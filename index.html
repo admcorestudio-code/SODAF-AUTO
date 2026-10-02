@@ -812,7 +812,7 @@ ${HEAD("Outils du conducteur", "Dans ta poche", "Les calculs du manuel, la véri
 </div></div></div></div>
 <div class="wrap sec" id="outils-check"><div class="card"><div class="sec-head" style="margin-bottom:14px"><div><p class="eyebrow">Avant de partir</p><h3 style="margin-top:10px">Vérification du matin · <span id="sd-ckCount">0</span>/12</h3></div><button class="btn btn-line btn-sm" id="sd-ckReset">Tout décocher</button></div><div class="check" id="sd-check"></div></div></div>
 <div class="wrap sec" id="outils-urgence"><div class="sec-head"><div><p class="eyebrow">Urgences · Togo</p><h2>Les numéros qui sauvent</h2></div><p>En cas d'accident : Protéger, Alerter, Secourir.</p></div>
-<div class="sos"><div><span>Police Secours</span><b>115</b><button data-copy="115">Copier</button></div><div><span>Police nationale</span><b>117</b><button data-copy="117">Copier</button></div><div><span>Gendarmerie</span><b>172</b><button data-copy="172">Copier</button></div><div><span>Sapeurs-pompiers</span><b>118</b><span>ou 22 21 67 00</span><button data-copy="118">Copier</button></div></div></div>
+<div class="sos"><div><span>Police, depuis un portable</span><b>161</b><button data-copy="161">Copier</button></div><div><span>Police, depuis un fixe</span><b>117</b><button data-copy="117">Copier</button></div><div><span>Gendarmerie</span><b>172</b><button data-copy="172">Copier</button></div><div><span>Sapeurs-pompiers</span><b>118</b><button data-copy="118">Copier</button></div></div></div>
 </section>
 
 <section class="page" data-page="documents" hidden>
@@ -889,8 +889,8 @@ const Q = [
 ["Un véhicule de la CEET avec gyrophare est-il prioritaire ?",["Oui, toujours","Non, on le laisse passer par courtoisie","Oui, la nuit","Seulement en ville"],1,"CEET, TdE et ambulances privées ne sont pas prioritaires.","cours-prioritaires"],
 ["Un véhicule de police est prioritaire quand :",["Il est en service","Sirène ou gyrophare activé en mission urgente","Il roule vite","Toujours"],1,"Seulement en mission urgente, signal activé.","cours-prioritaires"],
 ["Que signifie P.A.S. ?",["Prévenir, Attendre, Soigner","Protéger, Alerter, Secourir","Partir, Appeler, Sauver","Protéger, Aider, Signaler"],1,"Protéger, Alerter, Secourir.","cours-secourisme"],
-["Le numéro des sapeurs-pompiers au Togo :",["115","117","118","172"],2,"118, ou le 22 21 67 00.","cours-secourisme"],
-["Le numéro de la Gendarmerie nationale :",["117","172","118","115"],1,"Gendarmerie : 172.","cours-secourisme"],
+["Le numéro des sapeurs-pompiers au Togo :",["161","117","118","172"],2,"Sapeurs-pompiers : 118. Police : 161 depuis un portable, 117 depuis un fixe.","cours-secourisme"],
+["Le numéro de la Gendarmerie nationale :",["117","172","118","161"],1,"Gendarmerie : 172.","cours-secourisme"],
 ["Un blessé inconscient qui respire se place :",["Assis","Debout","En position latérale de sécurité","Sur le ventre"],2,"La PLS garde les voies respiratoires libres.","cours-secourisme"],
 ["Les secours sont déjà sur place. Tu :",["T'arrêtes pour regarder","Continues pour ne pas encombrer","Klaxonnes","Fais une vidéo"],1,"On ne s'arrête pas si les secours sont là.","cours-secourisme"],
 ["L'assurance minimale obligatoire est :",["Tous risques","Tiers collision","Responsabilité civile","Aucune"],2,"La responsabilité civile couvre les dommages aux autres.","cours-assurance"],
