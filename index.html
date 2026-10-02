@@ -220,6 +220,10 @@ section.page{padding-bottom:88px}
 .toc button:hover{background:var(--soft)}
 .toc .done{width:14px;height:14px;border-radius:50%;border:2px solid var(--line);flex-shrink:0}
 .toc button.read .done{background:var(--green);border-color:var(--green)}
+.toc button.cur{background:var(--green-soft);font-weight:600}
+.toc button.cur .done{border-color:var(--green);box-shadow:inset 0 0 0 3px #fff,inset 0 0 0 8px var(--yellow)}
+.toc button.cur.read .done{box-shadow:inset 0 0 0 3px var(--green),inset 0 0 0 8px var(--yellow)}
+.toc .done{transition:box-shadow .2s,background .2s,border-color .2s}
 @media (max-width:900px){.course{grid-template-columns:1fr;gap:20px}.toc{position:static;max-height:none;display:flex;gap:6px;overflow-x:auto;padding:10px}.toc .part{display:none}.toc button{white-space:nowrap;width:auto;background:var(--soft)}}
 article.ch{border:1px solid var(--line);border-radius:14px;padding:clamp(20px,3vw,34px);margin-bottom:22px;scroll-margin-top:90px;background:#fff}
 article.ch header{display:flex;justify-content:space-between;align-items:start;gap:16px;flex-wrap:wrap;padding-bottom:16px;margin-bottom:18px;border-bottom:1px solid var(--line)}
@@ -1074,6 +1078,22 @@ function init(root) {
     $$(".read-btn").forEach((b) => { const r = read.includes(b.dataset.id); b.classList.toggle("done", r); b.textContent = r ? "✓ Lu" : "Marquer comme lu"; });
   }
   syncRead();
+  // section en cours : le rond du sommaire se colore
+  let curId = null;
+  const setCur = (id) => {
+    if (id === curId) return; curId = id;
+    $$(".toc button").forEach((b) => b.classList.toggle("cur", b.dataset.id === id));
+    const btn = toc.querySelector('button[data-id="' + id + '"]');
+    if (btn && toc.scrollWidth > toc.clientWidth) toc.scrollTo({ left: btn.offsetLeft - toc.clientWidth / 2 + btn.offsetWidth / 2, behavior: "smooth" });
+  };
+  const spy = () => {
+    if (root.querySelector('section[data-page="cours"]').hidden) return;
+    const line = 120; let best = chapters[0];
+    for (const ch of chapters) { if (ch.getBoundingClientRect().top - line <= 0) best = ch; else break; }
+    setCur(best.id);
+  };
+  window.addEventListener("scroll", spy, { passive: true });
+  timers.push(() => window.removeEventListener("scroll", spy));
 
   const qEl = $("#sd-quiz");
   let quiz = { n: 10, list: [], i: 0, score: 0, answered: false, miss: [] };
@@ -1202,6 +1222,7 @@ function init(root) {
     $$("#sd-nav [data-nav]").forEach((a) => a.classList.toggle("on", a.dataset.nav === p));
     nav.classList.remove("open"); burger.setAttribute("aria-expanded", "false");
     if (p === "quiz") showBest();
+    if (p === "cours") requestAnimationFrame(() => requestAnimationFrame(spy));
     const target = h.includes("-") ? root.querySelector("#" + h) : null;
     requestAnimationFrame(() => { if (target) target.scrollIntoView({ block: "start" }); else window.scrollTo(0, 0); });
   }
