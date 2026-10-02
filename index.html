@@ -96,7 +96,16 @@ nav.main{display:flex;gap:2px;margin-left:auto}
 #sodaf-root nav.main a:hover{color:var(--ink);background:var(--soft)}
 #sodaf-root nav.main a.on{color:var(--ink);box-shadow:inset 0 -3px 0 var(--yellow);border-radius:0}
 .burger{display:none;margin-left:auto;background:#fff;border:1.5px solid var(--line);color:var(--ink);border-radius:8px;padding:.35em .8em;font:600 .95rem var(--f-body);cursor:pointer}
-@media (max-width:1060px){.burger{display:inline-block}.bar>.btn-green{display:none!important}nav.main{display:none;position:absolute;left:-16px;right:-16px;top:100%;background:#fff;flex-direction:column;padding:8px 16px 18px;border-bottom:1px solid var(--line);box-shadow:0 20px 30px -20px rgba(0,0,0,.2)}nav.main.open{display:flex}#sodaf-root nav.main a{padding:.8em .6em;font-size:1.08rem}#sodaf-root nav.main a.on{box-shadow:inset 3px 0 0 var(--yellow)}}
+.hdr-link{font-weight:600;font-size:.95rem;color:var(--ink)!important;text-decoration:none;white-space:nowrap;padding:.45em .2em;border-bottom:2px solid var(--yellow)}
+.pricebar{position:relative;z-index:3;margin-top:-34px;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 40px -26px rgba(0,0,0,.35);padding:18px 22px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) auto;gap:16px 28px;align-items:center}
+.pb-item{display:flex;flex-direction:column;gap:2px;min-width:0;padding-left:16px;border-left:3px solid var(--line)}
+.pb-item:first-child{border-left-color:var(--green)}
+.pb-item span{font-size:.86rem;color:var(--muted)}
+.pb-item b{font:800 1.45rem/1.1 var(--f-display);letter-spacing:-.02em}
+@media (min-width:821px){.dots{bottom:50px!important}.rule{bottom:70px!important}.hero-in{padding-bottom:120px!important}}
+@media (max-width:900px){.pricebar{grid-template-columns:repeat(2,minmax(0,1fr))}.pricebar .btn{grid-column:1/-1;justify-content:center}}
+@media (max-width:520px){.pricebar{grid-template-columns:1fr;margin-top:-20px}}
+@media (max-width:1240px){.burger{display:inline-block}.bar>.btn-green,.bar>.hdr-link{display:none!important}nav.main{display:none;position:absolute;left:-16px;right:-16px;top:100%;background:#fff;flex-direction:column;padding:8px 16px 18px;border-bottom:1px solid var(--line);box-shadow:0 20px 30px -20px rgba(0,0,0,.2)}nav.main.open{display:flex}#sodaf-root nav.main a{padding:.8em .6em;font-size:1.08rem}#sodaf-root nav.main a.on{box-shadow:inset 3px 0 0 var(--yellow)}}
 
 /* subtle white-background patterns */
 .pat-dots{background-image:radial-gradient(rgba(20,23,28,.07) 1px,transparent 1.2px);background-size:22px 22px}
@@ -395,9 +404,9 @@ const HTML = `
 <a class="logo" href="#accueil" aria-label="SODAF, accueil">${LOGO("#14171C", "word")}<small class="logo-sub">Auto-école · Togo</small></a>
 <button class="burger" id="sd-burger" aria-expanded="false">Menu</button>
 <nav class="main" id="sd-nav">
-<a href="#accueil" data-nav="accueil">Accueil</a><a href="#formations" data-nav="formations">Formations</a><a href="#cours" data-nav="cours">Cours</a><a href="#quiz" data-nav="quiz">Quiz</a><a href="#outils" data-nav="outils">Outils</a><a href="#documents" data-nav="documents">Documents</a><a href="#carnet" data-nav="carnet">Mon carnet</a>
+<a href="#accueil" data-nav="accueil">Accueil</a><a href="#formations" data-nav="formations">Formations et tarifs</a><a href="#cours" data-nav="cours">Cours</a><a href="#quiz" data-nav="quiz">Quiz</a><a href="#outils" data-nav="outils">Outils</a><a href="#documents" data-nav="documents">Documents</a><a href="#carnet" data-nav="carnet">Mon carnet</a>
 </nav>
-<a class="btn btn-green btn-sm" href="#inscription">S'inscrire</a>
+<a class="hdr-link" href="#formations">Voir les tarifs</a><a class="btn btn-green btn-sm" href="#inscription">S'inscrire</a>
 </div></header>
 <main>
 
@@ -416,6 +425,13 @@ const HTML = `
 <div class="dots" id="sd-dots">${SLIDES.map((s, i) => `<button aria-label="Image ${i + 1}" data-i="${i}"${i ? "" : ' class="on"'}></button>`).join("")}</div>
 <div class="lane" aria-hidden="true"></div>
 </div>
+
+<div class="wrap"><div class="pricebar">
+<div class="pb-item"><span>Permis B dès</span><b>35 000 F</b></div>
+<div class="pb-item"><span>Formation complète · 12 séances</span><b>55 000 F</b></div>
+<div class="pb-item"><span>Paiement</span><b>En 2 tranches</b></div>
+<a class="btn btn-green" href="#formations">Voir tous les tarifs</a>
+</div></div>
 
 <div class="band-soft"><div class="wrap">
 <div class="sec-head"><div><p class="eyebrow">Le code de la route</p><h2>4 signalisations à maîtriser</h2></div><p>Tout le code repose sur elles. Touche une carte pour ouvrir le cours.</p></div>
@@ -803,7 +819,7 @@ ${HEAD("Pré-inscription", "Rejoins SODAF", "Envoie ta demande en une minute : e
 <div class="pat-lane" aria-hidden="true"></div>
 <footer class="site"><div class="wrap"><div class="cols">
 <div><a class="logo flogo" href="#accueil" aria-label="SODAF, accueil">${LOGO("#FFFFFF", "ws")}</a><p style="margin-top:12px;max-width:40ch">Code, secourisme, mécanique et conduite, en salle et en ligne.</p></div>
-<div><h4>Apprendre</h4><a href="#cours">Les cours</a><a href="#quiz">Le quiz</a><a href="#outils">Les outils</a><a href="#documents">Documents</a></div>
+<div><h4>Apprendre</h4><a href="#formations">Formations et tarifs</a><a href="#cours">Les cours</a><a href="#quiz">Le quiz</a><a href="#outils">Les outils</a><a href="#documents">Documents</a></div>
 <div><h4>Secrétariat</h4><span class="phone">72 54 41 66</span><a href="#inscription">Pré-inscription</a></div>
 </div><div class="legal"><span>© 2026 SODAF Auto-École · Togo</span><span>Powered by ADM Core</span></div></div></footer>
 
