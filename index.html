@@ -121,7 +121,7 @@ nav.main{display:flex;gap:2px;margin-left:auto}
 @media (min-width:821px){.dots{bottom:50px!important}.rule{bottom:70px!important}.hero-in{padding-bottom:120px!important}}
 @media (max-width:900px){.pricebar{grid-template-columns:repeat(2,minmax(0,1fr))}.pricebar .btn{grid-column:1/-1;justify-content:center}}
 @media (max-width:520px){.pricebar{grid-template-columns:1fr;margin-top:-20px}}
-@media (max-width:1240px){.burger{display:inline-block}.bar>.btn-green,.bar>.hdr-link{display:none!important}nav.main{display:none;position:absolute;left:-16px;right:-16px;top:100%;background:#fff;flex-direction:column;padding:8px 16px 18px;border-bottom:1px solid var(--line);box-shadow:0 20px 30px -20px rgba(0,0,0,.2)}nav.main.open{display:flex}#sodaf-root nav.main a{padding:.8em .6em;font-size:1.08rem}#sodaf-root nav.main a.on{box-shadow:inset 3px 0 0 var(--yellow)}}
+@media (max-width:1300px){.burger{display:inline-block}.bar>.btn-green,.bar>.hdr-link{display:none!important}nav.main{display:none;position:absolute;left:-16px;right:-16px;top:100%;background:#fff;flex-direction:column;padding:8px 16px 18px;border-bottom:1px solid var(--line);box-shadow:0 20px 30px -20px rgba(0,0,0,.2)}nav.main.open{display:flex}#sodaf-root nav.main a{padding:.8em .6em;font-size:1.08rem}#sodaf-root nav.main a.on{box-shadow:inset 3px 0 0 var(--yellow)}}
 
 /* subtle white-background patterns */
 .pat-dots{background-image:radial-gradient(rgba(20,23,28,.07) 1px,transparent 1.2px);background-size:22px 22px}
@@ -431,6 +431,10 @@ article.ch p+p{margin-top:10px}
 .devtile em{font-style:normal;font-size:.8rem;color:var(--muted);margin-top:auto;padding-top:6px}
 .devtile em.ok{color:var(--green);font-weight:700}
 .devtile.now{border-color:var(--yellow);box-shadow:inset 0 0 0 1.5px var(--yellow)}
+.devlink{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:6px 16px;max-width:760px;margin:0 auto 22px;padding:14px 18px;border-radius:12px;background:#15191E;color:#fff;text-decoration:none}
+.devlink b{font:700 1.05rem var(--f-display);color:var(--yellow)}
+.devlink span{color:#C9CED6;font-size:.95rem}
+#sd-dev{scroll-margin-top:90px}
 .devlist-h{font:700 1rem var(--f-display);margin:0 0 12px!important;color:var(--muted)}
 .devform{max-width:520px;margin:0 auto}
 .devform .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -673,7 +677,7 @@ const HTML = `
 <a class="logo" href="#accueil" aria-label="SODAF, accueil">${LOGO("#14171C", "word")}<small class="logo-sub">Auto-école · Togo</small></a>
 <button class="burger" id="sd-burger" aria-expanded="false">Menu</button>
 <nav class="main" id="sd-nav">
-<a href="#accueil" data-nav="accueil">Accueil</a><a href="#formations" data-nav="formations">Formations et tarifs</a><a href="#cours" data-nav="cours">Cours</a><a href="#panneaux" data-nav="panneaux">Panneaux</a><a href="#quiz" data-nav="quiz">Quiz</a><a href="#outils" data-nav="outils">Outils</a><a href="#documents" data-nav="documents">Documents</a>
+<a href="#accueil" data-nav="accueil">Accueil</a><a href="#formations" data-nav="formations">Formations et tarifs</a><a href="#cours" data-nav="cours">Cours</a><a href="#panneaux" data-nav="panneaux">Panneaux</a><a href="#quiz" data-nav="quiz">Quiz</a><a href="#devoirs" data-nav="devoirs">Devoirs</a><a href="#outils" data-nav="outils">Outils</a><a href="#documents" data-nav="documents">Documents</a>
 </nav>
 <a class="btn btn-green btn-sm" href="#inscription">S'inscrire</a>
 </div></header>
@@ -1062,8 +1066,12 @@ ${HEAD("Révision", "Les panneaux", "Les principaux panneaux du code, classés p
 
 <section class="page" data-page="quiz" hidden>
 ${HEAD("Entraînement", "Le quiz SODAF", "Questions tirées du manuel, avec l'explication et le chapitre à relire. Objectif examen : 35 sur 40.")}
-<div class="wrap sec" id="quiz-devoirs"><div class="sec-head"><div><p class="eyebrow">Devoirs</p><h2>Le devoir de la semaine</h2></div><p>Un devoir par semaine sur le thème vu en salle le lundi. Ton résultat part directement au moniteur, et la correction se fait le mercredi à 14 h 30.</p></div><div id="sd-dev"></div></div>
-<div class="wrap sec" style="padding-top:0"><div class="sec-head"><div><p class="eyebrow">Entraînement libre</p><h2>Séries au hasard</h2></div><p>Autant de fois que tu veux. Ces séries ne sont pas envoyées au moniteur.</p></div><p class="qbest" id="sd-qbest" hidden></p><div class="modes" id="sd-modes"><button data-n="10" class="on">Série rapide · 10</button><button data-n="20">Série moyenne · 20</button><button data-n="40">Examen blanc · 40</button></div><div class="quiz card" id="sd-quiz"></div></div>
+<div class="wrap sec"><a class="devlink" href="#devoirs"><b>Devoir de la semaine</b><span>Fais le devoir noté envoyé au moniteur →</span></a><p class="qbest" id="sd-qbest" hidden></p><div class="modes" id="sd-modes"><button data-n="10" class="on">Série rapide · 10</button><button data-n="20">Série moyenne · 20</button><button data-n="40">Examen blanc · 40</button></div><div class="quiz card" id="sd-quiz"></div></div>
+</section>
+
+<section class="page" data-page="devoirs" hidden>
+${HEAD("Devoirs", "Le devoir de la semaine", "Un devoir par semaine sur le thème vu en salle le lundi. Ton résultat part directement au moniteur, et la correction se fait le mercredi à 14 h 30.")}
+<div class="wrap sec"><div id="sd-dev"></div></div>
 </section>
 
 <section class="page" data-page="outils" hidden>
@@ -1176,7 +1184,7 @@ ${HEAD("Pré-inscription", "Rejoins SODAF", "Envoie ta demande en une minute : e
 <div class="pat-lane" aria-hidden="true"></div>
 <footer class="site"><div class="wrap"><div class="cols">
 <div><a class="logo flogo" href="#accueil" aria-label="SODAF, accueil">${LOGO("#FFFFFF", "ws")}</a><p style="margin-top:12px;max-width:40ch">Code, secourisme, mécanique et conduite, en salle et en ligne.</p></div>
-<div><h4>Apprendre</h4><a href="#formations">Formations et tarifs</a><a href="#cours">Les cours</a><a href="#quiz">Le quiz</a><a href="#outils">Les outils</a><a href="#documents">Documents</a><a href="#classe" class="fcls">Mode classe <span>Projection</span></a></div>
+<div><h4>Apprendre</h4><a href="#formations">Formations et tarifs</a><a href="#cours">Les cours</a><a href="#quiz">Le quiz</a><a href="#devoirs">Les devoirs</a><a href="#outils">Les outils</a><a href="#documents">Documents</a><a href="#classe" class="fcls">Mode classe <span>Projection</span></a></div>
 <div><h4>Secrétariat</h4><span class="phone">72 54 41 66</span><p class="faddr">412 Avenue Akei, Tokoin Tamé, Lomé<br>(en face de la caisse)</p><p class="faddr">Secrétariat : lun – ven 8 h – 12 h 30 et 14 h 30 – 18 h<br>Samedi 8 h – 12 h · Dimanche fermé</p><a href="https://www.google.com/maps/search/?api=1&query=412+Avenue+Akei+Tokoin+Tam%C3%A9+Lom%C3%A9" target="_blank" rel="noopener">Itinéraire Google Maps</a><a href="#inscription">Pré-inscription</a></div>
 </div><div class="legal"><span>© 2026 SODAF Auto-École · Togo · <a href="#equipe" class="teamlink">Espace équipe</a></span><span>Powered by ADM Core</span></div></div></footer>
 
@@ -1815,7 +1823,7 @@ function init(root) {
       revB.hidden = true;
       if (mode === "lecon") stage.innerHTML = '<div class="cls-slide">' + it + "</div>";
       else if (mode === "quiz" || mode === "devoir") {
-        if (it.end && mode === "devoir") stage.innerHTML = '<div class="cls-title"><p class="cls-kicker">Fin de la correction</p><h1 class="cls-h1">Devoir ' + DEV[+sel.value].l + ' corrigé !</h1><p style="margin-top:16px;font-size:1.2rem;color:var(--muted)">Ceux qui ne l\'ont pas encore fait : autosodaf.com → Quiz → Devoirs.</p><div class="cls-bar"></div></div>';
+        if (it.end && mode === "devoir") stage.innerHTML = '<div class="cls-title"><p class="cls-kicker">Fin de la correction</p><h1 class="cls-h1">Devoir ' + DEV[+sel.value].l + ' corrigé !</h1><p style="margin-top:16px;font-size:1.2rem;color:var(--muted)">Ceux qui ne l\'ont pas encore fait : autosodaf.com → Devoirs.</p><div class="cls-bar"></div></div>';
         else if (it.end) stage.innerHTML = '<div class="cls-title"><p class="cls-kicker">Fin de la série</p><h1 class="cls-h1">Bravo à tous !</h1><p style="margin-top:16px;font-size:1.2rem;color:var(--muted)">Reprenez ensemble les questions qui ont posé problème, puis révisez sur autosodaf.com.</p><div class="cls-bar"></div></div>';
         else {
           const q = it.q;
