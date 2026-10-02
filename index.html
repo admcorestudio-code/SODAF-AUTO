@@ -224,6 +224,9 @@ section.page{padding-bottom:88px}
 .classband{display:flex;flex-wrap:wrap;align-items:center;gap:10px 22px;margin-top:28px;padding:16px 20px;border-radius:12px;background:var(--soft);border-left:4px solid var(--yellow)}
 .classband p{margin:0}
 #sodaf-root footer.site a.teamlink{display:inline;color:rgba(255,255,255,.45);padding:0}
+#sodaf-root footer.site a.fcls{display:inline-flex;align-items:center;gap:8px;margin-top:10px;padding:.45em .9em;border:1px solid rgba(242,177,0,.6);border-radius:999px;color:#fff;font-weight:600}
+#sodaf-root footer.site a.fcls:hover{background:rgba(242,177,0,.12)}
+#sodaf-root footer.site a.fcls span{font:600 .62rem var(--f-mono);letter-spacing:.1em;text-transform:uppercase;background:var(--yellow);color:var(--ink);padding:.2em .55em;border-radius:999px}
 .lockcard{max-width:460px;margin:0 auto;text-align:center}
 .lockico{width:56px;height:56px;border-radius:50%;background:var(--soft);display:grid;place-items:center;margin:0 auto 14px;color:var(--ink)}
 .lockcard form{display:flex;gap:10px;margin-top:18px}
@@ -955,7 +958,6 @@ ${HEAD("Équipe SODAF", "Espace secrétariat", "Réservé au personnel de l'auto
 <a class="card teamtile" id="sd-tCode" target="_blank" rel="noopener" href="#"><b>Cours de code</b><span>Séances du lundi, mercredi, vendredi et examen blanc du samedi : thème du jour, présents.</span><em>Ouvrir les cours →</em></a>
 <a class="card teamtile" id="sd-tInsc" target="_blank" rel="noopener" href="#"><b>Inscriptions</b><span>Pré-inscriptions reçues par le site, suivi de chaque élève et de ses séances.</span><em>Ouvrir les inscriptions →</em></a>
 </div>
-<a class="card teamtile" href="#classe" style="margin-top:16px;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 24px"><div style="display:flex;flex-direction:column;gap:6px"><b>Mode classe</b><span>Pour le moniteur : projette les leçons, le quiz et les panneaux en grand sur l'écran de la salle.</span></div><em style="margin-top:0">Lancer le mode classe →</em></a>
 <div class="grid g2" style="margin-top:18px">
 <div class="card soft"><p class="eyebrow">Réserver une séance de conduite</p><ol class="teamsteps"><li>Ouvre <b>Conduite</b>, onglet <b>Créneaux libres</b>, et choisis l'heure avec l'élève.</li><li>Touche le créneau, choisis l'<b>élève</b> et mets le statut sur <b>Réservé</b>.</li><li>Touche <b>Confirmer sur WhatsApp</b> : le message est prêt, appuie sur Envoyer.</li><li>La veille, onglet <b>Demain (rappels)</b> : touche <b>Rappel de la veille</b> pour chaque élève.</li></ol></div>
 <div class="card soft"><p class="eyebrow">Après chaque cours de code</p><ol class="teamsteps"><li>Ouvre <b>Cours de code</b>, touche la séance du jour.</li><li>Choisis le <b>thème</b> (le chapitre traité) et ajoute les <b>présents</b>.</li><li>Mets le statut sur <b>Fait</b>. L'onglet <b>À cocher</b> montre les séances oubliées.</li></ol><p style="margin-top:12px;font-size:.92rem;color:var(--muted)">Les créneaux du mois suivant se créent tout seuls le 24 de chaque mois.</p></div>
@@ -973,7 +975,7 @@ ${HEAD("Équipe SODAF", "Espace secrétariat", "Réservé au personnel de l'auto
 <label class="sr-only" for="sd-clsSel">Choix</label><select id="sd-clsSel"></select>
 <span class="cls-count" id="sd-clsCount"></span>
 <button class="btn btn-line btn-sm" type="button" id="sd-clsFs">Plein écran</button>
-<a class="btn btn-line btn-sm" href="#equipe">Quitter</a>
+<a class="btn btn-line btn-sm" href="#accueil">Quitter</a>
 </div>
 <div class="cls-stage" id="sd-clsStageWrap"><div class="cls-zoom" id="sd-clsStage"></div></div>
 <div class="cls-bot">
@@ -1014,7 +1016,7 @@ ${HEAD("Pré-inscription", "Rejoins SODAF", "Envoie ta demande en une minute : e
 <div class="pat-lane" aria-hidden="true"></div>
 <footer class="site"><div class="wrap"><div class="cols">
 <div><a class="logo flogo" href="#accueil" aria-label="SODAF, accueil">${LOGO("#FFFFFF", "ws")}</a><p style="margin-top:12px;max-width:40ch">Code, secourisme, mécanique et conduite, en salle et en ligne.</p></div>
-<div><h4>Apprendre</h4><a href="#formations">Formations et tarifs</a><a href="#cours">Les cours</a><a href="#quiz">Le quiz</a><a href="#outils">Les outils</a><a href="#documents">Documents</a></div>
+<div><h4>Apprendre</h4><a href="#formations">Formations et tarifs</a><a href="#cours">Les cours</a><a href="#quiz">Le quiz</a><a href="#outils">Les outils</a><a href="#documents">Documents</a><a href="#classe" class="fcls">Mode classe <span>Projection</span></a></div>
 <div><h4>Secrétariat</h4><span class="phone">72 54 41 66</span><p class="faddr">412 Avenue Akei, Tokoin Tamé, Lomé<br>(en face de la caisse)</p><p class="faddr">Secrétariat : lun – ven 8 h – 12 h 30 et 14 h 30 – 18 h<br>Samedi 8 h – 12 h · Dimanche fermé</p><a href="https://www.google.com/maps/search/?api=1&query=412+Avenue+Akei+Tokoin+Tam%C3%A9+Lom%C3%A9" target="_blank" rel="noopener">Itinéraire Google Maps</a><a href="#inscription">Pré-inscription</a></div>
 </div><div class="legal"><span>© 2026 SODAF Auto-École · Togo · <a href="#equipe" class="teamlink">Espace équipe</a></span><span>Powered by ADM Core</span></div></div></footer>
 
@@ -1500,7 +1502,6 @@ function init(root) {
     $$("section.page").forEach((s) => (s.hidden = s.dataset.page !== p));
     $$("#sd-nav [data-nav]").forEach((a) => a.classList.toggle("on", a.dataset.nav === p));
     nav.classList.remove("open"); burger.setAttribute("aria-expanded", "false");
-    if (p === "classe" && S.get("team", "") !== TEAM_HASH) { location.hash = "#equipe"; return; }
     if (p === "quiz") showBest();
     if (p === "classe") requestAnimationFrame(() => cls.open());
     if (p === "cours") requestAnimationFrame(() => requestAnimationFrame(spy));
