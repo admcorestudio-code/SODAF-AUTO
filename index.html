@@ -17,12 +17,17 @@
 
 const AIRTABLE_HOOK = "https://hooks.airtable.com/workflows/v1/genericWebhook/appNfMHMfzc5612Hc/wflZYJf8MhXOIEIGs/wtrW8QD2hFYrxK9u5";
 async function sendToAirtable(payload) {
-  // Format formulaire web : accepté par Airtable et autorisé directement depuis le navigateur.
+  // Envoi au format formulaire web (requête simple, sans vérification préalable du navigateur).
   const body = new URLSearchParams(payload);
+  if (navigator.onLine === false) return false;
   try {
-    await fetch(AIRTABLE_HOOK, { method: "POST", mode: "no-cors", body });
-    return true;
-  } catch (e) { return false; }
+    const r = await fetch(AIRTABLE_HOOK, { method: "POST", body });
+    return r.ok;
+  } catch (e) {
+    // La requête est partie mais le navigateur ne laisse pas lire la réponse d'Airtable :
+    // on la considère reçue si l'appareil est en ligne.
+    return navigator.onLine !== false;
+  }
 }
 
 const WA = "https://wa.me/22872544166";
@@ -301,6 +306,21 @@ article.ch p+p{margin-top:10px}
 .field input,.field select,.field textarea{font:1rem var(--f-body);padding:.7em .8em;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);width:100%}
 .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--ink);outline:none}
 .field textarea{min-height:90px}
+.okbox{border:1.5px solid var(--green);background:var(--green-soft);border-radius:14px;padding:22px;display:grid;gap:14px}
+.okhead{display:flex;gap:14px;align-items:center}
+.okcheck{width:46px;height:46px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;flex-shrink:0;animation:okpop .35s ease-out}
+.okcheck svg{width:24px;height:24px}
+@keyframes okpop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+.okhead b{display:block;font:800 1.5rem/1.1 var(--f-display);text-transform:uppercase}
+.okhead span{font-size:.86rem;color:var(--muted)}
+.okrecap{display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;margin:0;padding:14px 16px;background:#fff;border-radius:10px;font-size:.94rem}
+.okrecap dt{color:var(--muted)}.okrecap dd{margin:0;font-weight:600}
+.okwa{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px dashed rgba(11,110,79,.3)}
+.okwa p{font-size:.94rem}
+#sodaf-root .btn-wa{background:#1FA855;color:#fff}
+.linkbtn{justify-self:start;background:none;border:0;padding:0;color:var(--muted);text-decoration:underline;font:500 .9rem var(--f-body);cursor:pointer}
+.failbox{border:1.5px solid var(--red);background:var(--red-soft);border-radius:14px;padding:18px;margin-top:14px}
+#sd-send[disabled]{opacity:.7;cursor:wait}
 .tel{display:flex;align-items:stretch;border:1.5px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
 .tel:focus-within{border-color:var(--ink)}
 .tel span{display:flex;align-items:center;padding:0 .85em;background:var(--soft);font-weight:700;border-right:1px solid var(--line);color:var(--ink);user-select:none}
@@ -733,7 +753,7 @@ ${HEAD("Mon carnet", "Ta progression", "Enregistrée sur ce téléphone, sans co
 </section>
 
 <section class="page" data-page="inscription" hidden>
-${HEAD("Pré-inscription", "Rejoins SODAF", "Ce formulaire prépare ton message WhatsApp pour le secrétariat. Tu l'envoies, on te répond pour fixer ton premier cours.")}
+${HEAD("Pré-inscription", "Rejoins SODAF", "Envoie ta demande en une minute : elle arrive directement au secrétariat, qui te recontacte pour fixer ton premier cours.")}
 <div class="wrap sec"><div class="insc">
 <form class="card" id="sd-form" novalidate>
 <div class="row2"><div class="field"><label for="sd-fName">Nom complet</label><input id="sd-fName" placeholder="Ex. Kossi Agbeko"></div><div class="field"><label for="sd-fPhone">Téléphone / WhatsApp</label><div class="tel"><span>+228</span><input id="sd-fPhone" inputmode="numeric" maxlength="11" autocomplete="tel-national" placeholder="90 00 00 00"></div></div></div>
@@ -741,8 +761,15 @@ ${HEAD("Pré-inscription", "Rejoins SODAF", "Ce formulaire prépare ton message 
 <div class="row2"><div class="field"><label for="sd-fSlot">Créneau préféré</label><select id="sd-fSlot"><option>Tôt le matin</option><option>Après-midi</option><option>Samedi</option><option>Peu importe</option></select></div><div class="field"><label for="sd-fPay">Paiement</label><select id="sd-fPay"><option>En plusieurs tranches</option><option>En une fois</option></select></div></div>
 <div class="field"><label for="sd-fMsg">Message (facultatif)</label><textarea id="sd-fMsg" placeholder="Une question, une contrainte d'horaire…"></textarea></div>
 <p id="sd-fErr" style="color:var(--red);font-weight:600;margin-bottom:10px" hidden>Indique ton nom et ton numéro à 8 chiffres (après le +228).</p>
-<button class="btn btn-green" type="submit">Préparer mon message</button>
-<div class="out" id="sd-out" hidden><b id="sd-outTitle">Ta pré-inscription est envoyée.</b> <span id="sd-outSub">Le secrétariat te recontacte. Tu peux aussi lui écrire tout de suite sur WhatsApp.</span><pre id="sd-outText"></pre><div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn btn-green btn-sm" id="sd-waLink" target="_blank" rel="noopener" href="${WA}">Ouvrir WhatsApp</a><button class="btn btn-line btn-sm" type="button" id="sd-copyMsg">Copier le message</button></div></div>
+<button class="btn btn-green" type="submit" id="sd-send">Envoyer ma pré-inscription</button>
+<div class="okbox" id="sd-ok" hidden>
+<div class="okhead"><span class="okcheck" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div><b>Pré-inscription envoyée !</b><span id="sd-okWhen"></span></div></div>
+<p>Merci <span id="sd-okName"></span>, ta demande est bien arrivée au secrétariat SODAF. On te recontacte au <b id="sd-okPhone"></b> pour fixer ton premier cours.</p>
+<dl class="okrecap" id="sd-okRecap"></dl>
+<div class="okwa"><p><b>Tu veux aller plus vite ?</b> Écris-nous aussi sur WhatsApp, c'est facultatif.</p><a class="btn btn-wa btn-sm" id="sd-waLink" target="_blank" rel="noopener" href="${WA}">Écrire sur WhatsApp</a></div>
+<button class="linkbtn" type="button" id="sd-again">Faire une autre pré-inscription</button>
+</div>
+<div class="failbox" id="sd-fail" hidden><b>L'envoi n'a pas abouti.</b><p>Vérifie ta connexion internet puis réessaie. Tu peux aussi envoyer ta demande directement sur WhatsApp.</p><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px"><button class="btn btn-green btn-sm" type="button" id="sd-retry">Réessayer</button><a class="btn btn-line btn-sm" id="sd-waFail" target="_blank" rel="noopener" href="${WA}">Envoyer sur WhatsApp</a></div></div>
 </form>
 <div style="display:flex;flex-direction:column;gap:18px;min-width:0">
 <div class="card pat-dots"><p class="eyebrow">Secrétariat</p><p class="bignum">72 54 41 66</p><p style="color:var(--muted)">Appel ou WhatsApp · +228</p><button class="btn btn-line btn-sm" style="margin-top:14px" data-copy="+228 72 54 41 66">Copier le numéro</button></div>
@@ -960,23 +987,42 @@ function init(root) {
   const telIn = $("#sd-fPhone");
   const telDigits = () => { let d = telIn.value.replace(/\D/g, ""); if (d.length > 8 && d.startsWith("228")) d = d.slice(3); return d.slice(0, 8); };
   telIn.addEventListener("input", () => { telIn.value = telDigits().replace(/(\d{2})(?=\d)/g, "$1 "); });
-  let lastMsg = "";
-  $("#sd-form").addEventListener("submit", (e) => {
+  const form = $("#sd-form"), sendBtn = $("#sd-send");
+  const fieldsBox = () => [...form.children].filter((c) => !["sd-ok", "sd-fail"].includes(c.id));
+  let lastPayload = null;
+  async function submitInscription(payload, waText) {
+    $("#sd-fail").hidden = true;
+    sendBtn.disabled = true; sendBtn.textContent = "Envoi en cours…";
+    const ok = await sendToAirtable(payload);
+    sendBtn.disabled = false; sendBtn.textContent = "Envoyer ma pré-inscription";
+    $("#sd-waFail").href = WA + "?text=" + encodeURIComponent(waText);
+    if (!ok) { $("#sd-fail").hidden = false; return; }
+    const now = new Date();
+    $("#sd-okWhen").textContent = "Reçue le " + now.toLocaleDateString("fr-FR") + " à " + now.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+    $("#sd-okName").textContent = payload.nom.split(" ")[0];
+    $("#sd-okPhone").textContent = payload.telephone;
+    const rows = [["Formation", payload.formation], ["Quartier", payload.quartier || "—"], ["Créneau", payload.creneau], ["Paiement", payload.paiement]];
+    $("#sd-okRecap").innerHTML = rows.map(([k, v]) => "<dt>" + k + "</dt><dd>" + String(v).replace(/[<>&]/g, "") + "</dd>").join("");
+    $("#sd-waLink").href = WA + "?text=" + encodeURIComponent("Bonjour SODAF, je viens d'envoyer ma pré-inscription sur le site (" + payload.nom + ", " + payload.formation + "). Quand puis-je passer au secrétariat ?");
+    fieldsBox().forEach((c) => (c.hidden = true));
+    $("#sd-ok").hidden = false;
+    $("#sd-ok").scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+  form.addEventListener("submit", (e) => {
     e.preventDefault();
+    if (sendBtn.disabled) return;
     const name = $("#sd-fName").value.trim(), digits = telDigits(), phone = "+228 " + digits.replace(/(\d{2})(?=\d)/g, "$1 ");
     const okForm = !!name && digits.length === 8;
     $("#sd-fErr").hidden = okForm;
     if (!okForm) return;
-    lastMsg = "Bonjour SODAF, je souhaite m'inscrire.\nNom : " + name + "\nTéléphone : " + phone + "\nFormation : " + $("#sd-fCat").value + "\nVille / quartier : " + ($("#sd-fCity").value.trim() || "—") + "\nCréneau : " + $("#sd-fSlot").value + "\nPaiement : " + $("#sd-fPay").value + ($("#sd-fMsg").value.trim() ? "\nMessage : " + $("#sd-fMsg").value.trim() : "");
-    $("#sd-outText").textContent = lastMsg;
-    $("#sd-waLink").href = WA + "?text=" + encodeURIComponent(lastMsg);
-    $("#sd-out").hidden = false;
-    const payload = { nom: name, telephone: phone, formation: $("#sd-fCat").value, quartier: $("#sd-fCity").value.trim(), creneau: $("#sd-fSlot").value, paiement: $("#sd-fPay").value, message: $("#sd-fMsg").value.trim(), source: "Site web" };
-    sendToAirtable(payload).then((ok) => {
-      if (!ok) { $("#sd-outTitle").textContent = "Ton message est prêt."; $("#sd-outSub").textContent = "La connexion a échoué : envoie-le au secrétariat sur WhatsApp pour finaliser ta pré-inscription."; }
-    });
+    lastPayload = { nom: name, telephone: phone, formation: $("#sd-fCat").value, quartier: $("#sd-fCity").value.trim(), creneau: $("#sd-fSlot").value, paiement: $("#sd-fPay").value, message: $("#sd-fMsg").value.trim(), source: "Site web" };
+    const waText = "Bonjour SODAF, je souhaite m'inscrire.\nNom : " + name + "\nTéléphone : " + phone + "\nFormation : " + lastPayload.formation + "\nVille / quartier : " + (lastPayload.quartier || "—") + "\nCréneau : " + lastPayload.creneau + "\nPaiement : " + lastPayload.paiement + (lastPayload.message ? "\nMessage : " + lastPayload.message : "");
+    submitInscription(lastPayload, waText);
   });
-  $("#sd-copyMsg").addEventListener("click", () => copy(lastMsg));
+  $("#sd-retry").addEventListener("click", () => form.requestSubmit());
+  $("#sd-again").addEventListener("click", () => {
+    form.reset(); $("#sd-ok").hidden = true; fieldsBox().forEach((c) => (c.hidden = false)); $("#sd-fErr").hidden = true; $("#sd-fail").hidden = true; $("#sd-fName").focus();
+  });
 
   function route() {
     const h = (location.hash || "#accueil").slice(1);
