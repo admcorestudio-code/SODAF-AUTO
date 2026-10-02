@@ -27,12 +27,13 @@
 <script>
 
 const AIRTABLE_HOOK = "https://hooks.airtable.com/workflows/v1/genericWebhook/appNfMHMfzc5612Hc/wflZYJf8MhXOIEIGs/wtrW8QD2hFYrxK9u5";
-async function sendToAirtable(payload) {
+const DEVOIR_HOOK = "https://hooks.airtable.com/workflows/v1/genericWebhook/appNfMHMfzc5612Hc/wfl8NvTIvXTHHAJen/wtrBb8cdQOHls7n3N";
+async function sendToAirtable(payload, url) {
   // Envoi au format formulaire web (requête simple, sans vérification préalable du navigateur).
   const body = new URLSearchParams(payload);
   if (navigator.onLine === false) return false;
   try {
-    const r = await fetch(AIRTABLE_HOOK, { method: "POST", body });
+    const r = await fetch(url || AIRTABLE_HOOK, { method: "POST", body });
     return r.ok;
   } catch (e) {
     // La requête est partie mais le navigateur ne laisse pas lire la réponse d'Airtable :
@@ -44,7 +45,7 @@ async function sendToAirtable(payload) {
 const WA = "https://wa.me/22872544166";
 // Espace équipe : empreinte SHA-256 du code d'accès (en majuscules). Simple verrou d'affichage : les données restent protégées par la connexion Airtable.
 const TEAM_HASH = "b2b2f104d32c638903e151a9b20d6e27b41d8c0c84cf8458738f83ca2f1dd744";
-const TEAM_LINKS = { conduite: "https://airtable.com/appNfMHMfzc5612Hc/pagnl2QLcW11krdLq", code: "https://airtable.com/appNfMHMfzc5612Hc/pagQCm5voueu6Nr1E", inscriptions: "https://airtable.com/appNfMHMfzc5612Hc/pagLZ21abl0bkeirW" };
+const TEAM_LINKS = { conduite: "https://airtable.com/appNfMHMfzc5612Hc/pagnl2QLcW11krdLq", code: "https://airtable.com/appNfMHMfzc5612Hc/pagQCm5voueu6Nr1E", inscriptions: "https://airtable.com/appNfMHMfzc5612Hc/pagLZ21abl0bkeirW", devoirs: "https://airtable.com/appNfMHMfzc5612Hc/pagp0mADSpbpZLedx" };
 const P_MONO = "M15.42 43.8 l0 10.32 c0 3.66 -1.5 6.24 -6.12 6.24 l-0.84 0 c-4.5 0 -6.06 -2.58 -6.06 -6.24 l0 -14.64 l2.28 0 l0 13.68 c0 2.64 0.6 4.92 4.26 4.92 c3.6 0 4.2 -2.28 4.2 -4.92 l0 -9.96 c0 -3.9 -2.64 -7.2 -4.92 -10.5 c-3.84 -5.58 -5.82 -7.74 -5.82 -13.56 l0 -9.36 c0 -3.66 1.5 -6.24 6.06 -6.24 l0.84 0 c4.56 0 6.12 2.58 6.12 6.24 l0 14.76 l-2.28 0 l0 -13.8 c0 -2.64 -0.66 -4.92 -4.26 -4.92 s-4.2 2.28 -4.2 4.92 l0 9 c-0.06 3.78 1.62 6.3 4.62 10.62 c4.08 5.88 6.12 8.04 6.12 13.44 z";
 const P_SLOGAN = "M7.695313 5.888672 c2.763672 0 4.482422 2.050781 4.482422 4.560547 c0 2.568359 -1.71875 4.492188 -4.482422 4.492188 l-2.939453 0 l0 5.058594 l-2.929687 0 l0 -14.111328 l5.869141 0 z M7.207031 12.490234 c1.464844 0 2.148438 -0.810547 2.148438 -2.080078 c0 -1.220703 -0.683594 -2.070312 -2.148437 -2.070312 l-2.451172 0 l0 4.150391 l2.451172 0 z M20.888672 20.195313 c-4.150391 0 -7.216797 -2.832031 -7.216797 -7.255859 c0 -4.433594 3.066406 -7.246094 7.216797 -7.246094 c4.140625 0 7.207031 2.8125 7.207031 7.246094 c0 4.423828 -3.066406 7.255859 -7.207031 7.255859 z M20.888672 17.509766 c2.431641 0 4.296875 -1.708984 4.296875 -4.570312 c0 -2.851562 -1.865234 -4.550781 -4.296875 -4.550781 s-4.296875 1.699219 -4.296875 4.550781 c0 2.861328 1.865234 4.570313 4.296875 4.570313 z M33.085938 20 l-3.691406 -14.111328 l3.046875 0 l2.753906 10.683594 l3.154297 -10.683594 l2.470703 0 l3.134766 10.683594 l2.783203 -10.683594 l3.037109 0 l-3.691406 14.111328 l-3.769531 0 l-2.734375 -8.720703 l-2.724609 8.720703 l-3.769531 0 z M60.214844 8.466797 l-5.234375 0 l0 3.203125 l4.638672 0 l0 2.548828 l-4.638672 0 l0 3.193359 l5.234375 0 l0 2.587891 l-8.183594 0 l0 -14.111328 l8.183594 0 l0 2.578125 z M70.683594 20 l-3.671875 -6.210937 l-0.849609 0 l0 6.210938 l-2.929687 0 l0 -14.111328 l5.117188 0 c3.193359 0 4.541016 1.884766 4.541016 4.21875 c0 1.894531 -1.074219 3.125 -2.988281 3.535156 l4.248047 6.357422 l-3.466797 0 z M66.162109 8.320313 l0 3.369141 l1.728516 0 c1.5625 0 2.197266 -0.664062 2.197266 -1.679687 c0 -1.005859 -0.634766 -1.689453 -2.197266 -1.689453 l-1.728516 0 z M84.482422 8.466797 l-5.234375 0 l0 3.203125 l4.638672 0 l0 2.548828 l-4.638672 0 l0 3.193359 l5.234375 0 l0 2.587891 l-8.183594 0 l0 -14.111328 l8.183594 0 l0 2.578125 z M87.5 20 l0 -14.111328 l5.107422 0 c4.501953 0 6.728516 2.832031 6.728516 7.050781 c0 4.228516 -2.226562 7.060547 -6.728516 7.060547 l-5.107422 0 z M90.429687 17.412109 l2.03125 0 c2.597656 0 3.789063 -1.621094 3.789063 -4.472656 s-1.191406 -4.472656 -3.789062 -4.472656 l-2.03125 0 l0 8.945313 z M114.853516 12.548828 c1.591797 0.439453 2.65625 1.484375 2.65625 3.496094 c0 2.382813 -1.445312 3.955078 -4.423828 3.955078 l-5.810547 0 l0 -14.111328 l4.570313 0 c3.046875 0 4.648438 1.464844 4.648438 3.867188 c0 1.240234 -0.537109 2.255859 -1.640625 2.792969 z M111.875 8.320313 l-1.777344 0 l0 3.320313 l1.904297 0 c1.25 0 1.796875 -0.742187 1.796875 -1.699219 c0 -0.9375 -0.615234 -1.621094 -1.923828 -1.621094 z M112.539063 17.490234 c1.582031 0 2.128906 -0.849609 2.128906 -1.767578 c0 -0.9375 -0.537109 -1.826172 -2.1875 -1.826172 l-2.382812 0 l0 3.59375 l2.441406 0 z M130.703125 5.888672 l-4.638672 7.353516 l0 6.757813 l-2.939453 0 l0 -6.689453 l-4.667969 -7.421875 l3.242188 0 l2.880859 4.804688 l2.890625 -4.804687 l3.232422 0 z M147.324219 20 l-1.025391 -2.910156 l-5.927734 0 l-1.025391 2.910156 l-2.998047 0 l5.195313 -14.111328 l3.583984 0 l5.195313 14.111328 l-2.998047 0 z M141.230469 14.638672 l4.208984 0 l-2.099609 -5.986328 z M152.441406 20 l0 -14.111328 l5.107422 0 c4.501953 0 6.728516 2.832031 6.728516 7.050781 c0 4.228516 -2.226562 7.060547 -6.728516 7.060547 l-5.107422 0 z M155.371093 17.412109 l2.03125 0 c2.597656 0 3.789063 -1.621094 3.789063 -4.472656 s-1.191406 -4.472656 -3.789062 -4.472656 l-2.03125 0 l0 8.945313 z M183.19336 20 l-2.919922 0 l-0.927734 -10.634766 l-3.574219 10.634766 l-1.894531 0 l-3.574219 -10.634766 l-0.9375 10.634766 l-2.929687 0 l1.181641 -14.111328 l4.179688 0 l3.007813 8.857422 l3.046875 -8.857422 l4.179688 0 z M197.705078 20.195313 c-4.150391 0 -7.216797 -2.822266 -7.216797 -7.255859 s3.066406 -7.246094 7.216797 -7.246094 c3.144531 0 5.664063 1.611328 6.669922 4.287109 l-2.734375 0.996094 c-0.625 -1.640625 -2.119141 -2.587891 -3.935547 -2.587891 c-2.431641 0 -4.296875 1.699219 -4.296875 4.550781 s1.865234 4.560547 4.296875 4.560547 c1.816406 0 3.310547 -0.957031 3.935547 -2.597656 l2.734375 0.996094 c-1.005859 2.675781 -3.525391 4.296875 -6.669922 4.296875 z M213.027344 20.195313 c-4.150391 0 -7.216797 -2.832031 -7.216797 -7.255859 c0 -4.433594 3.066406 -7.246094 7.216797 -7.246094 c4.140625 0 7.207031 2.8125 7.207031 7.246094 c0 4.423828 -3.066406 7.255859 -7.207031 7.255859 z M213.027344 17.509766 c2.431641 0 4.296875 -1.708984 4.296875 -4.570312 c0 -2.851562 -1.865234 -4.550781 -4.296875 -4.550781 s-4.296875 1.699219 -4.296875 4.550781 c0 2.861328 1.865234 4.570313 4.296875 4.570313 z M230.38086 20 l-3.671875 -6.210937 l-0.849609 0 l0 6.210938 l-2.929687 0 l0 -14.111328 l5.117188 0 c3.193359 0 4.541016 1.884766 4.541016 4.21875 c0 1.894531 -1.074219 3.125 -2.988281 3.535156 l4.248047 6.357422 l-3.466797 0 z M225.859375 8.320313 l0 3.369141 l1.728516 0 c1.5625 0 2.197266 -0.664062 2.197266 -1.679687 c0 -1.005859 -0.634766 -1.689453 -2.197266 -1.689453 l-1.728516 0 z M244.179688 8.466797 l-5.234375 0 l0 3.203125 l4.638672 0 l0 2.548828 l-4.638672 0 l0 3.193359 l5.234375 0 l0 2.587891 l-8.183594 0 l0 -14.111328 l8.183594 0 l0 2.578125 z";
 const P_S = "M13.027344 40.390625 c-6.054687 0 -10.78125 -2.910156 -11.640625 -8.203125 l6.054688 -1.386719 c0.390625 3.164063 2.714844 4.804688 5.820313 4.804688 c2.382813 0 4.277344 -1.054687 4.257813 -3.4375 c-0.019531 -2.65625 -3.144531 -3.496094 -6.582031 -4.550781 c-4.140625 -1.289062 -8.574219 -2.8125 -8.574219 -8.007812 c0 -5.253906 4.296875 -8.222656 9.960938 -8.222656 c4.960938 0 9.960938 2.011719 11.09375 7.421875 l-5.664062 1.40625 c-0.527344 -2.8125 -2.421875 -4.042969 -5.078125 -4.042969 c-2.363281 0 -4.375 0.976563 -4.375 3.300781 c0 2.167969 2.773438 2.890625 5.976563 3.847656 c4.257813 1.289063 9.296875 2.929688 9.296875 8.554688 c0 5.996094 -5.019531 8.515625 -10.546875 8.515625 z";
@@ -234,8 +235,9 @@ section.page{padding-bottom:88px}
 .lockico{width:56px;height:56px;border-radius:50%;background:var(--soft);display:grid;place-items:center;margin:0 auto 14px;color:var(--ink)}
 .lockcard form{display:flex;gap:10px;margin-top:18px}
 .lockcard input{flex:1;min-width:0;text-transform:uppercase;letter-spacing:.12em;text-align:center}
-.teamgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
-@media (max-width:860px){.teamgrid{grid-template-columns:1fr}}
+.teamgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+@media (max-width:1100px){.teamgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:600px){.teamgrid{grid-template-columns:1fr}}
 a.teamtile{display:flex;flex-direction:column;gap:6px;text-decoration:none;color:var(--ink);transition:transform .15s,box-shadow .15s}
 a.teamtile:hover{transform:translateY(-2px);box-shadow:0 14px 30px -18px rgba(0,0,0,.35)}
 a.teamtile b{font:700 1.3rem var(--f-display)}
@@ -406,6 +408,45 @@ article.ch p+p{margin-top:10px}
 .modes{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:26px}
 .modes button{background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:.5em 1em;font:600 .93rem var(--f-body);color:var(--ink);cursor:pointer}
 .modes button.on{border-color:var(--ink);background:var(--ink);color:#fff}
+
+/* devoirs */
+.qsign{display:flex;justify-content:center;margin-bottom:16px}
+.qsign svg{width:120px;height:120px;display:block}
+.devnow{display:grid;grid-template-columns:auto 1fr auto;gap:18px 26px;align-items:center;padding:26px 28px;border-radius:18px;background:#15191E;color:#fff;margin-bottom:22px}
+.devnow .dl{font:800 4.2rem/1 var(--f-display);color:var(--yellow);width:86px;height:86px;border-radius:16px;background:rgba(242,177,0,.12);display:grid;place-items:center}
+#sodaf-root .devnow h3{font:700 1.5rem/1.2 var(--f-display);margin:4px 0 6px;color:#fff}
+#sodaf-root .devnow .btn-line{background:transparent;color:#fff;border-color:rgba(255,255,255,.35)}
+.devnow p{color:#C9CED6;margin:0}
+.devnow .eyebrow{color:var(--yellow)}
+.devnow .done{color:#7FD3AE;font-weight:700}
+.devacts{display:flex;flex-direction:column;gap:8px;align-items:stretch}
+.devacts .btn{justify-content:center;text-align:center}
+@media (max-width:760px){.devnow{grid-template-columns:auto 1fr}.devacts{grid-column:1/-1}}
+.devgrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+@media (max-width:900px){.devgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.devtile{display:flex;flex-direction:column;gap:4px;text-align:left;background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:14px;font:inherit;color:var(--ink);cursor:pointer}
+.devtile:hover{border-color:var(--ink)}
+.devtile b{font:800 1.6rem/1 var(--f-display)}
+.devtile span{font-size:.9rem;line-height:1.3}
+.devtile em{font-style:normal;font-size:.8rem;color:var(--muted);margin-top:auto;padding-top:6px}
+.devtile em.ok{color:var(--green);font-weight:700}
+.devtile.now{border-color:var(--yellow);box-shadow:inset 0 0 0 1.5px var(--yellow)}
+.devlist-h{font:700 1rem var(--f-display);margin:0 0 12px!important;color:var(--muted)}
+.devform{max-width:520px;margin:0 auto}
+.devform .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:520px){.devform .row2{grid-template-columns:1fr}}
+.opt.pick{border-color:var(--ink);background:var(--soft);box-shadow:inset 0 0 0 1px var(--ink)}
+.devres{text-align:center}
+.devres .who{font:700 1.15rem var(--f-display);margin-top:6px}
+.devsent{display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:.5em 1em;border-radius:999px;font-weight:600;font-size:.93rem;background:var(--soft)}
+.devsent.ok{background:var(--green-soft);color:var(--green)}
+.devsent.ko{background:var(--red-soft);color:var(--red)}
+.corr{margin-top:22px;display:grid;gap:10px;text-align:left}
+.corr div{padding:12px 14px;border-radius:10px;border-left:4px solid var(--green);background:var(--soft)}
+.corr div.ko{border-left-color:var(--red)}
+.corr p{margin:0!important}
+.corr small{display:block;color:var(--muted);margin-top:4px;font-size:.88rem}
+.cls-signq svg{width:min(34vh,300px);height:min(34vh,300px);display:block}
 
 /* outils */
 .calc{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:28px;align-items:center}
@@ -1021,7 +1062,8 @@ ${HEAD("Révision", "Les panneaux", "Les principaux panneaux du code, classés p
 
 <section class="page" data-page="quiz" hidden>
 ${HEAD("Entraînement", "Le quiz SODAF", "Questions tirées du manuel, avec l'explication et le chapitre à relire. Objectif examen : 35 sur 40.")}
-<div class="wrap sec"><p class="qbest" id="sd-qbest" hidden></p><div class="modes" id="sd-modes"><button data-n="10" class="on">Série rapide · 10</button><button data-n="20">Série moyenne · 20</button><button data-n="40">Examen blanc · 40</button></div><div class="quiz card" id="sd-quiz"></div></div>
+<div class="wrap sec" id="quiz-devoirs"><div class="sec-head"><div><p class="eyebrow">Devoirs</p><h2>Le devoir de la semaine</h2></div><p>Un devoir par semaine sur le thème vu en salle le lundi. Ton résultat part directement au moniteur, et la correction se fait le mercredi à 14 h 30.</p></div><div id="sd-dev"></div></div>
+<div class="wrap sec" style="padding-top:0"><div class="sec-head"><div><p class="eyebrow">Entraînement libre</p><h2>Séries au hasard</h2></div><p>Autant de fois que tu veux. Ces séries ne sont pas envoyées au moniteur.</p></div><p class="qbest" id="sd-qbest" hidden></p><div class="modes" id="sd-modes"><button data-n="10" class="on">Série rapide · 10</button><button data-n="20">Série moyenne · 20</button><button data-n="40">Examen blanc · 40</button></div><div class="quiz card" id="sd-quiz"></div></div>
 </section>
 
 <section class="page" data-page="outils" hidden>
@@ -1073,10 +1115,12 @@ ${HEAD("Équipe SODAF", "Espace secrétariat", "Réservé au personnel de l'auto
 <a class="card teamtile" id="sd-tConduite" target="_blank" rel="noopener" href="#"><b>Conduite</b><span>Créneaux libres, réserver une séance, prévenir l'élève sur WhatsApp, rappels de la veille.</span><em>Ouvrir le planning →</em></a>
 <a class="card teamtile" id="sd-tCode" target="_blank" rel="noopener" href="#"><b>Cours de code</b><span>Séances du lundi, mercredi, vendredi et examen blanc du samedi : thème du jour, présents.</span><em>Ouvrir les cours →</em></a>
 <a class="card teamtile" id="sd-tInsc" target="_blank" rel="noopener" href="#"><b>Inscriptions</b><span>Pré-inscriptions reçues par le site, suivi de chaque élève et de ses séances.</span><em>Ouvrir les inscriptions →</em></a>
+<a class="card teamtile" id="sd-tDev" target="_blank" rel="noopener" href="#"><b>Devoirs</b><span>Résultats des devoirs de la semaine et message prêt à coller dans le groupe WhatsApp.</span><em>Ouvrir les devoirs →</em></a>
 </div>
 <div class="grid g2" style="margin-top:18px">
 <div class="card soft"><p class="eyebrow">Réserver une séance de conduite</p><ol class="teamsteps"><li>Ouvre <b>Conduite</b>, onglet <b>Créneaux libres</b>, et choisis l'heure avec l'élève.</li><li>Touche le créneau, choisis l'<b>élève</b> et mets le statut sur <b>Réservé</b>.</li><li>Touche <b>Confirmer sur WhatsApp</b> : le message est prêt, appuie sur Envoyer.</li><li>La veille, onglet <b>Demain (rappels)</b> : touche <b>Rappel de la veille</b> pour chaque élève.</li></ol></div>
 <div class="card soft"><p class="eyebrow">Après chaque cours de code</p><ol class="teamsteps"><li>Ouvre <b>Cours de code</b>, touche la séance du jour.</li><li>Choisis le <b>thème</b> (le chapitre traité) et ajoute les <b>présents</b>.</li><li>Mets le statut sur <b>Fait</b>. L'onglet <b>À cocher</b> montre les séances oubliées.</li></ol><p style="margin-top:12px;font-size:.92rem;color:var(--muted)">Les créneaux du mois suivant se créent tout seuls le 24 de chaque mois.</p></div>
+<div class="card soft"><p class="eyebrow">Mercredi : résultats du devoir</p><ol class="teamsteps"><li>Ouvre <b>Devoirs</b>, onglet <b>Cette semaine</b>, et touche la semaine.</li><li>Copie le <b>Message WhatsApp</b> (participants, notes, moyenne).</li><li>Colle-le dans le groupe de l'auto-école. En salle, le moniteur corrige avec <b>Mode classe → Devoir</b>.</li></ol></div>
 </div>
 <button class="linkbtn" type="button" id="sd-teamOut" style="margin-top:18px">Se déconnecter de cet appareil</button>
 </div>
@@ -1087,7 +1131,7 @@ ${HEAD("Équipe SODAF", "Espace secrétariat", "Réservé au personnel de l'auto
 <div class="cls" id="sd-cls">
 <div class="cls-top">
 <div class="cls-brand">${LOGO("#14171C", "word")}<span>Mode classe</span></div>
-<div class="cls-tabs" role="tablist" id="sd-clsTabs"><button role="tab" data-m="lecon" aria-selected="true">Leçon</button><button role="tab" data-m="quiz" aria-selected="false">Quiz</button><button role="tab" data-m="panneaux" aria-selected="false">Panneaux</button><button role="tab" data-m="situations" aria-selected="false">Situations</button></div>
+<div class="cls-tabs" role="tablist" id="sd-clsTabs"><button role="tab" data-m="lecon" aria-selected="true">Leçon</button><button role="tab" data-m="quiz" aria-selected="false">Quiz</button><button role="tab" data-m="devoir" aria-selected="false">Devoir</button><button role="tab" data-m="panneaux" aria-selected="false">Panneaux</button><button role="tab" data-m="situations" aria-selected="false">Situations</button></div>
 <label class="sr-only" for="sd-clsSel">Choix</label><select id="sd-clsSel"></select>
 <span class="cls-count" id="sd-clsCount"></span>
 <button class="btn btn-line btn-sm" type="button" id="sd-clsFs">Plein écran</button>
@@ -1192,6 +1236,130 @@ const Q = [
 ["Accident sans panneau : qui est en tort ?",["A","B","Les deux","Personne"],1,"A venait de la droite de B : B devait lui céder le passage.","cours-priorites","accident"],
 ];
 
+/* ---------- Devoirs de la semaine : 10 devoirs, un par semaine, cycle de 10 semaines ---------- */
+// Lundi où commence le Devoir A. Ensuite B, C… puis retour à A toutes les 10 semaines.
+const DEV_START = "2026-10-05";
+const DEV = [
+{ l: "A", t: "Signalisation et marquages", q: [
+["Le code de la route, c'est :",["Un examen à passer une fois","L'ensemble des lois et règles qui régissent la circulation","La liste des panneaux","Le permis de conduire"],1,"Il facilite la circulation et évite les accidents.","cours-signalisation"],
+["Combien existe-t-il de types de signalisation routière ?",["2","3","4","5"],2,"Horizontale, verticale, lumineuse et gestuelle.","cours-signalisation"],
+["Les feux tricolores sont une signalisation :",["Horizontale","Verticale","Lumineuse","Gestuelle"],2,"Horizontale = marquages au sol, verticale = panneaux, lumineuse = feux, gestuelle = agents.","cours-signalisation"],
+["Une ligne continue au sol est :",["Franchissable pour dépasser","Infranchissable","Franchissable la nuit","Réservée aux bus"],1,"Dépassement et changement de voie y sont interdits.","cours-marquages"],
+["Une ligne mixte (continue + discontinue) est franchissable :",["Toujours","Jamais","Si la discontinue est de ton côté","Si la continue est de ton côté"],2,"Seule la discontinue placée de ton côté te permet de franchir.","cours-marquages"],
+["Où l'arrêt et le stationnement sont-ils permis, sauf interdiction ?",["Sur le trottoir","Sur l'accotement","Sur le passage piéton","Sur une piste cyclable"],1,"L'accotement est la partie non aménagée au bord de la route : arrêt et stationnement permis sauf interdiction.","cours-marquages"],
+["Sur une ligne jaune discontinue :",["Arrêt et stationnement interdits","Arrêt permis, stationnement interdit","Stationnement permis","Réservé aux taxis"],1,"Jaune discontinue : arrêt bref permis. Jaune continue : les deux interdits.","cours-marquages"],
+["La ligne d'avertissement (traits rapprochés) t'annonce :",["Un passage piéton","Une ligne continue : ne commence pas de dépassement","Un arrêt de bus","L'entrée d'une ville"],1,"Une ligne continue arrive bientôt.","cours-marquages"],
+["Avec les flèches de sélection, une fois la ligne devenue continue :",["Tu peux encore changer de voie","Tu restes dans ta voie jusqu'au carrefour","Tu dois t'arrêter","Tu klaxonnes avant de changer"],1,"On choisit sa voie tant que la ligne est discontinue.","cours-marquages"],
+["Sur une voie de décélération, quand commences-tu à ralentir ?",["Avant d'y entrer","Une fois sur la voie","On ne ralentit pas","Au panneau de sortie"],1,"On ne ralentit qu'une fois engagé sur la voie, pour ne pas gêner ceux qui suivent.","cours-marquages"]] },
+{ l: "B", t: "Les panneaux", q: [
+["Ce panneau t'oblige à :",["Ralentir seulement","T'arrêter à la ligne, puis céder le passage à tous","Passer en priorité","Klaxonner avant de passer"],1,"Stop : arrêt obligatoire, même si la route paraît libre.","cours-priorites","p:Stop"],
+["Devant ce panneau, tu :",["Ralentis et laisses passer les véhicules prioritaires","T'arrêtes toujours, même sans personne","Es prioritaire","Ne peux pas tourner"],0,"Cédez le passage : arrêt seulement si quelqu'un arrive.","cours-priorites","p:Cédez le passage"],
+["Ce panneau signifie :",["Danger","Tu es prioritaire à toutes les intersections suivantes","Fin de priorité","Parking"],1,"Losange jaune : route à caractère prioritaire.","cours-priorites","p:Route à caractère prioritaire"],
+["Ce panneau t'indique :",["Sens unique","Interdit d'entrer, quel que soit le véhicule","Parking interdit","Fin de route"],1,"Sens interdit.","cours-panneaux","p:Sens interdit"],
+["Un panneau rond à fond bleu est un panneau :",["D'interdiction","D'obligation","De danger","D'indication"],1,"Cercle bleu : obligation.","cours-panneaux"],
+["Ce panneau annonce :",["Une école ou une aire de jeux : vitesse très réduite","Un passage piéton avec feu","Un arrêt de bus","Un hôpital"],0,"Endroit fréquenté par des enfants.","cours-panneaux","p:Endroit fréquenté par des enfants"],
+["Hors agglomération, un panneau de danger est placé à environ :",["50 m du danger","150 m du danger","500 m du danger","Sur le danger"],1,"150 m hors agglomération, 50 m en ville.","cours-panneaux"],
+["Ce panneau signifie :",["Fin de toutes les interdictions signalées avant","Route barrée","Interdit à tous","Virage dangereux"],0,"Cercle blanc barré de noir : fin d'interdiction.","cours-panneaux","p:Fin de toutes les interdictions"],
+["Avec ce panneau :",["Ni arrêt ni stationnement","Arrêt bref permis, stationnement interdit","Stationnement payant","Réservé aux taxis"],1,"Stationnement interdit : l'arrêt bref reste permis.","cours-panneaux","p:Stationnement interdit"],
+["Le véhicule qui fait face à un panneau sens interdit :",["Fait demi-tour","Tourne obligatoirement à sa droite","Tourne à gauche","Recule"],1,"Puis on applique la priorité normale.","cours-panneaux"]] },
+{ l: "C", t: "Intersections et priorités", q: [
+["Dans quel ordre analyser une intersection ?",["Droite, gauche, arrière","Arrière, gauche, droite","Gauche, droite, arrière","Arrière, droite, gauche"],1,"Rétroviseur d'abord, puis la gauche, puis la droite.","cours-intersections"],
+["D'où vient le premier danger immédiat dans une intersection ?",["De la droite","De la gauche","De l'arrière","D'en face"],1,"Les véhicules venant de gauche sont les premiers à croiser ta route.","cours-intersections"],
+["Appel lumineux ou klaxon à l'approche d'une intersection :",["Toujours, en ville","Seulement hors agglomération et de jour","La nuit, en ville","Jamais"],1,"Hors agglomération et de jour seulement.","cours-intersections"],
+["À une intersection sans aucune signalisation :",["Priorité à gauche","Priorité à droite","Le plus gros véhicule passe","Le premier arrivé passe"],1,"On cède le passage à ceux qui viennent de droite.","cours-priorites"],
+["En sortant d'un parking ou d'un chemin privé, tu dois :",["Appliquer la priorité à droite","Céder le passage à tous","Passer en premier","Klaxonner"],1,"On cède le passage à tous.","cours-priorites"],
+["Tu sors d'un chemin non goudronné mais ouvert au public :",["Tu cèdes à tous","Les règles normales de priorité s'appliquent","Tu es prioritaire","Tu klaxonnes et tu passes"],1,"Ouvert au public, même non goudronné : règles normales.","cours-priorites"],
+["Au rond-point, la priorité est :",["À droite","Aux usagers déjà engagés, qui arrivent par la gauche","À celui qui klaxonne","Au plus gros véhicule"],1,"On cède le passage aux usagers déjà engagés.","cours-priorites"],
+["Le panneau de priorité ponctuelle est valable :",["Sur 5 km","À la prochaine intersection seulement","Jusqu'à la fin de la ville","Toute la journée"],1,"Ponctuelle = une seule intersection.","cours-priorites"],
+["Le losange jaune (route prioritaire) est répété environ tous les :",["500 m","1 km","5 km","50 km"],2,"Environ tous les 5 km.","cours-priorites"],
+["Feu vert, mais le carrefour est embouteillé. Tu :",["Passes, tu es prioritaire","Attends de pouvoir traverser sans bloquer","Klaxonnes","Passes par le trottoir"],1,"Interdit de s'engager si on risque de rester bloqué.","cours-priorites"]] },
+{ l: "D", t: "Qui passe en premier ?", q: [
+["Aucun panneau. Qui passe en premier ?",["A","B","Ils passent ensemble","Le plus rapide"],1,"Priorité à droite : B arrive par la droite de A.","cours-priorites","droite"],
+["Aucun panneau. Dans quel ordre passent les véhicules ?",["A, B, C","B, A, C","C, A, B","C, B, A"],2,"Personne n'est à la droite de C. A cède à C, B cède à A.","cours-priorites","trois"],
+["A a un stop. Qui passe en premier ?",["B","A, car B vient de sa gauche","Le premier arrivé","A, s'il klaxonne"],0,"Au stop, on laisse passer tout le monde, même à gauche.","cours-priorites","stop"],
+["A veut tourner à droite. Qui passe en premier ?",["A","Ils passent ensemble","Le zémidjan B","Celui qui klaxonne"],2,"Cédez le passage : on laisse passer la route principale, motos comprises.","cours-priorites","cedez"],
+["A roule sur la route prioritaire. Qui passe en premier ?",["B, il vient de la droite","Ils s'arrêtent tous","Le premier arrivé","A"],3,"Le losange jaune donne la priorité à A ; B a un Cédez le passage.","cours-priorites","prioritaire"],
+["A veut tourner à gauche, B arrive en face. Qui passe ?",["B","A","Le plus rapide","Celui qui fait un appel de phares"],0,"Pour tourner à gauche, on laisse passer ceux qui arrivent en face.","cours-priorites","gauche"],
+["Au rond-point, qui passe en premier ?",["A, il vient de la droite","Le plus gros véhicule","B, déjà engagé","Personne, on klaxonne"],2,"On cède le passage aux usagers déjà engagés.","cours-priorites","giratoire"],
+["Accident sans panneau : qui est en tort ?",["A","B","Les deux","Personne"],1,"A venait de la droite de B : B devait lui céder le passage.","cours-priorites","accident"],
+["Un véhicule de la CEET avec gyrophare est-il prioritaire ?",["Oui, toujours","Non, on le laisse passer par courtoisie","Oui, la nuit","Seulement en ville"],1,"CEET, TdE et ambulances privées ne sont pas prioritaires.","cours-prioritaires"],
+["Un véhicule de police est prioritaire quand :",["Il est en service","Sirène ou gyrophare activé, en mission urgente","Il roule vite","Toujours"],1,"Seulement en mission urgente, signal activé.","cours-prioritaires"]] },
+{ l: "E", t: "Feux, passages à niveau et agents", q: [
+["Le feu jaune fixe signifie :",["Accélérer","Arrêt, sauf si tu es trop près pour t'arrêter en sécurité","Passage libre","Feu en panne"],1,"Le jaune impose l'arrêt sauf impossibilité.","cours-feux"],
+["Le feu rouge signifie :",["Arrêt absolu avant la ligne","Passer si personne ne vient","Ralentir","Arrêt après la ligne"],0,"Arrêt absolu, avant la ligne.","cours-feux"],
+["Les feux sont éteints (coupure de courant). Tu appliques :",["Le feu vert","Les panneaux du support, sinon la priorité à droite","La priorité à gauche","La loi du plus fort"],1,"Feux défaillants : panneaux du support, sinon priorité à droite.","cours-feux"],
+["Un feu jaune clignotant signifie :",["Passage interdit","Feu en panne : panneaux du support, sinon priorité à droite","Accélère","Tu es prioritaire"],1,"Jaune clignotant = feu en panne.","cours-feux"],
+["La flèche de dégagement allumée te permet :",["De rien du tout","D'avancer dans sa direction malgré le rouge, en cédant le passage","De faire demi-tour","De passer sans regarder"],1,"Tu avances dans la direction de la flèche en cédant le passage.","cours-feux"],
+["Un passage à niveau est annoncé hors agglomération à :",["50 m","100 m","150 m","300 m"],2,"150 m hors agglomération, 50 m en ville.","cours-feux"],
+["Passage à niveau sans barrière :",["Tu passes vite","Arrêt et vérification qu'aucun train n'arrive","Tu klaxonnes sans t'arrêter","Tu suis le véhicule devant toi"],1,"On s'arrête, on regarde et on écoute.","cours-feux"],
+["L'agent est de profil par rapport à toi. Tu :",["T'arrêtes","Passes","Ralentis","Fais demi-tour"],1,"De profil, parallèle à ses bras : passage autorisé.","cours-agents"],
+["L'agent est de face ou de dos par rapport à toi. Tu :",["T'arrêtes immédiatement","Passes","Ralentis seulement","Tournes à droite"],0,"De face ou de dos : arrêt.","cours-agents"],
+["Feu vert, mais l'agent te fait signe de t'arrêter. Qui suis-tu ?",["Le feu","L'agent","Le premier arrivé","Personne"],1,"Les ordres de l'agent passent avant toute signalisation.","cours-agents"]] },
+{ l: "F", t: "Le poste de conduite", q: [
+["Une voiture à boîte manuelle a combien de pédales ?",["2","3","4","1"],1,"Embrayage, frein, accélérateur. Boîte automatique : deux pédales.","cours-conduite"],
+["L'embrayage s'actionne avec :",["Le pied droit","Le pied gauche","La main","Les deux pieds"],1,"Pied gauche. Frein et accélérateur : pied droit.","cours-conduite"],
+["Ordre de réglage avant de démarrer :",["Rétroviseurs, ceinture, siège","Siège, rétroviseurs, ceinture","Ceinture, siège, rétroviseurs","Peu importe"],1,"Siège, rétroviseurs, ceinture, puis levier au point mort.","cours-conduite"],
+["Le protocole V.I.F. pour démarrer signifie :",["Vitesse, Indicateur, Frein à main","Volant, Inclinaison, Feux","Vérifier, Indiquer, Foncer","Vitesse, Inertie, Freinage"],0,"Première engagée, clignotant gauche, frein à main desserré.","cours-conduite"],
+["La position des mains recommandée sur le volant :",["12 h","9 h 15","8 h 20","Une seule main"],1,"9 h 15 offre le meilleur contrôle.","cours-conduite"],
+["Dès quelle vitesse tes bras ne peuvent plus retenir ton corps lors d'un choc ?",["5 km/h","15 km/h","50 km/h","90 km/h"],1,"Dès 15 km/h, d'où la ceinture.","cours-conduite"],
+["La ceinture est obligatoire :",["À l'avant seulement","À l'avant et à l'arrière","Hors de la ville seulement","Pour le conducteur seulement"],1,"Avant et arrière, et siège auto pour les jeunes enfants.","cours-conduite"],
+["Un clignotant qui clignote trop vite signale :",["Une batterie pleine","Une ampoule grillée","Un frein usé","Rien de spécial"],1,"Il faut changer l'ampoule.","cours-conduite"],
+["Avant de changer de voie, pour vérifier l'angle mort, tu :",["Klaxonnes","Tournes la tête","Freines","Allumes les feux"],1,"Le rétroviseur ne montre pas tout : un coup d'œil par-dessus l'épaule.","cours-conduite"],
+["Les passagers montent de préférence :",["Côté chaussée","Côté trottoir","Par le coffre","Peu importe"],1,"Côté trottoir, à l'abri de la circulation.","cours-conduite"]] },
+{ l: "G", t: "Vitesse, distances et stationnement", q: [
+["À 50 km/h, combien de mètres parcours-tu en 1 seconde ?",["5 m","10 m","15 m","25 m"],2,"Chiffre des dizaines × 3 : 5 × 3 = 15 m.","cours-distances"],
+["À 90 km/h, la distance d'arrêt sur route sèche est d'environ :",["27 m","54 m","81 m","90 m"],2,"Dizaines × dizaines : 9 × 9 = 81 m.","cours-distances"],
+["À 50 km/h, la distance d'arrêt sur route sèche est d'environ :",["25 m","50 m","15 m","100 m"],0,"5 × 5 = 25 m.","cours-distances"],
+["Si ta vitesse double, ta distance de freinage est multipliée par :",["2","3","4","8"],2,"Elle suit le carré de la vitesse.","cours-distances"],
+["Sur route mouillée, la distance de freinage est :",["Identique","Doublée","Divisée par deux","Triplée"],1,"Elle double. Attention en saison des pluies.","cours-distances"],
+["La distance de sécurité minimale avec le véhicule devant :",["1 seconde","2 secondes","5 secondes","10 mètres"],1,"« Un crocodile, deux crocodiles ».","cours-distances"],
+["Quelle est la différence entre l'arrêt et le stationnement ?",["Aucune","L'arrêt est bref, conducteur au volant ou tout près","Le stationnement dure moins de 5 minutes","L'arrêt se fait moteur coupé, conducteur loin"],1,"Stationnement : prolongé, moteur coupé, conducteur éloigné.","cours-stationnement"],
+["Où le stationnement est-il interdit ?",["Sur l'accotement hors ville","Sur un pont","Le long du trottoir en ville","Dans un parking"],1,"Interdit aussi dans les virages, intersections, sommets de côte, passages piétons…","cours-stationnement"],
+["Un véhicule laissé au même endroit devient en stationnement abusif après :",["24 heures","7 jours","1 mois","Jamais"],1,"Plus de 7 jours : risque de fourrière.","cours-stationnement"],
+["Se garer « en bataille », c'est :",["Parallèle au trottoir","À 90°, de préférence en marche arrière","En diagonale","Sur le trottoir"],1,"Créneau = parallèle, épi = diagonale.","cours-stationnement"]] },
+{ l: "H", t: "Secourisme routier", q: [
+["Que signifie P.A.S. ?",["Prévenir, Attendre, Soigner","Protéger, Alerter, Secourir","Partir, Appeler, Sauver","Protéger, Aider, Signaler"],1,"Protéger, Alerter, Secourir, dans cet ordre.","cours-secourisme"],
+["Protéger, c'est notamment :",["Déplacer tout de suite les blessés","Te garer en sécurité, triangle et feux de détresse, couper les contacts","Prendre des photos","Donner à boire aux blessés"],1,"Et interdire de fumer près des véhicules.","cours-secourisme"],
+["Quand tu alertes les secours, tu donnes :",["Seulement ton nom","La nature de l'accident, le nombre de blessés, les véhicules, le lieu exact","Le prix des dégâts","Rien, ils savent déjà"],1,"Plus le message est précis, plus les secours sont efficaces.","cours-secourisme"],
+["Le numéro des sapeurs-pompiers au Togo :",["161","117","118","172"],2,"Sapeurs-pompiers : 118.","cours-secourisme"],
+["Le numéro de la Gendarmerie nationale :",["117","172","118","161"],1,"Gendarmerie : 172.","cours-secourisme"],
+["Un blessé inconscient qui respire se place :",["Assis","Debout","En position latérale de sécurité","Sur le ventre"],2,"La PLS garde les voies respiratoires libres.","cours-secourisme"],
+["Un blessé saigne beaucoup d'une plaie. Tu :",["Attends les secours sans rien faire","Comprimes la plaie","Le fais marcher","Lui donnes à boire"],1,"On comprime les plaies qui saignent.","cours-secourisme"],
+["Les secours sont déjà sur place. Tu :",["T'arrêtes pour regarder","Continues pour ne pas encombrer","Klaxonnes","Filmes la scène"],1,"On ne s'arrête pas si les secours sont là.","cours-secourisme"],
+["Le délit de fuite, c'est :",["Rouler trop vite","Ne pas s'arrêter après un accident pour échapper à sa responsabilité","Refuser un contrôle à pied","Dépasser par la droite"],1,"Il est sévèrement puni.","cours-secourisme"],
+["Un témoin d'accident doit :",["Décrire les faits fidèlement, sans les analyser","Dire qui a tort","Partir vite","Négocier entre les conducteurs"],0,"Le témoin raconte ce qu'il a vu, c'est tout.","cours-secourisme"]] },
+{ l: "I", t: "Assurance et conduire chez nous", q: [
+["L'assurance automobile est obligatoire :",["Pour les voitures neuves","Pour tout véhicule à moteur qui circule","Hors de Lomé seulement","Pour les taxis seulement"],1,"Tout véhicule à moteur qui circule.","cours-assurance"],
+["L'assurance minimale obligatoire est :",["Tous risques","Tiers collision","Responsabilité civile","Aucune"],2,"Elle couvre les dommages causés aux autres.","cours-assurance"],
+["L'assurance tous risques couvre :",["Seulement les dommages aux autres","Tous les dommages de ton véhicule, responsable ou non","Seulement le vol","Tes amendes"],1,"C'est la formule la plus complète.","cours-assurance"],
+["L'assureur paie-t-il tes amendes ?",["Oui","Non, jamais","Avec tous risques","La moitié"],1,"Jamais.","cours-assurance"],
+["L'assureur peut annuler la garantie si :",["Tu roules la nuit","Tu conduisais après avoir bu de l'alcool","Ta voiture est ancienne","Tu changes de quartier"],1,"Aussi : lunettes obligatoires non portées, prime impayée, fausse déclaration.","cours-assurance"],
+["Avant de tourner, à cause des zémidjans, tu :",["Klaxonnes fort et tu tournes","Regardes le rétroviseur puis par-dessus l'épaule","Accélères","Freines brusquement"],1,"Les motos-taxis changent de file sans prévenir.","cours-togo"],
+["Pendant l'harmattan (décembre à février) :",["Feux de route et vitesse normale","Feux de croisement, vitesse réduite, plus de distance","Rien ne change","Feux de détresse en roulant"],1,"La poussière réduit la visibilité.","cours-togo"],
+["Une flaque dont tu ne vois pas le fond :",["Tu la traverses vite","Tu ne la traverses pas","Tu klaxonnes avant","Tu suis un zémidjan"],1,"Elle peut cacher un trou profond.","cours-togo"],
+["Des chèvres sont au bord de la route :",["Tu klaxonnes et accélères","Tu ralentis","Tu fais des appels de phares","Rien, elles ne bougent pas"],1,"Les animaux traversent sans prévenir.","cours-togo"],
+["Tu approches d'un marché animé :",["Tu gardes ta vitesse","Tu ralentis : piétons, vendeurs et enfants débordent sur la chaussée","Tu klaxonnes sans arrêt","Tu passes par l'accotement"],1,"On ralentit à l'approche.","cours-togo"]] },
+{ l: "J", t: "Mécanique et tableau de bord", q: [
+["Les trois grands ensembles d'une voiture :",["Carrosserie, châssis, moteur","Pneus, volant, sièges","Phares, freins, radio","Moteur, batterie, carburant"],0,"Le châssis est le squelette de la voiture.","cours-mecanique"],
+["Le seul temps moteur du cycle à 4 temps :",["Admission","Compression","Explosion / détente","Échappement"],2,"L'explosion produit l'énergie.","cours-mecanique"],
+["Le circuit de refroidissement garde le moteur vers :",["40 °C","90 °C","150 °C","200 °C"],1,"Grâce à la pompe à eau et au radiateur.","cours-mecanique"],
+["La batterie d'une voiture fournit :",["6 V","12 V","220 V","25 000 V"],1,"12 V. La bobine monte à 15 000–25 000 V pour les bougies.","cours-mecanique"],
+["La vidange se fait tous les :",["1 000 km","5 000 km","20 000 km","50 000 km"],1,"Vidange et filtre tous les 5 000 km.","cours-mecanique"],
+["L'huile SAE 90 sert pour :",["Les moteurs essence","Les boîtes de vitesses manuelles et les ponts arrière","La direction assistée","Les moteurs diesel lourds"],1,"SAE 30/40 : moteurs essence. SAE 50 : diesel lourds.","cours-mecanique"],
+["Le voyant d'alerte freinage s'allume. Tu :",["Continues doucement","T'arrêtes immédiatement en sécurité et fais remorquer","Ajoutes de l'huile moteur","L'ignores"],1,"Liquide de frein critique : arrêt immédiat.","cours-tableau"],
+["Le voyant carburant s'allume :",["Réserve atteinte : station la plus proche","Arrêt immédiat et remorquage","Il faut ajouter de l'huile","Rien de grave, tu continues des jours"],0,"Tu roules sur la réserve.","cours-tableau"],
+["Lequel fait partie du lot de bord ?",["Le triangle","Le permis","La carte grise","La radio"],0,"Lot de bord : cric, clé démonte-roue, roue de secours, tournevis, extincteur, trousse de secours, triangle.","cours-tableau"],
+["Lequel est un document de bord ?",["La carte grise","L'extincteur","Le cric","La roue de secours"],0,"Documents : carte grise, attestation d'assurance, permis, pièce d'identité.","cours-tableau"]] },
+];
+// Semaine en cours (heure de Lomé = UTC) : lundi au format AAAA-MM-JJ et devoir correspondant.
+function devWeek(d) {
+  d = d || new Date();
+  const day = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+  day.setUTCDate(day.getUTCDate() - ((day.getUTCDay() + 6) % 7));
+  const n = Math.floor((day - new Date(DEV_START + "T00:00:00Z")) / 6048e5);
+  return { key: day.toISOString().slice(0, 10), idx: Math.max(0, n) % DEV.length, monday: day };
+}
+
 const CK = ["Aucune fuite sous le véhicule","Carrosserie, feux et vitres propres","Pression des 4 pneus","Liquide de refroidissement","Huile moteur (entre MIN et MAX)","Liquide de frein et d'embrayage","Eau de la batterie (si non scellée)","Liquide de direction assistée","Lot de bord complet","Documents de bord valides","Carburant suffisant","Feux, frein et klaxon fonctionnent"];
 
 function hideOtherBlocks(root) {
@@ -1209,8 +1377,10 @@ function hideOtherBlocks(root) {
   return () => hidden.forEach(([n, d]) => (n.style.display = d));
 }
 
+function signSVG(name) { const g = SIGNS.find((x) => x.n === name); return g ? g.s : ""; }
+function qVisual(q) { if (!q[5]) return ""; return q[5].startsWith("p:") ? '<div class="qsign">' + signSVG(q[5].slice(2)) + "</div>" : '<div class="qscene">' + SCENE(q[5]) + "</div>"; }
 function optsHTML(q) {
-  return (q[5] ? '<div class="qscene">' + SCENE(q[5]) + "</div>" : "") + '<p class="qtext">' + q[0] + '</p><div class="opts">' + q[1].map((o, k) => '<button class="opt" data-k="' + k + '"><span class="k">' + "ABCD"[k] + "</span><span>" + o + "</span></button>").join("") + "</div>";
+  return qVisual(q) + '<p class="qtext">' + q[0] + '</p><div class="opts">' + q[1].map((o, k) => '<button class="opt" data-k="' + k + '"><span class="k">' + "ABCD"[k] + "</span><span>" + o + "</span></button>").join("") + "</div>";
 }
 
 
@@ -1418,6 +1588,85 @@ function init(root) {
   $$("#sd-modes button").forEach((b) => b.addEventListener("click", () => { $$("#sd-modes button").forEach((x) => x.classList.toggle("on", x === b)); startQuiz(+b.dataset.n); }));
   startQuiz(10);
 
+  // ---------- Devoirs de la semaine ----------
+  const devEl = $("#sd-dev");
+  const escH = (t) => String(t).replace(/[<>&"]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" }[c]));
+  const MOIS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
+  const frDay = (d) => d.getUTCDate() + (d.getUTCDate() === 1 ? "er" : "") + " " + MOIS[d.getUTCMonth()];
+  const cap = (t) => t.trim().replace(/\s+/g, " ").toLowerCase().replace(/(^|[\s'-])(\p{L})/gu, (m, a, b) => a + b.toUpperCase());
+  let dv = null;
+  function devList() {
+    const w = devWeek(), cur = DEV[w.idx], sent = S.get("devSent", {}), best = S.get("devBest", {});
+    const mine = sent[w.key + cur.l];
+    devEl.innerHTML =
+      '<div class="devnow"><div class="dl">' + cur.l + '</div><div><p class="eyebrow">Semaine du ' + frDay(w.monday) + '</p><h3>Devoir ' + cur.l + " · " + escH(cur.t) + "</h3><p>" +
+      (mine != null ? '<span class="done">✓ Envoyé au moniteur : ' + mine + "/" + cur.q.length + "</span>" : "10 questions · à faire avant mercredi 14 h 30") + '</p></div><div class="devacts">' +
+      '<button class="btn btn-yellow" data-dev="' + w.idx + '">' + (mine != null ? "Refaire pour m'entraîner" : "Commencer le devoir") + '</button><a class="btn btn-line btn-sm" href="#' + cur.q[0][4] + '">Réviser le cours</a></div></div>' +
+      '<p class="devlist-h">Tous les devoirs · un cycle de 10 semaines</p><div class="devgrid">' +
+      DEV.map((d, k) => '<button class="devtile' + (k === w.idx ? " now" : "") + '" data-dev="' + k + '"><b>' + d.l + "</b><span>" + escH(d.t) + "</span>" +
+        (best[d.l] != null ? '<em class="ok">Ta meilleure note : ' + best[d.l] + "/" + d.q.length + "</em>" : "<em>" + (k === w.idx ? "Devoir de la semaine" : "Pas encore fait") + "</em>") + "</button>").join("") + "</div>";
+    devEl.querySelectorAll("[data-dev]").forEach((b) => b.addEventListener("click", () => devName(+b.dataset.dev)));
+  }
+  function devName(k) {
+    const d = DEV[k], who = S.get("devWho", { p: "", n: "" });
+    devEl.innerHTML = '<form class="card devform" novalidate><p class="eyebrow">Devoir ' + d.l + '</p><h3 style="font:700 1.4rem var(--f-display);margin:4px 0 6px">' + escH(d.t) + '</h3><p style="color:var(--muted);margin-bottom:18px">Écris ton prénom et ton nom comme sur ta fiche d\'inscription : c\'est ce nom que le moniteur verra.</p>' +
+      '<div class="row2"><div class="field"><label for="sd-dvP">Prénom</label><input id="sd-dvP" autocomplete="given-name" value="' + escH(who.p) + '"></div><div class="field"><label for="sd-dvN">Nom</label><input id="sd-dvN" autocomplete="family-name" value="' + escH(who.n) + '"></div></div>' +
+      '<p id="sd-dvErr" style="color:var(--red);font-weight:600;margin:4px 0 10px" hidden>Indique ton prénom et ton nom.</p>' +
+      '<div class="qactions"><button class="btn btn-line" type="button" id="sd-dvBack">← Retour</button><button class="btn btn-green" type="submit">Commencer · 10 questions</button></div></form>';
+    devEl.querySelector("#sd-dvBack").addEventListener("click", devList);
+    devEl.querySelector("form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const p = cap($("#sd-dvP").value), n = cap($("#sd-dvN").value);
+      if (p.length < 2 || n.length < 2) { $("#sd-dvErr").hidden = false; return; }
+      S.set("devWho", { p, n });
+      dv = { k, d, who: p + " " + n, i: 0, picks: [], order: d.q.map((q) => shuffle(q[1].map((_, j) => j))) };
+      devQ();
+      devEl.scrollIntoView({ block: "start" });
+    });
+    $("#sd-dvP").focus();
+  }
+  function devQ() {
+    const q = dv.d.q[dv.i], n = dv.d.q.length, ord = dv.order[dv.i], pick = dv.picks[dv.i];
+    devEl.innerHTML = '<div class="quiz card"><div class="qbar"><span>Devoir ' + dv.d.l + " · question " + (dv.i + 1) + " / " + n + "</span><span>" + escH(dv.who) + '</span></div><div class="progress"><i style="width:' + (dv.i / n) * 100 + '%"></i></div>' +
+      qVisual(q) + '<p class="qtext">' + q[0] + '</p><div class="opts">' + ord.map((j, k) => '<button class="opt' + (pick === j ? " pick" : "") + '" data-j="' + j + '"><span class="k">' + "ABCD"[k] + "</span><span>" + q[1][j] + "</span></button>").join("") + "</div>" +
+      '<div class="qactions"><button class="btn btn-line" type="button" id="sd-dvPrev"' + (dv.i ? "" : " hidden") + '>← Précédente</button><button class="btn btn-green" type="button" id="sd-dvNext"' + (pick == null ? " disabled" : "") + ">" + (dv.i === n - 1 ? "Terminer et envoyer" : "Question suivante →") + "</button></div></div>";
+    devEl.querySelectorAll(".opt").forEach((b) => b.addEventListener("click", () => {
+      dv.picks[dv.i] = +b.dataset.j;
+      devEl.querySelectorAll(".opt").forEach((x) => x.classList.toggle("pick", x === b));
+      $("#sd-dvNext").disabled = false;
+    }));
+    $("#sd-dvPrev").addEventListener("click", () => { dv.i--; devQ(); });
+    $("#sd-dvNext").addEventListener("click", () => { if (dv.i < n - 1) { dv.i++; devQ(); } else devResult(); });
+  }
+  function devResult() {
+    const d = dv.d, n = d.q.length, w = devWeek(), score = d.q.reduce((s, q, i) => s + (dv.picks[i] === q[2] ? 1 : 0), 0);
+    const best = S.get("devBest", {}); if (best[d.l] == null || score > best[d.l]) best[d.l] = score; S.set("devBest", best);
+    const sent = S.get("devSent", {}), sk = w.key + d.l, already = sent[sk] != null && S.get("devSentWho", {})[sk] === dv.who;
+    const msg = score >= 9 ? "Excellent, niveau examen !" : score >= 7 ? "Bon travail. Relis les questions ratées." : "Relis le cours, puis refais le devoir pour t'entraîner.";
+    const share = "SODAF Auto-École · Devoir " + d.l + " (" + d.t + ") : " + score + "/" + n + " · " + dv.who;
+    devEl.innerHTML = '<div class="quiz card devres"><p class="eyebrow" style="justify-content:center">Devoir ' + d.l + " · " + escH(d.t) + '</p><div class="big result" style="font:800 5rem/1 var(--f-display);color:var(--green);margin-top:10px">' + score + "/" + n + '</div><p class="who">' + escH(dv.who) + '</p><p style="margin-top:6px">' + msg + '</p><div id="sd-dvSent"></div>' +
+      '<div class="corr">' + d.q.map((q, i) => { const ok = dv.picks[i] === q[2]; return '<div class="' + (ok ? "ok" : "ko") + '"><p><b>' + (i + 1) + ". " + q[0] + "</b></p><small>" + (ok ? "✓ " + q[1][q[2]] : "Ta réponse : " + q[1][dv.picks[i]] + " · Bonne réponse : <b>" + q[1][q[2]] + "</b>") + " — " + q[3] + "</small></div>"; }).join("") + "</div>" +
+      '<div class="qactions" style="justify-content:center"><a class="btn btn-wa btn-sm" target="_blank" rel="noopener" href="https://wa.me/?text=' + encodeURIComponent(share) + '">Partager sur WhatsApp</a><button class="btn btn-line btn-sm" type="button" id="sd-dvList">Retour aux devoirs</button></div></div>';
+    $("#sd-dvList").addEventListener("click", () => { devList(); devEl.scrollIntoView({ block: "start" }); });
+    devEl.scrollIntoView({ block: "start" });
+    const box = $("#sd-dvSent");
+    if (already) { box.innerHTML = '<span class="devsent">Entraînement : ton résultat de cette semaine est déjà chez le moniteur.</span>'; return; }
+    const send = async () => {
+      box.innerHTML = '<span class="devsent">Envoi au moniteur…</span>';
+      const ok = await sendToAirtable({ eleve: dv.who, devoir: d.l, note: String(score), sur: String(n), semaine: w.key }, DEVOIR_HOOK);
+      if (ok) {
+        const s2 = S.get("devSent", {}); s2[sk] = score; S.set("devSent", s2);
+        const sw = S.get("devSentWho", {}); sw[sk] = dv.who; S.set("devSentWho", sw);
+        box.innerHTML = '<span class="devsent ok">✓ Résultat envoyé au moniteur</span>';
+      } else {
+        box.innerHTML = '<span class="devsent ko">Pas de connexion : résultat non envoyé.</span> <button class="linkbtn" type="button" id="sd-dvRetry">Réessayer</button>';
+        $("#sd-dvRetry").addEventListener("click", send);
+      }
+    };
+    send();
+  }
+  devList();
+
   const sp = $("#sd-speed"), MAX = 340;
   function calc() {
     const v = +sp.value, d = v / 10, re = d * 3, dry = d * d, frDry = Math.max(dry - re, 0), frWet = frDry * 2, wet = re + frWet;
@@ -1482,7 +1731,7 @@ function init(root) {
   // espace équipe
   (function () {
     const lock = $("#sd-teamLock"), panel = $("#sd-teamPanel");
-    $("#sd-tConduite").href = TEAM_LINKS.conduite; $("#sd-tCode").href = TEAM_LINKS.code; $("#sd-tInsc").href = TEAM_LINKS.inscriptions;
+    $("#sd-tConduite").href = TEAM_LINKS.conduite; $("#sd-tCode").href = TEAM_LINKS.code; $("#sd-tInsc").href = TEAM_LINKS.inscriptions; $("#sd-tDev").href = TEAM_LINKS.devoirs;
     const show = (ok) => { lock.hidden = ok; panel.hidden = !ok; };
     show(S.get("team", "") === TEAM_HASH);
     const sha = async (t) => { const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(t)); return [...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, "0")).join(""); };
@@ -1539,7 +1788,8 @@ function init(root) {
         const ids = [...new Set(Q.map((q) => q[4]))];
         sel.innerHTML = '<option value="all:10">10 questions au hasard</option><option value="all:20">20 questions au hasard</option><option value="all:99">Toutes les questions (' + Q.length + ")</option>" +
           ids.map((id) => '<option value="' + id + '">Chapitre : ' + esc(chTitle(id)) + "</option>").join("");
-      } else if (mode === "situations") sel.innerHTML = '<option value="all">Toutes les situations (' + SITS.length + ")</option>" + SITS.map((x) => '<option value="' + x.id + '">' + esc(x.t) + "</option>").join("");
+      } else if (mode === "devoir") { const cw = devWeek().idx; sel.innerHTML = DEV.map((d, k) => '<option value="' + k + '"' + (k === cw ? " selected" : "") + ">Devoir " + d.l + " · " + esc(d.t) + (k === cw ? " (cette semaine)" : "") + "</option>").join(""); }
+      else if (mode === "situations") sel.innerHTML = '<option value="all">Toutes les situations (' + SITS.length + ")</option>" + SITS.map((x) => '<option value="' + x.id + '">' + esc(x.t) + "</option>").join("");
       else sel.innerHTML = SIGN_FAMILIES.map(([k, l]) => '<option value="' + k + '">' + esc(l) + "</option>").join("");
     }
     function load() {
@@ -1549,7 +1799,8 @@ function init(root) {
         if (v.startsWith("all:")) items = shuffle(Q).slice(0, +v.split(":")[1]);
         else items = shuffle(Q.filter((q) => q[4] === v));
         items = items.map((q) => ({ q, shown: false })).concat([{ end: true }]);
-      } else if (mode === "situations") items = (v === "all" ? SITS : SITS.filter((x) => x.id === v)).map((x) => ({ x, shown: false }));
+      } else if (mode === "devoir") items = DEV[+v].q.map((q) => ({ q, shown: false })).concat([{ end: true }]);
+      else if (mode === "situations") items = (v === "all" ? SITS : SITS.filter((x) => x.id === v)).map((x) => ({ x, shown: false }));
       else items = shuffle(SIGNS.filter((g) => v === "tous" || g.f === v)).map((g) => ({ g, shown: false }));
       render();
     }
@@ -1563,14 +1814,15 @@ function init(root) {
       const it = items[i], n = items.length;
       revB.hidden = true;
       if (mode === "lecon") stage.innerHTML = '<div class="cls-slide">' + it + "</div>";
-      else if (mode === "quiz") {
-        if (it.end) stage.innerHTML = '<div class="cls-title"><p class="cls-kicker">Fin de la série</p><h1 class="cls-h1">Bravo à tous !</h1><p style="margin-top:16px;font-size:1.2rem;color:var(--muted)">Reprenez ensemble les questions qui ont posé problème, puis révisez sur autosodaf.com.</p><div class="cls-bar"></div></div>';
+      else if (mode === "quiz" || mode === "devoir") {
+        if (it.end && mode === "devoir") stage.innerHTML = '<div class="cls-title"><p class="cls-kicker">Fin de la correction</p><h1 class="cls-h1">Devoir ' + DEV[+sel.value].l + ' corrigé !</h1><p style="margin-top:16px;font-size:1.2rem;color:var(--muted)">Ceux qui ne l\'ont pas encore fait : autosodaf.com → Quiz → Devoirs.</p><div class="cls-bar"></div></div>';
+        else if (it.end) stage.innerHTML = '<div class="cls-title"><p class="cls-kicker">Fin de la série</p><h1 class="cls-h1">Bravo à tous !</h1><p style="margin-top:16px;font-size:1.2rem;color:var(--muted)">Reprenez ensemble les questions qui ont posé problème, puis révisez sur autosodaf.com.</p><div class="cls-bar"></div></div>';
         else {
           const q = it.q;
-          const body = '<p class="cls-kicker">Question ' + (i + 1) + " / " + (n - 1) + " · " + esc(chTitle(q[4])) + '</p><h2 class="cls-qt">' + esc(q[0]) + '</h2><div class="cls-opts">' +
+          const body = '<p class="cls-kicker">' + (mode === "devoir" ? "Devoir " + DEV[+sel.value].l + " · " : "") + "Question " + (i + 1) + " / " + (n - 1) + " · " + esc(chTitle(q[4])) + '</p><h2 class="cls-qt">' + esc(q[0]) + '</h2><div class="cls-opts">' +
             q[1].map((o, k) => '<div class="cls-opt' + (it.shown ? (k === q[2] ? " good" : " dim") : "") + '"><b>' + "ABCD"[k] + "</b><span>" + esc(o) + "</span></div>").join("") + "</div>" +
             (it.shown ? '<div class="cls-exp"><b>Réponse ' + "ABCD"[q[2]] + ".</b> " + esc(q[3]) + "</div>" : "");
-          stage.innerHTML = q[5] ? '<div class="cls-sitwrap">' + SCENE(q[5]) + "<div>" + body + "</div></div>" : body;
+          stage.innerHTML = q[5] ? '<div class="cls-sitwrap">' + (q[5].startsWith("p:") ? '<div class="cls-signq">' + signSVG(q[5].slice(2)) + "</div>" : SCENE(q[5])) + "<div>" + body + "</div></div>" : body;
           revB.hidden = it.shown;
         }
       } else if (mode === "situations") {
@@ -1593,6 +1845,7 @@ function init(root) {
           if (nx) { nextB.textContent = "Fin du chapitre · Chapitre suivant →"; endAction = () => { sel.selectedIndex = k + 1; load(); }; }
           else { nextB.textContent = "Fin du dernier chapitre · Revenir au 1er ↺"; endAction = () => { sel.selectedIndex = 0; load(); }; }
         } else if (mode === "quiz") { nextB.textContent = "Fin de la série · Nouvelle série ↺"; endAction = load; }
+        else if (mode === "devoir") { const k = sel.selectedIndex, nx = (k + 1) % DEV.length; nextB.textContent = "Fin du devoir · Devoir " + DEV[nx].l + " →"; endAction = () => { sel.selectedIndex = nx; load(); }; }
         else if (mode === "panneaux") { nextB.textContent = "Fin des panneaux · Mélanger et recommencer ↺"; endAction = load; }
         else { nextB.textContent = "Fin des situations · Recommencer ↺"; endAction = load; }
         cnt.textContent = "Fin · " + cnt.textContent;
