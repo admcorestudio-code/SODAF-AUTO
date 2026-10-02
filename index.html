@@ -240,6 +240,24 @@ a.teamtile span{color:var(--muted)}
 a.teamtile em{font-style:normal;font-weight:700;color:var(--green);margin-top:8px}
 .teamsteps{margin:10px 0 0;padding-left:1.2em;display:grid;gap:8px;color:var(--muted)}
 .teamsteps b{color:var(--ink)}
+.sits{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:12px}
+@media (max-width:700px){.sits{grid-template-columns:1fr}}
+.sit{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff}
+.scene{display:block;width:100%;height:auto;border-radius:8px}
+#sodaf-root .sit h5{font:700 1.05rem var(--f-display);margin:12px 0 4px}
+.sit p{margin:0}
+.sit details{margin-top:8px}
+.sit summary{cursor:pointer;font-weight:700;color:var(--green)}
+.sit details p{margin-top:6px;color:var(--muted)}
+.sit details b{color:var(--ink)}
+.fig{margin:16px 0 0}
+.fig svg{display:block;width:100%;max-width:400px;height:auto;border-radius:8px}
+.fig figcaption{font-size:.92rem;color:var(--muted);margin-top:8px;max-width:60ch}
+.pas svg{width:42px;height:42px;display:block;margin-bottom:8px}
+.qscene{max-width:340px;margin:0 0 14px}
+.cls-sitwrap{display:grid;grid-template-columns:420px minmax(0,1fr);gap:30px;align-items:center}
+.cls-sitwrap .scene{width:420px}
+.cls-sitwrap .cls-qt{font-size:1.7rem}
 /* mode classe */
 .cls{position:fixed;inset:0;z-index:9000;background:#fff;display:flex;flex-direction:column;color:var(--ink)}
 .cls-top{display:flex;align-items:center;gap:12px 18px;flex-wrap:wrap;padding:10px 20px;border-bottom:1px solid var(--line)}
@@ -516,6 +534,94 @@ footer.site .logo small{color:rgba(255,255,255,.5)}
 const SIGN_TRI = (inner) => `<svg viewBox="0 0 64 64"><polygon points="32,6 60,56 4,56" fill="#fff" stroke="#C8372D" stroke-width="6" stroke-linejoin="round"/>${inner}</svg>`;
 const LINE = (inner) => `<svg width="110" height="14"><rect width="110" height="14" fill="#2A2F36"/>${inner}</svg>`;
 const ZEBRA = '<span class="zebra" aria-hidden="true"></span>';
+/* ---------- Situations : schémas d'intersection vus du dessus (dessins originaux SODAF) ---------- */
+const SC = { road: "#4A5058", grass: "#E4EBDA", col: { A: "#2B63B5", B: "#C8372D", C: "#0B6E4F", D: "#7A4FA0" } };
+const SC_ROT = { s: 0, w: 90, n: 180, e: 270 };
+let SC_N = 0;
+const scPt = (x, y, deg) => { const r = (deg * Math.PI) / 180, dx = x - 200, dy = y - 200; return [200 + dx * Math.cos(r) - dy * Math.sin(r), 200 + dx * Math.sin(r) + dy * Math.cos(r)]; };
+const scBase = (kind) => {
+  const dash = 'stroke="#fff" stroke-width="3" stroke-dasharray="14 12"';
+  let g = '<rect width="400" height="400" fill="' + SC.grass + '"/>';
+  if (kind === "round") {
+    g += ["s", "w", "n", "e"].map((d) => '<g transform="rotate(' + SC_ROT[d] + ' 200 200)"><rect x="160" y="250" width="80" height="150" fill="' + SC.road + '"/><line x1="200" y1="300" x2="200" y2="400" ' + dash + "/></g>").join("");
+    return g + '<circle cx="200" cy="200" r="94" fill="' + SC.road + '"/><circle cx="200" cy="200" r="44" fill="#B9CFA0" stroke="#fff" stroke-width="3"/>';
+  }
+  const arms = kind === "T" ? ["s", "w", "e"] : ["s", "w", "n", "e"];
+  g += arms.map((d) => '<g transform="rotate(' + SC_ROT[d] + ' 200 200)"><rect x="160" y="200" width="80" height="200" fill="' + SC.road + '"/><line x1="200" y1="256" x2="200" y2="400" ' + dash + "/></g>").join("");
+  return g + '<rect x="160" y="160" width="80" height="80" fill="' + SC.road + '"/>';
+};
+const scMark = (t, at) => {
+  const r = 'transform="rotate(' + SC_ROT[at] + ' 200 200)"';
+  if (t === "stop") return "<g " + r + '><rect x="200" y="243" width="40" height="6" fill="#fff"/></g>';
+  if (t === "cedez") return "<g " + r + '><line x1="201" y1="246" x2="239" y2="246" stroke="#fff" stroke-width="4" stroke-dasharray="7 5"/></g>';
+  return "";
+};
+const scSign = (t, at, kind) => {
+  const [x, y] = scPt(262, kind === "round" ? 302 : 268, SC_ROT[at]), tr = 'transform="translate(' + x.toFixed(1) + " " + y.toFixed(1) + ')"';
+  if (t === "stop") return "<g " + tr + '><polygon points="-7,-17 7,-17 17,-7 17,7 7,17 -7,17 -17,7 -17,-7" fill="#C8372D" stroke="#fff" stroke-width="2"/><text y="3.5" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="9.5" fill="#fff">STOP</text></g>';
+  if (t === "cedez") return "<g " + tr + '><polygon points="-17,-13 17,-13 0,16" fill="#fff" stroke="#C8372D" stroke-width="4.5" stroke-linejoin="round"/></g>';
+  if (t === "prio") return "<g " + tr + '><rect x="-12" y="-12" width="24" height="24" transform="rotate(45)" fill="#fff" stroke="#8A9099"/><rect x="-7.5" y="-7.5" width="15" height="15" transform="rotate(45)" fill="#F2B100"/></g>';
+  return "";
+};
+const scCar = (c) => '<rect x="-14" y="-24" width="28" height="48" rx="8" fill="' + c + '"/><rect x="-10" y="-15" width="20" height="10" rx="3" fill="#D6E6F5"/><rect x="-10" y="11" width="20" height="7" rx="2" fill="#D6E6F5" opacity=".85"/>';
+const scMoto = () => '<g transform="scale(1.3)"><rect x="-4" y="-21" width="8" height="42" rx="4" fill="#2A2F36"/><circle cy="2" r="9" fill="#F2B100"/><circle cy="-4" r="5.5" fill="#14171C"/></g>';
+const scPath = (go, y0) => go === "right" ? "M220 " + y0 + " L220 254 Q220 220 254 220 L374 220" : go === "left" ? "M220 " + y0 + " L220 224 Q220 180 176 180 L26 180" : "M220 " + y0 + " L220 26";
+const scLabel = (l, x, y, c) => '<g transform="translate(' + x.toFixed(1) + " " + y.toFixed(1) + ')"><circle r="13" fill="#fff" stroke="' + c + '" stroke-width="3"/><text y="5" text-anchor="middle" font-family="Outfit,Arial,sans-serif" font-weight="800" font-size="15" fill="' + c + '">' + l + "</text></g>";
+function SCENE(id) {
+  const s = SITS.find((x) => x.id === id); if (!s) return "";
+  const u = "sc" + ++SC_N, withC = (v) => ({ ...v, c: v.moto ? "#14171C" : SC.col[v.l] });
+  const cars = (s.cars || []).map(withC), raw = (s.raw || []).map(withC), all = cars.concat(raw);
+  let defs = "<defs>" + all.map((v) => '<marker id="' + u + v.l + '" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="3.6" markerHeight="3.6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="' + v.c + '"/></marker>').join("") + "</defs>";
+  let g = scBase(s.kind) + (s.marks || []).map((m) => scMark(m.t, m.at)).join("");
+  let paths = "", bodies = "", labels = "";
+  cars.forEach((v) => {
+    const deg = SC_ROT[v.from], d = v.d || 300;
+    if (v.go !== "none") paths += '<path d="' + scPath(v.go, d - 30) + '" transform="rotate(' + deg + ' 200 200)" fill="none" stroke="' + v.c + '" stroke-width="4.5" stroke-dasharray="11 7" stroke-linecap="round" marker-end="url(#' + u + v.l + ')" opacity=".9"/>';
+    bodies += '<g transform="rotate(' + deg + ' 200 200) translate(220 ' + d + ')">' + (v.moto ? scMoto() : scCar(v.c)) + "</g>";
+    const [lx, ly] = scPt(v.moto ? 248 : 252, d + 4, deg); labels += scLabel(v.l, lx, ly, v.moto ? "#B07F00" : v.c);
+  });
+  raw.forEach((v) => {
+    if (v.path) paths += '<path d="' + v.path + '" fill="none" stroke="' + v.c + '" stroke-width="4.5" stroke-dasharray="11 7" stroke-linecap="round" marker-end="url(#' + u + v.l + ')" opacity=".9"/>';
+    bodies += '<g transform="translate(' + v.x + " " + v.y + ") rotate(" + v.rot + ')">' + (v.moto ? scMoto() : scCar(v.c)) + "</g>";
+    labels += scLabel(v.l, v.lx, v.ly, v.moto ? "#B07F00" : v.c);
+  });
+  const signs = (s.signs || []).map((m) => scSign(m.t, m.at, s.kind)).join("");
+  const crash = s.crash ? '<g transform="translate(' + s.crash[0] + " " + s.crash[1] + ')"><polygon points="0,-22 6,-8 21,-12 11,0 22,11 6,9 0,23 -6,9 -21,12 -11,0 -22,-11 -6,-8" fill="#F2B100" stroke="#C8372D" stroke-width="3" stroke-linejoin="round"/></g>' : "";
+  return '<svg class="scene" viewBox="0 0 400 400" role="img" aria-label="' + s.t + '">' + defs + g + paths + bodies + crash + signs + labels + "</svg>";
+}
+const SITS = [
+  { id: "droite", t: "Priorité à droite", kind: "cross", cars: [{ l: "A", from: "s", go: "straight" }, { l: "B", from: "e", go: "straight" }],
+    q: "Aucun panneau. Qui passe en premier ?", a: "B passe en premier, puis A.", e: "Sans panneau, c'est la priorité à droite. B arrive par la droite de A : A le laisse passer.", ch: "cours-priorites" },
+  { id: "trois", t: "Trois véhicules, aucun panneau", kind: "cross", cars: [{ l: "A", from: "s", go: "straight" }, { l: "B", from: "w", go: "straight" }, { l: "C", from: "e", go: "straight" }],
+    q: "Aucun panneau. Dans quel ordre passent les véhicules ?", a: "C, puis A, puis B.", e: "Personne n'est à la droite de C : il passe. A cède à C, qui vient de sa droite. B cède à A, qui vient de sa droite.", ch: "cours-priorites" },
+  { id: "stop", t: "Le stop", kind: "cross", marks: [{ t: "stop", at: "s" }], signs: [{ t: "stop", at: "s" }], cars: [{ l: "A", from: "s", go: "straight" }, { l: "B", from: "w", go: "straight" }],
+    q: "A a un stop. Qui passe en premier ?", a: "B passe, puis A.", e: "Au stop : arrêt complet à la ligne, puis on laisse passer tout le monde, même ceux qui viennent de gauche comme B.", ch: "cours-priorites" },
+  { id: "cedez", t: "Cédez le passage et zémidjan", kind: "T", marks: [{ t: "cedez", at: "s" }], signs: [{ t: "cedez", at: "s" }], cars: [{ l: "A", from: "s", go: "right" }, { l: "B", from: "w", go: "straight", moto: true }],
+    q: "A veut tourner à droite. Qui passe en premier ?", a: "Le zémidjan B, puis A.", e: "Cédez le passage : on ralentit, on s'arrête si besoin et on laisse passer les usagers de la route principale, motos comprises. Un zémidjan arrive souvent plus vite qu'on ne le pense.", ch: "cours-priorites" },
+  { id: "prioritaire", t: "Route prioritaire", kind: "cross", marks: [{ t: "cedez", at: "e" }], signs: [{ t: "prio", at: "s" }, { t: "cedez", at: "e" }], cars: [{ l: "A", from: "s", go: "straight" }, { l: "B", from: "e", go: "straight" }],
+    q: "A roule sur une route prioritaire (losange jaune). Qui passe en premier ?", a: "A passe, puis B.", e: "Le losange jaune donne la priorité à A, même si B vient de sa droite. B a un Cédez le passage : il attend.", ch: "cours-priorites" },
+  { id: "gauche", t: "Tourner à gauche", kind: "cross", cars: [{ l: "A", from: "s", go: "left" }, { l: "B", from: "n", go: "straight" }],
+    q: "A veut tourner à gauche, B arrive en face. Qui passe en premier ?", a: "B passe, puis A tourne.", e: "Pour tourner à gauche, on laisse passer les véhicules qui arrivent en face. A attend au centre du carrefour, roues droites, puis tourne.", ch: "cours-priorites" },
+  { id: "giratoire", t: "Le rond-point", kind: "round", marks: [{ t: "cedez", at: "s" }], signs: [{ t: "cedez", at: "s" }],
+    cars: [{ l: "A", from: "s", go: "none", d: 318 }],
+    raw: [{ l: "B", x: 134, y: 218, rot: 165, path: "M141 246 A68 68 0 1 0 224 136 L222 8", lx: 102, ly: 196 }],
+    q: "A arrive au rond-point, B y est déjà. Qui passe en premier ?", a: "B, déjà engagé, puis A.", e: "Au rond-point, on cède le passage aux usagers déjà engagés, qui arrivent par la gauche. A attend que B soit passé.", ch: "cours-priorites" },
+  { id: "accident", t: "Qui est en tort ?", kind: "cross",
+    raw: [{ l: "A", x: 220, y: 250, rot: 0, lx: 252, ly: 276 }, { l: "B", x: 186, y: 220, rot: 90, lx: 160, ly: 252 }], crash: [212, 226],
+    q: "Accident à un carrefour sans panneau. Qui est en tort ?", a: "B est en tort.", e: "A venait de la droite de B. Sans panneau, c'est la priorité à droite : B devait le laisser passer.", ch: "cours-priorites" }
+];
+const SIT_CARDS = (ids) => ids.map((id) => { const s = SITS.find((x) => x.id === id); return '<div class="sit">' + SCENE(id) + "<h5>" + s.t + "</h5><p>" + s.q + "</p><details><summary>Voir la réponse</summary><p><b>" + s.a + "</b> " + s.e + "</p></details></div>"; }).join("");
+const MARK_ARROWS = '<svg viewBox="0 0 360 230" role="img" aria-label="Flèches de sélection sur une route à trois voies"><rect width="360" height="230" fill="#E4EBDA"/><rect x="60" y="0" width="240" height="230" fill="#4A5058"/><rect x="60" y="0" width="240" height="6" fill="#fff"/><line x1="140" y1="6" x2="140" y2="110" stroke="#fff" stroke-width="4"/><line x1="220" y1="6" x2="220" y2="110" stroke="#fff" stroke-width="4"/><line x1="140" y1="118" x2="140" y2="230" stroke="#fff" stroke-width="4" stroke-dasharray="16 12"/><line x1="220" y1="118" x2="220" y2="230" stroke="#fff" stroke-width="4" stroke-dasharray="16 12"/><line x1="62" y1="0" x2="62" y2="230" stroke="#fff" stroke-width="3"/><line x1="298" y1="0" x2="298" y2="230" stroke="#fff" stroke-width="3"/>' +
+  '<path d="M106 150 V84 Q106 60 82 60" fill="none" stroke="#fff" stroke-width="12"/><path d="M84 46 L64 60 L84 74 Z" fill="#fff"/>' +
+  '<path d="M174 150 V70 H160 L180 44 L200 70 H186 V150 Z" fill="#fff"/>' +
+  '<path d="M254 150 V84 Q254 60 278 60" fill="none" stroke="#fff" stroke-width="12"/><path d="M276 46 L296 60 L276 74 Z" fill="#fff"/>' +
+  '</svg>';
+const PAS_ICO = {
+  p: '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 6 L44 40 H4 Z" fill="none" stroke="#C8372D" stroke-width="5" stroke-linejoin="round"/><path d="M24 19 V29" stroke="#C8372D" stroke-width="4" stroke-linecap="round"/><circle cx="24" cy="34.5" r="2.4" fill="#C8372D"/></svg>',
+  a: '<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="14" y="4" width="20" height="40" rx="4" fill="none" stroke="#2B63B5" stroke-width="4"/><path d="M21 37 H27" stroke="#2B63B5" stroke-width="3.5" stroke-linecap="round"/><path d="M38 12 Q43 18 38 24 M42 9 Q49 18 42 27" fill="none" stroke="#2B63B5" stroke-width="3" stroke-linecap="round"/></svg>',
+  s: '<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="8" y="8" width="32" height="32" rx="7" fill="#0B6E4F"/><path d="M24 15 V33 M15 24 H33" stroke="#fff" stroke-width="6" stroke-linecap="round"/></svg>'
+};
+
 const HEAD = (eyebrow, title, lead) => `<div class="page-head pat-dots"><span class="mono-wm" aria-hidden="true">${LOGO("#FFFFFF", "mono")}</span><div class="wrap" style="position:relative"><p class="eyebrow">${eyebrow}</p><h1>${title}</h1><p class="lead">${lead}</p></div></div>`;
 
 const HTML = `
@@ -538,7 +644,7 @@ const HTML = `
 <h1>La route<br>s'apprend <em>ici.</em></h1>
 <p class="lead">SODAF forme les conducteurs du Togo : code de la route, secourisme, mécanique et conduite. Tout ce que tu apprends en salle, tu le retrouves ici, sur ton téléphone.</p>
 <div class="ctas"><a class="btn btn-green" href="#inscription">Je m'inscris</a><a class="btn btn-line" href="#cours">Réviser le code</a></div>
-<div class="facts"><div><b>16</b><span>chapitres en ligne</span></div><div><b>41</b><span>questions corrigées</span></div><div><b>7</b><span>parties du manuel</span></div></div>
+<div class="facts"><div><b>16</b><span>chapitres en ligne</span></div><div><b id="sd-qcount">49</b><span>questions corrigées</span></div><div><b>7</b><span>parties du manuel</span></div></div>
 </div></div>
 <div class="rule" id="sd-rule"><span class="dot">!</span><div><small id="sd-ruleTag">${SLIDES[0].tag}</small><p id="sd-ruleText">${SLIDES[0].rule}</p></div></div>
 <div class="dots" id="sd-dots">${SLIDES.map((s, i) => `<button aria-label="Image ${i + 1}" data-i="${i}"${i ? "" : ' class="on"'}></button>`).join("")}</div>
@@ -684,6 +790,7 @@ ${HEAD("Manuel officiel SODAF", "Les cours", "Tout ce qui est enseigné en salle
 <li><b>Flèches de sélection</b> : une fois engagé dans la voie, on n'en sort plus. <b>Flèches de rabattement</b> : une ligne continue arrive.</li>
 <li><b>Croisement difficile</b> : les véhicules légers reculent pour laisser passer les poids lourds.</li>
 </ul>
+<figure class="fig">${MARK_ARROWS}<figcaption><b>Flèches de sélection.</b> Choisis ta voie tant que la ligne est discontinue. Quand elle devient continue, tu restes dans ta voie jusqu'au carrefour.</figcaption></figure>
 </article>
 
 <article class="ch" id="cours-intersections" data-part="B · Intersections" data-title="Les intersections">
@@ -712,11 +819,16 @@ ${HEAD("Manuel officiel SODAF", "Les cours", "Tout ce qui est enseigné en salle
 <div class="note"><b>Cas particulier :</b> en sortant d'un parking ou d'un chemin privé, tu cèdes le passage à tous. Si le chemin est ouvert au public, même non goudronné, les règles normales s'appliquent.</div>
 <h4>Priorité à gauche</h4>
 <p>Au rond-point : on cède le passage aux usagers déjà engagés, qui arrivent par la gauche.</p>
+<h4>Tourner à gauche</h4>
+<p>Avant de tourner à gauche, on laisse passer les véhicules qui arrivent en face. On attend au centre du carrefour, roues droites, puis on tourne.</p>
 <h4>Les panneaux de priorité</h4>
 <ul><li><b>Ponctuelle</b> : valable à la prochaine intersection seulement.</li><li><b>Route prioritaire</b> (losange jaune) : priorité à toutes les intersections, répété environ tous les 5 km.</li><li><b>Fin de priorité</b> (losange barré) : retour aux règles classiques.</li></ul>
 <h4>Cas complexes</h4>
 <p><b>Intersection encombrée</b> : interdit de s'engager si tu risques d'y rester bloqué, même au vert. Sur un quadrillage jaune, l'arrêt est interdit.</p>
 <p><b>Panonceau schéma</b> : le trait épais montre la route prioritaire, les traits fins les routes avec Stop ou Cédez le passage.</p>
+<h4>Entraîne-toi : qui passe en premier ?</h4>
+<p>Regarde chaque carrefour vu du dessus, réfléchis, puis ouvre la réponse.</p>
+<div class="sits">${SIT_CARDS(["droite", "trois", "stop", "cedez", "prioritaire", "gauche", "giratoire", "accident"])}</div>
 </article>
 
 <article class="ch" id="cours-feux" data-part="C · Priorités" data-title="Feux et passages à niveau">
@@ -791,7 +903,7 @@ ${HEAD("Manuel officiel SODAF", "Les cours", "Tout ce qui est enseigné en salle
 </dl>
 <h4>L'action P.A.S.</h4>
 <p>Si les secours sont déjà là, ne t'arrête pas. Si l'accident vient d'arriver devant toi :</p>
-<div class="mnemo"><div><b>Protéger</b>Gare-toi en sécurité. Coupe le contact des véhicules, interdis de fumer. Triangle et feux de détresse.</div><div><b>Alerter</b>Appelle : nature de l'accident, nombre de blessés, véhicules, lieu exact, incendie éventuel.</div><div><b>Secourir</b>Position latérale de sécurité (PLS). Comprime les plaies qui saignent.</div></div>
+<div class="mnemo pas"><div>${PAS_ICO.p}<b>Protéger</b>Gare-toi en sécurité. Coupe le contact des véhicules, interdis de fumer. Triangle et feux de détresse.</div><div>${PAS_ICO.a}<b>Alerter</b>Appelle : nature de l'accident, nombre de blessés, véhicules, lieu exact, incendie éventuel.</div><div>${PAS_ICO.s}<b>Secourir</b>Position latérale de sécurité (PLS). Comprime les plaies qui saignent.</div></div>
 <p><a href="#outils-urgence">Numéros d'urgence du Togo →</a></p>
 </article>
 
@@ -971,7 +1083,7 @@ ${HEAD("Équipe SODAF", "Espace secrétariat", "Réservé au personnel de l'auto
 <div class="cls" id="sd-cls">
 <div class="cls-top">
 <div class="cls-brand">${LOGO("#14171C", "word")}<span>Mode classe</span></div>
-<div class="cls-tabs" role="tablist" id="sd-clsTabs"><button role="tab" data-m="lecon" aria-selected="true">Leçon</button><button role="tab" data-m="quiz" aria-selected="false">Quiz</button><button role="tab" data-m="panneaux" aria-selected="false">Panneaux</button></div>
+<div class="cls-tabs" role="tablist" id="sd-clsTabs"><button role="tab" data-m="lecon" aria-selected="true">Leçon</button><button role="tab" data-m="quiz" aria-selected="false">Quiz</button><button role="tab" data-m="panneaux" aria-selected="false">Panneaux</button><button role="tab" data-m="situations" aria-selected="false">Situations</button></div>
 <label class="sr-only" for="sd-clsSel">Choix</label><select id="sd-clsSel"></select>
 <span class="cls-count" id="sd-clsCount"></span>
 <button class="btn btn-line btn-sm" type="button" id="sd-clsFs">Plein écran</button>
@@ -1065,7 +1177,15 @@ const Q = [
 ["Un stationnement devient abusif après :",["24 heures partout","7 jours","1 mois","Jamais"],1,"Plus de 7 jours.","cours-stationnement"],
 ["Le seul temps moteur du cycle à 4 temps :",["Admission","Compression","Explosion / détente","Échappement"],2,"L'explosion produit l'énergie.","cours-mecanique"],
 ["La vidange se fait tous les :",["1 000 km","5 000 km","20 000 km","50 000 km"],1,"Tous les 5 000 km.","cours-mecanique"],
-["Le voyant d'alerte freinage s'allume. Tu :",["Continues doucement","T'arrêtes immédiatement en sécurité","Ajoutes de l'huile","L'ignores"],1,"Arrêt immédiat et remorquage.","cours-tableau"]
+["Le voyant d'alerte freinage s'allume. Tu :",["Continues doucement","T'arrêtes immédiatement en sécurité","Ajoutes de l'huile","L'ignores"],1,"Arrêt immédiat et remorquage.","cours-tableau"],
+["Aucun panneau. Qui passe en premier ?",["A","B","Ils passent ensemble","Le plus rapide"],1,"Priorité à droite : B arrive par la droite de A.","cours-priorites","droite"],
+["Aucun panneau. Dans quel ordre passent les véhicules ?",["A, B, C","B, A, C","C, A, B","C, B, A"],2,"Personne n'est à la droite de C. A cède à C, B cède à A.","cours-priorites","trois"],
+["A a un stop. Qui passe en premier ?",["B","A, car B vient de sa gauche","Le premier arrivé","A, s'il klaxonne"],0,"Au stop, on laisse passer tout le monde, même à gauche.","cours-priorites","stop"],
+["A veut tourner à droite. Qui passe en premier ?",["A","Ils passent ensemble","Le zémidjan B","Celui qui klaxonne"],2,"Cédez le passage : on laisse passer la route principale, motos comprises.","cours-priorites","cedez"],
+["A roule sur la route prioritaire. Qui passe en premier ?",["B, il vient de la droite","Ils s'arrêtent tous","Le premier arrivé","A"],3,"Le losange jaune donne la priorité à A ; B a un Cédez le passage.","cours-priorites","prioritaire"],
+["A veut tourner à gauche, B arrive en face. Qui passe ?",["B","A","Le plus rapide","Celui qui fait un appel de phares"],0,"Pour tourner à gauche, on laisse passer ceux qui arrivent en face.","cours-priorites","gauche"],
+["Au rond-point, qui passe en premier ?",["A, il vient de la droite","Le plus gros véhicule","B, déjà engagé","Personne, on klaxonne"],2,"On cède le passage aux usagers déjà engagés, qui arrivent par la gauche.","cours-priorites","giratoire"],
+["Accident sans panneau : qui est en tort ?",["A","B","Les deux","Personne"],1,"A venait de la droite de B : B devait lui céder le passage.","cours-priorites","accident"],
 ];
 
 const CK = ["Aucune fuite sous le véhicule","Carrosserie, feux et vitres propres","Pression des 4 pneus","Liquide de refroidissement","Huile moteur (entre MIN et MAX)","Liquide de frein et d'embrayage","Eau de la batterie (si non scellée)","Liquide de direction assistée","Lot de bord complet","Documents de bord valides","Carburant suffisant","Feux, frein et klaxon fonctionnent"];
@@ -1086,7 +1206,7 @@ function hideOtherBlocks(root) {
 }
 
 function optsHTML(q) {
-  return '<p class="qtext">' + q[0] + '</p><div class="opts">' + q[1].map((o, k) => '<button class="opt" data-k="' + k + '"><span class="k">' + "ABCD"[k] + "</span><span>" + o + "</span></button>").join("") + "</div>";
+  return (q[5] ? '<div class="qscene">' + SCENE(q[5]) + "</div>" : "") + '<p class="qtext">' + q[0] + '</p><div class="opts">' + q[1].map((o, k) => '<button class="opt" data-k="' + k + '"><span class="k">' + "ABCD"[k] + "</span><span>" + o + "</span></button>").join("") + "</div>";
 }
 
 
@@ -1373,6 +1493,7 @@ function init(root) {
     $("#sd-teamOut").addEventListener("click", () => { S.set("team", ""); show(false); });
   })();
 
+  { const qc = $("#sd-qcount"); if (qc) qc.textContent = Q.length; }
   // mode classe
   const cls = (function () {
     const stage = $("#sd-clsStage"), wrap = $("#sd-clsStageWrap"), sel = $("#sd-clsSel"), cnt = $("#sd-clsCount");
@@ -1397,7 +1518,8 @@ function init(root) {
           for (let k = 0; k < rows.length; k += 3) out.push((k === 0 ? head : "") + '<dl class="dl">' + rows.slice(k, k + 3).map((r) => r.outerHTML).join("") + "</dl>");
           return;
         }
-        if (el.matches(".tbl,.signs,.grid,.mnemo")) {
+        if (el.matches(".sits")) { flush(); [...c.children].forEach((card) => out.push('<div class="cls-sitwrap">' + card.querySelector("svg").outerHTML + "<div>" + [...card.children].filter((x) => x.tagName !== "svg").map((x) => x.outerHTML).join("") + "</div></div>")); return; }
+        if (el.matches(".tbl,.signs,.grid,.mnemo,.fig")) {
           if (!onlyHead() && w > 160) flush();
           cur.push(html); flush(); return;
         }
@@ -1413,7 +1535,8 @@ function init(root) {
         const ids = [...new Set(Q.map((q) => q[4]))];
         sel.innerHTML = '<option value="all:10">10 questions au hasard</option><option value="all:20">20 questions au hasard</option><option value="all:99">Toutes les questions (' + Q.length + ")</option>" +
           ids.map((id) => '<option value="' + id + '">Chapitre : ' + esc(chTitle(id)) + "</option>").join("");
-      } else sel.innerHTML = SIGN_FAMILIES.map(([k, l]) => '<option value="' + k + '">' + esc(l) + "</option>").join("");
+      } else if (mode === "situations") sel.innerHTML = '<option value="all">Toutes les situations (' + SITS.length + ")</option>" + SITS.map((x) => '<option value="' + x.id + '">' + esc(x.t) + "</option>").join("");
+      else sel.innerHTML = SIGN_FAMILIES.map(([k, l]) => '<option value="' + k + '">' + esc(l) + "</option>").join("");
     }
     function load() {
       const v = sel.value; i = 0; shown = false;
@@ -1422,13 +1545,14 @@ function init(root) {
         if (v.startsWith("all:")) items = shuffle(Q).slice(0, +v.split(":")[1]);
         else items = shuffle(Q.filter((q) => q[4] === v));
         items = items.map((q) => ({ q, shown: false })).concat([{ end: true }]);
-      } else items = shuffle(SIGNS.filter((g) => v === "tous" || g.f === v)).map((g) => ({ g, shown: false }));
+      } else if (mode === "situations") items = (v === "all" ? SITS : SITS.filter((x) => x.id === v)).map((x) => ({ x, shown: false }));
+      else items = shuffle(SIGNS.filter((g) => v === "tous" || g.f === v)).map((g) => ({ g, shown: false }));
       render();
     }
     function fit() {
       stage.style.zoom = 1;
       const W = wrap.clientWidth - 40, H = wrap.clientHeight - 48, h = stage.scrollHeight;
-      const z = Math.max(0.6, Math.min(W / 900, H / Math.max(h, 1), 2.3));
+      const z = Math.max(0.38, Math.min(W / 900, H / Math.max(h, 1), 2.3));
       stage.style.zoom = z;
     }
     function render() {
@@ -1439,11 +1563,17 @@ function init(root) {
         if (it.end) stage.innerHTML = '<div class="cls-title"><p class="cls-kicker">Fin de la série</p><h1 class="cls-h1">Bravo à tous !</h1><p style="margin-top:16px;font-size:1.2rem;color:var(--muted)">Reprenez ensemble les questions qui ont posé problème, puis révisez sur autosodaf.com.</p><div class="cls-bar"></div></div>';
         else {
           const q = it.q;
-          stage.innerHTML = '<p class="cls-kicker">Question ' + (i + 1) + " / " + (n - 1) + " · " + esc(chTitle(q[4])) + '</p><h2 class="cls-qt">' + esc(q[0]) + '</h2><div class="cls-opts">' +
+          const body = '<p class="cls-kicker">Question ' + (i + 1) + " / " + (n - 1) + " · " + esc(chTitle(q[4])) + '</p><h2 class="cls-qt">' + esc(q[0]) + '</h2><div class="cls-opts">' +
             q[1].map((o, k) => '<div class="cls-opt' + (it.shown ? (k === q[2] ? " good" : " dim") : "") + '"><b>' + "ABCD"[k] + "</b><span>" + esc(o) + "</span></div>").join("") + "</div>" +
             (it.shown ? '<div class="cls-exp"><b>Réponse ' + "ABCD"[q[2]] + ".</b> " + esc(q[3]) + "</div>" : "");
+          stage.innerHTML = q[5] ? '<div class="cls-sitwrap">' + SCENE(q[5]) + "<div>" + body + "</div></div>" : body;
           revB.hidden = it.shown;
         }
+      } else if (mode === "situations") {
+        const x = it.x;
+        stage.innerHTML = '<div class="cls-sitwrap">' + SCENE(x.id) + '<div><p class="cls-kicker">Situation ' + (i + 1) + " / " + n + " · " + esc(x.t) + '</p><h2 class="cls-qt">' + esc(x.q) + "</h2>" +
+          (it.shown ? '<div class="cls-exp"><b>' + esc(x.a) + "</b> " + esc(x.e) + "</div>" : '<p class="cls-ask">Réfléchissez, puis montrez la réponse.</p>') + "</div></div>";
+        revB.hidden = it.shown;
       } else {
         const g = it.g;
         stage.innerHTML = '<div class="cls-sign">' + g.s + (it.shown ? '<div class="cls-ans">' + esc(g.n) + '</div><div class="cls-desc">' + esc(g.d) + "</div>" : '<div class="cls-ask">Quel est ce panneau ?</div>') + "</div>";
