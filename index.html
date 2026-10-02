@@ -1580,7 +1580,19 @@ function init(root) {
         revB.hidden = it.shown;
       }
       cnt.textContent = n ? (i + 1) + " / " + n : "";
-      prevB.disabled = i === 0; nextB.disabled = i >= n - 1;
+      prevB.disabled = i === 0;
+      endAction = null; nextB.disabled = false; nextB.classList.remove("btn-yellow"); nextB.classList.add("btn-green"); nextB.textContent = "Suivant →";
+      if (i >= n - 1) {
+        nextB.classList.remove("btn-green"); nextB.classList.add("btn-yellow");
+        if (mode === "lecon") {
+          const k = sel.selectedIndex, nx = sel.options[k + 1];
+          if (nx) { nextB.textContent = "Fin du chapitre · Chapitre suivant →"; endAction = () => { sel.selectedIndex = k + 1; load(); }; }
+          else { nextB.textContent = "Fin du dernier chapitre · Revenir au 1er ↺"; endAction = () => { sel.selectedIndex = 0; load(); }; }
+        } else if (mode === "quiz") { nextB.textContent = "Fin de la série · Nouvelle série ↺"; endAction = load; }
+        else if (mode === "panneaux") { nextB.textContent = "Fin des panneaux · Mélanger et recommencer ↺"; endAction = load; }
+        else { nextB.textContent = "Fin des situations · Recommencer ↺"; endAction = load; }
+        cnt.textContent = "Fin · " + cnt.textContent;
+      }
       wrap.scrollTop = 0;
       requestAnimationFrame(fit);
     }
@@ -1589,7 +1601,8 @@ function init(root) {
     const prev = () => { if (i > 0) { i--; render(); } };
     $("#sd-clsTabs").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; mode = b.dataset.m; $$("#sd-clsTabs button").forEach((x) => x.setAttribute("aria-selected", x === b)); fillSelect(); load(); });
     sel.addEventListener("change", load);
-    nextB.addEventListener("click", next); prevB.addEventListener("click", prev); revB.addEventListener("click", reveal);
+    let endAction = null;
+    nextB.addEventListener("click", () => { if (i < items.length - 1) next(); else if (endAction) endAction(); }); prevB.addEventListener("click", prev); revB.addEventListener("click", reveal);
     const fsB = $("#sd-clsFs");
     const toggleFs = () => { const el = $("#sd-cls"); try { if (document.fullscreenElement) document.exitFullscreen(); else el.requestFullscreen(); } catch (e) {} };
     fsB.addEventListener("click", toggleFs);
