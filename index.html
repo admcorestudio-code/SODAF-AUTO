@@ -211,8 +211,20 @@ section.page{padding-bottom:88px}
 .acrow{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 0;border-top:1px solid var(--line)}
 .acrow:first-of-type{margin-top:8px}
 .acrow span{color:var(--muted)}
+.wk{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:11px 0;border-top:1px solid var(--line)}
+.wk:first-of-type{margin-top:10px}
+.wk b{font-family:var(--f-display);font-weight:700;white-space:nowrap}
+.wk span{color:var(--muted);text-align:right}
+.steps-ol{margin:12px 0 0;padding-left:1.2em;color:var(--muted);display:grid;gap:8px}
+.steps-ol b{color:var(--ink)}
+.classband{display:flex;flex-wrap:wrap;align-items:center;gap:10px 22px;margin-top:28px;padding:16px 20px;border-radius:12px;background:var(--soft);border-left:4px solid var(--yellow)}
+.classband p{margin:0}
+.classband .cb-t{font-family:var(--f-display);font-weight:700}
+.classband .cb-d{color:var(--muted);font-size:.95rem}
 .acrow strong{font:800 1.2rem var(--f-display);white-space:nowrap}
-@media (max-width:600px){.acrow{flex-direction:column;align-items:flex-start;gap:4px}}
+@media (max-width:600px){.acrow{flex-direction:column;align-items:flex-start;gap:4px}
+.wk{flex-direction:column;gap:2px}.wk span{text-align:left}
+.classband .btn{margin-left:0!important}}
 #sodaf-root .offer ul{margin:0;padding-left:1.1em;color:var(--muted)}
 .price{margin-top:auto;padding-top:14px;border-top:1px dashed var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 .price b{font-family:var(--f-mono);font-size:.84rem;color:var(--muted)}
@@ -534,6 +546,23 @@ ${HEAD("Formations", "Nos formations et tarifs", "Chaque formule comprend le cod
 <div class="card offer"><span class="tag">Sociétés, ONG</span><h3>Formation entreprise</h3><p>Pour former vos chauffeurs, selon vos horaires.</p><ul><li>Conduite préventive</li><li>Vérification du véhicule chaque matin</li><li>Secourisme routier et constat amiable</li></ul><div class="price"><b>Sur devis</b><a class="btn btn-line btn-sm" href="#inscription" data-cat="Formation entreprise">Demander un devis</a></div></div>
 </div>
 </div>
+<div class="wrap sec">
+<div class="sec-head"><div><p class="eyebrow">Ta semaine à SODAF</p><h2>Comment se passe la formation</h2></div><p>Tu révises sur le site quand tu veux. En salle, le moniteur explique, corrige et t'entraîne pour l'examen.</p></div>
+<div class="grid g3">
+<div class="card"><p class="eyebrow">Code en salle</p><h3 style="margin-top:10px">14 h 30 – 15 h 30</h3>
+<div class="wk"><b>Lundi</b><span>Cours complet du thème de la semaine</span></div>
+<div class="wk"><b>Mercredi</b><span>Récap et correction du devoir</span></div>
+<div class="wk"><b>Vendredi</b><span>Entraînement type examen</span></div>
+<div class="wk"><b>Samedi 10 h</b><span>Examen blanc</span></div></div>
+<div class="card"><p class="eyebrow">Conduite · 1 h, sur rendez-vous</p><h3 style="margin-top:10px">Choisis ton créneau</h3>
+<div class="wk"><b>Lun – ven matin</b><span>6 h 30 · 7 h 30 · 8 h 45 · 9 h 45</span></div>
+<div class="wk"><b>Lun – ven soir</b><span>15 h 45 · 16 h 45</span></div>
+<div class="wk"><b>Samedi</b><span>6 h 30 à 11 h 45</span></div>
+<p style="margin-top:12px;font-size:.92rem;color:var(--muted)">Tu travailles ? Les créneaux de 6 h 30, de 16 h 45 et du samedi sont faits pour toi.</p></div>
+<div class="card"><p class="eyebrow">Ton parcours</p><h3 style="margin-top:10px">Étape par étape</h3>
+<ol class="steps-ol"><li><b>Semaines 1 et 2 :</b> le code d'abord, signalisation et priorités.</li><li><b>Dès la semaine 3 :</b> une séance de conduite par semaine, le code continue.</li><li><b>Tous les chapitres</b> reviennent en salle environ toutes les 10 semaines. Tu rattrapes sur le site.</li><li><b>Avant l'examen :</b> examens blancs du samedi.</li></ol></div>
+</div>
+</div>
 <div class="wrap sec"><div class="grid g3">
 <div class="card soft"><p class="eyebrow">Paiement</p><h3 style="margin-top:10px">En 2 tranches</h3><p style="margin-top:8px">La moitié à l'inscription, le reste avant la première séance de conduite. Un reçu pour chaque paiement.</p><div class="pills"><span>T-Money</span><span>Flooz</span><span>Espèces</span></div></div>
 <div class="card soft"><p class="eyebrow">Dossier à fournir</p><h3 style="margin-top:10px">Pour t'inscrire</h3><ul style="margin:8px 0 0;padding-left:1.1em;color:var(--muted)"><li>Acte de naissance</li><li>Carte d'identité</li><li>Photos d'identité, format passeport</li><li>Quittance d'examen : 35 000 F, en plus de la formation</li></ul></div>
@@ -543,6 +572,7 @@ ${HEAD("Formations", "Nos formations et tarifs", "Chaque formule comprend le cod
 
 <section class="page" data-page="cours" hidden>
 ${HEAD("Manuel officiel SODAF", "Les cours", "Tout ce qui est enseigné en salle, chapitre par chapitre. Marque chaque chapitre comme lu pour voir d'un coup d'œil où tu en es.")}
+<div class="wrap"><div class="classband"><p class="cb-t">Code en salle · 14 h 30 – 15 h 30</p><p class="cb-d">Lundi : cours complet · Mercredi : récap · Vendredi : entraînement · Samedi 10 h : examen blanc</p><a class="btn btn-line btn-sm" href="#formations" style="margin-left:auto">Voir le planning</a></div></div>
 <div class="wrap course"><aside class="toc" id="sd-toc" aria-label="Chapitres"></aside><div>
 
 <article class="ch" id="cours-signalisation" data-part="A · Code de la route" data-title="Le code et les signalisations">
