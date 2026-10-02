@@ -757,7 +757,7 @@ ${HEAD("Pré-inscription", "Rejoins SODAF", "Envoie ta demande en une minute : e
 <div class="wrap sec"><div class="insc">
 <form class="card" id="sd-form" novalidate>
 <div class="row2"><div class="field"><label for="sd-fName">Nom complet</label><input id="sd-fName" placeholder="Ex. Kossi Agbeko"></div><div class="field"><label for="sd-fPhone">Téléphone / WhatsApp</label><div class="tel"><span>+228</span><input id="sd-fPhone" inputmode="numeric" maxlength="11" autocomplete="tel-national" placeholder="90 00 00 00"></div></div></div>
-<div class="row2"><div class="field"><label for="sd-fCat">Formation</label><select id="sd-fCat"><option>Permis B</option><option>Permis A</option><option>Remise à niveau</option><option>Formation entreprise</option></select></div><div class="field"><label for="sd-fCity">Ville / quartier</label><input id="sd-fCity" placeholder="Ex. Lomé, Bè"></div></div>
+<div class="row2"><div class="field"><label for="sd-fCat">Formation</label><select id="sd-fCat"><option value="Permis B">Permis B (voiture)</option><option value="Permis A">Permis A (moto)</option><option value="Remise à niveau">Remise à niveau (déjà titulaire du permis)</option><option value="Formation entreprise">Formation entreprise (chauffeurs)</option></select></div><div class="field"><label for="sd-fCity">Ville / quartier</label><input id="sd-fCity" placeholder="Ex. Lomé, Bè"></div></div>
 <div class="row2"><div class="field"><label for="sd-fSlot">Créneau préféré</label><select id="sd-fSlot"><option>Tôt le matin</option><option>Après-midi</option><option>Samedi</option><option>Peu importe</option></select></div><div class="field"><label for="sd-fPay">Paiement</label><select id="sd-fPay"><option>En plusieurs tranches</option><option>En une fois</option></select></div></div>
 <div class="field"><label for="sd-fMsg">Message (facultatif)</label><textarea id="sd-fMsg" placeholder="Une question, une contrainte d'horaire…"></textarea></div>
 <p id="sd-fErr" style="color:var(--red);font-weight:600;margin-bottom:10px" hidden>Indique ton nom et ton numéro à 8 chiffres (après le +228).</p>
@@ -1001,7 +1001,8 @@ function init(root) {
     $("#sd-okWhen").textContent = "Reçue le " + now.toLocaleDateString("fr-FR") + " à " + now.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
     $("#sd-okName").textContent = payload.nom.split(" ")[0];
     $("#sd-okPhone").textContent = payload.telephone;
-    const rows = [["Formation", payload.formation], ["Quartier", payload.quartier || "—"], ["Créneau", payload.creneau], ["Paiement", payload.paiement]];
+    const catLabel = $("#sd-fCat").selectedOptions[0].textContent;
+    const rows = [["Formation", catLabel], ["Quartier", payload.quartier || "—"], ["Créneau", payload.creneau], ["Paiement", payload.paiement]];
     $("#sd-okRecap").innerHTML = rows.map(([k, v]) => "<dt>" + k + "</dt><dd>" + String(v).replace(/[<>&]/g, "") + "</dd>").join("");
     $("#sd-waLink").href = WA + "?text=" + encodeURIComponent("Bonjour SODAF, je viens d'envoyer ma pré-inscription sur le site (" + payload.nom + ", " + payload.formation + "). Quand puis-je passer au secrétariat ?");
     fieldsBox().forEach((c) => (c.hidden = true));
