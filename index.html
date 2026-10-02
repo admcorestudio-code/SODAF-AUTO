@@ -188,7 +188,14 @@ section.page{padding-bottom:88px}
 
 /* formations */
 .offer{display:flex;flex-direction:column;gap:12px}
-.offer .cat{font:800 3rem/1 var(--f-display)}
+.offer .cat{font:800 2.2rem/1 var(--f-display);letter-spacing:-.03em}
+.offer h3{margin:0}
+.alacarte{display:grid;gap:4px}
+.acrow{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 0;border-top:1px solid var(--line)}
+.acrow:first-of-type{margin-top:8px}
+.acrow span{color:var(--muted)}
+.acrow strong{font:800 1.2rem var(--f-display);white-space:nowrap}
+@media (max-width:600px){.acrow{flex-direction:column;align-items:flex-start;gap:4px}}
 #sodaf-root .offer ul{margin:0;padding-left:1.1em;color:var(--muted)}
 .price{margin-top:auto;padding-top:14px;border-top:1px dashed var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 .price b{font-family:var(--f-mono);font-size:.84rem;color:var(--muted)}
@@ -447,16 +454,31 @@ const HTML = `
 </section>
 
 <section class="page" data-page="formations" hidden>
-${HEAD("Formations", "Choisis ton permis", "Chaque formule comprend la théorie complète du manuel SODAF et l'accès à tous les outils en ligne.")}
+${HEAD("Formations", "Nos formations et tarifs", "Chaque formule comprend le code de la route, l'entretien mécanique et le secourisme. Prix en francs CFA. Droit d'inscription : 5 000 F, payé une fois.")}
+<div class="wrap sec">
+<div class="sec-head"><div><p class="eyebrow">Permis B · voiture</p><h2>Choisis ta formule</h2></div><p>Les trois formules suivent le même programme. Seuls le rythme et le nombre de séances de conduite changent.</p></div>
+<div class="grid g3">
+<div class="card offer star"><span class="tag y">Recommandée</span><h3>Formation complète</h3><div class="cat">55 000 F</div><p>Sur 3 mois. Pour apprendre à conduire en partant de zéro.</p><ul><li>12 séances de conduite d'1 h</li><li>Code de la route, théorie et pratique</li><li>Entretien mécanique et secourisme</li></ul><div class="price"><b>+ 5 000 F d'inscription</b><a class="btn btn-green btn-sm" href="#inscription" data-cat="Permis B">Choisir</a></div></div>
+<div class="card offer"><span class="tag">Plus rapide</span><h3>Formation accélérée</h3><div class="cat">75 000 F</div><p>En 2 mois, ou <b>80 000 F</b> en 1 mois. Même contenu, planning plus serré.</p><ul><li>12 séances de conduite d'1 h</li><li>Code de la route, théorie et pratique</li><li>Entretien mécanique et secourisme</li></ul><div class="price"><b>+ 5 000 F d'inscription</b><a class="btn btn-line btn-sm" href="#inscription" data-cat="Permis B">Choisir</a></div></div>
+<div class="card offer"><span class="tag">Déjà conducteur</span><h3>Formule courte</h3><div class="cat">35 000 F</div><p>Sur 3 mois. Pour ceux qui savent déjà tenir un volant.</p><ul><li>6 séances de conduite d'1 h</li><li>Code de la route, théorie et pratique</li><li>Entretien mécanique et secourisme</li></ul><div class="price"><b>+ 5 000 F d'inscription</b><a class="btn btn-line btn-sm" href="#inscription" data-cat="Permis B">Choisir</a></div></div>
+</div>
+<div class="card alacarte" style="margin-top:18px"><p class="eyebrow">À la carte</p>
+<div class="acrow"><div><b>Formation théorique seule</b><span> · code, mécanique et secourisme, sans conduite</span></div><strong>25 000 F</strong></div>
+<div class="acrow"><div><b>Séance de conduite supplémentaire</b><span> · 1 h, à ajouter à n'importe quelle formule</span></div><strong>5 000 F</strong></div>
+</div>
+</div>
+<div class="wrap sec">
+<div class="sec-head"><div><p class="eyebrow">Autres formations</p><h2>Moto, remise à niveau, entreprises</h2></div><p>Tarifs communiqués par le secrétariat selon ton besoin.</p></div>
+<div class="grid g3">
+<div class="card offer"><span class="tag">Deux-roues</span><h3>Permis A · moto</h3><p>Pour circuler en règle et en sécurité, pour toi ou ton activité.</p><ul><li>Code de la route et équipements</li><li>Maîtrise de la moto à basse vitesse</li><li>Circulation entre les véhicules</li></ul><div class="price"><b>Tarif au secrétariat</b><a class="btn btn-line btn-sm" href="#inscription" data-cat="Permis A">Demander</a></div></div>
+<div class="card offer"><span class="tag">Déjà titulaire</span><h3>Remise à niveau</h3><p>Tu as ton permis mais tu n'as pas conduit depuis longtemps ? On te remet en confiance.</p><ul><li>Évaluation avec un moniteur</li><li>Leçons ciblées : ville, nuit, route</li><li>Rappel des règles du code</li></ul><div class="price"><b>Tarif au secrétariat</b><a class="btn btn-line btn-sm" href="#inscription" data-cat="Remise à niveau">Demander</a></div></div>
+<div class="card offer"><span class="tag">Sociétés, ONG</span><h3>Formation entreprise</h3><p>Pour former vos chauffeurs, selon vos horaires.</p><ul><li>Conduite préventive</li><li>Vérification du véhicule chaque matin</li><li>Secourisme routier et constat amiable</li></ul><div class="price"><b>Sur devis</b><a class="btn btn-line btn-sm" href="#inscription" data-cat="Formation entreprise">Demander un devis</a></div></div>
+</div>
+</div>
 <div class="wrap sec"><div class="grid g3">
-<div class="card offer star"><span class="tag y">Le plus demandé</span><div class="cat">Permis B</div><p>Voiture, boîte manuelle. Pour conduire en ville comme sur les nationales.</p><ul><li>Cours de code + révision en ligne</li><li>Leçons sur véhicule école</li><li>Manœuvres et circulation à Lomé</li><li>Préparation à l'examen</li></ul><div class="price"><b>Tarif au secrétariat</b><a class="btn btn-green btn-sm" href="#inscription" data-cat="Permis B">Choisir</a></div></div>
-<div class="card offer"><span class="tag">Deux-roues</span><div class="cat">Permis A</div><p>Moto. Pour circuler en règle et en sécurité, pour toi ou ton activité.</p><ul><li>Code de la route et équipements</li><li>Maîtrise à basse vitesse</li><li>Circulation entre les véhicules</li><li>Casque et passager</li></ul><div class="price"><b>Tarif au secrétariat</b><a class="btn btn-line btn-sm" href="#inscription" data-cat="Permis A">Choisir</a></div></div>
-<div class="card offer"><span class="tag">Déjà titulaire</span><div class="cat">Remise à niveau</div><p>Tu as ton permis mais tu n'as pas conduit depuis longtemps ? On te remet en confiance.</p><ul><li>Évaluation avec un moniteur</li><li>Leçons ciblées (ville, nuit)</li><li>Rappel des règles</li><li>Accès aux quiz et outils</li></ul><div class="price"><b>Tarif au secrétariat</b><a class="btn btn-line btn-sm" href="#inscription" data-cat="Remise à niveau">Choisir</a></div></div>
-</div></div>
-<div class="wrap sec"><div class="grid g2">
-<div class="card soft"><p class="eyebrow">Paiement</p><h3 style="margin-top:10px">Paie à ton rythme</h3><p style="margin-top:8px">La formation peut se régler en plusieurs tranches. Le secrétariat te donne l'échéancier à l'inscription.</p><div class="pills"><span>T-Money</span><span>Flooz</span><span>Espèces</span></div></div>
-<div class="card soft"><p class="eyebrow">Horaires de conduite</p><h3 style="margin-top:10px">Des créneaux pour tous</h3><p style="margin-top:8px">Tôt le matin avant le travail, l'après-midi, ou le samedi.</p><div class="pills"><span>Matin</span><span>Après-midi</span><span>Samedi</span></div></div>
-<div class="card" style="grid-column:1/-1"><p class="eyebrow">Entreprises</p><h3 style="margin-top:10px">Former vos chauffeurs</h3><p style="margin-top:8px">Sociétés, ONG, transporteurs : conduite préventive, vérification du matin, secourisme routier et constat amiable, selon vos horaires.</p><a class="btn btn-line btn-sm" style="margin-top:14px" href="#inscription" data-cat="Formation entreprise">Demander un devis</a></div>
+<div class="card soft"><p class="eyebrow">Paiement</p><h3 style="margin-top:10px">En 2 tranches</h3><p style="margin-top:8px">La moitié à l'inscription, le reste avant la première séance de conduite. Un reçu pour chaque paiement.</p><div class="pills"><span>T-Money</span><span>Flooz</span><span>Espèces</span></div></div>
+<div class="card soft"><p class="eyebrow">Dossier à fournir</p><h3 style="margin-top:10px">Pour t'inscrire</h3><ul style="margin:8px 0 0;padding-left:1.1em;color:var(--muted)"><li>Acte de naissance</li><li>Carte d'identité</li><li>Photos d'identité, format passeport</li><li>Quittance d'examen : 35 000 F, en plus de la formation</li></ul></div>
+<div class="card soft"><p class="eyebrow">Bon à savoir</p><h3 style="margin-top:10px">Des règles claires</h3><ul style="margin:8px 0 0;padding-left:1.1em;color:var(--muted)"><li>Le droit d'inscription n'est pas remboursable.</li><li>Une séance non faite peut être reportée pendant 6 mois.</li><li>Conduite le matin, l'après-midi ou le samedi.</li></ul></div>
 </div></div>
 </section>
 
@@ -737,7 +759,7 @@ ${HEAD("Bibliothèque", "Documents", "Le manuel officiel, les pièces à prépar
 <ol class="toc-list"><li><a href="#cours-signalisation">Le code de la route</a></li><li><a href="#cours-intersections">Les intersections</a></li><li><a href="#cours-priorites">Les règles de priorité</a></li><li><a href="#cours-secourisme">Le secourisme routier</a></li><li><a href="#cours-assurance">L'assurance automobile</a></li><li><a href="#cours-conduite">Notions de conduite</a></li><li><a href="#cours-mecanique">Mécanique automobile</a></li></ol>
 <div class="acts"><a class="btn btn-green btn-sm" href="#cours">Lire en ligne</a><a class="btn btn-line btn-sm" target="_blank" rel="noopener" href="${WA}?text=${encodeURIComponent("Bonjour SODAF, je souhaite recevoir le manuel de l'élève en PDF.")}">Recevoir le PDF sur WhatsApp</a></div></div></div>
 <div class="grid g3" style="margin-top:18px">
-<div class="card doc"><div class="file">ID</div><div><span class="tag">Inscription</span><h3 style="margin-top:8px">Pièces à préparer</h3><ul style="color:var(--muted);padding-left:1.1em;margin:8px 0"><li>Pièce d'identité</li><li>Photos d'identité</li><li>Certificat médical</li><li>Premier versement</li></ul><p style="font-size:.88rem">Liste confirmée par le secrétariat.</p></div></div>
+<div class="card doc"><div class="file">ID</div><div><span class="tag">Inscription</span><h3 style="margin-top:8px">Pièces à préparer</h3><ul style="color:var(--muted);padding-left:1.1em;margin:8px 0"><li>Acte de naissance</li><li>Carte d'identité</li><li>Photos d'identité, format passeport</li><li>Quittance d'examen : 35 000 F</li></ul><p style="font-size:.88rem">Plus le droit d'inscription de 5 000 F.</p></div></div>
 <div class="card doc"><div class="file">CG</div><div><span class="tag">Au volant</span><h3 style="margin-top:8px">Documents de bord</h3><p>Carte grise, assurance, permis, pièce d'identité.</p><div class="acts"><a class="btn btn-line btn-sm" href="#cours-tableau">Voir le chapitre</a></div></div></div>
 <div class="card doc"><div class="file">CA</div><div><span class="tag">Accident</span><h3 style="margin-top:8px">Constat amiable</h3><p>Remplis-le sur place, ne signe que ce qui est exact, garde ton exemplaire.</p><div class="acts"><a class="btn btn-line btn-sm" href="#cours-secourisme">En savoir plus</a></div></div></div>
 </div></div>
