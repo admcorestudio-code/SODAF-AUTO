@@ -88,6 +88,7 @@ background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;l
 .btn{display:inline-flex;align-items:center;gap:.5em;font:600 1rem var(--f-body);padding:.8em 1.35em;border-radius:999px;border:1.5px solid transparent;cursor:pointer;text-decoration:none;transition:transform .15s,box-shadow .15s}
 .btn:hover{transform:translateY(-1px)}
 #sodaf-root .btn-green{background:var(--green);color:#fff}
+.btn-yellow{background:var(--yellow);color:var(--ink)}
 #sodaf-root .btn-green:hover{box-shadow:0 10px 24px -12px rgba(11,110,79,.7)}
 #sodaf-root .btn-line{background:#fff;border-color:var(--line);color:var(--ink)}
 #sodaf-root .btn-line:hover{border-color:var(--ink)}
@@ -236,6 +237,46 @@ a.teamtile span{color:var(--muted)}
 a.teamtile em{font-style:normal;font-weight:700;color:var(--green);margin-top:8px}
 .teamsteps{margin:10px 0 0;padding-left:1.2em;display:grid;gap:8px;color:var(--muted)}
 .teamsteps b{color:var(--ink)}
+/* mode classe */
+.cls{position:fixed;inset:0;z-index:9000;background:#fff;display:flex;flex-direction:column;color:var(--ink)}
+.cls-top{display:flex;align-items:center;gap:12px 18px;flex-wrap:wrap;padding:10px 20px;border-bottom:1px solid var(--line)}
+.cls-brand{display:flex;align-items:center;gap:10px;font:600 .72rem var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.cls-brand svg{height:22px;width:auto}
+.cls-tabs{display:flex;gap:6px;background:var(--soft);padding:4px;border-radius:999px}
+.cls-tabs button{border:0;background:transparent;font:600 .95rem var(--f-body);padding:.5em 1em;border-radius:999px;cursor:pointer;color:var(--muted)}
+.cls-tabs button[aria-selected="true"]{background:#fff;color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.cls-top select{font:500 .95rem var(--f-body);padding:.5em .8em;border:1px solid var(--line);border-radius:10px;background:#fff;max-width:320px}
+.cls-count{font:600 .95rem var(--f-mono);color:var(--muted);margin-left:auto}
+.cls-top .btn{padding:.5em 1em}
+.cls-stage{flex:1;min-height:0;overflow:auto;display:flex;justify-content:center;align-items:flex-start;padding:24px 20px}
+.cls-zoom{width:900px;font-size:20px;line-height:1.5;margin:auto 0}
+.cls-zoom p,.cls-zoom li{max-width:none}
+.cls-zoom h4{font:700 1.35rem var(--f-display);margin:18px 0 8px;color:var(--green)}
+.cls-zoom h4:first-child{margin-top:0}
+.cls-zoom .sign svg{width:96px;height:96px}
+.cls-kicker{font:600 .8rem var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.cls-h1{font:800 3.4rem/1.05 var(--f-display);letter-spacing:-.03em;margin:0}
+.cls-title{text-align:center;padding:40px 0}
+.cls-title .cls-bar{width:90px;height:8px;background:var(--yellow);border-radius:4px;margin:22px auto 0}
+.cls-qt{font:700 2rem/1.2 var(--f-display);margin:0 0 22px}
+.cls-opts{display:grid;gap:12px}
+.cls-opt{display:flex;gap:16px;align-items:center;border:2px solid var(--line);border-radius:14px;padding:14px 18px;font-size:1.25rem;background:#fff}
+.cls-opt b{font:700 1rem var(--f-mono);width:40px;height:40px;border-radius:8px;display:grid;place-items:center;background:var(--soft);flex-shrink:0}
+.cls-opt.good{border-color:var(--green);background:var(--green-soft)}
+.cls-opt.good b{background:var(--green);color:#fff}
+.cls-opt.dim{opacity:.45}
+.cls-exp{margin-top:18px;border-left:5px solid var(--green);background:var(--soft);border-radius:0 12px 12px 0;padding:14px 18px;font-size:1.1rem}
+.cls-sign{text-align:center}
+.cls-sign svg{width:300px;height:300px;display:block;margin:10px auto 18px}
+.cls-sign .cls-ans{font:800 2.2rem var(--f-display)}
+.cls-sign .cls-desc{font-size:1.2rem;color:var(--muted);margin-top:6px}
+.cls-ask{font:600 1.4rem var(--f-display);color:var(--muted)}
+.cls-bot{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 20px;border-top:1px solid var(--line)}
+.cls-bot .btn{font-size:1.05rem;padding:.75em 1.4em}
+.cls-help{font-size:.85rem;color:var(--muted);text-align:center}
+@media (max-width:700px){.cls-help{display:none}.cls-count{margin-left:0}}
+#sodaf-root .cls-qt{margin:0 0 24px}
+#sodaf-root .cls-kicker{margin:0 0 10px}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 @media (max-width:760px){#sd-teamPanel .g2{grid-template-columns:1fr}}
 
@@ -914,11 +955,31 @@ ${HEAD("Équipe SODAF", "Espace secrétariat", "Réservé au personnel de l'auto
 <a class="card teamtile" id="sd-tCode" target="_blank" rel="noopener" href="#"><b>Cours de code</b><span>Séances du lundi, mercredi, vendredi et examen blanc du samedi : thème du jour, présents.</span><em>Ouvrir les cours →</em></a>
 <a class="card teamtile" id="sd-tInsc" target="_blank" rel="noopener" href="#"><b>Inscriptions</b><span>Pré-inscriptions reçues par le site, suivi de chaque élève et de ses séances.</span><em>Ouvrir les inscriptions →</em></a>
 </div>
+<a class="card teamtile" href="#classe" style="margin-top:16px;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 24px"><div style="display:flex;flex-direction:column;gap:6px"><b>Mode classe</b><span>Pour le moniteur : projette les leçons, le quiz et les panneaux en grand sur l'écran de la salle.</span></div><em style="margin-top:0">Lancer le mode classe →</em></a>
 <div class="grid g2" style="margin-top:18px">
 <div class="card soft"><p class="eyebrow">Réserver une séance de conduite</p><ol class="teamsteps"><li>Ouvre <b>Conduite</b>, onglet <b>Créneaux libres</b>, et choisis l'heure avec l'élève.</li><li>Touche le créneau, choisis l'<b>élève</b> et mets le statut sur <b>Réservé</b>.</li><li>Touche <b>Confirmer sur WhatsApp</b> : le message est prêt, appuie sur Envoyer.</li><li>La veille, onglet <b>Demain (rappels)</b> : touche <b>Rappel de la veille</b> pour chaque élève.</li></ol></div>
 <div class="card soft"><p class="eyebrow">Après chaque cours de code</p><ol class="teamsteps"><li>Ouvre <b>Cours de code</b>, touche la séance du jour.</li><li>Choisis le <b>thème</b> (le chapitre traité) et ajoute les <b>présents</b>.</li><li>Mets le statut sur <b>Fait</b>. L'onglet <b>À cocher</b> montre les séances oubliées.</li></ol><p style="margin-top:12px;font-size:.92rem;color:var(--muted)">Les créneaux du mois suivant se créent tout seuls le 24 de chaque mois.</p></div>
 </div>
 <button class="linkbtn" type="button" id="sd-teamOut" style="margin-top:18px">Se déconnecter de cet appareil</button>
+</div>
+</div>
+</section>
+
+<section class="page" data-page="classe" hidden>
+<div class="cls" id="sd-cls">
+<div class="cls-top">
+<div class="cls-brand">${LOGO("#14171C", "word")}<span>Mode classe</span></div>
+<div class="cls-tabs" role="tablist" id="sd-clsTabs"><button role="tab" data-m="lecon" aria-selected="true">Leçon</button><button role="tab" data-m="quiz" aria-selected="false">Quiz</button><button role="tab" data-m="panneaux" aria-selected="false">Panneaux</button></div>
+<label class="sr-only" for="sd-clsSel">Choix</label><select id="sd-clsSel"></select>
+<span class="cls-count" id="sd-clsCount"></span>
+<button class="btn btn-line btn-sm" type="button" id="sd-clsFs">Plein écran</button>
+<a class="btn btn-line btn-sm" href="#equipe">Quitter</a>
+</div>
+<div class="cls-stage" id="sd-clsStageWrap"><div class="cls-zoom" id="sd-clsStage"></div></div>
+<div class="cls-bot">
+<button class="btn btn-line" type="button" id="sd-clsPrev">← Précédent</button>
+<span class="cls-help">Flèches ← → pour avancer · Espace ou R pour montrer la réponse · F pour le plein écran</span>
+<div style="display:flex;gap:10px"><button class="btn btn-yellow" type="button" id="sd-clsReveal" hidden>Montrer la réponse</button><button class="btn btn-green" type="button" id="sd-clsNext">Suivant →</button></div>
 </div>
 </div>
 </section>
@@ -1310,6 +1371,111 @@ function init(root) {
     $("#sd-teamOut").addEventListener("click", () => { S.set("team", ""); show(false); });
   })();
 
+  // mode classe
+  const cls = (function () {
+    const stage = $("#sd-clsStage"), wrap = $("#sd-clsStageWrap"), sel = $("#sd-clsSel"), cnt = $("#sd-clsCount");
+    const prevB = $("#sd-clsPrev"), nextB = $("#sd-clsNext"), revB = $("#sd-clsReveal");
+    const chs = $$("article.ch");
+    let mode = "lecon", items = [], i = 0, shown = false;
+    const esc = (t) => String(t).replace(/[<>&]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" }[c]));
+    function lessonSlides(id) {
+      const art = root.querySelector("#" + id), idx = chs.indexOf(art);
+      const out = ['<div class="cls-title"><p class="cls-kicker">' + esc(art.dataset.part) + " · Chapitre " + (idx + 1) + " / " + chs.length + '</p><h1 class="cls-h1">' + esc(art.dataset.title) + '</h1><div class="cls-bar"></div></div>'];
+      let cur = [], w = 0;
+      const flush = () => { if (cur.length) out.push(cur.join("")); cur = []; w = 0; };
+      const onlyHead = () => cur.length === 1 && /^<h4/i.test(cur[0]);
+      [...art.children].forEach((el) => {
+        if (el.tagName === "HEADER") return;
+        const c = el.cloneNode(true); c.querySelectorAll(".read-btn").forEach((b) => b.remove());
+        const html = c.outerHTML, len = c.textContent.length;
+        if (el.tagName === "H4") { flush(); cur.push(html); return; }
+        if (el.matches("dl.dl")) {
+          const head = onlyHead() ? cur[0] : ""; if (!head) flush(); cur = []; w = 0;
+          const rows = [...c.children];
+          for (let k = 0; k < rows.length; k += 3) out.push((k === 0 ? head : "") + '<dl class="dl">' + rows.slice(k, k + 3).map((r) => r.outerHTML).join("") + "</dl>");
+          return;
+        }
+        if (el.matches(".tbl,.signs,.grid,.mnemo")) {
+          if (!onlyHead() && w > 160) flush();
+          cur.push(html); flush(); return;
+        }
+        if (w + len > 380 && cur.length && !onlyHead()) flush();
+        cur.push(html); w += len;
+      });
+      flush();
+      return out;
+    }
+    function fillSelect() {
+      if (mode === "lecon") sel.innerHTML = chs.map((c, k) => '<option value="' + c.id + '">' + (k + 1) + ". " + esc(c.dataset.title) + "</option>").join("");
+      else if (mode === "quiz") {
+        const ids = [...new Set(Q.map((q) => q[4]))];
+        sel.innerHTML = '<option value="all:10">10 questions au hasard</option><option value="all:20">20 questions au hasard</option><option value="all:99">Toutes les questions (' + Q.length + ")</option>" +
+          ids.map((id) => '<option value="' + id + '">Chapitre : ' + esc(chTitle(id)) + "</option>").join("");
+      } else sel.innerHTML = SIGN_FAMILIES.map(([k, l]) => '<option value="' + k + '">' + esc(l) + "</option>").join("");
+    }
+    function load() {
+      const v = sel.value; i = 0; shown = false;
+      if (mode === "lecon") items = lessonSlides(v);
+      else if (mode === "quiz") {
+        if (v.startsWith("all:")) items = shuffle(Q).slice(0, +v.split(":")[1]);
+        else items = shuffle(Q.filter((q) => q[4] === v));
+        items = items.map((q) => ({ q, shown: false })).concat([{ end: true }]);
+      } else items = shuffle(SIGNS.filter((g) => v === "tous" || g.f === v)).map((g) => ({ g, shown: false }));
+      render();
+    }
+    function fit() {
+      stage.style.zoom = 1;
+      const W = wrap.clientWidth - 40, H = wrap.clientHeight - 48, h = stage.scrollHeight;
+      const z = Math.max(0.6, Math.min(W / 900, H / Math.max(h, 1), 2.3));
+      stage.style.zoom = z;
+    }
+    function render() {
+      const it = items[i], n = items.length;
+      revB.hidden = true;
+      if (mode === "lecon") stage.innerHTML = '<div class="cls-slide">' + it + "</div>";
+      else if (mode === "quiz") {
+        if (it.end) stage.innerHTML = '<div class="cls-title"><p class="cls-kicker">Fin de la série</p><h1 class="cls-h1">Bravo à tous !</h1><p style="margin-top:16px;font-size:1.2rem;color:var(--muted)">Reprenez ensemble les questions qui ont posé problème, puis révisez sur autosodaf.com.</p><div class="cls-bar"></div></div>';
+        else {
+          const q = it.q;
+          stage.innerHTML = '<p class="cls-kicker">Question ' + (i + 1) + " / " + (n - 1) + " · " + esc(chTitle(q[4])) + '</p><h2 class="cls-qt">' + esc(q[0]) + '</h2><div class="cls-opts">' +
+            q[1].map((o, k) => '<div class="cls-opt' + (it.shown ? (k === q[2] ? " good" : " dim") : "") + '"><b>' + "ABCD"[k] + "</b><span>" + esc(o) + "</span></div>").join("") + "</div>" +
+            (it.shown ? '<div class="cls-exp"><b>Réponse ' + "ABCD"[q[2]] + ".</b> " + esc(q[3]) + "</div>" : "");
+          revB.hidden = it.shown;
+        }
+      } else {
+        const g = it.g;
+        stage.innerHTML = '<div class="cls-sign">' + g.s + (it.shown ? '<div class="cls-ans">' + esc(g.n) + '</div><div class="cls-desc">' + esc(g.d) + "</div>" : '<div class="cls-ask">Quel est ce panneau ?</div>') + "</div>";
+        revB.hidden = it.shown;
+      }
+      cnt.textContent = n ? (i + 1) + " / " + n : "";
+      prevB.disabled = i === 0; nextB.disabled = i >= n - 1;
+      wrap.scrollTop = 0;
+      requestAnimationFrame(fit);
+    }
+    const reveal = () => { const it = items[i]; if (mode !== "lecon" && it && !it.end && !it.shown) { it.shown = true; render(); return true; } return false; };
+    const next = () => { if (i < items.length - 1) { i++; render(); } };
+    const prev = () => { if (i > 0) { i--; render(); } };
+    $("#sd-clsTabs").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; mode = b.dataset.m; $$("#sd-clsTabs button").forEach((x) => x.setAttribute("aria-selected", x === b)); fillSelect(); load(); });
+    sel.addEventListener("change", load);
+    nextB.addEventListener("click", next); prevB.addEventListener("click", prev); revB.addEventListener("click", reveal);
+    const fsB = $("#sd-clsFs");
+    const toggleFs = () => { const el = $("#sd-cls"); try { if (document.fullscreenElement) document.exitFullscreen(); else el.requestFullscreen(); } catch (e) {} };
+    fsB.addEventListener("click", toggleFs);
+    document.addEventListener("fullscreenchange", () => { fsB.textContent = document.fullscreenElement ? "Quitter le plein écran" : "Plein écran"; setTimeout(fit, 120); });
+    window.addEventListener("resize", () => { if (!$('section[data-page="classe"]').hidden) fit(); });
+    document.addEventListener("keydown", (e) => {
+      if ($('section[data-page="classe"]').hidden || e.target === sel) return;
+      const k = e.key;
+      if (k === "ArrowRight" || k === "PageDown") { e.preventDefault(); next(); }
+      else if (k === "ArrowLeft" || k === "PageUp") { e.preventDefault(); prev(); }
+      else if (k === " " || k === "Enter") { e.preventDefault(); if (!reveal()) next(); }
+      else if (k === "r" || k === "R") reveal();
+      else if (k === "f" || k === "F") toggleFs();
+    });
+    fillSelect();
+    return { open() { if (!items.length) load(); else render(); } };
+  })();
+
   // panneaux
   const pgrid = $("#sd-pgrid"), pf = $("#sd-pf"), pq = $("#sd-pq"), prev = $("#sd-prev");
   let pfam = "tous";
@@ -1334,7 +1500,9 @@ function init(root) {
     $$("section.page").forEach((s) => (s.hidden = s.dataset.page !== p));
     $$("#sd-nav [data-nav]").forEach((a) => a.classList.toggle("on", a.dataset.nav === p));
     nav.classList.remove("open"); burger.setAttribute("aria-expanded", "false");
+    if (p === "classe" && S.get("team", "") !== TEAM_HASH) { location.hash = "#equipe"; return; }
     if (p === "quiz") showBest();
+    if (p === "classe") requestAnimationFrame(() => cls.open());
     if (p === "cours") requestAnimationFrame(() => requestAnimationFrame(spy));
     const target = h.includes("-") ? root.querySelector("#" + h) : null;
     requestAnimationFrame(() => { if (target) target.scrollIntoView({ block: "start" }); else window.scrollTo(0, 0); });
