@@ -267,6 +267,31 @@ article.ch p+p{margin-top:10px}
 .qactions{display:flex;justify-content:space-between;gap:12px;margin-top:18px;flex-wrap:wrap}
 .result{text-align:center}
 .result .big{font:800 5rem/1 var(--f-display);color:var(--green)}
+.ptools{display:flex;flex-wrap:wrap;gap:12px 16px;align-items:center;margin-bottom:10px}
+.pfilters{display:flex;flex-wrap:wrap;gap:8px;flex:1 1 auto}
+.pfilters button{background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:.45em .95em;font:600 .9rem var(--f-body);color:var(--ink);cursor:pointer}
+.pfilters button[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.psearch input{font:1rem var(--f-body);padding:.6em .9em;border:1.5px solid var(--line);border-radius:999px;min-width:0;width:260px;max-width:100%}
+.psearch input:focus{border-color:var(--ink);outline:none}
+.ptoggle{display:flex;align-items:center;gap:8px;font-weight:600;cursor:pointer;white-space:nowrap}
+.ptoggle input{width:19px;height:19px;accent-color:var(--green)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.phint{color:var(--muted);margin:4px 0 18px!important;min-height:1.5em}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px}
+.pcard{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 14px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;cursor:default;font:inherit;color:inherit}
+.pcard svg{width:96px;height:96px;display:block}
+.pcard b{font:700 1rem/1.25 var(--f-display);letter-spacing:-.01em}
+.pcard span{font-size:.86rem;color:var(--muted);line-height:1.4}
+.pgrid.rev .pcard{cursor:pointer}
+.pgrid.rev .pcard .ptxt{visibility:hidden}
+.pgrid.rev .pcard.shown .ptxt{visibility:visible}
+.preveal{display:none;font-style:normal;font-size:.82rem;font-weight:600;color:var(--green)}
+.pgrid.rev .pcard:not(.shown) .preveal{display:block}
+.pgrid.rev .pcard:not(.shown) .ptxt{display:none}
+.ptxt{display:flex;flex-direction:column;gap:4px}
+.pempty{color:var(--muted)}
+.pnote{font-size:.84rem;color:var(--muted);margin-top:24px!important}
+@media (max-width:520px){.pgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.pcard svg{width:76px;height:76px}.psearch,.psearch input{width:100%}}
 .qbest{max-width:760px;margin:0 auto 18px;text-align:center;font-size:.95rem;color:var(--muted)}
 .qbest b{color:var(--green)}
 .modes{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:26px}
@@ -406,7 +431,7 @@ const HTML = `
 <a class="logo" href="#accueil" aria-label="SODAF, accueil">${LOGO("#14171C", "word")}<small class="logo-sub">Auto-école · Togo</small></a>
 <button class="burger" id="sd-burger" aria-expanded="false">Menu</button>
 <nav class="main" id="sd-nav">
-<a href="#accueil" data-nav="accueil">Accueil</a><a href="#formations" data-nav="formations">Formations et tarifs</a><a href="#cours" data-nav="cours">Cours</a><a href="#quiz" data-nav="quiz">Quiz</a><a href="#outils" data-nav="outils">Outils</a><a href="#documents" data-nav="documents">Documents</a>
+<a href="#accueil" data-nav="accueil">Accueil</a><a href="#formations" data-nav="formations">Formations et tarifs</a><a href="#cours" data-nav="cours">Cours</a><a href="#panneaux" data-nav="panneaux">Panneaux</a><a href="#quiz" data-nav="quiz">Quiz</a><a href="#outils" data-nav="outils">Outils</a><a href="#documents" data-nav="documents">Documents</a>
 </nav>
 <a class="btn btn-green btn-sm" href="#inscription">S'inscrire</a>
 </div></header>
@@ -607,6 +632,7 @@ ${HEAD("Manuel officiel SODAF", "Les cours", "Tout ce qui est enseigné en salle
 
 <article class="ch" id="cours-panneaux" data-part="C · Priorités" data-title="Les panneaux">
 <header><div><p class="eyebrow">Partie C</p><h2>Les panneaux</h2></div></header>
+<p class="note"><b>Tous les panneaux en images :</b> <a href="#panneaux">ouvre la page Panneaux</a> et révise-les en mode quiz.</p>
 <p>Placés à droite, ils s'adressent à ceux qui leur font face, jusqu'à la prochaine intersection. Les panneaux de danger sont à environ 150 m du danger hors agglomération, 50 m en ville.</p>
 <div class="signs">
 <div class="sign"><svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="28" fill="#fff" stroke="#C8372D" stroke-width="7"/><text x="32" y="40" font-family="Arial,sans-serif" font-weight="700" font-size="22" text-anchor="middle" fill="#14171C">50</text></svg>Interdiction</div>
@@ -751,6 +777,21 @@ ${HEAD("Manuel officiel SODAF", "Les cours", "Tout ce qui est enseigné en salle
 </div></div>
 </section>
 
+<section class="page" data-page="panneaux" hidden>
+${HEAD("Révision", "Les panneaux", "Les principaux panneaux du code, classés par famille. Passe en mode révision : le nom est caché, touche le panneau pour vérifier ta réponse.")}
+<div class="wrap sec">
+<div class="ptools">
+<div class="pfilters" id="sd-pf" role="tablist" aria-label="Familles de panneaux"></div>
+<div class="psearch"><label for="sd-pq" class="sr">Chercher un panneau</label><input id="sd-pq" type="search" placeholder="Chercher : stop, virage, parking…"></div>
+<label class="ptoggle" for="sd-prev"><input type="checkbox" id="sd-prev"><span>Mode révision</span></label>
+</div>
+<p class="phint" id="sd-phint"></p>
+<div class="pgrid" id="sd-pgrid"></div>
+<p class="pempty" id="sd-pempty" hidden>Aucun panneau ne correspond. Essaie un autre mot.</p>
+<p class="pnote">Dessins simplifiés à des fins de révision. Les panneaux réels peuvent varier légèrement.</p>
+</div>
+</section>
+
 <section class="page" data-page="quiz" hidden>
 ${HEAD("Entraînement", "Le quiz SODAF", "Questions tirées du manuel, avec l'explication et le chapitre à relire. Objectif examen : 35 sur 40.")}
 <div class="wrap sec"><p class="qbest" id="sd-qbest" hidden></p><div class="modes" id="sd-modes"><button data-n="10" class="on">Série rapide · 10</button><button data-n="20">Série moyenne · 20</button><button data-n="40">Examen blanc · 40</button></div><div class="quiz card" id="sd-quiz"></div></div>
@@ -885,6 +926,96 @@ function hideOtherBlocks(root) {
 function optsHTML(q) {
   return '<p class="qtext">' + q[0] + '</p><div class="opts">' + q[1].map((o, k) => '<button class="opt" data-k="' + k + '"><span class="k">' + "ABCD"[k] + "</span><span>" + o + "</span></button>").join("") + "</div>";
 }
+
+
+/* ---------- Panneaux : dessins vectoriels simplifiés ---------- */
+const PK = "#14171C", PR = "#C8372D", PB = "#2B63B5", PY = "#F2B100";
+const SVGW = (inner) => `<svg viewBox="0 0 100 100" aria-hidden="true">${inner}</svg>`;
+const sk = (d, w = 7, c = PK) => `<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`;
+const fl = (d, c = PK) => `<path d="${d}" fill="${c}"/>`;
+const tx = (t, size = 34, c = PK, y = 62) => `<text x="50" y="${y}" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="${size}" fill="${c}">${t}</text>`;
+const TRI = (i) => SVGW(`<path d="M50 9 L93 85 H7 Z" fill="#fff" stroke="${PR}" stroke-width="8" stroke-linejoin="round"/>${i}`);
+const RED = (i) => SVGW(`<circle cx="50" cy="50" r="42" fill="#fff" stroke="${PR}" stroke-width="10"/>${i}`);
+const BAR = `<path d="M21 21 L79 79" stroke="${PR}" stroke-width="8"/>`;
+const BLUE = (i) => SVGW(`<circle cx="50" cy="50" r="45" fill="${PB}"/>${i}`);
+const ENDS = (i) => SVGW(`<circle cx="50" cy="50" r="44" fill="#fff" stroke="#8A9099" stroke-width="2"/>${i}<path d="M24 82 L82 24 M18 76 L76 18 M30 88 L88 30" stroke="${PK}" stroke-width="3"/>`);
+const SQ = (i) => SVGW(`<rect x="7" y="7" width="86" height="86" rx="9" fill="${PB}"/>${i}`);
+const PERSON = (x = 50, y = 38, s = 1, c = PK) => `<g transform="translate(${x} ${y}) scale(${s})"><circle cx="0" cy="0" r="5" fill="${c}"/>${sk("M0 7 L0 24 M0 12 L-8 20 M0 12 L8 18 M0 24 L-7 36 M0 24 L7 36", 4.5, c)}</g>`;
+const CAR = (x, c) => `<g transform="translate(${x} 0)"><rect x="-10" y="38" width="20" height="30" rx="6" fill="${c}"/><rect x="-7" y="44" width="14" height="7" rx="2" fill="#fff"/></g>`;
+const ARROW_UP = (c = "#fff") => fl("M50 18 L70 42 H57 V80 H43 V42 H30 Z", c);
+
+const SIGNS = [
+  // Danger
+  { f: "danger", n: "Virage à droite", d: "Ralentis avant le virage et garde ta droite.", s: TRI(sk("M42 78 V58 Q42 46 55 46 H58") + fl("M57 37 L69 46 L57 55 Z")) },
+  { f: "danger", n: "Virage à gauche", d: "Ralentis avant le virage et garde ta droite.", s: TRI(sk("M58 78 V58 Q58 46 45 46 H42") + fl("M43 37 L31 46 L43 55 Z")) },
+  { f: "danger", n: "Succession de virages", d: "Plusieurs virages, le premier à droite.", s: TRI(sk("M44 79 C44 70 57 68 57 59 C57 51 45 50 45 42") + fl("M38 44 L45 32 L52 44 Z")) },
+  { f: "danger", n: "Cassis ou dos-d’âne", d: "Bosse ou creux sur la chaussée : ralentis fortement.", s: TRI(sk("M25 74 Q37 56 50 74 Q63 56 75 74", 6)) },
+  { f: "danger", n: "Chaussée glissante", d: "Risque de dérapage : vitesse réduite, freinage doux.", s: TRI(`<rect x="38" y="38" width="24" height="16" rx="4" fill="${PK}"/>` + sk("M36 66 q5 -6 10 0 M54 66 q5 -6 10 0 M40 75 q5 -6 10 0 M56 75 q5 -6 10 0", 3.5)) },
+  { f: "danger", n: "Chaussée rétrécie", d: "La route se resserre : prépare-toi à croiser au pas.", s: TRI(sk("M36 80 L44 62 V40 M64 80 L56 62 V40", 6)) },
+  { f: "danger", n: "Passage piétons", d: "Des piétons peuvent traverser : prêt à t’arrêter.", s: TRI(PERSON(50, 40, 1) + `<path d="M30 79 H70" stroke="${PK}" stroke-width="3" stroke-dasharray="6 4"/>`) },
+  { f: "danger", n: "Endroit fréquenté par des enfants", d: "École ou aire de jeux : vitesse très réduite.", s: TRI(PERSON(41, 44, 0.85) + PERSON(59, 46, 0.75)) },
+  { f: "danger", n: "Travaux", d: "Chantier sur la route : ralentis, ouvriers possibles.", s: TRI(PERSON(46, 42, 0.9) + sk("M54 52 L66 70", 4) + fl("M58 79 H76 L68 66 Z")) },
+  { f: "danger", n: "Feux tricolores", d: "Des feux arrivent : sois prêt à t’arrêter.", s: TRI(`<rect x="41" y="32" width="18" height="46" rx="5" fill="${PK}"/><circle cx="50" cy="42" r="5" fill="${PR}"/><circle cx="50" cy="55" r="5" fill="${PY}"/><circle cx="50" cy="68" r="5" fill="#0B6E4F"/>`) },
+  { f: "danger", n: "Intersection, priorité à droite", d: "Cède le passage aux véhicules venant de droite.", s: TRI(sk("M36 46 L64 76 M64 46 L36 76")) },
+  { f: "danger", n: "Circulation dans les deux sens", d: "Tu quittes un sens unique : des véhicules arrivent en face.", s: TRI(fl("M40 34 L48 46 H43 V78 H37 V46 H32 Z") + fl("M60 78 L52 66 H57 V34 H63 V66 H68 Z")) },
+  { f: "danger", n: "Descente dangereuse", d: "Forte pente : rétrograde et utilise le frein moteur.", s: TRI(fl("M24 78 H76 L24 52 Z") + tx("10%", 13, "#fff", 74)) },
+  { f: "danger", n: "Passage à niveau avec barrières", d: "Arrêt si les barrières se ferment ou si le feu clignote.", s: TRI(`<rect x="28" y="52" width="44" height="7" fill="${PK}"/><rect x="28" y="66" width="44" height="7" fill="${PK}"/>` + sk("M34 46 V79 M66 46 V79", 4)) },
+  { f: "danger", n: "Passage à niveau sans barrière", d: "Arrête-toi, regarde et écoute avant de traverser.", s: TRI(`<rect x="30" y="54" width="34" height="18" rx="2" fill="${PK}"/><rect x="58" y="44" width="12" height="28" rx="2" fill="${PK}"/><circle cx="38" cy="75" r="4" fill="${PK}"/><circle cx="56" cy="75" r="4" fill="${PK}"/>`) },
+  { f: "danger", n: "Autres dangers", d: "Danger signalé par un panonceau dessous : sois attentif.", s: TRI(`<rect x="45.5" y="36" width="9" height="28" rx="2" fill="${PK}"/><circle cx="50" cy="73" r="5" fill="${PK}"/>`) },
+
+  // Priorité
+  { f: "priorite", n: "Stop", d: "Arrêt obligatoire à la ligne, puis céder le passage à tous.", s: SVGW(`<path d="M31 6 H69 L94 31 V69 L69 94 H31 L6 69 V31 Z" fill="${PR}" stroke="#fff" stroke-width="3"/>` + tx("STOP", 25, "#fff", 59)) },
+  { f: "priorite", n: "Cédez le passage", d: "Ralentis et laisse passer les véhicules prioritaires.", s: SVGW(`<path d="M7 12 H93 L50 90 Z" fill="#fff" stroke="${PR}" stroke-width="8" stroke-linejoin="round"/>`) },
+  { f: "priorite", n: "Route à caractère prioritaire", d: "Tu es prioritaire à toutes les intersections suivantes.", s: SVGW(`<rect x="20" y="20" width="60" height="60" transform="rotate(45 50 50)" fill="#fff" stroke="#9AA1A9" stroke-width="2"/><rect x="30" y="30" width="40" height="40" transform="rotate(45 50 50)" fill="${PY}"/>`) },
+  { f: "priorite", n: "Fin de route prioritaire", d: "Retour aux règles normales de priorité.", s: SVGW(`<rect x="20" y="20" width="60" height="60" transform="rotate(45 50 50)" fill="#fff" stroke="#9AA1A9" stroke-width="2"/><rect x="30" y="30" width="40" height="40" transform="rotate(45 50 50)" fill="${PY}"/><path d="M20 80 L80 20" stroke="${PK}" stroke-width="7"/>`) },
+  { f: "priorite", n: "Priorité à la prochaine intersection", d: "Tu es prioritaire, seulement au prochain carrefour.", s: TRI(sk("M50 36 V80", 10) + sk("M34 58 H66", 4)) },
+
+  // Interdiction
+  { f: "interdiction", n: "Sens interdit", d: "Interdit d’entrer, quel que soit le véhicule.", s: SVGW(`<circle cx="50" cy="50" r="45" fill="${PR}"/><rect x="18" y="42" width="64" height="16" fill="#fff"/>`) },
+  { f: "interdiction", n: "Circulation interdite", d: "Interdit à tout véhicule dans les deux sens.", s: RED("") },
+  { f: "interdiction", n: "Interdiction de tourner à gauche", d: "Tourner à gauche est interdit à la prochaine intersection.", s: RED(sk("M58 74 V50 Q58 40 48 40 H40") + fl("M42 31 L30 40 L42 49 Z") + BAR) },
+  { f: "interdiction", n: "Interdiction de tourner à droite", d: "Tourner à droite est interdit à la prochaine intersection.", s: RED(sk("M42 74 V50 Q42 40 52 40 H60") + fl("M58 31 L70 40 L58 49 Z") + `<path d="M79 21 L21 79" stroke="${PR}" stroke-width="8"/>`) },
+  { f: "interdiction", n: "Demi-tour interdit", d: "Faire demi-tour est interdit jusqu’à la prochaine intersection.", s: RED(sk("M40 74 V46 Q40 32 52 32 Q64 32 64 46 V56") + fl("M56 54 L64 66 L72 54 Z") + BAR) },
+  { f: "interdiction", n: "Interdiction de dépasser", d: "Dépassement interdit, sauf deux-roues sans moteur.", s: RED(CAR(38, PR) + CAR(62, PK)) },
+  { f: "interdiction", n: "Vitesse limitée à 50 km/h", d: "Vitesse maximale autorisée : 50 km/h.", s: RED(tx("50", 34)) },
+  { f: "interdiction", n: "Signaux sonores interdits", d: "Klaxon interdit, sauf danger immédiat.", s: RED(fl("M30 44 H40 L58 32 V68 L40 56 H30 Z") + sk("M64 40 q6 10 0 20", 4) + BAR) },
+  { f: "interdiction", n: "Accès interdit aux piétons", d: "Les piétons ne peuvent pas emprunter cette voie.", s: RED(PERSON(50, 32, 1.05)) },
+  { f: "interdiction", n: "Accès interdit aux poids lourds", d: "Interdit aux camions de marchandises.", s: RED(`<rect x="26" y="40" width="34" height="22" fill="${PK}"/><path d="M60 46 H70 L76 54 V62 H60 Z" fill="${PK}"/><circle cx="34" cy="66" r="5" fill="${PK}"/><circle cx="68" cy="66" r="5" fill="${PK}"/>`) },
+  { f: "interdiction", n: "Stationnement interdit", d: "Arrêt bref permis, stationnement interdit.", s: SVGW(`<circle cx="50" cy="50" r="42" fill="${PB}" stroke="${PR}" stroke-width="10"/><path d="M21 21 L79 79" stroke="${PR}" stroke-width="9"/>`) },
+  { f: "interdiction", n: "Arrêt et stationnement interdits", d: "Ni arrêt ni stationnement, même quelques secondes.", s: SVGW(`<circle cx="50" cy="50" r="42" fill="${PB}" stroke="${PR}" stroke-width="10"/><path d="M21 21 L79 79 M79 21 L21 79" stroke="${PR}" stroke-width="9"/>`) },
+
+  // Fin d'interdiction
+  { f: "fin", n: "Fin de limitation à 50 km/h", d: "La limitation de 50 km/h ne s’applique plus.", s: ENDS(tx("50", 34, "#8A9099")) },
+  { f: "fin", n: "Fin de toutes les interdictions", d: "Fin de toutes les interdictions signalées avant.", s: ENDS("") },
+  { f: "fin", n: "Fin d’interdiction de dépasser", d: "Tu peux de nouveau dépasser, avec prudence.", s: ENDS(CAR(38, "#8A9099") + CAR(62, "#8A9099")) },
+
+  // Obligation
+  { f: "obligation", n: "Direction obligatoire : tout droit", d: "Seule direction autorisée à la prochaine intersection.", s: BLUE(ARROW_UP()) },
+  { f: "obligation", n: "Direction obligatoire : à droite", d: "Tu dois tourner à droite à la prochaine intersection.", s: BLUE(sk("M42 78 V54 Q42 42 54 42 H60", 12, "#fff") + fl("M58 28 L76 42 L58 56 Z", "#fff")) },
+  { f: "obligation", n: "Contournement par la droite", d: "Passe à droite de l’obstacle ou du terre-plein.", s: BLUE(sk("M34 34 L62 62", 12, "#fff") + fl("M70 46 V72 H44 Z", "#fff")) },
+  { f: "obligation", n: "Carrefour giratoire", d: "Tourne dans le sens indiqué et cède aux usagers engagés.", s: BLUE(sk("M50 26 A24 24 0 0 1 72 56", 8, "#fff") + sk("M66 70 A24 24 0 0 1 30 64", 8, "#fff") + sk("M27 50 A24 24 0 0 1 40 28", 8, "#fff") + fl("M64 50 L80 54 L70 66 Z", "#fff") + fl("M38 74 L24 70 L32 58 Z", "#fff") + fl("M34 22 L48 22 L44 36 Z", "#fff")) },
+  { f: "obligation", n: "Vitesse minimale obligatoire", d: "Tu dois rouler au moins à la vitesse indiquée.", s: BLUE(tx("30", 34, "#fff")) },
+  { f: "obligation", n: "Piste cyclable obligatoire", d: "Voie réservée aux cycles, obligatoire pour eux.", s: BLUE(`<circle cx="34" cy="62" r="11" fill="none" stroke="#fff" stroke-width="4"/><circle cx="68" cy="62" r="11" fill="none" stroke="#fff" stroke-width="4"/>` + sk("M34 62 L46 44 H60 L68 62 M46 44 L54 62 L60 44 M44 38 H52", 4, "#fff")) },
+
+  // Indication
+  { f: "indication", n: "Parking", d: "Lieu aménagé pour le stationnement.", s: SQ(tx("P", 58, "#fff", 71)) },
+  { f: "indication", n: "Sens unique", d: "La route est à sens unique dans la direction de la flèche.", s: SQ(`<rect x="22" y="34" width="56" height="32" fill="#fff"/>` + fl("M30 46 H58 V40 L72 50 L58 60 V54 H30 Z", PB)) },
+  { f: "indication", n: "Voie sans issue", d: "Cette route ne débouche pas : impasse.", s: SQ(`<rect x="43" y="40" width="14" height="44" fill="#fff"/><rect x="26" y="22" width="48" height="16" fill="${PR}"/>`) },
+  { f: "indication", n: "Passage pour piétons", d: "Emplacement du passage piétons : cède-leur le passage.", s: SQ(`<path d="M50 16 L84 80 H16 Z" fill="#fff"/>` + PERSON(50, 46, 0.95) + `<path d="M32 77 H68" stroke="${PK}" stroke-width="3" stroke-dasharray="5 3"/>`) },
+  { f: "indication", n: "Hôpital", d: "Hôpital à proximité : évite le bruit, sois prudent.", s: SQ(tx("H", 58, "#fff", 71)) },
+  { f: "indication", n: "Entrée d’agglomération", d: "Début de la ville : 50 km/h maximum sauf indication.", s: SVGW(`<rect x="6" y="26" width="88" height="48" rx="4" fill="#fff" stroke="${PR}" stroke-width="5"/>` + tx("LOMÉ", 22, PK, 58)) },
+];
+const SIGN_FAMILIES = [
+  ["tous", "Tous"], ["danger", "Danger"], ["priorite", "Priorité"], ["interdiction", "Interdiction"], ["fin", "Fin d’interdiction"], ["obligation", "Obligation"], ["indication", "Indication"],
+];
+const FAMILY_HINT = {
+  danger: "Triangle à bord rouge : un danger approche.",
+  priorite: "Formes spéciales : qui passe en premier.",
+  interdiction: "Rond à bord rouge : ce qui est interdit.",
+  fin: "Rond blanc barré : l’interdiction s’arrête.",
+  obligation: "Rond bleu : ce que tu dois faire.",
+  indication: "Carré ou rectangle : une information utile.",
+};
 
 function init(root) {
   const S = { get(k, d) { try { const v = localStorage.getItem("sodaf." + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
@@ -1045,6 +1176,24 @@ function init(root) {
   $("#sd-again").addEventListener("click", () => {
     form.reset(); $("#sd-ok").hidden = true; fieldsBox().forEach((c) => (c.hidden = false)); $("#sd-fErr").hidden = true; $("#sd-fail").hidden = true; $("#sd-fName").focus();
   });
+
+  // panneaux
+  const pgrid = $("#sd-pgrid"), pf = $("#sd-pf"), pq = $("#sd-pq"), prev = $("#sd-prev");
+  let pfam = "tous";
+  pf.innerHTML = SIGN_FAMILIES.map(([k, l]) => '<button role="tab" type="button" data-f="' + k + '" aria-selected="' + (k === "tous") + '">' + l + "</button>").join("");
+  const norm = (t) => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  function renderSigns() {
+    const q = norm(pq.value.trim());
+    const list = SIGNS.filter((g) => (pfam === "tous" || g.f === pfam) && (!q || norm(g.n + " " + g.d).includes(q)));
+    pgrid.innerHTML = list.map((g, i) => '<button type="button" class="pcard" data-i="' + i + '">' + g.s + '<div class="ptxt"><b>' + g.n + "</b><span>" + g.d + "</span></div><em class=\"preveal\">Touche pour voir</em></button>").join("");
+    $("#sd-pempty").hidden = list.length > 0;
+    $("#sd-phint").textContent = pfam === "tous" ? list.length + " panneaux. Choisis une famille pour réviser par forme et couleur." : FAMILY_HINT[pfam] + " " + list.length + " panneaux.";
+  }
+  pf.addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; pfam = b.dataset.f; pf.querySelectorAll("button").forEach((x) => x.setAttribute("aria-selected", x === b)); renderSigns(); });
+  pq.addEventListener("input", renderSigns);
+  prev.addEventListener("change", () => { pgrid.classList.toggle("rev", prev.checked); pgrid.querySelectorAll(".pcard").forEach((c) => c.classList.remove("shown")); });
+  pgrid.addEventListener("click", (e) => { const c = e.target.closest(".pcard"); if (c && prev.checked) c.classList.toggle("shown"); });
+  renderSigns();
 
   function route() {
     const h = (location.hash || "#accueil").slice(1);
