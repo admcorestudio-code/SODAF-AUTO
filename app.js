@@ -629,8 +629,8 @@ a.teamtile.hl{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
 #sodaf-root.app-mode .logo-sub{color:var(--green)}
 .pc{display:grid;grid-template-columns:minmax(280px,360px) minmax(0,1fr);gap:18px;align-items:start}
 .pc-list{border:1.5px solid var(--line);border-radius:14px;background:#fff;overflow:hidden;position:sticky;top:76px}
-.pc-stages{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;padding:10px;background:var(--soft);border-bottom:1.5px solid var(--line)}
-.pc-stages button{font:600 .9rem var(--f-body);padding:.55em .6em;border-radius:10px;border:1.5px solid var(--line);background:#fff;color:#3D444D;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:6px}
+.pc-stages{display:flex;flex-wrap:wrap;gap:6px;padding:10px;background:var(--soft);border-bottom:1.5px solid var(--line)}
+.pc-stages button{flex:1 1 40%;font:600 .9rem var(--f-body);padding:.55em .6em;border-radius:10px;border:1.5px solid var(--line);background:#fff;color:#3D444D;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:6px}
 .pc-stages button em{font-style:normal;font-size:.78rem;background:var(--soft);border-radius:999px;padding:.1em .55em;color:var(--ink)}
 .pc-stages button[aria-selected="true"]{border-color:var(--ink);background:var(--ink);color:#fff}
 .pc-stages button[aria-selected="true"] em{background:var(--yellow);color:var(--ink)}
@@ -655,6 +655,15 @@ a.teamtile.hl{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
 .pc-gh.g-am{background:#DCE8F8;color:#163E7A;border-left:5px solid var(--blue);font-size:.8rem}
 .pc-gh.g-matin span,.pc-gh.g-am span,.pc-gh.g-first span{font-weight:800;color:var(--ink)}
 .pc-item.i-first{border-left-color:var(--green)}
+.pc-gh.g-late{background:#FDE3D6;color:#7A2E0E;border-left:5px solid #D9622B;font-size:.8rem}
+.pc-gh.g-wait{background:var(--soft);color:#3D444D;border-left:5px solid #9AA3AB;font-size:.8rem}
+.pc-item.i-late{border-left-color:#D9622B}
+.pc-item.i-wait{border-left-color:#9AA3AB}
+.t-late{background:#FDE3D6;color:#7A2E0E}
+.t-wait{background:var(--soft);color:#3D444D}
+.pc-dos{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
+.pc-more{margin-top:12px}
+.pc-more summary{cursor:pointer;font-weight:600;color:var(--green);margin-bottom:8px}
 .pc-item.i-matin{border-left-color:#E0A400}
 .pc-item.i-am{border-left-color:var(--blue)}
 .pc-item.on.i-matin{background:#FFF7DC}
@@ -1441,7 +1450,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <section class="tm-sec" data-s="eleves">
 <div class="pc" id="sd-pc">
 <div class="pc-list">
-<div class="pc-stages" id="sd-pcStages" role="tablist"><button type="button" data-st="accueil">Accueil <em></em></button><button type="button" data-st="appels">Appels <em></em></button><button type="button" data-st="formation">En formation <em></em></button><button type="button" data-st="archives">Archivés <em></em></button></div>
+<div class="pc-stages" id="sd-pcStages" role="tablist"><button type="button" data-st="accueil">Accueil <em></em></button><button type="button" data-st="appels">Appels <em></em></button><button type="button" data-st="dossier">Dossier envoyé <em></em></button><button type="button" data-st="formation">En formation <em></em></button><button type="button" data-st="archives">Archivés <em></em></button></div>
 <div class="pc-tools"><input id="sd-pcQ" type="search" placeholder="Chercher un nom, un numéro, un n° de dossier"><button class="btn btn-green btn-sm" type="button" id="sd-elAddBtn">+ Élève</button></div>
 <form id="sd-elAdd" class="card tm-form" hidden novalidate>
 <div class="field"><label for="sd-elN">Nom et prénom</label><input id="sd-elN"></div>
@@ -1503,7 +1512,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 </section>
 <div class="tm-sub"><div><p class="eyebrow">Mode d'emploi</p><h3>Les gestes du secrétariat</h3></div></div>
 <div class="grid g2 tm-guides">
-<div class="card soft"><p class="eyebrow">Une pré-inscription arrive</p><ol class="teamsteps"><li><b>Accueil</b> : touche <b>Envoyer l'accueil</b> (WhatsApp), puis <b>Basculer en zone d'appel</b>.</li><li><b>Appels</b> : appelle avec le script. Pas de réponse ? <b>✗ Pas de réponse</b> et choisis quand rappeler. À 4 tentatives : relance WhatsApp puis <b>Injoignable</b>.</li><li>Il vient au bureau : <b>Inscrire et faire le reçu</b>, coche ses pièces, ajoute-le au groupe.</li></ol></div>
+<div class="card soft"><p class="eyebrow">Une pré-inscription arrive</p><ol class="teamsteps"><li><b>Accueil</b> : touche <b>Envoyer l'accueil</b> (WhatsApp), puis <b>Basculer en zone d'appel</b>.</li><li><b>Appels</b> : appelle avec le script. Pas de réponse ? <b>✗ Pas de réponse</b> et choisis quand rappeler. À 4 tentatives : relance WhatsApp puis <b>Injoignable</b>.</li><li>Il est intéressé : <b>Intéressé : envoyer le dossier</b> (fiche, planning, prix, paiement Mixx ou bureau, localisation).</li><li><b>Dossier envoyé</b> : relance après 3 jours. Il a payé (bureau ou capture Mixx vérifiée) : <b>Paiement reçu : faire le reçu</b>, coche ses pièces, ajoute-le au groupe.</li></ol></div>
 <div class="card soft"><p class="eyebrow">Réserver une séance de conduite</p><ol class="teamsteps"><li>Vérifie que la 2e moitié est payée (<b>Paiements</b> → À relancer).</li><li><b>Planning conduite</b> : choisis le jour, puis l'élève sur un créneau libre.</li><li>Touche <b>Confirmer</b> : le message WhatsApp est prêt. La veille, touche <b>Rappel</b>.</li></ol></div>
 <div class="card soft"><p class="eyebrow">Mercredi : résultats du devoir</p><ol class="teamsteps"><li>Onglet <b>Devoirs</b> : le message de la semaine est déjà écrit.</li><li>Touche <b>Ouvrir WhatsApp avec le message</b> et choisis le groupe.</li></ol></div>
 <div class="card soft"><p class="eyebrow">Règles</p><ol class="teamsteps"><li>On ne supprime rien : une séance annulée passe en <b>Annulé</b>, un dossier qui s'arrête va dans <b>Archivés</b> avec son motif, un reçu faux se fait <b>Annuler</b> (avec la raison) puis on refait le bon.</li><li>Erreur de nom ou de numéro : <b>Modifier</b> sur la fiche de l'élève.</li><li>Jour férié ou fermeture : <b>Planning conduite</b> → le jour → « Fermer ce jour », puis <b>Prévenir</b> chaque élève.</li><li>Les créneaux du mois suivant se créent tout seuls le 24.</li></ol></div>
@@ -2413,6 +2422,7 @@ function init(root) {
       if (!rows) return;
       if (!rows.length) { await DB.logout(); show(false); $("#sd-teamErr").textContent = "Ce compte n'est pas autorisé dans l'espace équipe."; $("#sd-teamErr").hidden = false; return; }
       me = rows[0];
+      const rg = await run(() => DB.q("reglages?select=*")); if (rg) rg.forEach((r) => (CFG[r.cle] = r.valeur));
       $("#sd-tmHello").textContent = "Bonjour " + me.nom.split(" ")[0];
       $("#sd-tmRole").textContent = { admin: "Direction", secretariat: "Secrétariat", moniteur: "Moniteur" }[me.role] + " · Espace équipe SODAF";
       show(true);
@@ -2426,7 +2436,13 @@ function init(root) {
     // ---- Parcours élèves : Accueil → Appels → En formation → Archivés
     const ST = ["Nouveau", "Contacté", "Inscrit", "En formation", "Permis obtenu", "Abandon"];
     const ETAPES = { accueil: ["Nouveau"], appels: ["Contacté"], formation: ["Inscrit", "En formation", "Permis obtenu"], archives: ["Abandon"] };
-    const etapeOf = (x) => Object.keys(ETAPES).find((k) => ETAPES[k].includes(x.statut)) || "accueil";
+    const etapeOf = (x) => (x.statut === "Contacté" && x.dossier_envoye_le ? "dossier" : Object.keys(ETAPES).find((k) => ETAPES[k].includes(x.statut)) || "accueil");
+    const CFG = {};
+    const PRIXM = { "Permis B": "55 000 F la formation complète (formule courte 35 000 F, accélérée 75 000 F en 2 mois ou 80 000 F en 1 mois)", "Permis A": "30 000 F", "Pack A + B": "80 000 F", "Remise à niveau": "20 000 F", "Formation entreprise": "sur devis, selon le nombre de chauffeurs" };
+    const jours = (d) => Math.floor((Date.now() - new Date(d)) / 864e5);
+    const dosAge = (x) => jours(x.dossier_relance_le && x.dossier_relance_le > x.dossier_envoye_le ? x.dossier_relance_le : x.dossier_envoye_le);
+    const msgDossier = (x) => "Bonjour " + prenom(x) + " 😊\nComme promis, voici ton dossier d'inscription SODAF Auto-École.\n\n*TON DOSSIER N° " + x.id + "*\n• Formation : " + (x.formation || "à préciser") + "\n• Prix : " + (PRIXM[x.formation] || "voir autosodaf.com") + "\n• Droit d'inscription : 5 000 F\n• Paiement en 2 fois : la moitié à l'inscription, le reste avant ta 1re séance de conduite.\n\n📄 Fiche de renseignement (à remplir et à apporter au bureau) :\nhttps://autosodaf.com/fiche-renseignement-sodaf.pdf\n📅 Planning de la semaine :\nhttps://autosodaf.com/planning-semaine-sodaf.pdf\n\n🗂️ Pièces à préparer : acte de naissance, carte d'identité, photos d'identité" + (/B/.test(x.formation || "") ? ", quittance d'examen de 35 000 F" : "") + ".\n\n💳 *Pour t'inscrire, 2 possibilités :*\n1. Au bureau, en espèces.\n2. À distance par Mixx by Yas (T-Money) : " + (CFG.mixx_numero ? "envoie au " + CFG.mixx_numero + (CFG.mixx_nom ? " (" + CFG.mixx_nom + ")" : "") + " avec le motif « SODAF " + x.id + " », puis envoie-nous la capture ici." : "réponds « Mixx » et nous t'envoyons le numéro de paiement.") + "\nDès réception, tu reçois ton reçu officiel sur WhatsApp.\n\n📍 Nous trouver : " + (CFG.maps_lien || "412 Avenue Akei, Tokoin Tamé") + "\n412 Avenue Akei, Tokoin Tamé (en face de la caisse)\n🕗 Lun – ven 8 h – 12 h 30 et 14 h 30 – 18 h · Sam 8 h – 12 h\n\nDes questions ? Réponds simplement à ce message.\nL'équipe SODAF · L'art de conduire, la force de réussir.";
+    const msgRelDos = (x) => "Bonjour " + prenom(x) + ", c'est le secrétariat de SODAF Auto-École. As-tu pu regarder ton dossier d'inscription (n° " + x.id + ") ? Si tu as une question sur le prix, les horaires ou le paiement, on est là. Tu peux payer au bureau ou par Mixx by Yas, et commencer le code dès la semaine prochaine 🚗";
     const PRIX = { "Permis B": "55 000 F la formation complète (formule courte dès 35 000 F, accélérée 75 000 ou 80 000 F)", "Permis A": "30 000 F", "Pack A + B": "80 000 F", "Remise à niveau": "20 000 F", "Formation entreprise": "sur devis" };
     const PIECES = [["acte", "Acte de naissance"], ["cni", "Carte d'identité"], ["photos", "Photos d'identité"], ["quittance", "Quittance d'examen (permis B)"], ["deja", "A déjà conduit"]];
     const prenom = (x) => (x.nom || "").trim().split(/\s+/)[0];
@@ -2452,6 +2468,7 @@ function init(root) {
     function groupsFor(stage, list) {
       if (stage === "accueil") return [["À accueillir", list.slice().sort((a, b) => (a.cree_le < b.cree_le ? -1 : 1))]];
       if (stage === "appels") return [["À appeler · 1er appel", list.filter((x) => !x.rappel), "first"], ["Rappeler le matin", list.filter((x) => x.rappel === "matin"), "matin"], ["Rappeler l'après-midi", list.filter((x) => x.rappel === "apres-midi"), "am"]];
+      if (stage === "dossier") return [["À relancer · 3 jours et plus", list.filter((x) => dosAge(x) >= 3), "late"], ["En réflexion", list.filter((x) => dosAge(x) < 3), "wait"]];
       if (stage === "formation") return ["Inscrit", "En formation", "Permis obtenu"].map((s) => [s, list.filter((x) => x.statut === s)]);
       return ["Plus tard", "Injoignable", "Rétractation", "Faux numéro"].map((m) => [m, list.filter((x) => x.archive_motif === m)]).concat([["Sans motif", list.filter((x) => !x.archive_motif)]]);
     }
@@ -2459,14 +2476,14 @@ function init(root) {
       const q = $("#sd-pcQ").value.trim().toLowerCase();
       $$("#sd-pcStages button").forEach((b) => { const n = eleves.filter((x) => etapeOf(x) === b.dataset.st).length; b.querySelector("em").textContent = n; b.setAttribute("aria-selected", b.dataset.st === pcStage); });
       const list = eleves.filter((x) => etapeOf(x) === pcStage && (!q || (x.nom + " " + (x.telephone || "") + " " + x.id).toLowerCase().includes(q)));
-      const fold = foldState(), TAG = { first: "1er appel", matin: "Matin", am: "Après-midi" };
-      const isOpen = (g) => !g[2] || g[2] === "first" || !!q || fold[g[2]];
-      const html = groupsFor(pcStage, list).filter((g) => g[1].length).map((g) => (g[2] && g[2] !== "first"
+      const fold = foldState(), TAG = { first: "1er appel", matin: "Matin", am: "Après-midi", late: "À relancer", wait: "En réflexion" };
+      const isOpen = (g) => !["matin", "am"].includes(g[2]) || !!q || fold[g[2]];
+      const html = groupsFor(pcStage, list).filter((g) => g[1].length).map((g) => (g[2] && ["matin", "am"].includes(g[2])
         ? '<button type="button" class="pc-gh pc-fold g-' + g[2] + '" data-fold="' + g[2] + '" aria-expanded="' + isOpen(g) + '"><i aria-hidden="true">▸</i>' + esc(g[0]) + " <span>" + g[1].length + "</span></button>"
         : '<p class="pc-gh' + (g[2] ? " g-" + g[2] : "") + '">' + esc(g[0]) + " <span>" + g[1].length + "</span></p>") + (isOpen(g) ? g[1].map((x) =>
         '<button type="button" class="pc-item' + (g[2] ? " i-" + g[2] : "") + (x.id === pcSel ? " on" : "") + '" data-id="' + x.id + '"><b>' + esc(x.nom) + (g[2] ? ' <em class="pc-tag t-' + g[2] + '">' + TAG[g[2]] + "</em>" : "") + '</b><span>' + esc((x.telephone || "").replace("+228", "+228 ")) + (x.formation ? " · " + esc(x.formation) : "") + "</span><small>N° " + x.id + " · " +
-        (pcStage === "accueil" ? (x.accueil_le ? "accueil envoyé ✓" : "arrivé " + ago(x.cree_le)) : pcStage === "appels" ? (x.appels ? x.appels + "X sans réponse" : "pas encore appelé") : pcStage === "archives" ? "archivé " + (x.archive_le ? ago(x.archive_le) : "") : esc(x.statut)) + "</small></button>").join("") : "")).join("");
-      $("#sd-pcList").innerHTML = html || '<p class="tm-empty">' + ({ accueil: "Aucune nouvelle pré-inscription. Elles arrivent ici toutes seules depuis le site.", appels: "Personne à appeler pour l'instant.", formation: "Aucun élève en formation pour l'instant.", archives: "Aucun dossier archivé." }[pcStage]) + "</p>";
+        (pcStage === "accueil" ? (x.accueil_le ? "accueil envoyé ✓" : "arrivé " + ago(x.cree_le)) : pcStage === "appels" ? (x.appels ? x.appels + "X sans réponse" : "pas encore appelé") : pcStage === "dossier" ? "dossier envoyé " + ago(x.dossier_envoye_le) + (x.dossier_relance_le ? " · relancé " + ago(x.dossier_relance_le) : "") : pcStage === "archives" ? "archivé " + (x.archive_le ? ago(x.archive_le) : "") : esc(x.statut)) + "</small></button>").join("") : "")).join("");
+      $("#sd-pcList").innerHTML = html || '<p class="tm-empty">' + ({ accueil: "Aucune nouvelle pré-inscription. Elles arrivent ici toutes seules depuis le site.", appels: "Personne à appeler pour l'instant.", dossier: "Aucun dossier en attente. Après un appel, « Intéressé : envoyer le dossier » les range ici.", formation: "Aucun élève en formation pour l'instant.", archives: "Aucun dossier archivé." }[pcStage]) + "</p>";
       if (pcSel && !list.some((x) => x.id === pcSel)) pcSel = null;
       if (!pcSel && isWide()) { const first = $("#sd-pcList .pc-item"); if (first) { pcSel = +first.dataset.id; first.classList.add("on"); } }
       renderDetail();
@@ -2506,8 +2523,8 @@ function init(root) {
       pc.classList.toggle("has-sel", !!x);
       if (!x) { box.innerHTML = '<div class="pc-none"><b>Choisis un dossier dans la liste</b><span>Sa fiche, les messages prêts et les actions s\'affichent ici.</span></div>'; return; }
       const st = etapeOf(x), n = waNum(x.telephone), wa = (t) => "https://wa.me/228" + n + "?text=" + encodeURIComponent(t);
-      const head = '<button type="button" class="linkbtn pc-back" data-a="back">← Retour à la liste</button><div class="pc-head"><div><p class="eyebrow">' + { accueil: "Accueil", appels: "Zone d'appel", formation: "En formation", archives: "Archivé" }[st] + '</p><h3>' + esc(x.nom) + ' <span>| ' + x.id + "</span></h3></div>" +
-        ({ accueil: '<button class="btn btn-blue btn-sm" type="button" data-a="toCall">Basculer en zone d\'appel →</button>', appels: '<button class="btn btn-green btn-sm" type="button" data-a="enroll">Inscrire et faire le reçu</button>', formation: '<button class="btn btn-green btn-sm" type="button" data-a="rc">Faire un reçu</button>', archives: '<button class="btn btn-blue btn-sm" type="button" data-a="revive">Ressortir : remettre en appel</button>' }[st]) + "</div>";
+      const head = '<button type="button" class="linkbtn pc-back" data-a="back">← Retour à la liste</button><div class="pc-head"><div><p class="eyebrow">' + { accueil: "Accueil", appels: "Zone d'appel", dossier: "Dossier envoyé · en réflexion", formation: "En formation", archives: "Archivé" }[st] + '</p><h3>' + esc(x.nom) + ' <span>| ' + x.id + "</span></h3></div>" +
+        ({ accueil: '<button class="btn btn-blue btn-sm" type="button" data-a="toCall">Basculer en zone d\'appel →</button>', appels: '<button class="btn btn-green btn-sm" type="button" data-a="prepDossier">Intéressé : envoyer le dossier →</button>', dossier: '<button class="btn btn-green btn-sm" type="button" data-a="enroll">Paiement reçu : faire le reçu</button>', formation: '<button class="btn btn-green btn-sm" type="button" data-a="rc">Faire un reçu</button>', archives: '<button class="btn btn-blue btn-sm" type="button" data-a="revive">Ressortir : remettre en appel</button>' }[st]) + "</div>";
       const info = '<div class="pc-info"><div><span>N° dossier</span><b>' + x.id + '</b></div><div><span>Téléphone</span><b>' + (n ? '<a href="tel:+228' + n + '">+228 ' + n.replace(/(\d{2})(?=\d)/g, "$1 ") + "</a>" : "—") + '</b></div><div><span>Formation</span><b>' + esc(x.formation || "—") + '</b></div><div><span>Quartier</span><b>' + esc(x.quartier || "—") + "</b></div>" +
         '<div><span>Préfère</span><b>' + esc(x.creneau_prefere || "—") + '</b></div><div><span>Paiement</span><b>' + esc(x.paiement_prefere || "—") + '</b></div><div><span>Arrivé</span><b>' + new Date(x.cree_le).toLocaleDateString("fr-FR") + " · " + (x.source === "site" ? "site" : "bureau") + "</b></div>" +
         '<div><span>Statut</span><b>' + (st === "formation" ? '<select data-a="statut">' + ETAPES.formation.map((t) => "<option" + (t === x.statut ? " selected" : "") + ">" + t + "</option>").join("") + "</select>" : esc(x.statut === "Abandon" ? "Archivé" + (x.archive_motif ? " · " + x.archive_motif : "") : x.statut)) + "</b></div>" +
@@ -2525,14 +2542,21 @@ function init(root) {
           '<div><p class="pc-lab">Tentatives sans réponse</p><div class="pc-tries">' + [1, 2, 3, 4].map((i) => '<i class="' + (i <= t ? "on" : "") + '">' + i + "X" + (i === 4 ? " · injoignable" : "") + "</i>").join("") + "</div></div></div>" +
           '<div class="tm-formact"><button class="btn btn-green btn-sm" type="button" data-a="callOk">✓ Appel réussi</button><button class="btn btn-line btn-sm" type="button" data-a="callKo">✗ Pas de réponse</button><input id="sd-pcCallNote" placeholder="Ce qu\'il a dit (facultatif)" maxlength="300"></div>' +
           (t >= 4 ? '<div class="pc-alert"><b>4 appels sans réponse.</b> Envoie la relance WhatsApp, puis range le dossier en « Injoignable ». Tu pourras le ressortir s\'il répond.<div class="tm-formact">' + (n ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-a="relance" href="' + wa(msgRelance(x)) + '">Envoyer la relance ↗</a>' : "") + '<button class="btn btn-sm pc-red" type="button" data-arch="Injoignable">Archiver : Injoignable</button></div></div>' : "") + "</div>" +
+          '<div class="pc-block pc-dos" id="sd-pcDos" hidden><div class="pc-bh"><b>Dossier à envoyer sur WhatsApp</b><span class="tm-note" style="margin:0!important">Fiche, planning, prix, paiement, localisation</span></div><textarea id="sd-pcDosMsg" rows="16">' + esc(msgDossier(x)) + '</textarea><div class="tm-formact">' + (n ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-a="sendDossier" href="' + wa(msgDossier(x)) + '">Envoyer le dossier sur WhatsApp ↗</a>' : '<span class="tm-err">Pas de numéro : ajoute-le avec Modifier.</span>') + '<span class="tm-note" style="margin:0!important">Après l\'envoi, le dossier passe dans « Dossier envoyé ».</span></div></div>' +
           '<div class="pc-block"><div class="pc-bh"><b>Script d\'appel</b><span class="tm-note" style="margin:0!important">' + esc(x.formation || "") + '</span></div><div class="pc-script">' + script(x) + "</div></div>";
+      } else if (st === "dossier") {
+        const age = jours(x.dossier_envoye_le), late = dosAge(x) >= 3;
+        body = '<p class="pc-proto">Protocole : l\'élève réfléchit. Relance-le après 3 jours sans nouvelles. Dès qu\'il paie (au bureau ou capture Mixx vérifiée sur le téléphone de l\'agence) : « Paiement reçu : faire le reçu ».</p>' +
+          '<div class="pc-block"><div class="pc-bh"><b>Dossier envoyé</b><span class="pc-ok">' + (age === 0 ? "aujourd'hui" : "il y a " + age + (age > 1 ? " jours" : " jour")) + (x.dossier_relance_le ? " · relancé " + ago(x.dossier_relance_le) : "") + "</span></div>" +
+          (late ? '<div class="pc-alert" style="margin-top:0"><b>Pas de nouvelles depuis ' + dosAge(x) + ' jours.</b> Envoie la relance, ou appelle-le.<div class="tm-formact">' + (n ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-a="relDossier" href="' + wa(msgRelDos(x)) + '">Envoyer la relance ↗</a>' : "") + "</div></div>" : (n ? '<div class="tm-formact"><a class="btn btn-line btn-sm" target="_blank" rel="noopener" data-a="relDossier" href="' + wa(msgRelDos(x)) + '">Relancer quand même ↗</a></div>' : "")) +
+          '<details class="pc-more"><summary>Revoir ou renvoyer le dossier</summary><textarea id="sd-pcDosMsg" rows="14">' + esc(msgDossier(x)) + '</textarea><div class="tm-formact">' + (n ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-a="resendDossier" href="' + wa(msgDossier(x)) + '">Renvoyer le dossier ↗</a>' : "") + "</div></details></div>";
       } else if (st === "formation") {
         body = '<div class="pc-block"><div class="pc-bh"><b>Paiements</b></div><div id="sd-pcPay"><p class="tm-note">Chargement…</p></div></div><div class="pc-block"><div class="pc-bh"><b>Conduite</b></div><div id="sd-pcDrive"><p class="tm-note">Chargement…</p></div></div>';
       } else {
         body = '<div class="pc-block"><p>Archivé ' + (x.archive_le ? "le " + new Date(x.archive_le).toLocaleDateString("fr-FR") : "") + (x.archive_motif ? " · motif : <b>" + esc(x.archive_motif) + "</b>" : "") + '.</p><p class="tm-note">« Ressortir » le remet dans la zone d\'appel, compteur d\'appels remis à zéro.</p>' + (n ? '<div class="tm-formact"><a class="btn btn-wa btn-sm" target="_blank" rel="noopener" href="https://wa.me/228' + n + '">Écrire sur WhatsApp</a></div>' : "") + "</div>";
       }
       const pieces = st === "accueil" || st === "archives" ? "" : '<div class="pc-block"><div class="pc-bh"><b>Dossier d\'inscription</b></div><div class="pc-checks">' + PIECES.map((p) => '<label><input type="checkbox" data-piece="' + p[0] + '"' + (x.dossier && x.dossier[p[0]] ? " checked" : "") + "> " + p[1] + "</label>").join("") + "</div></div>";
-      const arch = st === "appels" ? '<div class="pc-foot"><span>Ranger le dossier</span><div class="tm-acts"><button class="btn btn-line btn-sm" type="button" data-arch="Plus tard">Plus tard (potentiel)</button><button class="btn btn-sm pc-dark" type="button" data-arch="Rétractation">Archiver – Rétractation</button><button class="btn btn-sm pc-red" type="button" data-arch="Faux numéro">Faux numéro</button></div></div>' : "";
+      const arch = st === "dossier" ? '<div class="pc-foot"><span>Ranger le dossier</span><div class="tm-acts"><button class="linkbtn" type="button" data-a="backCall">Revenir en zone d\'appel</button><button class="btn btn-line btn-sm" type="button" data-arch="Plus tard">Plus tard (potentiel)</button><button class="btn btn-sm pc-dark" type="button" data-arch="Rétractation">Archiver – Rétractation</button></div></div>' : st === "appels" ? '<div class="pc-foot"><span>Ranger le dossier</span><div class="tm-acts"><button class="btn btn-line btn-sm" type="button" data-arch="Plus tard">Plus tard (potentiel)</button><button class="btn btn-sm pc-dark" type="button" data-arch="Rétractation">Archiver – Rétractation</button><button class="btn btn-sm pc-red" type="button" data-arch="Faux numéro">Faux numéro</button></div></div>' : "";
       const suivi = '<div class="pc-block"><div class="pc-bh"><b>Suivi</b><button class="linkbtn" type="button" data-a="edit">Modifier la fiche</button></div><div class="tm-formact" style="margin:0 0 10px"><input id="sd-pcNote" placeholder="Ajouter une note au dossier" maxlength="300"><button class="btn btn-line btn-sm" type="button" data-a="note">Ajouter</button></div><div id="sd-pcFeed" class="pc-feed"><p class="tm-note">Chargement…</p></div></div>';
       box.innerHTML = head + info + body + pieces + arch + suivi;
       const id = x.id;
@@ -2561,10 +2585,15 @@ function init(root) {
       else if (k === "toCall") { if (await patchEl(x, { statut: "Contacté", appels: 0 }, "Dossier en zone d'appel", ["Étape", "Passé en zone d'appel"])) nextAfter(x); }
       else if (k === "callOk") { const note = $("#sd-pcCallNote").value.trim(); await addSuivi(x, "Appel réussi", note); toast("Appel noté"); renderDetail(); }
       else if (k === "callKo") { const note = $("#sd-pcCallNote").value.trim(); if (await patchEl(x, { appels: Math.min((x.appels || 0) + 1, 20) }, "Tentative notée (" + ((x.appels || 0) + 1) + "X)", ["Appel sans réponse", note])) renderList(); }
+      else if (k === "prepDossier") { const b = $("#sd-pcDos"); b.hidden = false; b.scrollIntoView({ block: "center" }); $("#sd-pcDosMsg").focus(); }
+      else if (k === "sendDossier") { a.href = "https://wa.me/228" + waNum(x.telephone) + "?text=" + encodeURIComponent($("#sd-pcDosMsg").value); if (await patchEl(x, { dossier_envoye_le: new Date().toISOString(), dossier_relance_le: null, rappel: null }, "Dossier envoyé : il passe en réflexion", ["Étape", "Dossier envoyé (fiche, planning, prix, paiement)"])) nextAfter(x); }
+      else if (k === "resendDossier") { a.href = "https://wa.me/228" + waNum(x.telephone) + "?text=" + encodeURIComponent($("#sd-pcDosMsg").value); await patchEl(x, { dossier_envoye_le: new Date().toISOString(), dossier_relance_le: null }, "Dossier renvoyé", ["Étape", "Dossier renvoyé"]); renderList(); }
+      else if (k === "relDossier") { if (await patchEl(x, { dossier_relance_le: new Date().toISOString() }, "Relance notée", ["Relance envoyée", "Relance du dossier"])) renderList(); }
+      else if (k === "backCall") { if (await patchEl(x, { dossier_envoye_le: null, dossier_relance_le: null }, "Dossier remis en zone d'appel", ["Étape", "Revenu en zone d'appel"])) nextAfter(x); }
       else if (k === "relance") { await addSuivi(x, "Relance envoyée"); toast("Relance notée"); }
       else if (k === "enroll") { if (await patchEl(x, { statut: "Inscrit", rappel: null }, "Inscrit : fais le reçu", ["Étape", "Inscrit"])) { renderList(); if (window.__sodafRcFill) { sub("paiements"); window.__sodafRcFill(x); } } }
       else if (k === "rc") { if (window.__sodafRcFill) { sub("paiements"); window.__sodafRcFill(x); } }
-      else if (k === "revive") { if (await patchEl(x, { statut: "Contacté", archive_motif: null, archive_le: null, appels: 0, rappel: null }, "Dossier remis en appel", ["Étape", "Ressorti des archives"])) nextAfter(x); }
+      else if (k === "revive") { if (await patchEl(x, { statut: "Contacté", archive_motif: null, archive_le: null, appels: 0, rappel: null, dossier_envoye_le: null, dossier_relance_le: null }, "Dossier remis en appel", ["Étape", "Ressorti des archives"])) nextAfter(x); }
       else if (k === "note") { const v = $("#sd-pcNote").value.trim(); if (!v) return; await addSuivi(x, "Note", v); toast("Note ajoutée"); renderDetail(); }
       else if (k === "edit") editForm(x);
     });
@@ -2759,7 +2788,8 @@ function init(root) {
       if (vieux.length) w.push(["🔴", vieux.length + (vieux.length > 1 ? " pré-inscriptions" : " pré-inscription") + " sans accueil depuis plus de 2 jours", vieux.slice(0, 4).map((x) => x.nom).join(", ")]);
       const nouv = eleves.filter((x) => x.statut === "Nouveau").length - vieux.length;
       if (nouv > 0) w.push(["🟡", nouv + (nouv > 1 ? " nouvelles pré-inscriptions" : " nouvelle pré-inscription") + " à accueillir", "Secrétariat → Parcours élèves → Accueil"]);
-      const aApp = eleves.filter((x) => x.statut === "Contacté").length; if (aApp) w.push(["🟡", aApp + (aApp > 1 ? " élèves à appeler" : " élève à appeler"), "Secrétariat → Parcours élèves → Appels"]);
+      const aRel = eleves.filter((x) => etapeOf(x) === "dossier" && dosAge(x) >= 3).length; if (aRel) w.push(["🟠", aRel + (aRel > 1 ? " dossiers envoyés à relancer" : " dossier envoyé à relancer") + " (3 jours sans nouvelles)", "Secrétariat → Parcours élèves → Dossier envoyé"]);
+      const aApp = eleves.filter((x) => etapeOf(x) === "appels").length; if (aApp) w.push(["🟡", aApp + (aApp > 1 ? " élèves à appeler" : " élève à appeler"), "Secrétariat → Parcours élèves → Appels"]);
       const vieuxDus = dus.filter((p) => Date.now() - dOf(p.jour) > 30 * 864e5);
       if (vieuxDus.length) w.push(["🔴", vieuxDus.length + (vieuxDus.length > 1 ? " élèves doivent" : " élève doit") + " encore payer depuis plus d'un mois", vieuxDus.slice(0, 4).map((p) => p.eleve_nom + " (" + F(p.reste) + ")").join(", ")]);
       else if (dus.length) w.push(["🟡", dus.length + (dus.length > 1 ? " élèves ont" : " élève a") + " un reste à payer", "Secrétariat → Paiements → À relancer"]);
