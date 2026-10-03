@@ -3265,7 +3265,7 @@ function init(root) {
 
 (function () {
   const st = document.createElement("style"); st.textContent = CSS + 'html,body{margin:0;background:#15191E}#sodaf-root{min-height:100vh;display:flex;flex-direction:column}#sodaf-root>#app{flex:1;display:flex;flex-direction:column;background:#fff}#sodaf-root main{flex:1}'; document.head.appendChild(st);
-  const fi = document.createElement("link"); fi.rel = "icon"; fi.type = "image/svg+xml"; fi.href = FAVICON; document.head.appendChild(fi);
+  if (!document.querySelector("link[rel=icon]")) { const fi = document.createElement("link"); fi.rel = "icon"; fi.type = "image/svg+xml"; fi.href = FAVICON; document.head.appendChild(fi); }
   const app = document.getElementById("app"); app.innerHTML = HTML;
   if (window.SODAF_APP) {
     document.getElementById("sodaf-root").classList.add("app-mode");
