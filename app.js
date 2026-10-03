@@ -575,6 +575,7 @@ a.teamtile.hl{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
 .tm-main select,.tm-main input{width:100%;margin-top:4px}
 .tm-acts{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .tm-time{font:700 1rem var(--f-mono);min-width:5.5ch;color:var(--ink)}
+.tm-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-top:6px}.tm-dot-r{background:#D7263D}.tm-dot-o{background:#F08A24}.tm-dot-y{background:#E8C21A}
 .tm-empty{color:var(--muted);padding:18px;text-align:center;background:var(--soft);border-radius:12px}
 .tm-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:14px}
 .tm-stats div{background:var(--soft);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column}
@@ -609,6 +610,7 @@ a.teamtile.hl{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
 .tm-dr div.hl span,.tm-dr div.hl small{color:#C9CED4}
 .tm-dr div.hl b{color:#fff}
 .tm-dr small{font-size:.8rem;color:var(--muted)}
+.tm-drex{grid-template-columns:repeat(3,1fr)}@media(max-width:700px){.tm-drex{grid-template-columns:repeat(2,1fr)}}
 .tm-small{font-size:.82rem!important;min-width:6ch}
 .tm-src{display:flex;flex-direction:column;gap:10px}
 .tm-srow{display:grid;grid-template-columns:minmax(120px,190px) 1fr auto;gap:12px;align-items:center;font-size:.94rem}
@@ -1681,7 +1683,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 </section>
 <div class="tm-sub"><div><p class="eyebrow">Mode d'emploi</p><h3>Les gestes du secrétariat</h3></div></div>
 <div class="grid g2 tm-guides">
-<div class="card soft"><p class="eyebrow">Une pré-inscription arrive</p><ol class="teamsteps"><li><b>Accueil</b> : touche <b>Envoyer l'accueil</b> (WhatsApp), puis <b>Basculer en zone d'appel</b>.</li><li><b>Appels</b> : appelle avec le script. Pas de réponse ? <b>✗ Pas de réponse</b> et choisis quand rappeler. À 4 tentatives : relance WhatsApp puis <b>Injoignable</b>.</li><li>Il est intéressé : <b>Intéressé : finaliser l’inscription</b> (fiche, planning, prix, paiement Mixx ou bureau, localisation).</li><li><b>Dossier envoyé</b> : il finalise son inscription en ligne avec le lien du message. <b>Mixx à vérifier</b> : vérifie l'argent sur le téléphone de l'agence, puis <b>Paiement Mixx vérifié</b>. <b>Vient à l'agence</b> : quand il paie, <b>Paiement reçu</b>. Sans nouvelles après 3 jours : relance.</li><li>Le reçu s'ouvre déjà rempli : envoie-le, coche ses pièces, ajoute-le au groupe.</li></ol></div>
+<div class="card soft"><p class="eyebrow">Le parcours d'un élève</p><ol class="teamsteps"><li><b>Accueil</b> : <b>Envoyer l'accueil</b> (WhatsApp), puis <b>Basculer en zone d'appel</b>.</li><li><b>Appels</b> : appelle avec le script. Pas de réponse : choisis quand rappeler. À 4 tentatives : relance WhatsApp ou <b>Injoignable</b>.</li><li>Il est intéressé : <b>Intéressé : finaliser l’inscription</b> et envoie le lien.</li><li><b>Paiement en attente</b> : Mixx à vérifier sur le téléphone de l'agence, ou paiement à l'agence. Sans nouvelles : relance tous les 5 jours (4 au maximum).</li><li>Paiement reçu : le reçu s'ouvre déjà rempli, envoie-le. L'élève passe <b>En formation</b>.</li><li>Formation terminée : <b>Passer à l'examen</b>, message des papiers. Dossier complet + 30 000 F : reçu.</li><li><b>Dépôt d'examen</b> : coche le lot, imprime le bordereau, fais-le signer, puis <b>Lot déposé</b>. Au résultat : <b>Permis obtenu</b> ou <b>Permis échoué</b>.</li></ol></div>
 <div class="card soft"><p class="eyebrow">Réserver une séance de conduite</p><ol class="teamsteps"><li>Vérifie que la 2e moitié est payée (<b>Paiements</b> → À relancer).</li><li><b>Planning conduite</b> : choisis le jour, puis l'élève sur un créneau libre.</li><li>Touche <b>Confirmer</b> : le message WhatsApp est prêt. La veille, touche <b>Rappel</b>.</li></ol></div>
 <div class="card soft"><p class="eyebrow">Mercredi : résultats du devoir</p><ol class="teamsteps"><li>Onglet <b>Devoirs</b> : le message de la semaine est déjà écrit.</li><li>Touche <b>Ouvrir WhatsApp avec le message</b> et choisis le groupe.</li></ol></div>
 <div class="card soft"><p class="eyebrow">Règles</p><ol class="teamsteps"><li>On ne supprime rien : une séance annulée passe en <b>Annulé</b>, un dossier qui s'arrête va dans <b>Archivés</b> avec son motif, un reçu faux se fait <b>Annuler</b> (avec la raison) puis on refait le bon.</li><li>Erreur de nom ou de numéro : <b>Modifier</b> sur la fiche de l'élève.</li><li>Jour férié ou fermeture : <b>Planning conduite</b> → le jour → « Fermer ce jour », puis <b>Prévenir</b> chaque élève.</li><li>Les créneaux du mois suivant se créent tout seuls le 24.</li></ol></div>
@@ -1694,6 +1696,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="card"><p class="eyebrow">À surveiller</p><h3 class="tm-h3">Ce qui attend une action</h3><div id="sd-drWatch" class="tm-list"></div></div>
 <div class="card"><p class="eyebrow">Activité</p><h3 class="tm-h3">Derniers mouvements</h3><div id="sd-drFeed" class="tm-list"></div></div>
 </div>
+<div class="card" style="margin-top:16px"><p class="eyebrow">Examen</p><h3 class="tm-h3">Dossiers d'examen et résultats</h3><div id="sd-drExam" class="tm-stats tm-dr tm-drex"></div></div>
 <div class="card" style="margin-top:16px"><p class="eyebrow">Ce mois-ci</p><h3 class="tm-h3">D'où viennent les nouveaux clients</h3><div id="sd-drSrc" class="tm-src"></div></div>
 <div class="card" style="margin-top:16px"><p class="eyebrow">6 derniers mois</p><h3 class="tm-h3">Inscriptions et encaissements</h3><div id="sd-drMonths" class="tm-months"></div></div>
 </div>
@@ -2966,7 +2969,7 @@ function init(root) {
         }
       }
       else if (k === "exDepose") { const d = $("#sd-exDep").value || iso(new Date()); if (await patchEl(x, { examen_etape: "depose", examen_depose_le: d }, "Dossier déposé le " + dFr(d), ["Étape", "Examen : Dossier déposé le " + d])) renderList(); }
-      else if (k === "exPass") { confirmBtn(a, async () => { if (await patchEl(x, { statut: "Permis obtenu", examen_resultat: "obtenu" }, "Bravo ! Permis obtenu", ["Étape", "Examen : Permis obtenu"])) { pcStage = "archives"; S.set("pcStage", pcStage); pcSel = x.id; renderList(); } }); }
+      else if (k === "exPass") { confirmBtn(a, async () => { if (await patchEl(x, { statut: "Permis obtenu", examen_resultat: "obtenu", examen_date: iso(new Date()) }, "Bravo ! Permis obtenu", ["Étape", "Examen : Permis obtenu"])) { pcStage = "archives"; S.set("pcStage", pcStage); pcSel = x.id; renderList(); } }); }
       else if (k === "exFail") { confirmBtn(a, async () => { if (await patchEl(x, { statut: "Abandon", archive_motif: null, archive_le: new Date().toISOString(), examen_resultat: "echoue", examen_etape: null, examen_passages: Math.min((x.examen_passages || 0) + 1, 10), examen_date: null, examen_lieu: null, examen_depose_le: null, examen_lien_le: null, examen_relance_le: null, examen_bordereau_le: null, examen_paye: false, examen_docs: {} }, "Archivé : permis échoué. Ressors-le quand il veut repasser.", ["Étape", "Examen : échoué (archivé)"])) { pcSel = null; renderList(); } }); }
       else if (k === "exBack") { confirmBtn(a, async () => { if (await patchEl(x, { examen_etape: null }, "Revenu en formation", ["Étape", "Revenu en formation"])) { pcStage = "formation"; S.set("pcStage", pcStage); renderList(); } }); }
     });
@@ -3158,7 +3161,18 @@ function init(root) {
         T("Encaissé ce mois", F(enc), evo, "hl") + T("Reste à encaisser", F(du), dus.length + (dus.length > 1 ? " élèves" : " élève")) +
         T("Nouveaux élèves ce mois", nouveaux.length, site + " via le site · " + (nouveaux.length - site) + " ajoutés au bureau") + T("Élèves en formation", actifs, "Inscrits et en formation") +
         T("Séances de conduite faites", faits, abs + (abs > 1 ? " absences" : " absence") + " ce mois") + T("Planning de la semaine", pct(wkPris, wkOpen.length) + " %", wkPris + " créneaux pris sur " + wkOpen.length) +
-        T("Permis obtenus", permis, "depuis l'ouverture") + T("Dossiers archivés", aband, aband ? "rétractations, injoignables…" : "aucun");
+        T("Permis obtenus", permis, "depuis l'ouverture") + T("Dossiers archivés", aband, aband ? "rétractations, injoignables, échoués" : "aucun");
+      // Examen : où en sont les dossiers, et les résultats
+      const exS = (s) => eleves.filter((x) => etapeOf(x) === "examen" && (x.examen_etape === s || (s === "depose" && x.examen_etape === "convoque"))).length;
+      const exApp = exS("pret"), exCpl = exS("complet"), exDp = exS("depose");
+      const echecs = eleves.reduce((n, x) => n + (x.examen_passages || 0), 0), enArch = eleves.filter((x) => x.statut === "Abandon" && x.examen_resultat === "echoue").length;
+      const okMois = eleves.filter((x) => x.statut === "Permis obtenu" && x.examen_date && x.examen_date >= iso(m0)).length;
+      const vieuxDp = eleves.filter((x) => etapeOf(x) === "examen" && ["depose", "convoque"].includes(x.examen_etape) && x.examen_depose_le && Date.now() - dOf(x.examen_depose_le) > 60 * 864e5).length;
+      $("#sd-drExam").innerHTML =
+        T("Papiers à apporter", exApp, "message envoyé, en attente du dossier complet") + T("À déposer", exCpl, "dossier complet et 30 000 F reçus", exCpl ? "hl" : "") +
+        T("Déposés", exDp, vieuxDp ? vieuxDp + " déposé" + (vieuxDp > 1 ? "s" : "") + " il y a plus de 2 mois" : "en attente du résultat") +
+        T("Taux de réussite", (permis + echecs ? pct(permis, permis + echecs) : 0) + " %", permis + " obtenu" + (permis > 1 ? "s" : "") + " · " + echecs + " échec" + (echecs > 1 ? "s" : "") + " au total") +
+        T("Permis obtenus ce mois", okMois, "") + T("Échoués à ressortir", enArch, enArch ? "Archives → Permis échoué" : "aucun");
       // Provenance des nouveaux clients du mois
       const cnt = {}; nouveaux.forEach((x) => { const k = srcOf(x); cnt[k] = (cnt[k] || 0) + 1; });
       const rows = Object.entries(cnt).sort((a, b) => b[1] - a[1]), mx = rows.length ? rows[0][1] : 1;
@@ -3166,20 +3180,20 @@ function init(root) {
       // À surveiller
       const w = [];
       const vieux = eleves.filter((x) => x.statut === "Nouveau" && Date.now() - new Date(x.cree_le) > 2 * 864e5);
-      if (vieux.length) w.push(["🔴", vieux.length + (vieux.length > 1 ? " pré-inscriptions" : " pré-inscription") + " sans accueil depuis plus de 2 jours", vieux.slice(0, 4).map((x) => x.nom).join(", ")]);
+      if (vieux.length) w.push(["r", vieux.length + (vieux.length > 1 ? " pré-inscriptions" : " pré-inscription") + " sans accueil depuis plus de 2 jours", vieux.slice(0, 4).map((x) => x.nom).join(", ")]);
       const nouv = eleves.filter((x) => x.statut === "Nouveau").length - vieux.length;
-      if (nouv > 0) w.push(["🟡", nouv + (nouv > 1 ? " nouvelles pré-inscriptions" : " nouvelle pré-inscription") + " à accueillir", "Secrétariat → Parcours élèves → Accueil"]);
-      const aVer = eleves.filter((x) => x.web && x.web.mode === "mixx" && etapeOf(x) === "dossier").length; if (aVer) w.push(["🔴", aVer + (aVer > 1 ? " paiements Mixx à vérifier" : " paiement Mixx à vérifier"), "Secrétariat → Parcours élèves → Dossier envoyé"]);
-      const aRel = eleves.filter((x) => etapeOf(x) === "dossier" && !x.web && dosAge(x) >= 5).length; if (aRel) w.push(["🟠", aRel + (aRel > 1 ? " dossiers envoyés à relancer" : " dossier envoyé à relancer") + " (3 jours sans nouvelles)", "Secrétariat → Parcours élèves → Dossier envoyé"]);
-      const exDep = eleves.filter((x) => etapeOf(x) === "examen" && x.examen_etape === "complet").length; if (exDep) w.push(["🟠", exDep + (exDep > 1 ? " dossiers d'examen complets à déposer" : " dossier d'examen complet à déposer"), "Secrétariat → Parcours élèves → Examen"]);
-      const aApp = eleves.filter((x) => etapeOf(x) === "appels").length; if (aApp) w.push(["🟡", aApp + (aApp > 1 ? " élèves à appeler" : " élève à appeler"), "Secrétariat → Parcours élèves → Appels"]);
+      if (nouv > 0) w.push(["y", nouv + (nouv > 1 ? " nouvelles pré-inscriptions" : " nouvelle pré-inscription") + " à accueillir", "Secrétariat → Parcours élèves → Accueil"]);
+      const aVer = eleves.filter((x) => x.web && x.web.mode === "mixx" && etapeOf(x) === "dossier").length; if (aVer) w.push(["r", aVer + (aVer > 1 ? " paiements Mixx à vérifier" : " paiement Mixx à vérifier"), "Secrétariat → Parcours élèves → Paiement en attente"]);
+      const aRel = eleves.filter((x) => etapeOf(x) === "dossier" && !x.web && dosAge(x) >= 5).length; if (aRel) w.push(["o", aRel + (aRel > 1 ? " paiements en attente à relancer" : " paiement en attente à relancer") + " (5 jours sans nouvelles)", "Secrétariat → Parcours élèves → Paiement en attente"]);
+      const exDep = eleves.filter((x) => etapeOf(x) === "examen" && x.examen_etape === "complet").length; if (exDep) w.push(["o", exDep + (exDep > 1 ? " dossiers d'examen complets à déposer" : " dossier d'examen complet à déposer"), "Secrétariat → Parcours élèves → Dépôt d'examen"]);
+      const aApp = eleves.filter((x) => etapeOf(x) === "appels").length; if (aApp) w.push(["y", aApp + (aApp > 1 ? " élèves à appeler" : " élève à appeler"), "Secrétariat → Parcours élèves → Appels"]);
       const vieuxDus = dus.filter((p) => Date.now() - dOf(p.jour) > 30 * 864e5);
-      if (vieuxDus.length) w.push(["🔴", vieuxDus.length + (vieuxDus.length > 1 ? " élèves doivent" : " élève doit") + " encore payer depuis plus d'un mois", vieuxDus.slice(0, 4).map((p) => p.eleve_nom + " (" + F(p.reste) + ")").join(", ")]);
-      else if (dus.length) w.push(["🟡", dus.length + (dus.length > 1 ? " élèves ont" : " élève a") + " un reste à payer", "Secrétariat → Paiements → À relancer"]);
+      if (vieuxDus.length) w.push(["r", vieuxDus.length + (vieuxDus.length > 1 ? " élèves doivent" : " élève doit") + " encore payer depuis plus d'un mois", vieuxDus.slice(0, 4).map((p) => p.eleve_nom + " (" + F(p.reste) + ")").join(", ")]);
+      else if (dus.length) w.push(["y", dus.length + (dus.length > 1 ? " élèves ont" : " élève a") + " un reste à payer", "Secrétariat → Paiements → À relancer"]);
       const annules = moisP.length ? pay.filter((p) => p.annule && p.jour >= iso(m0)) : pay.filter((p) => p.annule && p.jour >= iso(m0));
-      if (annules.length) w.push(["🟠", annules.length + (annules.length > 1 ? " reçus annulés" : " reçu annulé") + " ce mois", annules.slice(0, 3).map((p) => "n° " + p.numero + (p.annule_motif ? " : " + p.annule_motif : "")).join(" · ")]);
-      if (abs >= 3) w.push(["🟠", abs + " absences en conduite ce mois", "Moniteur → séances du jour"]);
-      $("#sd-drWatch").innerHTML = w.length ? w.map((x) => '<div class="tm-row"><div class="tm-time">' + x[0] + '</div><div class="tm-main"><b>' + esc(x[1]) + "</b><span>" + esc(x[2]) + "</span></div></div>").join("") : '<p class="tm-empty">Rien à signaler. Tout est à jour ✓</p>';
+      if (annules.length) w.push(["o", annules.length + (annules.length > 1 ? " reçus annulés" : " reçu annulé") + " ce mois", annules.slice(0, 3).map((p) => "n° " + p.numero + (p.annule_motif ? " : " + p.annule_motif : "")).join(" · ")]);
+      if (abs >= 3) w.push(["o", abs + " absences en conduite ce mois", "Moniteur → séances du jour"]);
+      $("#sd-drWatch").innerHTML = w.length ? w.map((x) => '<div class="tm-row"><div class="tm-time"><i class="tm-dot tm-dot-' + x[0] + '"></i></div><div class="tm-main"><b>' + esc(x[1]) + "</b><span>" + esc(x[2]) + "</span></div></div>").join("") : '<p class="tm-empty">Rien à signaler. Tout est à jour.</p>';
       // Derniers mouvements
       const feed = [...eleves.slice(0, 10).map((x) => ({ t: x.cree_le, h: "<b>" + esc(x.nom) + "</b><span>" + (x.source === "site" ? "Pré-inscription sur le site" : "Ajouté au bureau · " + srcOf(x)) + " · " + esc(x.formation || "") + "</span>" })),
         ...pay.slice(0, 10).map((p) => ({ t: p.cree_le, h: "<b>" + esc(p.eleve_nom) + " · " + F(p.montant) + (p.annule ? " (annulé)" : "") + "</b><span>" + esc(p.motif) + " · " + esc(p.mode) + "</span>" }))]
