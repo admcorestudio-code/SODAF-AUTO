@@ -2456,29 +2456,23 @@ function init(root) {
     const prenom = (x) => (x.nom || "").trim().split(/\s+/)[0];
     const msgAccueil = (x) => "Bonjour " + prenom(x) + ",\nIci le secrétariat de SODAF Auto-École. Nous avons bien reçu ta pré-inscription, merci !\n\n*TON DOSSIER*\n• N° " + x.id + "\n• Formation : " + (x.formation || "à préciser") + "\n\nNous allons t'appeler très bientôt pour répondre à tes questions et préparer ton inscription.\nGarde ton téléphone près de toi.\n\nÀ très vite !\n*L'équipe SODAF · L'art de conduire, la force de réussir.*\nautosodaf.com";
     const msgRelance = (x) => "Bonjour " + prenom(x) + ", ici SODAF Auto-École. Nous avons essayé de te joindre plusieurs fois au sujet de ta pré-inscription (" + (x.formation || "permis") + "), sans succès. Si tu es toujours intéressé(e), réponds simplement à ce message ou appelle-nous au 72 54 41 66. Ton dossier n° " + x.id + " reste ouvert. Bonne journée !";
-    const PRIX_ORAL = {
-      "Permis B": "Pour le permis B, la formation complète coûte 55 000 francs, sur 3 mois. Si vous êtes pressé, il y a la formule accélérée : 75 000 francs en 2 mois, ou 80 000 francs en 1 mois. Et si vous savez déjà un peu conduire, la formule courte est à 35 000 francs.",
-      "Permis A": "Pour le permis moto, la formation coûte 30 000 francs.",
-      "Pack A + B": "Le pack moto et voiture coûte 80 000 francs. C'est moins cher que les deux séparément.",
-      "Remise à niveau": "La remise à niveau coûte 20 000 francs. Ce sont 4 séances de conduite d'une heure, avec une évaluation.",
-      "Formation entreprise": "Pour les chauffeurs d'entreprise, on fait un devis selon le nombre de personnes et vos horaires.",
-    };
+    const PRIX_COURT = { "Permis B": "Pour le permis B, ça commence à 35 000 francs", "Permis A": "Pour le permis moto, c'est 30 000 francs", "Pack A + B": "Pour le pack moto et voiture, c'est 80 000 francs", "Remise à niveau": "Pour la remise à niveau, c'est 20 000 francs", "Formation entreprise": "Pour les chauffeurs d'entreprise, on fait un devis" };
     const say = (t) => '<p class="sc-say">« ' + t + " »</p>";
     const tip = (t) => '<p class="sc-tip">' + t + "</p>";
     const script = (x) => {
       const exam = /Permis|Pack/.test(x.formation || "");
       return '<ol class="sc">' +
-        "<li><b>Saluer</b>" + say("Bonjour, SODAF Auto-École. Je suis [ton prénom], du secrétariat. Je vous appelle pour votre pré-inscription au " + esc(x.formation || "permis") + " sur notre site. Vous avez deux minutes ?") +
-          tip("S'il n'est pas disponible : « Pas de souci. Je vous rappelle plutôt le matin ou l'après-midi ? » Puis choisis « Rappeler le matin » ou « Rappeler l'après-midi ».") + "</li>" +
-        "<li><b>Expliquer la formation</b>" + say("Chez nous, il y a deux parties. D'abord le code : c'est en salle, le lundi, le mercredi et le vendredi à 14 h 30. Vous pouvez aussi réviser gratuitement sur notre site. Ensuite la conduite : des séances d'une heure avec le moniteur, le matin ou en fin d'après-midi.") + "</li>" +
-        "<li><b>Donner le prix</b>" + say(esc(PRIX_ORAL[x.formation] || "Je vous envoie nos prix sur WhatsApp.")) +
-          say("En plus, il y a 5 000 francs d'inscription" + (exam ? ", et 30 000 francs pour l'inscription à l'examen d'État." : ".")) + "</li>" +
-        "<li><b>Expliquer le paiement</b>" + say("Vous pouvez payer en deux fois : la moitié quand vous vous inscrivez, et le reste avant votre première séance de conduite. Vous payez en espèces au bureau, ou par Mixx by Yas.") + "</li>" +
-        "<li><b>Les papiers à apporter</b>" + say("Pour le dossier, il faut votre acte de naissance, une photocopie de votre carte d'identité, et 2 photos d'identité.") +
-          (exam ? say("Pour l'examen, c'est nous qui déposons votre dossier. Ensuite, l'État vous envoie un message avec la date et le lieu.") : "") + "</li>" +
-        "<li><b>Conclure</b>" + say("Je vous envoie tout ça sur WhatsApp : les prix, la fiche à remplir et notre localisation. Vous avez une question ?") +
-          tip("Il est intéressé : touche « Intéressé : envoyer le dossier ». Il hésite : « Prenez le temps d'y réfléchir, et répondez-moi sur WhatsApp quand vous voulez. » Il n'est pas intéressé : « Plus tard » ou « Rétractation ».") +
-          tip("S'il demande où vous êtes : « Au 412 avenue Akei, à Tokoin Tamé, en face de la caisse. Le bureau est ouvert du lundi au vendredi de 8 h à 12 h 30 et de 14 h 30 à 18 h, et le samedi matin. »") + "</li></ol>";
+        "<li><b>Saluer</b>" + say("Bonjour, SODAF Auto-École. Je vous appelle pour votre pré-inscription au " + esc(x.formation || "permis") + ". Vous avez une minute ?") +
+          tip("Pas disponible : « Je vous rappelle plutôt le matin ou l'après-midi ? » puis choisis quand rappeler.") + "</li>" +
+        "<li><b>L'essentiel</b>" + say("Chez nous, vous apprenez le code en salle et sur notre site, puis la conduite avec le moniteur. " + esc(PRIX_COURT[x.formation] || "Je vous envoie nos prix") + ", et vous pouvez payer en deux fois.") + "</li>" +
+        "<li><b>Conclure</b>" + say("Je vous envoie tout sur WhatsApp : les prix, la fiche à remplir et notre adresse. Vous regardez tranquillement et vous me dites. Vous avez une question ?") +
+          tip("Intéressé ou il veut réfléchir : touche « Intéressé : envoyer le dossier ». Pas intéressé : « Plus tard » ou « Rétractation ».") + "</li></ol>" +
+        '<details class="pc-more"><summary>S\'il pose une question</summary>' +
+        tip("<b>Les papiers :</b> acte de naissance, photocopie de la carte d'identité, 2 photos d'identité.") +
+        (exam ? tip("<b>L'examen :</b> 30 000 francs pour l'inscription à l'examen d'État. On dépose son dossier, puis l'État lui envoie la date et le lieu par message.") : "") +
+        tip("<b>Les inscriptions :</b> 5 000 francs, plus la moitié de la formation ; le reste avant la première séance de conduite. Espèces au bureau ou Mixx by Yas.") +
+        tip("<b>Les cours :</b> code lundi, mercredi et vendredi à 14 h 30 ; conduite par séances d'une heure.") +
+        tip("<b>L'adresse :</b> 412 avenue Akei, Tokoin Tamé, en face de la caisse. Lun – ven 8 h – 12 h 30 et 14 h 30 – 18 h, samedi matin.") + "</details>";
     };
     const ago = (d) => { const m = Math.round((Date.now() - new Date(d)) / 60000); return m < 60 ? "il y a " + Math.max(m, 1) + " min" : m < 1440 ? "il y a " + Math.round(m / 60) + " h" : "il y a " + Math.round(m / 1440) + " j"; };
     let pcStage = S.get("pcStage", "accueil"), pcSel = null, pcFeed = [];
