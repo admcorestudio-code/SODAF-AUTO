@@ -634,6 +634,28 @@ a.teamtile.hl{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
 #sodaf-root.app-mode nav.main,#sodaf-root.app-mode .burger,#sodaf-root.app-mode header.top>.wrap>.btn,#sodaf-root.app-mode footer.site,#sodaf-root.app-mode .wa-float,#sodaf-root.app-mode section[data-page="equipe"] .page-head{display:none!important}
 #sodaf-root.app-mode section[data-page="equipe"]>.wrap{padding-top:22px}
 #sodaf-root.app-mode .logo-sub{color:var(--green)}
+/* Espace équipe : fond de travail gris clair, cartes blanches, bandeau d'accueil foncé */
+html:has(#sodaf-root.app-mode),body:has(#sodaf-root.app-mode){background:#E9ECEF}
+#sodaf-root.app-mode{background:#E9ECEF;min-height:100vh}
+#sodaf-root.app-mode #app,#sodaf-root.app-mode main{background:transparent}
+#sodaf-root.app-mode .card,#sodaf-root.app-mode .pc-list,#sodaf-root.app-mode .pc-block,#sodaf-root.app-mode .pc-none,#sodaf-root.app-mode .pc-sbox{background:#fff;border-color:#DDE1E5;box-shadow:0 1px 2px rgba(20,23,28,.05)}
+#sodaf-root.app-mode .card.soft{background:#fff;border:1px solid #DDE1E5}
+#sodaf-root.app-mode .pc-sbox{border-color:var(--ink)}
+#sodaf-root.app-mode .pc-none{border-style:solid}
+#sodaf-root.app-mode .pc-info{background:#fff;border:1px solid #DDE1E5}
+#sodaf-root.app-mode .tm-tabs button{box-shadow:0 1px 2px rgba(20,23,28,.05);border-color:#DDE1E5}
+#sodaf-root.app-mode .tm-stats div{background:#fff;border:1px solid #DDE1E5}
+#sodaf-root.app-mode .tm-stats div.hl{background:var(--ink);border-color:var(--ink)}
+#sodaf-root.app-mode .tm-subnav{border-bottom-color:#D3D8DD}
+#sodaf-root.app-mode .tm-top{position:relative;overflow:hidden;background:var(--ink);color:#fff;border-radius:18px;padding:24px 28px 30px;margin-bottom:18px}
+#sodaf-root.app-mode .tm-top::after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;background:repeating-linear-gradient(90deg,var(--yellow) 0 28px,transparent 28px 44px)}
+#sodaf-root.app-mode .tm-top h2{color:#fff}
+#sodaf-root.app-mode .tm-top .eyebrow{color:var(--yellow)}
+#sodaf-root.app-mode .tm-top .tm-today{color:#C9CED4}
+#sodaf-root.app-mode .tm-top .linkbtn{color:#E6E8EB}
+#sodaf-root.app-mode .tm-top .linkbtn:hover{color:#fff}
+#sodaf-root.app-mode .tm-role{background:#fff;border-radius:0 10px 10px 0;padding:10px 14px!important}
+@media (max-width:640px){#sodaf-root.app-mode .tm-top{padding:18px 18px 24px;border-radius:14px}}
 .pc{display:grid;grid-template-columns:minmax(280px,360px) minmax(0,1fr);gap:18px;align-items:start}
 .pc-list{border:1.5px solid var(--line);border-radius:14px;background:#fff;overflow:hidden;position:sticky;top:76px}
 .pc-stages{display:flex;flex-wrap:wrap;gap:6px;padding:10px;background:var(--soft);border-bottom:1.5px solid var(--line)}
@@ -645,6 +667,7 @@ a.teamtile.hl{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
 .pc-tools{display:flex;gap:8px;padding:10px;border-bottom:1.5px solid var(--line)}
 .pc-edit{text-align:right;margin-top:6px}
 .pc-search{display:flex;gap:10px;align-items:center;margin:0 0 14px}
+#sodaf-root #sd-elAddBtn{white-space:nowrap;flex-shrink:0}
 .pc-sbox{flex:1;display:flex;align-items:center;gap:10px;border:2px solid var(--ink);border-radius:12px;padding:0 14px;background:#fff;color:#3D444D}
 .pc-sbox:focus-within{border-color:var(--green);box-shadow:0 0 0 3px var(--green-soft)}
 .pc-sbox input{flex:1;min-width:0;border:0;outline:0;font:1rem var(--f-body);padding:.75em 0;background:transparent}
