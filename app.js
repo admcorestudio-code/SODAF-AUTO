@@ -676,6 +676,8 @@ html:has(#sodaf-root.app-mode),body:has(#sodaf-root.app-mode){background:#E9ECEF
 .ex-doc span{font-size:.86rem;color:var(--red)}
 .ex-doc.ok{border:1.5px solid var(--green);background:var(--green-soft)}.ex-doc.ok span{color:#064D36}
 .ex-doc .linkbtn{align-self:flex-start;font-size:.86rem}
+label.ex-doc{position:relative;cursor:pointer;padding-left:44px}
+label.ex-doc input{position:absolute;left:14px;top:12px;width:20px;height:20px;accent-color:var(--green)}
 .ex-conv{display:grid;grid-template-columns:1fr 1.4fr;gap:10px}
 .ex-conv input,.pc-block input[type=date]{font:.95rem var(--f-body);padding:.5em .7em;border:1.5px solid var(--line);border-radius:10px}
 .ex-big .ex-when{font:700 1.3rem var(--f-display);margin:0 0 12px!important;text-transform:capitalize}
@@ -740,6 +742,12 @@ html:has(#sodaf-root.app-mode),body:has(#sodaf-root.app-mode){background:#E9ECEF
 .ex-st{margin-top:auto;font:600 .9rem var(--f-body);color:var(--blue)}
 .ex-tile.ok{border:2px solid var(--green);background:var(--green-soft)}.ex-tile.ok .ex-st{color:var(--green)}
 .ex-tile.busy{opacity:.7}.ex-tile.err{border-color:var(--red)}.ex-tile.err .ex-st{color:var(--red)}
+.exm{max-width:860px;margin:0 auto}.exm .insc-find{margin-top:24px}
+.ex-list{display:flex;flex-direction:column;gap:8px}
+.ex-item{display:flex;gap:12px;align-items:flex-start;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;background:#fff}
+.ex-item i{font-style:normal;flex:0 0 24px;height:24px;border-radius:6px;border:2px solid #C9CED4;display:grid;place-items:center;color:#fff;font-weight:800;font-size:.85rem;margin-top:2px}
+.ex-item b{display:block;font:700 1.02rem var(--f-display)}.ex-item small{color:var(--muted);font-size:.88rem}
+.ex-item.ok{border-color:var(--green);background:var(--green-soft)}.ex-item.ok i{background:var(--green);border-color:var(--green)}
 .ex-paid{background:var(--green-soft);color:#064D36;border-radius:12px;padding:12px 14px;font-weight:600}
 .ex-paid.wait{background:#FFF5D6;color:#5A4300}
 @media (max-width:560px){.ex-up{grid-template-columns:1fr}}
@@ -1563,8 +1571,8 @@ ${HEAD("SODAF Auto-École", "Finalise ton inscription", "Choisis ta formule, com
 </section>
 
 <section class="page" data-page="examen" hidden>
-${HEAD("SODAF Auto-École", "Ton dossier d'examen", "Envoie tes papiers en photo et règle le dépôt de 30 000 F : SODAF s'occupe du reste.")}
-<div class="wrap sec"><div id="sd-exam" class="insc"></div></div>
+${HEAD("SODAF Auto-École", "Ton dossier d'examen", "Tes papiers à apporter à l'agence et le dépôt de 30 000 F : SODAF s'occupe du reste.")}
+<div class="wrap sec"><div id="sd-exam" class="exm"></div></div>
 </section>
 
 <section class="page" data-page="equipe" hidden>
@@ -2622,9 +2630,9 @@ function init(root) {
     const msgAccueil = (x) => "Bonjour " + prenom(x) + ",\n\nIci le secrétariat de SODAF Auto-École. Nous avons bien reçu ta pré-inscription, merci !\n\n*TON DOSSIER*\n• N° Client : " + CODE(x) + "\n• Formation : " + (x.formation || "à préciser") + "\n\nNous allons t'appeler très bientôt pour répondre à tes questions et préparer ton inscription.\nGarde ton téléphone près de toi.\n\nÀ très vite !\n*L'équipe SODAF · L'art de conduire, la force de réussir.*\nautosodaf.com";
     const msgRelance = (x) => "Bonjour " + prenom(x) + ",\n\nIci le secrétariat de *SODAF Auto-École*. Nous avons essayé de te joindre plusieurs fois au sujet de ta pré-inscription, sans succès.\n\n*TON DOSSIER*\n• N° Client : " + CODE(x) + "\n• Formation : " + (x.formation || "à préciser") + "\n\nTon dossier reste ouvert. Si tu es toujours intéressé(e) :\n• Réponds simplement à ce message, nous te rappelons au moment qui t'arrange ;\n• Ou appelle-nous au *72 54 41 66*.\n\nEn attendant, découvre nos formations et révise le code gratuitement sur notre site :\nautosodaf.com\n\nÀ bientôt !\n*L'équipe SODAF · L'art de conduire, la force de réussir.*";
     // ---------- Étape « Examen » ----------
-    const PX = [["cni", "Carte d'identité"], ["acte", "Acte de naissance"], ["photo1", "Photo d'identité n° 1"], ["photo2", "Photo d'identité n° 2"]];
+    const PX = [["cni", "Photocopie de la carte d'identité"], ["acte", "Acte de naissance"], ["photo1", "Photo d'identité n° 1"], ["photo2", "Photo d'identité n° 2"]];
     const exDocs = (x) => PX.filter((p) => (x.examen_docs || {})[p[0]]).length;
-    const exManque = (x) => PX.filter((p) => !(x.examen_docs || {})[p[0]]).map((p) => p[1].replace(" n° 1", "").replace(" n° 2", ""));
+    const exManque = (x) => { const m = PX.filter((p) => !(x.examen_docs || {})[p[0]]).map((p) => p[0]), out = []; if (m.includes("cni")) out.push("la photocopie de ta carte d'identité"); if (m.includes("acte")) out.push("ton acte de naissance"); const ph = m.filter((k) => k.startsWith("photo")).length; if (ph) out.push(ph === 2 ? "2 photos d'identité" : "1 photo d'identité"); return out; };
     const dOnly = (d) => new Date(String(d).slice(0, 10) + "T12:00:00");
     const dFr = (d) => (d ? dOnly(d).toLocaleDateString("fr-FR", { day: "numeric", month: "short" }) : "");
     const dLong = (d) => (d ? dOnly(d).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" }) : "");
@@ -2632,17 +2640,11 @@ function init(root) {
     const exPay = (x) => (x.examen_paye ? "dépôt payé ✓" : x.examen_paiement ? (x.examen_paiement.mode === "mixx" ? "Mixx à vérifier" : "paiera à l'agence") : "dépôt à payer");
     const exLine = (x) => x.examen_etape === "pret" ? "papiers " + exDocs(x) + "/4 · " + exPay(x) : x.examen_etape === "complet" ? "dossier complet · à déposer" + (x.examen_passages ? " · " + (x.examen_passages + 1) + "e passage" : "") : x.examen_etape === "depose" ? "déposé le " + dFr(x.examen_depose_le) : "examen le " + dFr(x.examen_date) + (x.examen_lieu ? " · " + esc(x.examen_lieu) : "");
     const SIGN = "\n\n*L'équipe SODAF · L'art de conduire, la force de réussir.*";
-    const msgExamen = (x) => "Bonjour " + prenom(x) + ",\n\nFélicitations, ta formation chez *SODAF Auto-École* est terminée ! Place maintenant à l'*examen d'État*.\n\n*TON DOSSIER D'EXAMEN*\n• N° Client : " + CODE(x) + "\n• Papiers : carte d'identité, acte de naissance, 2 photos d'identité\n• Dépôt pour l'examen : 30 000 F\n\n*Envoie tes papiers en photo et règle le dépôt ici (5 minutes) :*\n" + exLink(x) + "\n\nDès que ton dossier est complet, nous le déposons. L'État t'envoie ensuite la date et le lieu de ton examen par message.\n\nÀ très vite !" + SIGN;
-    const msgExRel = (x) => { const m = exManque(x).concat(x.examen_paye ? [] : ["le dépôt de 30 000 F"]); return "Bonjour " + prenom(x) + ",\n\nPetit rappel du secrétariat *SODAF Auto-École* : pour déposer ton dossier d'examen, il nous manque encore :\n" + m.map((t) => "• " + t).join("\n") + "\n\nTu peux tout envoyer ici, en photo, depuis ton téléphone :\n" + exLink(x) + "\n\nPlus vite le dossier est complet, plus vite tu passes ton examen." + SIGN; };
+    const msgExamen = (x) => "Bonjour " + prenom(x) + ",\n\nFélicitations, ta formation chez *SODAF Auto-École* est terminée ! Place maintenant à l'*examen d'État*.\n\n*À APPORTER À L'AGENCE*\n• Photocopie de ta carte d'identité\n• Ton acte de naissance\n• 2 photos d'identité (format passeport)\n• Le dépôt pour l'examen : 30 000 F\n\nN° Client : " + CODE(x) + "\n\n*Adresse, horaires et paiement par Mixx by Yas :*\n" + exLink(x) + "\n\nDès que ton dossier est complet, nous le déposons. L'État t'envoie ensuite la date et le lieu de ton examen par message.\n\nÀ très vite !" + SIGN;
+    const msgExRel = (x) => { const m = exManque(x).concat(x.examen_paye ? [] : ["le dépôt de 30 000 F"]); return "Bonjour " + prenom(x) + ",\n\nPetit rappel du secrétariat *SODAF Auto-École* : pour déposer ton dossier d'examen, il nous manque encore :\n" + m.map((t) => "• " + t).join("\n") + "\n\nPasse les déposer à l'agence (412 Avenue Akei, Tokoin Tamé, en face de la caisse) : lundi – vendredi 8 h – 12 h 30 et 14 h 30 – 18 h, samedi 8 h – 12 h.\n\nAdresse et plan : " + exLink(x) + "\n\nPlus vite le dossier est complet, plus vite tu passes ton examen." + SIGN; };
     const msgConvoc = (x) => "Bonjour " + prenom(x) + ",\n\nBonne nouvelle : ta *convocation à l'examen du permis* est arrivée !\n\n*TON EXAMEN*\n• Date : " + dLong(x.examen_date) + "\n• Lieu : " + (x.examen_lieu || "à confirmer") + "\n• N° Client : " + CODE(x) + "\n\n*À NE PAS OUBLIER*\n• Ta carte d'identité originale\n• Arrive 30 minutes en avance\n• Repose-toi bien la veille\n\nRévise le code gratuitement sur autosodaf.com\n\nToute l'équipe SODAF est avec toi. Bonne chance !" + SIGN;
     const msgVeille = (x) => "Bonjour " + prenom(x) + ",\n\nC'est demain ! Ton examen du permis a lieu le *" + dLong(x.examen_date) + "*" + (x.examen_lieu ? " à *" + x.examen_lieu + "*" : "") + ".\n\n• Ta carte d'identité originale\n• 30 minutes d'avance\n• Calme et concentration : tu es prêt(e).\n\nBonne chance de la part de toute l'équipe *SODAF Auto-École* !";
     const msgBravo = (x) => "Félicitations " + prenom(x) + " !\n\nToute l'équipe de *SODAF Auto-École* est fière de toi : tu as obtenu ton *permis de conduire*.\n\nUn dernier conseil : sur la route, la prudence reste ta meilleure alliée.\n\nSi tu es content(e) de ta formation, parle de SODAF autour de toi : ta famille et tes amis seront bien accueillis." + SIGN + "\nautosodaf.com";
-    async function exSigned(path) {
-      const t = await DB.token();
-      const r = await fetch(SB_URL + "/storage/v1/object/sign/examen/" + path.split("/").map(encodeURIComponent).join("/"), { method: "POST", headers: { apikey: SB_KEY, Authorization: "Bearer " + t, "Content-Type": "application/json" }, body: JSON.stringify({ expiresIn: 3600 }) });
-      const j = await r.json().catch(() => ({}));
-      return j.signedURL ? SB_URL + "/storage/v1" + j.signedURL : null;
-    }
     const PRIX_COURT = { "Permis B": "Pour le permis B, ça commence à 35 000 francs", "Permis A": "Pour le permis moto, c'est 30 000 francs", "Pack A + B": "Pour le pack moto et voiture, c'est 80 000 francs", "Remise à niveau": "Pour la remise à niveau, c'est 20 000 francs", "Formation entreprise": "Pour les chauffeurs d'entreprise, on fait un devis" };
     const say = (t) => '<p class="sc-say">« ' + t + " »</p>";
     const tip = (t) => '<p class="sc-tip">' + t + "</p>";
@@ -2808,15 +2810,14 @@ function init(root) {
           '<div class="tm-formact">' + (n ? (x.examen_lien_le
             ? '<a class="btn btn-line btn-sm" target="_blank" rel="noopener" data-a="relExam" href="' + wa(msgExRel(x)) + '">Relancer : ce qui manque ↗</a><a class="linkbtn" target="_blank" rel="noopener" data-a="sendExam" href="' + wa(msgExamen(x)) + '">Renvoyer le lien complet</a>'
             : '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-a="sendExam" href="' + wa(msgExamen(x)) + '">Envoyer le lien sur WhatsApp ↗</a>') : '<span class="tm-err">Pas de numéro : ajoute-le avec Modifier.</span>') + "</div></div>" : "";
-        const pap = '<div class="pc-block"><div class="pc-bh"><b>Papiers pour l\'examen</b><span class="tm-note" style="margin:0!important">' + nd + "/4 reçus</span></div><div class=\"ex-docs\">" +
-          PX.map((p) => { const d = docs[p[0]]; return '<div class="ex-doc' + (d ? " ok" : "") + '"><b>' + p[1] + "</b>" + (d ? (d.chemin ? '<span>Reçue en photo · ' + ago(d.le) + '</span><button class="linkbtn" type="button" data-doc="' + p[0] + '">Voir</button>' : "<span>Reçue à l'agence (papier)</span>") : '<span>Manquante</span><button class="linkbtn" type="button" data-docmain="' + p[0] + '">Reçue à l\'agence</button>') + "</div>"; }).join("") + "</div>" +
-          (PX.some((p) => docs[p[0]] && docs[p[0]].chemin) ? '<div class="tm-formact"><button class="btn btn-line btn-sm" type="button" data-a="printDocs">Ouvrir toutes les photos pour imprimer</button></div>' : "") + "</div>";
+        const pap = '<div class="pc-block"><div class="pc-bh"><b>Papiers à apporter à l\'agence</b><span class="tm-note" style="margin:0!important">' + nd + '/4 reçus</span></div><p class="tm-note" style="margin:0 0 10px!important">Coche chaque papier quand l\'élève l\'apporte en main propre.</p><div class="ex-docs">' +
+          PX.map((p) => { const d = docs[p[0]]; return '<label class="ex-doc' + (d ? " ok" : "") + '"><input type="checkbox" data-docmain="' + p[0] + '"' + (d ? " checked" : "") + "><b>" + p[1] + "</b><span>" + (d ? "Reçu " + ago(d.le) : "À apporter") + "</span></label>"; }).join("") + "</div></div>";
         const dep = '<div class="pc-block"><div class="pc-bh"><b>Dépôt pour l\'examen · 30 000 F</b>' + (x.examen_paye ? '<span class="pc-ok">✓ Payé</span>' : "") + "</div>" +
           (x.examen_paye ? '<p class="tm-note" style="margin:0!important">Reçu fait. Rien d\'autre à encaisser pour l\'examen.</p>' :
             (pm && pm.mode === "mixx" ? '<div class="pc-alert pc-verif"><b>À vérifier sur le téléphone de l\'agence :</b> un paiement Mixx by Yas de <b>30 000 F</b>' + (pm.tel ? " depuis le <b>" + esc(pm.tel) + "</b>" : "") + (pm.ref ? ", référence <b>" + esc(pm.ref) + "</b>" : "") + ", motif « " + CODE(x) + " ».</div>" : pm ? '<p class="tm-note" style="margin:0 0 10px!important">Il a choisi de payer les 30 000 F <b>en espèces à l\'agence</b>.</p>' : '<p class="tm-note" style="margin:0 0 10px!important">Pas encore réglé.</p>') +
             '<div class="tm-formact"><button class="btn btn-green btn-sm" type="button" data-a="exPaid">Dépôt de 30 000 F reçu : faire le reçu</button></div>') + "</div>";
         let act = "";
-        if (E === "pret") act = '<div class="pc-block"><div class="pc-bh"><b>Dossier complet ?</b></div><p class="tm-note" style="margin:0 0 10px!important">' + (nd === 4 && x.examen_paye ? "Tout est là : passe le dossier en « Dossier complet »." : "Il passe tout seul en « Dossier complet » quand les 4 papiers et le dépôt sont reçus.") + '</p><div class="tm-formact"><button class="btn ' + (nd === 4 && x.examen_paye ? "btn-green" : "btn-line") + ' btn-sm" type="button" data-a="exComplete">Dossier complet : prêt à déposer →</button></div></div>';
+        if (E === "pret") act = '<div class="pc-block"><div class="pc-bh"><b>Dossier complet ?</b></div><p class="tm-note" style="margin:0 0 10px!important">' + (nd === 4 && x.examen_paye ? "Tout est là : passe le dossier en « Dossier complet »." : "Il passe tout seul en « Dossier complet » quand les 4 papiers sont cochés et le dépôt reçu.") + '</p><div class="tm-formact"><button class="btn ' + (nd === 4 && x.examen_paye ? "btn-green" : "btn-line") + ' btn-sm" type="button" data-a="exComplete">Dossier complet : prêt à déposer →</button></div></div>';
         if (E === "complet") act = '<div class="pc-block"><div class="pc-bh"><b>Dépôt du dossier</b></div><p class="tm-note" style="margin:0 0 10px!important">Imprime les papiers, dépose le dossier à l\'auto-école partenaire, puis note la date.</p><div class="tm-formact"><input type="date" id="sd-exDep" value="' + today + '" max="' + today + '"><button class="btn btn-green btn-sm" type="button" data-a="exDepose">Dossier déposé →</button></div></div>';
         if (E === "depose") act = '<div class="pc-block"><div class="pc-bh"><b>Convocation de l\'État</b><span class="tm-note" style="margin:0!important">Déposé le ' + dFr(x.examen_depose_le) + "</span></div><p class=\"tm-note\" style=\"margin:0 0 10px!important\">Quand l'élève reçoit le message officiel, note la date et le lieu : il recevra sa convocation SODAF et un rappel la veille.</p><div class=\"ex-conv\"><div class=\"field\"><label for=\"sd-exDate\">Date de l'examen</label><input type=\"date\" id=\"sd-exDate\" min=\"" + today + '"></div><div class="field"><label for="sd-exLieu">Lieu</label><input id="sd-exLieu" maxlength="160" placeholder="Ex. Centre d\'examen de Lomé"></div></div><div class="tm-formact"><button class="btn btn-green btn-sm" type="button" data-a="exConvoc">Enregistrer la convocation →</button></div></div>';
         if (E === "convoque") { const dj = x.examen_date ? Math.round((dOnly(x.examen_date) - dOnly(today)) / 864e5) : null;
@@ -2850,9 +2851,6 @@ function init(root) {
       const x = eleves.find((y) => y.id === pcSel); if (!x) return;
       const a = e.target.closest("[data-a]"), ar = e.target.closest("[data-arch]"), rp = e.target.closest("[data-rappel]");
       if (ar) { confirmBtn(ar, () => archive(x, ar.dataset.arch)); return; }
-      const dv = e.target.closest("[data-doc]"), dm = e.target.closest("[data-docmain]");
-      if (dv) { const d = (x.examen_docs || {})[dv.dataset.doc]; if (!d || !d.chemin) return; const w = window.open("", "_blank"); if (w) w.document.write("<p style='font:16px sans-serif;padding:20px'>Ouverture…</p>"); const u = await exSigned(d.chemin); if (w) { if (u) w.location.href = u; else w.close(); } if (!u) toast("Fichier introuvable"); return; }
-      if (dm) { const docs = Object.assign({}, x.examen_docs || {}); docs[dm.dataset.docmain] = { main: true, le: new Date().toISOString() }; const done = PX.every((p) => docs[p[0]]) && x.examen_paye && x.examen_etape === "pret"; if (await patchEl(x, Object.assign({ examen_docs: docs }, done ? { examen_etape: "complet" } : {}), "Papier noté comme reçu à l'agence", ["Examen", "Papier reçu à l'agence"])) renderList(); return; }
       const ko = e.target.closest("[data-ko]");
       if (ko) { const v = ko.dataset.ko, nb = Math.min((x.appels || 0) + 1, 20), note = ($("#sd-pcCallNote") || {}).value; const order = $$("#sd-pcList .pc-item").map((b) => +b.dataset.id); if (await patchEl(x, { appels: nb, rappel: v, dernier_appel_le: new Date().toISOString() }, "Pas de réponse (" + nb + "X) · " + (v === "matin" ? "à rappeler le matin" : "à rappeler l'après-midi"), ["Appel sans réponse", [v === "matin" ? "Rappel le matin" : "Rappel l'après-midi", (note || "").trim()].filter(Boolean).join(" · ")])) { const rest = order.slice(order.indexOf(x.id) + 1).concat(order.slice(0, order.indexOf(x.id))).map((id) => eleves.find((y) => y.id === id)).filter((y) => y && etapeOf(y) === "appels"); const nx = rest.find((y) => !calledToday(y)) || null; pcSel = nx ? nx.id : null; renderList(); } return; }
       if (rp) { const v = rp.dataset.rappel || null; if (await patchEl(x, { rappel: v }, "Enregistré")) renderList(); return; }
@@ -2901,16 +2899,11 @@ function init(root) {
       else if (k === "exPass") { confirmBtn(a, async () => { if (await patchEl(x, { statut: "Permis obtenu" }, "Bravo ! Permis obtenu", ["Examen", "Permis obtenu"])) { pcStage = "archives"; S.set("pcStage", pcStage); pcSel = x.id; renderList(); } }); }
       else if (k === "exFail") { confirmBtn(a, async () => { if (await patchEl(x, { examen_etape: "complet", examen_passages: Math.min((x.examen_passages || 0) + 1, 10), examen_date: null, examen_lieu: null, examen_depose_le: null }, "À repasser : dossier à redéposer", ["Examen", "À repasser"])) renderList(); }); }
       else if (k === "exBack") { confirmBtn(a, async () => { if (await patchEl(x, { examen_etape: null }, "Revenu en formation", ["Étape", "Revenu en formation"])) { pcStage = "formation"; S.set("pcStage", pcStage); renderList(); } }); }
-      else if (k === "printDocs") {
-        const w = window.open("", "_blank"); if (!w) return; w.document.write("<p style='font:16px sans-serif;padding:20px'>Chargement des papiers…</p>");
-        const docs = x.examen_docs || {}, items = [];
-        for (const p of PX) { const d = docs[p[0]]; if (d && d.chemin) items.push([p[1], await exSigned(d.chemin), /\.pdf$/i.test(d.chemin)]); }
-        w.document.open(); w.document.write('<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>Dossier examen · ' + esc(x.nom) + " · " + CODE(x) + '</title><style>body{font:14px sans-serif;margin:0}section{page-break-after:always;padding:12mm;text-align:center}h2{margin:0 0 8mm;font-size:16px}img{max-width:100%;max-height:250mm}@media print{.np{display:none}}</style></head><body><p class="np" style="padding:10px 12mm;background:#FFF5D6;margin:0">Dossier d\'examen de <b>' + esc(x.nom) + "</b> (" + CODE(x) + ") · <button onclick='print()'>Imprimer</button></p>" +
-          items.map((it) => "<section><h2>" + esc(it[0]) + " · " + esc(x.nom) + " · " + CODE(x) + "</h2>" + (it[1] ? (it[2] ? '<p><a href="' + it[1] + '" target="_blank">Ouvrir le PDF</a></p>' : '<img src="' + it[1] + '">') : "<p>Fichier introuvable</p>") + "</section>").join("") + "</body></html>"); w.document.close();
-      }
     });
     $("#sd-pcDetail").addEventListener("change", async (e) => {
       const x = eleves.find((y) => y.id === pcSel); if (!x) return;
+      const dm = e.target.closest("[data-docmain]");
+      if (dm) { const docs = Object.assign({}, x.examen_docs || {}); if (dm.checked) docs[dm.dataset.docmain] = { main: true, le: new Date().toISOString() }; else delete docs[dm.dataset.docmain]; const done = dm.checked && PX.every((p) => docs[p[0]]) && x.examen_paye && x.examen_etape === "pret"; if (await patchEl(x, Object.assign({ examen_docs: docs }, done ? { examen_etape: "complet" } : {}), dm.checked ? "Papier reçu" : "Papier retiré", ["Examen", (dm.checked ? "Papier reçu : " : "Papier retiré : ") + dm.dataset.docmain])) renderList(); return; }
       const pc = e.target.closest("[data-piece]");
       if (pc) { const d = Object.assign({}, x.dossier || {}); d[pc.dataset.piece] = pc.checked; await patchEl(x, { dossier: d }, "Dossier mis à jour"); return; }
       if (e.target.matches('[data-a="statut"]')) { if (await patchEl(x, { statut: e.target.value }, "Statut enregistré", ["Étape", e.target.value])) renderList(); }
@@ -3462,16 +3455,7 @@ function init(root) {
   }
 
   // ---------- Page publique : dossier d'examen (lien personnel envoyé en fin de formation) ----------
-  const EX_PIECES = [["cni", "Carte d'identité", "Recto (et verso si possible), bien à plat"], ["acte", "Acte de naissance", "Toute la page, lisible"], ["photo1", "Photo d'identité n° 1", "Photo de face, fond clair"], ["photo2", "Photo d'identité n° 2", "La deuxième photo"]];
-  function exCompress(file) {
-    return new Promise((res) => {
-      if (!/^image\/(jpeg|png|webp)$/.test(file.type)) return res(null);
-      const img = new Image(), url = URL.createObjectURL(file);
-      img.onload = () => { const m = 1800, r = Math.min(1, m / Math.max(img.width, img.height)), c = document.createElement("canvas"); c.width = Math.round(img.width * r); c.height = Math.round(img.height * r); c.getContext("2d").drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(url); c.toBlob((b) => res(b), "image/jpeg", 0.85); };
-      img.onerror = () => { URL.revokeObjectURL(url); res(null); };
-      img.src = url;
-    });
-  }
+  const EX_PIECES = [["cni", "Photocopie de ta carte d'identité", "Recto verso, bien lisible"], ["acte", "Acte de naissance", "Original ou copie, selon ce que demande le secrétariat"], ["photo1", "Photo d'identité n° 1", "Format passeport, fond clair"], ["photo2", "Photo d'identité n° 2", "Format passeport, fond clair"]];
   async function examPage(str) {
     const box = $("#sd-exam");
     const mm = /^(\d+)-([A-Za-z0-9]{10,32})$/.exec(str || "");
@@ -3491,33 +3475,16 @@ function init(root) {
       : "";
     const mixxOk = !!d.m;
     box.innerHTML = '<div class="insc-form">' +
-      '<div class="insc-hello"><p class="eyebrow">N° client SO' + id + " · " + escI(d.f) + '</p><h2>Bravo ' + escI(d.p) + ', place à l\'examen !</h2><p>Deux étapes et ton dossier est prêt : SODAF le dépose pour toi.</p></div>' +
-      '<fieldset class="insc-step"><legend><i>1</i>Tes papiers en photo</legend><p class="insc-hint">Photo nette, bien éclairée, document à plat avec les 4 coins visibles. Une photo par papier.</p><div class="ex-up">' +
-      EX_PIECES.map((p) => '<label class="ex-tile' + (docs[p[0]] ? " ok" : "") + '" data-p="' + p[0] + '"><input type="file" accept="image/*,application/pdf" data-up="' + p[0] + '"><b>' + p[1] + "</b><small>" + p[2] + '</small><span class="ex-st">' + (docs[p[0]] ? (docs[p[0]].main ? "✓ Reçu à l'agence" : "✓ Reçu · toucher pour remplacer") : "Toucher pour prendre la photo") + "</span></label>").join("") +
-      '</div><p class="insc-sum" id="sd-exCount"><b>' + nd + '/4</b> <span>papiers reçus</span></p></fieldset>' +
+      '<div class="insc-hello"><p class="eyebrow">N° client SO' + id + " · " + escI(d.f) + '</p><h2>Bravo ' + escI(d.p) + ', place à l\'examen !</h2><p>Apporte tes papiers et règle le dépôt : SODAF dépose ton dossier pour toi.</p></div>' +
+      '<fieldset class="insc-step"><legend><i>1</i>Tes papiers, à apporter à l\'agence</legend><p class="insc-hint">Les papiers doivent être remis en main propre : nous ne pouvons pas les accepter en photo.</p><div class="ex-list">' +
+      EX_PIECES.map((p) => '<div class="ex-item' + (docs[p[0]] ? " ok" : "") + '"><i>' + (docs[p[0]] ? "✓" : "") + "</i><div><b>" + p[1] + "</b><small>" + (docs[p[0]] ? "Reçu par SODAF" : p[2]) + "</small></div></div>").join("") +
+      '</div><p class="insc-sum" id="sd-exCount"><b>' + nd + '/4</b> <span>papiers reçus par SODAF</span></p></fieldset>' +
       '<fieldset class="insc-step"><legend><i>2</i>Le dépôt pour l\'examen : 30&nbsp;000&nbsp;F</legend>' + pay +
       '<form id="sd-exPay" novalidate' + (d.paye || d.pm ? " hidden" : "") + '><div class="insc-cards insc-two"><label class="rcm on"><input type="radio" name="exM" value="agence" checked><span><b>À l\'agence</b><small>En espèces, au 412 Avenue Akei, Tokoin Tamé</small></span></label>' +
       '<label class="rcm' + (mixxOk ? "" : " off") + '"><input type="radio" name="exM" value="mixx"' + (mixxOk ? "" : " disabled") + '><span><b>Par Mixx by Yas (T-Money)</b><small>' + (mixxOk ? "Depuis ton téléphone" : "Bientôt disponible : pour l'instant, paie à l'agence") + "</small></span></label></div>" +
       '<div class="insc-mixx" id="sd-exMixx" hidden><ol><li>Envoie <b>30&nbsp;000&nbsp;F</b> par Mixx by Yas au <b>' + escI(d.m) + "</b>" + (d.n ? " (" + escI(d.n) + ")" : "") + ".</li><li>Motif : <b>SO" + id + ' EXAMEN</b></li><li>Écris ci-dessous le numéro qui a payé et la référence du SMS.</li></ol><div class="insc-grid"><div class="field"><label for="sd-exMt">Numéro qui a payé</label><div class="tel"><span>+228</span><input id="sd-exMt" inputmode="numeric" maxlength="11" placeholder="90 00 00 00"></div></div><div class="field"><label for="sd-exMr">Référence (SMS)</label><input id="sd-exMr" maxlength="60" placeholder="Ex. MP2410…"></div></div></div>' +
       '<p class="insc-err" id="sd-exErr" hidden></p><button class="btn btn-green insc-go" type="submit">Valider</button></form></fieldset>' +
-      '<p class="insc-note">Ensuite : dès que ton dossier est complet, SODAF le dépose. L\'État t\'envoie la date et le lieu de ton examen par message, et nous te prévenons aussi sur WhatsApp.</p></div>';
-    box.querySelectorAll("[data-up]").forEach((inp) => inp.addEventListener("change", async () => {
-      const f = inp.files && inp.files[0], piece = inp.dataset.up, tile = inp.closest(".ex-tile"), st = tile.querySelector(".ex-st"); if (!f) return;
-      if (f.size > 15 * 1048576) { st.textContent = "Fichier trop lourd : prends une photo plus légère."; tile.classList.add("err"); return; }
-      tile.classList.remove("err"); tile.classList.add("busy"); st.textContent = "Envoi en cours…";
-      let blob = await exCompress(f), ext = "jpg", type = "image/jpeg";
-      if (!blob) { blob = f; type = f.type || "application/octet-stream"; ext = (/pdf/.test(type) ? "pdf" : /png/.test(type) ? "png" : /webp/.test(type) ? "webp" : /hei[cf]/.test(type) ? "heic" : "jpg"); }
-      const path = id + "/" + jt + "/" + piece + "-" + Date.now() + "." + ext;
-      let ok = false;
-      try {
-        const r = await fetch(SB_URL + "/storage/v1/object/examen/" + path, { method: "POST", headers: { apikey: SB_KEY, "Content-Type": type, "x-upsert": "false" }, body: blob });
-        if (r.ok) ok = await DB.q("rpc/examen_envoi_doc", { method: "POST", body: { p_id: id, p_jeton: jt, p_piece: piece, p_chemin: path }, anon: true });
-      } catch (e) {}
-      tile.classList.remove("busy");
-      if (ok === true) { tile.classList.add("ok"); st.textContent = "✓ Reçu · toucher pour remplacer"; docs[piece] = { le: new Date().toISOString() }; $("#sd-exCount").innerHTML = "<b>" + EX_PIECES.filter((p) => docs[p[0]]).length + "/4</b> <span>papiers reçus</span>"; }
-      else { tile.classList.add("err"); st.textContent = "L'envoi n'a pas marché : vérifie ta connexion et réessaie."; }
-      inp.value = "";
-    }));
+      '<p class="insc-note">Ensuite : dès que ton dossier est complet, SODAF le dépose. L\'État t\'envoie la date et le lieu de ton examen par message, et nous te prévenons aussi sur WhatsApp.</p></div>' + inscFindUs(0, id);
     const pf = $("#sd-exPay");
     const upd = () => { pf.querySelectorAll(".rcm").forEach((l) => l.classList.toggle("on", l.querySelector("input").checked)); $("#sd-exMixx").hidden = pf.querySelector("[name=exM]:checked").value !== "mixx"; };
     pf.addEventListener("change", upd); upd();
