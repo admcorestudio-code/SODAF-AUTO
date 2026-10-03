@@ -2669,23 +2669,24 @@ function init(root) {
     const SIGN = "\n\n*L'équipe SODAF · L'art de conduire, la force de réussir.*";
     const msgExamen = (x) => "Bonjour " + prenom(x) + ",\n\nFélicitations, ta formation chez *SODAF Auto-École* est terminée ! Pour la suite, nous devons faire le *dépôt de ton dossier d'examen* auprès de l'État.\n\n*À APPORTER À L'AGENCE*\n• Photocopie de ta carte d'identité\n• Ton acte de naissance\n• 2 photos d'identité (format passeport)\n• Le dépôt pour l'examen : 30 000 F\n\nLe dossier est accepté *uniquement complet* : apporte tout en une seule fois.\n\nN° Client : " + CODE(x) + exMixx(x) + "\n\n" + AGENCE + "\n\nÀ très vite !" + SIGN;
     const msgBravo = (x) => "Félicitations " + prenom(x) + " !\n\nToute l'équipe de *SODAF Auto-École* est fière de toi : tu as obtenu ton *permis de conduire*.\n\nUn dernier conseil : sur la route, la prudence reste ta meilleure alliée.\n\nSi tu es content(e) de ta formation, parle de SODAF autour de toi : ta famille et tes amis seront bien accueillis." + SIGN + "\nautosodaf.com";
-    const PRIX_COURT = { "Permis B": "Pour le permis B, ça commence à 35 000 francs", "Permis A": "Pour le permis moto, c'est 30 000 francs", "Pack A + B": "Pour le pack moto et voiture, c'est 80 000 francs", "Remise à niveau": "Pour la remise à niveau, c'est 20 000 francs", "Formation entreprise": "Pour les chauffeurs d'entreprise, on fait un devis" };
     const say = (t) => '<p class="sc-say">« ' + t + " »</p>";
     const tip = (t) => '<p class="sc-tip">' + t + "</p>";
+    // Nom de la formation tel qu'on le dit au téléphone (pas le nom administratif)
+    const ORAL = { "Permis B": "le permis voiture", "Permis A": "le permis moto", "Pack A + B": "le permis moto et voiture", "Remise à niveau": "la remise à niveau", "Formation entreprise": "la formation de vos chauffeurs" };
     const script = (x) => {
-      const exam = /Permis|Pack/.test(x.formation || "");
+      const exam = /Permis|Pack/.test(x.formation || ""), f = ORAL[x.formation] || "le permis";
       return '<ol class="sc">' +
-        "<li><b>Saluer</b>" + say("Bonjour, SODAF Auto-École. Je vous appelle pour votre pré-inscription au " + esc(x.formation || "permis") + ". Vous avez une minute ?") +
-          tip("Pas disponible : « Je vous rappelle plutôt le matin ou l'après-midi ? » puis choisis quand rappeler.") + "</li>" +
-        "<li><b>L'essentiel</b>" + say("Chez nous, vous apprenez le code en salle et sur notre site, puis la conduite avec le moniteur. " + esc(PRIX_COURT[x.formation] || "Je vous envoie nos prix") + ", et vous pouvez payer en deux fois.") + "</li>" +
-        "<li><b>Conclure</b>" + say("Je vous envoie tout sur WhatsApp : les prix et notre adresse. Vous regardez tranquillement et vous me dites. Vous avez une question ?") +
+        "<li><b>Saluer</b>" + say("Bonjour, ici SODAF Auto-École. Je vous appelle suite à votre pré-inscription pour " + esc(f) + ". Vous avez une petite minute ?") +
+          tip("Pas disponible : « Pas de souci, je vous rappelle plutôt le matin ou l'après-midi ? » puis choisis quand rappeler.") + "</li>" +
+        "<li><b>L'essentiel</b>" + say(x.formation === "Remise à niveau" ? "On reprend la conduite avec vous, à votre rythme, avec un moniteur, jusqu'à ce que vous soyez à l'aise au volant." : "Chez nous, vous apprenez le code en salle et aussi sur notre site, puis la conduite avec un moniteur. On vous accompagne jusqu'à l'examen.") + "</li>" +
+        "<li><b>Conclure</b>" + say("Je vous envoie tout sur WhatsApp : les tarifs, comment s'inscrire et notre adresse. Vous regardez tranquillement, et vous me dites. Vous avez une question ?") +
           tip("Intéressé ou il veut réfléchir : touche « Intéressé : finaliser l’inscription ». Pas intéressé : « Plus tard » ou « Rétractation ».") + "</li></ol>" +
         '<details class="pc-more"><summary>S\'il pose une question</summary>' +
-        tip("<b>Les papiers :</b> rien à apporter pour commencer. Pour l'examen, à la fin de la formation : acte de naissance, photocopie de la carte d'identité, 2 photos d'identité.") +
-        (exam ? tip("<b>L'examen :</b> 30 000 francs, à payer à la fin de la formation, au moment où on dépose son dossier d'examen. L'État lui envoie ensuite la date et le lieu par message.") : "") +
-        tip("<b>Les inscriptions :</b> 5 000 francs, plus la moitié de la formation ; le reste avant la première séance de conduite. Espèces au bureau ou Mixx by Yas.") +
-        tip("<b>Les cours :</b> code lundi, mercredi et vendredi à 14 h 30 ; conduite par séances d'une heure.") +
-        tip("<b>L'adresse :</b> 412 avenue Akei, Tokoin Tamé, en face de la caisse. Lun – ven 8 h – 12 h 30 et 14 h 30 – 18 h, samedi matin.") + "</details>";
+        tip("<b>Le prix :</b> on n'en parle pas au téléphone. « Tout est dans le message WhatsApp que je vous envoie juste après, avec les différentes formules. »") +
+        tip("<b>Les papiers :</b> « Rien à apporter pour commencer. Les papiers, c'est à la fin, pour l'examen. »") +
+        (exam ? tip("<b>L'examen :</b> « C'est nous qui déposons votre dossier à la fin de la formation, et l'État vous envoie la date par message. »") : "") +
+        tip("<b>Les cours :</b> « Le code, c'est le lundi, le mercredi et le vendredi à 14 h 30. La conduite, c'est par séances d'une heure. »") +
+        tip("<b>L'adresse :</b> « On est au 412 avenue Akei, à Tokoin Tamé, en face de la caisse. Le bureau est ouvert en semaine de 8 h à 18 h, avec une pause à midi, et le samedi matin. »") + "</details>";
     };
     const ago = (d) => { const m = Math.round((Date.now() - new Date(d)) / 60000); return m < 60 ? "il y a " + Math.max(m, 1) + " min" : m < 1440 ? "il y a " + Math.round(m / 60) + " h" : "il y a " + Math.round(m / 1440) + " j"; };
     let pcStage = S.get("pcStage", "accueil"), pcSel = null, pcFeed = [];
