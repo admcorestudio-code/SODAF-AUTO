@@ -2397,16 +2397,17 @@ function init(root) {
       };
     };
     function receiptHTML(d) {
+      const ex = /examen/i.test(d.motif || "");
       return '<div class="rc">' +
         '<div class="rc-top"><div class="rc-logo">' + LOGO("#FFFFFF", "word") + '<small>Auto-école · Lomé, Togo</small></div><div class="rc-no"><b>Reçu de paiement</b><span>N° ' + escR(d.no) + "</span><span>" + escR(d.dateTxt) + "</span></div></div>" +
         '<div class="rc-body">' +
         '<div class="rc-row"><span>Reçu de</span><b>' + escR(d.eleve) + "</b>" + (d.tel ? "<em>+228 " + escR(d.tel) + "</em>" : "") + "</div>" +
-        '<div class="rc-row"><span>Formation</span><b>' + escR(d.formation) + "</b>" + (d.prix ? "<em>Prix de la formation : " + fmt(d.prix) + "</em>" : "") + "</div>" +
+        '<div class="rc-row"><span>Formation</span><b>' + escR(d.formation) + "</b>" + (d.prix && !ex ? "<em>Prix de la formation : " + fmt(d.prix) + "</em>" : "") + "</div>" +
         '<div class="rc-row"><span>Motif</span><b>' + escR(d.motif) + "</b></div>" +
         '<div class="rc-amt"><span>Montant reçu</span><b>' + fmt(d.montant) + "</b><em>" + escR(lettres(d.montant)) + " francs CFA</em></div>" +
-        '<div class="rc-grid"><div><span>Mode de paiement</span><b>' + escR(d.mode) + "</b></div><div><span>Reste à payer</span><b>" + (d.reste === "" ? "—" : d.reste > 0 ? fmt(d.reste) : "Formation soldée ✓") + "</b></div></div>" +
+        '<div class="rc-grid"><div><span>Mode de paiement</span><b>' + escR(d.mode) + "</b></div><div><span>Reste à payer</span><b>" + (ex ? "Soldé ✓" : d.reste === "" ? "—" : d.reste > 0 ? fmt(d.reste) : "Formation soldée ✓") + "</b></div></div>" +
         (d.note ? '<p class="rc-note">' + escR(d.note) + "</p>" : "") +
-        '<div class="rc-cond"><b>Bon à savoir</b>Le droit d\'inscription n\'est pas remboursable. Une séance de conduite non faite peut être reportée pendant 6 mois. Garde ce reçu jusqu\'à la fin de ta formation.</div>' +
+        '<div class="rc-cond"><b>Bon à savoir</b>' + (ex ? "Ce dépôt couvre l\'inscription à l\'examen d\'État. SODAF dépose ton dossier ; l\'État t\'envoie ensuite la date de ton examen par message. Garde ce reçu jusqu\'au résultat de ton examen." : "Le droit d\'inscription n\'est pas remboursable. Une séance de conduite non faite peut être reportée pendant 6 mois. Garde ce reçu jusqu\'à la fin de ta formation.") + "</div>" +
         '<div class="rc-sign"><div><span>Pour SODAF Auto-École</span><b>' + "Le secrétariat" + '</b><small>Reçu électronique enregistré au secrétariat sous le n° ' + escR(d.no) + ".</small></div><img src=\"/entreprise/cachet-sodaf-bleu.png\" alt=\"\"></div>" +
         "</div>" +
         '<div class="rc-foot"><span>412 Avenue Akei, Tokoin Tamé, Lomé · +228 72 54 41 66 · autosodaf.com</span><b>L\'art de conduire, la force de réussir.</b></div>' +
