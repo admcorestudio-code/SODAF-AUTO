@@ -862,6 +862,12 @@ html:has(#sodaf-root.app-mode),body:has(#sodaf-root.app-mode){background:#E9ECEF
 .pc-mini b{font:700 1.05rem var(--f-display)}
 .pc-line{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;font-size:.92rem;padding:6px 0;border-top:1px solid var(--line)}
 .pc-line em{font-style:normal;color:var(--muted);flex:1;min-width:0}
+.pc-paylist{border-top:1px solid #DDE1E5;padding-top:10px}
+#sodaf-root .pc-info .pc-paylist .pc-line{display:flex;flex-direction:row;align-items:baseline;gap:12px;flex-wrap:wrap;border-top:0;padding:4px 0;font-size:.95rem}
+#sodaf-root .pc-info .pc-line span{font-size:.9rem;font-weight:500;color:#3D444D}
+#sodaf-root .pc-info .pc-line em{font-style:normal;color:var(--muted);flex:1;min-width:0}
+#sodaf-root .pc-info .pc-line a{color:var(--green)}
+.pc-due{color:var(--red)}
 .pc-feed{display:flex;flex-direction:column;gap:0}
 .pc-feed div{display:grid;grid-template-columns:auto 1fr;gap:0 12px;padding:7px 0;border-top:1px solid var(--line);font-size:.92rem}
 .pc-feed time{color:var(--muted);font-size:.82rem;grid-row:1/3;font-variant-numeric:tabular-nums}
@@ -2747,7 +2753,8 @@ function init(root) {
       const info = '<div class="pc-info"><div><span>N° client</span><b>' + CODE(x) + '</b></div><div><span>Téléphone</span><b>' + (n ? '<a href="tel:+228' + n + '">+228 ' + n.replace(/(\d{2})(?=\d)/g, "$1 ") + "</a>" : "—") + '</b></div><div><span>Formation</span><b>' + esc(x.formation || "—") + '</b></div><div><span>Quartier</span><b>' + esc(x.quartier || "—") + "</b></div>" +
         (x.creneau_prefere ? '<div><span>Préfère</span><b>' + esc(x.creneau_prefere) + "</b></div>" : "") + (x.paiement_prefere ? '<div><span>Paiement</span><b>' + esc(x.paiement_prefere) + "</b></div>" : "") + '<div><span>Arrivé</span><b>' + new Date(x.cree_le).toLocaleDateString("fr-FR") + " · " + esc(srcOf(x)) + "</b></div>" +
         '<div><span>Statut</span><b>' + (st === "formation" ? '<select data-a="statut">' + ETAPES.formation.map((t) => "<option" + (t === x.statut ? " selected" : "") + ">" + t + "</option>").join("") + "</select>" : esc(x.statut === "Abandon" ? "Archivé" + (x.archive_motif ? " · " + x.archive_motif : "") : x.statut)) + "</b></div>" +
-        (x.message ? '<div class="wide"><span>Son message</span><b>« ' + esc(x.message) + " »</b></div>" : "") + (x.notes ? '<div class="wide"><span>Note interne</span><b>' + esc(x.notes) + "</b></div>" : "") + "</div>";
+        (x.message ? '<div class="wide"><span>Son message</span><b>« ' + esc(x.message) + " »</b></div>" : "") + (x.notes ? '<div class="wide"><span>Note interne</span><b>' + esc(x.notes) + "</b></div>" : "") +
+        (st === "formation" ? '<div><span>Payé</span><b id="sd-pcPaid">…</b></div><div><span>Reste à payer</span><b id="sd-pcRest">…</b></div><div class="wide pc-paylist" id="sd-pcPay"></div>' : "") + "</div>";
       let body = "";
       if (st === "accueil") {
         body = '<p class="pc-proto">Protocole : envoie le message d\'accueil sur WhatsApp, puis bascule le dossier en zone d\'appel.</p>' +
@@ -2789,7 +2796,7 @@ function init(root) {
           (late && !w ? '<div class="pc-alert" style="margin-top:0"><b>Pas de nouvelles depuis ' + dosAge(x) + ' jours.</b> Envoie la relance, ou appelle-le.<div class="tm-formact">' + (n ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-a="relDossier" href="' + wa(msgRelDos(x)) + '">Envoyer la relance ↗</a>' : "") + "</div></div>" : (n ? '<div class="tm-formact"><a class="btn btn-line btn-sm" target="_blank" rel="noopener" data-a="relDossier" href="' + wa(msgRelDos(x)) + '">Relancer quand même ↗</a></div>' : "")) +
           '<details class="pc-more"><summary>Revoir ou renvoyer le dossier</summary><textarea id="sd-pcDosMsg" rows="14">' + esc(msgDossier(x)) + '</textarea><div class="tm-formact">' + (n ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-a="resendDossier" href="' + wa(msgDossier(x)) + '">Renvoyer le dossier ↗</a>' : "") + "</div></details></div>";
       } else if (st === "formation") {
-        body = '<div class="pc-block"><div class="pc-bh"><b>Paiements</b></div><div id="sd-pcPay"><p class="tm-note">Chargement…</p></div></div><div class="pc-block"><div class="pc-bh"><b>Conduite</b></div><div id="sd-pcDrive"><p class="tm-note">Chargement…</p></div></div>' +
+        body = '<div class="pc-block"><div class="pc-bh"><b>Conduite</b></div><div id="sd-pcDrive"><p class="tm-note">Chargement…</p></div></div>' +
           (/Permis|Pack/.test(x.formation || "") ? '<div class="pc-block pc-fin"><div class="pc-bh"><b>Fin de formation</b>' + (x.examen_passages ? '<span class="tm-note" style="margin:0!important">' + (x.examen_passages + 1) + 'e passage</span>' : "") + '</div><p class="tm-note" style="margin:0 0 10px!important">Quand l\'élève a terminé (ou qu\'il lui reste 1 ou 2 séances), passe-le à l\'étape examen : il recevra un lien pour envoyer ses papiers en photo et régler le dépôt de 30 000 F.</p><div class="tm-formact"><button class="btn btn-green btn-sm" type="button" data-a="toExam">Formation terminée : passer à l\'examen →</button></div></div>' : "");
       } else if (st === "examen") {
         const E = x.examen_etape, docs = x.examen_docs || {}, nd = exDocs(x), pm = x.examen_paiement || null;
@@ -2832,7 +2839,9 @@ function init(root) {
         const [py, cd] = await Promise.all([run(() => DB.q("paiements?select=*&eleve_id=eq." + id + "&order=cree_le.desc")), run(() => DB.q("creneaux_conduite?select=jour,heure,statut&eleve_id=eq." + id + "&order=jour.desc&limit=60"))]);
         if (pcSel !== id) return;
         const ok = (py || []).filter((p) => !p.annule), paid = ok.reduce((a, p) => a + p.montant, 0), last = ok[0];
-        $("#sd-pcPay").innerHTML = ok.length ? '<div class="pc-mini"><div><span>Payé</span><b>' + F(paid) + '</b></div><div><span>Reste</span><b>' + (last && last.reste > 0 ? F(last.reste) : "Soldé ✓") + "</b></div></div>" + ok.slice(0, 5).map((p) => '<div class="pc-line"><span>' + dOf(p.jour).toLocaleDateString("fr-FR") + "</span><b>" + F(p.montant) + "</b><em>" + esc(p.motif) + "</em>" + (window.__sodafRcLink ? '<a target="_blank" rel="noopener" href="' + window.__sodafRcLink(p) + '">reçu</a>' : "") + "</div>").join("") : '<p class="tm-note">Aucun paiement enregistré. Touche « Faire un reçu ».</p>';
+        $("#sd-pcPaid").textContent = ok.length ? F(paid) : "0 F";
+        const rs = $("#sd-pcRest"); rs.textContent = !ok.length ? "—" : last && last.reste > 0 ? F(last.reste) : "Soldé ✓"; rs.classList.toggle("pc-due", !!(last && last.reste > 0));
+        $("#sd-pcPay").innerHTML = ok.length ? "<span>Reçus</span>" + ok.slice(0, 5).map((p) => '<div class="pc-line"><span>' + dOf(p.jour).toLocaleDateString("fr-FR") + "</span><b>" + F(p.montant) + "</b><em>" + esc(p.motif) + "</em>" + (window.__sodafRcLink ? '<a target="_blank" rel="noopener" href="' + window.__sodafRcLink(p) + '">reçu</a>' : "") + "</div>").join("") : '<span>Reçus</span><b style="font-weight:500;color:var(--muted)">Aucun paiement enregistré. Touche « Faire un reçu ».</b>';
         const c = cd || [], fait = c.filter((s) => s.statut === "Fait").length, abs = c.filter((s) => s.statut === "Absent").length, next = c.filter((s) => s.statut === "Réservé" && s.jour >= iso(new Date())).sort((a, b) => (a.jour < b.jour ? -1 : 1))[0];
         $("#sd-pcDrive").innerHTML = '<div class="pc-mini"><div><span>Séances faites</span><b>' + fait + '</b></div><div><span>Absences</span><b>' + abs + '</b></div><div><span>Prochaine</span><b>' + (next ? longDay(next.jour) + " · " + esc(next.heure) : "—") + "</b></div></div>";
       }
