@@ -2552,7 +2552,7 @@ function init(root) {
     const PIECES = [["acte", "Acte de naissance"], ["cni", "Photocopie carte d'identité"], ["photos", "2 photos passeport"], ["examen", "Dépôt examen 30 000 F payé"], ["deja", "A déjà conduit"]];
     const CODE = (x) => "SO" + x.id;
     const SRC = { site: "Site web", agence: "Venu à l'agence", bureau: "Venu à l'agence", appel: "Appel téléphonique", whatsapp: "WhatsApp", bouche: "Bouche-à-oreille", reseaux: "Facebook / TikTok", affiche: "Affiche, flyer, QR", entreprise: "Entreprise", autre: "Autre" };
-    const srcOf = (x) => SRC[x.source] || (x.source ? x.source : "Non renseigné");
+    const srcOf = (x) => (x.source === "site" ? SRC.site : SRC[x.provenance] || SRC.agence);
     const prenom = (x) => (x.nom || "").trim().split(/\s+/)[0];
     const msgAccueil = (x) => "Bonjour " + prenom(x) + ",\n\nIci le secrétariat de SODAF Auto-École. Nous avons bien reçu ta pré-inscription, merci !\n\n*TON DOSSIER*\n• N° Client : " + CODE(x) + "\n• Formation : " + (x.formation || "à préciser") + "\n\nNous allons t'appeler très bientôt pour répondre à tes questions et préparer ton inscription.\nGarde ton téléphone près de toi.\n\nÀ très vite !\n*L'équipe SODAF · L'art de conduire, la force de réussir.*\nautosodaf.com";
     const msgRelance = (x) => "Bonjour " + prenom(x) + ",\n\nIci le secrétariat de *SODAF Auto-École*. Nous avons essayé de te joindre plusieurs fois au sujet de ta pré-inscription, sans succès.\n\n*TON DOSSIER*\n• N° Client : " + CODE(x) + "\n• Formation : " + (x.formation || "à préciser") + "\n\nTon dossier reste ouvert. Si tu es toujours intéressé(e) :\n• Réponds simplement à ce message, nous te rappelons au moment qui t'arrange ;\n• Ou appelle-nous au *72 54 41 66*.\n\nEn attendant, découvre nos formations et révise le code gratuitement sur notre site :\nautosodaf.com\n\nÀ bientôt !\n*L'équipe SODAF · L'art de conduire, la force de réussir.*";
@@ -2795,7 +2795,7 @@ function init(root) {
       if (tel.length !== 8) { err.textContent = "Numéro de téléphone à 8 chiffres."; return; }
       if (!src) { err.textContent = "Choisis comment il nous a connus."; return; }
       err.textContent = "";
-      const r = await run(() => DB.q("eleves", { method: "POST", body: { nom, nom_famille: nf, prenoms: pr, telephone: "+228" + tel, quartier: q || null, formation: $("#sd-elFo").value, source: src, statut }, prefer: "return=minimal" }), "Client ajouté");
+      const r = await run(() => DB.q("eleves", { method: "POST", body: { nom, nom_famille: nf, prenoms: pr, telephone: "+228" + tel, quartier: q || null, formation: $("#sd-elFo").value, source: "bureau", provenance: src, statut }, prefer: "return=minimal" }), "Client ajouté");
       if (r) { $("#sd-elAdd").reset(); $("#sd-elAdd").hidden = true; pcStage = statut === "Contacté" ? "appels" : "formation"; S.set("pcStage", pcStage); pcSel = null; loadEleves(); }
     });
     function fillEleveSelect() {
