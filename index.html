@@ -18,7 +18,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#14171C">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "DrivingSchool", "name": "SODAF Auto-École",
-  "slogan": "L'art de conduire, la force de réussir.", "url": "https://autosodaf.com/", "logo": "https://autosodaf.com/og-image.jpg", "image": "https://autosodaf.com/og-image.jpg", "telephone": "+228 72 54 41 66", "description": "Auto-école à Lomé : permis B, permis A (moto), remise à niveau et formation de chauffeurs. Cours de code en ligne gratuits.", "address": {"@type": "PostalAddress", "streetAddress": "412 Avenue Akei, Tokoin Tamé (en face de la caisse)", "addressLocality": "Lomé", "addressCountry": "TG"}, "areaServed": "Lomé", "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "08:00", "closes": "12:30"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "14:30", "closes": "18:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "08:00", "closes": "12:00"}], "priceRange": "20 000 – 80 000 FCFA", "currenciesAccepted": "XOF", "paymentAccepted": "Espèces, T-Money, Flooz"}</script>
+  "slogan": "L'art de conduire, la force de réussir.", "url": "https://autosodaf.com/", "logo": "https://autosodaf.com/og-image.jpg", "image": "https://autosodaf.com/og-image.jpg", "telephone": "+228 72 54 41 66", "description": "Auto-école à Lomé : permis B, permis A (moto), remise à niveau et formation de chauffeurs. Cours de code en ligne gratuits.", "address": {"@type": "PostalAddress", "streetAddress": "412 Avenue Akei, Tokoin Tamé (en face de la caisse)", "addressLocality": "Lomé", "addressCountry": "TG"}, "areaServed": "Lomé", "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "08:00", "closes": "12:30"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "14:30", "closes": "18:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "08:00", "closes": "12:00"}], "priceRange": "20 000 – 80 000 FCFA", "currenciesAccepted": "XOF", "paymentAccepted": "Espèces, Mixx by Yas (T-Money)"}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Figtree:wght@400;500;600;700&display=swap">
 </head>
@@ -461,6 +461,11 @@ article.ch p+p{margin-top:10px}
 .rcm em{font-style:normal;font:800 1.05rem var(--f-display);color:var(--green);white-space:nowrap}
 @media (max-width:520px){.rcm{flex-wrap:wrap}.rcm span{flex:1 1 calc(100% - 40px)}.rcm em{margin-left:32px}}
 #sodaf-root #sd-rcOther{font:1rem var(--f-body);padding:.7em .8em;border:1.5px solid var(--line);border-radius:10px;width:100%}
+.rcmodes{border:0;padding:0;margin:0 0 6px;min-width:0;display:flex;flex-wrap:wrap;gap:8px}
+.rcmodes legend{font-weight:600;margin-bottom:8px;padding:0;width:100%}
+.rcmode{display:flex;align-items:center;gap:10px;border:1.5px solid var(--line);border-radius:999px;padding:10px 18px;cursor:pointer;font-weight:600}
+.rcmode:has(input:checked){border-color:var(--green);background:var(--green-soft)}
+#sodaf-root .rcmode input{width:18px;height:18px;padding:0;margin:0;flex:0 0 18px;accent-color:var(--green)}
 .rcform .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media (max-width:640px){.rcform .row2{grid-template-columns:1fr}}
 .rcout{margin-top:18px}
@@ -787,7 +792,7 @@ const HTML = `
 <div class="grid g3">
 <div class="card feat"><span class="fico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/></svg></span><h3>Le manuel en ligne</h3><p>Les 7 parties du manuel SODAF en chapitres courts, à lire où tu veux.</p><a class="more" href="#cours">Ouvrir les cours →</a></div>
 <div class="card feat"><span class="fico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg></span><h3>Quiz corrigés</h3><p>Chaque réponse est expliquée et renvoie au chapitre à relire.</p><a class="more" href="#quiz">S'entraîner →</a></div>
-<div class="card feat"><span class="fico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg></span><h3>Paiement en tranches</h3><p>Règle ta formation en plusieurs fois, par T-Money, Flooz ou en espèces.</p><a class="more" href="#formations">Voir les formules →</a></div>
+<div class="card feat"><span class="fico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg></span><h3>Paiement en tranches</h3><p>Règle ta formation en plusieurs fois, en espèces ou par Mixx by Yas (T-Money).</p><a class="more" href="#formations">Voir les formules →</a></div>
 </div></div>
 
 <div class="wrap sec">
@@ -858,7 +863,7 @@ ${HEAD("Formations", "Nos formations et tarifs", "Chaque formule comprend le cod
 </div>
 </div>
 <div class="wrap sec"><div class="grid g3">
-<div class="card soft"><p class="eyebrow">Paiement</p><h3 style="margin-top:10px">En 2 tranches</h3><p style="margin-top:8px">La moitié à l'inscription, le reste avant la première séance de conduite. Un reçu pour chaque paiement.</p><div class="pills"><span>T-Money</span><span>Flooz</span><span>Espèces</span></div></div>
+<div class="card soft"><p class="eyebrow">Paiement</p><h3 style="margin-top:10px">En 2 tranches</h3><p style="margin-top:8px">La moitié à l'inscription, le reste avant la première séance de conduite. Un reçu pour chaque paiement.</p><div class="pills"><span>Espèces</span><span>Mixx by Yas (T-Money)</span></div></div>
 <div class="card soft"><p class="eyebrow">Dossier à fournir</p><h3 style="margin-top:10px">Pour t'inscrire</h3><ul style="margin:8px 0 0;padding-left:1.1em;color:var(--muted)"><li>Acte de naissance</li><li>Carte d'identité</li><li>Photos d'identité, format passeport</li><li>Quittance d'examen : 35 000 F pour le permis B, en plus de la formation (permis A : montant au secrétariat)</li></ul></div>
 <div class="card soft"><p class="eyebrow">Bon à savoir</p><h3 style="margin-top:10px">Des règles claires</h3><ul style="margin:8px 0 0;padding-left:1.1em;color:var(--muted)"><li>Le droit d'inscription n'est pas remboursable.</li><li>Une séance non faite peut être reportée pendant 6 mois.</li><li>Conduite, sur rendez-vous : du lundi au vendredi de 6 h 30 à 11 h et de 14 h 30 à 18 h, le samedi de 6 h 30 à 12 h.</li><li>Secrétariat : du lundi au vendredi de 8 h à 12 h 30 et de 14 h 30 à 18 h, le samedi de 8 h à 12 h.</li></ul></div>
 </div></div>
@@ -1208,7 +1213,7 @@ ${HEAD("Équipe SODAF", "Espace secrétariat", "Réservé au personnel de l'auto
 <input id="sd-rcOther" placeholder="Motif, ex. Droit d'inscription seul, 2 séances en plus…" hidden>
 </fieldset>
 <div class="row2"><div class="field"><label for="sd-rcAmt">3. Montant reçu (F CFA), modifiable</label><input id="sd-rcAmt" name="montant" type="number" inputmode="numeric" min="0" step="500"></div><div class="field" id="sd-rcRestBox"><label for="sd-rcRest">Reste à payer (F CFA)</label><input id="sd-rcRest" name="reste" type="number" inputmode="numeric" min="0" step="500"></div></div>
-<div class="row2"><div class="field"><label for="sd-rcMode">Mode de paiement</label><select id="sd-rcMode" name="mode"><option>Espèces</option><option>T-Money</option><option>Flooz</option><option>Virement</option></select></div><div class="field"><label for="sd-rcWho">Reçu fait par</label><input id="sd-rcWho" name="faitpar" placeholder="Ex. Le secrétariat"></div></div>
+<fieldset class="field rcmodes"><legend>4. Comment a-t-il payé ?</legend><label class="rcmode"><input type="radio" name="mode" value="Espèces" checked><span>Espèces</span></label><label class="rcmode"><input type="radio" name="mode" value="Mixx by Yas (T-Money)"><span>Mixx by Yas (T-Money)</span></label></fieldset>
 <div class="field"><label for="sd-rcNote">Note (facultatif)</label><input id="sd-rcNote" name="note" placeholder="Ex. Référence T-Money, séance du 12 octobre…"></div>
 <p id="sd-rcErr" style="color:var(--red);font-weight:600;margin:4px 0 10px" hidden>Indique le nom de l'élève, un montant, et un numéro à 8 chiffres (ou laisse le téléphone vide).</p>
 <button class="btn btn-green" type="submit">Créer le reçu</button>
@@ -1811,7 +1816,6 @@ function init(root) {
       form.querySelectorAll(".rcm").forEach((l) => l.classList.toggle("on", l.querySelector("input").checked));
     }
     F.f.addEventListener("change", suggest); form.querySelectorAll("input[name=motif]").forEach((r) => r.addEventListener("change", () => { suggest(); if (mk() === "autre") F.other.focus(); })); suggest();
-    const who = $("#sd-rcWho"); try { who.value = S.get("rcWho", ""); } catch (e) {}
     const U = ["zéro", "un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit", "neuf", "dix", "onze", "douze", "treize", "quatorze", "quinze", "seize"];
     const T = ["", "", "vingt", "trente", "quarante", "cinquante", "soixante", "", "quatre-vingt"];
     function u100(n) {
@@ -1858,7 +1862,7 @@ function init(root) {
         '<div class="rc-grid"><div><span>Mode de paiement</span><b>' + escR(d.mode) + "</b></div><div><span>Reste à payer</span><b>" + (d.reste === "" ? "—" : d.reste > 0 ? fmt(d.reste) : "Formation soldée ✓") + "</b></div></div>" +
         (d.note ? '<p class="rc-note">' + escR(d.note) + "</p>" : "") +
         '<div class="rc-cond"><b>Bon à savoir</b>Le droit d\'inscription n\'est pas remboursable. Une séance de conduite non faite peut être reportée pendant 6 mois. Garde ce reçu jusqu\'à la fin de ta formation.</div>' +
-        '<div class="rc-sign"><div><span>Pour SODAF Auto-École</span><b>' + escR(d.faitpar || "Le secrétariat") + '</b><small>Reçu électronique enregistré au secrétariat sous le n° ' + escR(d.no) + ".</small></div><img src=\"entreprise/cachet-sodaf-bleu.png\" alt=\"\"></div>" +
+        '<div class="rc-sign"><div><span>Pour SODAF Auto-École</span><b>' + "Le secrétariat" + '</b><small>Reçu électronique enregistré au secrétariat sous le n° ' + escR(d.no) + ".</small></div><img src=\"entreprise/cachet-sodaf-bleu.png\" alt=\"\"></div>" +
         "</div>" +
         '<div class="rc-foot"><span>412 Avenue Akei, Tokoin Tamé, Lomé · +228 72 54 41 66 · autosodaf.com</span><b>L\'art de conduire, la force de réussir.</b></div>' +
         "</div>";
@@ -1876,10 +1880,10 @@ function init(root) {
       const d = {
         no, eleve, tel: tel ? tel.replace(/(\d{2})(?=\d)/g, "$1 ") : "", formation: F.f.value, prix: price(), motif: motifText(), montant,
         mode: String(fd.get("mode")), reste: F.restBox.hidden || F.rest.value === "" ? "" : +F.rest.value, note: String(fd.get("note") || "").trim(),
-        faitpar: String(fd.get("faitpar") || "").trim(), dateTxt: "Le " + now.getDate() + (now.getDate() === 1 ? "er" : "") + " " + MO[now.getMonth()] + " " + now.getFullYear() + " à " + now.getHours() + " h " + pad(now.getMinutes()),
+        faitpar: "Le secrétariat", dateTxt: "Le " + now.getDate() + (now.getDate() === 1 ? "er" : "") + " " + MO[now.getMonth()] + " " + now.getFullYear() + " à " + now.getHours() + " h " + pad(now.getMinutes()),
         iso: now.getFullYear() + "-" + pad(now.getMonth() + 1) + "-" + pad(now.getDate()),
       };
-      try { S.set("rcWho", d.faitpar); } catch (er) {}
+      
       const out = $("#sd-rcOut"), status = $("#sd-rcStatus");
       $("#sd-rcPreview").innerHTML = receiptHTML(d);
       out.hidden = false; status.textContent = "Préparation du PDF…"; status.className = "devsent";
@@ -1917,7 +1921,7 @@ function init(root) {
       if (!current) return;
       try { await navigator.share({ files: [current.file], text: current.msg }); } catch (er) {}
     });
-    $("#sd-rcNew").addEventListener("click", () => { form.reset(); try { who.value = S.get("rcWho", ""); } catch (e) {} suggest(); $("#sd-rcOut").hidden = true; current = null; form.scrollIntoView({ block: "start" }); });
+    $("#sd-rcNew").addEventListener("click", () => { form.reset(); suggest(); $("#sd-rcOut").hidden = true; current = null; form.scrollIntoView({ block: "start" }); });
   })();
 
   const sp = $("#sd-speed"), MAX = 340;
