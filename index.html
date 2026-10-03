@@ -27,27 +27,49 @@
 <noscript><h1>SODAF Auto-École, Lomé</h1><p>Permis B dès 35 000 F, permis A (moto) 30 000 F, remise à niveau 20 000 F. Cours de code de la route en ligne. 412 Avenue Akei, Tokoin Tamé, Lomé (en face de la caisse). Tél. et WhatsApp : +228 72 54 41 66.</p></noscript>
 <script>
 
-const AIRTABLE_HOOK = "https://hooks.airtable.com/workflows/v1/genericWebhook/appNfMHMfzc5612Hc/wflZYJf8MhXOIEIGs/wtrW8QD2hFYrxK9u5";
-const RECU_HOOK = "https://hooks.airtable.com/workflows/v1/genericWebhook/appNfMHMfzc5612Hc/wfltWT1vovzZ29lGU/wtr4JrCnaWcOGAvoY";
-const DEVOIR_HOOK = "https://hooks.airtable.com/workflows/v1/genericWebhook/appNfMHMfzc5612Hc/wfl8NvTIvXTHHAJen/wtrBb8cdQOHls7n3N";
-async function sendToAirtable(payload, url) {
-  // Envoi au format formulaire web (requête simple, sans vérification préalable du navigateur).
-  const body = new URLSearchParams(payload);
-  if (navigator.onLine === false) return false;
-  try {
-    const r = await fetch(url || AIRTABLE_HOOK, { method: "POST", body });
-    return r.ok;
-  } catch (e) {
-    // La requête est partie mais le navigateur ne laisse pas lire la réponse d'Airtable :
-    // on la considère reçue si l'appareil est en ligne.
-    return navigator.onLine !== false;
-  }
-}
+// ---------- Base de données SODAF (Supabase) ----------
+// Clé publique : elle ne donne accès qu'à ce que les règles de sécurité de la base autorisent
+// (visiteurs : s'inscrire et envoyer un devoir ; équipe connectée : le reste).
+const SB_URL = "https://fpfmpiodbznjofxjfyjf.supabase.co";
+const SB_KEY = "sb_publishable_Up-XDNsPpfOsMR00Owu6wQ_FCFCwmwP";
+const DB = {
+  _k: "sodaf.sb",
+  get session() { try { return JSON.parse(localStorage.getItem(this._k) || "null"); } catch (e) { return null; } },
+  set session(v) { try { v ? localStorage.setItem(this._k, JSON.stringify(v)) : localStorage.removeItem(this._k); } catch (e) {} },
+  async _auth(path, body) {
+    const r = await fetch(SB_URL + "/auth/v1/" + path, { method: "POST", headers: { apikey: SB_KEY, "Content-Type": "application/json" }, body: JSON.stringify(body) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(j.error_description || j.msg || j.message || "Connexion impossible");
+    this.session = { access: j.access_token, refresh: j.refresh_token, exp: Date.now() + (j.expires_in || 3600) * 1000, user: j.user };
+    return this.session;
+  },
+  login(email, password) { return this._auth("token?grant_type=password", { email, password }); },
+  async refresh() { const s = this.session; if (!s) throw new Error("Session expirée"); return this._auth("token?grant_type=refresh_token", { refresh_token: s.refresh }); },
+  async logout() { const s = this.session; this.session = null; if (s) fetch(SB_URL + "/auth/v1/logout", { method: "POST", headers: { apikey: SB_KEY, Authorization: "Bearer " + s.access } }).catch(() => {}); },
+  async changePassword(password) {
+    const t = await this.token();
+    const r = await fetch(SB_URL + "/auth/v1/user", { method: "PUT", headers: { apikey: SB_KEY, Authorization: "Bearer " + t, "Content-Type": "application/json" }, body: JSON.stringify({ password }) });
+    if (!r.ok) { const j = await r.json().catch(() => ({})); throw new Error(j.msg || j.message || "Mot de passe refusé"); }
+  },
+  async token() { let s = this.session; if (!s) return null; if (Date.now() > s.exp - 60000) s = await this.refresh(); return s.access; },
+  // Requête à l'API de la base. path ex. "eleves?select=*&order=cree_le.desc"
+  async q(path, opt = {}) {
+    const h = { apikey: SB_KEY, "Content-Type": "application/json" };
+    if (!opt.anon) { const t = await this.token(); if (t) h.Authorization = "Bearer " + t; }
+    if (opt.prefer) h.Prefer = opt.prefer;
+    const r = await fetch(SB_URL + "/rest/v1/" + path, { method: opt.method || "GET", headers: h, body: opt.body ? JSON.stringify(opt.body) : undefined });
+    if (!r.ok) { const j = await r.json().catch(() => ({})); const e = new Error(j.message || ("Erreur " + r.status)); e.status = r.status; throw e; }
+    if (r.status === 204 || (opt.prefer || "").includes("return=minimal")) return true;
+    return r.json();
+  },
+  // Envoi public (visiteur non connecté) : true si la ligne est bien enregistrée
+  async add(table, row) {
+    if (navigator.onLine === false) return false;
+    try { await this.q(table, { method: "POST", body: row, prefer: "return=minimal", anon: true }); return true; } catch (e) { return false; }
+  },
+};
 
 const WA = "https://wa.me/22872544166";
-// Espace équipe : empreinte SHA-256 du code d'accès (en majuscules). Simple verrou d'affichage : les données restent protégées par la connexion Airtable.
-const TEAM_HASH = "b2b2f104d32c638903e151a9b20d6e27b41d8c0c84cf8458738f83ca2f1dd744";
-const TEAM_LINKS = { conduite: "https://airtable.com/appNfMHMfzc5612Hc/pagnl2QLcW11krdLq", code: "https://airtable.com/appNfMHMfzc5612Hc/pagQCm5voueu6Nr1E", inscriptions: "https://airtable.com/appNfMHMfzc5612Hc/pagLZ21abl0bkeirW", devoirs: "https://airtable.com/appNfMHMfzc5612Hc/pagp0mADSpbpZLedx", paiements: "https://airtable.com/appNfMHMfzc5612Hc/pagvDNbqNSNCCTPZ5" };
 const P_MONO = "M15.42 43.8 l0 10.32 c0 3.66 -1.5 6.24 -6.12 6.24 l-0.84 0 c-4.5 0 -6.06 -2.58 -6.06 -6.24 l0 -14.64 l2.28 0 l0 13.68 c0 2.64 0.6 4.92 4.26 4.92 c3.6 0 4.2 -2.28 4.2 -4.92 l0 -9.96 c0 -3.9 -2.64 -7.2 -4.92 -10.5 c-3.84 -5.58 -5.82 -7.74 -5.82 -13.56 l0 -9.36 c0 -3.66 1.5 -6.24 6.06 -6.24 l0.84 0 c4.56 0 6.12 2.58 6.12 6.24 l0 14.76 l-2.28 0 l0 -13.8 c0 -2.64 -0.66 -4.92 -4.26 -4.92 s-4.2 2.28 -4.2 4.92 l0 9 c-0.06 3.78 1.62 6.3 4.62 10.62 c4.08 5.88 6.12 8.04 6.12 13.44 z";
 const P_SLOGAN = "M7.695313 5.888672 c2.763672 0 4.482422 2.050781 4.482422 4.560547 c0 2.568359 -1.71875 4.492188 -4.482422 4.492188 l-2.939453 0 l0 5.058594 l-2.929687 0 l0 -14.111328 l5.869141 0 z M7.207031 12.490234 c1.464844 0 2.148438 -0.810547 2.148438 -2.080078 c0 -1.220703 -0.683594 -2.070312 -2.148437 -2.070312 l-2.451172 0 l0 4.150391 l2.451172 0 z M20.888672 20.195313 c-4.150391 0 -7.216797 -2.832031 -7.216797 -7.255859 c0 -4.433594 3.066406 -7.246094 7.216797 -7.246094 c4.140625 0 7.207031 2.8125 7.207031 7.246094 c0 4.423828 -3.066406 7.255859 -7.207031 7.255859 z M20.888672 17.509766 c2.431641 0 4.296875 -1.708984 4.296875 -4.570312 c0 -2.851562 -1.865234 -4.550781 -4.296875 -4.550781 s-4.296875 1.699219 -4.296875 4.550781 c0 2.861328 1.865234 4.570313 4.296875 4.570313 z M33.085938 20 l-3.691406 -14.111328 l3.046875 0 l2.753906 10.683594 l3.154297 -10.683594 l2.470703 0 l3.134766 10.683594 l2.783203 -10.683594 l3.037109 0 l-3.691406 14.111328 l-3.769531 0 l-2.734375 -8.720703 l-2.724609 8.720703 l-3.769531 0 z M60.214844 8.466797 l-5.234375 0 l0 3.203125 l4.638672 0 l0 2.548828 l-4.638672 0 l0 3.193359 l5.234375 0 l0 2.587891 l-8.183594 0 l0 -14.111328 l8.183594 0 l0 2.578125 z M70.683594 20 l-3.671875 -6.210937 l-0.849609 0 l0 6.210938 l-2.929687 0 l0 -14.111328 l5.117188 0 c3.193359 0 4.541016 1.884766 4.541016 4.21875 c0 1.894531 -1.074219 3.125 -2.988281 3.535156 l4.248047 6.357422 l-3.466797 0 z M66.162109 8.320313 l0 3.369141 l1.728516 0 c1.5625 0 2.197266 -0.664062 2.197266 -1.679687 c0 -1.005859 -0.634766 -1.689453 -2.197266 -1.689453 l-1.728516 0 z M84.482422 8.466797 l-5.234375 0 l0 3.203125 l4.638672 0 l0 2.548828 l-4.638672 0 l0 3.193359 l5.234375 0 l0 2.587891 l-8.183594 0 l0 -14.111328 l8.183594 0 l0 2.578125 z M87.5 20 l0 -14.111328 l5.107422 0 c4.501953 0 6.728516 2.832031 6.728516 7.050781 c0 4.228516 -2.226562 7.060547 -6.728516 7.060547 l-5.107422 0 z M90.429687 17.412109 l2.03125 0 c2.597656 0 3.789063 -1.621094 3.789063 -4.472656 s-1.191406 -4.472656 -3.789062 -4.472656 l-2.03125 0 l0 8.945313 z M114.853516 12.548828 c1.591797 0.439453 2.65625 1.484375 2.65625 3.496094 c0 2.382813 -1.445312 3.955078 -4.423828 3.955078 l-5.810547 0 l0 -14.111328 l4.570313 0 c3.046875 0 4.648438 1.464844 4.648438 3.867188 c0 1.240234 -0.537109 2.255859 -1.640625 2.792969 z M111.875 8.320313 l-1.777344 0 l0 3.320313 l1.904297 0 c1.25 0 1.796875 -0.742187 1.796875 -1.699219 c0 -0.9375 -0.615234 -1.621094 -1.923828 -1.621094 z M112.539063 17.490234 c1.582031 0 2.128906 -0.849609 2.128906 -1.767578 c0 -0.9375 -0.537109 -1.826172 -2.1875 -1.826172 l-2.382812 0 l0 3.59375 l2.441406 0 z M130.703125 5.888672 l-4.638672 7.353516 l0 6.757813 l-2.939453 0 l0 -6.689453 l-4.667969 -7.421875 l3.242188 0 l2.880859 4.804688 l2.890625 -4.804687 l3.232422 0 z M147.324219 20 l-1.025391 -2.910156 l-5.927734 0 l-1.025391 2.910156 l-2.998047 0 l5.195313 -14.111328 l3.583984 0 l5.195313 14.111328 l-2.998047 0 z M141.230469 14.638672 l4.208984 0 l-2.099609 -5.986328 z M152.441406 20 l0 -14.111328 l5.107422 0 c4.501953 0 6.728516 2.832031 6.728516 7.050781 c0 4.228516 -2.226562 7.060547 -6.728516 7.060547 l-5.107422 0 z M155.371093 17.412109 l2.03125 0 c2.597656 0 3.789063 -1.621094 3.789063 -4.472656 s-1.191406 -4.472656 -3.789062 -4.472656 l-2.03125 0 l0 8.945313 z M183.19336 20 l-2.919922 0 l-0.927734 -10.634766 l-3.574219 10.634766 l-1.894531 0 l-3.574219 -10.634766 l-0.9375 10.634766 l-2.929687 0 l1.181641 -14.111328 l4.179688 0 l3.007813 8.857422 l3.046875 -8.857422 l4.179688 0 z M197.705078 20.195313 c-4.150391 0 -7.216797 -2.822266 -7.216797 -7.255859 s3.066406 -7.246094 7.216797 -7.246094 c3.144531 0 5.664063 1.611328 6.669922 4.287109 l-2.734375 0.996094 c-0.625 -1.640625 -2.119141 -2.587891 -3.935547 -2.587891 c-2.431641 0 -4.296875 1.699219 -4.296875 4.550781 s1.865234 4.560547 4.296875 4.560547 c1.816406 0 3.310547 -0.957031 3.935547 -2.597656 l2.734375 0.996094 c-1.005859 2.675781 -3.525391 4.296875 -6.669922 4.296875 z M213.027344 20.195313 c-4.150391 0 -7.216797 -2.832031 -7.216797 -7.255859 c0 -4.433594 3.066406 -7.246094 7.216797 -7.246094 c4.140625 0 7.207031 2.8125 7.207031 7.246094 c0 4.423828 -3.066406 7.255859 -7.207031 7.255859 z M213.027344 17.509766 c2.431641 0 4.296875 -1.708984 4.296875 -4.570312 c0 -2.851562 -1.865234 -4.550781 -4.296875 -4.550781 s-4.296875 1.699219 -4.296875 4.550781 c0 2.861328 1.865234 4.570313 4.296875 4.570313 z M230.38086 20 l-3.671875 -6.210937 l-0.849609 0 l0 6.210938 l-2.929687 0 l0 -14.111328 l5.117188 0 c3.193359 0 4.541016 1.884766 4.541016 4.21875 c0 1.894531 -1.074219 3.125 -2.988281 3.535156 l4.248047 6.357422 l-3.466797 0 z M225.859375 8.320313 l0 3.369141 l1.728516 0 c1.5625 0 2.197266 -0.664062 2.197266 -1.679687 c0 -1.005859 -0.634766 -1.689453 -2.197266 -1.689453 l-1.728516 0 z M244.179688 8.466797 l-5.234375 0 l0 3.203125 l4.638672 0 l0 2.548828 l-4.638672 0 l0 3.193359 l5.234375 0 l0 2.587891 l-8.183594 0 l0 -14.111328 l8.183594 0 l0 2.578125 z";
 const P_S = "M13.027344 40.390625 c-6.054687 0 -10.78125 -2.910156 -11.640625 -8.203125 l6.054688 -1.386719 c0.390625 3.164063 2.714844 4.804688 5.820313 4.804688 c2.382813 0 4.277344 -1.054687 4.257813 -3.4375 c-0.019531 -2.65625 -3.144531 -3.496094 -6.582031 -4.550781 c-4.140625 -1.289062 -8.574219 -2.8125 -8.574219 -8.007812 c0 -5.253906 4.296875 -8.222656 9.960938 -8.222656 c4.960938 0 9.960938 2.011719 11.09375 7.421875 l-5.664062 1.40625 c-0.527344 -2.8125 -2.421875 -4.042969 -5.078125 -4.042969 c-2.363281 0 -4.375 0.976563 -4.375 3.300781 c0 2.167969 2.773438 2.890625 5.976563 3.847656 c4.257813 1.289063 9.296875 2.929688 9.296875 8.554688 c0 5.996094 -5.019531 8.515625 -10.546875 8.515625 z";
@@ -545,6 +567,59 @@ a.teamtile.hl{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
 #sd-teamPanel a.teamtile:hover b{text-decoration:underline;text-decoration-color:var(--yellow);text-decoration-thickness:3px;text-underline-offset:4px}
 .tm-pane[data-pane="mon"] .teamgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
 @media (max-width:600px){.tm-pane[data-pane="mon"] .teamgrid{grid-template-columns:1fr}}
+/* espace équipe : connexion et données */
+.lockcard form.tmlogin{flex-direction:column;align-items:stretch}
+.lockcard .tmlogin input{text-transform:none;letter-spacing:0;text-align:left;font:1rem var(--f-body);padding:.75em .9em;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+.lockcard .tmlogin input:focus{border-color:var(--ink);outline:none}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.tm-acc{display:flex;gap:6px 18px;flex-wrap:wrap;align-items:center}
+.tmpw{margin-bottom:16px;max-width:520px}
+.tmpw label{font-weight:600;display:block;margin-bottom:8px}
+.tmpw div{display:flex;gap:10px}
+.tmpw input,.tm-bar input,.tm-bar select,.tm-row select,.tm-row input,.tm-msg,#sd-dvWeek{font:.98rem var(--f-body);padding:.6em .75em;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);min-width:0}
+.tmpw input{flex:1}
+.tm-toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:9500;background:var(--ink);color:#fff;padding:.7em 1.2em;border-radius:12px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.2);max-width:calc(100vw - 32px)}
+.tm-toast.bad{background:var(--red)}
+.tm-subnav{display:flex;gap:6px;flex-wrap:wrap;border-bottom:1.5px solid var(--line);margin-bottom:18px}
+.tm-subnav button{font:600 .98rem var(--f-body);background:none;border:0;padding:.7em .9em;cursor:pointer;color:#3D444D;border-bottom:3px solid transparent;margin-bottom:-1.5px;display:flex;align-items:center;gap:6px}
+.tm-subnav button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--green)}
+.tm-count:not(:empty){background:var(--red);color:#fff;font:700 .75rem/1 var(--f-body);padding:.3em .55em;border-radius:999px}
+.tm-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.tm-bar input[type=search]{flex:1 1 220px}
+.tm-day-nav b{font:700 1.1rem var(--f-display);min-width:12ch;text-align:center;flex:1}
+.tm-form{margin-bottom:16px}
+.row3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:760px){.row3{grid-template-columns:1fr}}
+.tm-formact{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:6px}
+.tm-err{color:var(--red);font-weight:600;font-size:.92rem}
+.tm-list{display:flex;flex-direction:column;gap:8px}
+.tm-row{display:flex;gap:12px 16px;align-items:center;flex-wrap:wrap;background:#fff;border:1.5px solid var(--line);border-left:5px solid var(--line);border-radius:12px;padding:12px 14px}
+.tm-main{flex:1 1 260px;min-width:0;display:flex;flex-direction:column;gap:2px}
+.tm-main b{font-weight:700;color:var(--ink)}
+.tm-main span{color:#3D444D;font-size:.94rem}
+.tm-main small{color:var(--muted);font-size:.85rem}
+.tm-main select,.tm-main input{width:100%;margin-top:4px}
+.tm-acts{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.tm-time{font:700 1rem var(--f-mono);min-width:5.5ch;color:var(--ink)}
+.tm-empty{color:var(--muted);padding:18px;text-align:center;background:var(--soft);border-radius:12px}
+.tm-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:14px}
+.tm-stats div{background:var(--soft);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column}
+.tm-stats span{font-size:.85rem;color:#3D444D}
+.tm-stats b{font:700 1.35rem var(--f-display);color:var(--ink)}
+.tm-msg{width:100%;min-height:200px;font:.92rem/1.5 var(--f-mono);margin:10px 0}
+#sd-dvWeek{width:100%;margin-bottom:12px}
+.tm-mon{margin-bottom:16px}
+.tm-h3{font:700 1.25rem var(--f-display);margin:2px 0 12px!important}
+.tm-lab{font-weight:700;margin:12px 0 6px!important}
+.tm-checks{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px;margin-bottom:12px}
+.tm-checks label{display:flex;gap:8px;align-items:center;background:var(--soft);padding:.5em .7em;border-radius:10px;cursor:pointer}
+.tm-checks input{width:18px;height:18px;accent-color:var(--green)}
+.tm-row.st-libre{border-left-color:#C9CED4;background:#FAFBFB}
+.tm-row.st-reserve{border-left-color:var(--blue)}
+.tm-row.st-fait{border-left-color:var(--green);background:var(--green-soft)}
+.tm-row.st-absent{border-left-color:var(--red);background:var(--red-soft)}
+.tm-row.st-annule{border-left-color:#8A9099;opacity:.7}
+@media (max-width:600px){.tm-row{padding:10px 12px}.tm-acts{width:100%}.tm-subnav button{padding:.6em .6em;font-size:.92rem}}
 .devlist-h{font:700 1rem var(--f-display);margin:0 0 12px!important;color:var(--muted)}
 .devform{max-width:520px;margin:0 auto}
 .devform .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -1228,32 +1303,49 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="wrap sec">
 <div id="sd-teamLock" class="card lockcard">
 <div class="lockico" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
-<h2 style="font-size:1.5rem">Page réservée à l'entreprise SODAF</h2>
-<p style="color:var(--muted);margin-top:8px">Cet espace sert à l'équipe pour gérer les plannings. Si tu es élève, tout ce qu'il te faut est dans les autres pages du site.</p>
-<form id="sd-teamForm" novalidate><label for="sd-teamCode" class="sr-only">Code d'accès</label><input id="sd-teamCode" type="password" autocomplete="current-password" placeholder="Code d'accès" inputmode="numeric"><button class="btn btn-green" type="submit">Entrer</button></form>
-<p id="sd-teamErr" style="color:var(--red);font-weight:600;margin-top:10px" hidden>Code incorrect.</p>
+<h2 style="font-size:1.5rem">Connexion équipe SODAF</h2>
+<p style="color:var(--muted);margin-top:8px">Réservé au secrétariat et au moniteur. Si tu es élève, tout ce qu'il te faut est dans les autres pages du site.</p>
+<form id="sd-teamForm" class="tmlogin" novalidate><label for="sd-tmEmail" class="sr-only">E-mail</label><input id="sd-tmEmail" type="email" autocomplete="username" placeholder="Ton e-mail"><label for="sd-tmPw" class="sr-only">Mot de passe</label><input id="sd-tmPw" type="password" autocomplete="current-password" placeholder="Mot de passe"><button class="btn btn-green" type="submit" id="sd-tmGo">Se connecter</button></form>
+<p id="sd-teamErr" style="color:var(--red);font-weight:600;margin-top:10px" hidden></p>
 <a class="btn btn-line btn-sm" href="#accueil" style="margin-top:16px">Retour au site</a>
 </div>
 <div id="sd-teamPanel" hidden>
-<div class="tm-top"><div><p class="eyebrow">Espace équipe SODAF</p><h2>Bonjour, qui es-tu aujourd'hui ?</h2><p class="tm-today" id="sd-tmToday"></p></div><button class="linkbtn" type="button" id="sd-teamOut">Se déconnecter de cet appareil</button></div>
+<div class="tm-top"><div><p class="eyebrow" id="sd-tmRole">Espace équipe SODAF</p><h2 id="sd-tmHello">Bonjour</h2><p class="tm-today" id="sd-tmToday"></p></div><div class="tm-acc"><button class="linkbtn" type="button" id="sd-tmPwBtn">Changer mon mot de passe</button><button class="linkbtn" type="button" id="sd-teamOut">Se déconnecter</button></div></div>
+<form id="sd-tmPwForm" class="card tmpw" hidden novalidate><label for="sd-tmPw1">Nouveau mot de passe (8 caractères minimum)</label><div><input id="sd-tmPw1" type="password" autocomplete="new-password"><button class="btn btn-green btn-sm" type="submit">Enregistrer</button></div><p id="sd-tmPwMsg" class="tm-note"></p></form>
+<div id="sd-tmToast" class="tm-toast" hidden></div>
 <div class="tm-tabs" role="tablist" id="sd-tmTabs">
 <button role="tab" data-t="sec" aria-selected="true"><b>Secrétariat</b><small>Inscriptions, paiements, réservations</small></button>
 <button role="tab" data-t="mon" aria-selected="false"><b>Moniteur</b><small>Code en salle, conduite</small></button>
 <button role="tab" data-t="docs" aria-selected="false"><b>Documents</b><small>Carte, cachet, QR, affiches</small></button>
 </div>
-<p class="tm-hint">Les boutons ouvrent l'écran Airtable correspondant. Connecte-toi une fois avec l'e-mail de ton invitation ; sur téléphone, l'application Airtable reste connectée.</p>
 <div class="tm-pane" data-pane="sec" role="tabpanel">
 <p class="tm-role">Accueil des élèves, inscriptions, paiements, réservations de conduite et messages WhatsApp.</p>
-<div class="teamgrid">
-<a class="card teamtile " data-tl="inscriptions" href="#" target="_blank" rel="noopener"><b>Inscriptions</b><span>Pré-inscriptions reçues par le site et suivi de chaque élève.</span><em>Ouvrir les inscriptions →</em></a>
-<a class="card teamtile hl" href="#equipe-recu"><b>Faire un reçu</b><span>Après chaque paiement : reçu PDF avec le cachet, envoyé sur WhatsApp.</span><em>Créer un reçu ↓</em></a>
-<a class="card teamtile " data-tl="paiements" href="#" target="_blank" rel="noopener"><b>Paiements</b><span>Ce qui a été encaissé ce mois-ci et qui doit encore payer.</span><em>Ouvrir les paiements →</em></a>
-<a class="card teamtile " data-tl="conduite" href="#" target="_blank" rel="noopener"><b>Réserver la conduite</b><span>Créneaux libres, réservation avec l'élève, confirmation et rappel WhatsApp.</span><em>Ouvrir le planning →</em></a>
-<a class="card teamtile " data-tl="devoirs" href="#" target="_blank" rel="noopener"><b>Message du devoir</b><span>Le mercredi : résultats de la semaine à coller dans le groupe WhatsApp.</span><em>Ouvrir les devoirs →</em></a>
+<div class="tm-subnav" id="sd-secNav" role="tablist">
+<button data-s="eleves" aria-selected="true">Élèves <span class="tm-count" id="sd-cntNew"></span></button>
+<button data-s="conduite" aria-selected="false">Planning conduite</button>
+<button data-s="paiements" aria-selected="false">Paiements et reçus</button>
+<button data-s="devoirs" aria-selected="false">Devoirs</button>
 </div>
-<div class="rcbox" id="equipe-recu"><div class="tm-sub"><div><p class="eyebrow">Après chaque paiement</p><h3>Faire un reçu</h3></div><p>Remplis après chaque paiement : le reçu PDF est créé aux couleurs SODAF avec le cachet, enregistré dans Airtable, et tu l'envoies à l'élève sur WhatsApp.</p></div>
+<section class="tm-sec" data-s="eleves">
+<div class="tm-bar"><input id="sd-elQ" type="search" placeholder="Chercher un nom ou un numéro"><select id="sd-elF"><option value="new">Nouveaux et contactés</option><option value="act">Inscrits et en formation</option><option value="all">Tous les élèves</option></select><button class="btn btn-green btn-sm" type="button" id="sd-elAddBtn">+ Ajouter un élève</button></div>
+<form id="sd-elAdd" class="card tm-form" hidden novalidate>
+<div class="row3"><div class="field"><label for="sd-elN">Nom et prénom</label><input id="sd-elN"></div><div class="field"><label for="sd-elT">Téléphone</label><div class="tel"><span>+228</span><input id="sd-elT" inputmode="numeric" maxlength="11" placeholder="90 00 00 00"></div></div><div class="field"><label for="sd-elFo">Formation</label><select id="sd-elFo"><option>Permis B</option><option>Permis A</option><option>Pack A + B</option><option>Remise à niveau</option><option>Formation entreprise</option></select></div></div>
+<div class="tm-formact"><button class="btn btn-green btn-sm" type="submit">Enregistrer l'élève</button><button class="linkbtn" type="button" id="sd-elCancel">Annuler</button><span class="tm-err" id="sd-elErr"></span></div>
+</form>
+<div id="sd-elList" class="tm-list"></div>
+</section>
+<section class="tm-sec" data-s="conduite" hidden>
+<div class="tm-bar tm-day-nav"><button class="btn btn-line btn-sm" type="button" id="sd-cdPrev">‹ Veille</button><b id="sd-cdDay"></b><button class="btn btn-line btn-sm" type="button" id="sd-cdNext">Lendemain ›</button><button class="linkbtn" type="button" id="sd-cdToday">Aujourd'hui</button></div>
+<div id="sd-cdList" class="tm-list"></div>
+</section>
+<section class="tm-sec" data-s="paiements" hidden>
+<div class="tm-stats" id="sd-pyStats"></div>
+<div class="tm-sub" style="margin-top:22px"><div><p class="eyebrow">Ce mois-ci</p><h3>Reçus faits</h3></div></div>
+<div id="sd-pyList" class="tm-list"></div>
+<div id="sd-pyLate"></div>
+<div class="rcbox" id="equipe-recu"><div class="tm-sub"><div><p class="eyebrow">Après chaque paiement</p><h3>Faire un reçu</h3></div><p>Remplis après chaque paiement : le reçu PDF est créé aux couleurs SODAF avec le cachet, enregistré dans la base, et tu l'envoies à l'élève sur WhatsApp.</p></div>
 <form class="card rcform" id="sd-rcForm" novalidate>
-<div class="row2"><div class="field"><label for="sd-rcName">Nom et prénom de l'élève</label><input id="sd-rcName" name="eleve" placeholder="Ex. Kossi Agbeko"></div><div class="field"><label for="sd-rcTel">Téléphone / WhatsApp (facultatif)</label><div class="tel"><span>+228</span><input id="sd-rcTel" name="tel" inputmode="numeric" maxlength="11" placeholder="90 00 00 00"></div></div></div>
+<input type="hidden" id="sd-rcEid" name="eleve_id"><div class="row2"><div class="field"><label for="sd-rcName">Nom et prénom de l'élève</label><input id="sd-rcName" name="eleve" list="sd-rcEleves" autocomplete="off" placeholder="Tape ou choisis un élève"><datalist id="sd-rcEleves"></datalist></div><div class="field"><label for="sd-rcTel">Téléphone / WhatsApp (facultatif)</label><div class="tel"><span>+228</span><input id="sd-rcTel" name="tel" inputmode="numeric" maxlength="11" placeholder="90 00 00 00"></div></div></div>
 <div class="field"><label for="sd-rcF">1. Quelle formation a-t-il choisie ?</label><select id="sd-rcF" name="formation"><option data-p="55000">Formation complète (permis B)</option><option data-p="75000">Formation accélérée 2 mois (permis B)</option><option data-p="80000">Formation accélérée 1 mois (permis B)</option><option data-p="35000">Formule courte (permis B)</option><option data-p="25000">Formation théorique seule</option><option data-p="30000">Permis A (moto)</option><option data-p="80000">Pack A + B (moto et voiture)</option><option data-p="20000">Remise à niveau</option><option data-p="0">Formation entreprise (sur devis)</option><option data-p="0">Hors formation (séance ou frais)</option></select></div>
 <fieldset class="field rcmotifs" id="sd-rcMotifs"><legend>2. Qu'est-ce qu'il paie aujourd'hui ?</legend>
 <label class="rcm" data-k="ins-half"><input type="radio" name="motif" value="ins-half" checked><span><b>Il s'inscrit et paie la moitié</b><small>Droit d'inscription (5&nbsp;000&nbsp;F) + 1re moitié de la formation</small></span><em data-amt></em></label>
@@ -1276,14 +1368,22 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <p class="rchelp" id="sd-rcHelp">Le bouton vert ouvre directement la discussion WhatsApp de l'élève, avec le message et le lien de son reçu : il n'y a plus qu'à appuyer sur Envoyer.</p>
 </div></div>
 
+</section>
+<section class="tm-sec" data-s="devoirs" hidden>
+<div class="tm-bar"><label for="sd-dvWeek" class="sr-only">Semaine</label><select id="sd-dvWeek"></select></div>
+<div class="tm-stats" id="sd-dvStats"></div>
+<div class="tm-sub"><div><p class="eyebrow">Mercredi</p><h3>Message pour le groupe WhatsApp</h3></div></div>
+<textarea id="sd-dvMsg" class="tm-msg" readonly rows="10"></textarea>
+<div class="tm-formact"><button class="btn btn-green btn-sm" type="button" id="sd-dvCopy">Copier le message</button><a class="btn btn-wa btn-sm" id="sd-dvWa" target="_blank" rel="noopener" href="#">Ouvrir WhatsApp avec le message</a></div>
+<div id="sd-dvRes" class="tm-list" style="margin-top:18px"></div>
+</section>
 <div class="tm-sub"><div><p class="eyebrow">Mode d'emploi</p><h3>Les gestes du secrétariat</h3></div></div>
 <div class="grid g2 tm-guides">
-<div class="card soft"><p class="eyebrow">Un nouvel élève arrive</p><ol class="teamsteps"><li>Ouvre <b>Inscriptions</b> : vérifie sa fiche (ou crée-la s'il n'est pas passé par le site).</li><li>Encaisse, puis <b>Faire un reçu</b> → « Il s'inscrit et paie la moitié ».</li><li>Envoie le reçu sur WhatsApp et ajoute l'élève au <b>groupe</b> de l'auto-école.</li><li>Donne-lui le lien des cours : autosodaf.com/#cours.</li></ol></div>
-<div class="card soft"><p class="eyebrow">Réserver une séance de conduite</p><ol class="teamsteps"><li>Vérifie que la <b>2e moitié</b> est payée (Paiements → Reste à payer).</li><li>Ouvre <b>Réserver la conduite</b>, onglet <b>Créneaux libres</b>, choisis l'heure avec l'élève.</li><li>Touche le créneau, choisis l'<b>élève</b>, statut <b>Réservé</b>, puis <b>Confirmer sur WhatsApp</b>.</li><li>La veille, onglet <b>Demain (rappels)</b> : touche <b>Rappel de la veille</b>.</li></ol></div>
-<div class="card soft"><p class="eyebrow">Mercredi : résultats du devoir</p><ol class="teamsteps"><li>Ouvre <b>Message du devoir</b>, onglet <b>Cette semaine</b>, touche la semaine.</li><li>Copie le <b>Message WhatsApp</b> (participants, notes, moyenne).</li><li>Colle-le dans le groupe avant le cours de 14 h 30.</li></ol></div>
-<div class="card soft"><p class="eyebrow">Chaque mois</p><ol class="teamsteps"><li>Le <b>24</b>, les créneaux et séances du mois suivant se créent tout seuls.</li><li>Ouvre <b>Paiements</b>, onglet <b>Reste à payer</b> : relance les élèves concernés.</li><li>Ne supprime rien dans Airtable : passe plutôt le statut à <b>Annulé</b>.</li></ol></div>
-</div>
-</div>
+<div class="card soft"><p class="eyebrow">Un nouvel élève arrive</p><ol class="teamsteps"><li>Onglet <b>Élèves</b> : retrouve sa pré-inscription (ou <b>+ Ajouter un élève</b> s'il vient directement).</li><li>Encaisse, puis touche <b>Reçu</b> sur sa fiche → « Il s'inscrit et paie la moitié ».</li><li>Envoie le reçu sur WhatsApp, passe son statut à <b>Inscrit</b>, ajoute-le au groupe.</li></ol></div>
+<div class="card soft"><p class="eyebrow">Réserver une séance de conduite</p><ol class="teamsteps"><li>Vérifie que la 2e moitié est payée (<b>Paiements</b> → À relancer).</li><li><b>Planning conduite</b> : choisis le jour, puis l'élève sur un créneau libre.</li><li>Touche <b>Confirmer</b> : le message WhatsApp est prêt. La veille, touche <b>Rappel</b>.</li></ol></div>
+<div class="card soft"><p class="eyebrow">Mercredi : résultats du devoir</p><ol class="teamsteps"><li>Onglet <b>Devoirs</b> : le message de la semaine est déjà écrit.</li><li>Touche <b>Ouvrir WhatsApp avec le message</b> et choisis le groupe.</li></ol></div>
+<div class="card soft"><p class="eyebrow">Règles</p><ol class="teamsteps"><li>On ne supprime rien : une séance annulée passe en <b>Annulé</b>, un élève qui arrête en <b>Abandon</b>.</li><li>Les créneaux du mois suivant se créent tout seuls le 24.</li></ol></div>
+</div></div>
 <div class="tm-pane" data-pane="mon" role="tabpanel" hidden>
 <p class="tm-role">Cours de code en salle, séances de conduite et progression des élèves.</p>
 <div class="tm-week card"><div class="tm-wk-head"><div><p class="eyebrow">Cette semaine</p><h3 id="sd-tmTheme">Thème</h3></div><a class="btn btn-yellow btn-sm" href="#classe">Ouvrir le Mode classe</a></div>
@@ -1293,16 +1393,18 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <a class="tm-day" href="#classe-quiz"><b>Vendredi · 14 h 30</b><span>Entraînement type examen</span><em>Mode classe → Quiz</em></a>
 <a class="tm-day" href="#classe-situations"><b>Samedi · 10 h</b><span>Examen blanc</span><em>Quiz, situations, panneaux</em></a>
 </div></div>
-<div class="teamgrid">
+<div class="grid g2 tm-mon">
+<div class="card" id="sd-mcCode"><p class="eyebrow">Cours de code</p><h3 class="tm-h3" id="sd-mcTitle">Chargement…</h3><div id="sd-mcBody"></div></div>
+<div class="card" id="sd-mcDrive"><p class="eyebrow">Conduite</p><h3 class="tm-h3">Mes séances d'aujourd'hui</h3><div id="sd-mcList" class="tm-list"></div></div>
+</div>
+<div class="teamgrid" style="margin-top:16px">
 <a class="card teamtile hl" href="#classe"><b>Mode classe</b><span>Projette les leçons, le devoir, le quiz, les panneaux et les carrefours en salle.</span><em>Lancer la projection →</em></a>
-<a class="card teamtile " data-tl="code" href="#" target="_blank" rel="noopener"><b>Cours de code</b><span>Séance du jour : thème traité et présents, à remplir après le cours.</span><em>Ouvrir les cours →</em></a>
-<a class="card teamtile " data-tl="conduite" href="#" target="_blank" rel="noopener"><b>Mes séances de conduite</b><span>Onglet Aujourd'hui : qui conduit, à quelle heure. Marque Fait ou Absent.</span><em>Ouvrir mes séances →</em></a>
-<a class="card teamtile " href="#devoirs"><b>Devoir de la semaine</b><span>Ce que font les élèves sur le site cette semaine.</span><em>Voir le devoir →</em></a>
+<a class="card teamtile" href="#devoirs"><b>Devoir de la semaine</b><span>Ce que font les élèves sur le site cette semaine.</span><em>Voir le devoir →</em></a>
 </div>
 <div class="tm-sub"><div><p class="eyebrow">Mode d'emploi</p><h3>Les gestes du moniteur</h3></div></div>
 <div class="grid g2 tm-guides">
-<div class="card soft"><p class="eyebrow">Après chaque cours de code</p><ol class="teamsteps"><li>Ouvre <b>Cours de code</b>, touche la séance du jour.</li><li>Choisis le <b>thème</b> traité et ajoute les <b>présents</b>.</li><li>Mets le statut sur <b>Fait</b>. L'onglet <b>À cocher</b> montre les séances oubliées.</li></ol></div>
-<div class="card soft"><p class="eyebrow">Avant et après une séance de conduite</p><ol class="teamsteps"><li>Le matin, ouvre <b>Mes séances de conduite</b>, onglet <b>Aujourd'hui</b>.</li><li>Avant de partir : <b>vérification de la voiture</b> (Outils → check-list du matin).</li><li>Après la séance : statut <b>Fait</b> ou <b>Absent</b>, et une courte <b>note</b> sur les progrès.</li></ol></div>
+<div class="card soft"><p class="eyebrow">Après chaque cours de code</p><ol class="teamsteps"><li>Dans <b>Cours de code</b>, choisis le thème traité.</li><li>Coche les élèves présents (c'est enregistré tout de suite).</li><li>Touche <b>Cours fait</b>.</li></ol></div>
+<div class="card soft"><p class="eyebrow">Séances de conduite</p><ol class="teamsteps"><li>Le matin, regarde <b>Mes séances d'aujourd'hui</b>.</li><li>Avant de partir : vérification de la voiture (Outils → check-list du matin).</li><li>Après la séance : <b>Fait</b> ou <b>Absent</b>, et une courte note sur les progrès.</li></ol></div>
 </div></div>
 <div class="tm-pane" data-pane="docs" role="tabpanel" hidden>
 <p class="tm-role">Supports de communication et documents officiels SODAF, à télécharger ou à envoyer à l'imprimeur.</p>
@@ -1847,7 +1949,7 @@ function init(root) {
     if (already) { box.innerHTML = '<span class="devsent">Entraînement : ton résultat de cette semaine est déjà chez le moniteur.</span>'; return; }
     const send = async () => {
       box.innerHTML = '<span class="devsent">Envoi au moniteur…</span>';
-      const ok = await sendToAirtable({ eleve: dv.who, devoir: d.l, note: String(score), sur: String(n), semaine: w.key }, DEVOIR_HOOK);
+      const ok = await DB.add("devoir_resultats", { eleve_nom: dv.who, devoir: d.l, note: score, sur: n, semaine: w.key });
       if (ok) {
         const s2 = S.get("devSent", {}); s2[sk] = score; S.set("devSent", s2);
         const sw = S.get("devSentWho", {}); sw[sk] = dv.who; S.set("devSentWho", sw);
@@ -1940,6 +2042,26 @@ function init(root) {
       return { no, when, eleve, tel: tel ? tel.replace(/(\d{2})(?=\d)/g, "$1 ") : "", formation, prix, motif, montant, mode, reste: reste < 0 ? "" : reste, note, faitpar: "Le secrétariat",
         dateTxt: "Le " + t.getDate() + (t.getDate() === 1 ? "er" : "") + " " + MO[t.getMonth()] + " " + t.getFullYear() + " à " + t.getHours() + " h " + pad(t.getMinutes()) };
     }
+    // Utilisés par l'espace équipe : pré-remplir le reçu depuis la fiche élève, revoir un reçu enregistré
+    const nameIn = $("#sd-rcName"), eidIn = $("#sd-rcEid");
+    function fillFrom(x) {
+      eidIn.value = x.id; nameIn.value = x.nom;
+      $("#sd-rcTel").value = (x.telephone || "").replace(/\D/g, "").replace(/^228/, "").replace(/(\d{2})(?=\d)/g, "$1 ");
+      const o = [...F.f.options].find((op) => x.formation && op.textContent.toLowerCase().startsWith(x.formation.toLowerCase()));
+      if (o) F.f.value = o.value || o.textContent;
+      suggest();
+    }
+    window.__sodafRcFill = (x) => { $("#sd-rcOut").hidden = true; form.reset(); fillFrom(x); $("#equipe-recu").scrollIntoView({ block: "start" }); };
+    nameIn.addEventListener("input", () => {
+      const list = (window.TEAM_ELEVES && window.TEAM_ELEVES()) || [];
+      const x = list.find((y) => y.nom.toLowerCase() === nameIn.value.trim().toLowerCase());
+      if (x) { if (+eidIn.value !== x.id) fillFrom(x); } else eidIn.value = "";
+    });
+    window.__sodafRcLink = (p) => {
+      const t = new Date(p.cree_le);
+      const when = t.getFullYear() + "-" + pad(t.getMonth() + 1) + "-" + pad(t.getDate()) + "T" + pad(t.getHours()) + ":" + pad(t.getMinutes());
+      return "https://autosodaf.com/#recu-" + rcEncode({ no: p.numero, when, eleve: p.eleve_nom, tel: (p.telephone || "").replace(/\D/g, "").replace(/^228/, ""), formation: p.formation || "", prix: p.prix || 0, motif: p.motif, montant: p.montant, mode: p.mode, reste: p.reste == null ? "" : p.reste, note: p.note || "" });
+    };
     async function makePdf(d) {
       const h2p = await loadLib();
       const node = document.createElement("div"); node.className = "rc-render"; node.innerHTML = receiptHTML(d); document.body.appendChild(node);
@@ -2003,11 +2125,12 @@ function init(root) {
       out.hidden = false; status.textContent = "Préparation du PDF…"; status.className = "devsent";
       $("#sd-rcShare").disabled = true; $("#sd-rcDl").disabled = true;
       out.scrollIntoView({ block: "start" });
-      // Enregistrement dans Airtable
-      sendToAirtable({ numero: no, date: d.iso, eleve, telephone: tel ? "+228" + tel : "", formation: d.formation, prix: String(d.prix), motif: d.motif, montant: String(montant), mode: d.mode, reste: d.reste === "" ? "" : String(d.reste), faitpar: d.faitpar, note: d.note }, RECU_HOOK).then((ok) => {
-        $("#sd-rcSaved").textContent = ok ? "✓ Enregistré dans Airtable (Paiements)" : "Pas de connexion : reçu non enregistré dans Airtable. Note-le à la main.";
-        $("#sd-rcSaved").className = "devsent " + (ok ? "ok" : "ko");
-      });
+      // Enregistrement dans la base SODAF
+      const sv = $("#sd-rcSaved"); sv.textContent = "Enregistrement…"; sv.className = "devsent";
+      const eid = +($("#sd-rcEid").value || 0) || null;
+      DB.q("paiements", { method: "POST", prefer: "return=minimal", body: { numero: no, jour: d.iso, eleve_id: eid, eleve_nom: eleve, telephone: tel ? "+228" + tel : null, formation: d.formation, prix: d.prix || null, motif: d.motif, montant, mode: d.mode, reste: d.reste === "" ? null : d.reste, note: d.note || null } })
+        .then(() => { sv.textContent = "✓ Enregistré dans la base (Paiements)"; sv.className = "devsent ok"; if (window.TEAM_RELOAD_PAY) window.TEAM_RELOAD_PAY(); })
+        .catch((er) => { sv.textContent = er.status === 401 ? "Session expirée : reconnecte-toi, puis refais le reçu." : "Pas de connexion : reçu non enregistré. Note-le et refais-le plus tard."; sv.className = "devsent ko"; });
       try {
         const file = await makePdf(d);
         current = { file, d };
@@ -2029,7 +2152,7 @@ function init(root) {
       if (!current) return;
       try { await navigator.share({ files: [current.file], text: current.msg, title: "Reçu SODAF" }); } catch (er) {}
     });
-    $("#sd-rcNew").addEventListener("click", () => { form.reset(); suggest(); $("#sd-rcOut").hidden = true; current = null; form.scrollIntoView({ block: "start" }); });
+    $("#sd-rcNew").addEventListener("click", () => { form.reset(); $("#sd-rcEid").value = ""; suggest(); $("#sd-rcOut").hidden = true; current = null; form.scrollIntoView({ block: "start" }); });
   })();
 
   const sp = $("#sd-speed"), MAX = 340;
@@ -2061,7 +2184,7 @@ function init(root) {
   async function submitInscription(payload, waText) {
     $("#sd-fail").hidden = true;
     sendBtn.disabled = true; sendBtn.textContent = "Envoi en cours…";
-    const ok = await sendToAirtable(payload);
+    const ok = await DB.add("eleves", { nom: payload.nom, telephone: "+228" + payload.telephone.replace(/\D/g, "").slice(-8), formation: payload.formation, quartier: payload.quartier || null, creneau_prefere: payload.creneau, paiement_prefere: payload.paiement, message: payload.message || null, source: "site" });
     sendBtn.disabled = false; sendBtn.textContent = "Envoyer ma pré-inscription";
     $("#sd-waFail").href = WA + "?text=" + encodeURIComponent(waText);
     if (!ok) { $("#sd-fail").hidden = false; return; }
@@ -2093,31 +2216,224 @@ function init(root) {
     form.reset(); $("#sd-ok").hidden = true; fieldsBox().forEach((c) => (c.hidden = false)); $("#sd-fErr").hidden = true; $("#sd-fail").hidden = true; $("#sd-fName").focus();
   });
 
-  // espace équipe
-  (function () {
+  // ---------- Espace équipe (connexion + données Supabase) ----------
+  const TEAM = (function () {
     const lock = $("#sd-teamLock"), panel = $("#sd-teamPanel");
-    $$("[data-tl]").forEach((x) => (x.href = TEAM_LINKS[x.dataset.tl]));
-    { const tabs = $$("#sd-tmTabs button"), panes = $$(".tm-pane");
-      const pick = (t) => { tabs.forEach((b) => b.setAttribute("aria-selected", b.dataset.t === t)); panes.forEach((p) => (p.hidden = p.dataset.pane !== t)); try { S.set("tmTab", t); } catch (e) {} };
-      tabs.forEach((b) => b.addEventListener("click", () => pick(b.dataset.t)));
-      pick(S.get("tmTab", "sec"));
-      $$('a[href="#equipe-recu"]').forEach((x) => x.addEventListener("click", () => pick("sec")));
-      const w = devWeek(), dv = DEV[w.idx], J = ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"], M = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"], n = new Date();
-      $("#sd-tmTheme").textContent = "Devoir " + dv.l + " · " + dv.t;
-      $("#sd-tmToday").textContent = "Nous sommes le " + J[n.getDay()] + " " + n.getDate() + " " + M[n.getMonth()] + ". Thème de la semaine : " + dv.t + " (devoir " + dv.l + ").";
+    const J = ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"], M = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
+    const esc = (t) => String(t == null ? "" : t).replace(/[<>&"]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" }[c]));
+    const pad = (x) => String(x).padStart(2, "0");
+    const iso = (d) => d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+    const dOf = (s) => new Date(s + "T12:00:00");
+    const longDay = (s) => { const d = dOf(s); return J[d.getDay()] + " " + d.getDate() + " " + M[d.getMonth()]; };
+    const F = (n) => String(Math.round(n || 0)).replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " F";
+    const hmin = (h) => { const m = /(\d+) h (\d+)/.exec(h) || [0, 0, 0]; return +m[1] * 60 + +m[2]; };
+    const waNum = (t) => (t || "").replace(/\D/g, "").replace(/^228/, "");
+    let me = null, eleves = [], cdDay = iso(new Date());
+    const toastEl = $("#sd-tmToast");
+    let toastT = 0;
+    function toast(msg, bad) { toastEl.textContent = msg; toastEl.className = "tm-toast" + (bad ? " bad" : ""); toastEl.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => (toastEl.hidden = true), bad ? 6000 : 2500); }
+    async function run(fn, okMsg) {
+      try { const r = await fn(); if (okMsg) toast(okMsg); return r; }
+      catch (e) {
+        if (e.status === 401 || /JWT|Session|Refresh/i.test(e.message)) { await DB.logout(); show(false); $("#sd-teamErr").textContent = "Session expirée : reconnecte-toi."; $("#sd-teamErr").hidden = false; }
+        else toast("Erreur : " + (navigator.onLine === false ? "pas de connexion internet" : e.message), true);
+        return null;
+      }
     }
-    const show = (ok) => { lock.hidden = ok; panel.hidden = !ok; };
-    show(S.get("team", "") === TEAM_HASH);
-    const sha = async (t) => { const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(t)); return [...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, "0")).join(""); };
+    function show(ok) { lock.hidden = ok; panel.hidden = !ok; }
+
+    // Onglets principaux et sous-onglets
+    const tabs = $$("#sd-tmTabs button"), panes = $$(".tm-pane");
+    const pick = (t) => { tabs.forEach((b) => b.setAttribute("aria-selected", b.dataset.t === t)); panes.forEach((p) => (p.hidden = p.dataset.pane !== t)); try { S.set("tmTab", t); } catch (e) {} if (t === "mon") loadMon(); };
+    tabs.forEach((b) => b.addEventListener("click", () => pick(b.dataset.t)));
+    const subs = $$("#sd-secNav button"), secs = $$(".tm-sec");
+    const LOAD = { eleves: () => loadEleves(), conduite: () => loadDay(), paiements: () => loadPay(), devoirs: () => loadDev() };
+    const sub = (k) => { subs.forEach((b) => b.setAttribute("aria-selected", b.dataset.s === k)); secs.forEach((x) => (x.hidden = x.dataset.s !== k)); LOAD[k](); };
+    subs.forEach((b) => b.addEventListener("click", () => sub(b.dataset.s)));
+    $$('a[href="#equipe-recu"]').forEach((x) => x.addEventListener("click", () => { pick("sec"); sub("paiements"); }));
+    { const w = devWeek(), dv = DEV[w.idx], n = new Date();
+      $("#sd-tmTheme").textContent = "Devoir " + dv.l + " · " + dv.t;
+      $("#sd-tmToday").textContent = "Nous sommes le " + J[n.getDay()] + " " + n.getDate() + " " + M[n.getMonth()] + ". Thème de la semaine : " + dv.t + " (devoir " + dv.l + ")."; }
+
+    // Connexion
     $("#sd-teamForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-      let h = "";
-      try { h = await sha($("#sd-teamCode").value.trim().toUpperCase()); } catch (err) {}
-      const ok = h === TEAM_HASH;
-      $("#sd-teamErr").hidden = ok;
-      if (ok) { S.set("team", h); $("#sd-teamCode").value = ""; show(true); }
+      const err = $("#sd-teamErr"), btn = $("#sd-tmGo"), email = $("#sd-tmEmail").value.trim(), pw = $("#sd-tmPw").value;
+      if (!email || !pw) { err.textContent = "Indique ton e-mail et ton mot de passe."; err.hidden = false; return; }
+      btn.disabled = true; btn.textContent = "Connexion…";
+      try { await DB.login(email, pw); err.hidden = true; $("#sd-tmPw").value = ""; await start(); }
+      catch (ex) { err.textContent = /Invalid login/i.test(ex.message) ? "E-mail ou mot de passe incorrect." : navigator.onLine === false ? "Pas de connexion internet." : ex.message; err.hidden = false; }
+      btn.disabled = false; btn.textContent = "Se connecter";
     });
-    $("#sd-teamOut").addEventListener("click", () => { S.set("team", ""); show(false); });
+    $("#sd-teamOut").addEventListener("click", async () => { await DB.logout(); me = null; show(false); });
+    $("#sd-tmPwBtn").addEventListener("click", () => { $("#sd-tmPwForm").hidden = !$("#sd-tmPwForm").hidden; });
+    $("#sd-tmPwForm").addEventListener("submit", async (e) => {
+      e.preventDefault(); const v = $("#sd-tmPw1").value, m = $("#sd-tmPwMsg");
+      if (v.length < 8) { m.textContent = "8 caractères minimum."; return; }
+      try { await DB.changePassword(v); m.textContent = "✓ Mot de passe changé."; $("#sd-tmPw1").value = ""; } catch (ex) { m.textContent = "Erreur : " + ex.message; }
+    });
+
+    async function start() {
+      const s = DB.session; if (!s) { show(false); return; }
+      const rows = await run(() => DB.q("profils?select=nom,role&id=eq." + s.user.id));
+      if (!rows) return;
+      if (!rows.length) { await DB.logout(); show(false); $("#sd-teamErr").textContent = "Ce compte n'est pas autorisé dans l'espace équipe."; $("#sd-teamErr").hidden = false; return; }
+      me = rows[0];
+      $("#sd-tmHello").textContent = "Bonjour " + me.nom.split(" ")[0];
+      $("#sd-tmRole").textContent = { admin: "Direction", secretariat: "Secrétariat", moniteur: "Moniteur" }[me.role] + " · Espace équipe SODAF";
+      show(true);
+      await loadEleves(true);
+      pick(S.get("tmTab", me.role === "moniteur" ? "mon" : "sec"));
+      sub("eleves");
+    }
+
+    // ---- Élèves
+    const ST = ["Nouveau", "Contacté", "Inscrit", "En formation", "Permis obtenu", "Abandon"];
+    async function loadEleves(silent) {
+      const r = await run(() => DB.q("eleves?select=*&order=cree_le.desc&limit=1000"));
+      if (!r) return; eleves = r;
+      const nb = eleves.filter((x) => x.statut === "Nouveau").length;
+      $("#sd-cntNew").textContent = nb ? nb : "";
+      if (!silent) renderEleves(); else renderEleves();
+      fillEleveSelect();
+    }
+    function renderEleves() {
+      const q = $("#sd-elQ").value.trim().toLowerCase(), f = $("#sd-elF").value;
+      const list = eleves.filter((x) => (f === "all" || (f === "new" ? ["Nouveau", "Contacté"] : ["Inscrit", "En formation"]).includes(x.statut)) && (!q || (x.nom + " " + (x.telephone || "")).toLowerCase().includes(q)));
+      $("#sd-elList").innerHTML = list.length ? list.map((x) => '<div class="tm-row" data-id="' + x.id + '"><div class="tm-main"><b>' + esc(x.nom) + '</b><span>' + esc([x.telephone ? x.telephone.replace("+228", "+228 ") : "", x.formation, x.quartier].filter(Boolean).join(" · ")) + '</span><small>' + (x.source === "site" ? "Pré-inscrit sur le site" : "Ajouté au bureau") + " le " + new Date(x.cree_le).toLocaleDateString("fr-FR") + (x.creneau_prefere ? " · préfère : " + esc(x.creneau_prefere) : "") + (x.message ? " · « " + esc(x.message) + " »" : "") + '</small></div><div class="tm-acts"><select data-st aria-label="Statut">' + ST.map((t) => "<option" + (t === x.statut ? " selected" : "") + ">" + t + "</option>").join("") + "</select>" + (x.telephone ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" href="https://wa.me/228' + waNum(x.telephone) + '">WhatsApp</a>' : "") + '<button class="btn btn-line btn-sm" type="button" data-rc>Reçu</button></div></div>').join("") : '<p class="tm-empty">Aucun élève dans cette liste.</p>';
+    }
+    $("#sd-elQ").addEventListener("input", renderEleves); $("#sd-elF").addEventListener("change", renderEleves);
+    $("#sd-elList").addEventListener("change", async (e) => {
+      const sel = e.target.closest("[data-st]"); if (!sel) return; const id = +sel.closest("[data-id]").dataset.id;
+      const ok = await run(() => DB.q("eleves?id=eq." + id, { method: "PATCH", body: { statut: sel.value }, prefer: "return=minimal" }), "Statut enregistré");
+      if (ok) { const x = eleves.find((y) => y.id === id); if (x) x.statut = sel.value; $("#sd-cntNew").textContent = eleves.filter((y) => y.statut === "Nouveau").length || ""; }
+    });
+    $("#sd-elList").addEventListener("click", (e) => {
+      const b = e.target.closest("[data-rc]"); if (!b) return; const x = eleves.find((y) => y.id === +b.closest("[data-id]").dataset.id);
+      if (x && window.__sodafRcFill) { sub("paiements"); window.__sodafRcFill(x); }
+    });
+    $("#sd-elAddBtn").addEventListener("click", () => { $("#sd-elAdd").hidden = false; $("#sd-elN").focus(); });
+    $("#sd-elCancel").addEventListener("click", () => { $("#sd-elAdd").hidden = true; });
+    $("#sd-elAdd").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const nom = $("#sd-elN").value.trim().replace(/\s+/g, " "), tel = $("#sd-elT").value.replace(/\D/g, ""), err = $("#sd-elErr");
+      if (nom.length < 3 || (tel && tel.length !== 8)) { err.textContent = "Nom (3 lettres min.) et numéro à 8 chiffres."; return; }
+      err.textContent = "";
+      const r = await run(() => DB.q("eleves", { method: "POST", body: { nom, telephone: tel ? "+228" + tel : null, formation: $("#sd-elFo").value, source: "bureau", statut: "Inscrit" }, prefer: "return=minimal" }), "Élève ajouté");
+      if (r) { $("#sd-elAdd").reset(); $("#sd-elAdd").hidden = true; $("#sd-elF").value = "act"; loadEleves(); }
+    });
+    function fillEleveSelect() {
+      const opts = eleves.filter((x) => x.statut !== "Abandon").sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
+      const dl = $("#sd-rcEleves"); if (dl) dl.innerHTML = opts.map((x) => '<option value="' + esc(x.nom) + '">').join("");
+    }
+
+    // ---- Planning conduite
+    const CST = ["Libre", "Réservé", "Fait", "Absent", "Annulé"];
+    async function loadDay() {
+      $("#sd-cdDay").textContent = longDay(cdDay).replace(/^./, (c) => c.toUpperCase()) + (cdDay === iso(new Date()) ? " (aujourd'hui)" : "");
+      const r = await run(() => DB.q("creneaux_conduite?select=*&jour=eq." + cdDay));
+      if (!r) return;
+      r.sort((a, b) => hmin(a.heure) - hmin(b.heure));
+      const actifs = eleves.filter((x) => !["Abandon", "Permis obtenu"].includes(x.statut)).sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
+      const tomorrow = iso(new Date(Date.now() + 864e5));
+      $("#sd-cdList").innerHTML = r.length ? r.map((c) => {
+        const el = eleves.find((x) => x.id === c.eleve_id), n = el ? waNum(el.telephone) : "";
+        const conf = el && n ? "https://wa.me/228" + n + "?text=" + encodeURIComponent("Bonjour " + el.nom.split(" ")[0] + ", ta séance de conduite SODAF est confirmée le " + longDay(c.jour) + " à " + c.heure + ". Rendez-vous au 412 Avenue Akei, Tokoin Tamé. À bientôt !") : "";
+        const rap = el && n && c.jour === tomorrow ? "https://wa.me/228" + n + "?text=" + encodeURIComponent("Bonjour " + el.nom.split(" ")[0] + ", petit rappel : ta séance de conduite SODAF est demain à " + c.heure + ". Merci d'être à l'heure !") : "";
+        return '<div class="tm-row st-' + c.statut.normalize("NFD").replace(/[^a-z]/gi, "").toLowerCase() + '" data-id="' + c.id + '"><div class="tm-time">' + esc(c.heure) + '</div><div class="tm-main"><select data-el aria-label="Élève"><option value="">— Créneau libre —</option>' + actifs.map((x) => '<option value="' + x.id + '"' + (x.id === c.eleve_id ? " selected" : "") + ">" + esc(x.nom) + "</option>").join("") + (el && !actifs.includes(el) ? '<option value="' + el.id + '" selected>' + esc(el.nom) + "</option>" : "") + '</select>' + (c.note ? "<small>" + esc(c.note) + "</small>" : "") + '</div><div class="tm-acts"><select data-cs aria-label="Statut">' + CST.map((t) => "<option" + (t === c.statut ? " selected" : "") + ">" + t + "</option>").join("") + "</select>" + (conf ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" href="' + conf + '">Confirmer</a>' : "") + (rap ? '<a class="btn btn-yellow btn-sm" target="_blank" rel="noopener" href="' + rap + '">Rappel</a>' : "") + "</div></div>";
+      }).join("") : '<p class="tm-empty">Pas de créneau ce jour-là (dimanche ou jour férié).</p>';
+    }
+    $("#sd-cdList").addEventListener("change", async (e) => {
+      const row = e.target.closest("[data-id]"); if (!row) return; const id = row.dataset.id;
+      let body;
+      if (e.target.matches("[data-el]")) { const v = e.target.value; body = { eleve_id: v ? +v : null, statut: v ? "Réservé" : "Libre", modifie_le: new Date().toISOString() }; }
+      else if (e.target.matches("[data-cs]")) body = { statut: e.target.value, modifie_le: new Date().toISOString() };
+      if (!body) return;
+      await run(() => DB.q("creneaux_conduite?id=eq." + id, { method: "PATCH", body, prefer: "return=minimal" }), "Planning enregistré");
+      loadDay();
+    });
+    const shift = (n) => { const d = dOf(cdDay); d.setDate(d.getDate() + n); cdDay = iso(d); loadDay(); };
+    $("#sd-cdPrev").addEventListener("click", () => shift(-1)); $("#sd-cdNext").addEventListener("click", () => shift(1));
+    $("#sd-cdToday").addEventListener("click", () => { cdDay = iso(new Date()); loadDay(); });
+
+    // ---- Paiements
+    async function loadPay() {
+      const now = new Date(), m0 = iso(new Date(now.getFullYear(), now.getMonth(), 1)), d90 = iso(new Date(Date.now() - 120 * 864e5));
+      const r = await run(() => DB.q("paiements?select=*&jour=gte." + d90 + "&order=cree_le.desc"));
+      if (!r) return;
+      const mois = r.filter((p) => p.jour >= m0), tot = mois.reduce((a, p) => a + p.montant, 0);
+      const esp = mois.filter((p) => p.mode === "Espèces").reduce((a, p) => a + p.montant, 0);
+      const last = {}; r.slice().reverse().forEach((p) => (last[(p.eleve_id || p.eleve_nom)] = p));
+      const late = Object.values(last).filter((p) => p.reste > 0);
+      $("#sd-pyStats").innerHTML = '<div><span>Encaissé en ' + M[now.getMonth()] + '</span><b>' + F(tot) + '</b></div><div><span>Reçus ce mois</span><b>' + mois.length + '</b></div><div><span>Espèces / Mixx by Yas</span><b>' + F(esp) + " / " + F(tot - esp) + '</b></div><div><span>Élèves qui doivent encore payer</span><b>' + late.length + "</b></div>";
+      $("#sd-pyList").innerHTML = mois.length ? mois.map((p) => '<div class="tm-row"><div class="tm-time">' + dOf(p.jour).getDate() + " " + M[dOf(p.jour).getMonth()].slice(0, 4) + '.</div><div class="tm-main"><b>' + esc(p.eleve_nom) + " · " + F(p.montant) + "</b><span>" + esc(p.motif) + " · " + esc(p.mode) + (p.reste > 0 ? " · reste " + F(p.reste) : "") + "</span><small>Reçu n° " + esc(p.numero) + '</small></div><div class="tm-acts">' + (window.__sodafRcLink ? '<a class="btn btn-line btn-sm" target="_blank" rel="noopener" href="' + window.__sodafRcLink(p) + '">Revoir le reçu</a>' : "") + "</div></div>").join("") : '<p class="tm-empty">Aucun reçu ce mois-ci pour l\'instant.</p>';
+      $("#sd-pyLate").innerHTML = late.length ? '<div class="tm-sub"><div><p class="eyebrow">À relancer</p><h3>Reste à payer</h3></div></div><div class="tm-list">' + late.map((p) => { const n = waNum(p.telephone); return '<div class="tm-row"><div class="tm-main"><b>' + esc(p.eleve_nom) + " · reste " + F(p.reste) + "</b><span>" + esc(p.formation || "") + " · dernier paiement le " + dOf(p.jour).toLocaleDateString("fr-FR") + '</span></div><div class="tm-acts">' + (n ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" href="https://wa.me/228' + n + "?text=" + encodeURIComponent("Bonjour " + p.eleve_nom.split(" ")[0] + ", petit rappel de SODAF : il reste " + F(p.reste) + " à régler pour ta formation, avant ta première séance de conduite. Merci !") + '">Relancer</a>' : "") + "</div></div>"; }).join("") + "</div>" : "";
+    }
+
+    // ---- Devoirs
+    async function loadDev() {
+      const sel = $("#sd-dvWeek");
+      if (!sel.options.length) {
+        const w = await run(() => DB.q("devoir_semaines?select=*&lundi=lte." + iso(new Date()) + "&order=lundi.desc&limit=15"));
+        if (!w) return;
+        sel.innerHTML = w.map((x) => '<option value="' + x.lundi + '" data-l="' + x.lettre + '" data-t="' + esc(x.theme) + '">Semaine du ' + dOf(x.lundi).getDate() + " " + M[dOf(x.lundi).getMonth()] + " · Devoir " + x.lettre + " · " + esc(x.theme) + "</option>").join("") || '<option value="' + devWeek().key + '" data-l="' + DEV[devWeek().idx].l + '" data-t="' + esc(DEV[devWeek().idx].t) + '">Semaine en cours</option>';
+      }
+      const o = sel.selectedOptions[0]; if (!o) return;
+      const r = await run(() => DB.q("devoir_resultats?select=*&semaine=eq." + o.value + "&order=recu_le"));
+      if (!r) return;
+      const moy = r.length ? r.reduce((a, x) => a + (x.note * 10) / x.sur, 0) / r.length : 0;
+      $("#sd-dvStats").innerHTML = "<div><span>Participants</span><b>" + r.length + "</b></div><div><span>Moyenne</span><b>" + (r.length ? String(Math.round(moy * 10) / 10).replace(".", ",") + "/10" : "—") + "</b></div><div><span>Niveau examen (9 ou 10)</span><b>" + r.filter((x) => x.note / x.sur >= 0.9).length + "</b></div>";
+      const ic = (x) => (x.note / x.sur >= 0.9 ? "🏆" : x.note / x.sur >= 0.7 ? "✅" : "📘");
+      const lines = r.map((x) => ic(x) + " " + x.eleve_nom + " : " + x.note + "/" + x.sur + (x.devoir !== o.dataset.l ? " (devoir " + x.devoir + ")" : ""));
+      const msg = "📚 *SODAF Auto-École · Devoir " + o.dataset.l + "*\nSemaine du " + dOf(o.value).getDate() + " " + M[dOf(o.value).getMonth()] + " · " + o.dataset.t + "\n\n" + (r.length ? "👥 " + r.length + (r.length > 1 ? " participants" : " participant") + " · moyenne " + String(Math.round(moy * 10) / 10).replace(".", ",") + "/10\n\n" + lines.join("\n") : "Aucun résultat reçu pour l'instant.") + "\n\n🏆 9 ou 10 · ✅ 7 ou 8 · 📘 à revoir\nCorrection mercredi en salle à 14 h 30.\nPas encore fait ? autosodaf.com/#devoirs";
+      $("#sd-dvMsg").value = msg;
+      $("#sd-dvWa").href = "https://wa.me/?text=" + encodeURIComponent(msg);
+      $("#sd-dvRes").innerHTML = r.map((x) => '<div class="tm-row"><div class="tm-time">' + ic(x) + '</div><div class="tm-main"><b>' + esc(x.eleve_nom) + " · " + x.note + "/" + x.sur + "</b><span>Devoir " + x.devoir + " · reçu le " + new Date(x.recu_le).toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" }) + "</span></div></div>").join("");
+    }
+    $("#sd-dvWeek").addEventListener("change", loadDev);
+    $("#sd-dvCopy").addEventListener("click", async () => { try { await navigator.clipboard.writeText($("#sd-dvMsg").value); toast("Message copié"); } catch (e) { $("#sd-dvMsg").select(); document.execCommand("copy"); toast("Message copié"); } });
+
+    // ---- Moniteur
+    const THEMES = [...$$("article.ch").map((c) => c.dataset.title), "Révision générale", "Examen blanc"];
+    async function loadMon() {
+      if (!me) return;
+      const today = iso(new Date());
+      const s = await run(() => DB.q("seances_code?select=*&jour=gte." + today + "&statut=neq.Annulé&order=jour&limit=1"));
+      if (s) {
+        const se = s[0];
+        if (!se) { $("#sd-mcTitle").textContent = "Aucune séance prévue"; $("#sd-mcBody").innerHTML = ""; }
+        else {
+          const pr = await run(() => DB.q("presences?select=eleve_id&seance_id=eq." + se.id)) || [];
+          const ids = new Set(pr.map((x) => x.eleve_id));
+          const act = eleves.filter((x) => ["Inscrit", "En formation"].includes(x.statut)).sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
+          $("#sd-mcTitle").textContent = (se.jour === today ? "Aujourd'hui" : longDay(se.jour).replace(/^./, (c) => c.toUpperCase())) + " · " + se.type + " · " + se.heure + (se.statut === "Fait" ? " ✓" : "");
+          $("#sd-mcBody").innerHTML = '<div class="field"><label for="sd-mcTheme">Thème traité</label><select id="sd-mcTheme"><option value="">— Choisir —</option>' + THEMES.map((t) => "<option" + (t === se.theme ? " selected" : "") + ">" + esc(t) + "</option>").join("") + '</select></div><p class="tm-lab">Présents (' + ids.size + ")</p>" + (act.length ? '<div class="tm-checks">' + act.map((x) => '<label><input type="checkbox" data-pe="' + x.id + '"' + (ids.has(x.id) ? " checked" : "") + "> " + esc(x.nom) + "</label>").join("") + "</div>" : '<p class="tm-empty">Aucun élève inscrit pour l\'instant.</p>') + '<div class="field"><label for="sd-mcNote">Note (facultatif)</label><input id="sd-mcNote" value="' + esc(se.note || "") + '"></div><button class="btn btn-green btn-sm" type="button" id="sd-mcDone" data-id="' + se.id + '">' + (se.statut === "Fait" ? "Mettre à jour" : "Cours fait") + "</button>";
+          $$("#sd-mcBody [data-pe]").forEach((c) => c.addEventListener("change", async () => {
+            const eid = +c.dataset.pe;
+            if (c.checked) await run(() => DB.q("presences", { method: "POST", body: { seance_id: se.id, eleve_id: eid }, prefer: "return=minimal,resolution=ignore-duplicates" }), "Présence enregistrée");
+            else await run(() => DB.q("presences?seance_id=eq." + se.id + "&eleve_id=eq." + eid, { method: "DELETE", prefer: "return=minimal" }), "Présence retirée");
+          }));
+          $("#sd-mcDone").addEventListener("click", async () => {
+            await run(() => DB.q("seances_code?id=eq." + se.id, { method: "PATCH", body: { theme: $("#sd-mcTheme").value || null, note: $("#sd-mcNote").value.trim() || null, statut: "Fait" }, prefer: "return=minimal" }), "Cours enregistré");
+            loadMon();
+          });
+        }
+      }
+      const c = await run(() => DB.q("creneaux_conduite?select=*&jour=eq." + today + "&eleve_id=not.is.null"));
+      if (c) {
+        c.sort((a, b) => hmin(a.heure) - hmin(b.heure));
+        $("#sd-mcList").innerHTML = c.length ? c.map((x) => { const el = eleves.find((y) => y.id === x.eleve_id) || { nom: "Élève" }; return '<div class="tm-row" data-id="' + x.id + '"><div class="tm-time">' + esc(x.heure) + '</div><div class="tm-main"><b>' + esc(el.nom) + "</b><span>" + esc(x.statut) + '</span><input data-note placeholder="Note sur les progrès" value="' + esc(x.note || "") + '"></div><div class="tm-acts"><button class="btn btn-green btn-sm" type="button" data-set="Fait">Fait</button><button class="btn btn-line btn-sm" type="button" data-set="Absent">Absent</button></div></div>'; }).join("") : '<p class="tm-empty">Aucune séance réservée aujourd\'hui.</p>';
+      }
+    }
+    $("#sd-mcList").addEventListener("click", async (e) => {
+      const b = e.target.closest("[data-set]"); if (!b) return; const row = b.closest("[data-id]");
+      await run(() => DB.q("creneaux_conduite?id=eq." + row.dataset.id, { method: "PATCH", body: { statut: b.dataset.set, note: row.querySelector("[data-note]").value.trim() || null, modifie_le: new Date().toISOString() }, prefer: "return=minimal" }), "Séance : " + b.dataset.set);
+      loadMon();
+    });
+
+    window.TEAM_ELEVES = () => eleves; window.TEAM_RELOAD_PAY = () => { if (!$('.tm-sec[data-s="paiements"]').hidden) loadPay(); };
+    if (DB.session) start(); else show(false);
+    return { toast, run, get me() { return me; }, reloadPay: () => loadPay(), get eleves() { return eleves; } };
   })();
 
   { const qc = $("#sd-qcount"); if (qc) qc.textContent = Q.length; }
