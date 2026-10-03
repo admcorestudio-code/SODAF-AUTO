@@ -746,15 +746,16 @@ a.teamtile.hl{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
 .pc-block .tm-formact input{flex:1;min-width:180px;font:.95rem var(--f-body);padding:.55em .7em;border:1.5px solid var(--line);border-radius:10px}
 .pc-lab{font-size:.8rem;font-weight:700;color:#3D444D;margin-bottom:6px!important}
 .pc-steps{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-#sodaf-root [data-rappel],#sodaf-root .pc-noanswer{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:700 .95rem var(--f-body);padding:.7em 1.1em;border-radius:12px;border:2px solid;cursor:pointer;line-height:1.25}
+#sodaf-root [data-rappel],#sodaf-root [data-ko]{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:700 .95rem var(--f-body);padding:.7em 1.1em;border-radius:12px;border:2px solid;cursor:pointer;line-height:1.25}
 #sodaf-root [data-rappel=""]{border-color:var(--green);color:var(--green);background:var(--green-soft);min-width:230px}
-#sodaf-root [data-rappel="matin"]{border-color:#C99400;color:#6B4F00;background:#FFF8E1}
-#sodaf-root [data-rappel="apres-midi"]{border-color:var(--blue);color:var(--blue);background:#EEF3FB}
+#sodaf-root [data-ko="matin"]{border-color:#C99400;color:#6B4F00;background:#FFF8E1}
+#sodaf-root [data-ko="apres-midi"]{border-color:var(--blue);color:var(--blue);background:#EEF3FB}
 #sodaf-root [data-rappel=""][aria-pressed="true"]{background:var(--green);color:#fff}
-#sodaf-root [data-rappel="matin"][aria-pressed="true"]{background:#E0A400;border-color:#E0A400;color:#14171C}
-#sodaf-root [data-rappel="apres-midi"][aria-pressed="true"]{background:var(--blue);color:#fff}
+#sodaf-root [data-ko="matin"][aria-pressed="true"]{background:#E0A400;border-color:#E0A400;color:#14171C}
+#sodaf-root [data-ko="apres-midi"][aria-pressed="true"]{background:var(--blue);color:#fff}
 .pc-callnow{padding-bottom:14px;margin-bottom:14px;border-bottom:2px solid var(--ink)}
-.pc-lab2{margin-top:16px!important}
+.pc-konote{width:100%;font:.95rem var(--f-body);padding:.55em .7em;border:1.5px solid var(--line);border-radius:10px;margin-bottom:8px}
+.pc-ko+.pc-triesrow{margin-top:12px}
 .pc-triesrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px}
 .pc-triesrow .pc-lab{margin:0!important}
 .pc-triesrow small{flex-basis:100%;font-size:.8rem;color:var(--muted)}
@@ -776,7 +777,6 @@ a.teamtile.hl{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
 .pc-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px;padding-top:14px;border-top:1.5px solid var(--line)}
 .pc-foot>span{font-weight:700}
 .pc-red{background:var(--red);color:#fff}
-#sodaf-root .pc-noanswer{background:var(--red);border-color:var(--red);color:#fff}
 #sodaf-root .sc,#sodaf-root .sc li{list-style:none}
 .pc-dark{background:var(--ink);color:#fff}
 .btn.armed{outline:3px solid var(--yellow);outline-offset:2px}
@@ -790,7 +790,7 @@ a.teamtile.hl{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
 .pc-feed div{display:grid;grid-template-columns:auto 1fr;gap:0 12px;padding:7px 0;border-top:1px solid var(--line);font-size:.92rem}
 .pc-feed time{color:var(--muted);font-size:.82rem;grid-row:1/3;font-variant-numeric:tabular-nums}
 .pc-feed span{color:#3D444D}
-@media (max-width:899px){.pc{grid-template-columns:1fr}.pc-list{position:static}.pc-items{max-height:none}.pc.has-sel .pc-list{display:none}.pc:not(.has-sel) .pc-detail{display:none}.pc-back{display:inline-block}#sodaf-root .pc-steps [data-rappel]{font-size:.86rem;padding:.65em .5em}.pc-head h3{font-size:1.4rem}}
+@media (max-width:899px){.pc{grid-template-columns:1fr}.pc-list{position:static}.pc-items{max-height:none}.pc.has-sel .pc-list{display:none}.pc:not(.has-sel) .pc-detail{display:none}.pc-back{display:inline-block}#sodaf-root .pc-steps [data-ko]{font-size:.86rem;padding:.65em .5em}.pc-head h3{font-size:1.4rem}}
 .tm-row.st-libre{border-left-color:#C9CED4;background:#FAFBFB}
 .tm-row.st-reserve{border-left-color:var(--blue)}
 .tm-row.st-fait{border-left-color:var(--green);background:var(--green-soft)}
@@ -2640,13 +2640,16 @@ function init(root) {
           matin: IC('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>'),
           am: IC('<path d="M12 10V2M4.93 10.93l1.41 1.41M2 18h2M20 18h2M19.07 10.93l-1.41 1.41M22 22H2M16 6l-4 4-4-4M16 18a4 4 0 0 0-8 0"/>')
         };
+        const kb = (k, ic, label) => '<button type="button" data-ko="' + k + '" aria-pressed="' + (t > 0 && x.rappel === k) + '">' + ic + "<span>" + label + "</span></button>";
         const rb = (k, ic, label) => '<button type="button" data-rappel="' + k + '" aria-pressed="' + ((x.rappel || "") === k) + '">' + ic + "<span>" + label + "</span></button>";
         body = '<div class="pc-block"><div class="pc-bh"><b>Historique d\'appels</b></div>' +
-          '<div class="pc-callnow"><p class="pc-lab">Statut</p>' + rb("", ICS.call, "Call à faire") + "</div>" +
-          '<div class="pc-ko"><div class="tm-formact"><button class="btn pc-noanswer" type="button" data-a="callKo">' + ICS.ko + '<span>Pas de réponse</span></button><input id="sd-pcCallNote" placeholder="Ce qu\'il a dit (facultatif)" maxlength="300"></div>' +
-          '<div class="pc-triesrow"><span class="pc-lab">Tentatives sans réponse</span><div class="pc-tries">' + [1, 2, 3, 4].map((i) => '<i class="' + (i <= t ? "on" : "") + '">' + i + "X" + (i === 4 ? " · injoignable" : "") + "</i>").join("") + '</div><small>Se coche tout seul à chaque « Pas de réponse ».</small></div>' +
-          '<p class="pc-lab pc-lab2">Rappeler plus tard</p><div class="pc-steps">' + rb("matin", ICS.matin, "Rappeler le matin") + rb("apres-midi", ICS.am, "Rappeler l'après\u2011midi") + "</div></div>" +
-          (t >= 4 ? '<div class="pc-alert"><b>4 appels sans réponse.</b> Envoie la relance WhatsApp, puis range le dossier en « Injoignable ». Tu pourras le ressortir s\'il répond.<div class="tm-formact">' + (n ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-a="relance" href="' + wa(msgRelance(x)) + '">Envoyer la relance ↗</a>' : "") + '<button class="btn btn-sm pc-red" type="button" data-arch="Injoignable">Archiver : Injoignable</button></div></div>' : "") + "</div>" +
+          (t < 4 ? '<div class="pc-callnow"><p class="pc-lab">Statut</p>' + rb("", ICS.call, "Call à faire") + "</div>" : "") +
+          (t < 4 ? '<div class="pc-ko"><p class="pc-lab">Pas de réponse ? Choisis quand rappeler</p>' +
+            '<input class="pc-konote" id="sd-pcCallNote" placeholder="Note sur l\'appel (facultatif)" maxlength="300">' +
+            '<div class="pc-steps">' + kb("matin", ICS.matin, "Rappeler le matin") + kb("apres-midi", ICS.am, "Rappeler l'après‑midi") + "</div></div>" : "") +
+          '<div class="pc-triesrow"><span class="pc-lab">Tentatives sans réponse</span><div class="pc-tries">' + [1, 2, 3, 4].map((i) => '<i class="' + (i <= t ? "on" : "") + '">' + i + "X" + (i === 4 ? " · injoignable" : "") + "</i>").join("") + "</div>" +
+          (t < 4 ? "<small>Une tentative s'ajoute toute seule quand tu choisis Rappeler le matin ou l'après-midi.</small>" : "") + "</div>" +
+          (t >= 4 ? '<div class="pc-alert"><b>Injoignable : 4 appels sans réponse.</b> Envoie la relance WhatsApp, puis archive le dossier. Tu pourras le ressortir s\'il répond.<div class="tm-formact">' + (n ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-a="relance" href="' + wa(msgRelance(x)) + '">Envoyer la relance WhatsApp ↗</a>' : "") + '<button class="btn btn-sm pc-red" type="button" data-arch="Injoignable">Archiver : Injoignable</button></div></div>' : "") + "</div>" +
           '<div class="pc-block pc-dos" id="sd-pcDos" hidden><div class="pc-bh"><b>Lien d\'inscription à envoyer sur WhatsApp</b><span class="tm-note" style="margin:0!important">Prix, lien pour finaliser, adresse</span></div><textarea id="sd-pcDosMsg" rows="16">' + esc(msgDossier(x)) + '</textarea><div class="tm-formact">' + (n ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-a="sendDossier" href="' + wa(msgDossier(x)) + '">Envoyer le lien d\'inscription sur WhatsApp ↗</a>' : '<span class="tm-err">Pas de numéro : ajoute-le avec Modifier.</span>') + '<span class="tm-note" style="margin:0!important">Après l\'envoi, le dossier passe dans « Dossier envoyé ».</span></div></div>' +
           '<div class="pc-block"><div class="pc-bh"><b>Script d\'appel</b><span class="tm-note" style="margin:0!important">' + esc(x.formation || "") + '</span></div><div class="pc-script">' + script(x) + "</div></div>";
       } else if (st === "dossier") {
@@ -2688,6 +2691,8 @@ function init(root) {
       const x = eleves.find((y) => y.id === pcSel); if (!x) return;
       const a = e.target.closest("[data-a]"), ar = e.target.closest("[data-arch]"), rp = e.target.closest("[data-rappel]");
       if (ar) { confirmBtn(ar, () => archive(x, ar.dataset.arch)); return; }
+      const ko = e.target.closest("[data-ko]");
+      if (ko) { const v = ko.dataset.ko, nb = Math.min((x.appels || 0) + 1, 20), note = ($("#sd-pcCallNote") || {}).value; if (await patchEl(x, { appels: nb, rappel: v }, "Pas de réponse (" + nb + "X) · " + (v === "matin" ? "à rappeler le matin" : "à rappeler l'après-midi"), ["Appel sans réponse", [v === "matin" ? "Rappel le matin" : "Rappel l'après-midi", (note || "").trim()].filter(Boolean).join(" · ")])) renderList(); return; }
       if (rp) { const v = rp.dataset.rappel || null; if (await patchEl(x, { rappel: v }, "Enregistré")) renderList(); return; }
       if (!a) return;
       const k = a.dataset.a;
