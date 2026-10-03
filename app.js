@@ -651,6 +651,14 @@ a.teamtile.hl{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
 .pc-hint{padding:10px 14px;font-size:.85rem;color:var(--muted);margin:0!important;border-bottom:1px solid var(--line)}
 .pc-tools input{flex:1;min-width:0;font:.95rem var(--f-body);padding:.55em .7em;border:1.5px solid var(--line);border-radius:10px}
 .pc-list .tm-form{margin:10px;padding:14px}
+#sodaf-root #sd-elAdd{background:var(--ink);border-color:var(--ink);color:#fff;box-shadow:0 8px 24px rgba(20,23,28,.18)}
+#sodaf-root #sd-elAdd .eyebrow{color:var(--yellow)}
+#sodaf-root #sd-elAdd label{color:#fff}
+#sodaf-root #sd-elAdd input,#sodaf-root #sd-elAdd select{background:#fff;color:var(--ink);border-color:#fff}
+#sodaf-root #sd-elAdd .tel{border-color:#fff}
+#sodaf-root #sd-elAdd .linkbtn{color:#C9CED4}
+#sodaf-root #sd-elAdd .tm-err{color:#FF9B92}
+#sodaf-root #sd-elAdd .btn-green{background:var(--yellow);color:var(--ink)}
 .pc-items{max-height:68vh;overflow:auto}
 .pc-gh{display:flex;justify-content:space-between;font:600 .74rem var(--f-body);letter-spacing:.08em;text-transform:uppercase;color:#3D444D;background:var(--soft);padding:8px 14px;margin:0!important;border-bottom:1px solid var(--line)}
 .pc-gh span{background:#fff;border-radius:999px;padding:0 .5em}
