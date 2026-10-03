@@ -683,6 +683,7 @@ a.teamtile.hl{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
 .insc-mixx li{margin-bottom:4px}
 .insc-note{font-size:.95rem;color:#3D444D;background:var(--soft);border-radius:12px;padding:12px 14px}
 .insc-err{color:var(--red);font-weight:600}
+.insc-load{color:var(--muted);padding:30px 0;text-align:center}
 .insc-go{align-self:flex-start;font-size:1.05rem;padding:.85em 1.6em}
 .insc-msg,.insc-ok{display:flex;flex-direction:column;gap:10px;align-items:flex-start;margin-bottom:18px}
 .insc-ok{border-top:5px solid var(--green)}
@@ -2504,10 +2505,10 @@ function init(root) {
     const PRIXM = { "Permis B": "55 000 F la formation complète (formule courte 35 000 F, accélérée 75 000 F en 2 mois ou 80 000 F en 1 mois)", "Permis A": "30 000 F", "Pack A + B": "80 000 F", "Remise à niveau": "20 000 F", "Formation entreprise": "sur devis, selon le nombre de chauffeurs" };
     const jours = (d) => Math.floor((Date.now() - new Date(d)) / 864e5);
     const dosAge = (x) => jours(x.dossier_relance_le && x.dossier_relance_le > x.dossier_envoye_le ? x.dossier_relance_le : x.dossier_envoye_le);
-    const msgDossier = (x) => "Bonjour " + prenom(x) + " 😊\nComme promis, voici ton dossier d'inscription SODAF Auto-École.\n\n*TON DOSSIER N° " + x.id + "*\n• Formation : " + (x.formation || "à préciser") + "\n• Prix : " + (PRIXM[x.formation] || "voir autosodaf.com") + "\n• Droit d'inscription : 5 000 F" + (/Permis|Pack/.test(x.formation || "") ? "\n• Examen d'État : dépôt de 30 000 F pour l'inscription à l'examen final. Nous déposons ton dossier, puis l'État t'envoie un message avec le jour et le lieu de ton examen." : "") + "\n• Paiement en 2 fois : la moitié à l'inscription, le reste avant ta 1re séance de conduite.\n\n📄 Nos formations et tarifs (fiche SODAF) :\nhttps://autosodaf.com/fiche-renseignement-sodaf.pdf\n📅 Planning de la semaine :\nhttps://autosodaf.com/planning-semaine-sodaf.pdf\n\n🗂️ Pièces à préparer : acte de naissance, photocopie de la carte d'identité, 2 photos d'identité format passeport.\n\n✍️ *Finalise ton inscription en ligne (2 minutes) :*\n" + inscLink(x) + "\nTu choisis ta formule, puis tu paies à l'agence ou par Mixx by Yas. Tu reçois ensuite ton reçu officiel sur WhatsApp.\n\n📍 Nous trouver : " + (CFG.maps_lien || "412 Avenue Akei, Tokoin Tamé") + "\n412 Avenue Akei, Tokoin Tamé (en face de la caisse)\n🕗 Lun – ven 8 h – 12 h 30 et 14 h 30 – 18 h · Sam 8 h – 12 h\n\nDes questions ? Réponds simplement à ce message.\nL'équipe SODAF · L'art de conduire, la force de réussir.";
-    const newJeton = () => { const a = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789", r = new Uint32Array(14); crypto.getRandomValues(r); return [...r].map((n) => a[n % a.length]).join(""); };
+    const msgDossier = (x) => "Bonjour " + prenom(x) + " 😊\nComme promis, voici ton dossier d'inscription SODAF Auto-École.\n\n*TON DOSSIER N° " + x.id + "*\n• Formation : " + (x.formation || "à préciser") + "\n• Prix : " + (PRIXM[x.formation] || "voir autosodaf.com") + "\n• Droit d'inscription : 5 000 F\n\n✍️ *Finalise ton inscription en ligne (2 minutes) :*\n" + inscLink(x) + "\nTu choisis ta formule, puis tu paies à l'agence ou par Mixx by Yas. Tu reçois ensuite ton reçu officiel sur WhatsApp.\n\n📍 412 Avenue Akei, Tokoin Tamé (en face de la caisse)\n\nDes questions ? Réponds simplement à ce message.\nL'équipe SODAF · L'art de conduire, la force de réussir.";
+    const newJeton = () => { const a = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789", r = new Uint32Array(10); crypto.getRandomValues(r); return [...r].map((n) => a[n % a.length]).join(""); };
     const jetonOf = (x) => x.jeton || (x._jeton = x._jeton || newJeton());
-    const inscLink = (x) => "https://autosodaf.com/#inscrire-" + btoa(unescape(encodeURIComponent(JSON.stringify({ i: x.id, j: jetonOf(x), p: prenom(x), f: x.formation || "", m: CFG.mixx_numero || "", n: CFG.mixx_nom || "" })))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+    const inscLink = (x) => "https://autosodaf.com/#inscrire-" + x.id + "-" + jetonOf(x);
     const msgRelDos = (x) => "Bonjour " + prenom(x) + ", c'est le secrétariat de SODAF Auto-École. As-tu pu regarder ton dossier d'inscription (n° " + x.id + ") ? Si tu as une question sur le prix, les horaires ou le paiement, on est là. Tu peux payer au bureau ou par Mixx by Yas, et commencer le code dès la semaine prochaine 🚗";
     const PRIX = { "Permis B": "55 000 F la formation complète (formule courte dès 35 000 F, accélérée 75 000 ou 80 000 F)", "Permis A": "30 000 F", "Pack A + B": "80 000 F", "Remise à niveau": "20 000 F", "Formation entreprise": "sur devis" };
     const PIECES = [["acte", "Acte de naissance"], ["cni", "Photocopie carte d'identité"], ["photos", "2 photos passeport"], ["examen", "Dépôt examen 30 000 F payé"], ["deja", "A déjà conduit"]];
@@ -3137,9 +3138,16 @@ function init(root) {
       (aPayer ? "<li><b>À apporter</b> : " + fmtF(aPayer) + " en espèces, ton acte de naissance, une photocopie de ta carte d'identité et 2 photos d'identité</li>" : "") +
       (id ? "<li><b>Ton n° de dossier</b> : " + id + " (donne-le au secrétariat)</li>" : "") + '</ul><a class="btn btn-wa btn-sm" target="_blank" rel="noopener" href="' + WA + "?text=" + encodeURIComponent("Bonjour SODAF, je suis en route pour l'agence (dossier n° " + (id || "") + ").") + '">Prévenir l\'agence sur WhatsApp</a></div></div>';
   }
-  function inscPage(str) {
+  async function inscPage(str) {
     const box = $("#sd-insc");
-    let d; try { d = inscDecode(str); if (!d.i || !d.j) throw 0; } catch (e) { box.innerHTML = '<div class="card insc-msg"><h3>Ce lien est incomplet</h3><p>Demande au secrétariat SODAF de te le renvoyer sur WhatsApp : +228 72 54 41 66.</p><a class="btn btn-wa" href="' + WA + '" target="_blank" rel="noopener">Écrire au secrétariat</a></div>' + inscFindUs(0, 0); return; }
+    let d = null;
+    const mm = /^(\d+)-([A-Za-z0-9]{10,32})$/.exec(str || "");
+    if (mm) {
+      box.innerHTML = '<p class="insc-load">Chargement de ton dossier…</p>';
+      try { const r = await DB.q("rpc/inscription_info", { method: "POST", body: { p_id: +mm[1], p_jeton: mm[2] }, anon: true }); if (r && r.p !== undefined) d = Object.assign({ i: +mm[1], j: mm[2] }, r); } catch (e) {}
+      if (!d) { box.innerHTML = '<div class="card insc-msg"><h3>Ce lien n\'est plus valable</h3><p>Ton inscription est peut-être déjà faite, ou le lien a changé. Demande au secrétariat SODAF de te le renvoyer : +228 72 54 41 66.</p><a class="btn btn-wa" href="' + WA + '" target="_blank" rel="noopener">Écrire au secrétariat</a></div>' + inscFindUs(0, 0); return; }
+    }
+    try { if (!d) { d = inscDecode(str); if (!d.i || !d.j) throw 0; } } catch (e) { box.innerHTML = '<div class="card insc-msg"><h3>Ce lien est incomplet</h3><p>Demande au secrétariat SODAF de te le renvoyer sur WhatsApp : +228 72 54 41 66.</p><a class="btn btn-wa" href="' + WA + '" target="_blank" rel="noopener">Écrire au secrétariat</a></div>' + inscFindUs(0, 0); return; }
     const forms = INSC_FORMULES[d.f], done = S.get("insc" + d.i, null);
     if (!forms) { box.innerHTML = '<div class="card insc-msg"><h3>Bonjour ' + escI(d.p) + '</h3><p>Pour ta formation (' + escI(d.f || "à préciser") + '), le secrétariat prépare un devis avec toi. Écris-nous sur WhatsApp ou passe à l\'agence.</p><a class="btn btn-wa" href="' + WA + '" target="_blank" rel="noopener">Écrire au secrétariat</a></div>' + inscFindUs(0, d.i); return; }
     const exam = /Permis|Pack/.test(d.f), mixxOk = !!d.m;
