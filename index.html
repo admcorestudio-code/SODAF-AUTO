@@ -446,6 +446,8 @@ article.ch p+p{margin-top:10px}
 .entdoc b{display:block;font:700 1.15rem var(--f-display)}
 .entdoc span{display:block;color:var(--muted);font-size:.93rem;margin-top:4px}
 .entdoc .acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.navteam{display:none}
+@media (max-width:1300px){#sodaf-root nav.main a.navteam{display:block;margin-top:6px;border-top:1px solid var(--line);color:var(--green)}}
 .devlist-h{font:700 1rem var(--f-display);margin:0 0 12px!important;color:var(--muted)}
 .devform{max-width:520px;margin:0 auto}
 .devform .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -688,9 +690,9 @@ const HTML = `
 <a class="logo" href="#accueil" aria-label="SODAF, accueil">${LOGO("#14171C", "word")}<small class="logo-sub">Auto-école · Togo</small></a>
 <button class="burger" id="sd-burger" aria-expanded="false">Menu</button>
 <nav class="main" id="sd-nav">
-<a href="#accueil" data-nav="accueil">Accueil</a><a href="#formations" data-nav="formations">Formations et tarifs</a><a href="#cours" data-nav="cours">Cours</a><a href="#panneaux" data-nav="panneaux">Panneaux</a><a href="#quiz" data-nav="quiz">Quiz</a><a href="#devoirs" data-nav="devoirs">Devoirs</a><a href="#outils" data-nav="outils">Outils</a>
+<a href="#accueil" data-nav="accueil">Accueil</a><a href="#formations" data-nav="formations">Formations et tarifs</a><a href="#cours" data-nav="cours">Cours</a><a href="#panneaux" data-nav="panneaux">Panneaux</a><a href="#quiz" data-nav="quiz">Quiz</a><a href="#devoirs" data-nav="devoirs">Devoirs</a><a href="#outils" data-nav="outils">Outils</a><a href="#equipe" data-nav="equipe" class="navteam">Espace équipe</a>
 </nav>
-<a class="btn btn-green btn-sm" href="#inscription">S'inscrire</a>
+<a class="btn btn-green btn-sm" href="#equipe">Espace équipe</a>
 </div></header>
 <main>
 
