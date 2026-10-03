@@ -1570,11 +1570,6 @@ ${HEAD("SODAF Auto-École", "Finalise ton inscription", "Choisis ta formule, com
 <div class="wrap sec"><div id="sd-insc" class="insc"></div></div>
 </section>
 
-<section class="page" data-page="examen" hidden>
-${HEAD("SODAF Auto-École", "Ton dossier d'examen", "Tes papiers à apporter à l'agence et le dépôt de 30 000 F : SODAF s'occupe du reste.")}
-<div class="wrap sec"><div id="sd-exam" class="exm"></div></div>
-</section>
-
 <section class="page" data-page="equipe" hidden>
 ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-école : secrétariat et moniteur.")}
 <div class="wrap sec">
@@ -2636,12 +2631,14 @@ function init(root) {
     const dOnly = (d) => new Date(String(d).slice(0, 10) + "T12:00:00");
     const dFr = (d) => (d ? dOnly(d).toLocaleDateString("fr-FR", { day: "numeric", month: "short" }) : "");
     const dLong = (d) => (d ? dOnly(d).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" }) : "");
-    const exLink = (x) => "https://autosodaf.com/#examen-" + x.id + "-" + jetonOf(x);
+    const ITI = "https://www.google.com/maps/search/?api=1&query=6.168785%2C1.225462";
+    const AGENCE = "*OÙ NOUS TROUVER*\n412 Avenue Akei, Tokoin Tamé (en face de la caisse)\nLun – ven : 8 h – 12 h 30 et 14 h 30 – 18 h · Sam : 8 h – 12 h\nItinéraire : " + ITI;
+    const exMixx = (x) => (CFG.mixx_numero ? "\n\nTu peux aussi payer les 30 000 F par *Mixx by Yas* au " + CFG.mixx_numero + (CFG.mixx_nom ? " (" + CFG.mixx_nom + ")" : "") + ", motif *" + CODE(x) + " EXAMEN*, puis nous envoyer la capture du SMS ici." : "");
     const exPay = (x) => (x.examen_paye ? "dépôt payé ✓" : x.examen_paiement ? (x.examen_paiement.mode === "mixx" ? "Mixx à vérifier" : "paiera à l'agence") : "dépôt à payer");
     const exLine = (x) => x.examen_etape === "pret" ? "papiers " + exDocs(x) + "/4 · " + exPay(x) : x.examen_etape === "complet" ? "dossier complet · à déposer" + (x.examen_passages ? " · " + (x.examen_passages + 1) + "e passage" : "") : x.examen_etape === "depose" ? "déposé le " + dFr(x.examen_depose_le) : "examen le " + dFr(x.examen_date) + (x.examen_lieu ? " · " + esc(x.examen_lieu) : "");
     const SIGN = "\n\n*L'équipe SODAF · L'art de conduire, la force de réussir.*";
-    const msgExamen = (x) => "Bonjour " + prenom(x) + ",\n\nFélicitations, ta formation chez *SODAF Auto-École* est terminée ! Place maintenant à l'*examen d'État*.\n\n*À APPORTER À L'AGENCE*\n• Photocopie de ta carte d'identité\n• Ton acte de naissance\n• 2 photos d'identité (format passeport)\n• Le dépôt pour l'examen : 30 000 F\n\nN° Client : " + CODE(x) + "\n\n*Adresse, horaires et paiement par Mixx by Yas :*\n" + exLink(x) + "\n\nDès que ton dossier est complet, nous le déposons. L'État t'envoie ensuite la date et le lieu de ton examen par message.\n\nÀ très vite !" + SIGN;
-    const msgExRel = (x) => { const m = exManque(x).concat(x.examen_paye ? [] : ["le dépôt de 30 000 F"]); return "Bonjour " + prenom(x) + ",\n\nPetit rappel du secrétariat *SODAF Auto-École* : pour déposer ton dossier d'examen, il nous manque encore :\n" + m.map((t) => "• " + t).join("\n") + "\n\nPasse les déposer à l'agence (412 Avenue Akei, Tokoin Tamé, en face de la caisse) : lundi – vendredi 8 h – 12 h 30 et 14 h 30 – 18 h, samedi 8 h – 12 h.\n\nAdresse et plan : " + exLink(x) + "\n\nPlus vite le dossier est complet, plus vite tu passes ton examen." + SIGN; };
+    const msgExamen = (x) => "Bonjour " + prenom(x) + ",\n\nFélicitations, ta formation chez *SODAF Auto-École* est terminée ! Place maintenant à l'*examen d'État*.\n\n*À APPORTER À L'AGENCE*\n• Photocopie de ta carte d'identité\n• Ton acte de naissance\n• 2 photos d'identité (format passeport)\n• Le dépôt pour l'examen : 30 000 F\n\nN° Client : " + CODE(x) + exMixx(x) + "\n\n" + AGENCE + "\n\nDès que ton dossier est complet, nous le déposons. L'État t'envoie ensuite la date et le lieu de ton examen par message.\n\nÀ très vite !" + SIGN;
+    const msgExRel = (x) => { const m = exManque(x).concat(x.examen_paye ? [] : ["le dépôt de 30 000 F"]); return "Bonjour " + prenom(x) + ",\n\nPetit rappel du secrétariat *SODAF Auto-École* : pour déposer ton dossier d'examen, il nous manque encore :\n" + m.map((t) => "• " + t).join("\n") + "\n\nPasse les déposer à l'agence dès que possible.\n\n" + AGENCE + "\n\nPlus vite le dossier est complet, plus vite tu passes ton examen." + SIGN; };
     const msgConvoc = (x) => "Bonjour " + prenom(x) + ",\n\nBonne nouvelle : ta *convocation à l'examen du permis* est arrivée !\n\n*TON EXAMEN*\n• Date : " + dLong(x.examen_date) + "\n• Lieu : " + (x.examen_lieu || "à confirmer") + "\n• N° Client : " + CODE(x) + "\n\n*À NE PAS OUBLIER*\n• Ta carte d'identité originale\n• Arrive 30 minutes en avance\n• Repose-toi bien la veille\n\nRévise le code gratuitement sur autosodaf.com\n\nToute l'équipe SODAF est avec toi. Bonne chance !" + SIGN;
     const msgVeille = (x) => "Bonjour " + prenom(x) + ",\n\nC'est demain ! Ton examen du permis a lieu le *" + dLong(x.examen_date) + "*" + (x.examen_lieu ? " à *" + x.examen_lieu + "*" : "") + ".\n\n• Ta carte d'identité originale\n• 30 minutes d'avance\n• Calme et concentration : tu es prêt(e).\n\nBonne chance de la part de toute l'équipe *SODAF Auto-École* !";
     const msgBravo = (x) => "Félicitations " + prenom(x) + " !\n\nToute l'équipe de *SODAF Auto-École* est fière de toi : tu as obtenu ton *permis de conduire*.\n\nUn dernier conseil : sur la route, la prudence reste ta meilleure alliée.\n\nSi tu es content(e) de ta formation, parle de SODAF autour de toi : ta famille et tes amis seront bien accueillis." + SIGN + "\nautosodaf.com";
@@ -2799,17 +2796,17 @@ function init(root) {
           '<details class="pc-more"><summary>Revoir ou renvoyer le dossier</summary><textarea id="sd-pcDosMsg" rows="14">' + esc(msgDossier(x)) + '</textarea><div class="tm-formact">' + (n ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-a="resendDossier" href="' + wa(msgDossier(x)) + '">Renvoyer le dossier ↗</a>' : "") + "</div></details></div>";
       } else if (st === "formation") {
         body = '<div class="pc-block"><div class="pc-bh"><b>Conduite</b></div><div id="sd-pcDrive"><p class="tm-note">Chargement…</p></div></div>' +
-          (/Permis|Pack/.test(x.formation || "") ? '<div class="pc-block pc-fin"><div class="pc-bh"><b>Fin de formation</b>' + (x.examen_passages ? '<span class="tm-note" style="margin:0!important">' + (x.examen_passages + 1) + 'e passage</span>' : "") + '</div><p class="tm-note" style="margin:0 0 10px!important">Quand l\'élève a terminé (ou qu\'il lui reste 1 ou 2 séances), passe-le à l\'étape examen : il recevra un lien pour envoyer ses papiers en photo et régler le dépôt de 30 000 F.</p><div class="tm-formact"><button class="btn btn-green btn-sm" type="button" data-a="toExam">Formation terminée : passer à l\'examen →</button></div></div>' : "");
+          (/Permis|Pack/.test(x.formation || "") ? '<div class="pc-block pc-fin"><div class="pc-bh"><b>Fin de formation</b>' + (x.examen_passages ? '<span class="tm-note" style="margin:0!important">' + (x.examen_passages + 1) + 'e passage</span>' : "") + '</div><p class="tm-note" style="margin:0 0 10px!important">Quand l\'élève a terminé (ou qu\'il lui reste 1 ou 2 séances), passe-le à l\'étape examen : il recevra sur WhatsApp la liste des papiers à apporter et le dépôt de 30 000 F à régler.</p><div class="tm-formact"><button class="btn btn-green btn-sm" type="button" data-a="toExam">Formation terminée : passer à l\'examen →</button></div></div>' : "");
       } else if (st === "examen") {
         const E = x.examen_etape, docs = x.examen_docs || {}, nd = exDocs(x), pm = x.examen_paiement || null;
         const STEPS = [["pret", "Papiers et dépôt"], ["complet", "Dossier complet"], ["depose", "Déposé"], ["convoque", "Convoqué"]], ix = STEPS.findIndex((t) => t[0] === E);
         const today = iso(new Date());
         const steps = '<div class="ex-steps">' + STEPS.map((t, i) => '<span class="' + (i < ix ? "done" : i === ix ? "on" : "") + '"><i>' + (i < ix ? "✓" : i + 1) + "</i>" + t[1] + "</span>").join("") + "</div>";
-        const lien = E === "pret" ? '<div class="pc-block"><div class="pc-bh"><b>Lien du dossier d\'examen</b>' + (x.examen_lien_le ? '<span class="pc-ok">✓ Envoyé ' + ago(x.examen_lien_le) + "</span>" : "") + "</div>" +
+        const lien = E === "pret" ? '<div class="pc-block"><div class="pc-bh"><b>Message de fin de formation</b>' + (x.examen_lien_le ? '<span class="pc-ok">✓ Envoyé ' + ago(x.examen_lien_le) + "</span>" : "") + "</div>" +
           (x.examen_lien_le ? "" : '<textarea id="sd-exMsg" rows="14">' + esc(msgExamen(x)) + "</textarea>") +
           '<div class="tm-formact">' + (n ? (x.examen_lien_le
-            ? '<a class="btn btn-line btn-sm" target="_blank" rel="noopener" data-a="relExam" href="' + wa(msgExRel(x)) + '">Relancer : ce qui manque ↗</a><a class="linkbtn" target="_blank" rel="noopener" data-a="sendExam" href="' + wa(msgExamen(x)) + '">Renvoyer le lien complet</a>'
-            : '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-a="sendExam" href="' + wa(msgExamen(x)) + '">Envoyer le lien sur WhatsApp ↗</a>') : '<span class="tm-err">Pas de numéro : ajoute-le avec Modifier.</span>') + "</div></div>" : "";
+            ? '<a class="btn btn-line btn-sm" target="_blank" rel="noopener" data-a="relExam" href="' + wa(msgExRel(x)) + '">Relancer : ce qui manque ↗</a><a class="linkbtn" target="_blank" rel="noopener" data-a="sendExam" href="' + wa(msgExamen(x)) + '">Renvoyer le message complet</a>'
+            : '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-a="sendExam" href="' + wa(msgExamen(x)) + '">Envoyer le message sur WhatsApp ↗</a>') : '<span class="tm-err">Pas de numéro : ajoute-le avec Modifier.</span>') + "</div></div>" : "";
         const pap = '<div class="pc-block"><div class="pc-bh"><b>Papiers à apporter à l\'agence</b><span class="tm-note" style="margin:0!important">' + nd + '/4 reçus</span></div><p class="tm-note" style="margin:0 0 10px!important">Coche chaque papier quand l\'élève l\'apporte en main propre.</p><div class="ex-docs">' +
           PX.map((p) => { const d = docs[p[0]]; return '<label class="ex-doc' + (d ? " ok" : "") + '"><input type="checkbox" data-docmain="' + p[0] + '"' + (d ? " checked" : "") + "><b>" + p[1] + "</b><span>" + (d ? "Reçu " + ago(d.le) : "À apporter") + "</span></label>"; }).join("") + "</div></div>";
         const dep = '<div class="pc-block"><div class="pc-bh"><b>Dépôt pour l\'examen · 30 000 F</b>' + (x.examen_paye ? '<span class="pc-ok">✓ Payé</span>' : "") + "</div>" +
@@ -2881,8 +2878,8 @@ function init(root) {
       else if (k === "revive") { if (await patchEl(x, { statut: "Contacté", archive_motif: null, archive_le: null, appels: 0, rappel: null, dossier_envoye_le: null, dossier_relance_le: null }, "Dossier remis en appel", ["Étape", "Ressorti des archives"])) nextAfter(x); }
       else if (k === "note") { const v = $("#sd-pcNote").value.trim(); if (!v) return; await addSuivi(x, "Note", v); toast("Note ajoutée"); renderDetail(); }
       else if (k === "edit") editForm(x);
-      else if (k === "toExam") { if (await patchEl(x, { examen_etape: "pret", examen_pret_le: new Date().toISOString(), examen_lien_le: null, examen_relance_le: null, examen_date: null, examen_lieu: null, jeton: jetonOf(x) }, "Étape examen : envoie le lien à l'élève", ["Étape", "Formation terminée : examen"])) { pcStage = "examen"; S.set("pcStage", pcStage); renderList(); } }
-      else if (k === "sendExam") { const m = $("#sd-exMsg"); if (m) a.href = "https://wa.me/228" + waNum(x.telephone) + "?text=" + encodeURIComponent(m.value); await patchEl(x, { examen_lien_le: new Date().toISOString(), jeton: jetonOf(x) }, "Lien d'examen noté comme envoyé", ["Examen", "Lien du dossier d'examen envoyé"]); renderList(); }
+      else if (k === "toExam") { if (await patchEl(x, { examen_etape: "pret", examen_pret_le: new Date().toISOString(), examen_lien_le: null, examen_relance_le: null, examen_date: null, examen_lieu: null, jeton: jetonOf(x) }, "Étape examen : envoie le message à l'élève", ["Étape", "Formation terminée : examen"])) { pcStage = "examen"; S.set("pcStage", pcStage); renderList(); } }
+      else if (k === "sendExam") { const m = $("#sd-exMsg"); if (m) a.href = "https://wa.me/228" + waNum(x.telephone) + "?text=" + encodeURIComponent(m.value); await patchEl(x, { examen_lien_le: new Date().toISOString(), jeton: jetonOf(x) }, "Message noté comme envoyé", ["Examen", "Message de fin de formation envoyé"]); renderList(); }
       else if (k === "relExam") { await patchEl(x, { examen_relance_le: new Date().toISOString() }, "Relance notée", ["Examen", "Relance papiers / dépôt"]); renderList(); }
       else if (k === "exPaid") {
         if (await patchEl(x, Object.assign({ examen_paye: true }, exDocs(x) === 4 && x.examen_etape === "pret" ? { examen_etape: "complet" } : {}), "Dépôt reçu : fais le reçu", ["Examen", "Dépôt 30 000 F reçu"])) {
@@ -3454,55 +3451,6 @@ function init(root) {
     });
   }
 
-  // ---------- Page publique : dossier d'examen (lien personnel envoyé en fin de formation) ----------
-  const EX_PIECES = [["cni", "Photocopie de ta carte d'identité", "Recto verso, bien lisible"], ["acte", "Acte de naissance", "Original ou copie, selon ce que demande le secrétariat"], ["photo1", "Photo d'identité n° 1", "Format passeport, fond clair"], ["photo2", "Photo d'identité n° 2", "Format passeport, fond clair"]];
-  async function examPage(str) {
-    const box = $("#sd-exam");
-    const mm = /^(\d+)-([A-Za-z0-9]{10,32})$/.exec(str || "");
-    const bad = (t) => { box.innerHTML = '<div class="card insc-msg"><h3>' + t + '</h3><p>Demande au secrétariat SODAF de te renvoyer ton lien : +228 72 54 41 66.</p><a class="btn btn-wa" href="' + WA + '" target="_blank" rel="noopener">Écrire au secrétariat</a></div>' + inscFindUs(0, 0); };
-    if (!mm) return bad("Ce lien est incomplet");
-    const id = +mm[1], jt = mm[2];
-    box.innerHTML = '<p class="insc-load">Chargement de ton dossier…</p>';
-    let d = null; try { d = await DB.q("rpc/examen_info", { method: "POST", body: { p_id: id, p_jeton: jt }, anon: true }); } catch (e) {}
-    if (!d || d.p === undefined) return bad("Ce lien n'est plus valable");
-    const docs = d.docs || {}, nd = EX_PIECES.filter((p) => docs[p[0]]).length;
-    if (d.e === "depose" || d.e === "convoque" || !["pret", "complet"].includes(d.e)) {
-      box.innerHTML = '<div class="card insc-ok"><p class="eyebrow">Dossier d\'examen · N° client SO' + id + '</p><h3>Ton dossier est entre de bonnes mains, ' + escI(d.p) + '.</h3><p>' + (d.e === "convoque" ? "Ta convocation est arrivée : le secrétariat t'a envoyé la date et le lieu sur WhatsApp." : "SODAF a déposé ton dossier. L'État t'envoie la date et le lieu de ton examen par message ; nous te prévenons aussi.") + '</p><p>En attendant, révise le code : <a href="#cours">cours</a> et <a href="#quiz">quiz</a> gratuits.</p></div>';
-      return;
-    }
-    const pay = d.paye ? '<p class="ex-paid">✓ Dépôt de 30&nbsp;000&nbsp;F reçu par SODAF. Merci !</p>'
-      : d.pm ? '<p class="ex-paid wait">' + (d.pm === "mixx" ? "Paiement Mixx by Yas annoncé : le secrétariat le vérifie et t'envoie ton reçu." : "Tu as choisi de payer les 30&nbsp;000&nbsp;F à l'agence. Le secrétariat te donnera ton reçu.") + ' <button class="linkbtn" type="button" id="sd-exRePay">Changer</button></p>'
-      : "";
-    const mixxOk = !!d.m;
-    box.innerHTML = '<div class="insc-form">' +
-      '<div class="insc-hello"><p class="eyebrow">N° client SO' + id + " · " + escI(d.f) + '</p><h2>Bravo ' + escI(d.p) + ', place à l\'examen !</h2><p>Apporte tes papiers et règle le dépôt : SODAF dépose ton dossier pour toi.</p></div>' +
-      '<fieldset class="insc-step"><legend><i>1</i>Tes papiers, à apporter à l\'agence</legend><p class="insc-hint">Les papiers doivent être remis en main propre : nous ne pouvons pas les accepter en photo.</p><div class="ex-list">' +
-      EX_PIECES.map((p) => '<div class="ex-item' + (docs[p[0]] ? " ok" : "") + '"><i>' + (docs[p[0]] ? "✓" : "") + "</i><div><b>" + p[1] + "</b><small>" + (docs[p[0]] ? "Reçu par SODAF" : p[2]) + "</small></div></div>").join("") +
-      '</div><p class="insc-sum" id="sd-exCount"><b>' + nd + '/4</b> <span>papiers reçus par SODAF</span></p></fieldset>' +
-      '<fieldset class="insc-step"><legend><i>2</i>Le dépôt pour l\'examen : 30&nbsp;000&nbsp;F</legend>' + pay +
-      '<form id="sd-exPay" novalidate' + (d.paye || d.pm ? " hidden" : "") + '><div class="insc-cards insc-two"><label class="rcm on"><input type="radio" name="exM" value="agence" checked><span><b>À l\'agence</b><small>En espèces, au 412 Avenue Akei, Tokoin Tamé</small></span></label>' +
-      '<label class="rcm' + (mixxOk ? "" : " off") + '"><input type="radio" name="exM" value="mixx"' + (mixxOk ? "" : " disabled") + '><span><b>Par Mixx by Yas (T-Money)</b><small>' + (mixxOk ? "Depuis ton téléphone" : "Bientôt disponible : pour l'instant, paie à l'agence") + "</small></span></label></div>" +
-      '<div class="insc-mixx" id="sd-exMixx" hidden><ol><li>Envoie <b>30&nbsp;000&nbsp;F</b> par Mixx by Yas au <b>' + escI(d.m) + "</b>" + (d.n ? " (" + escI(d.n) + ")" : "") + ".</li><li>Motif : <b>SO" + id + ' EXAMEN</b></li><li>Écris ci-dessous le numéro qui a payé et la référence du SMS.</li></ol><div class="insc-grid"><div class="field"><label for="sd-exMt">Numéro qui a payé</label><div class="tel"><span>+228</span><input id="sd-exMt" inputmode="numeric" maxlength="11" placeholder="90 00 00 00"></div></div><div class="field"><label for="sd-exMr">Référence (SMS)</label><input id="sd-exMr" maxlength="60" placeholder="Ex. MP2410…"></div></div></div>' +
-      '<p class="insc-err" id="sd-exErr" hidden></p><button class="btn btn-green insc-go" type="submit">Valider</button></form></fieldset>' +
-      '<p class="insc-note">Ensuite : dès que ton dossier est complet, SODAF le dépose. L\'État t\'envoie la date et le lieu de ton examen par message, et nous te prévenons aussi sur WhatsApp.</p></div>' + inscFindUs(0, id);
-    const pf = $("#sd-exPay");
-    const upd = () => { pf.querySelectorAll(".rcm").forEach((l) => l.classList.toggle("on", l.querySelector("input").checked)); $("#sd-exMixx").hidden = pf.querySelector("[name=exM]:checked").value !== "mixx"; };
-    pf.addEventListener("change", upd); upd();
-    const rp = $("#sd-exRePay"); if (rp) rp.addEventListener("click", () => { pf.hidden = false; rp.closest("p").hidden = true; });
-    pf.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const mode = pf.querySelector("[name=exM]:checked").value, err = $("#sd-exErr"), btn = pf.querySelector("button[type=submit]");
-      let mt = $("#sd-exMt").value.replace(/\D/g, ""); if (mt.length > 8 && mt.startsWith("228")) mt = mt.slice(3);
-      const mr = $("#sd-exMr").value.trim();
-      if (mode === "mixx" && !(mt.length === 8 || mr.length >= 4)) { err.textContent = "Écris le numéro qui a payé (8 chiffres) ou la référence du SMS."; err.hidden = false; return; }
-      err.hidden = true; btn.disabled = true; btn.textContent = "Envoi…";
-      let ok = false; try { ok = await DB.q("rpc/examen_choix_paiement", { method: "POST", body: { p_id: id, p_jeton: jt, p_mode: mode, p_tel: mode === "mixx" && mt ? "+228" + mt : "", p_ref: mode === "mixx" ? mr : "" }, anon: true }); } catch (e2) {}
-      btn.disabled = false; btn.textContent = "Valider";
-      if (ok !== true) { err.textContent = "L'envoi n'a pas marché. Vérifie ta connexion et réessaie."; err.hidden = false; return; }
-      examPage(str);
-    });
-  }
-
   function route() {
     const APP = !!window.SODAF_APP;
     if (!APP && (location.hash === "#documents" || location.hash.startsWith("#equipe"))) { location.replace("/equipe/" + (location.hash.startsWith("#equipe-") ? location.hash : "")); return; }
@@ -3511,14 +3459,13 @@ function init(root) {
     if (APP && !["equipe", "classe", "recu"].includes(p)) { if (location.hash && location.hash !== "#accueil") window.open("/" + location.hash, "_blank"); history.replaceState(null, "", "#equipe"); p = "equipe"; }
     if (p === "recu") rcPublic(h.slice(5));
     if (p === "inscrire") inscPage(h.slice(9));
-    if (p === "examen") examPage(h.slice(7));
     $$("section.page").forEach((s) => (s.hidden = s.dataset.page !== p));
     $$("#sd-nav [data-nav]").forEach((a) => a.classList.toggle("on", a.dataset.nav === p));
     nav.classList.remove("open"); burger.setAttribute("aria-expanded", "false");
     if (p === "quiz") showBest();
     if (p === "classe") requestAnimationFrame(() => cls.open(h.split("-")[1]));
     if (p === "cours") requestAnimationFrame(() => requestAnimationFrame(spy));
-    let target = null; try { target = h.includes("-") && p !== "recu" && p !== "inscrire" && p !== "examen" ? root.querySelector("#" + h) : null; } catch (e) {}
+    let target = null; try { target = h.includes("-") && p !== "recu" && p !== "inscrire" ? root.querySelector("#" + h) : null; } catch (e) {}
     requestAnimationFrame(() => { if (target) target.scrollIntoView({ block: "start" }); else window.scrollTo(0, 0); });
   }
   window.addEventListener("hashchange", route);
