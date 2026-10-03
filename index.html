@@ -1221,8 +1221,8 @@ ${HEAD("Équipe SODAF", "Espace secrétariat", "Réservé au personnel de l'auto
 <div id="sd-rcOut" class="rcout" hidden>
 <div class="rcacts"><span id="sd-rcStatus" class="devsent"></span><span id="sd-rcSaved" class="devsent">Enregistrement…</span></div>
 <div class="rc-prev" id="sd-rcPreview"></div>
-<div class="rcacts"><button class="btn btn-wa" type="button" id="sd-rcShare">Envoyer le PDF (WhatsApp…)</button><button class="btn btn-green" type="button" id="sd-rcDl">Télécharger le PDF</button><a class="btn btn-line" id="sd-rcWa" target="_blank" rel="noopener" href="#">Ouvrir la discussion WhatsApp</a><button class="linkbtn" type="button" id="sd-rcNew">Faire un autre reçu</button></div>
-<p class="rchelp">Sur téléphone, « Envoyer le PDF » ouvre le partage : choisis WhatsApp puis l'élève. Sur ordinateur, télécharge le PDF puis glisse-le dans la discussion WhatsApp.</p>
+<div class="rcacts"><button class="btn btn-wa" type="button" id="sd-rcShare">Envoyer le reçu sur WhatsApp</button><button class="linkbtn" type="button" id="sd-rcDl">Télécharger seulement</button><button class="linkbtn" type="button" id="sd-rcNew">Faire un autre reçu</button></div>
+<p class="rchelp" id="sd-rcHelp">Un seul bouton : le PDF et le message partent ensemble. Choisis WhatsApp, puis l'élève.</p>
 </div></div>
 <div class="grid g2" style="margin-top:18px">
 <div class="card soft"><p class="eyebrow">Réserver une séance de conduite</p><ol class="teamsteps"><li>Ouvre <b>Conduite</b>, onglet <b>Créneaux libres</b>, et choisis l'heure avec l'élève.</li><li>Touche le créneau, choisis l'<b>élève</b> et mets le statut sur <b>Réservé</b>.</li><li>Touche <b>Confirmer sur WhatsApp</b> : le message est prêt, appuie sur Envoyer.</li><li>La veille, onglet <b>Demain (rappels)</b> : touche <b>Rappel de la veille</b> pour chaque élève.</li></ol></div>
@@ -1905,21 +1905,25 @@ function init(root) {
         status.textContent = "✓ PDF prêt"; status.className = "devsent ok";
         $("#sd-rcShare").disabled = false; $("#sd-rcDl").disabled = false;
         const msg = "Bonjour " + eleve.split(" ")[0] + ", voici ton reçu SODAF n° " + no + " : " + fmt(montant).replace(/ | /g, " ") + " (" + d.motif + "). Merci et bonne formation !";
-        $("#sd-rcWa").href = "https://wa.me/" + (tel ? "228" + tel : "") + "?text=" + encodeURIComponent(msg);
-        $("#sd-rcShare").hidden = !(navigator.canShare && navigator.canShare({ files: [file] }));
-        current.msg = msg;
+        current.msg = msg; current.wa = "https://wa.me/" + (tel ? "228" + tel : "") + "?text=" + encodeURIComponent(msg + " (reçu en pièce jointe)");
+        current.canShare = !!(navigator.canShare && navigator.canShare({ files: [file] }));
+        $("#sd-rcHelp").textContent = current.canShare ? "Un seul bouton : le PDF et le message partent ensemble. Choisis WhatsApp, puis l'élève." : "Ce navigateur ne peut pas joindre le fichier tout seul : le bouton télécharge le PDF et ouvre la discussion WhatsApp de l'élève. Il reste à glisser le PDF dans la discussion. Depuis un téléphone, tout part en un geste.";
       } catch (er) {
         status.textContent = "Le PDF n'a pas pu être créé. Vérifie la connexion et réessaie."; status.className = "devsent ko";
       }
     });
-    $("#sd-rcDl").addEventListener("click", () => {
-      if (!current) return;
+    function dlPdf() {
       const a = document.createElement("a"); a.href = URL.createObjectURL(current.file); a.download = current.file.name; document.body.appendChild(a); a.click(); a.remove();
       setTimeout(() => URL.revokeObjectURL(a.href), 4000);
-    });
+    }
+    $("#sd-rcDl").addEventListener("click", () => { if (current) dlPdf(); });
     $("#sd-rcShare").addEventListener("click", async () => {
       if (!current) return;
-      try { await navigator.share({ files: [current.file], text: current.msg }); } catch (er) {}
+      if (current.canShare) {
+        try { await navigator.share({ files: [current.file], text: current.msg, title: "Reçu SODAF" }); return; }
+        catch (er) { if (er && er.name === "AbortError") return; }
+      }
+      dlPdf(); window.open(current.wa, "_blank", "noopener");
     });
     $("#sd-rcNew").addEventListener("click", () => { form.reset(); suggest(); $("#sd-rcOut").hidden = true; current = null; form.scrollIntoView({ block: "start" }); });
   })();
