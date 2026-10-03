@@ -655,6 +655,46 @@ a.teamtile.hl{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
 .pc-gh.g-am{background:#DCE8F8;color:#163E7A;border-left:5px solid var(--blue);font-size:.8rem}
 .pc-gh.g-matin span,.pc-gh.g-am span,.pc-gh.g-first span{font-weight:800;color:var(--ink)}
 .pc-item.i-first{border-left-color:var(--green)}
+.pc-gh.g-verif{background:#FDE0DD;color:#7A1A12;border-left:5px solid var(--red);font-size:.8rem}
+.pc-gh.g-agence{background:var(--green-soft);color:#064D36;border-left:5px solid var(--green);font-size:.8rem}
+.pc-item.i-verif{border-left-color:var(--red)}
+.pc-item.i-agence{border-left-color:var(--green)}
+.t-verif{background:#FDE0DD;color:#7A1A12}
+.t-agence{background:var(--green-soft);color:#064D36}
+.pc-web{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
+.pc-verif{margin:0 0 12px}
+/* page publique : finaliser son inscription */
+.insc{max-width:860px;margin:0 auto}
+.insc-form{display:flex;flex-direction:column;gap:18px}
+.insc-hello h2{font-size:clamp(1.6rem,4vw,2.2rem);margin-top:6px}
+.insc-hello p:not(.eyebrow){color:var(--muted);margin-top:6px}
+.insc-step{border:1.5px solid var(--line);border-radius:16px;padding:18px;margin:0;min-width:0;background:#fff}
+.insc-step legend{display:flex;align-items:center;gap:10px;font:700 1.15rem var(--f-display);padding:0 6px}
+.insc-step legend i{font-style:normal;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--ink);color:#fff;font-size:.95rem}
+.insc-cards{display:flex;flex-direction:column;gap:8px}
+.insc-two{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.rcm.off{opacity:.55;cursor:not-allowed}
+.insc-sum{margin-top:12px!important;background:var(--soft);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:2px}
+.insc-sum b{font:800 1.25rem var(--f-display);color:var(--green)}
+.insc-sum span{font-size:.9rem;color:#3D444D}
+.insc-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 14px}
+.insc-mixx{margin-top:14px;background:#FFF5D6;border:1.5px solid var(--yellow);border-radius:12px;padding:14px 16px}
+.insc-mixx ol{margin:0 0 10px;padding-left:1.2em}
+.insc-mixx li{margin-bottom:4px}
+.insc-note{font-size:.95rem;color:#3D444D;background:var(--soft);border-radius:12px;padding:12px 14px}
+.insc-err{color:var(--red);font-weight:600}
+.insc-go{align-self:flex-start;font-size:1.05rem;padding:.85em 1.6em}
+.insc-msg,.insc-ok{display:flex;flex-direction:column;gap:10px;align-items:flex-start;margin-bottom:18px}
+.insc-ok{border-top:5px solid var(--green)}
+.insc-ok h3,.insc-msg h3{font-size:1.5rem}
+.insc-find{display:grid;grid-template-columns:1.1fr 1fr;gap:18px;align-items:start}
+.insc-map{border-radius:16px;overflow:hidden;border:1.5px solid var(--line);aspect-ratio:4/3;max-width:100%;background:var(--soft)}
+.insc-map iframe{width:100%;height:100%;border:0;display:block}
+.insc-addr{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.insc-addr h3{font-size:1.4rem}
+.insc-big{font:700 1.15rem var(--f-display)}
+.insc-list{margin:0;padding-left:1.1em;display:flex;flex-direction:column;gap:6px;font-size:.96rem}
+@media (max-width:720px){.insc-two,.insc-grid,.insc-find{grid-template-columns:1fr}.insc-go{align-self:stretch}}
 .pc-gh.g-late{background:#FDE3D6;color:#7A2E0E;border-left:5px solid #D9622B;font-size:.8rem}
 .pc-gh.g-wait{background:var(--soft);color:#3D444D;border-left:5px solid #9AA3AB;font-size:.8rem}
 .pc-item.i-late{border-left-color:#D9622B}
@@ -1423,6 +1463,11 @@ ${HEAD("SODAF Auto-École", "Ton reçu de paiement", "Garde ce lien ou télécha
 <div class="wrap sec"><div class="rc-prev" id="sd-rcPub"></div><div class="rcacts" style="justify-content:center"><button class="btn btn-green" type="button" id="sd-rcPubDl" hidden>Télécharger mon reçu (PDF)</button><a class="btn btn-line" href="#accueil">Découvrir le site</a></div></div>
 </section>
 
+<section class="page" data-page="inscrire" hidden>
+${HEAD("SODAF Auto-École", "Finalise ton inscription", "Choisis ta formule, complète tes informations, puis paie à l'agence ou par Mixx by Yas.")}
+<div class="wrap sec"><div id="sd-insc" class="insc"></div></div>
+</section>
+
 <section class="page" data-page="equipe" hidden>
 ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-école : secrétariat et moniteur.")}
 <div class="wrap sec">
@@ -1519,7 +1564,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 </section>
 <div class="tm-sub"><div><p class="eyebrow">Mode d'emploi</p><h3>Les gestes du secrétariat</h3></div></div>
 <div class="grid g2 tm-guides">
-<div class="card soft"><p class="eyebrow">Une pré-inscription arrive</p><ol class="teamsteps"><li><b>Accueil</b> : touche <b>Envoyer l'accueil</b> (WhatsApp), puis <b>Basculer en zone d'appel</b>.</li><li><b>Appels</b> : appelle avec le script. Pas de réponse ? <b>✗ Pas de réponse</b> et choisis quand rappeler. À 4 tentatives : relance WhatsApp puis <b>Injoignable</b>.</li><li>Il est intéressé : <b>Intéressé : envoyer le dossier</b> (fiche, planning, prix, paiement Mixx ou bureau, localisation).</li><li><b>Dossier envoyé</b> : relance après 3 jours. Il a payé (bureau ou capture Mixx vérifiée) : <b>Paiement reçu : faire le reçu</b>, coche ses pièces, ajoute-le au groupe.</li></ol></div>
+<div class="card soft"><p class="eyebrow">Une pré-inscription arrive</p><ol class="teamsteps"><li><b>Accueil</b> : touche <b>Envoyer l'accueil</b> (WhatsApp), puis <b>Basculer en zone d'appel</b>.</li><li><b>Appels</b> : appelle avec le script. Pas de réponse ? <b>✗ Pas de réponse</b> et choisis quand rappeler. À 4 tentatives : relance WhatsApp puis <b>Injoignable</b>.</li><li>Il est intéressé : <b>Intéressé : envoyer le dossier</b> (fiche, planning, prix, paiement Mixx ou bureau, localisation).</li><li><b>Dossier envoyé</b> : il finalise son inscription en ligne avec le lien du message. <b>Mixx à vérifier</b> : vérifie l'argent sur le téléphone de l'agence, puis <b>Paiement Mixx vérifié</b>. <b>Vient à l'agence</b> : quand il paie, <b>Paiement reçu</b>. Sans nouvelles après 3 jours : relance.</li><li>Le reçu s'ouvre déjà rempli : envoie-le, coche ses pièces, ajoute-le au groupe.</li></ol></div>
 <div class="card soft"><p class="eyebrow">Réserver une séance de conduite</p><ol class="teamsteps"><li>Vérifie que la 2e moitié est payée (<b>Paiements</b> → À relancer).</li><li><b>Planning conduite</b> : choisis le jour, puis l'élève sur un créneau libre.</li><li>Touche <b>Confirmer</b> : le message WhatsApp est prêt. La veille, touche <b>Rappel</b>.</li></ol></div>
 <div class="card soft"><p class="eyebrow">Mercredi : résultats du devoir</p><ol class="teamsteps"><li>Onglet <b>Devoirs</b> : le message de la semaine est déjà écrit.</li><li>Touche <b>Ouvrir WhatsApp avec le message</b> et choisis le groupe.</li></ol></div>
 <div class="card soft"><p class="eyebrow">Règles</p><ol class="teamsteps"><li>On ne supprime rien : une séance annulée passe en <b>Annulé</b>, un dossier qui s'arrête va dans <b>Archivés</b> avec son motif, un reçu faux se fait <b>Annuler</b> (avec la raison) puis on refait le bon.</li><li>Erreur de nom ou de numéro : <b>Modifier</b> sur la fiche de l'élève.</li><li>Jour férié ou fermeture : <b>Planning conduite</b> → le jour → « Fermer ce jour », puis <b>Prévenir</b> chaque élève.</li><li>Les créneaux du mois suivant se créent tout seuls le 24.</li></ol></div>
@@ -2202,7 +2247,17 @@ function init(root) {
       if (o) F.f.value = o.value || o.textContent;
       suggest();
     }
-    window.__sodafRcFill = (x) => { $("#sd-rcOut").hidden = true; form.reset(); fillFrom(x); $("#equipe-recu").scrollIntoView({ block: "start" }); };
+    window.__sodafRcFill = (x, o) => {
+      $("#sd-rcOut").hidden = true; form.reset(); fillFrom(x);
+      if (o) {
+        const op = [...F.f.options].find((q) => q.textContent === o.formation); if (op) F.f.value = op.value || op.textContent;
+        suggest();
+        const mr = form.querySelector('input[name=motif][value="' + o.motif + '"]'); if (mr && !mr.closest(".rcm").hidden) { mr.checked = true; suggest(); }
+        const md = form.querySelector('input[name=mode][value="' + o.mode + '"]'); if (md) md.checked = true;
+        if (o.note) $("#sd-rcNote").value = o.note;
+      }
+      $("#equipe-recu").scrollIntoView({ block: "start" });
+    };
     nameIn.addEventListener("input", () => {
       const list = (window.TEAM_ELEVES && window.TEAM_ELEVES()) || [];
       const x = list.find((y) => y.nom.toLowerCase() === nameIn.value.trim().toLowerCase());
@@ -2449,7 +2504,10 @@ function init(root) {
     const PRIXM = { "Permis B": "55 000 F la formation complète (formule courte 35 000 F, accélérée 75 000 F en 2 mois ou 80 000 F en 1 mois)", "Permis A": "30 000 F", "Pack A + B": "80 000 F", "Remise à niveau": "20 000 F", "Formation entreprise": "sur devis, selon le nombre de chauffeurs" };
     const jours = (d) => Math.floor((Date.now() - new Date(d)) / 864e5);
     const dosAge = (x) => jours(x.dossier_relance_le && x.dossier_relance_le > x.dossier_envoye_le ? x.dossier_relance_le : x.dossier_envoye_le);
-    const msgDossier = (x) => "Bonjour " + prenom(x) + " 😊\nComme promis, voici ton dossier d'inscription SODAF Auto-École.\n\n*TON DOSSIER N° " + x.id + "*\n• Formation : " + (x.formation || "à préciser") + "\n• Prix : " + (PRIXM[x.formation] || "voir autosodaf.com") + "\n• Droit d'inscription : 5 000 F" + (/Permis|Pack/.test(x.formation || "") ? "\n• Examen d'État : dépôt de 30 000 F pour l'inscription à l'examen final. Nous déposons ton dossier, puis l'État t'envoie un message avec le jour et le lieu de ton examen." : "") + "\n• Paiement en 2 fois : la moitié à l'inscription, le reste avant ta 1re séance de conduite.\n\n📄 Nos formations et tarifs (fiche SODAF) :\nhttps://autosodaf.com/fiche-renseignement-sodaf.pdf\n📅 Planning de la semaine :\nhttps://autosodaf.com/planning-semaine-sodaf.pdf\n\n🗂️ Pièces à préparer : acte de naissance, photocopie de la carte d'identité, 2 photos d'identité format passeport.\n\n💳 *Pour t'inscrire, 2 possibilités :*\n1. Au bureau, en espèces.\n2. À distance par Mixx by Yas (T-Money) : " + (CFG.mixx_numero ? "envoie au " + CFG.mixx_numero + (CFG.mixx_nom ? " (" + CFG.mixx_nom + ")" : "") + " avec le motif « SODAF " + x.id + " », puis envoie-nous la capture ici." : "réponds « Mixx » et nous t'envoyons le numéro de paiement.") + "\nDès réception, tu reçois ton reçu officiel sur WhatsApp.\n\n📍 Nous trouver : " + (CFG.maps_lien || "412 Avenue Akei, Tokoin Tamé") + "\n412 Avenue Akei, Tokoin Tamé (en face de la caisse)\n🕗 Lun – ven 8 h – 12 h 30 et 14 h 30 – 18 h · Sam 8 h – 12 h\n\nDes questions ? Réponds simplement à ce message.\nL'équipe SODAF · L'art de conduire, la force de réussir.";
+    const msgDossier = (x) => "Bonjour " + prenom(x) + " 😊\nComme promis, voici ton dossier d'inscription SODAF Auto-École.\n\n*TON DOSSIER N° " + x.id + "*\n• Formation : " + (x.formation || "à préciser") + "\n• Prix : " + (PRIXM[x.formation] || "voir autosodaf.com") + "\n• Droit d'inscription : 5 000 F" + (/Permis|Pack/.test(x.formation || "") ? "\n• Examen d'État : dépôt de 30 000 F pour l'inscription à l'examen final. Nous déposons ton dossier, puis l'État t'envoie un message avec le jour et le lieu de ton examen." : "") + "\n• Paiement en 2 fois : la moitié à l'inscription, le reste avant ta 1re séance de conduite.\n\n📄 Nos formations et tarifs (fiche SODAF) :\nhttps://autosodaf.com/fiche-renseignement-sodaf.pdf\n📅 Planning de la semaine :\nhttps://autosodaf.com/planning-semaine-sodaf.pdf\n\n🗂️ Pièces à préparer : acte de naissance, photocopie de la carte d'identité, 2 photos d'identité format passeport.\n\n✍️ *Finalise ton inscription en ligne (2 minutes) :*\n" + inscLink(x) + "\nTu choisis ta formule, puis tu paies à l'agence ou par Mixx by Yas. Tu reçois ensuite ton reçu officiel sur WhatsApp.\n\n📍 Nous trouver : " + (CFG.maps_lien || "412 Avenue Akei, Tokoin Tamé") + "\n412 Avenue Akei, Tokoin Tamé (en face de la caisse)\n🕗 Lun – ven 8 h – 12 h 30 et 14 h 30 – 18 h · Sam 8 h – 12 h\n\nDes questions ? Réponds simplement à ce message.\nL'équipe SODAF · L'art de conduire, la force de réussir.";
+    const newJeton = () => { const a = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789", r = new Uint32Array(14); crypto.getRandomValues(r); return [...r].map((n) => a[n % a.length]).join(""); };
+    const jetonOf = (x) => x.jeton || (x._jeton = x._jeton || newJeton());
+    const inscLink = (x) => "https://autosodaf.com/#inscrire-" + btoa(unescape(encodeURIComponent(JSON.stringify({ i: x.id, j: jetonOf(x), p: prenom(x), f: x.formation || "", m: CFG.mixx_numero || "", n: CFG.mixx_nom || "" })))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
     const msgRelDos = (x) => "Bonjour " + prenom(x) + ", c'est le secrétariat de SODAF Auto-École. As-tu pu regarder ton dossier d'inscription (n° " + x.id + ") ? Si tu as une question sur le prix, les horaires ou le paiement, on est là. Tu peux payer au bureau ou par Mixx by Yas, et commencer le code dès la semaine prochaine 🚗";
     const PRIX = { "Permis B": "55 000 F la formation complète (formule courte dès 35 000 F, accélérée 75 000 ou 80 000 F)", "Permis A": "30 000 F", "Pack A + B": "80 000 F", "Remise à niveau": "20 000 F", "Formation entreprise": "sur devis" };
     const PIECES = [["acte", "Acte de naissance"], ["cni", "Photocopie carte d'identité"], ["photos", "2 photos passeport"], ["examen", "Dépôt examen 30 000 F payé"], ["deja", "A déjà conduit"]];
@@ -2481,7 +2539,10 @@ function init(root) {
     async function loadEleves(silent) {
       const r = await run(() => DB.q("eleves?select=*&order=cree_le.desc&limit=2000"));
       if (!r) return; eleves = r;
-      const nb = eleves.filter((x) => x.statut === "Nouveau").length;
+      const wb = await run(() => DB.q("inscriptions_web?select=*&order=le.desc&limit=2000"));
+      const W = {}; (wb || []).forEach((w) => { if (!W[w.eleve_id]) W[w.eleve_id] = w; });
+      eleves.forEach((x) => (x.web = W[x.id] && W[x.id].statut === "Nouveau" ? W[x.id] : null));
+      const nb = eleves.filter((x) => x.statut === "Nouveau").length + eleves.filter((x) => x.web && x.web.mode === "mixx" && etapeOf(x) === "dossier").length;
       $("#sd-cntNew").textContent = nb ? nb : "";
       renderList();
       fillEleveSelect();
@@ -2489,7 +2550,7 @@ function init(root) {
     function groupsFor(stage, list) {
       if (stage === "accueil") return [["À accueillir", list.slice().sort((a, b) => (a.cree_le < b.cree_le ? -1 : 1))]];
       if (stage === "appels") return [["À appeler · 1er appel", list.filter((x) => !x.rappel), "first"], ["Rappeler le matin", list.filter((x) => x.rappel === "matin"), "matin"], ["Rappeler l'après-midi", list.filter((x) => x.rappel === "apres-midi"), "am"]];
-      if (stage === "dossier") return [["À relancer · 3 jours et plus", list.filter((x) => dosAge(x) >= 3), "late"], ["En réflexion", list.filter((x) => dosAge(x) < 3), "wait"]];
+      if (stage === "dossier") return [["Paiement Mixx à vérifier", list.filter((x) => x.web && x.web.mode === "mixx"), "verif"], ["Viendra payer à l'agence", list.filter((x) => x.web && x.web.mode === "agence"), "agence"], ["À relancer · 3 jours et plus", list.filter((x) => !x.web && dosAge(x) >= 3), "late"], ["En réflexion", list.filter((x) => !x.web && dosAge(x) < 3), "wait"]];
       if (stage === "formation") return ["Inscrit", "En formation", "Permis obtenu"].map((s) => [s, list.filter((x) => x.statut === s)]);
       return ["Plus tard", "Injoignable", "Rétractation", "Faux numéro"].map((m) => [m, list.filter((x) => x.archive_motif === m)]).concat([["Sans motif", list.filter((x) => !x.archive_motif)]]);
     }
@@ -2497,13 +2558,13 @@ function init(root) {
       const q = $("#sd-pcQ").value.trim().toLowerCase();
       $$("#sd-pcStages button").forEach((b) => { const n = eleves.filter((x) => etapeOf(x) === b.dataset.st).length; b.querySelector("em").textContent = n; b.setAttribute("aria-selected", b.dataset.st === pcStage); });
       const list = eleves.filter((x) => etapeOf(x) === pcStage && (!q || (x.nom + " " + (x.telephone || "") + " " + x.id).toLowerCase().includes(q)));
-      const fold = foldState(), TAG = { first: "1er appel", matin: "Matin", am: "Après-midi", late: "À relancer", wait: "En réflexion" };
+      const fold = foldState(), TAG = { first: "1er appel", matin: "Matin", am: "Après-midi", late: "À relancer", wait: "En réflexion", verif: "Mixx à vérifier", agence: "Vient à l'agence" };
       const isOpen = (g) => !["matin", "am"].includes(g[2]) || !!q || fold[g[2]];
       const html = groupsFor(pcStage, list).filter((g) => g[1].length).map((g) => (g[2] && ["matin", "am"].includes(g[2])
         ? '<button type="button" class="pc-gh pc-fold g-' + g[2] + '" data-fold="' + g[2] + '" aria-expanded="' + isOpen(g) + '"><i aria-hidden="true">▸</i>' + esc(g[0]) + " <span>" + g[1].length + "</span></button>"
         : '<p class="pc-gh' + (g[2] ? " g-" + g[2] : "") + '">' + esc(g[0]) + " <span>" + g[1].length + "</span></p>") + (isOpen(g) ? g[1].map((x) =>
         '<button type="button" class="pc-item' + (g[2] ? " i-" + g[2] : "") + (x.id === pcSel ? " on" : "") + '" data-id="' + x.id + '"><b>' + esc(x.nom) + (g[2] ? ' <em class="pc-tag t-' + g[2] + '">' + TAG[g[2]] + "</em>" : "") + '</b><span>' + esc((x.telephone || "").replace("+228", "+228 ")) + (x.formation ? " · " + esc(x.formation) : "") + "</span><small>N° " + x.id + " · " +
-        (pcStage === "accueil" ? (x.accueil_le ? "accueil envoyé ✓" : "arrivé " + ago(x.cree_le)) : pcStage === "appels" ? (x.appels ? x.appels + "X sans réponse" : "pas encore appelé") : pcStage === "dossier" ? "dossier envoyé " + ago(x.dossier_envoye_le) + (x.dossier_relance_le ? " · relancé " + ago(x.dossier_relance_le) : "") : pcStage === "archives" ? "archivé " + (x.archive_le ? ago(x.archive_le) : "") : esc(x.statut)) + "</small></button>").join("") : "")).join("");
+        (pcStage === "accueil" ? (x.accueil_le ? "accueil envoyé ✓" : "arrivé " + ago(x.cree_le)) : pcStage === "appels" ? (x.appels ? x.appels + "X sans réponse" : "pas encore appelé") : pcStage === "dossier" ? (x.web ? (x.web.mode === "mixx" ? "a payé " + F(x.web.a_payer) + " par Mixx " : "paiera " + F(x.web.a_payer) + " à l'agence · ") + ago(x.web.le) : "dossier envoyé " + ago(x.dossier_envoye_le)) + (x.dossier_relance_le ? " · relancé " + ago(x.dossier_relance_le) : "") : pcStage === "archives" ? "archivé " + (x.archive_le ? ago(x.archive_le) : "") : esc(x.statut)) + "</small></button>").join("") : "")).join("");
       $("#sd-pcList").innerHTML = html || '<p class="tm-empty">' + ({ accueil: "Aucune nouvelle pré-inscription. Elles arrivent ici toutes seules depuis le site.", appels: "Personne à appeler pour l'instant.", dossier: "Aucun dossier en attente. Après un appel, « Intéressé : envoyer le dossier » les range ici.", formation: "Aucun élève en formation pour l'instant.", archives: "Aucun dossier archivé." }[pcStage]) + "</p>";
       if (pcSel && !list.some((x) => x.id === pcSel)) pcSel = null;
       if (!pcSel && isWide()) { const first = $("#sd-pcList .pc-item"); if (first) { pcSel = +first.dataset.id; first.classList.add("on"); } }
@@ -2524,7 +2585,7 @@ function init(root) {
       if (!ok) return false;
       Object.assign(x, body);
       if (log) await addSuivi(x, log[0], log[1]);
-      $("#sd-cntNew").textContent = eleves.filter((y) => y.statut === "Nouveau").length || "";
+      $("#sd-cntNew").textContent = (eleves.filter((y) => y.statut === "Nouveau").length + eleves.filter((y) => y.web && y.web.mode === "mixx" && etapeOf(y) === "dossier").length) || "";
       return true;
     }
     async function addSuivi(x, type, note) { await run(() => DB.q("suivi", { method: "POST", body: { eleve_id: x.id, type, note: note || null }, prefer: "return=minimal" })); }
@@ -2545,7 +2606,7 @@ function init(root) {
       if (!x) { box.innerHTML = '<div class="pc-none"><b>Choisis un dossier dans la liste</b><span>Sa fiche, les messages prêts et les actions s\'affichent ici.</span></div>'; return; }
       const st = etapeOf(x), n = waNum(x.telephone), wa = (t) => "https://wa.me/228" + n + "?text=" + encodeURIComponent(t);
       const head = '<button type="button" class="linkbtn pc-back" data-a="back">← Retour à la liste</button><div class="pc-head"><div><p class="eyebrow">' + { accueil: "Accueil", appels: "Zone d'appel", dossier: "Dossier envoyé · en réflexion", formation: "En formation", archives: "Archivé" }[st] + '</p><h3>' + esc(x.nom) + ' <span>| ' + x.id + "</span></h3></div>" +
-        ({ accueil: '<button class="btn btn-blue btn-sm" type="button" data-a="toCall">Basculer en zone d\'appel →</button>', appels: '<button class="btn btn-green btn-sm" type="button" data-a="prepDossier">Intéressé : envoyer le dossier →</button>', dossier: '<button class="btn btn-green btn-sm" type="button" data-a="enroll">Paiement reçu : faire le reçu</button>', formation: '<button class="btn btn-green btn-sm" type="button" data-a="rc">Faire un reçu</button>', archives: '<button class="btn btn-blue btn-sm" type="button" data-a="revive">Ressortir : remettre en appel</button>' }[st]) + "</div>";
+        ({ accueil: '<button class="btn btn-blue btn-sm" type="button" data-a="toCall">Basculer en zone d\'appel →</button>', appels: '<button class="btn btn-green btn-sm" type="button" data-a="prepDossier">Intéressé : envoyer le dossier →</button>', dossier: '<button class="btn btn-green btn-sm" type="button" data-a="enroll">' + (x.web && x.web.mode === "mixx" ? "Paiement Mixx vérifié : faire le reçu" : "Paiement reçu : faire le reçu") + "</button>", formation: '<button class="btn btn-green btn-sm" type="button" data-a="rc">Faire un reçu</button>', archives: '<button class="btn btn-blue btn-sm" type="button" data-a="revive">Ressortir : remettre en appel</button>' }[st]) + "</div>";
       const info = '<div class="pc-info"><div><span>N° dossier</span><b>' + x.id + '</b></div><div><span>Téléphone</span><b>' + (n ? '<a href="tel:+228' + n + '">+228 ' + n.replace(/(\d{2})(?=\d)/g, "$1 ") + "</a>" : "—") + '</b></div><div><span>Formation</span><b>' + esc(x.formation || "—") + '</b></div><div><span>Quartier</span><b>' + esc(x.quartier || "—") + "</b></div>" +
         '<div><span>Préfère</span><b>' + esc(x.creneau_prefere || "—") + '</b></div><div><span>Paiement</span><b>' + esc(x.paiement_prefere || "—") + '</b></div><div><span>Arrivé</span><b>' + new Date(x.cree_le).toLocaleDateString("fr-FR") + " · " + (x.source === "site" ? "site" : "bureau") + "</b></div>" +
         '<div><span>Statut</span><b>' + (st === "formation" ? '<select data-a="statut">' + ETAPES.formation.map((t) => "<option" + (t === x.statut ? " selected" : "") + ">" + t + "</option>").join("") + "</select>" : esc(x.statut === "Abandon" ? "Archivé" + (x.archive_motif ? " · " + x.archive_motif : "") : x.statut)) + "</b></div>" +
@@ -2567,9 +2628,16 @@ function init(root) {
           '<div class="pc-block"><div class="pc-bh"><b>Script d\'appel</b><span class="tm-note" style="margin:0!important">' + esc(x.formation || "") + '</span></div><div class="pc-script">' + script(x) + "</div></div>";
       } else if (st === "dossier") {
         const age = jours(x.dossier_envoye_le), late = dosAge(x) >= 3;
-        body = '<p class="pc-proto">Protocole : l\'élève réfléchit. Relance-le après 3 jours sans nouvelles. Dès qu\'il paie (au bureau ou capture Mixx vérifiée sur le téléphone de l\'agence) : « Paiement reçu : faire le reçu ».</p>' +
+        const w = x.web;
+        const webBlock = w ? '<div class="pc-block pc-web"><div class="pc-bh"><b>Inscription en ligne</b><span class="pc-ok">reçue ' + ago(w.le) + "</span></div>" +
+          (w.mode === "mixx" ? '<div class="pc-alert pc-verif"><b>À vérifier sur le téléphone de l\'agence :</b> un paiement Mixx by Yas de <b>' + F(w.a_payer) + "</b>" + (w.mixx_tel ? " depuis le <b>" + esc(w.mixx_tel.replace("+228", "+228 ")) + "</b>" : "") + (w.mixx_ref ? ", référence <b>" + esc(w.mixx_ref) + "</b>" : "") + ", motif « SODAF " + x.id + " ». S'il est bien arrivé : « Paiement Mixx vérifié ». Sinon : « Paiement introuvable ».</div>" : '<p class="tm-note" style="margin:0 0 10px!important">Il a choisi de payer <b>' + F(w.a_payer) + "</b> en espèces à l'agence. Quand il vient : « Paiement reçu : faire le reçu ».</p>") +
+          '<div class="pc-info"><div><span>Formule</span><b>' + esc(w.formule) + '</b></div><div><span>Prix</span><b>' + F(w.prix) + '</b></div><div><span>Il paie</span><b>' + (w.paiement === "total" ? "Tout" : "La moitié") + " · " + F(w.a_payer) + '</b></div><div><span>Mode</span><b>' + (w.mode === "mixx" ? "Mixx by Yas" : "À l'agence") + '</b></div>' +
+          '<div><span>Nom et prénoms</span><b>' + esc(w.nom + " " + w.prenoms) + '</b></div><div><span>Naissance</span><b>' + (w.naissance_date ? new Date(w.naissance_date + "T12:00:00").toLocaleDateString("fr-FR") : "—") + (w.naissance_lieu ? " · " + esc(w.naissance_lieu) : "") + '</b></div><div><span>Quartier</span><b>' + esc(w.quartier || "—") + '</b></div><div><span>Profession</span><b>' + esc(w.profession || "—") + "</b></div>" +
+          '<div class="wide"><span>Personne à prévenir</span><b>' + esc([w.urgence_nom, w.urgence_tel ? w.urgence_tel.replace("+228", "+228 ") : ""].filter(Boolean).join(" · ") || "—") + "</b></div></div>" +
+          (w.mode === "mixx" ? '<div class="tm-formact"><button class="btn btn-sm pc-red" type="button" data-a="webReject">Paiement introuvable</button></div>' : "") + "</div>" : "";
+        body = w ? webBlock : webBlock + '<p class="pc-proto">Protocole : l\'élève réfléchit. Relance-le après 3 jours sans nouvelles. Dès qu\'il paie (au bureau ou capture Mixx vérifiée sur le téléphone de l\'agence) : « Paiement reçu : faire le reçu ».</p>' +
           '<div class="pc-block"><div class="pc-bh"><b>Dossier envoyé</b><span class="pc-ok">' + (age === 0 ? "aujourd'hui" : "il y a " + age + (age > 1 ? " jours" : " jour")) + (x.dossier_relance_le ? " · relancé " + ago(x.dossier_relance_le) : "") + "</span></div>" +
-          (late ? '<div class="pc-alert" style="margin-top:0"><b>Pas de nouvelles depuis ' + dosAge(x) + ' jours.</b> Envoie la relance, ou appelle-le.<div class="tm-formact">' + (n ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-a="relDossier" href="' + wa(msgRelDos(x)) + '">Envoyer la relance ↗</a>' : "") + "</div></div>" : (n ? '<div class="tm-formact"><a class="btn btn-line btn-sm" target="_blank" rel="noopener" data-a="relDossier" href="' + wa(msgRelDos(x)) + '">Relancer quand même ↗</a></div>' : "")) +
+          (late && !w ? '<div class="pc-alert" style="margin-top:0"><b>Pas de nouvelles depuis ' + dosAge(x) + ' jours.</b> Envoie la relance, ou appelle-le.<div class="tm-formact">' + (n ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-a="relDossier" href="' + wa(msgRelDos(x)) + '">Envoyer la relance ↗</a>' : "") + "</div></div>" : (n ? '<div class="tm-formact"><a class="btn btn-line btn-sm" target="_blank" rel="noopener" data-a="relDossier" href="' + wa(msgRelDos(x)) + '">Relancer quand même ↗</a></div>' : "")) +
           '<details class="pc-more"><summary>Revoir ou renvoyer le dossier</summary><textarea id="sd-pcDosMsg" rows="14">' + esc(msgDossier(x)) + '</textarea><div class="tm-formact">' + (n ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-a="resendDossier" href="' + wa(msgDossier(x)) + '">Renvoyer le dossier ↗</a>' : "") + "</div></details></div>";
       } else if (st === "formation") {
         body = '<div class="pc-block"><div class="pc-bh"><b>Paiements</b></div><div id="sd-pcPay"><p class="tm-note">Chargement…</p></div></div><div class="pc-block"><div class="pc-bh"><b>Conduite</b></div><div id="sd-pcDrive"><p class="tm-note">Chargement…</p></div></div>';
@@ -2607,12 +2675,21 @@ function init(root) {
       else if (k === "callOk") { const note = $("#sd-pcCallNote").value.trim(); await addSuivi(x, "Appel réussi", note); toast("Appel noté"); renderDetail(); }
       else if (k === "callKo") { const note = $("#sd-pcCallNote").value.trim(); if (await patchEl(x, { appels: Math.min((x.appels || 0) + 1, 20) }, "Tentative notée (" + ((x.appels || 0) + 1) + "X)", ["Appel sans réponse", note])) renderList(); }
       else if (k === "prepDossier") { const b = $("#sd-pcDos"); b.hidden = false; b.scrollIntoView({ block: "center" }); $("#sd-pcDosMsg").focus(); }
-      else if (k === "sendDossier") { a.href = "https://wa.me/228" + waNum(x.telephone) + "?text=" + encodeURIComponent($("#sd-pcDosMsg").value); if (await patchEl(x, { dossier_envoye_le: new Date().toISOString(), dossier_relance_le: null, rappel: null }, "Dossier envoyé : il passe en réflexion", ["Étape", "Dossier envoyé (fiche, planning, prix, paiement)"])) nextAfter(x); }
-      else if (k === "resendDossier") { a.href = "https://wa.me/228" + waNum(x.telephone) + "?text=" + encodeURIComponent($("#sd-pcDosMsg").value); await patchEl(x, { dossier_envoye_le: new Date().toISOString(), dossier_relance_le: null }, "Dossier renvoyé", ["Étape", "Dossier renvoyé"]); renderList(); }
+      else if (k === "sendDossier") { a.href = "https://wa.me/228" + waNum(x.telephone) + "?text=" + encodeURIComponent($("#sd-pcDosMsg").value); if (await patchEl(x, { dossier_envoye_le: new Date().toISOString(), dossier_relance_le: null, rappel: null, jeton: jetonOf(x) }, "Dossier envoyé : il passe en réflexion", ["Étape", "Dossier envoyé (fiche, planning, prix, paiement)"])) nextAfter(x); }
+      else if (k === "resendDossier") { a.href = "https://wa.me/228" + waNum(x.telephone) + "?text=" + encodeURIComponent($("#sd-pcDosMsg").value); await patchEl(x, { dossier_envoye_le: new Date().toISOString(), dossier_relance_le: null, jeton: jetonOf(x) }, "Dossier renvoyé", ["Étape", "Dossier renvoyé"]); renderList(); }
       else if (k === "relDossier") { if (await patchEl(x, { dossier_relance_le: new Date().toISOString() }, "Relance notée", ["Relance envoyée", "Relance du dossier"])) renderList(); }
       else if (k === "backCall") { if (await patchEl(x, { dossier_envoye_le: null, dossier_relance_le: null }, "Dossier remis en zone d'appel", ["Étape", "Revenu en zone d'appel"])) nextAfter(x); }
       else if (k === "relance") { await addSuivi(x, "Relance envoyée"); toast("Relance notée"); }
-      else if (k === "enroll") { if (await patchEl(x, { statut: "Inscrit", rappel: null }, "Inscrit : fais le reçu", ["Étape", "Inscrit"])) { renderList(); if (window.__sodafRcFill) { sub("paiements"); window.__sodafRcFill(x); } } }
+      else if (k === "enroll") {
+        const w = x.web;
+        if (w) await run(() => DB.q("inscriptions_web?id=eq." + w.id, { method: "PATCH", body: { statut: "Vérifié" }, prefer: "return=minimal" }));
+        const extra = w && !x.quartier && w.quartier ? { quartier: w.quartier } : {};
+        if (await patchEl(x, Object.assign({ statut: "Inscrit", rappel: null }, extra), "Inscrit : fais le reçu", ["Étape", w ? "Inscrit (inscription en ligne, " + (w.mode === "mixx" ? "Mixx vérifié" : "payé à l'agence") + ")" : "Inscrit"])) {
+          x.web = null; renderList();
+          if (window.__sodafRcFill) { sub("paiements"); window.__sodafRcFill(x, w ? { formation: w.formule, motif: w.paiement === "total" ? "ins-full" : "ins-half", mode: w.mode === "mixx" ? "Mixx by Yas (T-Money)" : "Espèces", note: w.mode === "mixx" ? "Mixx" + (w.mixx_ref ? " réf. " + w.mixx_ref : "") + (w.mixx_tel ? " depuis " + w.mixx_tel : "") : "" } : null); }
+        }
+      }
+      else if (k === "webReject") { const w = x.web; if (!w) return; confirmBtn(a, async () => { const ok = await run(() => DB.q("inscriptions_web?id=eq." + w.id, { method: "PATCH", body: { statut: "Rejeté" }, prefer: "return=minimal" }), "Paiement marqué introuvable"); if (ok) { await addSuivi(x, "Note", "Paiement Mixx introuvable (" + F(w.a_payer) + (w.mixx_ref ? ", réf. " + w.mixx_ref : "") + "). Contacter l'élève."); x.web = null; renderList(); } }); }
       else if (k === "rc") { if (window.__sodafRcFill) { sub("paiements"); window.__sodafRcFill(x); } }
       else if (k === "revive") { if (await patchEl(x, { statut: "Contacté", archive_motif: null, archive_le: null, appels: 0, rappel: null, dossier_envoye_le: null, dossier_relance_le: null }, "Dossier remis en appel", ["Étape", "Ressorti des archives"])) nextAfter(x); }
       else if (k === "note") { const v = $("#sd-pcNote").value.trim(); if (!v) return; await addSuivi(x, "Note", v); toast("Note ajoutée"); renderDetail(); }
@@ -2809,7 +2886,8 @@ function init(root) {
       if (vieux.length) w.push(["🔴", vieux.length + (vieux.length > 1 ? " pré-inscriptions" : " pré-inscription") + " sans accueil depuis plus de 2 jours", vieux.slice(0, 4).map((x) => x.nom).join(", ")]);
       const nouv = eleves.filter((x) => x.statut === "Nouveau").length - vieux.length;
       if (nouv > 0) w.push(["🟡", nouv + (nouv > 1 ? " nouvelles pré-inscriptions" : " nouvelle pré-inscription") + " à accueillir", "Secrétariat → Parcours élèves → Accueil"]);
-      const aRel = eleves.filter((x) => etapeOf(x) === "dossier" && dosAge(x) >= 3).length; if (aRel) w.push(["🟠", aRel + (aRel > 1 ? " dossiers envoyés à relancer" : " dossier envoyé à relancer") + " (3 jours sans nouvelles)", "Secrétariat → Parcours élèves → Dossier envoyé"]);
+      const aVer = eleves.filter((x) => x.web && x.web.mode === "mixx" && etapeOf(x) === "dossier").length; if (aVer) w.push(["🔴", aVer + (aVer > 1 ? " paiements Mixx à vérifier" : " paiement Mixx à vérifier"), "Secrétariat → Parcours élèves → Dossier envoyé"]);
+      const aRel = eleves.filter((x) => etapeOf(x) === "dossier" && !x.web && dosAge(x) >= 3).length; if (aRel) w.push(["🟠", aRel + (aRel > 1 ? " dossiers envoyés à relancer" : " dossier envoyé à relancer") + " (3 jours sans nouvelles)", "Secrétariat → Parcours élèves → Dossier envoyé"]);
       const aApp = eleves.filter((x) => etapeOf(x) === "appels").length; if (aApp) w.push(["🟡", aApp + (aApp > 1 ? " élèves à appeler" : " élève à appeler"), "Secrétariat → Parcours élèves → Appels"]);
       const vieuxDus = dus.filter((p) => Date.now() - dOf(p.jour) > 30 * 864e5);
       if (vieuxDus.length) w.push(["🔴", vieuxDus.length + (vieuxDus.length > 1 ? " élèves doivent" : " élève doit") + " encore payer depuis plus d'un mois", vieuxDus.slice(0, 4).map((p) => p.eleve_nom + " (" + F(p.reste) + ")").join(", ")]);
@@ -3039,6 +3117,87 @@ function init(root) {
   pgrid.addEventListener("click", (e) => { const c = e.target.closest(".pcard"); if (c && prev.checked) c.classList.toggle("shown"); });
   renderSigns();
 
+
+  // ---------- Page publique : finaliser son inscription (lien personnel envoyé par le secrétariat) ----------
+  const INSC_FORMULES = {
+    "Permis B": [["Formation complète (permis B)", 55000, "Sur 3 mois · 12 séances de conduite d'1 h"], ["Formation accélérée 2 mois (permis B)", 75000, "12 séances, planning plus serré"], ["Formation accélérée 1 mois (permis B)", 80000, "12 séances en 1 mois"], ["Formule courte (permis B)", 35000, "Tu sais déjà tenir un volant · 6 séances"]],
+    "Permis A": [["Permis A (moto)", 30000, "Code complet et environ 6 séances de moto"]],
+    "Pack A + B": [["Pack A + B (moto et voiture)", 80000, "Formation complète voiture + permis moto"]],
+    "Remise à niveau": [["Remise à niveau", 20000, "4 séances d'1 h, évaluation comprise"]],
+  };
+  const MAPS = "https://www.google.com/maps/search/?api=1&query=6.168785%2C1.225462";
+  const fmtF = (n) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " F";
+  const escI = (t) => String(t == null ? "" : t).replace(/[<>&"]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" }[c]));
+  function inscDecode(str) { return JSON.parse(decodeURIComponent(escape(atob(str.replace(/-/g, "+").replace(/_/g, "/"))))); }
+  function inscFindUs(aPayer, id) {
+    return '<div class="insc-find"><div class="insc-map"><iframe title="Plan : SODAF Auto-École" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=6.168785,1.225462&z=17&output=embed"></iframe></div>' +
+      '<div class="insc-addr"><p class="eyebrow">Nous trouver</p><h3>SODAF Auto-École</h3><p class="insc-big">412 Avenue Akei, Tokoin Tamé, Lomé</p><p><b>Repère :</b> en face de la caisse.</p>' +
+      '<a class="btn btn-green" href="' + MAPS + '" target="_blank" rel="noopener">Ouvrir l\'itinéraire dans Google Maps</a>' +
+      '<ul class="insc-list"><li><b>Bureau</b> : lundi – vendredi 8 h – 12 h 30 et 14 h 30 – 18 h · samedi 8 h – 12 h</li><li><b>Téléphone et WhatsApp</b> : <a href="tel:+22872544166">+228 72 54 41 66</a></li>' +
+      (aPayer ? "<li><b>À apporter</b> : " + fmtF(aPayer) + " en espèces, ton acte de naissance, une photocopie de ta carte d'identité et 2 photos d'identité</li>" : "") +
+      (id ? "<li><b>Ton n° de dossier</b> : " + id + " (donne-le au secrétariat)</li>" : "") + '</ul><a class="btn btn-wa btn-sm" target="_blank" rel="noopener" href="' + WA + "?text=" + encodeURIComponent("Bonjour SODAF, je suis en route pour l'agence (dossier n° " + (id || "") + ").") + '">Prévenir l\'agence sur WhatsApp</a></div></div>';
+  }
+  function inscPage(str) {
+    const box = $("#sd-insc");
+    let d; try { d = inscDecode(str); if (!d.i || !d.j) throw 0; } catch (e) { box.innerHTML = '<div class="card insc-msg"><h3>Ce lien est incomplet</h3><p>Demande au secrétariat SODAF de te le renvoyer sur WhatsApp : +228 72 54 41 66.</p><a class="btn btn-wa" href="' + WA + '" target="_blank" rel="noopener">Écrire au secrétariat</a></div>' + inscFindUs(0, 0); return; }
+    const forms = INSC_FORMULES[d.f], done = S.get("insc" + d.i, null);
+    if (!forms) { box.innerHTML = '<div class="card insc-msg"><h3>Bonjour ' + escI(d.p) + '</h3><p>Pour ta formation (' + escI(d.f || "à préciser") + '), le secrétariat prépare un devis avec toi. Écris-nous sur WhatsApp ou passe à l\'agence.</p><a class="btn btn-wa" href="' + WA + '" target="_blank" rel="noopener">Écrire au secrétariat</a></div>' + inscFindUs(0, d.i); return; }
+    const exam = /Permis|Pack/.test(d.f), mixxOk = !!d.m;
+    const show = (res) => {
+      box.innerHTML = res.mode === "agence"
+        ? '<div class="card insc-ok"><p class="eyebrow">Inscription enregistrée · dossier n° ' + d.i + '</p><h3>Merci ' + escI(d.p) + ', nous t\'attendons à l\'agence !</h3><p>Viens avec <b>' + fmtF(res.a) + '</b> en espèces et tes papiers. Tu repars avec ton reçu officiel.</p><button class="linkbtn" type="button" id="sd-inRedo">Modifier mon inscription</button></div>' + inscFindUs(res.a, d.i)
+        : '<div class="card insc-ok"><p class="eyebrow">Paiement envoyé · dossier n° ' + d.i + '</p><h3>Merci ' + escI(d.p) + ' !</h3><p>Le secrétariat vérifie ton paiement Mixx by Yas de <b>' + fmtF(res.a) + '</b> et t\'envoie ton <b>reçu officiel sur WhatsApp</b> (aux heures de bureau). Pense à apporter tes papiers à l\'agence : acte de naissance, photocopie de la carte d\'identité, 2 photos d\'identité.</p><button class="linkbtn" type="button" id="sd-inRedo">Modifier mon inscription</button></div>' + inscFindUs(0, d.i);
+      $("#sd-inRedo").addEventListener("click", () => { S.set("insc" + d.i, null); inscPage(str); });
+      window.scrollTo({ top: Math.max(0, box.getBoundingClientRect().top + window.scrollY - 90) });
+    };
+    if (done) { show(done); return; }
+    box.innerHTML = '<form class="insc-form" id="sd-inForm" novalidate>' +
+      '<div class="insc-hello"><p class="eyebrow">Dossier n° ' + d.i + ' · ' + escI(d.f) + '</p><h2>Bonjour ' + escI(d.p) + ' 👋</h2><p>Trois petites étapes et ton inscription est faite.</p></div>' +
+      '<fieldset class="insc-step"><legend><i>1</i>Ta formule</legend><div class="insc-cards">' + forms.map((f, k) => '<label class="rcm' + (k ? "" : " on") + '"><input type="radio" name="inF" value="' + k + '"' + (k ? "" : " checked") + '><span><b>' + escI(f[0].replace(/ \(permis B\)$/, "")) + "</b><small>" + escI(f[2]) + "</small></span><em>" + fmtF(f[1]) + "</em></label>").join("") + "</div>" +
+      '<div class="insc-cards insc-two"><label class="rcm on"><input type="radio" name="inP" value="moitie" checked><span><b>Je paie la moitié maintenant</b><small>Le reste avant ma 1re séance de conduite</small></span><em data-p="moitie"></em></label><label class="rcm"><input type="radio" name="inP" value="total"><span><b>Je paie tout maintenant</b><small>Formation soldée, plus rien à payer</small></span><em data-p="total"></em></label></div>' +
+      '<p class="insc-sum" id="sd-inSum"></p></fieldset>' +
+      '<fieldset class="insc-step"><legend><i>2</i>Tes informations</legend><div class="insc-grid">' +
+      '<div class="field"><label for="sd-inNom">Nom</label><input id="sd-inNom" autocomplete="family-name" maxlength="60"></div><div class="field"><label for="sd-inPre">Prénoms</label><input id="sd-inPre" autocomplete="given-name" maxlength="80" value="' + escI(d.p) + '"></div>' +
+      '<div class="field"><label for="sd-inDn">Date de naissance</label><input id="sd-inDn" type="date" max="' + new Date().toISOString().slice(0, 10) + '"></div><div class="field"><label for="sd-inLn">Lieu de naissance</label><input id="sd-inLn" maxlength="80"></div>' +
+      '<div class="field"><label for="sd-inQ">Quartier</label><input id="sd-inQ" maxlength="80" placeholder="Ex. Bè, Adidogomé"></div><div class="field"><label for="sd-inPro">Profession</label><input id="sd-inPro" maxlength="80" placeholder="Ex. étudiant, commerçante"></div>' +
+      '<div class="field"><label for="sd-inUn">Personne à prévenir en cas d\'urgence</label><input id="sd-inUn" maxlength="80" placeholder="Nom"></div><div class="field"><label for="sd-inUt">Son téléphone</label><div class="tel"><span>+228</span><input id="sd-inUt" inputmode="numeric" maxlength="11" placeholder="90 00 00 00"></div></div>' +
+      "</div></fieldset>" +
+      '<fieldset class="insc-step"><legend><i>3</i>Comment veux-tu payer ?</legend><div class="insc-cards insc-two">' +
+      '<label class="rcm on"><input type="radio" name="inM" value="agence" checked><span><b>À l\'agence</b><small>En espèces, au 412 Avenue Akei, Tokoin Tamé</small></span></label>' +
+      '<label class="rcm' + (mixxOk ? "" : " off") + '"><input type="radio" name="inM" value="mixx"' + (mixxOk ? "" : " disabled") + '><span><b>Par Mixx by Yas (T-Money)</b><small>' + (mixxOk ? "Depuis ton téléphone, sans te déplacer" : "Bientôt disponible : pour l'instant, paie à l'agence") + "</small></span></label></div>" +
+      '<div class="insc-mixx" id="sd-inMixx" hidden><ol><li>Sur ton téléphone, envoie <b id="sd-inAmt"></b> par Mixx by Yas au <b>' + escI(d.m) + "</b>" + (d.n ? " (" + escI(d.n) + ")" : "") + ".</li><li>Motif : <b>SODAF " + d.i + "</b></li><li>Écris ci-dessous le numéro qui a payé et la référence du SMS de confirmation.</li></ol>" +
+      '<div class="insc-grid"><div class="field"><label for="sd-inMt">Numéro qui a payé</label><div class="tel"><span>+228</span><input id="sd-inMt" inputmode="numeric" maxlength="11" placeholder="90 00 00 00"></div></div><div class="field"><label for="sd-inMr">Référence de la transaction (SMS)</label><input id="sd-inMr" maxlength="60" placeholder="Ex. MP2410…"></div></div></div>' +
+      "</fieldset>" +
+      (exam ? '<p class="insc-note">À prévoir aussi : <b>30&nbsp;000&nbsp;F</b> pour l\'inscription à l\'examen d\'État, réglés au secrétariat. SODAF dépose ton dossier ; l\'État t\'envoie ensuite la date et le lieu par message.</p>' : "") +
+      '<p class="insc-err" id="sd-inErr" hidden></p><button class="btn btn-green insc-go" type="submit" id="sd-inGo">Valider mon inscription</button></form>';
+    const form = $("#sd-inForm");
+    const val = () => { const f = forms[+form.querySelector("[name=inF]:checked").value], p = form.querySelector("[name=inP]:checked").value; return { f, p, a: 5000 + (p === "total" ? f[1] : f[1] / 2) }; };
+    const upd = () => {
+      const v = val();
+      form.querySelector('[data-p="moitie"]').textContent = fmtF(5000 + v.f[1] / 2); form.querySelector('[data-p="total"]').textContent = fmtF(5000 + v.f[1]);
+      $("#sd-inSum").innerHTML = "À payer maintenant : <b>" + fmtF(v.a) + "</b> <span>(droit d'inscription 5&nbsp;000&nbsp;F + " + (v.p === "total" ? "toute la formation" : "la moitié de la formation") + ")</span>" + (v.p === "moitie" ? "<span>Reste à payer avant la 1re séance de conduite : " + fmtF(v.f[1] / 2) + "</span>" : "");
+      $("#sd-inAmt").textContent = fmtF(v.a);
+      form.querySelectorAll(".rcm").forEach((l) => l.classList.toggle("on", l.querySelector("input").checked));
+      $("#sd-inMixx").hidden = form.querySelector("[name=inM]:checked").value !== "mixx";
+    };
+    form.addEventListener("change", upd); upd();
+    const tel8 = (el) => { let t = el.value.replace(/\D/g, ""); if (t.length > 8 && t.startsWith("228")) t = t.slice(3); return t; };
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const v = val(), mode = form.querySelector("[name=inM]:checked").value, err = $("#sd-inErr"), btn = $("#sd-inGo");
+      const nom = $("#sd-inNom").value.trim(), pre = $("#sd-inPre").value.trim(), ut = tel8($("#sd-inUt")), mt = tel8($("#sd-inMt")), mr = $("#sd-inMr").value.trim();
+      const bad = nom.length < 2 ? "Écris ton nom." : pre.length < 2 ? "Écris tes prénoms." : ut && ut.length !== 8 ? "Le numéro de la personne à prévenir doit avoir 8 chiffres." : mode === "mixx" && !(mt.length === 8 || mr.length >= 4) ? "Pour Mixx by Yas, écris le numéro qui a payé (8 chiffres) ou la référence du SMS." : "";
+      if (bad) { err.textContent = bad; err.hidden = false; err.scrollIntoView({ block: "center" }); return; }
+      err.hidden = true; btn.disabled = true; btn.textContent = "Envoi…";
+      const row = { eleve_id: d.i, jeton: d.j, formule: v.f[0], prix: v.f[1], paiement: v.p, a_payer: Math.round(v.a), mode, mixx_tel: mode === "mixx" && mt ? "+228" + mt : null, mixx_ref: mode === "mixx" && mr ? mr : null,
+        nom, prenoms: pre, naissance_date: $("#sd-inDn").value || null, naissance_lieu: $("#sd-inLn").value.trim() || null, quartier: $("#sd-inQ").value.trim() || null, profession: $("#sd-inPro").value.trim() || null, urgence_nom: $("#sd-inUn").value.trim() || null, urgence_tel: ut ? "+228" + ut : null };
+      const ok = await DB.add("inscriptions_web", row);
+      btn.disabled = false; btn.textContent = "Valider mon inscription";
+      if (!ok) { err.innerHTML = 'L\'envoi n\'a pas marché. Vérifie ta connexion et réessaie. Si ça continue, le lien a peut-être expiré : <a href="' + WA + '" target="_blank" rel="noopener">écris au secrétariat</a>.'; err.hidden = false; return; }
+      const res = { mode, a: Math.round(v.a) }; S.set("insc" + d.i, res); show(res);
+    });
+  }
+
   function route() {
     const APP = !!window.SODAF_APP;
     if (!APP && (location.hash === "#documents" || location.hash.startsWith("#equipe"))) { location.replace("/equipe/" + (location.hash.startsWith("#equipe-") ? location.hash : "")); return; }
@@ -3046,13 +3205,14 @@ function init(root) {
     let p = h.split("-")[0]; if (!pages.includes(p)) p = APP ? "equipe" : "accueil";
     if (APP && !["equipe", "classe", "recu"].includes(p)) { if (location.hash && location.hash !== "#accueil") window.open("/" + location.hash, "_blank"); history.replaceState(null, "", "#equipe"); p = "equipe"; }
     if (p === "recu") rcPublic(h.slice(5));
+    if (p === "inscrire") inscPage(h.slice(9));
     $$("section.page").forEach((s) => (s.hidden = s.dataset.page !== p));
     $$("#sd-nav [data-nav]").forEach((a) => a.classList.toggle("on", a.dataset.nav === p));
     nav.classList.remove("open"); burger.setAttribute("aria-expanded", "false");
     if (p === "quiz") showBest();
     if (p === "classe") requestAnimationFrame(() => cls.open(h.split("-")[1]));
     if (p === "cours") requestAnimationFrame(() => requestAnimationFrame(spy));
-    let target = null; try { target = h.includes("-") && p !== "recu" ? root.querySelector("#" + h) : null; } catch (e) {}
+    let target = null; try { target = h.includes("-") && p !== "recu" && p !== "inscrire" ? root.querySelector("#" + h) : null; } catch (e) {}
     requestAnimationFrame(() => { if (target) target.scrollIntoView({ block: "start" }); else window.scrollTo(0, 0); });
   }
   window.addEventListener("hashchange", route);
