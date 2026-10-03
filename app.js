@@ -627,6 +627,79 @@ a.teamtile.hl{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
 #sodaf-root.app-mode nav.main,#sodaf-root.app-mode .burger,#sodaf-root.app-mode header.top>.wrap>.btn,#sodaf-root.app-mode footer.site,#sodaf-root.app-mode .wa-float,#sodaf-root.app-mode section[data-page="equipe"] .page-head{display:none!important}
 #sodaf-root.app-mode section[data-page="equipe"]>.wrap{padding-top:22px}
 #sodaf-root.app-mode .logo-sub{color:var(--green)}
+.pc{display:grid;grid-template-columns:minmax(280px,360px) minmax(0,1fr);gap:18px;align-items:start}
+.pc-list{border:1.5px solid var(--line);border-radius:14px;background:#fff;overflow:hidden;position:sticky;top:76px}
+.pc-stages{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;padding:10px;background:var(--soft);border-bottom:1.5px solid var(--line)}
+.pc-stages button{font:600 .9rem var(--f-body);padding:.55em .6em;border-radius:10px;border:1.5px solid var(--line);background:#fff;color:#3D444D;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:6px}
+.pc-stages button em{font-style:normal;font-size:.78rem;background:var(--soft);border-radius:999px;padding:.1em .55em;color:var(--ink)}
+.pc-stages button[aria-selected="true"]{border-color:var(--ink);background:var(--ink);color:#fff}
+.pc-stages button[aria-selected="true"] em{background:var(--yellow);color:var(--ink)}
+.pc-stages button[data-st="accueil"] em:not(:empty){}
+.pc-tools{display:flex;gap:8px;padding:10px;border-bottom:1.5px solid var(--line)}
+.pc-tools input{flex:1;min-width:0;font:.95rem var(--f-body);padding:.55em .7em;border:1.5px solid var(--line);border-radius:10px}
+.pc-list .tm-form{margin:10px;padding:14px}
+.pc-items{max-height:68vh;overflow:auto}
+.pc-gh{display:flex;justify-content:space-between;font:600 .74rem var(--f-body);letter-spacing:.08em;text-transform:uppercase;color:#3D444D;background:var(--soft);padding:8px 14px;margin:0!important;border-bottom:1px solid var(--line)}
+.pc-gh span{background:#fff;border-radius:999px;padding:0 .5em}
+.pc-item{all:unset;box-sizing:border-box;display:flex;flex-direction:column;gap:1px;width:100%;padding:11px 14px;border-bottom:1px solid var(--line);cursor:pointer;border-left:4px solid transparent}
+.pc-item:hover{background:#FAFBFB}
+.pc-item.on{background:var(--green-soft);border-left-color:var(--green)}
+.pc-item b{font-weight:700;color:var(--ink)}
+.pc-item span{font-size:.88rem;color:#3D444D}
+.pc-item small{font-size:.8rem;color:var(--muted)}
+.pc-item:focus-visible{outline:3px solid var(--yellow);outline-offset:-3px}
+.pc-detail{min-width:0}
+.pc-none{border:1.5px dashed var(--line);border-radius:14px;padding:40px 20px;text-align:center;display:flex;flex-direction:column;gap:4px;color:var(--muted)}
+.pc-none b{color:var(--ink);font:700 1.1rem var(--f-display)}
+.pc-back{display:none;margin-bottom:10px}
+.pc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;padding-bottom:14px;border-bottom:1.5px solid var(--line);margin-bottom:14px}
+.pc-head h3{font:700 1.7rem var(--f-display);margin-top:2px}
+.pc-head h3 span{font-weight:500;color:var(--muted)}
+.btn-blue{background:var(--blue);color:#fff}
+.pc-info{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px 18px;background:var(--soft);border-radius:12px;padding:14px 16px}
+.pc-info div{display:flex;flex-direction:column;min-width:0}
+.pc-info .wide{grid-column:1/-1}
+.pc-info span{font-size:.76rem;color:#3D444D;font-weight:600}
+.pc-info b{font-weight:700;color:var(--ink);overflow-wrap:anywhere}
+.pc-info a{color:var(--ink)}
+.pc-info select{font:inherit;padding:.3em .5em;border:1.5px solid var(--line);border-radius:8px}
+.pc-proto{font:.85rem/1.5 ui-monospace,Menlo,Consolas,monospace;background:var(--soft);border-radius:8px;padding:8px 12px;margin:14px 0 0!important;color:#3D444D}
+.pc-block{border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;margin-top:14px;background:#fff}
+.pc-bh{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.pc-bh b{font:700 1.08rem var(--f-display)}
+.pc-ok{font-size:.85rem;font-weight:700;color:var(--green)}
+.pc-block textarea{width:100%;font:.95rem/1.5 var(--f-body);padding:.7em .8em;border:1.5px solid var(--line);border-radius:10px;resize:vertical}
+.pc-block .tm-formact input{flex:1;min-width:180px;font:.95rem var(--f-body);padding:.55em .7em;border:1.5px solid var(--line);border-radius:10px}
+.pc-calls{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;margin-bottom:12px}
+.pc-lab{font-size:.8rem;font-weight:700;color:#3D444D;margin-bottom:6px!important}
+.pc-steps{display:flex;flex-wrap:wrap;gap:6px}
+.pc-steps button{font:600 .86rem var(--f-body);padding:.45em .8em;border-radius:999px;border:1.5px solid var(--line);background:#fff;color:#3D444D;cursor:pointer}
+.pc-steps button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.pc-tries{display:flex;flex-wrap:wrap;gap:6px}
+.pc-tries i{font-style:normal;font:600 .82rem var(--f-body);padding:.35em .7em;border-radius:999px;border:1.5px solid var(--line);color:var(--muted)}
+.pc-tries i.on{background:var(--red-soft);border-color:var(--red);color:var(--red)}
+.pc-alert{margin-top:12px;background:var(--red-soft);border:1.5px solid var(--red);border-radius:10px;padding:12px 14px;font-size:.94rem}
+.pc-script{font-size:1rem;line-height:1.6}
+.pc-script p{margin:0 0 10px!important}
+.pc-checks{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:6px}
+.pc-checks label{display:flex;gap:8px;align-items:center;background:var(--soft);padding:.5em .7em;border-radius:10px;cursor:pointer;font-size:.94rem}
+.pc-checks input{width:18px;height:18px;accent-color:var(--green)}
+.pc-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px;padding-top:14px;border-top:1.5px solid var(--line)}
+.pc-foot>span{font-weight:700}
+.pc-red{background:var(--red);color:#fff}
+.pc-dark{background:var(--ink);color:#fff}
+.btn.armed{outline:3px solid var(--yellow);outline-offset:2px}
+.pc-mini{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-bottom:8px}
+.pc-mini div{background:var(--soft);border-radius:10px;padding:8px 12px;display:flex;flex-direction:column}
+.pc-mini span{font-size:.78rem;color:#3D444D}
+.pc-mini b{font:700 1.05rem var(--f-display)}
+.pc-line{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;font-size:.92rem;padding:6px 0;border-top:1px solid var(--line)}
+.pc-line em{font-style:normal;color:var(--muted);flex:1;min-width:0}
+.pc-feed{display:flex;flex-direction:column;gap:0}
+.pc-feed div{display:grid;grid-template-columns:auto 1fr;gap:0 12px;padding:7px 0;border-top:1px solid var(--line);font-size:.92rem}
+.pc-feed time{color:var(--muted);font-size:.82rem;grid-row:1/3;font-variant-numeric:tabular-nums}
+.pc-feed span{color:#3D444D}
+@media (max-width:899px){.pc{grid-template-columns:1fr}.pc-list{position:static}.pc-items{max-height:none}.pc.has-sel .pc-list{display:none}.pc:not(.has-sel) .pc-detail{display:none}.pc-back{display:inline-block}.pc-calls{grid-template-columns:1fr}.pc-head h3{font-size:1.4rem}}
 .tm-row.st-libre{border-left-color:#C9CED4;background:#FAFBFB}
 .tm-row.st-reserve{border-left-color:var(--blue)}
 .tm-row.st-fait{border-left-color:var(--green);background:var(--green-soft)}
@@ -1336,18 +1409,26 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="tm-pane" data-pane="sec" role="tabpanel">
 <p class="tm-role">Accueil des élèves, inscriptions, paiements, réservations de conduite et messages WhatsApp.</p>
 <div class="tm-subnav" id="sd-secNav" role="tablist">
-<button data-s="eleves" aria-selected="true">Élèves <span class="tm-count" id="sd-cntNew"></span></button>
+<button data-s="eleves" aria-selected="true">Parcours élèves <span class="tm-count" id="sd-cntNew"></span></button>
 <button data-s="conduite" aria-selected="false">Planning conduite</button>
 <button data-s="paiements" aria-selected="false">Paiements et reçus</button>
 <button data-s="devoirs" aria-selected="false">Devoirs</button>
 </div>
 <section class="tm-sec" data-s="eleves">
-<div class="tm-bar"><input id="sd-elQ" type="search" placeholder="Chercher un nom ou un numéro"><select id="sd-elF"><option value="new">Nouveaux et contactés</option><option value="act">Inscrits et en formation</option><option value="all">Tous les élèves</option></select><button class="btn btn-green btn-sm" type="button" id="sd-elAddBtn">+ Ajouter un élève</button></div>
+<div class="pc" id="sd-pc">
+<div class="pc-list">
+<div class="pc-stages" id="sd-pcStages" role="tablist"><button type="button" data-st="accueil">Accueil <em></em></button><button type="button" data-st="appels">Appels <em></em></button><button type="button" data-st="formation">En formation <em></em></button><button type="button" data-st="archives">Archivés <em></em></button></div>
+<div class="pc-tools"><input id="sd-pcQ" type="search" placeholder="Chercher un nom, un numéro, un n° de dossier"><button class="btn btn-green btn-sm" type="button" id="sd-elAddBtn">+ Élève</button></div>
 <form id="sd-elAdd" class="card tm-form" hidden novalidate>
-<div class="row3"><div class="field"><label for="sd-elN">Nom et prénom</label><input id="sd-elN"></div><div class="field"><label for="sd-elT">Téléphone</label><div class="tel"><span>+228</span><input id="sd-elT" inputmode="numeric" maxlength="11" placeholder="90 00 00 00"></div></div><div class="field"><label for="sd-elFo">Formation</label><select id="sd-elFo"><option>Permis B</option><option>Permis A</option><option>Pack A + B</option><option>Remise à niveau</option><option>Formation entreprise</option></select></div></div>
-<div class="tm-formact"><button class="btn btn-green btn-sm" type="submit">Enregistrer l'élève</button><button class="linkbtn" type="button" id="sd-elCancel">Annuler</button><span class="tm-err" id="sd-elErr"></span></div>
+<div class="field"><label for="sd-elN">Nom et prénom</label><input id="sd-elN"></div>
+<div class="field"><label for="sd-elT">Téléphone</label><div class="tel"><span>+228</span><input id="sd-elT" inputmode="numeric" maxlength="11" placeholder="90 00 00 00"></div></div>
+<div class="row2"><div class="field"><label for="sd-elFo">Formation</label><select id="sd-elFo"><option>Permis B</option><option>Permis A</option><option>Pack A + B</option><option>Remise à niveau</option><option>Formation entreprise</option></select></div><div class="field"><label for="sd-elSt">Étape</label><select id="sd-elSt"><option value="Inscrit">Il s'inscrit maintenant</option><option value="Contacté">Juste renseigné, à rappeler</option></select></div></div>
+<div class="tm-formact"><button class="btn btn-green btn-sm" type="submit">Enregistrer</button><button class="linkbtn" type="button" id="sd-elCancel">Annuler</button><span class="tm-err" id="sd-elErr"></span></div>
 </form>
-<div id="sd-elList" class="tm-list"></div>
+<div id="sd-pcList" class="pc-items"></div>
+</div>
+<div class="pc-detail" id="sd-pcDetail"></div>
+</div>
 </section>
 <section class="tm-sec" data-s="conduite" hidden>
 <div class="tm-bar tm-day-nav"><button class="btn btn-line btn-sm" type="button" id="sd-cdPrev">‹ Veille</button><b id="sd-cdDay"></b><button class="btn btn-line btn-sm" type="button" id="sd-cdNext">Lendemain ›</button><button class="linkbtn" type="button" id="sd-cdToday">Aujourd'hui</button></div>
@@ -1398,10 +1479,10 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 </section>
 <div class="tm-sub"><div><p class="eyebrow">Mode d'emploi</p><h3>Les gestes du secrétariat</h3></div></div>
 <div class="grid g2 tm-guides">
-<div class="card soft"><p class="eyebrow">Un nouvel élève arrive</p><ol class="teamsteps"><li>Onglet <b>Élèves</b> : retrouve sa pré-inscription (ou <b>+ Ajouter un élève</b> s'il vient directement).</li><li>Encaisse, puis touche <b>Reçu</b> sur sa fiche → « Il s'inscrit et paie la moitié ».</li><li>Envoie le reçu sur WhatsApp, passe son statut à <b>Inscrit</b>, ajoute-le au groupe.</li></ol></div>
+<div class="card soft"><p class="eyebrow">Une pré-inscription arrive</p><ol class="teamsteps"><li><b>Accueil</b> : touche <b>Envoyer l'accueil</b> (WhatsApp), puis <b>Basculer en zone d'appel</b>.</li><li><b>Appels</b> : appelle avec le script. Pas de réponse ? <b>✗ Pas de réponse</b> et choisis quand rappeler. À 4 tentatives : relance WhatsApp puis <b>Injoignable</b>.</li><li>Il vient au bureau : <b>Inscrire et faire le reçu</b>, coche ses pièces, ajoute-le au groupe.</li></ol></div>
 <div class="card soft"><p class="eyebrow">Réserver une séance de conduite</p><ol class="teamsteps"><li>Vérifie que la 2e moitié est payée (<b>Paiements</b> → À relancer).</li><li><b>Planning conduite</b> : choisis le jour, puis l'élève sur un créneau libre.</li><li>Touche <b>Confirmer</b> : le message WhatsApp est prêt. La veille, touche <b>Rappel</b>.</li></ol></div>
 <div class="card soft"><p class="eyebrow">Mercredi : résultats du devoir</p><ol class="teamsteps"><li>Onglet <b>Devoirs</b> : le message de la semaine est déjà écrit.</li><li>Touche <b>Ouvrir WhatsApp avec le message</b> et choisis le groupe.</li></ol></div>
-<div class="card soft"><p class="eyebrow">Règles</p><ol class="teamsteps"><li>On ne supprime rien : une séance annulée passe en <b>Annulé</b>, un élève qui arrête en <b>Abandon</b>, un reçu faux se fait <b>Annuler</b> (avec la raison) puis on refait le bon.</li><li>Erreur de nom ou de numéro : <b>Modifier</b> sur la fiche de l'élève.</li><li>Jour férié ou fermeture : <b>Planning conduite</b> → le jour → « Fermer ce jour », puis <b>Prévenir</b> chaque élève.</li><li>Les créneaux du mois suivant se créent tout seuls le 24.</li></ol></div>
+<div class="card soft"><p class="eyebrow">Règles</p><ol class="teamsteps"><li>On ne supprime rien : une séance annulée passe en <b>Annulé</b>, un dossier qui s'arrête va dans <b>Archivés</b> avec son motif, un reçu faux se fait <b>Annuler</b> (avec la raison) puis on refait le bon.</li><li>Erreur de nom ou de numéro : <b>Modifier</b> sur la fiche de l'élève.</li><li>Jour férié ou fermeture : <b>Planning conduite</b> → le jour → « Fermer ce jour », puis <b>Prévenir</b> chaque élève.</li><li>Les créneaux du mois suivant se créent tout seuls le 24.</li></ol></div>
 </div></div>
 <div class="tm-pane" data-pane="dir" role="tabpanel" hidden>
 <p class="tm-role">Vue d'ensemble de l'auto-école, mise à jour à chaque ouverture. Visible seulement par la direction.</p>
@@ -2318,60 +2399,174 @@ function init(root) {
       sub("eleves");
     }
 
-    // ---- Élèves
+    // ---- Parcours élèves : Accueil → Appels → En formation → Archivés
     const ST = ["Nouveau", "Contacté", "Inscrit", "En formation", "Permis obtenu", "Abandon"];
+    const ETAPES = { accueil: ["Nouveau"], appels: ["Contacté"], formation: ["Inscrit", "En formation", "Permis obtenu"], archives: ["Abandon"] };
+    const etapeOf = (x) => Object.keys(ETAPES).find((k) => ETAPES[k].includes(x.statut)) || "accueil";
+    const PRIX = { "Permis B": "55 000 F la formation complète (formule courte dès 35 000 F, accélérée 75 000 ou 80 000 F)", "Permis A": "30 000 F", "Pack A + B": "80 000 F", "Remise à niveau": "20 000 F", "Formation entreprise": "sur devis" };
+    const PIECES = [["acte", "Acte de naissance"], ["cni", "Carte d'identité"], ["photos", "Photos d'identité"], ["quittance", "Quittance d'examen (permis B)"], ["deja", "A déjà conduit"]];
+    const prenom = (x) => (x.nom || "").trim().split(/\s+/)[0];
+    const msgAccueil = (x) => "Bonjour " + prenom(x) + " 👋\nIci le secrétariat de SODAF Auto-École. Nous avons bien reçu ta pré-inscription, merci !\n\n*TON DOSSIER*\n• N° " + x.id + "\n• Formation : " + (x.formation || "à préciser") + "\n\nNous allons t'appeler très bientôt pour répondre à tes questions et préparer ton inscription. Garde ton téléphone près de toi 😉\n\n📍 412 Avenue Akei, Tokoin Tamé (en face de la caisse)\n🕗 Lun – ven 8 h – 12 h 30 et 14 h 30 – 18 h · Sam 8 h – 12 h\n\nÀ très vite !\nL'équipe SODAF · L'art de conduire, la force de réussir.\nautosodaf.com";
+    const msgRelance = (x) => "Bonjour " + prenom(x) + ", ici SODAF Auto-École. Nous avons essayé de te joindre plusieurs fois au sujet de ta pré-inscription (" + (x.formation || "permis") + "), sans succès. Si tu es toujours intéressé(e), réponds simplement à ce message ou appelle-nous au 72 54 41 66. Ton dossier n° " + x.id + " reste ouvert. Bonne journée !";
+    const script = (x) => "<p><b>Bonjour, je suis [ton prénom] du secrétariat de SODAF Auto-École. Tu as fait une pré-inscription sur notre site pour le " + esc(x.formation || "permis") + ". As-tu deux minutes ?</b></p>" +
+      "<p>→ <b>La formation</b> : code en salle lundi, mercredi et vendredi à 14 h 30, plus les cours et quiz sur autosodaf.com. Conduite par séances d'une heure avec le moniteur. Examen blanc chaque samedi à 10 h.</p>" +
+      "<p>→ <b>Le prix</b> : " + esc(PRIX[x.formation] || "voir les tarifs") + ", plus 5 000 F d'inscription. On paie en 2 fois : la moitié à l'inscription, le reste avant la première séance de conduite. Espèces ou Mixx by Yas (T-Money).</p>" +
+      "<p>→ <b>Les pièces</b> : acte de naissance, carte d'identité, photos d'identité" + (/B/.test(x.formation || "") ? ", et la quittance d'examen de 35 000 F" : "") + ".</p>" +
+      "<p>→ <b>Quand peux-tu passer au bureau pour t'inscrire ?</b> Lun – ven 8 h – 12 h 30 et 14 h 30 – 18 h, samedi 8 h – 12 h.</p>";
+    const ago = (d) => { const m = Math.round((Date.now() - new Date(d)) / 60000); return m < 60 ? "il y a " + Math.max(m, 1) + " min" : m < 1440 ? "il y a " + Math.round(m / 60) + " h" : "il y a " + Math.round(m / 1440) + " j"; };
+    let pcStage = S.get("pcStage", "accueil"), pcSel = null, pcFeed = [];
+    const isWide = () => window.matchMedia("(min-width: 900px)").matches;
+
     async function loadEleves(silent) {
-      const r = await run(() => DB.q("eleves?select=*&order=cree_le.desc&limit=1000"));
+      const r = await run(() => DB.q("eleves?select=*&order=cree_le.desc&limit=2000"));
       if (!r) return; eleves = r;
       const nb = eleves.filter((x) => x.statut === "Nouveau").length;
       $("#sd-cntNew").textContent = nb ? nb : "";
-      if (!silent) renderEleves(); else renderEleves();
+      renderList();
       fillEleveSelect();
     }
-    function renderEleves() {
-      const q = $("#sd-elQ").value.trim().toLowerCase(), f = $("#sd-elF").value;
-      const list = eleves.filter((x) => (f === "all" || (f === "new" ? ["Nouveau", "Contacté"] : ["Inscrit", "En formation"]).includes(x.statut)) && (!q || (x.nom + " " + (x.telephone || "")).toLowerCase().includes(q)));
-      $("#sd-elList").innerHTML = list.length ? list.map((x) => '<div class="tm-row" data-id="' + x.id + '"><div class="tm-main"><b>' + esc(x.nom) + '</b><span>' + esc([x.telephone ? x.telephone.replace("+228", "+228 ") : "", x.formation, x.quartier].filter(Boolean).join(" · ")) + '</span><small>' + (x.source === "site" ? "Pré-inscrit sur le site" : "Ajouté au bureau") + " le " + new Date(x.cree_le).toLocaleDateString("fr-FR") + (x.creneau_prefere ? " · préfère : " + esc(x.creneau_prefere) : "") + (x.message ? " · « " + esc(x.message) + " »" : "") + '</small></div><div class="tm-acts"><select data-st aria-label="Statut">' + ST.map((t) => "<option" + (t === x.statut ? " selected" : "") + ">" + t + "</option>").join("") + "</select>" + (x.telephone ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" href="https://wa.me/228' + waNum(x.telephone) + '">WhatsApp</a>' : "") + '<button class="btn btn-line btn-sm" type="button" data-rc>Reçu</button><button class="linkbtn" type="button" data-ed>Modifier</button></div>' + (x.notes ? '<p class="tm-notes">Note : ' + esc(x.notes) + "</p>" : "") + "</div>").join("") : '<p class="tm-empty">Aucun élève dans cette liste.</p>';
+    function groupsFor(stage, list) {
+      if (stage === "accueil") return [["À accueillir", list.slice().sort((a, b) => (a.cree_le < b.cree_le ? -1 : 1))]];
+      if (stage === "appels") return [["À appeler", list.filter((x) => !x.rappel)], ["Rappeler le matin", list.filter((x) => x.rappel === "matin")], ["Rappeler l'après-midi", list.filter((x) => x.rappel === "apres-midi")]];
+      if (stage === "formation") return ["Inscrit", "En formation", "Permis obtenu"].map((s) => [s, list.filter((x) => x.statut === s)]);
+      return ["Plus tard", "Injoignable", "Rétractation", "Faux numéro"].map((m) => [m, list.filter((x) => x.archive_motif === m)]).concat([["Sans motif", list.filter((x) => !x.archive_motif)]]);
     }
-    $("#sd-elQ").addEventListener("input", renderEleves); $("#sd-elF").addEventListener("change", renderEleves);
-    $("#sd-elList").addEventListener("change", async (e) => {
-      const sel = e.target.closest("[data-st]"); if (!sel) return; const id = +sel.closest("[data-id]").dataset.id;
-      const ok = await run(() => DB.q("eleves?id=eq." + id, { method: "PATCH", body: { statut: sel.value }, prefer: "return=minimal" }), "Statut enregistré");
-      if (ok) { const x = eleves.find((y) => y.id === id); if (x) x.statut = sel.value; $("#sd-cntNew").textContent = eleves.filter((y) => y.statut === "Nouveau").length || ""; }
+    function renderList() {
+      const q = $("#sd-pcQ").value.trim().toLowerCase();
+      $$("#sd-pcStages button").forEach((b) => { const n = eleves.filter((x) => etapeOf(x) === b.dataset.st).length; b.querySelector("em").textContent = n; b.setAttribute("aria-selected", b.dataset.st === pcStage); });
+      const list = eleves.filter((x) => etapeOf(x) === pcStage && (!q || (x.nom + " " + (x.telephone || "") + " " + x.id).toLowerCase().includes(q)));
+      const html = groupsFor(pcStage, list).filter((g) => g[1].length).map((g) => '<p class="pc-gh">' + esc(g[0]) + " <span>" + g[1].length + "</span></p>" + g[1].map((x) =>
+        '<button type="button" class="pc-item' + (x.id === pcSel ? " on" : "") + '" data-id="' + x.id + '"><b>' + esc(x.nom) + '</b><span>' + esc((x.telephone || "").replace("+228", "+228 ")) + (x.formation ? " · " + esc(x.formation) : "") + "</span><small>N° " + x.id + " · " +
+        (pcStage === "accueil" ? (x.accueil_le ? "accueil envoyé ✓" : "arrivé " + ago(x.cree_le)) : pcStage === "appels" ? (x.appels ? x.appels + "X sans réponse" : "pas encore appelé") : pcStage === "archives" ? "archivé " + (x.archive_le ? ago(x.archive_le) : "") : esc(x.statut)) + "</small></button>").join("")).join("");
+      $("#sd-pcList").innerHTML = html || '<p class="tm-empty">' + ({ accueil: "Aucune nouvelle pré-inscription. Elles arrivent ici toutes seules depuis le site.", appels: "Personne à appeler pour l'instant.", formation: "Aucun élève en formation pour l'instant.", archives: "Aucun dossier archivé." }[pcStage]) + "</p>";
+      if (pcSel && !list.some((x) => x.id === pcSel)) pcSel = null;
+      if (!pcSel && isWide() && list.length) { pcSel = groupsFor(pcStage, list).find((g) => g[1].length)[1][0].id; $("#sd-pcList .pc-item[data-id='" + pcSel + "']")?.classList.add("on"); }
+      renderDetail();
+    }
+    $("#sd-pcQ").addEventListener("input", renderList);
+    $("#sd-pcStages").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; pcStage = b.dataset.st; pcSel = null; S.set("pcStage", pcStage); renderList(); });
+    $("#sd-pcList").addEventListener("click", (e) => { const b = e.target.closest(".pc-item"); if (!b) return; pcSel = +b.dataset.id; $$("#sd-pcList .pc-item").forEach((i) => i.classList.toggle("on", i === b)); renderDetail(); if (!isWide()) $("#sd-pc").scrollIntoView({ block: "start" }); });
+
+    async function patchEl(x, body, okMsg, log) {
+      const ok = await run(() => DB.q("eleves?id=eq." + x.id, { method: "PATCH", body, prefer: "return=minimal" }), okMsg);
+      if (!ok) return false;
+      Object.assign(x, body);
+      if (log) await addSuivi(x, log[0], log[1]);
+      $("#sd-cntNew").textContent = eleves.filter((y) => y.statut === "Nouveau").length || "";
+      return true;
+    }
+    async function addSuivi(x, type, note) { await run(() => DB.q("suivi", { method: "POST", body: { eleve_id: x.id, type, note: note || null }, prefer: "return=minimal" })); }
+    function nextAfter(x) { // après une bascule : on passe au dossier suivant de la même étape
+      const list = eleves.filter((y) => etapeOf(y) === pcStage && y.id !== x.id); pcSel = isWide() && list.length ? null : null; renderList();
+    }
+    function confirmBtn(btn, fn) { // deux touches pour les actions de rangement
+      if (btn.dataset.armed) { delete btn.dataset.armed; fn(); return; }
+      const t = btn.textContent; btn.dataset.armed = 1; btn.textContent = "Confirmer ?"; btn.classList.add("armed");
+      setTimeout(() => { if (btn.dataset.armed) { delete btn.dataset.armed; btn.textContent = t; btn.classList.remove("armed"); } }, 4000);
+    }
+    const archive = (x, motif) => patchEl(x, { statut: "Abandon", archive_motif: motif, archive_le: new Date().toISOString(), rappel: null }, "Dossier archivé : " + motif, ["Étape", "Archivé : " + motif]).then((ok) => ok && nextAfter(x));
+
+    async function renderDetail() {
+      const box = $("#sd-pcDetail"), pc = $("#sd-pc");
+      const x = eleves.find((y) => y.id === pcSel);
+      pc.classList.toggle("has-sel", !!x);
+      if (!x) { box.innerHTML = '<div class="pc-none"><b>Choisis un dossier dans la liste</b><span>Sa fiche, les messages prêts et les actions s\'affichent ici.</span></div>'; return; }
+      const st = etapeOf(x), n = waNum(x.telephone), wa = (t) => "https://wa.me/228" + n + "?text=" + encodeURIComponent(t);
+      const head = '<button type="button" class="linkbtn pc-back" data-a="back">← Retour à la liste</button><div class="pc-head"><div><p class="eyebrow">' + { accueil: "Accueil", appels: "Zone d'appel", formation: "En formation", archives: "Archivé" }[st] + '</p><h3>' + esc(x.nom) + ' <span>| ' + x.id + "</span></h3></div>" +
+        ({ accueil: '<button class="btn btn-blue btn-sm" type="button" data-a="toCall">Basculer en zone d\'appel →</button>', appels: '<button class="btn btn-green btn-sm" type="button" data-a="enroll">Inscrire et faire le reçu</button>', formation: '<button class="btn btn-green btn-sm" type="button" data-a="rc">Faire un reçu</button>', archives: '<button class="btn btn-blue btn-sm" type="button" data-a="revive">Ressortir : remettre en appel</button>' }[st]) + "</div>";
+      const info = '<div class="pc-info"><div><span>N° dossier</span><b>' + x.id + '</b></div><div><span>Téléphone</span><b>' + (n ? '<a href="tel:+228' + n + '">+228 ' + n.replace(/(\d{2})(?=\d)/g, "$1 ") + "</a>" : "—") + '</b></div><div><span>Formation</span><b>' + esc(x.formation || "—") + '</b></div><div><span>Quartier</span><b>' + esc(x.quartier || "—") + "</b></div>" +
+        '<div><span>Préfère</span><b>' + esc(x.creneau_prefere || "—") + '</b></div><div><span>Paiement</span><b>' + esc(x.paiement_prefere || "—") + '</b></div><div><span>Arrivé</span><b>' + new Date(x.cree_le).toLocaleDateString("fr-FR") + " · " + (x.source === "site" ? "site" : "bureau") + "</b></div>" +
+        '<div><span>Statut</span><b>' + (st === "formation" ? '<select data-a="statut">' + ETAPES.formation.map((t) => "<option" + (t === x.statut ? " selected" : "") + ">" + t + "</option>").join("") + "</select>" : esc(x.statut === "Abandon" ? "Archivé" + (x.archive_motif ? " · " + x.archive_motif : "") : x.statut)) + "</b></div>" +
+        (x.message ? '<div class="wide"><span>Son message</span><b>« ' + esc(x.message) + " »</b></div>" : "") + (x.notes ? '<div class="wide"><span>Note interne</span><b>' + esc(x.notes) + "</b></div>" : "") + "</div>";
+      let body = "";
+      if (st === "accueil") {
+        body = '<p class="pc-proto">Protocole : envoie le message d\'accueil sur WhatsApp, puis bascule le dossier en zone d\'appel.</p>' +
+          '<div class="pc-block"><div class="pc-bh"><b>Message d\'accueil</b>' + (x.accueil_le ? '<span class="pc-ok">✓ Envoyé ' + ago(x.accueil_le) + "</span>" : "") + '</div><textarea id="sd-pcMsg" rows="14">' + esc(msgAccueil(x)) + '</textarea>' +
+          '<div class="tm-formact">' + (n ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-a="sendWelcome" href="' + wa(msgAccueil(x)) + '">Envoyer l\'accueil sur WhatsApp ↗</a>' : '<span class="tm-err">Pas de numéro : ajoute-le avec Modifier.</span>') + "</div></div>" +
+          '<div class="pc-foot"><span>Numéro qui ne marche pas ?</span><button class="btn btn-sm pc-red" type="button" data-arch="Faux numéro">Coordonnées erronées / Faux numéro</button></div>';
+      } else if (st === "appels") {
+        const t = x.appels || 0;
+        body = '<div class="pc-block"><div class="pc-bh"><b>Historique d\'appels</b></div><div class="pc-calls"><div><p class="pc-lab">Quand rappeler</p><div class="pc-steps">' +
+          [["", "À appeler"], ["matin", "Rappeler le matin"], ["apres-midi", "Rappeler l'après-midi"]].map((r) => '<button type="button" data-rappel="' + r[0] + '" aria-pressed="' + ((x.rappel || "") === r[0]) + '">' + r[1] + "</button>").join("") + "</div></div>" +
+          '<div><p class="pc-lab">Tentatives sans réponse</p><div class="pc-tries">' + [1, 2, 3, 4].map((i) => '<i class="' + (i <= t ? "on" : "") + '">' + i + "X" + (i === 4 ? " · injoignable" : "") + "</i>").join("") + "</div></div></div>" +
+          '<div class="tm-formact"><button class="btn btn-green btn-sm" type="button" data-a="callOk">✓ Appel réussi</button><button class="btn btn-line btn-sm" type="button" data-a="callKo">✗ Pas de réponse</button><input id="sd-pcCallNote" placeholder="Ce qu\'il a dit (facultatif)" maxlength="300"></div>' +
+          (t >= 4 ? '<div class="pc-alert"><b>4 appels sans réponse.</b> Envoie la relance WhatsApp, puis range le dossier en « Injoignable ». Tu pourras le ressortir s\'il répond.<div class="tm-formact">' + (n ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-a="relance" href="' + wa(msgRelance(x)) + '">Envoyer la relance ↗</a>' : "") + '<button class="btn btn-sm pc-red" type="button" data-arch="Injoignable">Archiver : Injoignable</button></div></div>' : "") + "</div>" +
+          '<div class="pc-block"><div class="pc-bh"><b>Script d\'appel</b><span class="tm-note" style="margin:0!important">' + esc(x.formation || "") + '</span></div><div class="pc-script">' + script(x) + "</div></div>";
+      } else if (st === "formation") {
+        body = '<div class="pc-block"><div class="pc-bh"><b>Paiements</b></div><div id="sd-pcPay"><p class="tm-note">Chargement…</p></div></div><div class="pc-block"><div class="pc-bh"><b>Conduite</b></div><div id="sd-pcDrive"><p class="tm-note">Chargement…</p></div></div>';
+      } else {
+        body = '<div class="pc-block"><p>Archivé ' + (x.archive_le ? "le " + new Date(x.archive_le).toLocaleDateString("fr-FR") : "") + (x.archive_motif ? " · motif : <b>" + esc(x.archive_motif) + "</b>" : "") + '.</p><p class="tm-note">« Ressortir » le remet dans la zone d\'appel, compteur d\'appels remis à zéro.</p>' + (n ? '<div class="tm-formact"><a class="btn btn-wa btn-sm" target="_blank" rel="noopener" href="https://wa.me/228' + n + '">Écrire sur WhatsApp</a></div>' : "") + "</div>";
+      }
+      const pieces = st === "accueil" || st === "archives" ? "" : '<div class="pc-block"><div class="pc-bh"><b>Dossier d\'inscription</b></div><div class="pc-checks">' + PIECES.map((p) => '<label><input type="checkbox" data-piece="' + p[0] + '"' + (x.dossier && x.dossier[p[0]] ? " checked" : "") + "> " + p[1] + "</label>").join("") + "</div></div>";
+      const arch = st === "appels" ? '<div class="pc-foot"><span>Ranger le dossier</span><div class="tm-acts"><button class="btn btn-line btn-sm" type="button" data-arch="Plus tard">Plus tard (potentiel)</button><button class="btn btn-sm pc-dark" type="button" data-arch="Rétractation">Archiver – Rétractation</button><button class="btn btn-sm pc-red" type="button" data-arch="Faux numéro">Faux numéro</button></div></div>' : "";
+      const suivi = '<div class="pc-block"><div class="pc-bh"><b>Suivi</b><button class="linkbtn" type="button" data-a="edit">Modifier la fiche</button></div><div class="tm-formact" style="margin:0 0 10px"><input id="sd-pcNote" placeholder="Ajouter une note au dossier" maxlength="300"><button class="btn btn-line btn-sm" type="button" data-a="note">Ajouter</button></div><div id="sd-pcFeed" class="pc-feed"><p class="tm-note">Chargement…</p></div></div>';
+      box.innerHTML = head + info + body + pieces + arch + suivi;
+      const id = x.id;
+      const fd = await run(() => DB.q("suivi?select=*&eleve_id=eq." + id + "&order=le.desc&limit=50"));
+      if (pcSel !== id) return;
+      pcFeed = fd || [];
+      $("#sd-pcFeed").innerHTML = pcFeed.length ? pcFeed.map((s) => '<div><time>' + new Date(s.le).toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" }) + "</time><b>" + esc(s.type) + "</b>" + (s.note ? "<span>" + esc(s.note) + "</span>" : "") + "</div>").join("") : '<p class="tm-note">Rien pour l\'instant.</p>';
+      if (st === "formation") {
+        const [py, cd] = await Promise.all([run(() => DB.q("paiements?select=*&eleve_id=eq." + id + "&order=cree_le.desc")), run(() => DB.q("creneaux_conduite?select=jour,heure,statut&eleve_id=eq." + id + "&order=jour.desc&limit=60"))]);
+        if (pcSel !== id) return;
+        const ok = (py || []).filter((p) => !p.annule), paid = ok.reduce((a, p) => a + p.montant, 0), last = ok[0];
+        $("#sd-pcPay").innerHTML = ok.length ? '<div class="pc-mini"><div><span>Payé</span><b>' + F(paid) + '</b></div><div><span>Reste</span><b>' + (last && last.reste > 0 ? F(last.reste) : "Soldé ✓") + "</b></div></div>" + ok.slice(0, 5).map((p) => '<div class="pc-line"><span>' + dOf(p.jour).toLocaleDateString("fr-FR") + "</span><b>" + F(p.montant) + "</b><em>" + esc(p.motif) + "</em>" + (window.__sodafRcLink ? '<a target="_blank" rel="noopener" href="' + window.__sodafRcLink(p) + '">reçu</a>' : "") + "</div>").join("") : '<p class="tm-note">Aucun paiement enregistré. Touche « Faire un reçu ».</p>';
+        const c = cd || [], fait = c.filter((s) => s.statut === "Fait").length, abs = c.filter((s) => s.statut === "Absent").length, next = c.filter((s) => s.statut === "Réservé" && s.jour >= iso(new Date())).sort((a, b) => (a.jour < b.jour ? -1 : 1))[0];
+        $("#sd-pcDrive").innerHTML = '<div class="pc-mini"><div><span>Séances faites</span><b>' + fait + '</b></div><div><span>Absences</span><b>' + abs + '</b></div><div><span>Prochaine</span><b>' + (next ? longDay(next.jour) + " · " + esc(next.heure) : "—") + "</b></div></div>";
+      }
+    }
+    $("#sd-pcDetail").addEventListener("click", async (e) => {
+      const x = eleves.find((y) => y.id === pcSel); if (!x) return;
+      const a = e.target.closest("[data-a]"), ar = e.target.closest("[data-arch]"), rp = e.target.closest("[data-rappel]");
+      if (ar) { confirmBtn(ar, () => archive(x, ar.dataset.arch)); return; }
+      if (rp) { const v = rp.dataset.rappel || null; if (await patchEl(x, { rappel: v }, "Enregistré")) renderList(); return; }
+      if (!a) return;
+      const k = a.dataset.a;
+      if (k === "back") { pcSel = null; renderList(); $("#sd-pc").scrollIntoView({ block: "start" }); }
+      else if (k === "sendWelcome") { const txt = $("#sd-pcMsg").value; a.href = "https://wa.me/228" + waNum(x.telephone) + "?text=" + encodeURIComponent(txt); await patchEl(x, { accueil_le: new Date().toISOString() }, "Accueil noté comme envoyé", ["Accueil envoyé"]); renderList(); }
+      else if (k === "toCall") { if (await patchEl(x, { statut: "Contacté", appels: 0 }, "Dossier en zone d'appel", ["Étape", "Passé en zone d'appel"])) nextAfter(x); }
+      else if (k === "callOk") { const note = $("#sd-pcCallNote").value.trim(); await addSuivi(x, "Appel réussi", note); toast("Appel noté"); renderDetail(); }
+      else if (k === "callKo") { const note = $("#sd-pcCallNote").value.trim(); if (await patchEl(x, { appels: Math.min((x.appels || 0) + 1, 20) }, "Tentative notée (" + ((x.appels || 0) + 1) + "X)", ["Appel sans réponse", note])) renderList(); }
+      else if (k === "relance") { await addSuivi(x, "Relance envoyée"); toast("Relance notée"); }
+      else if (k === "enroll") { if (await patchEl(x, { statut: "Inscrit", rappel: null }, "Inscrit : fais le reçu", ["Étape", "Inscrit"])) { renderList(); if (window.__sodafRcFill) { sub("paiements"); window.__sodafRcFill(x); } } }
+      else if (k === "rc") { if (window.__sodafRcFill) { sub("paiements"); window.__sodafRcFill(x); } }
+      else if (k === "revive") { if (await patchEl(x, { statut: "Contacté", archive_motif: null, archive_le: null, appels: 0, rappel: null }, "Dossier remis en appel", ["Étape", "Ressorti des archives"])) nextAfter(x); }
+      else if (k === "note") { const v = $("#sd-pcNote").value.trim(); if (!v) return; await addSuivi(x, "Note", v); toast("Note ajoutée"); renderDetail(); }
+      else if (k === "edit") editForm(x);
     });
-    $("#sd-elList").addEventListener("click", (e) => {
-      const b = e.target.closest("[data-rc]"); if (!b) return; const x = eleves.find((y) => y.id === +b.closest("[data-id]").dataset.id);
-      if (x && window.__sodafRcFill) { sub("paiements"); window.__sodafRcFill(x); }
+    $("#sd-pcDetail").addEventListener("change", async (e) => {
+      const x = eleves.find((y) => y.id === pcSel); if (!x) return;
+      const pc = e.target.closest("[data-piece]");
+      if (pc) { const d = Object.assign({}, x.dossier || {}); d[pc.dataset.piece] = pc.checked; await patchEl(x, { dossier: d }, "Dossier mis à jour"); return; }
+      if (e.target.matches('[data-a="statut"]')) { if (await patchEl(x, { statut: e.target.value }, "Statut enregistré", ["Étape", e.target.value])) renderList(); }
     });
     const FORMS = [...$$("#sd-elFo option")].map((o) => o.textContent);
-    $("#sd-elList").addEventListener("click", (e) => {
-      const b = e.target.closest("[data-ed]"); if (!b) return; const row = b.closest("[data-id]"), x = eleves.find((y) => y.id === +row.dataset.id); if (!x) return;
-      const old = row.querySelector(".tm-edit"); if (old) { old.remove(); return; }
+    function editForm(x) {
+      const box = $("#sd-pcDetail"), old = box.querySelector(".tm-edit"); if (old) { old.remove(); return; }
       const fo = FORMS.includes(x.formation) || !x.formation ? FORMS : [x.formation, ...FORMS];
-      const f = document.createElement("form"); f.className = "tm-edit"; f.noValidate = true;
+      const f = document.createElement("form"); f.className = "tm-edit pc-block"; f.noValidate = true;
       f.innerHTML = '<div class="row3"><div class="field"><label>Nom et prénom</label><input name="nom" value="' + esc(x.nom) + '"></div><div class="field"><label>Téléphone</label><div class="tel"><span>+228</span><input name="tel" inputmode="numeric" maxlength="11" value="' + esc(waNum(x.telephone).replace(/(\d{2})(?=\d)/g, "$1 ")) + '"></div></div><div class="field"><label>Formation</label><select name="formation">' + fo.map((t) => "<option" + (t === x.formation ? " selected" : "") + ">" + esc(t) + "</option>").join("") + '</select></div></div>' +
         '<div class="row2e"><div class="field"><label>Quartier</label><input name="quartier" maxlength="80" value="' + esc(x.quartier || "") + '"></div><div class="field"><label>Note interne (visible par l\'équipe seulement)</label><input name="notes" maxlength="300" value="' + esc(x.notes || "") + '"></div></div>' +
         '<div class="tm-formact"><button class="btn btn-green btn-sm" type="submit">Enregistrer</button><button class="linkbtn" type="button" data-x>Fermer</button><span class="tm-err"></span></div>';
-      row.appendChild(f); f.querySelector("input").focus();
+      box.querySelector(".pc-info").after(f); f.querySelector("input").focus();
       f.querySelector("[data-x]").addEventListener("click", () => f.remove());
       f.addEventListener("submit", async (ev) => {
         ev.preventDefault();
         const nom = f.nom.value.trim().replace(/\s+/g, " "), tel = f.tel.value.replace(/\D/g, ""), er = f.querySelector(".tm-err");
         if (nom.length < 3 || (tel && tel.length !== 8)) { er.textContent = "Nom (3 lettres min.) et numéro à 8 chiffres."; return; }
         const body = { nom, telephone: tel ? "+228" + tel : null, formation: f.formation.value, quartier: f.quartier.value.trim() || null, notes: f.notes.value.trim() || null };
-        const ok = await run(() => DB.q("eleves?id=eq." + x.id, { method: "PATCH", body, prefer: "return=minimal" }), "Fiche élève enregistrée");
-        if (ok) { Object.assign(x, body); renderEleves(); fillEleveSelect(); }
+        if (await patchEl(x, body, "Fiche élève enregistrée")) { fillEleveSelect(); renderList(); }
       });
-    });
+    }
     $("#sd-elAddBtn").addEventListener("click", () => { $("#sd-elAdd").hidden = false; $("#sd-elN").focus(); });
     $("#sd-elCancel").addEventListener("click", () => { $("#sd-elAdd").hidden = true; });
     $("#sd-elAdd").addEventListener("submit", async (e) => {
       e.preventDefault();
-      const nom = $("#sd-elN").value.trim().replace(/\s+/g, " "), tel = $("#sd-elT").value.replace(/\D/g, ""), err = $("#sd-elErr");
+      const nom = $("#sd-elN").value.trim().replace(/\s+/g, " "), tel = $("#sd-elT").value.replace(/\D/g, ""), err = $("#sd-elErr"), statut = $("#sd-elSt").value;
       if (nom.length < 3 || (tel && tel.length !== 8)) { err.textContent = "Nom (3 lettres min.) et numéro à 8 chiffres."; return; }
       err.textContent = "";
-      const r = await run(() => DB.q("eleves", { method: "POST", body: { nom, telephone: tel ? "+228" + tel : null, formation: $("#sd-elFo").value, source: "bureau", statut: "Inscrit" }, prefer: "return=minimal" }), "Élève ajouté");
-      if (r) { $("#sd-elAdd").reset(); $("#sd-elAdd").hidden = true; $("#sd-elF").value = "act"; loadEleves(); }
+      const r = await run(() => DB.q("eleves", { method: "POST", body: { nom, telephone: tel ? "+228" + tel : null, formation: $("#sd-elFo").value, source: "bureau", statut }, prefer: "return=minimal" }), "Élève ajouté");
+      if (r) { $("#sd-elAdd").reset(); $("#sd-elAdd").hidden = true; pcStage = statut === "Contacté" ? "appels" : "formation"; S.set("pcStage", pcStage); pcSel = null; loadEleves(); }
     });
     function fillEleveSelect() {
       const opts = eleves.filter((x) => x.statut !== "Abandon").sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
@@ -2389,7 +2584,7 @@ function init(root) {
       $("#sd-cdCloseBtn").hidden = !!ferme || !r.length; $("#sd-cdCloseForm").hidden = true;
       if (ferme) $("#sd-cdReopen").addEventListener("click", reopenDay);
       r.sort((a, b) => hmin(a.heure) - hmin(b.heure));
-      const actifs = eleves.filter((x) => !["Abandon", "Permis obtenu"].includes(x.statut)).sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
+      const actifs = eleves.filter((x) => ["Inscrit", "En formation"].includes(x.statut)).sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
       const tomorrow = iso(new Date(Date.now() + 864e5));
       $("#sd-cdList").innerHTML = r.length ? r.map((c) => {
         const el = eleves.find((x) => x.id === c.eleve_id), n = el ? waNum(el.telephone) : "";
@@ -2523,13 +2718,14 @@ function init(root) {
         T("Encaissé ce mois", F(enc), evo, "hl") + T("Reste à encaisser", F(du), dus.length + (dus.length > 1 ? " élèves" : " élève")) +
         T("Nouveaux élèves ce mois", nouveaux.length, site + " via le site · " + (nouveaux.length - site) + " au bureau") + T("Élèves en formation", actifs, "Inscrits et en formation") +
         T("Séances de conduite faites", faits, abs + (abs > 1 ? " absences" : " absence") + " ce mois") + T("Planning de la semaine", pct(wkPris, wkOpen.length) + " %", wkPris + " créneaux pris sur " + wkOpen.length) +
-        T("Permis obtenus", permis, "depuis l'ouverture") + T("Abandons", aband, aband ? "à comprendre" : "aucun");
+        T("Permis obtenus", permis, "depuis l'ouverture") + T("Dossiers archivés", aband, aband ? "rétractations, injoignables…" : "aucun");
       // À surveiller
       const w = [];
       const vieux = eleves.filter((x) => x.statut === "Nouveau" && Date.now() - new Date(x.cree_le) > 2 * 864e5);
-      if (vieux.length) w.push(["🔴", vieux.length + (vieux.length > 1 ? " pré-inscriptions" : " pré-inscription") + " pas encore rappelée" + (vieux.length > 1 ? "s" : "") + " depuis plus de 2 jours", vieux.slice(0, 4).map((x) => x.nom).join(", ")]);
+      if (vieux.length) w.push(["🔴", vieux.length + (vieux.length > 1 ? " pré-inscriptions" : " pré-inscription") + " sans accueil depuis plus de 2 jours", vieux.slice(0, 4).map((x) => x.nom).join(", ")]);
       const nouv = eleves.filter((x) => x.statut === "Nouveau").length - vieux.length;
-      if (nouv > 0) w.push(["🟡", nouv + (nouv > 1 ? " nouvelles pré-inscriptions" : " nouvelle pré-inscription") + " à rappeler", "Secrétariat → Élèves"]);
+      if (nouv > 0) w.push(["🟡", nouv + (nouv > 1 ? " nouvelles pré-inscriptions" : " nouvelle pré-inscription") + " à accueillir", "Secrétariat → Parcours élèves → Accueil"]);
+      const aApp = eleves.filter((x) => x.statut === "Contacté").length; if (aApp) w.push(["🟡", aApp + (aApp > 1 ? " élèves à appeler" : " élève à appeler"), "Secrétariat → Parcours élèves → Appels"]);
       const vieuxDus = dus.filter((p) => Date.now() - dOf(p.jour) > 30 * 864e5);
       if (vieuxDus.length) w.push(["🔴", vieuxDus.length + (vieuxDus.length > 1 ? " élèves doivent" : " élève doit") + " encore payer depuis plus d'un mois", vieuxDus.slice(0, 4).map((p) => p.eleve_nom + " (" + F(p.reste) + ")").join(", ")]);
       else if (dus.length) w.push(["🟡", dus.length + (dus.length > 1 ? " élèves ont" : " élève a") + " un reste à payer", "Secrétariat → Paiements → À relancer"]);
