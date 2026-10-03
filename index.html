@@ -7,7 +7,7 @@
 <meta name="description" content="Auto-école SODAF à Tokoin Tamé, Lomé : permis B dès 35 000 F, permis moto, remise à niveau. Cours de code en ligne gratuits, quiz corrigés et pré-inscription en une minute.">
 <link rel="canonical" href="https://autosodaf.com/">
 <meta property="og:title" content="SODAF Auto-École · Togo">
-<meta property="og:description" content="La route s'apprend ici. Cours du manuel SODAF en ligne, quiz, outils et pré-inscription.">
+<meta property="og:description" content="L'art de conduire, la force de réussir. Cours du manuel SODAF en ligne, quiz, outils et pré-inscription.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://autosodaf.com/">
 <meta property="og:site_name" content="SODAF Auto-École">
@@ -17,7 +17,8 @@
 <meta property="og:image:alt" content="Voiture école SODAF dans une rue de Lomé">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#14171C">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "DrivingSchool", "name": "SODAF Auto-École", "url": "https://autosodaf.com/", "logo": "https://autosodaf.com/og-image.jpg", "image": "https://autosodaf.com/og-image.jpg", "telephone": "+228 72 54 41 66", "description": "Auto-école à Lomé : permis B, permis A (moto), remise à niveau et formation de chauffeurs. Cours de code en ligne gratuits.", "address": {"@type": "PostalAddress", "streetAddress": "412 Avenue Akei, Tokoin Tamé (en face de la caisse)", "addressLocality": "Lomé", "addressCountry": "TG"}, "areaServed": "Lomé", "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "08:00", "closes": "12:30"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "14:30", "closes": "18:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "08:00", "closes": "12:00"}], "priceRange": "20 000 – 80 000 FCFA", "currenciesAccepted": "XOF", "paymentAccepted": "Espèces, T-Money, Flooz"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "DrivingSchool", "name": "SODAF Auto-École",
+  "slogan": "L'art de conduire, la force de réussir.", "url": "https://autosodaf.com/", "logo": "https://autosodaf.com/og-image.jpg", "image": "https://autosodaf.com/og-image.jpg", "telephone": "+228 72 54 41 66", "description": "Auto-école à Lomé : permis B, permis A (moto), remise à niveau et formation de chauffeurs. Cours de code en ligne gratuits.", "address": {"@type": "PostalAddress", "streetAddress": "412 Avenue Akei, Tokoin Tamé (en face de la caisse)", "addressLocality": "Lomé", "addressCountry": "TG"}, "areaServed": "Lomé", "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "08:00", "closes": "12:30"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "14:30", "closes": "18:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "08:00", "closes": "12:00"}], "priceRange": "20 000 – 80 000 FCFA", "currenciesAccepted": "XOF", "paymentAccepted": "Espèces, T-Money, Flooz"}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Figtree:wght@400;500;600;700&display=swap">
 </head>
@@ -141,6 +142,7 @@ nav.main{display:flex;gap:2px;margin-left:auto}
 .greet{font-family:var(--f-display);font-size:.95rem;letter-spacing:0;color:var(--green);font-weight:600;margin-bottom:16px!important}
 #sodaf-root .hero h1{font-size:clamp(2.7rem,6.4vw,4.9rem);font-weight:800;line-height:1.02;letter-spacing:-.035em}
 .hero h1 em{font-style:normal;color:var(--green)}
+.hslogan{margin:14px 0 18px!important;font:700 clamp(1.05rem,2vw,1.3rem)/1.3 var(--f-display);letter-spacing:-.01em;display:inline-block;padding-bottom:4px;border-bottom:3px solid var(--yellow)}
 .hero p.lead{margin-top:20px;max-width:46ch;font-size:1.12rem;color:var(--muted)}
 .ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
 .facts{display:flex;flex-wrap:wrap;gap:20px 34px;margin-top:34px}
@@ -435,6 +437,7 @@ article.ch p+p{margin-top:10px}
 .devlink b{font:700 1.05rem var(--f-display);color:var(--yellow)}
 .devlink span{color:#C9CED6;font-size:.95rem}
 #sd-dev{scroll-margin-top:90px}
+.fslogan{margin-top:14px!important;font:700 1.05rem/1.3 var(--f-display);color:var(--yellow)}
 .devlist-h{font:700 1rem var(--f-display);margin:0 0 12px!important;color:var(--muted)}
 .devform{max-width:520px;margin:0 auto}
 .devform .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -690,6 +693,7 @@ const HTML = `
 <div class="wrap hero-in"><div class="hero-copy">
 <p class="greet">Woezon · Bienvenue · Alafia</p>
 <h1>La route<br>s'apprend <em>ici.</em></h1>
+<p class="hslogan">L'art de conduire, la force de réussir.</p>
 <p class="lead">SODAF forme les conducteurs du Togo : code de la route, secourisme, mécanique et conduite. Tout ce que tu apprends en salle, tu le retrouves ici, sur ton téléphone.</p>
 <div class="ctas"><a class="btn btn-green" href="#inscription">Je m'inscris</a><a class="btn btn-line" href="#cours">Réviser le code</a></div>
 <div class="facts"><div><b>16</b><span>chapitres en ligne</span></div><div><b id="sd-qcount">49</b><span>questions corrigées</span></div><div><b>7</b><span>parties du manuel</span></div></div>
@@ -1185,7 +1189,7 @@ ${HEAD("Pré-inscription", "Rejoins SODAF", "Envoie ta demande en une minute : e
 
 <div class="pat-lane" aria-hidden="true"></div>
 <footer class="site"><div class="wrap"><div class="cols">
-<div><a class="logo flogo" href="#accueil" aria-label="SODAF, accueil">${LOGO("#FFFFFF", "ws")}</a><p style="margin-top:12px;max-width:40ch">Code, secourisme, mécanique et conduite, en salle et en ligne.</p></div>
+<div><a class="logo flogo" href="#accueil" aria-label="SODAF, accueil">${LOGO("#FFFFFF", "ws")}</a><p class="fslogan">L'art de conduire, la force de réussir.</p><p style="margin-top:8px;max-width:40ch">Code, secourisme, mécanique et conduite, en salle et en ligne.</p></div>
 <div><h4>Apprendre</h4><a href="#formations">Formations et tarifs</a><a href="#cours">Les cours</a><a href="#quiz">Le quiz</a><a href="#devoirs">Les devoirs</a><a href="#outils">Les outils</a><a href="#documents">Documents</a><a href="#classe" class="fcls">Mode classe <span>Projection</span></a></div>
 <div><h4>Secrétariat</h4><span class="phone">72 54 41 66</span><p class="faddr">412 Avenue Akei, Tokoin Tamé, Lomé<br>(en face de la caisse)</p><p class="faddr">Secrétariat : lun – ven 8 h – 12 h 30 et 14 h 30 – 18 h<br>Samedi 8 h – 12 h · Dimanche fermé</p><a href="https://www.google.com/maps/search/?api=1&query=412+Avenue+Akei+Tokoin+Tam%C3%A9+Lom%C3%A9" target="_blank" rel="noopener">Itinéraire Google Maps</a><a href="#inscription">Pré-inscription</a></div>
 </div><div class="legal"><span>© 2026 SODAF Auto-École · Togo · <a href="#equipe" class="teamlink">Espace équipe</a></span><span>Powered by ADM Core</span></div></div></footer>
