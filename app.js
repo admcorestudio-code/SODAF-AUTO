@@ -744,16 +744,23 @@ a.teamtile.hl{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
 .pc-ok{font-size:.85rem;font-weight:700;color:var(--green)}
 .pc-block textarea{width:100%;font:.95rem/1.5 var(--f-body);padding:.7em .8em;border:1.5px solid var(--line);border-radius:10px;resize:vertical}
 .pc-block .tm-formact input{flex:1;min-width:180px;font:.95rem var(--f-body);padding:.55em .7em;border:1.5px solid var(--line);border-radius:10px}
-.pc-calls{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;margin-bottom:12px}
 .pc-lab{font-size:.8rem;font-weight:700;color:#3D444D;margin-bottom:6px!important}
-.pc-steps{display:flex;flex-wrap:wrap;gap:6px}
-.pc-steps button{font:600 .86rem var(--f-body);padding:.45em .8em;border-radius:999px;border:1.5px solid var(--line);background:#fff;color:#3D444D;cursor:pointer}
-.pc-steps button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
-.pc-steps button[data-rappel="matin"][aria-pressed="true"]{background:#E0A400;border-color:#E0A400;color:#14171C}
-.pc-steps button[data-rappel="apres-midi"][aria-pressed="true"]{background:var(--blue);border-color:var(--blue)}
-.pc-steps button[data-rappel=""][aria-pressed="true"]{background:var(--green);border-color:var(--green)}
+.pc-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.pc-steps button{font:700 .95rem var(--f-body);padding:.7em .6em;border-radius:12px;border:2px solid;background:#fff;cursor:pointer;line-height:1.25}
+.pc-steps button[data-rappel=""]{border-color:var(--green);color:var(--green);background:var(--green-soft)}
+.pc-steps button[data-rappel="matin"]{border-color:#E0A400;color:#7A5A00;background:#FFF6D6}
+.pc-steps button[data-rappel="apres-midi"]{border-color:var(--blue);color:var(--blue);background:#EAF1FB}
+.pc-steps button[aria-pressed="true"]{box-shadow:0 0 0 3px rgba(20,23,28,.12)}
+.pc-steps button[data-rappel=""][aria-pressed="true"]{background:var(--green);color:#fff}
+.pc-steps button[data-rappel="matin"][aria-pressed="true"]{background:#E0A400;color:#14171C}
+.pc-steps button[data-rappel="apres-midi"][aria-pressed="true"]{background:var(--blue);color:#fff}
+.pc-steps button[aria-pressed="true"]::after{content:" ✓"}
+.pc-ko{border-top:1.5px solid var(--line);padding-top:12px}
+.pc-triesrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px}
+.pc-triesrow .pc-lab{margin:0!important}
+.pc-triesrow small{flex-basis:100%;font-size:.8rem;color:var(--muted)}
 .pc-tries{display:flex;flex-wrap:wrap;gap:6px}
-.pc-tries i{font-style:normal;font:600 .82rem var(--f-body);padding:.35em .7em;border-radius:999px;border:1.5px solid var(--line);color:var(--muted)}
+.pc-tries i{font-style:normal;font:600 .82rem var(--f-body);padding:.3em .65em;border-radius:999px;border:1.5px solid var(--line);color:var(--muted)}
 .pc-tries i.on{background:var(--red-soft);border-color:var(--red);color:var(--red)}
 .pc-alert{margin-top:12px;background:var(--red-soft);border:1.5px solid var(--red);border-radius:10px;padding:12px 14px;font-size:.94rem}
 .pc-script{font-size:1rem;line-height:1.6}
@@ -770,7 +777,7 @@ a.teamtile.hl{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
 .pc-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px;padding-top:14px;border-top:1.5px solid var(--line)}
 .pc-foot>span{font-weight:700}
 .pc-red{background:var(--red);color:#fff}
-#sodaf-root .pc-noanswer{background:var(--red);color:#fff;flex:1 1 100%;justify-content:center;font-size:1.02rem;padding:.8em 1em}
+#sodaf-root .pc-noanswer{background:var(--red);color:#fff;font:700 .95rem var(--f-body);padding:.7em 1.2em;border-radius:12px}
 #sodaf-root .sc,#sodaf-root .sc li{list-style:none}
 .pc-dark{background:var(--ink);color:#fff}
 .btn.armed{outline:3px solid var(--yellow);outline-offset:2px}
@@ -784,7 +791,7 @@ a.teamtile.hl{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
 .pc-feed div{display:grid;grid-template-columns:auto 1fr;gap:0 12px;padding:7px 0;border-top:1px solid var(--line);font-size:.92rem}
 .pc-feed time{color:var(--muted);font-size:.82rem;grid-row:1/3;font-variant-numeric:tabular-nums}
 .pc-feed span{color:#3D444D}
-@media (max-width:899px){.pc{grid-template-columns:1fr}.pc-list{position:static}.pc-items{max-height:none}.pc.has-sel .pc-list{display:none}.pc:not(.has-sel) .pc-detail{display:none}.pc-back{display:inline-block}.pc-calls{grid-template-columns:1fr}.pc-head h3{font-size:1.4rem}}
+@media (max-width:899px){.pc{grid-template-columns:1fr}.pc-list{position:static}.pc-items{max-height:none}.pc.has-sel .pc-list{display:none}.pc:not(.has-sel) .pc-detail{display:none}.pc-back{display:inline-block}.pc-steps button{font-size:.84rem;padding:.65em .35em}.pc-head h3{font-size:1.4rem}}
 .tm-row.st-libre{border-left-color:#C9CED4;background:#FAFBFB}
 .tm-row.st-reserve{border-left-color:var(--blue)}
 .tm-row.st-fait{border-left-color:var(--green);background:var(--green-soft)}
@@ -2626,10 +2633,10 @@ function init(root) {
           '<div class="pc-foot"><span>Numéro qui ne marche pas ?</span><button class="btn btn-sm pc-red" type="button" data-arch="Faux numéro">Coordonnées erronées / Faux numéro</button></div>';
       } else if (st === "appels") {
         const t = x.appels || 0;
-        body = '<div class="pc-block"><div class="pc-bh"><b>Historique d\'appels</b></div><div class="pc-calls"><div><p class="pc-lab">Quand rappeler</p><div class="pc-steps">' +
-          [["", "À appeler"], ["matin", "Rappeler le matin"], ["apres-midi", "Rappeler l'après-midi"]].map((r) => '<button type="button" data-rappel="' + r[0] + '" aria-pressed="' + ((x.rappel || "") === r[0]) + '">' + r[1] + "</button>").join("") + "</div></div>" +
-          '<div><p class="pc-lab">Tentatives sans réponse</p><div class="pc-tries">' + [1, 2, 3, 4].map((i) => '<i class="' + (i <= t ? "on" : "") + '">' + i + "X" + (i === 4 ? " · injoignable" : "") + "</i>").join("") + "</div></div></div>" +
-          '<div class="tm-formact"><button class="btn pc-noanswer" type="button" data-a="callKo">✗ Pas de réponse</button><input id="sd-pcCallNote" placeholder="Ce qu\'il a dit (facultatif)" maxlength="300"></div>' +
+        body = '<div class="pc-block"><div class="pc-bh"><b>Historique d\'appels</b></div><p class="pc-lab">Statut</p><div class="pc-steps">' +
+          [["", "📞 Call à faire\u00a0!"], ["matin", "☀️ Rappeler le matin"], ["apres-midi", "🌇 Rappeler l'après-midi"]].map((r) => '<button type="button" data-rappel="' + r[0] + '" aria-pressed="' + ((x.rappel || "") === r[0]) + '">' + r[1] + "</button>").join("") + "</div>" +
+          '<div class="pc-ko"><div class="tm-formact"><button class="btn pc-noanswer" type="button" data-a="callKo">✗ Pas de réponse</button><input id="sd-pcCallNote" placeholder="Ce qu\'il a dit (facultatif)" maxlength="300"></div>' +
+          '<div class="pc-triesrow"><span class="pc-lab">Tentatives sans réponse</span><div class="pc-tries">' + [1, 2, 3, 4].map((i) => '<i class="' + (i <= t ? "on" : "") + '">' + i + "X" + (i === 4 ? " · injoignable" : "") + "</i>").join("") + '</div><small>Se coche tout seul à chaque « Pas de réponse ».</small></div></div>' +
           (t >= 4 ? '<div class="pc-alert"><b>4 appels sans réponse.</b> Envoie la relance WhatsApp, puis range le dossier en « Injoignable ». Tu pourras le ressortir s\'il répond.<div class="tm-formact">' + (n ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-a="relance" href="' + wa(msgRelance(x)) + '">Envoyer la relance ↗</a>' : "") + '<button class="btn btn-sm pc-red" type="button" data-arch="Injoignable">Archiver : Injoignable</button></div></div>' : "") + "</div>" +
           '<div class="pc-block pc-dos" id="sd-pcDos" hidden><div class="pc-bh"><b>Lien d\'inscription à envoyer sur WhatsApp</b><span class="tm-note" style="margin:0!important">Prix, lien pour finaliser, adresse</span></div><textarea id="sd-pcDosMsg" rows="16">' + esc(msgDossier(x)) + '</textarea><div class="tm-formact">' + (n ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-a="sendDossier" href="' + wa(msgDossier(x)) + '">Envoyer le lien d\'inscription sur WhatsApp ↗</a>' : '<span class="tm-err">Pas de numéro : ajoute-le avec Modifier.</span>') + '<span class="tm-note" style="margin:0!important">Après l\'envoi, le dossier passe dans « Dossier envoyé ».</span></div></div>' +
           '<div class="pc-block"><div class="pc-bh"><b>Script d\'appel</b><span class="tm-note" style="margin:0!important">' + esc(x.formation || "") + '</span></div><div class="pc-script">' + script(x) + "</div></div>";
