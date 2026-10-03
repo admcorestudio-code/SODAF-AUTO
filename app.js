@@ -610,6 +610,11 @@ a.teamtile.hl{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
 .tm-dr div.hl b{color:#fff}
 .tm-dr small{font-size:.8rem;color:var(--muted)}
 .tm-small{font-size:.82rem!important;min-width:6ch}
+.tm-src{display:flex;flex-direction:column;gap:10px}
+.tm-srow{display:grid;grid-template-columns:minmax(120px,190px) 1fr auto;gap:12px;align-items:center;font-size:.94rem}
+.tm-srow i{display:block;height:10px;background:var(--soft);border-radius:999px;overflow:hidden}
+.tm-srow em{display:block;height:100%;background:var(--green);border-radius:999px}
+.tm-srow b{font-variant-numeric:tabular-nums;min-width:9ch;text-align:right}
 .tm-months{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;align-items:end}
 .tm-mo{display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center}
 .tm-bar-v{height:110px;width:100%;max-width:56px;background:var(--soft);border-radius:8px;display:flex;align-items:flex-end;overflow:hidden}
@@ -1525,9 +1530,13 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="pc-list">
 <div class="pc-stages" id="sd-pcStages" role="tablist"><button type="button" data-st="accueil">Accueil <em></em></button><button type="button" data-st="appels">Appels <em></em></button><button type="button" data-st="dossier">Dossier envoyé <em></em></button><button type="button" data-st="formation">En formation <em></em></button><button type="button" data-st="archives">Archivés <em></em></button></div>
 <form id="sd-elAdd" class="card tm-form" hidden novalidate>
-<div class="field"><label for="sd-elN">Nom et prénom</label><input id="sd-elN"></div>
+<p class="eyebrow" style="margin:0 0 4px">Nouveau client</p>
+<div class="row2"><div class="field"><label for="sd-elN">Nom</label><input id="sd-elN" autocomplete="off" placeholder="ex. AGBEKO"></div><div class="field"><label for="sd-elP">Prénoms</label><input id="sd-elP" autocomplete="off" placeholder="ex. Yao Koffi"></div></div>
 <div class="field"><label for="sd-elT">Téléphone</label><div class="tel"><span>+228</span><input id="sd-elT" inputmode="numeric" maxlength="11" placeholder="90 00 00 00"></div></div>
-<div class="row2"><div class="field"><label for="sd-elFo">Formation</label><select id="sd-elFo"><option>Permis B</option><option>Permis A</option><option>Pack A + B</option><option>Remise à niveau</option><option>Formation entreprise</option></select></div><div class="field"><label for="sd-elSt">Étape</label><select id="sd-elSt"><option value="Inscrit">Il s'inscrit maintenant</option><option value="Contacté">Juste renseigné, à rappeler</option></select></div></div>
+<div class="field"><label for="sd-elQ">Quartier</label><input id="sd-elQ" autocomplete="off" placeholder="ex. Bè, Agoè, Tokoin"></div>
+<div class="field"><label for="sd-elSrc">Comment il nous a connus</label><select id="sd-elSrc"><option value="">— Choisir —</option><option value="agence">Venu à l'agence (passage, enseigne)</option><option value="appel">Appel téléphonique</option><option value="whatsapp">WhatsApp</option><option value="bouche">Bouche-à-oreille (ami, famille, ancien élève)</option><option value="reseaux">Facebook / TikTok / Instagram</option><option value="affiche">Affiche, flyer, QR code</option><option value="entreprise">Entreprise (chauffeur envoyé)</option><option value="autre">Autre</option></select></div>
+<div class="field"><label for="sd-elFo">Formation</label><select id="sd-elFo"><option>Permis B</option><option>Permis A</option><option>Pack A + B</option><option>Remise à niveau</option><option>Formation entreprise</option></select></div>
+<div class="field"><label for="sd-elSt">Étape</label><select id="sd-elSt"><option value="Inscrit">S'inscrit maintenant</option><option value="Contacté">Renseigné, à rappeler</option></select></div>
 <div class="tm-formact"><button class="btn btn-green btn-sm" type="submit">Enregistrer</button><button class="linkbtn" type="button" id="sd-elCancel">Annuler</button><span class="tm-err" id="sd-elErr"></span></div>
 </form>
 <div id="sd-pcList" class="pc-items"></div>
@@ -1598,6 +1607,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="card"><p class="eyebrow">À surveiller</p><h3 class="tm-h3">Ce qui attend une action</h3><div id="sd-drWatch" class="tm-list"></div></div>
 <div class="card"><p class="eyebrow">Activité</p><h3 class="tm-h3">Derniers mouvements</h3><div id="sd-drFeed" class="tm-list"></div></div>
 </div>
+<div class="card" style="margin-top:16px"><p class="eyebrow">Ce mois-ci</p><h3 class="tm-h3">D'où viennent les nouveaux clients</h3><div id="sd-drSrc" class="tm-src"></div></div>
 <div class="card" style="margin-top:16px"><p class="eyebrow">6 derniers mois</p><h3 class="tm-h3">Inscriptions et encaissements</h3><div id="sd-drMonths" class="tm-months"></div></div>
 </div>
 <div class="tm-pane" data-pane="mon" role="tabpanel" hidden>
@@ -2533,6 +2543,8 @@ function init(root) {
     const PRIX = { "Permis B": "55 000 F la formation complète (formule courte dès 35 000 F, accélérée 75 000 ou 80 000 F)", "Permis A": "30 000 F", "Pack A + B": "80 000 F", "Remise à niveau": "20 000 F", "Formation entreprise": "sur devis" };
     const PIECES = [["acte", "Acte de naissance"], ["cni", "Photocopie carte d'identité"], ["photos", "2 photos passeport"], ["examen", "Dépôt examen 30 000 F payé"], ["deja", "A déjà conduit"]];
     const CODE = (x) => "SO" + x.id;
+    const SRC = { site: "Site web", agence: "Venu à l'agence", bureau: "Venu à l'agence", appel: "Appel téléphonique", whatsapp: "WhatsApp", bouche: "Bouche-à-oreille", reseaux: "Facebook / TikTok", affiche: "Affiche, flyer, QR", entreprise: "Entreprise", autre: "Autre" };
+    const srcOf = (x) => SRC[x.source] || (x.source ? x.source : "Non renseigné");
     const prenom = (x) => (x.nom || "").trim().split(/\s+/)[0];
     const msgAccueil = (x) => "Bonjour " + prenom(x) + ",\n\nIci le secrétariat de SODAF Auto-École. Nous avons bien reçu ta pré-inscription, merci !\n\n*TON DOSSIER*\n• N° Client : " + CODE(x) + "\n• Formation : " + (x.formation || "à préciser") + "\n\nNous allons t'appeler très bientôt pour répondre à tes questions et préparer ton inscription.\nGarde ton téléphone près de toi.\n\nÀ très vite !\n*L'équipe SODAF · L'art de conduire, la force de réussir.*\nautosodaf.com";
     const msgRelance = (x) => "Bonjour " + prenom(x) + ",\n\nIci le secrétariat de *SODAF Auto-École*. Nous avons essayé de te joindre plusieurs fois au sujet de ta pré-inscription, sans succès.\n\n*TON DOSSIER*\n• N° Client : " + CODE(x) + "\n• Formation : " + (x.formation || "à préciser") + "\n\nTon dossier reste ouvert. Si tu es toujours intéressé(e) :\n• Réponds simplement à ce message, nous te rappelons au moment qui t'arrange ;\n• Ou appelle-nous au *72 54 41 66*.\n\nEn attendant, découvre nos formations et révise le code gratuitement sur notre site :\nautosodaf.com\n\nÀ bientôt !\n*L'équipe SODAF · L'art de conduire, la force de réussir.*";
@@ -2643,7 +2655,7 @@ function init(root) {
       const head = '<button type="button" class="linkbtn pc-back" data-a="back">← Retour à la liste</button><div class="pc-head"><div><p class="eyebrow">' + { accueil: "Accueil", appels: "Zone d'appel", dossier: "Dossier envoyé · en réflexion", formation: "En formation", archives: "Archivé" }[st] + '</p><h3>' + esc(x.nom) + ' <span>| ' + CODE(x) + "</span></h3></div>" +
         ({ accueil: '<button class="btn btn-blue btn-sm" type="button" data-a="toCall">Basculer en zone d\'appel →</button>', appels: '<button class="btn btn-green btn-sm" type="button" data-a="prepDossier">Intéressé : finaliser l’inscription →</button>', dossier: '<button class="btn btn-green btn-sm" type="button" data-a="enroll">' + (x.web && x.web.mode === "mixx" ? "Paiement Mixx vérifié : faire le reçu" : "Paiement reçu : faire le reçu") + "</button>", formation: '<button class="btn btn-green btn-sm" type="button" data-a="rc">Faire un reçu</button>', archives: '<button class="btn btn-blue btn-sm" type="button" data-a="revive">Ressortir : remettre en appel</button>' }[st]) + "</div>";
       const info = '<div class="pc-info"><div><span>N° client</span><b>' + CODE(x) + '</b></div><div><span>Téléphone</span><b>' + (n ? '<a href="tel:+228' + n + '">+228 ' + n.replace(/(\d{2})(?=\d)/g, "$1 ") + "</a>" : "—") + '</b></div><div><span>Formation</span><b>' + esc(x.formation || "—") + '</b></div><div><span>Quartier</span><b>' + esc(x.quartier || "—") + "</b></div>" +
-        (x.creneau_prefere ? '<div><span>Préfère</span><b>' + esc(x.creneau_prefere) + "</b></div>" : "") + (x.paiement_prefere ? '<div><span>Paiement</span><b>' + esc(x.paiement_prefere) + "</b></div>" : "") + '<div><span>Arrivé</span><b>' + new Date(x.cree_le).toLocaleDateString("fr-FR") + " · " + (x.source === "site" ? "site" : "bureau") + "</b></div>" +
+        (x.creneau_prefere ? '<div><span>Préfère</span><b>' + esc(x.creneau_prefere) + "</b></div>" : "") + (x.paiement_prefere ? '<div><span>Paiement</span><b>' + esc(x.paiement_prefere) + "</b></div>" : "") + '<div><span>Arrivé</span><b>' + new Date(x.cree_le).toLocaleDateString("fr-FR") + " · " + esc(srcOf(x)) + "</b></div>" +
         '<div><span>Statut</span><b>' + (st === "formation" ? '<select data-a="statut">' + ETAPES.formation.map((t) => "<option" + (t === x.statut ? " selected" : "") + ">" + t + "</option>").join("") + "</select>" : esc(x.statut === "Abandon" ? "Archivé" + (x.archive_motif ? " · " + x.archive_motif : "") : x.statut)) + "</b></div>" +
         (x.message ? '<div class="wide"><span>Son message</span><b>« ' + esc(x.message) + " »</b></div>" : "") + (x.notes ? '<div class="wide"><span>Note interne</span><b>' + esc(x.notes) + "</b></div>" : "") + "</div>";
       let body = "";
@@ -2765,14 +2777,17 @@ function init(root) {
         if (await patchEl(x, body, "Fiche élève enregistrée")) { fillEleveSelect(); renderList(); }
       });
     }
-    $("#sd-elAddBtn").addEventListener("click", () => { $("#sd-elAdd").hidden = false; $("#sd-elN").focus(); });
+    $("#sd-elAddBtn").addEventListener("click", () => { $("#sd-elAdd").hidden = false; $("#sd-pcQ").value = ""; $("#sd-elN").focus(); });
     $("#sd-elCancel").addEventListener("click", () => { $("#sd-elAdd").hidden = true; });
     $("#sd-elAdd").addEventListener("submit", async (e) => {
       e.preventDefault();
-      const nom = $("#sd-elN").value.trim().replace(/\s+/g, " "), tel = $("#sd-elT").value.replace(/\D/g, ""), err = $("#sd-elErr"), statut = $("#sd-elSt").value;
-      if (nom.length < 3 || (tel && tel.length !== 8)) { err.textContent = "Nom (3 lettres min.) et numéro à 8 chiffres."; return; }
+      const nf = $("#sd-elN").value.trim().replace(/\s+/g, " ").toUpperCase(), pr = $("#sd-elP").value.trim().replace(/\s+/g, " "), nom = (pr + " " + nf).trim();
+      const tel = $("#sd-elT").value.replace(/\D/g, ""), q = $("#sd-elQ").value.trim(), src = $("#sd-elSrc").value, err = $("#sd-elErr"), statut = $("#sd-elSt").value;
+      if (nf.length < 2 || pr.length < 2) { err.textContent = "Écris le nom et les prénoms."; return; }
+      if (tel.length !== 8) { err.textContent = "Numéro de téléphone à 8 chiffres."; return; }
+      if (!src) { err.textContent = "Choisis comment il nous a connus."; return; }
       err.textContent = "";
-      const r = await run(() => DB.q("eleves", { method: "POST", body: { nom, telephone: tel ? "+228" + tel : null, formation: $("#sd-elFo").value, source: "bureau", statut }, prefer: "return=minimal" }), "Élève ajouté");
+      const r = await run(() => DB.q("eleves", { method: "POST", body: { nom, nom_famille: nf, prenoms: pr, telephone: "+228" + tel, quartier: q || null, formation: $("#sd-elFo").value, source: src, statut }, prefer: "return=minimal" }), "Client ajouté");
       if (r) { $("#sd-elAdd").reset(); $("#sd-elAdd").hidden = true; pcStage = statut === "Contacté" ? "appels" : "formation"; S.set("pcStage", pcStage); pcSel = null; loadEleves(); }
     });
     function fillEleveSelect() {
@@ -2923,9 +2938,13 @@ function init(root) {
       const T = (lab, val, sub, cls) => '<div class="' + (cls || "") + '"><span>' + lab + "</span><b>" + val + "</b>" + (sub ? "<small>" + sub + "</small>" : "") + "</div>";
       $("#sd-drStats").innerHTML =
         T("Encaissé ce mois", F(enc), evo, "hl") + T("Reste à encaisser", F(du), dus.length + (dus.length > 1 ? " élèves" : " élève")) +
-        T("Nouveaux élèves ce mois", nouveaux.length, site + " via le site · " + (nouveaux.length - site) + " au bureau") + T("Élèves en formation", actifs, "Inscrits et en formation") +
+        T("Nouveaux élèves ce mois", nouveaux.length, site + " via le site · " + (nouveaux.length - site) + " ajoutés au bureau") + T("Élèves en formation", actifs, "Inscrits et en formation") +
         T("Séances de conduite faites", faits, abs + (abs > 1 ? " absences" : " absence") + " ce mois") + T("Planning de la semaine", pct(wkPris, wkOpen.length) + " %", wkPris + " créneaux pris sur " + wkOpen.length) +
         T("Permis obtenus", permis, "depuis l'ouverture") + T("Dossiers archivés", aband, aband ? "rétractations, injoignables…" : "aucun");
+      // Provenance des nouveaux clients du mois
+      const cnt = {}; nouveaux.forEach((x) => { const k = srcOf(x); cnt[k] = (cnt[k] || 0) + 1; });
+      const rows = Object.entries(cnt).sort((a, b) => b[1] - a[1]), mx = rows.length ? rows[0][1] : 1;
+      $("#sd-drSrc").innerHTML = rows.length ? rows.map((r) => '<div class="tm-srow"><span>' + esc(r[0]) + '</span><i><em style="width:' + Math.max(4, Math.round((r[1] / mx) * 100)) + '%"></em></i><b>' + r[1] + " · " + pct(r[1], nouveaux.length) + " %</b></div>").join("") : '<p class="tm-empty">Aucun nouveau client ce mois-ci pour l\'instant.</p>';
       // À surveiller
       const w = [];
       const vieux = eleves.filter((x) => x.statut === "Nouveau" && Date.now() - new Date(x.cree_le) > 2 * 864e5);
@@ -2943,7 +2962,7 @@ function init(root) {
       if (abs >= 3) w.push(["🟠", abs + " absences en conduite ce mois", "Moniteur → séances du jour"]);
       $("#sd-drWatch").innerHTML = w.length ? w.map((x) => '<div class="tm-row"><div class="tm-time">' + x[0] + '</div><div class="tm-main"><b>' + esc(x[1]) + "</b><span>" + esc(x[2]) + "</span></div></div>").join("") : '<p class="tm-empty">Rien à signaler. Tout est à jour ✓</p>';
       // Derniers mouvements
-      const feed = [...eleves.slice(0, 10).map((x) => ({ t: x.cree_le, h: "<b>" + esc(x.nom) + "</b><span>" + (x.source === "site" ? "Pré-inscription sur le site" : "Inscrit au bureau") + " · " + esc(x.formation || "") + "</span>" })),
+      const feed = [...eleves.slice(0, 10).map((x) => ({ t: x.cree_le, h: "<b>" + esc(x.nom) + "</b><span>" + (x.source === "site" ? "Pré-inscription sur le site" : "Ajouté au bureau · " + srcOf(x)) + " · " + esc(x.formation || "") + "</span>" })),
         ...pay.slice(0, 10).map((p) => ({ t: p.cree_le, h: "<b>" + esc(p.eleve_nom) + " · " + F(p.montant) + (p.annule ? " (annulé)" : "") + "</b><span>" + esc(p.motif) + " · " + esc(p.mode) + "</span>" }))]
         .sort((a, b) => (a.t < b.t ? 1 : -1)).slice(0, 8);
       $("#sd-drFeed").innerHTML = feed.length ? feed.map((x) => '<div class="tm-row"><div class="tm-time tm-small">' + new Date(x.t).toLocaleDateString("fr-FR", { day: "numeric", month: "short" }) + '</div><div class="tm-main">' + x.h + "</div></div>").join("") : '<p class="tm-empty">Aucune activité pour l\'instant.</p>';
