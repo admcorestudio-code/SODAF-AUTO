@@ -463,7 +463,7 @@ article.ch p+p{margin-top:10px}
 #sodaf-root #sd-rcOther{font:1rem var(--f-body);padding:.7em .8em;border:1.5px solid var(--line);border-radius:10px;width:100%}
 .rcmodes{border:0;padding:0;margin:0 0 6px;min-width:0;display:flex;flex-wrap:wrap;gap:8px}
 .rcmodes legend{font-weight:600;margin-bottom:8px;padding:0;width:100%}
-.rcmode{display:flex;align-items:center;gap:10px;border:1.5px solid var(--line);border-radius:999px;padding:10px 18px;cursor:pointer;font-weight:600}
+#sodaf-root .rcmodes .rcmode{display:inline-flex;width:auto;align-items:center;gap:10px;border:1.5px solid var(--line);border-radius:999px;padding:10px 18px;cursor:pointer;font-weight:600}
 .rcmode:has(input:checked){border-color:var(--green);background:var(--green-soft)}
 #sodaf-root .rcmode input{width:18px;height:18px;padding:0;margin:0;flex:0 0 18px;accent-color:var(--green)}
 .rcform .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -506,6 +506,41 @@ article.ch p+p{margin-top:10px}
 .rc-sign img{width:132px;height:132px;transform:rotate(-9deg);opacity:.9;margin-right:6px}
 .rc-foot{background:#F6F7F8;padding:12px 30px;display:flex;justify-content:space-between;gap:10px;font-size:10.5px;color:#5D6570;align-items:center}
 .rc-foot b{color:#0B6E4F;font:700 11px Outfit,sans-serif;white-space:nowrap}
+.tm-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px 24px;flex-wrap:wrap;margin-bottom:22px}
+.tm-today{color:var(--muted);margin-top:6px!important}
+.tm-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:12px}
+.tm-tabs button{text-align:left;border:1.5px solid var(--line);background:#fff;border-radius:14px;padding:14px 16px;cursor:pointer;font:inherit;color:var(--ink);display:flex;flex-direction:column;gap:2px;border-top:4px solid var(--line)}
+.tm-tabs button b{font:700 1.15rem var(--f-display)}
+.tm-tabs button small{color:var(--muted);font-size:.86rem}
+.tm-tabs button[data-t="sec"][aria-selected="true"]{border-color:var(--green);border-top-color:var(--green);background:var(--green-soft)}
+.tm-tabs button[data-t="mon"][aria-selected="true"]{border-color:#C99400;border-top-color:var(--yellow);background:#FFF7DC}
+.tm-tabs button[data-t="docs"][aria-selected="true"]{border-color:var(--ink);border-top-color:var(--ink);background:var(--soft)}
+@media (max-width:640px){.tm-tabs{grid-template-columns:1fr}.tm-tabs button{flex-direction:row;align-items:baseline;gap:10px;padding:12px 14px}}
+.tm-hint{font-size:.88rem;color:var(--muted);margin-bottom:22px!important}
+.tm-role{font-weight:600;margin-bottom:16px!important;padding-left:12px;border-left:4px solid var(--green)}
+.tm-pane[data-pane="mon"] .tm-role{border-left-color:var(--yellow)}
+.tm-pane[data-pane="docs"] .tm-role{border-left-color:var(--ink)}
+.tm-sub{display:flex;justify-content:space-between;align-items:end;flex-wrap:wrap;gap:8px 24px;margin:34px 0 14px}
+.tm-sub h3{font:700 1.45rem var(--f-display);margin-top:2px}
+.tm-sub p:not(.eyebrow){max-width:52ch;color:var(--muted)}
+.tm-guides{margin-top:0}
+.tm-note{font-size:.9rem;color:var(--muted);margin-top:10px!important}
+a.teamtile.hl{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
+.tm-pane[data-pane="mon"] a.teamtile.hl{border-color:var(--yellow);box-shadow:inset 0 0 0 1px var(--yellow)}
+.tm-week{margin-bottom:16px;border-top:4px solid var(--yellow)}
+.tm-wk-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.tm-wk-head h3{font:700 1.3rem var(--f-display);margin-top:2px}
+.tm-days{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media (max-width:900px){.tm-days{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.tm-days{grid-template-columns:1fr}}
+.tm-day{display:flex;flex-direction:column;gap:2px;padding:12px 14px;border-radius:12px;background:var(--soft);text-decoration:none;color:var(--ink)}
+.tm-day:hover{background:#FFF7DC}
+.tm-day b{font:700 1rem var(--f-display)}
+.tm-day span{font-size:.92rem}
+.tm-day em{font-style:normal;font-size:.84rem;color:var(--green);font-weight:700;margin-top:4px}
+.rcbox{margin-top:0}
+.tm-pane[data-pane="mon"] .teamgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:600px){.tm-pane[data-pane="mon"] .teamgrid{grid-template-columns:1fr}}
 .devlist-h{font:700 1rem var(--f-display);margin:0 0 12px!important;color:var(--muted)}
 .devform{max-width:520px;margin:0 auto}
 .devform .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -1185,7 +1220,7 @@ ${HEAD("SODAF Auto-École", "Ton reçu de paiement", "Garde ce lien ou télécha
 </section>
 
 <section class="page" data-page="equipe" hidden>
-${HEAD("Équipe SODAF", "Espace secrétariat", "Réservé au personnel de l'auto-école.")}
+${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-école : secrétariat et moniteur.")}
 <div class="wrap sec">
 <div id="sd-teamLock" class="card lockcard">
 <div class="lockico" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
@@ -1196,16 +1231,23 @@ ${HEAD("Équipe SODAF", "Espace secrétariat", "Réservé au personnel de l'auto
 <a class="btn btn-line btn-sm" href="#accueil" style="margin-top:16px">Retour au site</a>
 </div>
 <div id="sd-teamPanel" hidden>
-<div class="sec-head" style="margin-bottom:18px"><div><p class="eyebrow">Bonjour</p><h2>Que veux-tu gérer ?</h2></div><p>Chaque bouton ouvre l'écran Airtable correspondant. Connecte-toi une fois avec l'e-mail de ton invitation ; sur téléphone, l'application Airtable reste connectée.</p></div>
-<div class="teamgrid">
-<a class="card teamtile" id="sd-tConduite" target="_blank" rel="noopener" href="#"><b>Conduite</b><span>Créneaux libres, réserver une séance, prévenir l'élève sur WhatsApp, rappels de la veille.</span><em>Ouvrir le planning →</em></a>
-<a class="card teamtile" id="sd-tCode" target="_blank" rel="noopener" href="#"><b>Cours de code</b><span>Séances du lundi, mercredi, vendredi et examen blanc du samedi : thème du jour, présents.</span><em>Ouvrir les cours →</em></a>
-<a class="card teamtile" id="sd-tInsc" target="_blank" rel="noopener" href="#"><b>Inscriptions</b><span>Pré-inscriptions reçues par le site, suivi de chaque élève et de ses séances.</span><em>Ouvrir les inscriptions →</em></a>
-<a class="card teamtile" id="sd-tDev" target="_blank" rel="noopener" href="#"><b>Devoirs</b><span>Résultats des devoirs de la semaine et message prêt à coller dans le groupe WhatsApp.</span><em>Ouvrir les devoirs →</em></a>
-<a class="card teamtile" id="sd-tPay" target="_blank" rel="noopener" href="#"><b>Paiements</b><span>Tous les reçus faits sur le site, ce qui a été encaissé ce mois-ci, et qui doit encore payer.</span><em>Ouvrir les paiements →</em></a>
-<a class="card teamtile" href="#equipe-recu"><b>Faire un reçu</b><span>Reçu PDF avec le cachet SODAF, à envoyer à l'élève sur WhatsApp.</span><em>Créer un reçu ↓</em></a>
+<div class="tm-top"><div><p class="eyebrow">Espace équipe SODAF</p><h2>Bonjour, qui es-tu aujourd'hui ?</h2><p class="tm-today" id="sd-tmToday"></p></div><button class="linkbtn" type="button" id="sd-teamOut">Se déconnecter de cet appareil</button></div>
+<div class="tm-tabs" role="tablist" id="sd-tmTabs">
+<button role="tab" data-t="sec" aria-selected="true"><b>Secrétariat</b><small>Inscriptions, paiements, réservations</small></button>
+<button role="tab" data-t="mon" aria-selected="false"><b>Moniteur</b><small>Code en salle, conduite</small></button>
+<button role="tab" data-t="docs" aria-selected="false"><b>Documents</b><small>Carte, cachet, QR, affiches</small></button>
 </div>
-<div class="rcbox" id="equipe-recu"><div class="sec-head" style="margin:34px 0 16px"><div><p class="eyebrow">Paiements</p><h2>Faire un reçu</h2></div><p>Remplis après chaque paiement : le reçu PDF est créé aux couleurs SODAF avec le cachet, enregistré dans Airtable, et tu l'envoies à l'élève sur WhatsApp.</p></div>
+<p class="tm-hint">Les boutons ouvrent l'écran Airtable correspondant. Connecte-toi une fois avec l'e-mail de ton invitation ; sur téléphone, l'application Airtable reste connectée.</p>
+<div class="tm-pane" data-pane="sec" role="tabpanel">
+<p class="tm-role">Accueil des élèves, inscriptions, paiements, réservations de conduite et messages WhatsApp.</p>
+<div class="teamgrid">
+<a class="card teamtile " data-tl="inscriptions" href="#" target="_blank" rel="noopener"><b>Inscriptions</b><span>Pré-inscriptions reçues par le site et suivi de chaque élève.</span><em>Ouvrir les inscriptions →</em></a>
+<a class="card teamtile hl" href="#equipe-recu"><b>Faire un reçu</b><span>Après chaque paiement : reçu PDF avec le cachet, envoyé sur WhatsApp.</span><em>Créer un reçu ↓</em></a>
+<a class="card teamtile " data-tl="paiements" href="#" target="_blank" rel="noopener"><b>Paiements</b><span>Ce qui a été encaissé ce mois-ci et qui doit encore payer.</span><em>Ouvrir les paiements →</em></a>
+<a class="card teamtile " data-tl="conduite" href="#" target="_blank" rel="noopener"><b>Réserver la conduite</b><span>Créneaux libres, réservation avec l'élève, confirmation et rappel WhatsApp.</span><em>Ouvrir le planning →</em></a>
+<a class="card teamtile " data-tl="devoirs" href="#" target="_blank" rel="noopener"><b>Message du devoir</b><span>Le mercredi : résultats de la semaine à coller dans le groupe WhatsApp.</span><em>Ouvrir les devoirs →</em></a>
+</div>
+<div class="rcbox" id="equipe-recu"><div class="tm-sub"><div><p class="eyebrow">Après chaque paiement</p><h3>Faire un reçu</h3></div><p>Remplis après chaque paiement : le reçu PDF est créé aux couleurs SODAF avec le cachet, enregistré dans Airtable, et tu l'envoies à l'élève sur WhatsApp.</p></div>
 <form class="card rcform" id="sd-rcForm" novalidate>
 <div class="row2"><div class="field"><label for="sd-rcName">Nom et prénom de l'élève</label><input id="sd-rcName" name="eleve" placeholder="Ex. Kossi Agbeko"></div><div class="field"><label for="sd-rcTel">Téléphone / WhatsApp (facultatif)</label><div class="tel"><span>+228</span><input id="sd-rcTel" name="tel" inputmode="numeric" maxlength="11" placeholder="90 00 00 00"></div></div></div>
 <div class="field"><label for="sd-rcF">1. Quelle formation a-t-il choisie ?</label><select id="sd-rcF" name="formation"><option data-p="55000">Formation complète (permis B)</option><option data-p="75000">Formation accélérée 2 mois (permis B)</option><option data-p="80000">Formation accélérée 1 mois (permis B)</option><option data-p="35000">Formule courte (permis B)</option><option data-p="25000">Formation théorique seule</option><option data-p="30000">Permis A (moto)</option><option data-p="80000">Pack A + B (moto et voiture)</option><option data-p="20000">Remise à niveau</option><option data-p="0">Formation entreprise (sur devis)</option><option data-p="0">Hors formation (séance ou frais)</option></select></div>
@@ -1229,12 +1271,38 @@ ${HEAD("Équipe SODAF", "Espace secrétariat", "Réservé au personnel de l'auto
 <div class="rcacts"><a class="btn btn-wa" id="sd-rcWa" target="_blank" rel="noopener" href="#">Envoyer sur WhatsApp à l'élève</a><button class="linkbtn" type="button" id="sd-rcShare">Partager le PDF</button><button class="linkbtn" type="button" id="sd-rcDl">Télécharger le PDF</button><button class="linkbtn" type="button" id="sd-rcNew">Faire un autre reçu</button></div>
 <p class="rchelp" id="sd-rcHelp">Le bouton vert ouvre directement la discussion WhatsApp de l'élève, avec le message et le lien de son reçu : il n'y a plus qu'à appuyer sur Envoyer.</p>
 </div></div>
-<div class="grid g2" style="margin-top:18px">
-<div class="card soft"><p class="eyebrow">Réserver une séance de conduite</p><ol class="teamsteps"><li>Ouvre <b>Conduite</b>, onglet <b>Créneaux libres</b>, et choisis l'heure avec l'élève.</li><li>Touche le créneau, choisis l'<b>élève</b> et mets le statut sur <b>Réservé</b>.</li><li>Touche <b>Confirmer sur WhatsApp</b> : le message est prêt, appuie sur Envoyer.</li><li>La veille, onglet <b>Demain (rappels)</b> : touche <b>Rappel de la veille</b> pour chaque élève.</li></ol></div>
-<div class="card soft"><p class="eyebrow">Après chaque cours de code</p><ol class="teamsteps"><li>Ouvre <b>Cours de code</b>, touche la séance du jour.</li><li>Choisis le <b>thème</b> (le chapitre traité) et ajoute les <b>présents</b>.</li><li>Mets le statut sur <b>Fait</b>. L'onglet <b>À cocher</b> montre les séances oubliées.</li></ol><p style="margin-top:12px;font-size:.92rem;color:var(--muted)">Les créneaux du mois suivant se créent tout seuls le 24 de chaque mois.</p></div>
-<div class="card soft"><p class="eyebrow">Mercredi : résultats du devoir</p><ol class="teamsteps"><li>Ouvre <b>Devoirs</b>, onglet <b>Cette semaine</b>, et touche la semaine.</li><li>Copie le <b>Message WhatsApp</b> (participants, notes, moyenne).</li><li>Colle-le dans le groupe de l'auto-école. En salle, le moniteur corrige avec <b>Mode classe → Devoir</b>.</li></ol></div>
+
+<div class="tm-sub"><div><p class="eyebrow">Mode d'emploi</p><h3>Les gestes du secrétariat</h3></div></div>
+<div class="grid g2 tm-guides">
+<div class="card soft"><p class="eyebrow">Un nouvel élève arrive</p><ol class="teamsteps"><li>Ouvre <b>Inscriptions</b> : vérifie sa fiche (ou crée-la s'il n'est pas passé par le site).</li><li>Encaisse, puis <b>Faire un reçu</b> → « Il s'inscrit et paie la moitié ».</li><li>Envoie le reçu sur WhatsApp et ajoute l'élève au <b>groupe</b> de l'auto-école.</li><li>Donne-lui le lien des cours : autosodaf.com/#cours.</li></ol></div>
+<div class="card soft"><p class="eyebrow">Réserver une séance de conduite</p><ol class="teamsteps"><li>Vérifie que la <b>2e moitié</b> est payée (Paiements → Reste à payer).</li><li>Ouvre <b>Réserver la conduite</b>, onglet <b>Créneaux libres</b>, choisis l'heure avec l'élève.</li><li>Touche le créneau, choisis l'<b>élève</b>, statut <b>Réservé</b>, puis <b>Confirmer sur WhatsApp</b>.</li><li>La veille, onglet <b>Demain (rappels)</b> : touche <b>Rappel de la veille</b>.</li></ol></div>
+<div class="card soft"><p class="eyebrow">Mercredi : résultats du devoir</p><ol class="teamsteps"><li>Ouvre <b>Message du devoir</b>, onglet <b>Cette semaine</b>, touche la semaine.</li><li>Copie le <b>Message WhatsApp</b> (participants, notes, moyenne).</li><li>Colle-le dans le groupe avant le cours de 14 h 30.</li></ol></div>
+<div class="card soft"><p class="eyebrow">Chaque mois</p><ol class="teamsteps"><li>Le <b>24</b>, les créneaux et séances du mois suivant se créent tout seuls.</li><li>Ouvre <b>Paiements</b>, onglet <b>Reste à payer</b> : relance les élèves concernés.</li><li>Ne supprime rien dans Airtable : passe plutôt le statut à <b>Annulé</b>.</li></ol></div>
 </div>
-<div class="entdocs"><div class="sec-head" style="margin:34px 0 16px"><div><p class="eyebrow">Réservé à l'équipe</p><h2>Documents de l'entreprise</h2></div><p>Supports de communication SODAF à télécharger ou à envoyer à l'imprimeur. Slogan officiel : « L'art de conduire, la force de réussir. »</p></div>
+</div>
+<div class="tm-pane" data-pane="mon" role="tabpanel" hidden>
+<p class="tm-role">Cours de code en salle, séances de conduite et progression des élèves.</p>
+<div class="tm-week card"><div class="tm-wk-head"><div><p class="eyebrow">Cette semaine</p><h3 id="sd-tmTheme">Thème</h3></div><a class="btn btn-yellow btn-sm" href="#classe">Ouvrir le Mode classe</a></div>
+<div class="tm-days">
+<a class="tm-day" href="#classe-lecon"><b>Lundi · 14 h 30</b><span>Cours complet du thème</span><em>Mode classe → Leçon</em></a>
+<a class="tm-day" href="#classe-devoir"><b>Mercredi · 14 h 30</b><span>Correction du devoir de la semaine</span><em>Mode classe → Devoir</em></a>
+<a class="tm-day" href="#classe-quiz"><b>Vendredi · 14 h 30</b><span>Entraînement type examen</span><em>Mode classe → Quiz</em></a>
+<a class="tm-day" href="#classe-situations"><b>Samedi · 10 h</b><span>Examen blanc</span><em>Quiz, situations, panneaux</em></a>
+</div></div>
+<div class="teamgrid">
+<a class="card teamtile hl" href="#classe"><b>Mode classe</b><span>Projette les leçons, le devoir, le quiz, les panneaux et les carrefours en salle.</span><em>Lancer la projection →</em></a>
+<a class="card teamtile " data-tl="code" href="#" target="_blank" rel="noopener"><b>Cours de code</b><span>Séance du jour : thème traité et présents, à remplir après le cours.</span><em>Ouvrir les cours →</em></a>
+<a class="card teamtile " data-tl="conduite" href="#" target="_blank" rel="noopener"><b>Mes séances de conduite</b><span>Onglet Aujourd'hui : qui conduit, à quelle heure. Marque Fait ou Absent.</span><em>Ouvrir mes séances →</em></a>
+<a class="card teamtile " href="#devoirs"><b>Devoir de la semaine</b><span>Ce que font les élèves sur le site cette semaine.</span><em>Voir le devoir →</em></a>
+</div>
+<div class="tm-sub"><div><p class="eyebrow">Mode d'emploi</p><h3>Les gestes du moniteur</h3></div></div>
+<div class="grid g2 tm-guides">
+<div class="card soft"><p class="eyebrow">Après chaque cours de code</p><ol class="teamsteps"><li>Ouvre <b>Cours de code</b>, touche la séance du jour.</li><li>Choisis le <b>thème</b> traité et ajoute les <b>présents</b>.</li><li>Mets le statut sur <b>Fait</b>. L'onglet <b>À cocher</b> montre les séances oubliées.</li></ol></div>
+<div class="card soft"><p class="eyebrow">Avant et après une séance de conduite</p><ol class="teamsteps"><li>Le matin, ouvre <b>Mes séances de conduite</b>, onglet <b>Aujourd'hui</b>.</li><li>Avant de partir : <b>vérification de la voiture</b> (Outils → check-list du matin).</li><li>Après la séance : statut <b>Fait</b> ou <b>Absent</b>, et une courte <b>note</b> sur les progrès.</li></ol></div>
+</div></div>
+<div class="tm-pane" data-pane="docs" role="tabpanel" hidden>
+<p class="tm-role">Supports de communication et documents officiels SODAF, à télécharger ou à envoyer à l'imprimeur.</p>
+<div class="entdocs"><div class="tm-sub"><div><p class="eyebrow">Réservé à l'équipe</p><h3>Documents de l'entreprise</h3></div><p>Supports de communication SODAF à télécharger ou à envoyer à l'imprimeur. Slogan officiel : « L'art de conduire, la force de réussir. »</p></div>
 <div class="entgrid">
 <div class="card entdoc"><img src="entreprise/apercu-carte.jpg" alt="Carte de visite SODAF, recto" loading="lazy"><div><b>Carte de visite</b><span>85 × 55 mm, recto verso. PDF avec 3 mm de fond perdu, à envoyer tel quel à l'imprimeur (papier 350 g mat).</span><div class="acts"><a class="btn btn-green btn-sm" href="entreprise/carte-visite-sodaf-91x61mm-fond-perdu.pdf" download>PDF imprimeur</a><a class="btn btn-line btn-sm" href="entreprise/carte-sodaf-recto-300dpi.png" download>Recto PNG</a><a class="btn btn-line btn-sm" href="entreprise/carte-sodaf-verso-300dpi.png" download>Verso PNG</a></div></div></div>
 <div class="card entdoc"><img src="entreprise/apercu-affiche-qr.jpg" alt="Affiche du code QR SODAF" loading="lazy" class="tall"><div><b>Affiche du code QR</b><span>A4, « Scanne et découvre SODAF », avec le mode d'emploi iPhone et Android. Pour la vitrine et la salle de code.</span><div class="acts"><a class="btn btn-green btn-sm" href="entreprise/affiche-qr-sodaf.pdf" download>Affiche A4 (PDF)</a></div></div></div>
@@ -1244,7 +1312,7 @@ ${HEAD("Équipe SODAF", "Espace secrétariat", "Réservé au personnel de l'auto
 <div class="card entdoc"><img src="apercu-fiche.jpg" alt="Fiche de renseignement" loading="lazy" class="tall"><div><b>Fiche de renseignement</b><span>Formations, tarifs, dossier à fournir. Aussi visible par le public dans Documents.</span><div class="acts"><a class="btn btn-green btn-sm" href="fiche-renseignement-sodaf.pdf" download>PDF</a></div></div></div>
 <div class="card entdoc"><img src="apercu-planning.jpg" alt="Planning de la semaine" loading="lazy"><div><b>Planning mural</b><span>Code en salle, créneaux de conduite et examen blanc. A4 paysage à afficher.</span><div class="acts"><a class="btn btn-green btn-sm" href="planning-semaine-sodaf.pdf" download>PDF</a></div></div></div>
 </div></div>
-<button class="linkbtn" type="button" id="sd-teamOut" style="margin-top:18px">Se déconnecter de cet appareil</button>
+</div>
 </div>
 </div>
 </section>
@@ -2024,7 +2092,16 @@ function init(root) {
   // espace équipe
   (function () {
     const lock = $("#sd-teamLock"), panel = $("#sd-teamPanel");
-    $("#sd-tConduite").href = TEAM_LINKS.conduite; $("#sd-tCode").href = TEAM_LINKS.code; $("#sd-tInsc").href = TEAM_LINKS.inscriptions; $("#sd-tDev").href = TEAM_LINKS.devoirs; $("#sd-tPay").href = TEAM_LINKS.paiements;
+    $$("[data-tl]").forEach((x) => (x.href = TEAM_LINKS[x.dataset.tl]));
+    { const tabs = $$("#sd-tmTabs button"), panes = $$(".tm-pane");
+      const pick = (t) => { tabs.forEach((b) => b.setAttribute("aria-selected", b.dataset.t === t)); panes.forEach((p) => (p.hidden = p.dataset.pane !== t)); try { S.set("tmTab", t); } catch (e) {} };
+      tabs.forEach((b) => b.addEventListener("click", () => pick(b.dataset.t)));
+      pick(S.get("tmTab", "sec"));
+      $$('a[href="#equipe-recu"]').forEach((x) => x.addEventListener("click", () => pick("sec")));
+      const w = devWeek(), dv = DEV[w.idx], J = ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"], M = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"], n = new Date();
+      $("#sd-tmTheme").textContent = "Devoir " + dv.l + " · " + dv.t;
+      $("#sd-tmToday").textContent = "Nous sommes le " + J[n.getDay()] + " " + n.getDate() + " " + M[n.getMonth()] + ". Thème de la semaine : " + dv.t + " (devoir " + dv.l + ").";
+    }
     const show = (ok) => { lock.hidden = ok; panel.hidden = !ok; };
     show(S.get("team", "") === TEAM_HASH);
     const sha = async (t) => { const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(t)); return [...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, "0")).join(""); };
@@ -2168,7 +2245,7 @@ function init(root) {
       else if (k === "f" || k === "F") toggleFs();
     });
     fillSelect();
-    return { open() { if (!items.length) load(); else render(); } };
+    return { open(m) { const b = m && $('#sd-clsTabs [data-m="' + m + '"]'); if (b && b.getAttribute("aria-selected") !== "true") { b.click(); return; } if (!items.length) load(); else render(); } };
   })();
 
   // panneaux
@@ -2198,7 +2275,7 @@ function init(root) {
     $$("#sd-nav [data-nav]").forEach((a) => a.classList.toggle("on", a.dataset.nav === p));
     nav.classList.remove("open"); burger.setAttribute("aria-expanded", "false");
     if (p === "quiz") showBest();
-    if (p === "classe") requestAnimationFrame(() => cls.open());
+    if (p === "classe") requestAnimationFrame(() => cls.open(h.split("-")[1]));
     if (p === "cours") requestAnimationFrame(() => requestAnimationFrame(spy));
     let target = null; try { target = h.includes("-") && p !== "recu" ? root.querySelector("#" + h) : null; } catch (e) {}
     requestAnimationFrame(() => { if (target) target.scrollIntoView({ block: "start" }); else window.scrollTo(0, 0); });
