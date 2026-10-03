@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SODAF Équipe</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Espace équipe de SODAF Auto-École (réservé au personnel).">
+<meta name="theme-color" content="#14171C">
+<link rel="manifest" href="/equipe/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/equipe/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="SODAF Équipe">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Figtree:wght@400;500;600;700&display=swap">
+<script>
+window.SODAF_APP = 1;
+window.addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); window.__bip = e; document.dispatchEvent(new Event("sodaf-bip")); });
+if ("serviceWorker" in navigator) window.addEventListener("load", function () { navigator.serviceWorker.register("/equipe/sw.js", { scope: "/equipe/" }).catch(function () {}); });
+</script>
+</head>
+<body>
+<div id="sodaf-root"><div id="app"></div></div>
+<noscript><p>Active JavaScript pour utiliser l'espace équipe SODAF.</p></noscript>
+<script src="/app.js?v=1"></script>
+</body>
+</html>

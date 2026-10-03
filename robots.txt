@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
 Disallow: /entreprise/
+Disallow: /equipe/
 
 Sitemap: https://autosodaf.com/sitemap.xml
