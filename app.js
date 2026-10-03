@@ -684,6 +684,7 @@ a.teamtile.hl{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
 .insc-note{font-size:.95rem;color:#3D444D;background:var(--soft);border-radius:12px;padding:12px 14px}
 .insc-err{color:var(--red);font-weight:600}
 .insc-load{color:var(--muted);padding:30px 0;text-align:center}
+.insc-hint{font-size:.9rem;color:var(--muted);margin:-4px 0 10px!important}
 .insc-go{align-self:flex-start;font-size:1.05rem;padding:.85em 1.6em}
 .insc-msg,.insc-ok{display:flex;flex-direction:column;gap:10px;align-items:flex-start;margin-bottom:18px}
 .insc-ok{border-top:5px solid var(--green)}
@@ -1642,11 +1643,12 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 ${HEAD("Pré-inscription", "Rejoins SODAF", "Envoie ta demande en une minute : elle arrive directement au secrétariat, qui te recontacte pour fixer ton premier cours.")}
 <div class="wrap sec"><div class="insc">
 <form class="card" id="sd-form" novalidate>
-<div class="row2"><div class="field"><label for="sd-fName">Nom complet</label><input id="sd-fName" placeholder="Ex. Kossi Agbeko"></div><div class="field"><label for="sd-fPhone">Téléphone / WhatsApp</label><div class="tel"><span>+228</span><input id="sd-fPhone" inputmode="numeric" maxlength="11" autocomplete="tel-national" placeholder="90 00 00 00"></div></div></div>
-<div class="row2"><div class="field"><label for="sd-fCat">Formation</label><select id="sd-fCat"><option value="Permis B">Permis B (voiture)</option><option value="Permis A">Permis A (moto)</option><option value="Remise à niveau">Remise à niveau (déjà titulaire du permis)</option><option value="Formation entreprise">Formation entreprise (chauffeurs)</option></select></div><div class="field"><label for="sd-fCity">Ville / quartier</label><input id="sd-fCity" placeholder="Ex. Lomé, Bè"></div></div>
+<div class="row2"><div class="field"><label for="sd-fName">Nom</label><input id="sd-fName" autocomplete="family-name" maxlength="60" placeholder="Ex. AGBEKO"></div><div class="field"><label for="sd-fFirst">Prénoms</label><input id="sd-fFirst" autocomplete="given-name" maxlength="80" placeholder="Ex. Kossi Mawuli"></div></div>
+<div class="row2"><div class="field"><label for="sd-fPhone">Téléphone / WhatsApp</label><div class="tel"><span>+228</span><input id="sd-fPhone" inputmode="numeric" maxlength="11" autocomplete="tel-national" placeholder="90 00 00 00"></div></div><div class="field"><label for="sd-fCity">Quartier</label><input id="sd-fCity" maxlength="80" placeholder="Ex. Bè, Adidogomé"></div></div>
+<div class="field"><label for="sd-fCat">Formation</label><select id="sd-fCat"><option value="Permis B">Permis B (voiture)</option><option value="Permis A">Permis A (moto)</option><option value="Remise à niveau">Remise à niveau (déjà titulaire du permis)</option><option value="Formation entreprise">Formation entreprise (chauffeurs)</option></select></div>
 <div class="row2"><div class="field"><label for="sd-fSlot">Créneau préféré</label><select id="sd-fSlot"><option>Tôt le matin</option><option>Après-midi</option><option>Samedi</option><option>Peu importe</option></select></div><div class="field"><label for="sd-fPay">Paiement</label><select id="sd-fPay"><option>En plusieurs tranches</option><option>En une fois</option></select></div></div>
 <div class="field"><label for="sd-fMsg">Message (facultatif)</label><textarea id="sd-fMsg" placeholder="Une question, une contrainte d'horaire…"></textarea></div>
-<p id="sd-fErr" style="color:var(--red);font-weight:600;margin-bottom:10px" hidden>Indique ton nom et ton numéro à 8 chiffres (après le +228).</p>
+<p id="sd-fErr" style="color:var(--red);font-weight:600;margin-bottom:10px" hidden>Indique ton nom, tes prénoms et ton numéro à 8 chiffres (après le +228).</p>
 <button class="btn btn-green" type="submit" id="sd-send">Envoyer ma pré-inscription</button>
 <div class="okbox" id="sd-ok" hidden>
 <div class="okhead"><span class="okcheck" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div><b>Pré-inscription envoyée !</b><span id="sd-okWhen"></span></div></div>
@@ -2391,7 +2393,7 @@ function init(root) {
   async function submitInscription(payload, waText) {
     $("#sd-fail").hidden = true;
     sendBtn.disabled = true; sendBtn.textContent = "Envoi en cours…";
-    const ok = await DB.add("eleves", { nom: payload.nom, telephone: "+228" + payload.telephone.replace(/\D/g, "").slice(-8), formation: payload.formation, quartier: payload.quartier || null, creneau_prefere: payload.creneau, paiement_prefere: payload.paiement, message: payload.message || null, source: "site" });
+    const ok = await DB.add("eleves", { nom: payload.nom, nom_famille: payload.nom_famille || null, prenoms: payload.prenoms || null, telephone: "+228" + payload.telephone.replace(/\D/g, "").slice(-8), formation: payload.formation, quartier: payload.quartier || null, creneau_prefere: payload.creneau, paiement_prefere: payload.paiement, message: payload.message || null, source: "site" });
     sendBtn.disabled = false; sendBtn.textContent = "Envoyer ma pré-inscription";
     $("#sd-waFail").href = WA + "?text=" + encodeURIComponent(waText);
     if (!ok) { $("#sd-fail").hidden = false; return; }
@@ -2410,12 +2412,12 @@ function init(root) {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     if (sendBtn.disabled) return;
-    const name = $("#sd-fName").value.trim(), digits = telDigits(), phone = "+228 " + digits.replace(/(\d{2})(?=\d)/g, "$1 ");
-    const okForm = !!name && digits.length === 8;
+    const nf = $("#sd-fName").value.trim().replace(/\s+/g, " "), pr = $("#sd-fFirst").value.trim().replace(/\s+/g, " "), name = (pr + " " + nf).trim(), digits = telDigits(), phone = "+228 " + digits.replace(/(\d{2})(?=\d)/g, "$1 ");
+    const okForm = nf.length >= 2 && pr.length >= 2 && digits.length === 8;
     $("#sd-fErr").hidden = okForm;
     if (!okForm) return;
-    lastPayload = { nom: name, telephone: phone, formation: $("#sd-fCat").value, quartier: $("#sd-fCity").value.trim(), creneau: $("#sd-fSlot").value, paiement: $("#sd-fPay").value, message: $("#sd-fMsg").value.trim(), source: "Site web" };
-    const waText = "Bonjour SODAF, je souhaite m'inscrire.\nNom : " + name + "\nTéléphone : " + phone + "\nFormation : " + lastPayload.formation + "\nVille / quartier : " + (lastPayload.quartier || "—") + "\nCréneau : " + lastPayload.creneau + "\nPaiement : " + lastPayload.paiement + (lastPayload.message ? "\nMessage : " + lastPayload.message : "");
+    lastPayload = { nom: name, nom_famille: nf, prenoms: pr, telephone: phone, formation: $("#sd-fCat").value, quartier: $("#sd-fCity").value.trim(), creneau: $("#sd-fSlot").value, paiement: $("#sd-fPay").value, message: $("#sd-fMsg").value.trim(), source: "Site web" };
+    const waText = "Bonjour SODAF, je souhaite m'inscrire.\nNom : " + name + "\nTéléphone : " + phone + "\nFormation : " + lastPayload.formation + "\nQuartier : " + (lastPayload.quartier || "—") + "\nCréneau : " + lastPayload.creneau + "\nPaiement : " + lastPayload.paiement + (lastPayload.message ? "\nMessage : " + lastPayload.message : "");
     submitInscription(lastPayload, waText);
   });
   $("#sd-retry").addEventListener("click", () => form.requestSubmit());
@@ -2633,8 +2635,7 @@ function init(root) {
         const webBlock = w ? '<div class="pc-block pc-web"><div class="pc-bh"><b>Inscription en ligne</b><span class="pc-ok">reçue ' + ago(w.le) + "</span></div>" +
           (w.mode === "mixx" ? '<div class="pc-alert pc-verif"><b>À vérifier sur le téléphone de l\'agence :</b> un paiement Mixx by Yas de <b>' + F(w.a_payer) + "</b>" + (w.mixx_tel ? " depuis le <b>" + esc(w.mixx_tel.replace("+228", "+228 ")) + "</b>" : "") + (w.mixx_ref ? ", référence <b>" + esc(w.mixx_ref) + "</b>" : "") + ", motif « SODAF " + x.id + " ». S'il est bien arrivé : « Paiement Mixx vérifié ». Sinon : « Paiement introuvable ».</div>" : '<p class="tm-note" style="margin:0 0 10px!important">Il a choisi de payer <b>' + F(w.a_payer) + "</b> en espèces à l'agence. Quand il vient : « Paiement reçu : faire le reçu ».</p>") +
           '<div class="pc-info"><div><span>Formule</span><b>' + esc(w.formule) + '</b></div><div><span>Prix</span><b>' + F(w.prix) + '</b></div><div><span>Il paie</span><b>' + (w.paiement === "total" ? "Tout" : "La moitié") + " · " + F(w.a_payer) + '</b></div><div><span>Mode</span><b>' + (w.mode === "mixx" ? "Mixx by Yas" : "À l'agence") + '</b></div>' +
-          '<div><span>Nom et prénoms</span><b>' + esc(w.nom + " " + w.prenoms) + '</b></div><div><span>Naissance</span><b>' + (w.naissance_date ? new Date(w.naissance_date + "T12:00:00").toLocaleDateString("fr-FR") : "—") + (w.naissance_lieu ? " · " + esc(w.naissance_lieu) : "") + '</b></div><div><span>Quartier</span><b>' + esc(w.quartier || "—") + '</b></div><div><span>Profession</span><b>' + esc(w.profession || "—") + "</b></div>" +
-          '<div class="wide"><span>Personne à prévenir</span><b>' + esc([w.urgence_nom, w.urgence_tel ? w.urgence_tel.replace("+228", "+228 ") : ""].filter(Boolean).join(" · ") || "—") + "</b></div></div>" +
+          '<div><span>Nom et prénoms</span><b>' + esc(w.prenoms + " " + w.nom) + '</b></div><div><span>Téléphone</span><b>' + esc((w.telephone || "—").replace("+228", "+228 ")) + '</b></div><div><span>Quartier</span><b>' + esc(w.quartier || "—") + "</b></div></div>" +
           (w.mode === "mixx" ? '<div class="tm-formact"><button class="btn btn-sm pc-red" type="button" data-a="webReject">Paiement introuvable</button></div>' : "") + "</div>" : "";
         body = w ? webBlock : webBlock + '<p class="pc-proto">Protocole : l\'élève réfléchit. Relance-le après 3 jours sans nouvelles. Dès qu\'il paie (au bureau ou capture Mixx vérifiée sur le téléphone de l\'agence) : « Paiement reçu : faire le reçu ».</p>' +
           '<div class="pc-block"><div class="pc-bh"><b>Dossier envoyé</b><span class="pc-ok">' + (age === 0 ? "aujourd'hui" : "il y a " + age + (age > 1 ? " jours" : " jour")) + (x.dossier_relance_le ? " · relancé " + ago(x.dossier_relance_le) : "") + "</span></div>" +
@@ -2684,7 +2685,7 @@ function init(root) {
       else if (k === "enroll") {
         const w = x.web;
         if (w) await run(() => DB.q("inscriptions_web?id=eq." + w.id, { method: "PATCH", body: { statut: "Vérifié" }, prefer: "return=minimal" }));
-        const extra = w && !x.quartier && w.quartier ? { quartier: w.quartier } : {};
+        const extra = w ? { nom: (w.prenoms + " " + w.nom).trim(), nom_famille: w.nom, prenoms: w.prenoms, telephone: w.telephone || x.telephone, quartier: w.quartier || x.quartier } : {};
         if (await patchEl(x, Object.assign({ statut: "Inscrit", rappel: null }, extra), "Inscrit : fais le reçu", ["Étape", w ? "Inscrit (inscription en ligne, " + (w.mode === "mixx" ? "Mixx vérifié" : "payé à l'agence") + ")" : "Inscrit"])) {
           x.web = null; renderList();
           if (window.__sodafRcFill) { sub("paiements"); window.__sodafRcFill(x, w ? { formation: w.formule, motif: w.paiement === "total" ? "ins-full" : "ins-half", mode: w.mode === "mixx" ? "Mixx by Yas (T-Money)" : "Espèces", note: w.mode === "mixx" ? "Mixx" + (w.mixx_ref ? " réf. " + w.mixx_ref : "") + (w.mixx_tel ? " depuis " + w.mixx_tel : "") : "" } : null); }
@@ -2717,6 +2718,7 @@ function init(root) {
         const nom = f.nom.value.trim().replace(/\s+/g, " "), tel = f.tel.value.replace(/\D/g, ""), er = f.querySelector(".tm-err");
         if (nom.length < 3 || (tel && tel.length !== 8)) { er.textContent = "Nom (3 lettres min.) et numéro à 8 chiffres."; return; }
         const body = { nom, telephone: tel ? "+228" + tel : null, formation: f.formation.value, quartier: f.quartier.value.trim() || null, notes: f.notes.value.trim() || null };
+        if (nom !== x.nom) { body.nom_famille = null; body.prenoms = null; }
         if (await patchEl(x, body, "Fiche élève enregistrée")) { fillEleveSelect(); renderList(); }
       });
     }
@@ -3164,11 +3166,9 @@ function init(root) {
       '<fieldset class="insc-step"><legend><i>1</i>Ta formule</legend><div class="insc-cards">' + forms.map((f, k) => '<label class="rcm' + (k ? "" : " on") + '"><input type="radio" name="inF" value="' + k + '"' + (k ? "" : " checked") + '><span><b>' + escI(f[0].replace(/ \(permis B\)$/, "")) + "</b><small>" + escI(f[2]) + "</small></span><em>" + fmtF(f[1]) + "</em></label>").join("") + "</div>" +
       '<div class="insc-cards insc-two"><label class="rcm on"><input type="radio" name="inP" value="moitie" checked><span><b>Je paie la moitié maintenant</b><small>Le reste avant ma 1re séance de conduite</small></span><em data-p="moitie"></em></label><label class="rcm"><input type="radio" name="inP" value="total"><span><b>Je paie tout maintenant</b><small>Formation soldée, plus rien à payer</small></span><em data-p="total"></em></label></div>' +
       '<p class="insc-sum" id="sd-inSum"></p></fieldset>' +
-      '<fieldset class="insc-step"><legend><i>2</i>Tes informations</legend><div class="insc-grid">' +
-      '<div class="field"><label for="sd-inNom">Nom</label><input id="sd-inNom" autocomplete="family-name" maxlength="60"></div><div class="field"><label for="sd-inPre">Prénoms</label><input id="sd-inPre" autocomplete="given-name" maxlength="80" value="' + escI(d.p) + '"></div>' +
-      '<div class="field"><label for="sd-inDn">Date de naissance</label><input id="sd-inDn" type="date" max="' + new Date().toISOString().slice(0, 10) + '"></div><div class="field"><label for="sd-inLn">Lieu de naissance</label><input id="sd-inLn" maxlength="80"></div>' +
-      '<div class="field"><label for="sd-inQ">Quartier</label><input id="sd-inQ" maxlength="80" placeholder="Ex. Bè, Adidogomé"></div><div class="field"><label for="sd-inPro">Profession</label><input id="sd-inPro" maxlength="80" placeholder="Ex. étudiant, commerçante"></div>' +
-      '<div class="field"><label for="sd-inUn">Personne à prévenir en cas d\'urgence</label><input id="sd-inUn" maxlength="80" placeholder="Nom"></div><div class="field"><label for="sd-inUt">Son téléphone</label><div class="tel"><span>+228</span><input id="sd-inUt" inputmode="numeric" maxlength="11" placeholder="90 00 00 00"></div></div>' +
+      '<fieldset class="insc-step"><legend><i>2</i>Tes informations</legend><p class="insc-hint">Vérifie et corrige si besoin.</p><div class="insc-grid">' +
+      '<div class="field"><label for="sd-inNom">Nom</label><input id="sd-inNom" autocomplete="family-name" maxlength="60" value="' + escI(d.nf || "") + '"></div><div class="field"><label for="sd-inPre">Prénoms</label><input id="sd-inPre" autocomplete="given-name" maxlength="80" value="' + escI(d.pr || d.nc || d.p || "") + '"></div>' +
+      '<div class="field"><label for="sd-inTel">Téléphone / WhatsApp</label><div class="tel"><span>+228</span><input id="sd-inTel" inputmode="numeric" maxlength="11" value="' + escI(String(d.t || "").replace(/\D/g, "").replace(/^228/, "").replace(/(\d{2})(?=\d)/g, "$1 ")) + '"></div></div><div class="field"><label for="sd-inQ">Quartier</label><input id="sd-inQ" maxlength="80" placeholder="Ex. Bè, Adidogomé" value="' + escI(d.q || "") + '"></div>' +
       "</div></fieldset>" +
       '<fieldset class="insc-step"><legend><i>3</i>Comment veux-tu payer ?</legend><div class="insc-cards insc-two">' +
       '<label class="rcm on"><input type="radio" name="inM" value="agence" checked><span><b>À l\'agence</b><small>En espèces, au 412 Avenue Akei, Tokoin Tamé</small></span></label>' +
@@ -3193,12 +3193,12 @@ function init(root) {
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const v = val(), mode = form.querySelector("[name=inM]:checked").value, err = $("#sd-inErr"), btn = $("#sd-inGo");
-      const nom = $("#sd-inNom").value.trim(), pre = $("#sd-inPre").value.trim(), ut = tel8($("#sd-inUt")), mt = tel8($("#sd-inMt")), mr = $("#sd-inMr").value.trim();
-      const bad = nom.length < 2 ? "Écris ton nom." : pre.length < 2 ? "Écris tes prénoms." : ut && ut.length !== 8 ? "Le numéro de la personne à prévenir doit avoir 8 chiffres." : mode === "mixx" && !(mt.length === 8 || mr.length >= 4) ? "Pour Mixx by Yas, écris le numéro qui a payé (8 chiffres) ou la référence du SMS." : "";
+      const nom = $("#sd-inNom").value.trim(), pre = $("#sd-inPre").value.trim(), tl = tel8($("#sd-inTel")), mt = tel8($("#sd-inMt")), mr = $("#sd-inMr").value.trim();
+      const bad = nom.length < 2 ? "Écris ton nom." : pre.length < 2 ? "Écris tes prénoms." : tl.length !== 8 ? "Ton numéro de téléphone doit avoir 8 chiffres (après le +228)." : mode === "mixx" && !(mt.length === 8 || mr.length >= 4) ? "Pour Mixx by Yas, écris le numéro qui a payé (8 chiffres) ou la référence du SMS." : "";
       if (bad) { err.textContent = bad; err.hidden = false; err.scrollIntoView({ block: "center" }); return; }
       err.hidden = true; btn.disabled = true; btn.textContent = "Envoi…";
       const row = { eleve_id: d.i, jeton: d.j, formule: v.f[0], prix: v.f[1], paiement: v.p, a_payer: Math.round(v.a), mode, mixx_tel: mode === "mixx" && mt ? "+228" + mt : null, mixx_ref: mode === "mixx" && mr ? mr : null,
-        nom, prenoms: pre, naissance_date: $("#sd-inDn").value || null, naissance_lieu: $("#sd-inLn").value.trim() || null, quartier: $("#sd-inQ").value.trim() || null, profession: $("#sd-inPro").value.trim() || null, urgence_nom: $("#sd-inUn").value.trim() || null, urgence_tel: ut ? "+228" + ut : null };
+        nom, prenoms: pre, telephone: "+228" + tl, quartier: $("#sd-inQ").value.trim() || null };
       const ok = await DB.add("inscriptions_web", row);
       btn.disabled = false; btn.textContent = "Valider mon inscription";
       if (!ok) { err.innerHTML = 'L\'envoi n\'a pas marché. Vérifie ta connexion et réessaie. Si ça continue, le lien a peut-être expiré : <a href="' + WA + '" target="_blank" rel="noopener">écris au secrétariat</a>.'; err.hidden = false; return; }
