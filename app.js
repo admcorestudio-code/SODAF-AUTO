@@ -681,6 +681,8 @@ label.ex-doc input{position:absolute;left:14px;top:12px;width:20px;height:20px;a
 .ex-lot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:var(--ink);color:#fff;padding:12px 14px}
 .ex-lot b{display:block;font:700 1rem var(--f-display)}.ex-lot span{font-size:.84rem;color:#C9CED4}
 .ex-lot-acts{display:flex;gap:6px;flex-wrap:wrap}
+.ex-lot-why{flex-basis:100%;margin:2px 0 0!important;font-size:.84rem;color:#FFD66B}
+#sodaf-root .ex-lot .btn[disabled]{opacity:.45;cursor:not-allowed}
 #sodaf-root .ex-lot .btn-line{background:#fff;color:var(--ink)}#sodaf-root .ex-lot .btn-green{background:var(--yellow);color:var(--ink)}
 .ex-check{margin:0 0 10px;padding-left:1.2em;display:flex;flex-direction:column;gap:4px;font-weight:600}
 .ex-conv{display:grid;grid-template-columns:1fr 1.4fr;gap:10px}
@@ -2736,7 +2738,8 @@ function init(root) {
       $("#sd-pcQ").placeholder = "Rechercher dans « " + ST_LAB[pcStage] + " » : N° client (SO12), téléphone ou nom";
       const grps = groupsFor(pcStage, list);
       const lot = !q && pcStage === "examen" ? list.filter((x) => x.examen_etape === "complet") : [];
-      const html = (lot.length ? '<div class="ex-lot"><div><b>' + lot.length + (lot.length > 1 ? " dossiers prêts" : " dossier prêt") + ' à déposer</b><span>' + fmtN(lot.length * 30000) + ' F de dépôts</span></div><div class="ex-lot-acts"><button class="btn btn-line btn-sm" type="button" data-lot="print">Imprimer le bordereau</button><button class="btn btn-green btn-sm" type="button" data-lot="done">Lot déposé</button></div></div>' : "") + (q && list.length ? '<p class="pc-hint">' + list.length + " résultat" + (list.length > 1 ? "s" : "") + " dans « " + ST_LAB[pcStage] + " »</p>" : "") + grps.filter((g) => g[1].length).map((g) => (g[2] && ["matin", "am", "xdepose"].includes(g[2])
+      const nonImp = lot.filter((x) => !x.examen_bordereau_le).length, toutImp = lot.length && !nonImp;
+      const html = (lot.length ? '<div class="ex-lot"><div><b>' + lot.length + (lot.length > 1 ? " dossiers prêts" : " dossier prêt") + ' à déposer</b><span>' + fmtN(lot.length * 30000) + ' F de dépôts' + (toutImp ? " · ✓ bordereau imprimé" : "") + '</span></div><div class="ex-lot-acts"><button class="btn btn-line btn-sm" type="button" data-lot="print">' + (toutImp ? "Réimprimer le bordereau" : "1. Imprimer le bordereau") + '</button><button class="btn btn-green btn-sm" type="button" data-lot="done"' + (toutImp ? "" : " disabled") + ">" + (toutImp ? "Lot déposé" : "2. Lot déposé") + "</button></div>" + (toutImp ? "" : '<p class="ex-lot-why">' + (nonImp === lot.length ? "Imprime d\'abord le bordereau : « Lot déposé » se débloque après l\'impression." : nonImp + (nonImp > 1 ? " nouveaux dossiers ne sont pas" : " nouveau dossier n\'est pas") + " sur le bordereau imprimé : réimprime-le.") + "</p>") + "</div>" : "") + (q && list.length ? '<p class="pc-hint">' + list.length + " résultat" + (list.length > 1 ? "s" : "") + " dans « " + ST_LAB[pcStage] + " »</p>" : "") + grps.filter((g) => g[1].length).map((g) => (g[2] && ["matin", "am", "xdepose"].includes(g[2])
         ? '<button type="button" class="pc-gh pc-fold g-' + g[2] + '" data-fold="' + g[2] + '" aria-expanded="' + isOpen(g) + '"><i aria-hidden="true">▸</i>' + esc(g[0]) + " <span>" + g[1].length + "</span></button>"
         : '<p class="pc-gh' + (g[2] ? " g-" + g[2] : "") + '">' + esc(g[0]) + " <span>" + g[1].length + "</span></p>") + (isOpen(g) ? g[1].map((x) =>
         '<button type="button" class="pc-item' + (g[2] ? " i-" + g[2] : "") + (sg(x) === "appels" && calledToday(x) ? " i-done" : "") + (x.id === pcSel ? " on" : "") + '" data-id="' + x.id + '"><b>' + esc(x.nom) + (g[2] ? ' <em class="pc-tag t-' + g[2] + '">' + TAG[g[2]] + "</em>" : "") + '</b><span>' + esc((x.telephone || "").replace("+228", "+228 ")) + (x.formation ? " · " + esc(x.formation) : "") + "</span><small>" + CODE(x) + " · " +
@@ -2771,8 +2774,16 @@ function init(root) {
           '<div class="sign"><div><b>Remis par · SODAF Auto-École</b><p class="ln">Nom et prénom : ' + esc((me && me.nom) || "") + '</p><p class="ln">Signature :</p></div><div><b>Reçu par · Partenaire SODAF</b><p class="ln">Nom et prénom : ' + esc(CFG.partenaire_nom || "") + '</p><p class="ln">Signature :</p></div></div>' +
           '<p class="foot">SODAF Auto-École · 412 Avenue Akei, Tokoin Tamé, Lomé · +228 72 54 41 66 · autosodaf.com</p></body></html>');
         w.document.close();
+        let marked = false;
+        w.addEventListener("afterprint", async () => {
+          if (marked) return; marked = true;
+          const now = new Date().toISOString();
+          const ok = await run(() => DB.q("eleves?id=in.(" + lot.map((x) => x.id).join(",") + ")", { method: "PATCH", body: { examen_bordereau_le: now }, prefer: "return=minimal" }), "Bordereau imprimé : tu peux valider le dépôt après signature");
+          if (ok) { lot.forEach((x) => (x.examen_bordereau_le = now)); renderList(); }
+        });
         return;
       }
+      if (lot.some((x) => !x.examen_bordereau_le)) { toast("Imprime d'abord le bordereau"); return; }
       confirmBtn(lb, async () => {
         const ids = lot.map((x) => x.id).join(",");
         const ok = await run(() => DB.q("eleves?id=in.(" + ids + ")", { method: "PATCH", body: { examen_etape: "depose", examen_depose_le: today }, prefer: "return=minimal" }), "Lot déposé : " + lot.length + (lot.length > 1 ? " dossiers" : " dossier"));
@@ -2937,7 +2948,7 @@ function init(root) {
       else if (k === "revive") { if (await patchEl(x, { statut: "Contacté", archive_motif: null, archive_le: null, appels: 0, rappel: null, dossier_envoye_le: null, dossier_relance_le: null, dossier_relances: 0 }, "Dossier remis en appel", ["Étape", "Ressorti des archives"])) nextAfter(x); }
       else if (k === "note") { const v = $("#sd-pcNote").value.trim(); if (!v) return; await addSuivi(x, "Note", v); toast("Note ajoutée"); renderDetail(); }
       else if (k === "edit") editForm(x);
-      else if (k === "toExam") { if (await patchEl(x, { examen_etape: "pret", examen_pret_le: new Date().toISOString(), examen_lien_le: null, examen_relance_le: null, examen_date: null, examen_lieu: null, jeton: jetonOf(x) }, "Étape examen : envoie le message à l'élève", ["Étape", "Formation terminée : examen"])) { pcStage = "examen"; S.set("pcStage", pcStage); renderList(); } }
+      else if (k === "toExam") { if (await patchEl(x, { examen_etape: "pret", examen_pret_le: new Date().toISOString(), examen_lien_le: null, examen_relance_le: null, examen_bordereau_le: null, examen_date: null, examen_lieu: null, jeton: jetonOf(x) }, "Étape examen : envoie le message à l'élève", ["Étape", "Formation terminée : examen"])) { pcStage = "examen"; S.set("pcStage", pcStage); renderList(); } }
       else if (k === "sendExam") { const m = $("#sd-exMsg"); if (m) a.href = "https://wa.me/228" + waNum(x.telephone) + "?text=" + encodeURIComponent(m.value); await patchEl(x, { examen_lien_le: new Date().toISOString(), jeton: jetonOf(x) }, "Message noté comme envoyé", ["Étape", "Examen : Message de fin de formation envoyé"]); renderList(); }
       else if (k === "exRecu") {
         const le = new Date().toISOString(), docs = {}; PX.forEach((p) => (docs[p[0]] = { main: true, le }));
@@ -2948,7 +2959,7 @@ function init(root) {
       }
       else if (k === "exDepose") { const d = $("#sd-exDep").value || iso(new Date()); if (await patchEl(x, { examen_etape: "depose", examen_depose_le: d }, "Dossier déposé le " + dFr(d), ["Étape", "Examen : Dossier déposé le " + d])) renderList(); }
       else if (k === "exPass") { confirmBtn(a, async () => { if (await patchEl(x, { statut: "Permis obtenu" }, "Bravo ! Permis obtenu", ["Étape", "Examen : Permis obtenu"])) { pcStage = "archives"; S.set("pcStage", pcStage); pcSel = x.id; renderList(); } }); }
-      else if (k === "exFail") { confirmBtn(a, async () => { if (await patchEl(x, { examen_etape: "complet", examen_passages: Math.min((x.examen_passages || 0) + 1, 10), examen_date: null, examen_lieu: null, examen_depose_le: null, examen_relance_le: null }, "À repasser : dossier à redéposer", ["Étape", "Examen : À repasser"])) renderList(); }); }
+      else if (k === "exFail") { confirmBtn(a, async () => { if (await patchEl(x, { examen_etape: "complet", examen_passages: Math.min((x.examen_passages || 0) + 1, 10), examen_date: null, examen_lieu: null, examen_depose_le: null, examen_relance_le: null, examen_bordereau_le: null }, "À repasser : dossier à redéposer", ["Étape", "Examen : À repasser"])) renderList(); }); }
       else if (k === "exBack") { confirmBtn(a, async () => { if (await patchEl(x, { examen_etape: null }, "Revenu en formation", ["Étape", "Revenu en formation"])) { pcStage = "formation"; S.set("pcStage", pcStage); renderList(); } }); }
     });
     $("#sd-pcDetail").addEventListener("change", async (e) => {
