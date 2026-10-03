@@ -349,6 +349,8 @@ article.ch p+p{margin-top:10px}
 .note.red{border-left-color:var(--red);background:var(--red-soft)}
 #sodaf-root .read-btn{color:var(--ink)}
 #sodaf-root .read-btn.done{background:var(--green);color:#fff;border-color:var(--green)}
+.read-foot{margin-top:22px;padding-top:16px;border-top:1.5px dashed var(--line);display:flex;justify-content:center}
+#sodaf-root .read-foot .read-btn{white-space:normal;text-align:center;max-width:100%}
 .signs{display:flex;flex-wrap:wrap;gap:16px;margin:12px 0}
 .sign{display:flex;flex-direction:column;align-items:center;gap:6px;width:104px;text-align:center;font-size:.82rem;color:var(--muted)}
 #sodaf-root .sign svg{display:block;width:60px;height:60px}
@@ -1646,7 +1648,6 @@ ${HEAD("Pré-inscription", "Rejoins SODAF", "Envoie ta demande en une minute : e
 <div class="row2"><div class="field"><label for="sd-fName">Nom</label><input id="sd-fName" autocomplete="family-name" maxlength="60" placeholder="Ex. AGBEKO"></div><div class="field"><label for="sd-fFirst">Prénoms</label><input id="sd-fFirst" autocomplete="given-name" maxlength="80" placeholder="Ex. Kossi Mawuli"></div></div>
 <div class="row2"><div class="field"><label for="sd-fPhone">Téléphone / WhatsApp</label><div class="tel"><span>+228</span><input id="sd-fPhone" inputmode="numeric" maxlength="11" autocomplete="tel-national" placeholder="90 00 00 00"></div></div><div class="field"><label for="sd-fCity">Quartier</label><input id="sd-fCity" maxlength="80" placeholder="Ex. Bè, Adidogomé"></div></div>
 <div class="field"><label for="sd-fCat">Formation</label><select id="sd-fCat"><option value="Permis B">Permis B (voiture)</option><option value="Permis A">Permis A (moto)</option><option value="Remise à niveau">Remise à niveau (déjà titulaire du permis)</option><option value="Formation entreprise">Formation entreprise (chauffeurs)</option></select></div>
-<div class="row2"><div class="field"><label for="sd-fSlot">Créneau préféré</label><select id="sd-fSlot"><option>Tôt le matin</option><option>Après-midi</option><option>Samedi</option><option>Peu importe</option></select></div><div class="field"><label for="sd-fPay">Paiement</label><select id="sd-fPay"><option>En plusieurs tranches</option><option>En une fois</option></select></div></div>
 <div class="field"><label for="sd-fMsg">Message (facultatif)</label><textarea id="sd-fMsg" placeholder="Une question, une contrainte d'horaire…"></textarea></div>
 <p id="sd-fErr" style="color:var(--red);font-weight:600;margin-bottom:10px" hidden>Indique ton nom, tes prénoms et ton numéro à 8 chiffres (après le +228).</p>
 <button class="btn btn-green" type="submit" id="sd-send">Envoyer ma pré-inscription</button>
@@ -2017,11 +2018,11 @@ function init(root) {
     toc.appendChild(b);
     const rb = document.createElement("button"); rb.className = "btn btn-line btn-sm read-btn"; rb.dataset.id = ch.id;
     rb.addEventListener("click", () => { read = read.includes(ch.id) ? read.filter((x) => x !== ch.id) : [...read, ch.id]; S.set("read", read); syncRead(); if (read.includes(ch.id)) toast("Chapitre marqué comme lu"); });
-    ch.querySelector("header").appendChild(rb);
+    const rf = document.createElement("div"); rf.className = "read-foot"; rf.appendChild(rb); ch.appendChild(rf);
   });
   function syncRead() {
     $$(".toc button").forEach((b) => b.classList.toggle("read", read.includes(b.dataset.id)));
-    $$(".read-btn").forEach((b) => { const r = read.includes(b.dataset.id); b.classList.toggle("done", r); b.textContent = r ? "✓ Lu" : "Marquer comme lu"; });
+    $$(".read-btn").forEach((b) => { const r = read.includes(b.dataset.id), t = (root.querySelector("#" + b.dataset.id) || {}).dataset?.title || "ce chapitre"; b.classList.toggle("done", r); b.textContent = r ? "✓ « " + t + " » : lu" : "Marquer « " + t + " » comme lu"; });
   }
   syncRead();
   // section en cours : le rond du sommaire se colore
@@ -2393,7 +2394,7 @@ function init(root) {
   async function submitInscription(payload, waText) {
     $("#sd-fail").hidden = true;
     sendBtn.disabled = true; sendBtn.textContent = "Envoi en cours…";
-    const ok = await DB.add("eleves", { nom: payload.nom, nom_famille: payload.nom_famille || null, prenoms: payload.prenoms || null, telephone: "+228" + payload.telephone.replace(/\D/g, "").slice(-8), formation: payload.formation, quartier: payload.quartier || null, creneau_prefere: payload.creneau, paiement_prefere: payload.paiement, message: payload.message || null, source: "site" });
+    const ok = await DB.add("eleves", { nom: payload.nom, nom_famille: payload.nom_famille || null, prenoms: payload.prenoms || null, telephone: "+228" + payload.telephone.replace(/\D/g, "").slice(-8), formation: payload.formation, quartier: payload.quartier || null, message: payload.message || null, source: "site" });
     sendBtn.disabled = false; sendBtn.textContent = "Envoyer ma pré-inscription";
     $("#sd-waFail").href = WA + "?text=" + encodeURIComponent(waText);
     if (!ok) { $("#sd-fail").hidden = false; return; }
@@ -2402,7 +2403,7 @@ function init(root) {
     $("#sd-okName").textContent = payload.nom.split(" ")[0];
     $("#sd-okPhone").textContent = payload.telephone;
     const catLabel = $("#sd-fCat").selectedOptions[0].textContent;
-    const rows = [["Formation", catLabel], ["Quartier", payload.quartier || "—"], ["Créneau", payload.creneau], ["Paiement", payload.paiement]];
+    const rows = [["Formation", catLabel], ["Quartier", payload.quartier || "—"]];
     $("#sd-okRecap").innerHTML = rows.map(([k, v]) => "<dt>" + k + "</dt><dd>" + String(v).replace(/[<>&]/g, "") + "</dd>").join("");
     $("#sd-waLink").href = WA + "?text=" + encodeURIComponent("Bonjour SODAF, je viens d'envoyer ma pré-inscription sur le site (" + payload.nom + ", " + payload.formation + "). Quand puis-je passer au secrétariat ?");
     fieldsBox().forEach((c) => (c.hidden = true));
@@ -2416,8 +2417,8 @@ function init(root) {
     const okForm = nf.length >= 2 && pr.length >= 2 && digits.length === 8;
     $("#sd-fErr").hidden = okForm;
     if (!okForm) return;
-    lastPayload = { nom: name, nom_famille: nf, prenoms: pr, telephone: phone, formation: $("#sd-fCat").value, quartier: $("#sd-fCity").value.trim(), creneau: $("#sd-fSlot").value, paiement: $("#sd-fPay").value, message: $("#sd-fMsg").value.trim(), source: "Site web" };
-    const waText = "Bonjour SODAF, je souhaite m'inscrire.\nNom : " + name + "\nTéléphone : " + phone + "\nFormation : " + lastPayload.formation + "\nQuartier : " + (lastPayload.quartier || "—") + "\nCréneau : " + lastPayload.creneau + "\nPaiement : " + lastPayload.paiement + (lastPayload.message ? "\nMessage : " + lastPayload.message : "");
+    lastPayload = { nom: name, nom_famille: nf, prenoms: pr, telephone: phone, formation: $("#sd-fCat").value, quartier: $("#sd-fCity").value.trim(), message: $("#sd-fMsg").value.trim(), source: "Site web" };
+    const waText = "Bonjour SODAF, je souhaite m'inscrire.\nNom : " + name + "\nTéléphone : " + phone + "\nFormation : " + lastPayload.formation + "\nQuartier : " + (lastPayload.quartier || "—") + (lastPayload.message ? "\nMessage : " + lastPayload.message : "");
     submitInscription(lastPayload, waText);
   });
   $("#sd-retry").addEventListener("click", () => form.requestSubmit());
@@ -2611,7 +2612,7 @@ function init(root) {
       const head = '<button type="button" class="linkbtn pc-back" data-a="back">← Retour à la liste</button><div class="pc-head"><div><p class="eyebrow">' + { accueil: "Accueil", appels: "Zone d'appel", dossier: "Dossier envoyé · en réflexion", formation: "En formation", archives: "Archivé" }[st] + '</p><h3>' + esc(x.nom) + ' <span>| ' + x.id + "</span></h3></div>" +
         ({ accueil: '<button class="btn btn-blue btn-sm" type="button" data-a="toCall">Basculer en zone d\'appel →</button>', appels: '<button class="btn btn-green btn-sm" type="button" data-a="prepDossier">Intéressé : envoyer le dossier →</button>', dossier: '<button class="btn btn-green btn-sm" type="button" data-a="enroll">' + (x.web && x.web.mode === "mixx" ? "Paiement Mixx vérifié : faire le reçu" : "Paiement reçu : faire le reçu") + "</button>", formation: '<button class="btn btn-green btn-sm" type="button" data-a="rc">Faire un reçu</button>', archives: '<button class="btn btn-blue btn-sm" type="button" data-a="revive">Ressortir : remettre en appel</button>' }[st]) + "</div>";
       const info = '<div class="pc-info"><div><span>N° dossier</span><b>' + x.id + '</b></div><div><span>Téléphone</span><b>' + (n ? '<a href="tel:+228' + n + '">+228 ' + n.replace(/(\d{2})(?=\d)/g, "$1 ") + "</a>" : "—") + '</b></div><div><span>Formation</span><b>' + esc(x.formation || "—") + '</b></div><div><span>Quartier</span><b>' + esc(x.quartier || "—") + "</b></div>" +
-        '<div><span>Préfère</span><b>' + esc(x.creneau_prefere || "—") + '</b></div><div><span>Paiement</span><b>' + esc(x.paiement_prefere || "—") + '</b></div><div><span>Arrivé</span><b>' + new Date(x.cree_le).toLocaleDateString("fr-FR") + " · " + (x.source === "site" ? "site" : "bureau") + "</b></div>" +
+        (x.creneau_prefere ? '<div><span>Préfère</span><b>' + esc(x.creneau_prefere) + "</b></div>" : "") + (x.paiement_prefere ? '<div><span>Paiement</span><b>' + esc(x.paiement_prefere) + "</b></div>" : "") + '<div><span>Arrivé</span><b>' + new Date(x.cree_le).toLocaleDateString("fr-FR") + " · " + (x.source === "site" ? "site" : "bureau") + "</b></div>" +
         '<div><span>Statut</span><b>' + (st === "formation" ? '<select data-a="statut">' + ETAPES.formation.map((t) => "<option" + (t === x.statut ? " selected" : "") + ">" + t + "</option>").join("") + "</select>" : esc(x.statut === "Abandon" ? "Archivé" + (x.archive_motif ? " · " + x.archive_motif : "") : x.statut)) + "</b></div>" +
         (x.message ? '<div class="wide"><span>Son message</span><b>« ' + esc(x.message) + " »</b></div>" : "") + (x.notes ? '<div class="wide"><span>Note interne</span><b>' + esc(x.notes) + "</b></div>" : "") + "</div>";
       let body = "";
@@ -3019,7 +3020,7 @@ function init(root) {
       const onlyHead = () => cur.length === 1 && /^<h4/i.test(cur[0]);
       [...art.children].forEach((el) => {
         if (el.tagName === "HEADER") return;
-        const c = el.cloneNode(true); c.querySelectorAll(".read-btn").forEach((b) => b.remove());
+        const c = el.cloneNode(true); c.querySelectorAll(".read-btn, .read-foot").forEach((b) => b.remove());
         const html = c.outerHTML, len = c.textContent.length;
         if (el.tagName === "H4") { flush(); cur.push(html); return; }
         if (el.matches("dl.dl")) {
