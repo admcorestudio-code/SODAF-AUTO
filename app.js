@@ -713,6 +713,12 @@ a.teamtile.hl{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
 .pc-tries i.on{background:var(--red-soft);border-color:var(--red);color:var(--red)}
 .pc-alert{margin-top:12px;background:var(--red-soft);border:1.5px solid var(--red);border-radius:10px;padding:12px 14px;font-size:.94rem}
 .pc-script{font-size:1rem;line-height:1.6}
+.sc{list-style:none;counter-reset:sc;margin:0;padding:0;display:flex;flex-direction:column;gap:14px}
+.sc li{counter-increment:sc;position:relative;padding-left:38px}
+.sc li::before{content:counter(sc);position:absolute;left:0;top:0;width:26px;height:26px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font:700 .85rem var(--f-display)}
+.sc li>b{display:block;font:700 .82rem var(--f-body);letter-spacing:.06em;text-transform:uppercase;color:#3D444D;margin:3px 0 6px}
+.sc-say{font-size:1.08rem;line-height:1.6;font-weight:600;color:var(--ink);background:var(--green-soft);border-left:4px solid var(--green);border-radius:0 10px 10px 0;padding:8px 12px;margin:0 0 6px!important}
+.sc-tip{font-size:.88rem;color:#3D444D;font-style:italic;margin:0 0 6px!important;padding-left:2px}
 .pc-script p{margin:0 0 10px!important}
 .pc-checks{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:6px}
 .pc-checks label{display:flex;gap:8px;align-items:center;background:var(--soft);padding:.5em .7em;border-radius:10px;cursor:pointer;font-size:.94rem}
@@ -2448,13 +2454,32 @@ function init(root) {
     const PRIX = { "Permis B": "55 000 F la formation complète (formule courte dès 35 000 F, accélérée 75 000 ou 80 000 F)", "Permis A": "30 000 F", "Pack A + B": "80 000 F", "Remise à niveau": "20 000 F", "Formation entreprise": "sur devis" };
     const PIECES = [["acte", "Acte de naissance"], ["cni", "Photocopie carte d'identité"], ["photos", "2 photos passeport"], ["examen", "Dépôt examen 30 000 F payé"], ["deja", "A déjà conduit"]];
     const prenom = (x) => (x.nom || "").trim().split(/\s+/)[0];
-    const msgAccueil = (x) => "Bonjour " + prenom(x) + " 👋\nIci le secrétariat de SODAF Auto-École. Nous avons bien reçu ta pré-inscription, merci !\n\n*TON DOSSIER*\n• N° " + x.id + "\n• Formation : " + (x.formation || "à préciser") + "\n\nNous allons t'appeler très bientôt pour répondre à tes questions et préparer ton inscription. Garde ton téléphone près de toi 😉\n\n📍 412 Avenue Akei, Tokoin Tamé (en face de la caisse)\n🕗 Lun – ven 8 h – 12 h 30 et 14 h 30 – 18 h · Sam 8 h – 12 h\n\nÀ très vite !\nL'équipe SODAF · L'art de conduire, la force de réussir.\nautosodaf.com";
+    const msgAccueil = (x) => "Bonjour " + prenom(x) + ",\nIci le secrétariat de SODAF Auto-École. Nous avons bien reçu ta pré-inscription, merci !\n\n*TON DOSSIER*\n• N° " + x.id + "\n• Formation : " + (x.formation || "à préciser") + "\n\nNous allons t'appeler très bientôt pour répondre à tes questions et préparer ton inscription.\nGarde ton téléphone près de toi.\n\nÀ très vite !\n*L'équipe SODAF · L'art de conduire, la force de réussir.*\nautosodaf.com";
     const msgRelance = (x) => "Bonjour " + prenom(x) + ", ici SODAF Auto-École. Nous avons essayé de te joindre plusieurs fois au sujet de ta pré-inscription (" + (x.formation || "permis") + "), sans succès. Si tu es toujours intéressé(e), réponds simplement à ce message ou appelle-nous au 72 54 41 66. Ton dossier n° " + x.id + " reste ouvert. Bonne journée !";
-    const script = (x) => "<p><b>Bonjour, je suis [ton prénom] du secrétariat de SODAF Auto-École. Tu as fait une pré-inscription sur notre site pour le " + esc(x.formation || "permis") + ". As-tu deux minutes ?</b></p>" +
-      "<p>→ <b>La formation</b> : code en salle lundi, mercredi et vendredi à 14 h 30, plus les cours et quiz sur autosodaf.com. Conduite par séances d'une heure avec le moniteur. Examen blanc chaque samedi à 10 h.</p>" +
-      "<p>→ <b>Le prix</b> : " + esc(PRIX[x.formation] || "voir les tarifs") + ", plus 5 000 F d'inscription. On paie en 2 fois : la moitié à l'inscription, le reste avant la première séance de conduite. Espèces ou Mixx by Yas (T-Money).</p>" +
-      "<p>→ <b>Les pièces</b> : acte de naissance, photocopie de la carte d'identité, 2 photos d'identité format passeport.</p>" + (/Permis|Pack/.test(x.formation || "") ? "<p>→ <b>L'examen d'État</b> : un dépôt de 30 000 F pour l'inscription à l'examen final, payé au secrétariat. C'est nous qui déposons son dossier ; ensuite l'État lui envoie un message avec le jour et le lieu de l'examen.</p>" : "") +
-      "<p>→ <b>Quand peux-tu passer au bureau pour t'inscrire ?</b> Lun – ven 8 h – 12 h 30 et 14 h 30 – 18 h, samedi 8 h – 12 h.</p>";
+    const PRIX_ORAL = {
+      "Permis B": "Pour le permis B, la formation complète coûte 55 000 francs, sur 3 mois. Si vous êtes pressé, il y a la formule accélérée : 75 000 francs en 2 mois, ou 80 000 francs en 1 mois. Et si vous savez déjà un peu conduire, la formule courte est à 35 000 francs.",
+      "Permis A": "Pour le permis moto, la formation coûte 30 000 francs.",
+      "Pack A + B": "Le pack moto et voiture coûte 80 000 francs. C'est moins cher que les deux séparément.",
+      "Remise à niveau": "La remise à niveau coûte 20 000 francs. Ce sont 4 séances de conduite d'une heure, avec une évaluation.",
+      "Formation entreprise": "Pour les chauffeurs d'entreprise, on fait un devis selon le nombre de personnes et vos horaires.",
+    };
+    const say = (t) => '<p class="sc-say">« ' + t + " »</p>";
+    const tip = (t) => '<p class="sc-tip">' + t + "</p>";
+    const script = (x) => {
+      const exam = /Permis|Pack/.test(x.formation || "");
+      return '<ol class="sc">' +
+        "<li><b>Saluer</b>" + say("Bonjour, SODAF Auto-École. Je suis [ton prénom], du secrétariat. Je vous appelle pour votre pré-inscription au " + esc(x.formation || "permis") + " sur notre site. Vous avez deux minutes ?") +
+          tip("S'il n'est pas disponible : « Pas de souci. Je vous rappelle plutôt le matin ou l'après-midi ? » Puis choisis « Rappeler le matin » ou « Rappeler l'après-midi ».") + "</li>" +
+        "<li><b>Expliquer la formation</b>" + say("Chez nous, il y a deux parties. D'abord le code : c'est en salle, le lundi, le mercredi et le vendredi à 14 h 30. Vous pouvez aussi réviser gratuitement sur notre site. Ensuite la conduite : des séances d'une heure avec le moniteur, le matin ou en fin d'après-midi.") + "</li>" +
+        "<li><b>Donner le prix</b>" + say(esc(PRIX_ORAL[x.formation] || "Je vous envoie nos prix sur WhatsApp.")) +
+          say("En plus, il y a 5 000 francs d'inscription" + (exam ? ", et 30 000 francs pour l'inscription à l'examen d'État." : ".")) + "</li>" +
+        "<li><b>Expliquer le paiement</b>" + say("Vous pouvez payer en deux fois : la moitié quand vous vous inscrivez, et le reste avant votre première séance de conduite. Vous payez en espèces au bureau, ou par Mixx by Yas.") + "</li>" +
+        "<li><b>Les papiers à apporter</b>" + say("Pour le dossier, il faut votre acte de naissance, une photocopie de votre carte d'identité, et 2 photos d'identité.") +
+          (exam ? say("Pour l'examen, c'est nous qui déposons votre dossier. Ensuite, l'État vous envoie un message avec la date et le lieu.") : "") + "</li>" +
+        "<li><b>Conclure</b>" + say("Je vous envoie tout ça sur WhatsApp : les prix, la fiche à remplir et notre localisation. Vous avez une question ?") +
+          tip("Il est intéressé : touche « Intéressé : envoyer le dossier ». Il hésite : « Prenez le temps d'y réfléchir, et répondez-moi sur WhatsApp quand vous voulez. » Il n'est pas intéressé : « Plus tard » ou « Rétractation ».") +
+          tip("S'il demande où vous êtes : « Au 412 avenue Akei, à Tokoin Tamé, en face de la caisse. Le bureau est ouvert du lundi au vendredi de 8 h à 12 h 30 et de 14 h 30 à 18 h, et le samedi matin. »") + "</li></ol>";
+    };
     const ago = (d) => { const m = Math.round((Date.now() - new Date(d)) / 60000); return m < 60 ? "il y a " + Math.max(m, 1) + " min" : m < 1440 ? "il y a " + Math.round(m / 60) + " h" : "il y a " + Math.round(m / 1440) + " j"; };
     let pcStage = S.get("pcStage", "accueil"), pcSel = null, pcFeed = [];
     const isWide = () => window.matchMedia("(min-width: 900px)").matches;
