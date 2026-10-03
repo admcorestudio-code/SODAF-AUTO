@@ -643,6 +643,9 @@ a.teamtile.hl{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
 .pc-items{max-height:68vh;overflow:auto}
 .pc-gh{display:flex;justify-content:space-between;font:600 .74rem var(--f-body);letter-spacing:.08em;text-transform:uppercase;color:#3D444D;background:var(--soft);padding:8px 14px;margin:0!important;border-bottom:1px solid var(--line)}
 .pc-gh span{background:#fff;border-radius:999px;padding:0 .5em}
+.pc-items>.pc-gh:not(:first-child){margin-top:14px!important;border-top:2px solid var(--ink)}
+.pc-item.i-done{opacity:.55}
+.pc-item.i-done.on{opacity:1}
 .pc-item{all:unset;box-sizing:border-box;display:flex;flex-direction:column;gap:1px;width:100%;padding:11px 14px;border-bottom:1px solid var(--line);cursor:pointer;border-left:4px solid transparent}
 .pc-item:hover{background:#FAFBFB}
 .pc-fold{all:unset;box-sizing:border-box;width:100%;cursor:pointer;display:flex!important;align-items:center;gap:8px;padding:12px 14px;font:700 .82rem var(--f-body);letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid var(--line)}
@@ -2560,9 +2563,11 @@ function init(root) {
       renderList();
       fillEleveSelect();
     }
+    const calledToday = (x) => !!x.dernier_appel_le && iso(new Date(x.dernier_appel_le)) === iso(new Date());
+    const hm = (t) => { const d = new Date(t); return d.getHours() + " h " + pad(d.getMinutes()); };
     function groupsFor(stage, list) {
       if (stage === "accueil") return [["À accueillir", list.slice().sort((a, b) => (a.cree_le < b.cree_le ? -1 : 1))]];
-      if (stage === "appels") return [["À appeler · 1er appel", list.filter((x) => !x.rappel), "first"], ["Rappeler le matin", list.filter((x) => x.rappel === "matin"), "matin"], ["Rappeler l'après-midi", list.filter((x) => x.rappel === "apres-midi"), "am"]];
+      if (stage === "appels") { const o = (a) => a.filter((x) => !calledToday(x)).concat(a.filter(calledToday)); return [["À appeler · 1er appel", o(list.filter((x) => !x.rappel)), "first"], ["Rappeler le matin", o(list.filter((x) => x.rappel === "matin")), "matin"], ["Rappeler l'après-midi", o(list.filter((x) => x.rappel === "apres-midi")), "am"]]; }
       if (stage === "dossier") return [["Paiement Mixx à vérifier", list.filter((x) => x.web && x.web.mode === "mixx"), "verif"], ["Viendra payer à l'agence", list.filter((x) => x.web && x.web.mode === "agence"), "agence"], ["À relancer · 3 jours et plus", list.filter((x) => !x.web && dosAge(x) >= 3), "late"], ["En réflexion", list.filter((x) => !x.web && dosAge(x) < 3), "wait"]];
       if (stage === "formation") return ["Inscrit", "En formation", "Permis obtenu"].map((s) => [s, list.filter((x) => x.statut === s)]);
       return ["Plus tard", "Injoignable", "Rétractation", "Faux numéro"].map((m) => [m, list.filter((x) => x.archive_motif === m)]).concat([["Sans motif", list.filter((x) => !x.archive_motif)]]);
@@ -2576,11 +2581,11 @@ function init(root) {
       const html = groupsFor(pcStage, list).filter((g) => g[1].length).map((g) => (g[2] && ["matin", "am"].includes(g[2])
         ? '<button type="button" class="pc-gh pc-fold g-' + g[2] + '" data-fold="' + g[2] + '" aria-expanded="' + isOpen(g) + '"><i aria-hidden="true">▸</i>' + esc(g[0]) + " <span>" + g[1].length + "</span></button>"
         : '<p class="pc-gh' + (g[2] ? " g-" + g[2] : "") + '">' + esc(g[0]) + " <span>" + g[1].length + "</span></p>") + (isOpen(g) ? g[1].map((x) =>
-        '<button type="button" class="pc-item' + (g[2] ? " i-" + g[2] : "") + (x.id === pcSel ? " on" : "") + '" data-id="' + x.id + '"><b>' + esc(x.nom) + (g[2] ? ' <em class="pc-tag t-' + g[2] + '">' + TAG[g[2]] + "</em>" : "") + '</b><span>' + esc((x.telephone || "").replace("+228", "+228 ")) + (x.formation ? " · " + esc(x.formation) : "") + "</span><small>" + CODE(x) + " · " +
-        (pcStage === "accueil" ? (x.accueil_le ? "accueil envoyé ✓" : "arrivé " + ago(x.cree_le)) : pcStage === "appels" ? (x.appels ? x.appels + "X sans réponse" : "pas encore appelé") : pcStage === "dossier" ? (x.web ? (x.web.mode === "mixx" ? "a payé " + F(x.web.a_payer) + " par Mixx " : "paiera " + F(x.web.a_payer) + " à l'agence · ") + ago(x.web.le) : "dossier envoyé " + ago(x.dossier_envoye_le)) + (x.dossier_relance_le ? " · relancé " + ago(x.dossier_relance_le) : "") : pcStage === "archives" ? "archivé " + (x.archive_le ? ago(x.archive_le) : "") : esc(x.statut)) + "</small></button>").join("") : "")).join("");
+        '<button type="button" class="pc-item' + (g[2] ? " i-" + g[2] : "") + (pcStage === "appels" && calledToday(x) ? " i-done" : "") + (x.id === pcSel ? " on" : "") + '" data-id="' + x.id + '"><b>' + esc(x.nom) + (g[2] ? ' <em class="pc-tag t-' + g[2] + '">' + TAG[g[2]] + "</em>" : "") + '</b><span>' + esc((x.telephone || "").replace("+228", "+228 ")) + (x.formation ? " · " + esc(x.formation) : "") + "</span><small>" + CODE(x) + " · " +
+        (pcStage === "accueil" ? (x.accueil_le ? "accueil envoyé ✓" : "arrivé " + ago(x.cree_le)) : pcStage === "appels" ? (x.appels ? x.appels + "X sans réponse" : "pas encore appelé") + (calledToday(x) ? " · appelé à " + hm(x.dernier_appel_le) : "") : pcStage === "dossier" ? (x.web ? (x.web.mode === "mixx" ? "a payé " + F(x.web.a_payer) + " par Mixx " : "paiera " + F(x.web.a_payer) + " à l'agence · ") + ago(x.web.le) : "dossier envoyé " + ago(x.dossier_envoye_le)) + (x.dossier_relance_le ? " · relancé " + ago(x.dossier_relance_le) : "") : pcStage === "archives" ? "archivé " + (x.archive_le ? ago(x.archive_le) : "") : esc(x.statut)) + "</small></button>").join("") : "")).join("");
       $("#sd-pcList").innerHTML = html || '<p class="tm-empty">' + ({ accueil: "Aucune nouvelle pré-inscription. Elles arrivent ici toutes seules depuis le site.", appels: "Personne à appeler pour l'instant.", dossier: "Aucun dossier en attente. Après un appel, « Intéressé : finaliser l’inscription » les range ici.", formation: "Aucun élève en formation pour l'instant.", archives: "Aucun dossier archivé." }[pcStage]) + "</p>";
       if (pcSel && !list.some((x) => x.id === pcSel)) pcSel = null;
-      if (!pcSel && isWide()) { const first = $("#sd-pcList .pc-item"); if (first) { pcSel = +first.dataset.id; first.classList.add("on"); } }
+      if (!pcSel && isWide()) { const first = $("#sd-pcList .pc-item:not(.i-done)") || $("#sd-pcList .pc-item"); if (first) { pcSel = +first.dataset.id; first.classList.add("on"); } }
       if (!keepDetail || keepDetail !== pcSel) renderDetail();
     }
     $("#sd-pcQ").addEventListener("input", renderList);
@@ -2692,7 +2697,7 @@ function init(root) {
       const a = e.target.closest("[data-a]"), ar = e.target.closest("[data-arch]"), rp = e.target.closest("[data-rappel]");
       if (ar) { confirmBtn(ar, () => archive(x, ar.dataset.arch)); return; }
       const ko = e.target.closest("[data-ko]");
-      if (ko) { const v = ko.dataset.ko, nb = Math.min((x.appels || 0) + 1, 20), note = ($("#sd-pcCallNote") || {}).value; if (await patchEl(x, { appels: nb, rappel: v }, "Pas de réponse (" + nb + "X) · " + (v === "matin" ? "à rappeler le matin" : "à rappeler l'après-midi"), ["Appel sans réponse", [v === "matin" ? "Rappel le matin" : "Rappel l'après-midi", (note || "").trim()].filter(Boolean).join(" · ")])) renderList(); return; }
+      if (ko) { const v = ko.dataset.ko, nb = Math.min((x.appels || 0) + 1, 20), note = ($("#sd-pcCallNote") || {}).value; const order = $$("#sd-pcList .pc-item").map((b) => +b.dataset.id); if (await patchEl(x, { appels: nb, rappel: v, dernier_appel_le: new Date().toISOString() }, "Pas de réponse (" + nb + "X) · " + (v === "matin" ? "à rappeler le matin" : "à rappeler l'après-midi"), ["Appel sans réponse", [v === "matin" ? "Rappel le matin" : "Rappel l'après-midi", (note || "").trim()].filter(Boolean).join(" · ")])) { const rest = order.slice(order.indexOf(x.id) + 1).concat(order.slice(0, order.indexOf(x.id))).map((id) => eleves.find((y) => y.id === id)).filter((y) => y && etapeOf(y) === "appels"); const nx = rest.find((y) => !calledToday(y)) || null; pcSel = nx ? nx.id : null; renderList(); } return; }
       if (rp) { const v = rp.dataset.rappel || null; if (await patchEl(x, { rappel: v }, "Enregistré")) renderList(); return; }
       if (!a) return;
       const k = a.dataset.a;
