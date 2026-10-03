@@ -678,6 +678,10 @@ html:has(#sodaf-root.app-mode),body:has(#sodaf-root.app-mode){background:#E9ECEF
 .ex-doc .linkbtn{align-self:flex-start;font-size:.86rem}
 label.ex-doc{position:relative;cursor:pointer;padding-left:44px}
 label.ex-doc input{position:absolute;left:14px;top:12px;width:20px;height:20px;accent-color:var(--green)}
+.ex-lot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:var(--ink);color:#fff;padding:12px 14px}
+.ex-lot b{display:block;font:700 1rem var(--f-display)}.ex-lot span{font-size:.84rem;color:#C9CED4}
+.ex-lot-acts{display:flex;gap:6px;flex-wrap:wrap}
+#sodaf-root .ex-lot .btn-line{background:#fff;color:var(--ink)}#sodaf-root .ex-lot .btn-green{background:var(--yellow);color:var(--ink)}
 .ex-check{margin:0 0 10px;padding-left:1.2em;display:flex;flex-direction:column;gap:4px;font-weight:600}
 .ex-conv{display:grid;grid-template-columns:1fr 1.4fr;gap:10px}
 #sodaf-root .pc-block .tm-formact input[type=date]{flex:0 0 auto;width:auto;min-width:0}
@@ -2673,6 +2677,7 @@ function init(root) {
       renderList();
       fillEleveSelect();
     }
+    const fmtN = (n) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
     const calledToday = (x) => !!x.dernier_appel_le && iso(new Date(x.dernier_appel_le)) === iso(new Date());
     const hm = (t) => { const d = new Date(t); return d.getHours() + " h " + pad(d.getMinutes()); };
     // Recherche globale : N° client (SO12 ou 12), téléphone (avec ou sans +228, espaces), ou nom
@@ -2700,7 +2705,8 @@ function init(root) {
       const isOpen = (g) => !["matin", "am"].includes(g[2]) || !!q || fold[g[2]];
       const ST_LAB = { accueil: "Accueil", appels: "Appels", dossier: "Dossier envoyé", formation: "En formation", archives: "Archivés" };
       const grps = q ? Object.keys(ST_LAB).map((k) => [ST_LAB[k], list.filter((x) => etapeOf(x) === k)]) : groupsFor(pcStage, list);
-      const html = (q ? '<p class="pc-hint">' + (list.length ? list.length + " résultat" + (list.length > 1 ? "s" : "") + " dans toutes les étapes" : "") + "</p>" : "") + grps.filter((g) => g[1].length).map((g) => (g[2] && ["matin", "am"].includes(g[2])
+      const lot = !q && pcStage === "examen" ? list.filter((x) => x.examen_etape === "complet") : [];
+      const html = (lot.length ? '<div class="ex-lot"><div><b>' + lot.length + (lot.length > 1 ? " dossiers prêts" : " dossier prêt") + ' à déposer</b><span>' + fmtN(lot.length * 30000) + ' F de dépôts</span></div><div class="ex-lot-acts"><button class="btn btn-line btn-sm" type="button" data-lot="print">Imprimer le bordereau</button><button class="btn btn-green btn-sm" type="button" data-lot="done">Lot déposé</button></div></div>' : "") + (q ? '<p class="pc-hint">' + (list.length ? list.length + " résultat" + (list.length > 1 ? "s" : "") + " dans toutes les étapes" : "") + "</p>" : "") + grps.filter((g) => g[1].length).map((g) => (g[2] && ["matin", "am"].includes(g[2])
         ? '<button type="button" class="pc-gh pc-fold g-' + g[2] + '" data-fold="' + g[2] + '" aria-expanded="' + isOpen(g) + '"><i aria-hidden="true">▸</i>' + esc(g[0]) + " <span>" + g[1].length + "</span></button>"
         : '<p class="pc-gh' + (g[2] ? " g-" + g[2] : "") + '">' + esc(g[0]) + " <span>" + g[1].length + "</span></p>") + (isOpen(g) ? g[1].map((x) =>
         '<button type="button" class="pc-item' + (g[2] ? " i-" + g[2] : "") + (sg(x) === "appels" && calledToday(x) ? " i-done" : "") + (x.id === pcSel ? " on" : "") + '" data-id="' + x.id + '"><b>' + esc(x.nom) + (g[2] ? ' <em class="pc-tag t-' + g[2] + '">' + TAG[g[2]] + "</em>" : "") + '</b><span>' + esc((x.telephone || "").replace("+228", "+228 ")) + (x.formation ? " · " + esc(x.formation) : "") + "</span><small>" + CODE(x) + " · " +
@@ -2716,6 +2722,35 @@ function init(root) {
       const h = new Date().getHours(), key = iso(new Date()) + (h < 12 ? "m" : "a"), f = S.get("pcFold", null);
       return f && f.key === key ? f : { key, matin: h < 12, am: h >= 12 };
     }
+    // Dépôt en lot : un seul bordereau, une seule signature, un seul clic
+    $("#sd-pcList").addEventListener("click", async (e) => {
+      const lb = e.target.closest("[data-lot]"); if (!lb) return;
+      const lot = eleves.filter((x) => etapeOf(x) === "examen" && x.examen_etape === "complet").sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
+      if (!lot.length) return;
+      const today = iso(new Date()), dTxt = new Date().toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+      if (lb.dataset.lot === "print") {
+        const w = window.open("", "_blank"); if (!w) { toast("Autorise les fenêtres pour imprimer"); return; }
+        const rows = lot.map((x, i) => "<tr><td>" + (i + 1) + "</td><td><b>" + esc(x.nom) + "</b></td><td>" + CODE(x) + "</td><td>" + esc(x.formation || "") + '</td><td class="r">30 000 F</td></tr>').join("");
+        w.document.write('<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>Bordereau de dépôt ' + today + ' · SODAF</title><style>@page{size:A4;margin:16mm}body{font:14px/1.45 "Segoe UI",Arial,sans-serif;color:#14171C;margin:0}.top{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #14171C;padding-bottom:12px}.top svg{height:34px;width:auto}.top small{display:block;font-size:11px;letter-spacing:.12em;color:#0B6E4F;font-weight:700;margin-top:4px}h1{font-size:20px;margin:18px 0 4px}.meta{display:flex;gap:28px;margin:10px 0 16px;font-size:14px}.meta b{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#5D6570}table{width:100%;border-collapse:collapse}th{text-align:left;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#5D6570;border-bottom:2px solid #14171C;padding:8px 6px}td{padding:9px 6px;border-bottom:1px solid #DDE1E5}.r{text-align:right;white-space:nowrap}tfoot td{border-top:2px solid #14171C;border-bottom:0;font-weight:800;font-size:15px}.sign{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:40px}.sign div{border:1.5px solid #14171C;border-radius:8px;padding:12px 14px;min-height:120px}.sign b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase}.sign span{display:block;color:#5D6570;font-size:12px;margin-top:2px}.ln{margin:16px 0 0;border-bottom:1px solid #9AA3AB;padding-bottom:4px;font-size:13px;min-height:20px}.foot{margin-top:28px;font-size:11px;color:#5D6570;text-align:center}.np{background:#FFF5D6;padding:10px 14px;margin:0 0 14px;border-radius:8px}@media print{.np{display:none}}</style></head><body>' +
+          '<p class="np">Vérifie la liste, puis <button onclick="print()">Imprimer</button>. Fais signer le partenaire en bas et garde la feuille.</p>' +
+          '<div class="top"><div>' + LOGO("#14171C", "word") + '<small>AUTO-ÉCOLE · LOMÉ, TOGO</small></div><div style="text-align:right"><b>Bordereau de dépôt</b><br>N° ' + today + "</div></div>" +
+          '<h1>Dépôt des dossiers d\'examen</h1><div class="meta"><div><b>Remis à</b>Partenaire SODAF</div><div><b>Date</b>' + dTxt + "</div><div><b>Dossiers</b>" + lot.length + "</div></div>" +
+          '<table><thead><tr><th>#</th><th>Élève</th><th>N° client</th><th>Formation</th><th class="r">Dépôt</th></tr></thead><tbody>' + rows + "</tbody><tfoot><tr><td></td><td>" + lot.length + (lot.length > 1 ? " dossiers" : " dossier") + '</td><td></td><td></td><td class="r">' + fmtN(lot.length * 30000) + " F</td></tr></tfoot></table>" +
+          '<p style="margin-top:14px;font-size:13px">Chaque dossier contient : photocopie de la carte d\'identité, acte de naissance, 2 photos d\'identité et le dépôt de 30 000 F.</p>' +
+          '<div class="sign"><div><b>Remis par · SODAF Auto-École</b><p class="ln">Nom et prénom : ' + esc((me && me.nom) || "") + '</p><p class="ln">Signature :</p></div><div><b>Reçu par · Partenaire SODAF</b><p class="ln">Nom et prénom : ' + esc(CFG.partenaire_nom || "") + '</p><p class="ln">Signature :</p></div></div>' +
+          '<p class="foot">SODAF Auto-École · 412 Avenue Akei, Tokoin Tamé, Lomé · +228 72 54 41 66 · autosodaf.com</p></body></html>');
+        w.document.close();
+        return;
+      }
+      confirmBtn(lb, async () => {
+        const ids = lot.map((x) => x.id).join(",");
+        const ok = await run(() => DB.q("eleves?id=in.(" + ids + ")", { method: "PATCH", body: { examen_etape: "depose", examen_depose_le: today }, prefer: "return=minimal" }), "Lot déposé : " + lot.length + (lot.length > 1 ? " dossiers" : " dossier"));
+        if (!ok) return;
+        lot.forEach((x) => Object.assign(x, { examen_etape: "depose", examen_depose_le: today }));
+        await run(() => DB.q("suivi", { method: "POST", body: lot.map((x) => ({ eleve_id: x.id, type: "Étape", note: "Examen : Dossier déposé (lot du " + today + ")" })), prefer: "return=minimal" }));
+        renderList();
+      });
+    });
     $("#sd-pcList").addEventListener("click", (e) => { const b = e.target.closest("[data-fold]"); if (!b) return; const f = foldState(); f[b.dataset.fold] = !f[b.dataset.fold]; S.set("pcFold", f); renderList(); });
     $("#sd-pcStages").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; pcStage = b.dataset.st; pcSel = null; $("#sd-pcQ").value = ""; S.set("pcStage", pcStage); renderList(); });
     $("#sd-pcList").addEventListener("click", (e) => { const b = e.target.closest(".pc-item"); if (!b) return; pcSel = +b.dataset.id; $$("#sd-pcList .pc-item").forEach((i) => i.classList.toggle("on", i === b)); renderDetail(); if (!isWide()) $("#sd-pc").scrollIntoView({ block: "start" }); });
