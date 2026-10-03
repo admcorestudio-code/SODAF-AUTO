@@ -688,7 +688,7 @@ const HTML = `
 <a class="logo" href="#accueil" aria-label="SODAF, accueil">${LOGO("#14171C", "word")}<small class="logo-sub">Auto-école · Togo</small></a>
 <button class="burger" id="sd-burger" aria-expanded="false">Menu</button>
 <nav class="main" id="sd-nav">
-<a href="#accueil" data-nav="accueil">Accueil</a><a href="#formations" data-nav="formations">Formations et tarifs</a><a href="#cours" data-nav="cours">Cours</a><a href="#panneaux" data-nav="panneaux">Panneaux</a><a href="#quiz" data-nav="quiz">Quiz</a><a href="#devoirs" data-nav="devoirs">Devoirs</a><a href="#outils" data-nav="outils">Outils</a><a href="#documents" data-nav="documents">Documents</a>
+<a href="#accueil" data-nav="accueil">Accueil</a><a href="#formations" data-nav="formations">Formations et tarifs</a><a href="#cours" data-nav="cours">Cours</a><a href="#panneaux" data-nav="panneaux">Panneaux</a><a href="#quiz" data-nav="quiz">Quiz</a><a href="#devoirs" data-nav="devoirs">Devoirs</a><a href="#outils" data-nav="outils">Outils</a>
 </nav>
 <a class="btn btn-green btn-sm" href="#inscription">S'inscrire</a>
 </div></header>
@@ -751,6 +751,13 @@ const HTML = `
 <div id="sd-qday" style="position:relative"></div>
 </div></div></div>
 
+<div class="wrap sec"><div class="sec-head"><div><p class="eyebrow">Bon à savoir</p><h2>Les papiers du conducteur</h2></div><p>Ce qu'il faut préparer pour t'inscrire, ce qu'il faut avoir à bord, et quoi faire après un accrochage.</p></div>
+<div class="grid g3">
+<div class="card doc"><div class="file">ID</div><div><span class="tag">Inscription</span><h3 style="margin-top:8px">Pièces à préparer</h3><ul style="color:var(--muted);padding-left:1.1em;margin:8px 0"><li>Acte de naissance</li><li>Carte d'identité</li><li>Photos d'identité, format passeport</li><li>Quittance d'examen : 35&nbsp;000&nbsp;F (permis B)</li></ul><p style="font-size:.88rem">Plus le droit d'inscription de 5&nbsp;000&nbsp;F.</p></div></div>
+<div class="card doc"><div class="file">CG</div><div><span class="tag">Au volant</span><h3 style="margin-top:8px">Documents de bord</h3><p>Carte grise, assurance, permis, pièce d'identité.</p><div class="acts"><a class="btn btn-line btn-sm" href="#cours-tableau">Voir le chapitre</a></div></div></div>
+<div class="card doc"><div class="file">CA</div><div><span class="tag">Accident</span><h3 style="margin-top:8px">Constat amiable</h3><p>Remplis-le sur place, ne signe que ce qui est exact, garde ton exemplaire.</p><div class="acts"><a class="btn btn-line btn-sm" href="#cours-secourisme">En savoir plus</a></div></div></div>
+</div>
+</div>
 <div class="wrap sec"><div class="band">${ZEBRA}<div style="position:relative"><h2 style="font-size:clamp(1.8rem,4vw,2.5rem)">Prêt à prendre le volant ?</h2><p>Pré-inscris-toi en une minute. Le secrétariat te répond sur WhatsApp pour fixer ton premier cours.</p></div><a class="btn btn-green" style="position:relative" href="#inscription">Me pré-inscrire</a></div></div>
 </section>
 
@@ -800,11 +807,20 @@ ${HEAD("Formations", "Nos formations et tarifs", "Chaque formule comprend le cod
 <div class="card soft"><p class="eyebrow">Dossier à fournir</p><h3 style="margin-top:10px">Pour t'inscrire</h3><ul style="margin:8px 0 0;padding-left:1.1em;color:var(--muted)"><li>Acte de naissance</li><li>Carte d'identité</li><li>Photos d'identité, format passeport</li><li>Quittance d'examen : 35 000 F pour le permis B, en plus de la formation (permis A : montant au secrétariat)</li></ul></div>
 <div class="card soft"><p class="eyebrow">Bon à savoir</p><h3 style="margin-top:10px">Des règles claires</h3><ul style="margin:8px 0 0;padding-left:1.1em;color:var(--muted)"><li>Le droit d'inscription n'est pas remboursable.</li><li>Une séance non faite peut être reportée pendant 6 mois.</li><li>Conduite, sur rendez-vous : du lundi au vendredi de 6 h 30 à 11 h et de 14 h 30 à 18 h, le samedi de 6 h 30 à 12 h.</li><li>Secrétariat : du lundi au vendredi de 8 h à 12 h 30 et de 14 h 30 à 18 h, le samedi de 8 h à 12 h.</li></ul></div>
 </div></div>
+<div class="wrap sec" id="formations-docs" style="padding-top:0"><div class="sec-head"><div><p class="eyebrow">À télécharger</p><h2>Fiche et planning</h2></div><p>À imprimer, à garder sur ton téléphone ou à envoyer à un proche.</p></div>
+<div class="card doc doc-cover"><img class="cover" src="apercu-fiche.jpg" alt="Aperçu de la fiche de renseignement SODAF" width="120" height="170" loading="lazy"><div><span class="tag">PDF · 1 page A4</span><h3 style="margin-top:8px">Fiche de renseignement</h3><p>Toutes les formules et leurs prix, le dossier à fournir et les règles de l'auto-école. À imprimer ou à envoyer à un proche.</p>
+<div class="acts"><a class="btn btn-green btn-sm" href="fiche-renseignement-sodaf.pdf" download>Télécharger le PDF</a><a class="btn btn-line btn-sm" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent("La fiche de l'auto-école SODAF (formations et tarifs) : https://autosodaf.com/fiche-renseignement-sodaf.pdf")}">Partager sur WhatsApp</a></div></div></div>
+<div class="card doc doc-cover" style="margin-top:18px"><img class="cover" src="apercu-planning.jpg" alt="Aperçu du planning de la semaine SODAF" width="120" height="85" loading="lazy" style="align-self:start"><div><span class="tag">PDF · A4 paysage</span><h3 style="margin-top:8px">Planning de la semaine</h3><p>Les heures du code en salle, les créneaux de conduite et l'examen blanc du samedi. Garde-le sur ton téléphone.</p>
+<div class="acts"><a class="btn btn-green btn-sm" href="planning-semaine-sodaf.pdf" download>Télécharger le PDF</a><a class="btn btn-line btn-sm" href="#formations">Voir en ligne</a></div></div></div>
+</div>
 </section>
 
 <section class="page" data-page="cours" hidden>
 ${HEAD("Manuel officiel SODAF", "Les cours", "Tout ce qui est enseigné en salle, chapitre par chapitre. Marque chaque chapitre comme lu pour voir d'un coup d'œil où tu en es.")}
 <div class="wrap"><div class="classband"><p class="cb-t">Code en salle · 14 h 30 – 15 h 30</p><p class="cb-d">Lundi : cours complet · Mercredi : récap · Vendredi : entraînement · Samedi 10 h : examen blanc</p><a class="btn btn-line btn-sm" href="#formations" style="margin-left:auto">Voir le planning</a></div></div>
+<div class="wrap" style="margin-top:22px"><div class="card doc doc-cover"><img class="cover" src="couverture-manuel.jpg" alt="Couverture du manuel de l'élève conducteur SODAF" width="120" height="160" loading="lazy"><div><span class="tag">Manuel officiel · 34 pages</span><h3 style="margin-top:8px">Manuel de l'élève conducteur</h3><p>Code, secourisme et mécanique, en 7 parties :</p>
+<ol class="toc-list"><li><a href="#cours-signalisation">Le code de la route</a></li><li><a href="#cours-intersections">Les intersections</a></li><li><a href="#cours-priorites">Les règles de priorité</a></li><li><a href="#cours-secourisme">Le secourisme routier</a></li><li><a href="#cours-assurance">L'assurance automobile</a></li><li><a href="#cours-conduite">Notions de conduite</a></li><li><a href="#cours-mecanique">Mécanique automobile</a></li></ol>
+<div class="acts"><a class="btn btn-green btn-sm" href="#cours-signalisation">Commencer la lecture</a><a class="btn btn-line btn-sm" target="_blank" rel="noopener" href="${WA}?text=${encodeURIComponent("Bonjour SODAF, je souhaite recevoir le manuel de l'élève en PDF.")}">Recevoir le PDF sur WhatsApp</a></div></div></div></div>
 <div class="wrap course"><aside class="toc" id="sd-toc" aria-label="Chapitres"></aside><div>
 
 <article class="ch" id="cours-signalisation" data-part="A · Code de la route" data-title="Le code et les signalisations">
@@ -1100,22 +1116,7 @@ ${HEAD("Outils du conducteur", "Dans ta poche", "Les calculs du manuel, la véri
 <div class="sos"><div><span>Police, depuis un portable</span><b>161</b><button data-copy="161">Copier</button></div><div><span>Police, depuis un fixe</span><b>117</b><button data-copy="117">Copier</button></div><div><span>Gendarmerie</span><b>172</b><button data-copy="172">Copier</button></div><div><span>Sapeurs-pompiers</span><b>118</b><button data-copy="118">Copier</button></div></div></div>
 </section>
 
-<section class="page" data-page="documents" hidden>
-${HEAD("Bibliothèque", "Documents", "Le manuel officiel, les pièces à préparer et les documents que tout conducteur doit connaître.")}
-<div class="wrap sec">
-<div class="card doc doc-cover"><img class="cover" src="couverture-manuel.jpg" alt="Couverture du manuel de l'élève conducteur SODAF" width="120" height="160" loading="lazy"><div><span class="tag">Manuel officiel · 34 pages</span><h3 style="margin-top:8px">Manuel de l'élève conducteur</h3><p>Code, secourisme et mécanique, en 7 parties :</p>
-<ol class="toc-list"><li><a href="#cours-signalisation">Le code de la route</a></li><li><a href="#cours-intersections">Les intersections</a></li><li><a href="#cours-priorites">Les règles de priorité</a></li><li><a href="#cours-secourisme">Le secourisme routier</a></li><li><a href="#cours-assurance">L'assurance automobile</a></li><li><a href="#cours-conduite">Notions de conduite</a></li><li><a href="#cours-mecanique">Mécanique automobile</a></li></ol>
-<div class="acts"><a class="btn btn-green btn-sm" href="#cours">Lire en ligne</a><a class="btn btn-line btn-sm" target="_blank" rel="noopener" href="${WA}?text=${encodeURIComponent("Bonjour SODAF, je souhaite recevoir le manuel de l'élève en PDF.")}">Recevoir le PDF sur WhatsApp</a></div></div></div>
-<div class="card doc doc-cover" style="margin-top:18px"><img class="cover" src="apercu-fiche.jpg" alt="Aperçu de la fiche de renseignement SODAF" width="120" height="170" loading="lazy"><div><span class="tag">PDF · 1 page A4</span><h3 style="margin-top:8px">Fiche de renseignement</h3><p>Toutes les formules et leurs prix, le dossier à fournir et les règles de l'auto-école. À imprimer ou à envoyer à un proche.</p>
-<div class="acts"><a class="btn btn-green btn-sm" href="fiche-renseignement-sodaf.pdf" download>Télécharger le PDF</a><a class="btn btn-line btn-sm" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent("La fiche de l'auto-école SODAF (formations et tarifs) : https://autosodaf.com/fiche-renseignement-sodaf.pdf")}">Partager sur WhatsApp</a></div></div></div>
-<div class="card doc doc-cover" style="margin-top:18px"><img class="cover" src="apercu-planning.jpg" alt="Aperçu du planning de la semaine SODAF" width="120" height="85" loading="lazy" style="align-self:start"><div><span class="tag">PDF · A4 paysage</span><h3 style="margin-top:8px">Planning de la semaine</h3><p>Les heures du code en salle, les créneaux de conduite et l'examen blanc du samedi. Garde-le sur ton téléphone.</p>
-<div class="acts"><a class="btn btn-green btn-sm" href="planning-semaine-sodaf.pdf" download>Télécharger le PDF</a><a class="btn btn-line btn-sm" href="#formations">Voir en ligne</a></div></div></div>
-<div class="grid g3" style="margin-top:18px">
-<div class="card doc"><div class="file">ID</div><div><span class="tag">Inscription</span><h3 style="margin-top:8px">Pièces à préparer</h3><ul style="color:var(--muted);padding-left:1.1em;margin:8px 0"><li>Acte de naissance</li><li>Carte d'identité</li><li>Photos d'identité, format passeport</li><li>Quittance d'examen : 35 000 F (permis B)</li></ul><p style="font-size:.88rem">Plus le droit d'inscription de 5 000 F.</p></div></div>
-<div class="card doc"><div class="file">CG</div><div><span class="tag">Au volant</span><h3 style="margin-top:8px">Documents de bord</h3><p>Carte grise, assurance, permis, pièce d'identité.</p><div class="acts"><a class="btn btn-line btn-sm" href="#cours-tableau">Voir le chapitre</a></div></div></div>
-<div class="card doc"><div class="file">CA</div><div><span class="tag">Accident</span><h3 style="margin-top:8px">Constat amiable</h3><p>Remplis-le sur place, ne signe que ce qui est exact, garde ton exemplaire.</p><div class="acts"><a class="btn btn-line btn-sm" href="#cours-secourisme">En savoir plus</a></div></div></div>
-</div></div>
-</section>
+
 
 
 <section class="page" data-page="equipe" hidden>
@@ -1205,7 +1206,7 @@ ${HEAD("Pré-inscription", "Rejoins SODAF", "Envoie ta demande en une minute : e
 <div class="pat-lane" aria-hidden="true"></div>
 <footer class="site"><div class="wrap"><div class="cols">
 <div><a class="logo flogo" href="#accueil" aria-label="SODAF, accueil">${LOGO("#FFFFFF", "ws")}</a><p class="fslogan">L'art de conduire, la force de réussir.</p><p style="margin-top:8px;max-width:40ch">Code, secourisme, mécanique et conduite, en salle et en ligne.</p></div>
-<div><h4>Apprendre</h4><a href="#formations">Formations et tarifs</a><a href="#cours">Les cours</a><a href="#quiz">Le quiz</a><a href="#devoirs">Les devoirs</a><a href="#outils">Les outils</a><a href="#documents">Documents</a><a href="#classe" class="fcls">Mode classe <span>Projection</span></a></div>
+<div><h4>Apprendre</h4><a href="#formations">Formations et tarifs</a><a href="#cours">Les cours</a><a href="#quiz">Le quiz</a><a href="#devoirs">Les devoirs</a><a href="#outils">Les outils</a><a href="#classe" class="fcls">Mode classe <span>Projection</span></a></div>
 <div><h4>Secrétariat</h4><span class="phone">72 54 41 66</span><p class="faddr">412 Avenue Akei, Tokoin Tamé, Lomé<br>(en face de la caisse)</p><p class="faddr">Secrétariat : lun – ven 8 h – 12 h 30 et 14 h 30 – 18 h<br>Samedi 8 h – 12 h · Dimanche fermé</p><a href="https://www.google.com/maps/search/?api=1&query=412+Avenue+Akei+Tokoin+Tam%C3%A9+Lom%C3%A9" target="_blank" rel="noopener">Itinéraire Google Maps</a><a href="#inscription">Pré-inscription</a></div>
 </div><div class="legal"><span>© 2026 SODAF Auto-École · Togo · <a href="#equipe" class="teamlink">Espace équipe</a></span><span>Powered by ADM Core</span></div></div></footer>
 
@@ -1926,6 +1927,7 @@ function init(root) {
   renderSigns();
 
   function route() {
+    if (location.hash === "#documents") history.replaceState(null, "", "#equipe");
     const h = (location.hash || "#accueil").slice(1);
     let p = h.split("-")[0]; if (!pages.includes(p)) p = "accueil";
     $$("section.page").forEach((s) => (s.hidden = s.dataset.page !== p));
