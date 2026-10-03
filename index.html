@@ -449,6 +449,18 @@ article.ch p+p{margin-top:10px}
 .entdoc .acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 .navteam{display:none}
 @media (max-width:1300px){#sodaf-root nav.main a.navteam{display:block;margin-top:6px;border-top:1px solid var(--line);color:var(--green)}}
+.rcmotifs{border:0;padding:0;margin:0 0 6px;display:grid;gap:8px;min-width:0}
+.rcmotifs legend{font-weight:600;margin-bottom:8px;padding:0}
+.rcm{display:flex;align-items:center;gap:12px;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;background:#fff}
+.rcm[hidden]{display:none}
+.rcm.on{border-color:var(--green);background:var(--green-soft)}
+#sodaf-root .rcm input{width:20px;height:20px;padding:0;margin:0;flex:0 0 20px;accent-color:var(--green)}
+.rcm span{flex:1;min-width:0}
+.rcm b{display:block;font-weight:700}
+.rcm small{display:block;color:var(--muted);font-size:.88rem;margin-top:2px}
+.rcm em{font-style:normal;font:800 1.05rem var(--f-display);color:var(--green);white-space:nowrap}
+@media (max-width:520px){.rcm{flex-wrap:wrap}.rcm span{flex:1 1 calc(100% - 40px)}.rcm em{margin-left:32px}}
+#sodaf-root #sd-rcOther{font:1rem var(--f-body);padding:.7em .8em;border:1.5px solid var(--line);border-radius:10px;width:100%}
 .rcform .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media (max-width:640px){.rcform .row2{grid-template-columns:1fr}}
 .rcout{margin-top:18px}
@@ -1186,8 +1198,16 @@ ${HEAD("Équipe SODAF", "Espace secrétariat", "Réservé au personnel de l'auto
 <div class="rcbox" id="equipe-recu"><div class="sec-head" style="margin:34px 0 16px"><div><p class="eyebrow">Paiements</p><h2>Faire un reçu</h2></div><p>Remplis après chaque paiement : le reçu PDF est créé aux couleurs SODAF avec le cachet, enregistré dans Airtable, et tu l'envoies à l'élève sur WhatsApp.</p></div>
 <form class="card rcform" id="sd-rcForm" novalidate>
 <div class="row2"><div class="field"><label for="sd-rcName">Nom et prénom de l'élève</label><input id="sd-rcName" name="eleve" placeholder="Ex. Kossi Agbeko"></div><div class="field"><label for="sd-rcTel">Téléphone / WhatsApp (facultatif)</label><div class="tel"><span>+228</span><input id="sd-rcTel" name="tel" inputmode="numeric" maxlength="11" placeholder="90 00 00 00"></div></div></div>
-<div class="row2"><div class="field"><label for="sd-rcF">Formation</label><select id="sd-rcF" name="formation"><option data-p="55000">Formation complète (permis B)</option><option data-p="75000">Formation accélérée 2 mois (permis B)</option><option data-p="80000">Formation accélérée 1 mois (permis B)</option><option data-p="35000">Formule courte (permis B)</option><option data-p="25000">Formation théorique seule</option><option data-p="30000">Permis A (moto)</option><option data-p="80000">Pack A + B (moto et voiture)</option><option data-p="20000">Remise à niveau</option><option data-p="0">Formation entreprise (sur devis)</option><option data-p="0">Hors formation (séance ou frais)</option></select></div><div class="field"><label for="sd-rcM">Motif du paiement</label><select id="sd-rcM" name="motif"><option>Droit d'inscription + 1re tranche</option><option>Droit d'inscription</option><option>1re tranche</option><option>2e tranche (solde)</option><option>Paiement complet</option><option>Droit d'inscription + paiement complet</option><option>Séance de conduite supplémentaire</option><option>Autre</option></select></div></div>
-<div class="row2"><div class="field"><label for="sd-rcAmt">Montant reçu (F CFA)</label><input id="sd-rcAmt" name="montant" type="number" inputmode="numeric" min="0" step="500"></div><div class="field" id="sd-rcRestBox"><label for="sd-rcRest">Reste à payer (F CFA)</label><input id="sd-rcRest" name="reste" type="number" inputmode="numeric" min="0" step="500"></div></div>
+<div class="field"><label for="sd-rcF">1. Quelle formation a-t-il choisie ?</label><select id="sd-rcF" name="formation"><option data-p="55000">Formation complète (permis B)</option><option data-p="75000">Formation accélérée 2 mois (permis B)</option><option data-p="80000">Formation accélérée 1 mois (permis B)</option><option data-p="35000">Formule courte (permis B)</option><option data-p="25000">Formation théorique seule</option><option data-p="30000">Permis A (moto)</option><option data-p="80000">Pack A + B (moto et voiture)</option><option data-p="20000">Remise à niveau</option><option data-p="0">Formation entreprise (sur devis)</option><option data-p="0">Hors formation (séance ou frais)</option></select></div>
+<fieldset class="field rcmotifs" id="sd-rcMotifs"><legend>2. Qu'est-ce qu'il paie aujourd'hui ?</legend>
+<label class="rcm" data-k="ins-half"><input type="radio" name="motif" value="ins-half" checked><span><b>Il s'inscrit et paie la moitié</b><small>Droit d'inscription (5&nbsp;000&nbsp;F) + 1re moitié de la formation</small></span><em data-amt></em></label>
+<label class="rcm" data-k="ins-full"><input type="radio" name="motif" value="ins-full"><span><b>Il s'inscrit et paie tout</b><small>Droit d'inscription (5&nbsp;000&nbsp;F) + toute la formation</small></span><em data-amt></em></label>
+<label class="rcm" data-k="rest"><input type="radio" name="motif" value="rest"><span><b>Il paie le reste</b><small>2e moitié de la formation, avant sa 1re séance de conduite</small></span><em data-amt></em></label>
+<label class="rcm" data-k="seance"><input type="radio" name="motif" value="seance"><span><b>Une séance de conduite en plus</b><small>1 h, 5&nbsp;000&nbsp;F la séance</small></span><em data-amt></em></label>
+<label class="rcm" data-k="autre"><input type="radio" name="motif" value="autre"><span><b>Autre paiement</b><small>Tu écris toi-même le motif et le montant</small></span><em></em></label>
+<input id="sd-rcOther" placeholder="Motif, ex. Droit d'inscription seul, 2 séances en plus…" hidden>
+</fieldset>
+<div class="row2"><div class="field"><label for="sd-rcAmt">3. Montant reçu (F CFA), modifiable</label><input id="sd-rcAmt" name="montant" type="number" inputmode="numeric" min="0" step="500"></div><div class="field" id="sd-rcRestBox"><label for="sd-rcRest">Reste à payer (F CFA)</label><input id="sd-rcRest" name="reste" type="number" inputmode="numeric" min="0" step="500"></div></div>
 <div class="row2"><div class="field"><label for="sd-rcMode">Mode de paiement</label><select id="sd-rcMode" name="mode"><option>Espèces</option><option>T-Money</option><option>Flooz</option><option>Virement</option></select></div><div class="field"><label for="sd-rcWho">Reçu fait par</label><input id="sd-rcWho" name="faitpar" placeholder="Ex. Le secrétariat"></div></div>
 <div class="field"><label for="sd-rcNote">Note (facultatif)</label><input id="sd-rcNote" name="note" placeholder="Ex. Référence T-Money, séance du 12 octobre…"></div>
 <p id="sd-rcErr" style="color:var(--red);font-weight:600;margin:4px 0 10px" hidden>Indique le nom de l'élève, un montant, et un numéro à 8 chiffres (ou laisse le téléphone vide).</p>
@@ -1762,26 +1782,35 @@ function init(root) {
   // ---------- Reçus de paiement (Espace équipe) ----------
   (function () {
     const form = $("#sd-rcForm"); if (!form) return;
-    const F = { f: $("#sd-rcForm select[name=formation]"), m: $("#sd-rcForm select[name=motif]"), amt: $("#sd-rcAmt"), rest: $("#sd-rcRest"), restBox: $("#sd-rcRestBox") };
-    const fmt = (n) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " F";
+    const F = { f: $("#sd-rcForm select[name=formation]"), amt: $("#sd-rcAmt"), rest: $("#sd-rcRest"), restBox: $("#sd-rcRestBox"), other: $("#sd-rcOther") };
+    const fmt = (n) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, "\u202F") + "\u00A0F";
     const price = () => +(F.f.selectedOptions[0].dataset.p || 0);
-    const motifNeedsPrice = (m) => /tranche|complet/.test(m);
-    function suggest() {
-      const p = price(), m = F.m.value;
-      let a = "", r = "";
-      if (m === "Droit d'inscription") a = 5000;
-      else if (m === "Droit d'inscription + 1re tranche") { a = 5000 + p / 2; r = p / 2; }
-      else if (m === "1re tranche") { a = p / 2; r = p / 2; }
-      else if (m === "2e tranche (solde)") { a = p / 2; r = 0; }
-      else if (m === "Paiement complet") { a = p; r = 0; }
-      else if (m === "Droit d'inscription + paiement complet") { a = 5000 + p; r = 0; }
-      else if (m === "Séance de conduite supplémentaire") a = 5000;
-      if (p === 0 && /tranche|complet/.test(m)) { a = ""; r = ""; }
-      F.amt.value = a === "" ? "" : Math.round(a);
-      F.rest.value = r === "" ? "" : Math.round(r);
-      F.restBox.hidden = !(motifNeedsPrice(m) || /\+ 1re/.test(m));
+    const mk = () => (form.querySelector("input[name=motif]:checked") || {}).value || "autre";
+    const MOTIF = { "ins-half": "Droit d'inscription + 1re moitié de la formation", "ins-full": "Droit d'inscription + formation complète", rest: "2e moitié de la formation (solde)", seance: "Séance de conduite supplémentaire" };
+    const motifText = () => mk() === "autre" ? (F.other.value.trim() || "Autre paiement") : MOTIF[mk()];
+    function calc(k, p) {
+      if (k === "ins-half") return p ? [5000 + p / 2, p / 2] : null;
+      if (k === "ins-full") return p ? [5000 + p, 0] : null;
+      if (k === "rest") return p ? [p / 2, 0] : null;
+      if (k === "seance") return [5000, ""];
+      return ["", ""];
     }
-    F.f.addEventListener("change", suggest); F.m.addEventListener("change", suggest); suggest();
+    function suggest() {
+      const p = price();
+      form.querySelectorAll(".rcm").forEach((l) => {
+        const k = l.dataset.k, c = calc(k, p), em = l.querySelector("[data-amt]");
+        const off = c === null; l.hidden = off;
+        if (em) em.textContent = !off && c[0] !== "" ? fmt(c[0]) : "";
+      });
+      if (form.querySelector(".rcm:not([hidden]) input:checked") === null) { const first = form.querySelector(".rcm:not([hidden]) input"); if (first) first.checked = true; }
+      const k = mk(), c = calc(k, p) || ["", ""];
+      F.amt.value = c[0] === "" ? "" : Math.round(c[0]);
+      F.rest.value = c[1] === "" ? "" : Math.round(c[1]);
+      F.restBox.hidden = !(k === "ins-half" || k === "ins-full" || k === "rest");
+      F.other.hidden = k !== "autre";
+      form.querySelectorAll(".rcm").forEach((l) => l.classList.toggle("on", l.querySelector("input").checked));
+    }
+    F.f.addEventListener("change", suggest); form.querySelectorAll("input[name=motif]").forEach((r) => r.addEventListener("change", () => { suggest(); if (mk() === "autre") F.other.focus(); })); suggest();
     const who = $("#sd-rcWho"); try { who.value = S.get("rcWho", ""); } catch (e) {}
     const U = ["zéro", "un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit", "neuf", "dix", "onze", "douze", "treize", "quatorze", "quinze", "seize"];
     const T = ["", "", "vingt", "trente", "quarante", "cinquante", "soixante", "", "quatre-vingt"];
@@ -1845,7 +1874,7 @@ function init(root) {
       const no = String(now.getFullYear()).slice(2) + pad(now.getMonth() + 1) + pad(now.getDate()) + "-" + pad(now.getHours()) + pad(now.getMinutes()) + "-" + pad(Math.floor(Math.random() * 100));
       const MO = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
       const d = {
-        no, eleve, tel: tel ? tel.replace(/(\d{2})(?=\d)/g, "$1 ") : "", formation: F.f.value, prix: price(), motif: F.m.value, montant,
+        no, eleve, tel: tel ? tel.replace(/(\d{2})(?=\d)/g, "$1 ") : "", formation: F.f.value, prix: price(), motif: motifText(), montant,
         mode: String(fd.get("mode")), reste: F.restBox.hidden || F.rest.value === "" ? "" : +F.rest.value, note: String(fd.get("note") || "").trim(),
         faitpar: String(fd.get("faitpar") || "").trim(), dateTxt: "Le " + now.getDate() + (now.getDate() === 1 ? "er" : "") + " " + MO[now.getMonth()] + " " + now.getFullYear() + " à " + now.getHours() + " h " + pad(now.getMinutes()),
         iso: now.getFullYear() + "-" + pad(now.getMonth() + 1) + "-" + pad(now.getDate()),
