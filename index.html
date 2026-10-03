@@ -438,6 +438,14 @@ article.ch p+p{margin-top:10px}
 .devlink span{color:#C9CED6;font-size:.95rem}
 #sd-dev{scroll-margin-top:90px}
 .fslogan{margin-top:14px!important;font:700 1.05rem/1.3 var(--f-display);color:var(--yellow)}
+.entgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.entdoc{display:flex;flex-direction:column;gap:14px}
+.entdoc img{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:10px;background:#15191E;border:1px solid var(--line)}
+.entdoc img.tall{object-fit:contain;background:var(--soft)}
+.entdoc img.sq{object-fit:contain;background:#fff}
+.entdoc b{display:block;font:700 1.15rem var(--f-display)}
+.entdoc span{display:block;color:var(--muted);font-size:.93rem;margin-top:4px}
+.entdoc .acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 .devlist-h{font:700 1rem var(--f-display);margin:0 0 12px!important;color:var(--muted)}
 .devform{max-width:520px;margin:0 auto}
 .devform .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -1102,8 +1110,6 @@ ${HEAD("Bibliothèque", "Documents", "Le manuel officiel, les pièces à prépar
 <div class="acts"><a class="btn btn-green btn-sm" href="fiche-renseignement-sodaf.pdf" download>Télécharger le PDF</a><a class="btn btn-line btn-sm" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent("La fiche de l'auto-école SODAF (formations et tarifs) : https://autosodaf.com/fiche-renseignement-sodaf.pdf")}">Partager sur WhatsApp</a></div></div></div>
 <div class="card doc doc-cover" style="margin-top:18px"><img class="cover" src="apercu-planning.jpg" alt="Aperçu du planning de la semaine SODAF" width="120" height="85" loading="lazy" style="align-self:start"><div><span class="tag">PDF · A4 paysage</span><h3 style="margin-top:8px">Planning de la semaine</h3><p>Les heures du code en salle, les créneaux de conduite et l'examen blanc du samedi. Garde-le sur ton téléphone.</p>
 <div class="acts"><a class="btn btn-green btn-sm" href="planning-semaine-sodaf.pdf" download>Télécharger le PDF</a><a class="btn btn-line btn-sm" href="#formations">Voir en ligne</a></div></div></div>
-<div class="card doc doc-cover" style="margin-top:18px"><img class="cover" src="apercu-affiche-qr.jpg" alt="Affiche avec le code QR du site SODAF" width="120" height="170" loading="lazy"><div><span class="tag">Code QR · PNG et affiche A4</span><h3 style="margin-top:8px">Le code QR de SODAF</h3><p>On le scanne avec l'appareil photo du téléphone et on arrive directement sur autosodaf.com. À coller sur la voiture école, la vitrine ou les cartes de visite.</p>
-<div class="acts"><a class="btn btn-green btn-sm" href="affiche-qr-sodaf.pdf" download>Télécharger l'affiche A4</a><a class="btn btn-line btn-sm" href="qr-sodaf.png" download>Code QR seul (PNG)</a></div></div></div>
 <div class="grid g3" style="margin-top:18px">
 <div class="card doc"><div class="file">ID</div><div><span class="tag">Inscription</span><h3 style="margin-top:8px">Pièces à préparer</h3><ul style="color:var(--muted);padding-left:1.1em;margin:8px 0"><li>Acte de naissance</li><li>Carte d'identité</li><li>Photos d'identité, format passeport</li><li>Quittance d'examen : 35 000 F (permis B)</li></ul><p style="font-size:.88rem">Plus le droit d'inscription de 5 000 F.</p></div></div>
 <div class="card doc"><div class="file">CG</div><div><span class="tag">Au volant</span><h3 style="margin-top:8px">Documents de bord</h3><p>Carte grise, assurance, permis, pièce d'identité.</p><div class="acts"><a class="btn btn-line btn-sm" href="#cours-tableau">Voir le chapitre</a></div></div></div>
@@ -1136,6 +1142,15 @@ ${HEAD("Équipe SODAF", "Espace secrétariat", "Réservé au personnel de l'auto
 <div class="card soft"><p class="eyebrow">Après chaque cours de code</p><ol class="teamsteps"><li>Ouvre <b>Cours de code</b>, touche la séance du jour.</li><li>Choisis le <b>thème</b> (le chapitre traité) et ajoute les <b>présents</b>.</li><li>Mets le statut sur <b>Fait</b>. L'onglet <b>À cocher</b> montre les séances oubliées.</li></ol><p style="margin-top:12px;font-size:.92rem;color:var(--muted)">Les créneaux du mois suivant se créent tout seuls le 24 de chaque mois.</p></div>
 <div class="card soft"><p class="eyebrow">Mercredi : résultats du devoir</p><ol class="teamsteps"><li>Ouvre <b>Devoirs</b>, onglet <b>Cette semaine</b>, et touche la semaine.</li><li>Copie le <b>Message WhatsApp</b> (participants, notes, moyenne).</li><li>Colle-le dans le groupe de l'auto-école. En salle, le moniteur corrige avec <b>Mode classe → Devoir</b>.</li></ol></div>
 </div>
+<div class="entdocs"><div class="sec-head" style="margin:34px 0 16px"><div><p class="eyebrow">Réservé à l'équipe</p><h2>Documents de l'entreprise</h2></div><p>Supports de communication SODAF à télécharger ou à envoyer à l'imprimeur. Slogan officiel : « L'art de conduire, la force de réussir. »</p></div>
+<div class="entgrid">
+<div class="card entdoc"><img src="entreprise/apercu-carte.jpg" alt="Carte de visite SODAF, recto" loading="lazy"><div><b>Carte de visite</b><span>85 × 55 mm, recto verso. PDF avec 3 mm de fond perdu, à envoyer tel quel à l'imprimeur (papier 350 g mat).</span><div class="acts"><a class="btn btn-green btn-sm" href="entreprise/carte-visite-sodaf-91x61mm-fond-perdu.pdf" download>PDF imprimeur</a><a class="btn btn-line btn-sm" href="entreprise/carte-sodaf-recto-300dpi.png" download>Recto PNG</a><a class="btn btn-line btn-sm" href="entreprise/carte-sodaf-verso-300dpi.png" download>Verso PNG</a></div></div></div>
+<div class="card entdoc"><img src="entreprise/apercu-affiche-qr.jpg" alt="Affiche du code QR SODAF" loading="lazy" class="tall"><div><b>Affiche du code QR</b><span>A4, « Scanne et découvre SODAF », avec le mode d'emploi iPhone et Android. Pour la vitrine et la salle de code.</span><div class="acts"><a class="btn btn-green btn-sm" href="entreprise/affiche-qr-sodaf.pdf" download>Affiche A4 (PDF)</a></div></div></div>
+<div class="card entdoc"><img src="entreprise/apercu-qr.jpg" alt="Code QR vers autosodaf.com" loading="lazy" class="sq"><div><b>Code QR seul</b><span>Mène à autosodaf.com. Pour autocollants, voiture école, publications. Minimum 3 cm sur une carte, 15 cm sur une voiture.</span><div class="acts"><a class="btn btn-green btn-sm" href="entreprise/qr-sodaf.png" download>Code QR (PNG)</a></div></div></div>
+<div class="card entdoc"><img src="entreprise/apercu-couverture.jpg" alt="Couverture WhatsApp Business SODAF" loading="lazy"><div><b>Couverture WhatsApp Business</b><span>Image décorative 16:9 sans texte, à mettre derrière la photo de profil.</span><div class="acts"><a class="btn btn-green btn-sm" href="entreprise/couverture-whatsapp-sodaf.png" download>Image (PNG)</a></div></div></div>
+<div class="card entdoc"><img src="apercu-fiche.jpg" alt="Fiche de renseignement" loading="lazy" class="tall"><div><b>Fiche de renseignement</b><span>Formations, tarifs, dossier à fournir. Aussi visible par le public dans Documents.</span><div class="acts"><a class="btn btn-green btn-sm" href="fiche-renseignement-sodaf.pdf" download>PDF</a></div></div></div>
+<div class="card entdoc"><img src="apercu-planning.jpg" alt="Planning de la semaine" loading="lazy"><div><b>Planning mural</b><span>Code en salle, créneaux de conduite et examen blanc. A4 paysage à afficher.</span><div class="acts"><a class="btn btn-green btn-sm" href="planning-semaine-sodaf.pdf" download>PDF</a></div></div></div>
+</div></div>
 <button class="linkbtn" type="button" id="sd-teamOut" style="margin-top:18px">Se déconnecter de cet appareil</button>
 </div>
 </div>
