@@ -638,6 +638,12 @@ a.teamtile.hl{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
 .pc-stages button[aria-selected="true"] em{background:var(--yellow);color:var(--ink)}
 .pc-stages button[data-st="accueil"] em:not(:empty){}
 .pc-tools{display:flex;gap:8px;padding:10px;border-bottom:1.5px solid var(--line)}
+.pc-edit{text-align:right;margin-top:6px}
+.pc-search{display:flex;gap:10px;align-items:center;margin:0 0 14px}
+.pc-sbox{flex:1;display:flex;align-items:center;gap:10px;border:2px solid var(--ink);border-radius:12px;padding:0 14px;background:#fff;color:#3D444D}
+.pc-sbox:focus-within{border-color:var(--green);box-shadow:0 0 0 3px var(--green-soft)}
+.pc-sbox input{flex:1;min-width:0;border:0;outline:0;font:1rem var(--f-body);padding:.75em 0;background:transparent}
+.pc-hint{padding:10px 14px;font-size:.85rem;color:var(--muted);margin:0!important;border-bottom:1px solid var(--line)}
 .pc-tools input{flex:1;min-width:0;font:.95rem var(--f-body);padding:.55em .7em;border:1.5px solid var(--line);border-radius:10px}
 .pc-list .tm-form{margin:10px;padding:14px}
 .pc-items{max-height:68vh;overflow:auto}
@@ -1514,10 +1520,10 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <button data-s="devoirs" aria-selected="false">Devoirs</button>
 </div>
 <section class="tm-sec" data-s="eleves">
+<div class="pc-search"><label class="pc-sbox"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="sd-pcQ" type="search" placeholder="Rechercher un client : N° client (SO12), téléphone ou nom" autocomplete="off"></label><button class="btn btn-green btn-sm" type="button" id="sd-elAddBtn">+ Élève</button></div>
 <div class="pc" id="sd-pc">
 <div class="pc-list">
 <div class="pc-stages" id="sd-pcStages" role="tablist"><button type="button" data-st="accueil">Accueil <em></em></button><button type="button" data-st="appels">Appels <em></em></button><button type="button" data-st="dossier">Dossier envoyé <em></em></button><button type="button" data-st="formation">En formation <em></em></button><button type="button" data-st="archives">Archivés <em></em></button></div>
-<div class="pc-tools"><input id="sd-pcQ" type="search" placeholder="Nom, téléphone ou N° client (SO12)"><button class="btn btn-green btn-sm" type="button" id="sd-elAddBtn">+ Élève</button></div>
 <form id="sd-elAdd" class="card tm-form" hidden novalidate>
 <div class="field"><label for="sd-elN">Nom et prénom</label><input id="sd-elN"></div>
 <div class="field"><label for="sd-elT">Téléphone</label><div class="tel"><span>+228</span><input id="sd-elT" inputmode="numeric" maxlength="11" placeholder="90 00 00 00"></div></div>
@@ -2565,6 +2571,14 @@ function init(root) {
     }
     const calledToday = (x) => !!x.dernier_appel_le && iso(new Date(x.dernier_appel_le)) === iso(new Date());
     const hm = (t) => { const d = new Date(t); return d.getHours() + " h " + pad(d.getMinutes()); };
+    // Recherche globale : N° client (SO12 ou 12), téléphone (avec ou sans +228, espaces), ou nom
+    function trouve(x, q) {
+      const c = q.replace(/\s+/g, ""), d = q.replace(/\D/g, ""), ph = (x.telephone || "").replace(/\D/g, "").replace(/^228(?=\d{8}$)/, "");
+      if (/^so\d+$/.test(c)) return "so" + x.id === c;
+      if (/^\d+$/.test(c) && c.length <= 4 && String(x.id) === c) return true;
+      if (d.length >= 4 && ph.includes(d.length >= 7 ? d.replace(/^228/, "") : d)) return true;
+      return /[a-zà-ÿ]/i.test(q) && (x.nom || "").toLowerCase().includes(q);
+    }
     function groupsFor(stage, list) {
       if (stage === "accueil") return [["À accueillir", list.slice().sort((a, b) => (a.cree_le < b.cree_le ? -1 : 1))]];
       if (stage === "appels") { const o = (a) => a.filter((x) => !calledToday(x)).concat(a.filter(calledToday)); return [["À appeler · 1er appel", o(list.filter((x) => !x.rappel)), "first"], ["Rappeler le matin", o(list.filter((x) => x.rappel === "matin")), "matin"], ["Rappeler l'après-midi", o(list.filter((x) => x.rappel === "apres-midi")), "am"]]; }
@@ -2575,15 +2589,18 @@ function init(root) {
     function renderList(keepDetail) {
       const q = $("#sd-pcQ").value.trim().toLowerCase();
       $$("#sd-pcStages button").forEach((b) => { const n = eleves.filter((x) => etapeOf(x) === b.dataset.st).length; b.querySelector("em").textContent = n; b.setAttribute("aria-selected", b.dataset.st === pcStage); });
-      const list = eleves.filter((x) => etapeOf(x) === pcStage && (!q || (x.nom + " " + (x.telephone || "") + " " + x.id + " so" + x.id).toLowerCase().includes(q)));
+      const sg = (x) => (q ? etapeOf(x) : pcStage);
+      const list = q ? eleves.filter((x) => trouve(x, q)) : eleves.filter((x) => etapeOf(x) === pcStage);
       const fold = foldState(), TAG = { first: "1er appel", matin: "Matin", am: "Après-midi", late: "À relancer", wait: "En réflexion", verif: "Mixx à vérifier", agence: "Vient à l'agence" };
       const isOpen = (g) => !["matin", "am"].includes(g[2]) || !!q || fold[g[2]];
-      const html = groupsFor(pcStage, list).filter((g) => g[1].length).map((g) => (g[2] && ["matin", "am"].includes(g[2])
+      const ST_LAB = { accueil: "Accueil", appels: "Appels", dossier: "Dossier envoyé", formation: "En formation", archives: "Archivés" };
+      const grps = q ? Object.keys(ST_LAB).map((k) => [ST_LAB[k], list.filter((x) => etapeOf(x) === k)]) : groupsFor(pcStage, list);
+      const html = (q ? '<p class="pc-hint">' + (list.length ? list.length + " résultat" + (list.length > 1 ? "s" : "") + " dans toutes les étapes" : "") + "</p>" : "") + grps.filter((g) => g[1].length).map((g) => (g[2] && ["matin", "am"].includes(g[2])
         ? '<button type="button" class="pc-gh pc-fold g-' + g[2] + '" data-fold="' + g[2] + '" aria-expanded="' + isOpen(g) + '"><i aria-hidden="true">▸</i>' + esc(g[0]) + " <span>" + g[1].length + "</span></button>"
         : '<p class="pc-gh' + (g[2] ? " g-" + g[2] : "") + '">' + esc(g[0]) + " <span>" + g[1].length + "</span></p>") + (isOpen(g) ? g[1].map((x) =>
-        '<button type="button" class="pc-item' + (g[2] ? " i-" + g[2] : "") + (pcStage === "appels" && calledToday(x) ? " i-done" : "") + (x.id === pcSel ? " on" : "") + '" data-id="' + x.id + '"><b>' + esc(x.nom) + (g[2] ? ' <em class="pc-tag t-' + g[2] + '">' + TAG[g[2]] + "</em>" : "") + '</b><span>' + esc((x.telephone || "").replace("+228", "+228 ")) + (x.formation ? " · " + esc(x.formation) : "") + "</span><small>" + CODE(x) + " · " +
-        (pcStage === "accueil" ? (x.accueil_le ? "accueil envoyé ✓" : "arrivé " + ago(x.cree_le)) : pcStage === "appels" ? (x.appels ? x.appels + "X sans réponse" : "pas encore appelé") + (calledToday(x) ? " · appelé à " + hm(x.dernier_appel_le) : "") : pcStage === "dossier" ? (x.web ? (x.web.mode === "mixx" ? "a payé " + F(x.web.a_payer) + " par Mixx " : "paiera " + F(x.web.a_payer) + " à l'agence · ") + ago(x.web.le) : "dossier envoyé " + ago(x.dossier_envoye_le)) + (x.dossier_relance_le ? " · relancé " + ago(x.dossier_relance_le) : "") : pcStage === "archives" ? "archivé " + (x.archive_le ? ago(x.archive_le) : "") : esc(x.statut)) + "</small></button>").join("") : "")).join("");
-      $("#sd-pcList").innerHTML = html || '<p class="tm-empty">' + ({ accueil: "Aucune nouvelle pré-inscription. Elles arrivent ici toutes seules depuis le site.", appels: "Personne à appeler pour l'instant.", dossier: "Aucun dossier en attente. Après un appel, « Intéressé : finaliser l’inscription » les range ici.", formation: "Aucun élève en formation pour l'instant.", archives: "Aucun dossier archivé." }[pcStage]) + "</p>";
+        '<button type="button" class="pc-item' + (g[2] ? " i-" + g[2] : "") + (sg(x) === "appels" && calledToday(x) ? " i-done" : "") + (x.id === pcSel ? " on" : "") + '" data-id="' + x.id + '"><b>' + esc(x.nom) + (g[2] ? ' <em class="pc-tag t-' + g[2] + '">' + TAG[g[2]] + "</em>" : "") + '</b><span>' + esc((x.telephone || "").replace("+228", "+228 ")) + (x.formation ? " · " + esc(x.formation) : "") + "</span><small>" + CODE(x) + " · " +
+        (sg(x) === "accueil" ? (x.accueil_le ? "accueil envoyé ✓" : "arrivé " + ago(x.cree_le)) : sg(x) === "appels" ? (x.appels ? x.appels + "X sans réponse" : "pas encore appelé") + (calledToday(x) ? " · appelé à " + hm(x.dernier_appel_le) : "") : sg(x) === "dossier" ? (x.web ? (x.web.mode === "mixx" ? "a payé " + F(x.web.a_payer) + " par Mixx " : "paiera " + F(x.web.a_payer) + " à l'agence · ") + ago(x.web.le) : "dossier envoyé " + ago(x.dossier_envoye_le)) + (x.dossier_relance_le ? " · relancé " + ago(x.dossier_relance_le) : "") : sg(x) === "archives" ? "archivé " + (x.archive_le ? ago(x.archive_le) : "") : esc(x.statut)) + "</small></button>").join("") : "")).join("");
+      $("#sd-pcList").innerHTML = (q && !list.length) ? '<p class="tm-empty">Aucun client trouvé pour « ' + esc(q) + ' ». Vérifie le N° client (SO12) ou le numéro de téléphone.</p>' : html || '<p class="tm-empty">' + ({ accueil: "Aucune nouvelle pré-inscription. Elles arrivent ici toutes seules depuis le site.", appels: "Personne à appeler pour l'instant.", dossier: "Aucun dossier en attente. Après un appel, « Intéressé : finaliser l’inscription » les range ici.", formation: "Aucun élève en formation pour l'instant.", archives: "Aucun dossier archivé." }[pcStage]) + "</p>";
       if (pcSel && !list.some((x) => x.id === pcSel)) pcSel = null;
       if (!pcSel && isWide()) { const first = $("#sd-pcList .pc-item:not(.i-done)") || $("#sd-pcList .pc-item"); if (first) { pcSel = +first.dataset.id; first.classList.add("on"); } }
       if (!keepDetail || keepDetail !== pcSel) renderDetail();
@@ -2595,7 +2612,7 @@ function init(root) {
       return f && f.key === key ? f : { key, matin: h < 12, am: h >= 12 };
     }
     $("#sd-pcList").addEventListener("click", (e) => { const b = e.target.closest("[data-fold]"); if (!b) return; const f = foldState(); f[b.dataset.fold] = !f[b.dataset.fold]; S.set("pcFold", f); renderList(); });
-    $("#sd-pcStages").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; pcStage = b.dataset.st; pcSel = null; S.set("pcStage", pcStage); renderList(); });
+    $("#sd-pcStages").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; pcStage = b.dataset.st; pcSel = null; $("#sd-pcQ").value = ""; S.set("pcStage", pcStage); renderList(); });
     $("#sd-pcList").addEventListener("click", (e) => { const b = e.target.closest(".pc-item"); if (!b) return; pcSel = +b.dataset.id; $$("#sd-pcList .pc-item").forEach((i) => i.classList.toggle("on", i === b)); renderDetail(); if (!isWide()) $("#sd-pc").scrollIntoView({ block: "start" }); });
 
     async function patchEl(x, body, okMsg, log) {
@@ -2676,13 +2693,9 @@ function init(root) {
       }
       const pieces = ""; // Pièces du dossier d'examen : gérées plus tard (fin de formation)
       const arch = st === "dossier" ? '<div class="pc-foot"><span>Ranger le dossier</span><div class="tm-acts"><button class="linkbtn" type="button" data-a="backCall">Revenir en zone d\'appel</button><button class="btn btn-line btn-sm" type="button" data-arch="Plus tard">Plus tard (potentiel)</button><button class="btn btn-sm pc-dark" type="button" data-arch="Rétractation">Archiver – Rétractation</button></div></div>' : st === "appels" ? '<div class="pc-foot"><span>Ranger le dossier</span><div class="tm-acts"><button class="btn btn-line btn-sm" type="button" data-arch="Plus tard">Plus tard (potentiel)</button><button class="btn btn-sm pc-dark" type="button" data-arch="Rétractation">Archiver – Rétractation</button><button class="btn btn-sm pc-red" type="button" data-arch="Faux numéro">Faux numéro</button></div></div>' : "";
-      const suivi = '<div class="pc-block"><div class="pc-bh"><b>Suivi</b><button class="linkbtn" type="button" data-a="edit">Modifier la fiche</button></div><div class="tm-formact" style="margin:0 0 10px"><input id="sd-pcNote" placeholder="Ajouter une note au dossier" maxlength="300"><button class="btn btn-line btn-sm" type="button" data-a="note">Ajouter</button></div><div id="sd-pcFeed" class="pc-feed"><p class="tm-note">Chargement…</p></div></div>';
+      const suivi = '<div class="pc-edit"><button class="linkbtn" type="button" data-a="edit">Modifier la fiche</button></div>'; // l'historique reste enregistré dans la base (table suivi), sans l'afficher
       box.innerHTML = head + info + body + pieces + arch + suivi;
       const id = x.id;
-      const fd = await run(() => DB.q("suivi?select=*&eleve_id=eq." + id + "&order=le.desc&limit=50"));
-      if (pcSel !== id) return;
-      pcFeed = fd || [];
-      $("#sd-pcFeed").innerHTML = pcFeed.length ? pcFeed.map((s) => '<div><time>' + new Date(s.le).toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" }) + "</time><b>" + esc(s.type) + "</b>" + (s.note ? "<span>" + esc(s.note) + "</span>" : "") + "</div>").join("") : '<p class="tm-note">Rien pour l\'instant.</p>';
       if (st === "formation") {
         const [py, cd] = await Promise.all([run(() => DB.q("paiements?select=*&eleve_id=eq." + id + "&order=cree_le.desc")), run(() => DB.q("creneaux_conduite?select=jour,heure,statut&eleve_id=eq." + id + "&order=jour.desc&limit=60"))]);
         if (pcSel !== id) return;
