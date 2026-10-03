@@ -643,6 +643,27 @@ a.teamtile.hl{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
 .pc-gh span{background:#fff;border-radius:999px;padding:0 .5em}
 .pc-item{all:unset;box-sizing:border-box;display:flex;flex-direction:column;gap:1px;width:100%;padding:11px 14px;border-bottom:1px solid var(--line);cursor:pointer;border-left:4px solid transparent}
 .pc-item:hover{background:#FAFBFB}
+.pc-fold{all:unset;box-sizing:border-box;width:100%;cursor:pointer;display:flex!important;align-items:center;gap:8px;padding:12px 14px;font:700 .82rem var(--f-body);letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid var(--line)}
+.pc-fold[aria-expanded="false"]::after{content:"· ouvrir";font:500 .72rem var(--f-body);letter-spacing:0;text-transform:none;opacity:.75;margin-left:4px}
+.pc-fold[aria-expanded="false"] span{order:3}
+.pc-fold i{font-style:normal;display:inline-block;transition:transform .15s;font-size:.8rem}
+.pc-fold[aria-expanded="true"] i{transform:rotate(90deg)}
+.pc-fold span{margin-left:auto;background:#fff;border-radius:999px;padding:0 .55em}
+.pc-fold:focus-visible{outline:3px solid var(--yellow);outline-offset:-3px}
+.pc-gh.g-first{background:var(--green-soft);color:#064D36;border-left:5px solid var(--green);font-size:.8rem}
+.pc-gh.g-matin{background:#FFF1C2;color:#6B4E00;border-left:5px solid #E0A400;font-size:.8rem}
+.pc-gh.g-am{background:#DCE8F8;color:#163E7A;border-left:5px solid var(--blue);font-size:.8rem}
+.pc-gh.g-matin span,.pc-gh.g-am span,.pc-gh.g-first span{font-weight:800;color:var(--ink)}
+.pc-item.i-first{border-left-color:var(--green)}
+.pc-item.i-matin{border-left-color:#E0A400}
+.pc-item.i-am{border-left-color:var(--blue)}
+.pc-item.on.i-matin{background:#FFF7DC}
+.pc-item.on.i-am{background:#EAF1FB}
+.pc-tag{font-style:normal;font:700 .68rem var(--f-body);letter-spacing:.04em;text-transform:uppercase;padding:.15em .5em;border-radius:999px;margin-left:6px;vertical-align:2px}
+.t-first{background:var(--green-soft);color:#064D36}
+.t-matin{background:#FFE9A8;color:#6B4E00}
+.t-am{background:#DCE8F8;color:#163E7A}
+@media (prefers-reduced-motion:reduce){.pc-fold i{transition:none}}
 .pc-item.on{background:var(--green-soft);border-left-color:var(--green)}
 .pc-item b{font-weight:700;color:var(--ink)}
 .pc-item span{font-size:.88rem;color:#3D444D}
@@ -675,6 +696,9 @@ a.teamtile.hl{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
 .pc-steps{display:flex;flex-wrap:wrap;gap:6px}
 .pc-steps button{font:600 .86rem var(--f-body);padding:.45em .8em;border-radius:999px;border:1.5px solid var(--line);background:#fff;color:#3D444D;cursor:pointer}
 .pc-steps button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.pc-steps button[data-rappel="matin"][aria-pressed="true"]{background:#E0A400;border-color:#E0A400;color:#14171C}
+.pc-steps button[data-rappel="apres-midi"][aria-pressed="true"]{background:var(--blue);border-color:var(--blue)}
+.pc-steps button[data-rappel=""][aria-pressed="true"]{background:var(--green);border-color:var(--green)}
 .pc-tries{display:flex;flex-wrap:wrap;gap:6px}
 .pc-tries i{font-style:normal;font:600 .82rem var(--f-body);padding:.35em .7em;border-radius:999px;border:1.5px solid var(--line);color:var(--muted)}
 .pc-tries i.on{background:var(--red-soft);border-color:var(--red);color:var(--red)}
@@ -2427,7 +2451,7 @@ function init(root) {
     }
     function groupsFor(stage, list) {
       if (stage === "accueil") return [["À accueillir", list.slice().sort((a, b) => (a.cree_le < b.cree_le ? -1 : 1))]];
-      if (stage === "appels") return [["À appeler", list.filter((x) => !x.rappel)], ["Rappeler le matin", list.filter((x) => x.rappel === "matin")], ["Rappeler l'après-midi", list.filter((x) => x.rappel === "apres-midi")]];
+      if (stage === "appels") return [["À appeler · 1er appel", list.filter((x) => !x.rappel), "first"], ["Rappeler le matin", list.filter((x) => x.rappel === "matin"), "matin"], ["Rappeler l'après-midi", list.filter((x) => x.rappel === "apres-midi"), "am"]];
       if (stage === "formation") return ["Inscrit", "En formation", "Permis obtenu"].map((s) => [s, list.filter((x) => x.statut === s)]);
       return ["Plus tard", "Injoignable", "Rétractation", "Faux numéro"].map((m) => [m, list.filter((x) => x.archive_motif === m)]).concat([["Sans motif", list.filter((x) => !x.archive_motif)]]);
     }
@@ -2435,15 +2459,25 @@ function init(root) {
       const q = $("#sd-pcQ").value.trim().toLowerCase();
       $$("#sd-pcStages button").forEach((b) => { const n = eleves.filter((x) => etapeOf(x) === b.dataset.st).length; b.querySelector("em").textContent = n; b.setAttribute("aria-selected", b.dataset.st === pcStage); });
       const list = eleves.filter((x) => etapeOf(x) === pcStage && (!q || (x.nom + " " + (x.telephone || "") + " " + x.id).toLowerCase().includes(q)));
-      const html = groupsFor(pcStage, list).filter((g) => g[1].length).map((g) => '<p class="pc-gh">' + esc(g[0]) + " <span>" + g[1].length + "</span></p>" + g[1].map((x) =>
-        '<button type="button" class="pc-item' + (x.id === pcSel ? " on" : "") + '" data-id="' + x.id + '"><b>' + esc(x.nom) + '</b><span>' + esc((x.telephone || "").replace("+228", "+228 ")) + (x.formation ? " · " + esc(x.formation) : "") + "</span><small>N° " + x.id + " · " +
-        (pcStage === "accueil" ? (x.accueil_le ? "accueil envoyé ✓" : "arrivé " + ago(x.cree_le)) : pcStage === "appels" ? (x.appels ? x.appels + "X sans réponse" : "pas encore appelé") : pcStage === "archives" ? "archivé " + (x.archive_le ? ago(x.archive_le) : "") : esc(x.statut)) + "</small></button>").join("")).join("");
+      const fold = foldState(), TAG = { first: "1er appel", matin: "Matin", am: "Après-midi" };
+      const isOpen = (g) => !g[2] || g[2] === "first" || !!q || fold[g[2]];
+      const html = groupsFor(pcStage, list).filter((g) => g[1].length).map((g) => (g[2] && g[2] !== "first"
+        ? '<button type="button" class="pc-gh pc-fold g-' + g[2] + '" data-fold="' + g[2] + '" aria-expanded="' + isOpen(g) + '"><i aria-hidden="true">▸</i>' + esc(g[0]) + " <span>" + g[1].length + "</span></button>"
+        : '<p class="pc-gh' + (g[2] ? " g-" + g[2] : "") + '">' + esc(g[0]) + " <span>" + g[1].length + "</span></p>") + (isOpen(g) ? g[1].map((x) =>
+        '<button type="button" class="pc-item' + (g[2] ? " i-" + g[2] : "") + (x.id === pcSel ? " on" : "") + '" data-id="' + x.id + '"><b>' + esc(x.nom) + (g[2] ? ' <em class="pc-tag t-' + g[2] + '">' + TAG[g[2]] + "</em>" : "") + '</b><span>' + esc((x.telephone || "").replace("+228", "+228 ")) + (x.formation ? " · " + esc(x.formation) : "") + "</span><small>N° " + x.id + " · " +
+        (pcStage === "accueil" ? (x.accueil_le ? "accueil envoyé ✓" : "arrivé " + ago(x.cree_le)) : pcStage === "appels" ? (x.appels ? x.appels + "X sans réponse" : "pas encore appelé") : pcStage === "archives" ? "archivé " + (x.archive_le ? ago(x.archive_le) : "") : esc(x.statut)) + "</small></button>").join("") : "")).join("");
       $("#sd-pcList").innerHTML = html || '<p class="tm-empty">' + ({ accueil: "Aucune nouvelle pré-inscription. Elles arrivent ici toutes seules depuis le site.", appels: "Personne à appeler pour l'instant.", formation: "Aucun élève en formation pour l'instant.", archives: "Aucun dossier archivé." }[pcStage]) + "</p>";
       if (pcSel && !list.some((x) => x.id === pcSel)) pcSel = null;
-      if (!pcSel && isWide() && list.length) { pcSel = groupsFor(pcStage, list).find((g) => g[1].length)[1][0].id; $("#sd-pcList .pc-item[data-id='" + pcSel + "']")?.classList.add("on"); }
+      if (!pcSel && isWide()) { const first = $("#sd-pcList .pc-item"); if (first) { pcSel = +first.dataset.id; first.classList.add("on"); } }
       renderDetail();
     }
     $("#sd-pcQ").addEventListener("input", renderList);
+    // Groupes « Rappeler le matin / l'après-midi » repliables. Par défaut : le matin on voit le matin, l'après-midi on voit l'après-midi.
+    function foldState() {
+      const h = new Date().getHours(), key = iso(new Date()) + (h < 12 ? "m" : "a"), f = S.get("pcFold", null);
+      return f && f.key === key ? f : { key, matin: h < 12, am: h >= 12 };
+    }
+    $("#sd-pcList").addEventListener("click", (e) => { const b = e.target.closest("[data-fold]"); if (!b) return; const f = foldState(); f[b.dataset.fold] = !f[b.dataset.fold]; S.set("pcFold", f); renderList(); });
     $("#sd-pcStages").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; pcStage = b.dataset.st; pcSel = null; S.set("pcStage", pcStage); renderList(); });
     $("#sd-pcList").addEventListener("click", (e) => { const b = e.target.closest(".pc-item"); if (!b) return; pcSel = +b.dataset.id; $$("#sd-pcList .pc-item").forEach((i) => i.classList.toggle("on", i === b)); renderDetail(); if (!isWide()) $("#sd-pc").scrollIntoView({ block: "start" }); });
 
