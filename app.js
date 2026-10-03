@@ -2871,18 +2871,18 @@ function init(root) {
       else if (k === "note") { const v = $("#sd-pcNote").value.trim(); if (!v) return; await addSuivi(x, "Note", v); toast("Note ajoutée"); renderDetail(); }
       else if (k === "edit") editForm(x);
       else if (k === "toExam") { if (await patchEl(x, { examen_etape: "pret", examen_pret_le: new Date().toISOString(), examen_lien_le: null, examen_relance_le: null, examen_date: null, examen_lieu: null, jeton: jetonOf(x) }, "Étape examen : envoie le message à l'élève", ["Étape", "Formation terminée : examen"])) { pcStage = "examen"; S.set("pcStage", pcStage); renderList(); } }
-      else if (k === "sendExam") { const m = $("#sd-exMsg"); if (m) a.href = "https://wa.me/228" + waNum(x.telephone) + "?text=" + encodeURIComponent(m.value); await patchEl(x, { examen_lien_le: new Date().toISOString(), jeton: jetonOf(x) }, "Message noté comme envoyé", ["Examen", "Message de fin de formation envoyé"]); renderList(); }
+      else if (k === "sendExam") { const m = $("#sd-exMsg"); if (m) a.href = "https://wa.me/228" + waNum(x.telephone) + "?text=" + encodeURIComponent(m.value); await patchEl(x, { examen_lien_le: new Date().toISOString(), jeton: jetonOf(x) }, "Message noté comme envoyé", ["Étape", "Examen : Message de fin de formation envoyé"]); renderList(); }
       else if (k === "exRecu") {
         const le = new Date().toISOString(), docs = {}; PX.forEach((p) => (docs[p[0]] = { main: true, le }));
-        if (await patchEl(x, { examen_paye: true, examen_docs: docs, examen_etape: "complet" }, "Dossier reçu : fais le reçu, puis envoie le message", ["Examen", "Dossier complet reçu (papiers + 30 000 F)"])) {
+        if (await patchEl(x, { examen_paye: true, examen_docs: docs, examen_etape: "complet" }, "Dossier reçu : fais le reçu, puis envoie le message", ["Étape", "Examen : Dossier complet reçu (papiers + 30 000 F)"])) {
           renderList();
           if (window.__sodafRcFill) { sub("paiements"); window.__sodafRcFill(x, { formation: x.formation, motif: "examen", mode: "Espèces", note: "Dépôt examen d'État · dossier complet reçu" }); }
         }
       }
-      else if (k === "sendRecu") { const m = $("#sd-exRecuMsg"); if (m) a.href = "https://wa.me/228" + waNum(x.telephone) + "?text=" + encodeURIComponent(m.value); await patchEl(x, { examen_relance_le: new Date().toISOString() }, "Message « dossier reçu » noté comme envoyé", ["Examen", "Message dossier reçu envoyé"]); renderList(); }
-      else if (k === "exDepose") { const d = $("#sd-exDep").value || iso(new Date()); if (await patchEl(x, { examen_etape: "depose", examen_depose_le: d }, "Dossier déposé le " + dFr(d), ["Examen", "Dossier déposé le " + d])) renderList(); }
-      else if (k === "exPass") { confirmBtn(a, async () => { if (await patchEl(x, { statut: "Permis obtenu" }, "Bravo ! Permis obtenu", ["Examen", "Permis obtenu"])) { pcStage = "archives"; S.set("pcStage", pcStage); pcSel = x.id; renderList(); } }); }
-      else if (k === "exFail") { confirmBtn(a, async () => { if (await patchEl(x, { examen_etape: "complet", examen_passages: Math.min((x.examen_passages || 0) + 1, 10), examen_date: null, examen_lieu: null, examen_depose_le: null, examen_relance_le: null }, "À repasser : dossier à redéposer", ["Examen", "À repasser"])) renderList(); }); }
+      else if (k === "sendRecu") { const m = $("#sd-exRecuMsg"); if (m) a.href = "https://wa.me/228" + waNum(x.telephone) + "?text=" + encodeURIComponent(m.value); await patchEl(x, { examen_relance_le: new Date().toISOString() }, "Message « dossier reçu » noté comme envoyé", ["Étape", "Examen : Message dossier reçu envoyé"]); renderList(); }
+      else if (k === "exDepose") { const d = $("#sd-exDep").value || iso(new Date()); if (await patchEl(x, { examen_etape: "depose", examen_depose_le: d }, "Dossier déposé le " + dFr(d), ["Étape", "Examen : Dossier déposé le " + d])) renderList(); }
+      else if (k === "exPass") { confirmBtn(a, async () => { if (await patchEl(x, { statut: "Permis obtenu" }, "Bravo ! Permis obtenu", ["Étape", "Examen : Permis obtenu"])) { pcStage = "archives"; S.set("pcStage", pcStage); pcSel = x.id; renderList(); } }); }
+      else if (k === "exFail") { confirmBtn(a, async () => { if (await patchEl(x, { examen_etape: "complet", examen_passages: Math.min((x.examen_passages || 0) + 1, 10), examen_date: null, examen_lieu: null, examen_depose_le: null, examen_relance_le: null }, "À repasser : dossier à redéposer", ["Étape", "Examen : À repasser"])) renderList(); }); }
       else if (k === "exBack") { confirmBtn(a, async () => { if (await patchEl(x, { examen_etape: null }, "Revenu en formation", ["Étape", "Revenu en formation"])) { pcStage = "formation"; S.set("pcStage", pcStage); renderList(); } }); }
     });
     $("#sd-pcDetail").addEventListener("change", async (e) => {
