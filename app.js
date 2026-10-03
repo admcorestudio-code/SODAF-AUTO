@@ -2557,7 +2557,7 @@ function init(root) {
       if (stage === "formation") return ["Inscrit", "En formation", "Permis obtenu"].map((s) => [s, list.filter((x) => x.statut === s)]);
       return ["Plus tard", "Injoignable", "Rétractation", "Faux numéro"].map((m) => [m, list.filter((x) => x.archive_motif === m)]).concat([["Sans motif", list.filter((x) => !x.archive_motif)]]);
     }
-    function renderList() {
+    function renderList(keepDetail) {
       const q = $("#sd-pcQ").value.trim().toLowerCase();
       $$("#sd-pcStages button").forEach((b) => { const n = eleves.filter((x) => etapeOf(x) === b.dataset.st).length; b.querySelector("em").textContent = n; b.setAttribute("aria-selected", b.dataset.st === pcStage); });
       const list = eleves.filter((x) => etapeOf(x) === pcStage && (!q || (x.nom + " " + (x.telephone || "") + " " + x.id).toLowerCase().includes(q)));
@@ -2571,7 +2571,7 @@ function init(root) {
       $("#sd-pcList").innerHTML = html || '<p class="tm-empty">' + ({ accueil: "Aucune nouvelle pré-inscription. Elles arrivent ici toutes seules depuis le site.", appels: "Personne à appeler pour l'instant.", dossier: "Aucun dossier en attente. Après un appel, « Intéressé : envoyer le dossier » les range ici.", formation: "Aucun élève en formation pour l'instant.", archives: "Aucun dossier archivé." }[pcStage]) + "</p>";
       if (pcSel && !list.some((x) => x.id === pcSel)) pcSel = null;
       if (!pcSel && isWide()) { const first = $("#sd-pcList .pc-item"); if (first) { pcSel = +first.dataset.id; first.classList.add("on"); } }
-      renderDetail();
+      if (!keepDetail || keepDetail !== pcSel) renderDetail();
     }
     $("#sd-pcQ").addEventListener("input", renderList);
     // Groupes « Rappeler le matin / l'après-midi » repliables. Par défaut : le matin on voit le matin, l'après-midi on voit l'après-midi.
@@ -2966,6 +2966,39 @@ function init(root) {
     });
 
     window.TEAM_ELEVES = () => eleves; window.TEAM_RELOAD_PAY = () => { if (!$('.tm-sec[data-s="paiements"]').hidden) loadPay(); };
+    // ---- Mise à jour automatique : nouvelles pré-inscriptions, inscriptions en ligne… sans recharger la page
+    const sig = (x) => x ? JSON.stringify([x.statut, x.nom, x.telephone, x.formation, x.quartier, x.accueil_le, x.appels, x.rappel, x.dossier_envoye_le, x.dossier_relance_le, x.archive_motif, x.notes, x.dossier, x.web && x.web.id]) : "";
+    let polling = false;
+    async function poll() {
+      if (!me || polling || document.hidden || !DB.session) return;
+      polling = true;
+      try {
+        const [r, wb] = await Promise.all([DB.q("eleves?select=*&order=cree_le.desc&limit=2000"), DB.q("inscriptions_web?select=*&order=le.desc&limit=2000")]);
+        const W = {}; (wb || []).forEach((w) => { if (!W[w.eleve_id]) W[w.eleve_id] = w; });
+        r.forEach((x) => (x.web = W[x.id] && W[x.id].statut === "Nouveau" ? W[x.id] : null));
+        const old = {}; eleves.forEach((x) => (old[x.id] = x));
+        const nouveaux = r.filter((x) => !old[x.id] && x.source === "site");
+        const payes = r.filter((x) => x.web && (!old[x.id] || !old[x.id].web || old[x.id].web.id !== x.web.id));
+        const changed = r.length !== eleves.length || r.some((x) => sig(x) !== sig(old[x.id]));
+        if (changed) {
+          const selBefore = sig(old[pcSel]), selAfter = sig(r.find((x) => x.id === pcSel));
+          const editing = document.activeElement && $("#sd-pcDetail").contains(document.activeElement) && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
+          eleves = r;
+          $("#sd-cntNew").textContent = (eleves.filter((y) => y.statut === "Nouveau").length + eleves.filter((y) => y.web && y.web.mode === "mixx" && etapeOf(y) === "dossier").length) || "";
+          renderList(editing || selBefore === selAfter ? pcSel : null);
+          fillEleveSelect();
+        }
+        if (nouveaux.length) toast(nouveaux.length > 1 ? nouveaux.length + " nouvelles pré-inscriptions" : "Nouvelle pré-inscription : " + nouveaux[0].nom);
+        else if (payes.length) toast(payes[0].web.mode === "mixx" ? "Paiement Mixx à vérifier : " + payes[0].nom : payes[0].nom + " a finalisé son inscription (paiera à l'agence)");
+        const nb = +($("#sd-cntNew").textContent || 0);
+        document.title = (nb ? "(" + nb + ") " : "") + (window.SODAF_APP ? "SODAF Équipe" : document.title.replace(/^\(\d+\) /, ""));
+      } catch (e) {}
+      polling = false;
+    }
+    setInterval(poll, 20000);
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) poll(); });
+    window.addEventListener("focus", poll);
+
     if (DB.session) start(); else show(false);
     return { toast, run, get me() { return me; }, reloadPay: () => loadPay(), get eleves() { return eleves; } };
   })();
