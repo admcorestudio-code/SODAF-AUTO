@@ -1179,6 +1179,11 @@ ${HEAD("Outils du conducteur", "Dans ta poche", "Les calculs du manuel, la véri
 
 
 
+<section class="page" data-page="recu" hidden>
+${HEAD("SODAF Auto-École", "Ton reçu de paiement", "Garde ce lien ou télécharge ton reçu en PDF. Pour toute question : secrétariat SODAF, +228 72 54 41 66.")}
+<div class="wrap sec"><div class="rc-prev" id="sd-rcPub"></div><div class="rcacts" style="justify-content:center"><button class="btn btn-green" type="button" id="sd-rcPubDl" hidden>Télécharger mon reçu (PDF)</button><a class="btn btn-line" href="#accueil">Découvrir le site</a></div></div>
+</section>
+
 <section class="page" data-page="equipe" hidden>
 ${HEAD("Équipe SODAF", "Espace secrétariat", "Réservé au personnel de l'auto-école.")}
 <div class="wrap sec">
@@ -1221,8 +1226,8 @@ ${HEAD("Équipe SODAF", "Espace secrétariat", "Réservé au personnel de l'auto
 <div id="sd-rcOut" class="rcout" hidden>
 <div class="rcacts"><span id="sd-rcStatus" class="devsent"></span><span id="sd-rcSaved" class="devsent">Enregistrement…</span></div>
 <div class="rc-prev" id="sd-rcPreview"></div>
-<div class="rcacts"><button class="btn btn-wa" type="button" id="sd-rcShare">Envoyer le reçu sur WhatsApp</button><button class="linkbtn" type="button" id="sd-rcDl">Télécharger seulement</button><button class="linkbtn" type="button" id="sd-rcNew">Faire un autre reçu</button></div>
-<p class="rchelp" id="sd-rcHelp">Un seul bouton : le PDF et le message partent ensemble. Choisis WhatsApp, puis l'élève.</p>
+<div class="rcacts"><a class="btn btn-wa" id="sd-rcWa" target="_blank" rel="noopener" href="#">Envoyer sur WhatsApp à l'élève</a><button class="linkbtn" type="button" id="sd-rcShare">Partager le PDF</button><button class="linkbtn" type="button" id="sd-rcDl">Télécharger le PDF</button><button class="linkbtn" type="button" id="sd-rcNew">Faire un autre reçu</button></div>
+<p class="rchelp" id="sd-rcHelp">Le bouton vert ouvre directement la discussion WhatsApp de l'élève, avec le message et le lien de son reçu : il n'y a plus qu'à appuyer sur Envoyer.</p>
 </div></div>
 <div class="grid g2" style="margin-top:18px">
 <div class="card soft"><p class="eyebrow">Réserver une séance de conduite</p><ol class="teamsteps"><li>Ouvre <b>Conduite</b>, onglet <b>Créneaux libres</b>, et choisis l'heure avec l'élève.</li><li>Touche le créneau, choisis l'<b>élève</b> et mets le statut sur <b>Réservé</b>.</li><li>Touche <b>Confirmer sur WhatsApp</b> : le message est prêt, appuie sur Envoyer.</li><li>La veille, onglet <b>Demain (rappels)</b> : touche <b>Rappel de la veille</b> pour chaque élève.</li></ol></div>
@@ -1785,6 +1790,7 @@ function init(root) {
   devList();
 
   // ---------- Reçus de paiement (Espace équipe) ----------
+  let rcPublic = () => {};
   (function () {
     const form = $("#sd-rcForm"); if (!form) return;
     const F = { f: $("#sd-rcForm select[name=formation]"), amt: $("#sd-rcAmt"), rest: $("#sd-rcRest"), restBox: $("#sd-rcRestBox"), other: $("#sd-rcOther") };
@@ -1851,6 +1857,36 @@ function init(root) {
       lib = new Promise((res, rej) => { const s = document.createElement("script"); s.src = "lib/html2pdf.bundle.min.js"; s.onload = () => res(window.html2pdf); s.onerror = rej; document.head.appendChild(s); });
       return lib;
     }
+    function rcEncode(d) {
+      const a = [d.no, d.when, d.eleve, (d.tel || "").replace(/\s/g, ""), d.formation, d.prix, d.motif, d.montant, d.mode, d.reste === "" ? -1 : d.reste, d.note || ""];
+      return btoa(unescape(encodeURIComponent(JSON.stringify(a)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+    }
+    function rcDecode(str) {
+      const a = JSON.parse(decodeURIComponent(escape(atob(str.replace(/-/g, "+").replace(/_/g, "/")))));
+      const [no, when, eleve, tel, formation, prix, motif, montant, mode, reste, note] = a;
+      const t = new Date(when + ":00"), MO = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
+      return { no, when, eleve, tel: tel ? tel.replace(/(\d{2})(?=\d)/g, "$1 ") : "", formation, prix, motif, montant, mode, reste: reste < 0 ? "" : reste, note, faitpar: "Le secrétariat",
+        dateTxt: "Le " + t.getDate() + (t.getDate() === 1 ? "er" : "") + " " + MO[t.getMonth()] + " " + t.getFullYear() + " à " + t.getHours() + " h " + pad(t.getMinutes()) };
+    }
+    async function makePdf(d) {
+      const h2p = await loadLib();
+      const node = document.createElement("div"); node.className = "rc-render"; node.innerHTML = receiptHTML(d); document.body.appendChild(node);
+      await Promise.all([...node.querySelectorAll("img")].map((im) => im.complete ? 0 : new Promise((r) => { im.onload = im.onerror = r; })));
+      const blob = await h2p().set({ margin: 0, image: { type: "jpeg", quality: 0.95 }, html2canvas: { scale: 2.5, backgroundColor: "#ffffff", useCORS: true }, jsPDF: { unit: "mm", format: "a5", orientation: "portrait" } }).from(node.firstChild).outputPdf("blob");
+      node.remove();
+      return new File([blob], "Recu-SODAF-" + d.no + ".pdf", { type: "application/pdf" });
+    }
+    rcPublic = function (str) {
+      const box = $("#sd-rcPub"), btn = $("#sd-rcPubDl");
+      let d; try { d = rcDecode(str); } catch (e) { box.innerHTML = '<p class="card">Ce lien de reçu est incomplet. Demande au secrétariat SODAF de te le renvoyer : +228 72 54 41 66.</p>'; btn.hidden = true; return; }
+      box.innerHTML = receiptHTML(d); btn.hidden = false;
+      btn.onclick = async () => {
+        btn.disabled = true; const t = btn.textContent; btn.textContent = "Préparation du PDF…";
+        try { const f = await makePdf(d); const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); }
+        catch (e) {}
+        btn.disabled = false; btn.textContent = t;
+      };
+    };
     function receiptHTML(d) {
       return '<div class="rc">' +
         '<div class="rc-top"><div class="rc-logo">' + LOGO("#FFFFFF", "word") + '<small>Auto-école · Lomé, Togo</small></div><div class="rc-no"><b>Reçu de paiement</b><span>N° ' + escR(d.no) + "</span><span>" + escR(d.dateTxt) + "</span></div></div>" +
@@ -1884,8 +1920,14 @@ function init(root) {
         iso: now.getFullYear() + "-" + pad(now.getMonth() + 1) + "-" + pad(now.getDate()),
       };
       
+      d.when = now.getFullYear() + "-" + pad(now.getMonth() + 1) + "-" + pad(now.getDate()) + "T" + pad(now.getHours()) + ":" + pad(now.getMinutes());
       const out = $("#sd-rcOut"), status = $("#sd-rcStatus");
       $("#sd-rcPreview").innerHTML = receiptHTML(d);
+      const link = "https://autosodaf.com/#recu-" + rcEncode(d);
+      const msg = "Bonjour " + eleve.split(" ")[0] + ", merci pour ton paiement de " + fmt(montant).replace(/[\u202F\u00A0]/g, " ") + " (" + d.motif + "). Voici ton reçu SODAF n° " + no + " : " + link;
+      const wa = $("#sd-rcWa");
+      wa.href = tel ? "https://wa.me/228" + tel + "?text=" + encodeURIComponent(msg) : "https://wa.me/?text=" + encodeURIComponent(msg);
+      wa.textContent = tel ? "Envoyer sur WhatsApp à " + eleve.split(" ")[0] : "Envoyer sur WhatsApp (choisir le contact)";
       out.hidden = false; status.textContent = "Préparation du PDF…"; status.className = "devsent";
       $("#sd-rcShare").disabled = true; $("#sd-rcDl").disabled = true;
       out.scrollIntoView({ block: "start" });
@@ -1895,19 +1937,13 @@ function init(root) {
         $("#sd-rcSaved").className = "devsent " + (ok ? "ok" : "ko");
       });
       try {
-        const h2p = await loadLib();
-        const node = document.createElement("div"); node.className = "rc-render"; node.innerHTML = receiptHTML(d); document.body.appendChild(node);
-        await Promise.all([...node.querySelectorAll("img")].map((im) => im.complete ? 0 : new Promise((r) => { im.onload = im.onerror = r; })));
-        const blob = await h2p().set({ margin: 0, filename: "recu-sodaf-" + no + ".pdf", image: { type: "jpeg", quality: 0.95 }, html2canvas: { scale: 2.5, backgroundColor: "#ffffff", useCORS: true }, jsPDF: { unit: "mm", format: "a5", orientation: "portrait" } }).from(node.firstChild).outputPdf("blob");
-        node.remove();
-        const file = new File([blob], "Recu-SODAF-" + no + ".pdf", { type: "application/pdf" });
+        const file = await makePdf(d);
         current = { file, d };
         status.textContent = "✓ PDF prêt"; status.className = "devsent ok";
         $("#sd-rcShare").disabled = false; $("#sd-rcDl").disabled = false;
-        const msg = "Bonjour " + eleve.split(" ")[0] + ", voici ton reçu SODAF n° " + no + " : " + fmt(montant).replace(/ | /g, " ") + " (" + d.motif + "). Merci et bonne formation !";
-        current.msg = msg; current.wa = "https://wa.me/" + (tel ? "228" + tel : "") + "?text=" + encodeURIComponent(msg + " (reçu en pièce jointe)");
+        current.msg = msg;
         current.canShare = !!(navigator.canShare && navigator.canShare({ files: [file] }));
-        $("#sd-rcHelp").textContent = current.canShare ? "Un seul bouton : le PDF et le message partent ensemble. Choisis WhatsApp, puis l'élève." : "Ce navigateur ne peut pas joindre le fichier tout seul : le bouton télécharge le PDF et ouvre la discussion WhatsApp de l'élève. Il reste à glisser le PDF dans la discussion. Depuis un téléphone, tout part en un geste.";
+        $("#sd-rcShare").hidden = !current.canShare;
       } catch (er) {
         status.textContent = "Le PDF n'a pas pu être créé. Vérifie la connexion et réessaie."; status.className = "devsent ko";
       }
@@ -1919,11 +1955,7 @@ function init(root) {
     $("#sd-rcDl").addEventListener("click", () => { if (current) dlPdf(); });
     $("#sd-rcShare").addEventListener("click", async () => {
       if (!current) return;
-      if (current.canShare) {
-        try { await navigator.share({ files: [current.file], text: current.msg, title: "Reçu SODAF" }); return; }
-        catch (er) { if (er && er.name === "AbortError") return; }
-      }
-      dlPdf(); window.open(current.wa, "_blank", "noopener");
+      try { await navigator.share({ files: [current.file], text: current.msg, title: "Reçu SODAF" }); } catch (er) {}
     });
     $("#sd-rcNew").addEventListener("click", () => { form.reset(); suggest(); $("#sd-rcOut").hidden = true; current = null; form.scrollIntoView({ block: "start" }); });
   })();
@@ -2161,13 +2193,14 @@ function init(root) {
     if (location.hash === "#documents") history.replaceState(null, "", "#equipe");
     const h = (location.hash || "#accueil").slice(1);
     let p = h.split("-")[0]; if (!pages.includes(p)) p = "accueil";
+    if (p === "recu") rcPublic(h.slice(5));
     $$("section.page").forEach((s) => (s.hidden = s.dataset.page !== p));
     $$("#sd-nav [data-nav]").forEach((a) => a.classList.toggle("on", a.dataset.nav === p));
     nav.classList.remove("open"); burger.setAttribute("aria-expanded", "false");
     if (p === "quiz") showBest();
     if (p === "classe") requestAnimationFrame(() => cls.open());
     if (p === "cours") requestAnimationFrame(() => requestAnimationFrame(spy));
-    const target = h.includes("-") ? root.querySelector("#" + h) : null;
+    let target = null; try { target = h.includes("-") && p !== "recu" ? root.querySelector("#" + h) : null; } catch (e) {}
     requestAnimationFrame(() => { if (target) target.scrollIntoView({ block: "start" }); else window.scrollTo(0, 0); });
   }
   window.addEventListener("hashchange", route);
