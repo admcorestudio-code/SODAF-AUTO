@@ -614,6 +614,17 @@ a.teamtile.hl{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
 .tm-checks{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px;margin-bottom:12px}
 .tm-checks label{display:flex;gap:8px;align-items:center;background:var(--soft);padding:.5em .7em;border-radius:10px;cursor:pointer}
 .tm-checks input{width:18px;height:18px;accent-color:var(--green)}
+.tm-notes{flex-basis:100%;margin:0!important;font-size:.88rem;color:#3D444D;background:#FFF7DC;border-radius:8px;padding:.35em .7em}
+.tm-edit{flex-basis:100%;border-top:1.5px dashed var(--line);padding-top:12px;margin-top:4px}
+.row2e{display:grid;grid-template-columns:1fr 2fr;gap:12px}
+@media (max-width:760px){.row2e{grid-template-columns:1fr}}
+.tm-row.annule{background:var(--soft);opacity:.75}
+.tm-row.annule .tm-main b{text-decoration:line-through}
+.tm-ko{color:var(--red)!important;text-decoration:none!important}
+.tm-closed{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;background:var(--red-soft);border:1.5px solid var(--red);border-radius:12px;padding:12px 14px;margin-bottom:14px;color:var(--ink)}
+.tm-foot{margin-top:14px!important;text-align:right}
+.tm-warn:not(:empty){margin-bottom:26px;padding-bottom:18px;border-bottom:1.5px dashed var(--line)}
+.tm-warn .tm-sub{margin-top:6px}
 .tm-row.st-libre{border-left-color:#C9CED4;background:#FAFBFB}
 .tm-row.st-reserve{border-left-color:var(--blue)}
 .tm-row.st-fait{border-left-color:var(--green);background:var(--green-soft)}
@@ -1336,7 +1347,11 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 </section>
 <section class="tm-sec" data-s="conduite" hidden>
 <div class="tm-bar tm-day-nav"><button class="btn btn-line btn-sm" type="button" id="sd-cdPrev">‹ Veille</button><b id="sd-cdDay"></b><button class="btn btn-line btn-sm" type="button" id="sd-cdNext">Lendemain ›</button><button class="linkbtn" type="button" id="sd-cdToday">Aujourd'hui</button></div>
+<div id="sd-cdClosed" class="tm-closed" hidden></div>
+<form id="sd-cdCloseForm" class="card tm-form" hidden novalidate><div class="field"><label for="sd-cdWhy">Pourquoi ce jour est fermé ?</label><input id="sd-cdWhy" maxlength="60" placeholder="Ex. Jour férié, Tabaski, panne de voiture, moniteur malade"></div><p class="tm-note" style="margin:0 0 12px!important">Toutes les séances de conduite et le cours de code de ce jour passent en « Annulé ». Les élèves déjà réservés s'affichent ensuite avec un bouton WhatsApp pour les prévenir.</p><div class="tm-formact"><button class="btn btn-green btn-sm" type="submit">Fermer ce jour</button><button class="linkbtn" type="button" id="sd-cdCloseCancel">Annuler</button></div></form>
+<div id="sd-cdWarn" class="tm-warn"></div>
 <div id="sd-cdList" class="tm-list"></div>
+<p class="tm-foot"><button class="linkbtn" type="button" id="sd-cdCloseBtn">Fermer ce jour (férié, fermeture exceptionnelle…)</button></p>
 </section>
 <section class="tm-sec" data-s="paiements" hidden>
 <div class="tm-stats" id="sd-pyStats"></div>
@@ -1382,7 +1397,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="card soft"><p class="eyebrow">Un nouvel élève arrive</p><ol class="teamsteps"><li>Onglet <b>Élèves</b> : retrouve sa pré-inscription (ou <b>+ Ajouter un élève</b> s'il vient directement).</li><li>Encaisse, puis touche <b>Reçu</b> sur sa fiche → « Il s'inscrit et paie la moitié ».</li><li>Envoie le reçu sur WhatsApp, passe son statut à <b>Inscrit</b>, ajoute-le au groupe.</li></ol></div>
 <div class="card soft"><p class="eyebrow">Réserver une séance de conduite</p><ol class="teamsteps"><li>Vérifie que la 2e moitié est payée (<b>Paiements</b> → À relancer).</li><li><b>Planning conduite</b> : choisis le jour, puis l'élève sur un créneau libre.</li><li>Touche <b>Confirmer</b> : le message WhatsApp est prêt. La veille, touche <b>Rappel</b>.</li></ol></div>
 <div class="card soft"><p class="eyebrow">Mercredi : résultats du devoir</p><ol class="teamsteps"><li>Onglet <b>Devoirs</b> : le message de la semaine est déjà écrit.</li><li>Touche <b>Ouvrir WhatsApp avec le message</b> et choisis le groupe.</li></ol></div>
-<div class="card soft"><p class="eyebrow">Règles</p><ol class="teamsteps"><li>On ne supprime rien : une séance annulée passe en <b>Annulé</b>, un élève qui arrête en <b>Abandon</b>.</li><li>Les créneaux du mois suivant se créent tout seuls le 24.</li></ol></div>
+<div class="card soft"><p class="eyebrow">Règles</p><ol class="teamsteps"><li>On ne supprime rien : une séance annulée passe en <b>Annulé</b>, un élève qui arrête en <b>Abandon</b>, un reçu faux se fait <b>Annuler</b> (avec la raison) puis on refait le bon.</li><li>Erreur de nom ou de numéro : <b>Modifier</b> sur la fiche de l'élève.</li><li>Jour férié ou fermeture : <b>Planning conduite</b> → le jour → « Fermer ce jour », puis <b>Prévenir</b> chaque élève.</li><li>Les créneaux du mois suivant se créent tout seuls le 24.</li></ol></div>
 </div></div>
 <div class="tm-pane" data-pane="mon" role="tabpanel" hidden>
 <p class="tm-role">Cours de code en salle, séances de conduite et progression des élèves.</p>
@@ -2300,7 +2315,7 @@ function init(root) {
     function renderEleves() {
       const q = $("#sd-elQ").value.trim().toLowerCase(), f = $("#sd-elF").value;
       const list = eleves.filter((x) => (f === "all" || (f === "new" ? ["Nouveau", "Contacté"] : ["Inscrit", "En formation"]).includes(x.statut)) && (!q || (x.nom + " " + (x.telephone || "")).toLowerCase().includes(q)));
-      $("#sd-elList").innerHTML = list.length ? list.map((x) => '<div class="tm-row" data-id="' + x.id + '"><div class="tm-main"><b>' + esc(x.nom) + '</b><span>' + esc([x.telephone ? x.telephone.replace("+228", "+228 ") : "", x.formation, x.quartier].filter(Boolean).join(" · ")) + '</span><small>' + (x.source === "site" ? "Pré-inscrit sur le site" : "Ajouté au bureau") + " le " + new Date(x.cree_le).toLocaleDateString("fr-FR") + (x.creneau_prefere ? " · préfère : " + esc(x.creneau_prefere) : "") + (x.message ? " · « " + esc(x.message) + " »" : "") + '</small></div><div class="tm-acts"><select data-st aria-label="Statut">' + ST.map((t) => "<option" + (t === x.statut ? " selected" : "") + ">" + t + "</option>").join("") + "</select>" + (x.telephone ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" href="https://wa.me/228' + waNum(x.telephone) + '">WhatsApp</a>' : "") + '<button class="btn btn-line btn-sm" type="button" data-rc>Reçu</button></div></div>').join("") : '<p class="tm-empty">Aucun élève dans cette liste.</p>';
+      $("#sd-elList").innerHTML = list.length ? list.map((x) => '<div class="tm-row" data-id="' + x.id + '"><div class="tm-main"><b>' + esc(x.nom) + '</b><span>' + esc([x.telephone ? x.telephone.replace("+228", "+228 ") : "", x.formation, x.quartier].filter(Boolean).join(" · ")) + '</span><small>' + (x.source === "site" ? "Pré-inscrit sur le site" : "Ajouté au bureau") + " le " + new Date(x.cree_le).toLocaleDateString("fr-FR") + (x.creneau_prefere ? " · préfère : " + esc(x.creneau_prefere) : "") + (x.message ? " · « " + esc(x.message) + " »" : "") + '</small></div><div class="tm-acts"><select data-st aria-label="Statut">' + ST.map((t) => "<option" + (t === x.statut ? " selected" : "") + ">" + t + "</option>").join("") + "</select>" + (x.telephone ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" href="https://wa.me/228' + waNum(x.telephone) + '">WhatsApp</a>' : "") + '<button class="btn btn-line btn-sm" type="button" data-rc>Reçu</button><button class="linkbtn" type="button" data-ed>Modifier</button></div>' + (x.notes ? '<p class="tm-notes">Note : ' + esc(x.notes) + "</p>" : "") + "</div>").join("") : '<p class="tm-empty">Aucun élève dans cette liste.</p>';
     }
     $("#sd-elQ").addEventListener("input", renderEleves); $("#sd-elF").addEventListener("change", renderEleves);
     $("#sd-elList").addEventListener("change", async (e) => {
@@ -2311,6 +2326,26 @@ function init(root) {
     $("#sd-elList").addEventListener("click", (e) => {
       const b = e.target.closest("[data-rc]"); if (!b) return; const x = eleves.find((y) => y.id === +b.closest("[data-id]").dataset.id);
       if (x && window.__sodafRcFill) { sub("paiements"); window.__sodafRcFill(x); }
+    });
+    const FORMS = [...$$("#sd-elFo option")].map((o) => o.textContent);
+    $("#sd-elList").addEventListener("click", (e) => {
+      const b = e.target.closest("[data-ed]"); if (!b) return; const row = b.closest("[data-id]"), x = eleves.find((y) => y.id === +row.dataset.id); if (!x) return;
+      const old = row.querySelector(".tm-edit"); if (old) { old.remove(); return; }
+      const fo = FORMS.includes(x.formation) || !x.formation ? FORMS : [x.formation, ...FORMS];
+      const f = document.createElement("form"); f.className = "tm-edit"; f.noValidate = true;
+      f.innerHTML = '<div class="row3"><div class="field"><label>Nom et prénom</label><input name="nom" value="' + esc(x.nom) + '"></div><div class="field"><label>Téléphone</label><div class="tel"><span>+228</span><input name="tel" inputmode="numeric" maxlength="11" value="' + esc(waNum(x.telephone).replace(/(\d{2})(?=\d)/g, "$1 ")) + '"></div></div><div class="field"><label>Formation</label><select name="formation">' + fo.map((t) => "<option" + (t === x.formation ? " selected" : "") + ">" + esc(t) + "</option>").join("") + '</select></div></div>' +
+        '<div class="row2e"><div class="field"><label>Quartier</label><input name="quartier" maxlength="80" value="' + esc(x.quartier || "") + '"></div><div class="field"><label>Note interne (visible par l\'équipe seulement)</label><input name="notes" maxlength="300" value="' + esc(x.notes || "") + '"></div></div>' +
+        '<div class="tm-formact"><button class="btn btn-green btn-sm" type="submit">Enregistrer</button><button class="linkbtn" type="button" data-x>Fermer</button><span class="tm-err"></span></div>';
+      row.appendChild(f); f.querySelector("input").focus();
+      f.querySelector("[data-x]").addEventListener("click", () => f.remove());
+      f.addEventListener("submit", async (ev) => {
+        ev.preventDefault();
+        const nom = f.nom.value.trim().replace(/\s+/g, " "), tel = f.tel.value.replace(/\D/g, ""), er = f.querySelector(".tm-err");
+        if (nom.length < 3 || (tel && tel.length !== 8)) { er.textContent = "Nom (3 lettres min.) et numéro à 8 chiffres."; return; }
+        const body = { nom, telephone: tel ? "+228" + tel : null, formation: f.formation.value, quartier: f.quartier.value.trim() || null, notes: f.notes.value.trim() || null };
+        const ok = await run(() => DB.q("eleves?id=eq." + x.id, { method: "PATCH", body, prefer: "return=minimal" }), "Fiche élève enregistrée");
+        if (ok) { Object.assign(x, body); renderEleves(); fillEleveSelect(); }
+      });
     });
     $("#sd-elAddBtn").addEventListener("click", () => { $("#sd-elAdd").hidden = false; $("#sd-elN").focus(); });
     $("#sd-elCancel").addEventListener("click", () => { $("#sd-elAdd").hidden = true; });
@@ -2331,15 +2366,19 @@ function init(root) {
     const CST = ["Libre", "Réservé", "Fait", "Absent", "Annulé"];
     async function loadDay() {
       $("#sd-cdDay").textContent = longDay(cdDay).replace(/^./, (c) => c.toUpperCase()) + (cdDay === iso(new Date()) ? " (aujourd'hui)" : "");
-      const r = await run(() => DB.q("creneaux_conduite?select=*&jour=eq." + cdDay));
+      const [r, fe] = await Promise.all([run(() => DB.q("creneaux_conduite?select=*&jour=eq." + cdDay)), run(() => DB.q("jours_feries?select=*&jour=eq." + cdDay))]);
       if (!r) return;
+      const ferme = fe && fe[0], cl = $("#sd-cdClosed");
+      cl.hidden = !ferme; cl.innerHTML = ferme ? "<b>Jour fermé : " + esc(ferme.nom) + '</b><button class="linkbtn" type="button" id="sd-cdReopen">Rouvrir ce jour</button>' : "";
+      $("#sd-cdCloseBtn").hidden = !!ferme || !r.length; $("#sd-cdCloseForm").hidden = true;
+      if (ferme) $("#sd-cdReopen").addEventListener("click", reopenDay);
       r.sort((a, b) => hmin(a.heure) - hmin(b.heure));
       const actifs = eleves.filter((x) => !["Abandon", "Permis obtenu"].includes(x.statut)).sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
       const tomorrow = iso(new Date(Date.now() + 864e5));
       $("#sd-cdList").innerHTML = r.length ? r.map((c) => {
         const el = eleves.find((x) => x.id === c.eleve_id), n = el ? waNum(el.telephone) : "";
-        const conf = el && n ? "https://wa.me/228" + n + "?text=" + encodeURIComponent("Bonjour " + el.nom.split(" ")[0] + ", ta séance de conduite SODAF est confirmée le " + longDay(c.jour) + " à " + c.heure + ". Rendez-vous au 412 Avenue Akei, Tokoin Tamé. À bientôt !") : "";
-        const rap = el && n && c.jour === tomorrow ? "https://wa.me/228" + n + "?text=" + encodeURIComponent("Bonjour " + el.nom.split(" ")[0] + ", petit rappel : ta séance de conduite SODAF est demain à " + c.heure + ". Merci d'être à l'heure !") : "";
+        const conf = el && n && c.statut === "Réservé" ? "https://wa.me/228" + n + "?text=" + encodeURIComponent("Bonjour " + el.nom.split(" ")[0] + ", ta séance de conduite SODAF est confirmée le " + longDay(c.jour) + " à " + c.heure + ". Rendez-vous au 412 Avenue Akei, Tokoin Tamé. À bientôt !") : "";
+        const rap = el && n && c.statut === "Réservé" && c.jour === tomorrow ? "https://wa.me/228" + n + "?text=" + encodeURIComponent("Bonjour " + el.nom.split(" ")[0] + ", petit rappel : ta séance de conduite SODAF est demain à " + c.heure + ". Merci d'être à l'heure !") : "";
         return '<div class="tm-row st-' + c.statut.normalize("NFD").replace(/[^a-z]/gi, "").toLowerCase() + '" data-id="' + c.id + '"><div class="tm-time">' + esc(c.heure) + '</div><div class="tm-main"><select data-el aria-label="Élève"><option value="">— Créneau libre —</option>' + actifs.map((x) => '<option value="' + x.id + '"' + (x.id === c.eleve_id ? " selected" : "") + ">" + esc(x.nom) + "</option>").join("") + (el && !actifs.includes(el) ? '<option value="' + el.id + '" selected>' + esc(el.nom) + "</option>" : "") + '</select>' + (c.note ? "<small>" + esc(c.note) + "</small>" : "") + '</div><div class="tm-acts"><select data-cs aria-label="Statut">' + CST.map((t) => "<option" + (t === c.statut ? " selected" : "") + ">" + t + "</option>").join("") + "</select>" + (conf ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" href="' + conf + '">Confirmer</a>' : "") + (rap ? '<a class="btn btn-yellow btn-sm" target="_blank" rel="noopener" href="' + rap + '">Rappel</a>' : "") + "</div></div>";
       }).join("") : '<p class="tm-empty">Pas de créneau ce jour-là (dimanche ou jour férié).</p>';
     }
@@ -2352,7 +2391,35 @@ function init(root) {
       await run(() => DB.q("creneaux_conduite?id=eq." + id, { method: "PATCH", body, prefer: "return=minimal" }), "Planning enregistré");
       loadDay();
     });
-    const shift = (n) => { const d = dOf(cdDay); d.setDate(d.getDate() + n); cdDay = iso(d); loadDay(); };
+    $("#sd-cdCloseBtn").addEventListener("click", () => { $("#sd-cdCloseForm").hidden = false; $("#sd-cdWhy").value = ""; $("#sd-cdWhy").focus(); });
+    $("#sd-cdCloseCancel").addEventListener("click", () => { $("#sd-cdCloseForm").hidden = true; });
+    $("#sd-cdCloseForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const why = $("#sd-cdWhy").value.trim() || "Fermeture exceptionnelle", day = cdDay, now = new Date().toISOString();
+      const r = await run(() => DB.q("creneaux_conduite?select=*&jour=eq." + day)); if (!r) return;
+      const touches = r.filter((c) => c.eleve_id && c.statut === "Réservé");
+      const ok = await run(async () => {
+        await DB.q("jours_feries", { method: "POST", body: { jour: day, nom: why }, prefer: "return=minimal,resolution=merge-duplicates" });
+        await DB.q("creneaux_conduite?jour=eq." + day + "&statut=in.(Libre,R%C3%A9serv%C3%A9)", { method: "PATCH", body: { statut: "Annulé", note: why, modifie_le: now }, prefer: "return=minimal" });
+        await DB.q("seances_code?jour=eq." + day + "&statut=eq.Pr%C3%A9vu", { method: "PATCH", body: { statut: "Annulé", note: why }, prefer: "return=minimal" });
+        return true;
+      }, "Jour fermé");
+      if (!ok) return;
+      await loadDay();
+      $("#sd-cdWarn").innerHTML = touches.length ? '<div class="tm-sub"><div><p class="eyebrow">À prévenir</p><h3>' + touches.length + (touches.length > 1 ? " élèves avaient" : " élève avait") + " une séance ce jour-là</h3></div><p>Préviens-les et propose un autre créneau.</p></div><div class=\"tm-list\">" + touches.map((c) => { const el = eleves.find((x) => x.id === c.eleve_id) || { nom: "Élève" }, n = waNum(el.telephone); return '<div class="tm-row"><div class="tm-time">' + esc(c.heure) + '</div><div class="tm-main"><b>' + esc(el.nom) + '</b></div><div class="tm-acts">' + (n ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" href="https://wa.me/228' + n + "?text=" + encodeURIComponent("Bonjour " + el.nom.split(" ")[0] + ", ta séance de conduite SODAF du " + longDay(day) + " à " + c.heure + " est annulée (" + why + "). Désolé ! Réponds-nous pour choisir un autre créneau.") + '">Prévenir</a>' : "") + "</div></div>"; }).join("") + "</div>" : "";
+    });
+    async function reopenDay() {
+      const day = cdDay, now = new Date().toISOString();
+      const ok = await run(async () => {
+        await DB.q("creneaux_conduite?jour=eq." + day + "&statut=eq.Annul%C3%A9&eleve_id=is.null", { method: "PATCH", body: { statut: "Libre", note: null, modifie_le: now }, prefer: "return=minimal" });
+        await DB.q("creneaux_conduite?jour=eq." + day + "&statut=eq.Annul%C3%A9&eleve_id=not.is.null", { method: "PATCH", body: { statut: "Réservé", note: null, modifie_le: now }, prefer: "return=minimal" });
+        await DB.q("seances_code?jour=eq." + day + "&statut=eq.Annul%C3%A9", { method: "PATCH", body: { statut: "Prévu", note: null }, prefer: "return=minimal" });
+        await DB.q("jours_feries?jour=eq." + day, { method: "DELETE", prefer: "return=minimal" });
+        return true;
+      }, "Jour rouvert");
+      $("#sd-cdWarn").innerHTML = ""; if (ok) loadDay();
+    }
+    const shift = (n) => { $("#sd-cdWarn").innerHTML = ""; const d = dOf(cdDay); d.setDate(d.getDate() + n); cdDay = iso(d); loadDay(); };
     $("#sd-cdPrev").addEventListener("click", () => shift(-1)); $("#sd-cdNext").addEventListener("click", () => shift(1));
     $("#sd-cdToday").addEventListener("click", () => { cdDay = iso(new Date()); loadDay(); });
 
@@ -2361,14 +2428,29 @@ function init(root) {
       const now = new Date(), m0 = iso(new Date(now.getFullYear(), now.getMonth(), 1)), d90 = iso(new Date(Date.now() - 120 * 864e5));
       const r = await run(() => DB.q("paiements?select=*&jour=gte." + d90 + "&order=cree_le.desc"));
       if (!r) return;
-      const mois = r.filter((p) => p.jour >= m0), tot = mois.reduce((a, p) => a + p.montant, 0);
-      const esp = mois.filter((p) => p.mode === "Espèces").reduce((a, p) => a + p.montant, 0);
-      const last = {}; r.slice().reverse().forEach((p) => (last[(p.eleve_id || p.eleve_nom)] = p));
+      const mois = r.filter((p) => p.jour >= m0), ok = mois.filter((p) => !p.annule), tot = ok.reduce((a, p) => a + p.montant, 0);
+      const esp = ok.filter((p) => p.mode === "Espèces").reduce((a, p) => a + p.montant, 0);
+      const last = {}; r.filter((p) => !p.annule).reverse().forEach((p) => (last[(p.eleve_id || p.eleve_nom)] = p));
       const late = Object.values(last).filter((p) => p.reste > 0);
-      $("#sd-pyStats").innerHTML = '<div><span>Encaissé en ' + M[now.getMonth()] + '</span><b>' + F(tot) + '</b></div><div><span>Reçus ce mois</span><b>' + mois.length + '</b></div><div><span>Espèces / Mixx by Yas</span><b>' + F(esp) + " / " + F(tot - esp) + '</b></div><div><span>Élèves qui doivent encore payer</span><b>' + late.length + "</b></div>";
-      $("#sd-pyList").innerHTML = mois.length ? mois.map((p) => '<div class="tm-row"><div class="tm-time">' + dOf(p.jour).getDate() + " " + M[dOf(p.jour).getMonth()].slice(0, 4) + '.</div><div class="tm-main"><b>' + esc(p.eleve_nom) + " · " + F(p.montant) + "</b><span>" + esc(p.motif) + " · " + esc(p.mode) + (p.reste > 0 ? " · reste " + F(p.reste) : "") + "</span><small>Reçu n° " + esc(p.numero) + '</small></div><div class="tm-acts">' + (window.__sodafRcLink ? '<a class="btn btn-line btn-sm" target="_blank" rel="noopener" href="' + window.__sodafRcLink(p) + '">Revoir le reçu</a>' : "") + "</div></div>").join("") : '<p class="tm-empty">Aucun reçu ce mois-ci pour l\'instant.</p>';
+      $("#sd-pyStats").innerHTML = '<div><span>Encaissé en ' + M[now.getMonth()] + '</span><b>' + F(tot) + '</b></div><div><span>Reçus ce mois</span><b>' + ok.length + '</b></div><div><span>Espèces / Mixx by Yas</span><b>' + F(esp) + " / " + F(tot - esp) + '</b></div><div><span>Élèves qui doivent encore payer</span><b>' + late.length + "</b></div>";
+      $("#sd-pyList").innerHTML = mois.length ? mois.map((p) => '<div class="tm-row' + (p.annule ? " annule" : "") + '" data-id="' + p.id + '"><div class="tm-time">' + dOf(p.jour).getDate() + " " + M[dOf(p.jour).getMonth()].slice(0, 4) + '.</div><div class="tm-main"><b>' + esc(p.eleve_nom) + " · " + F(p.montant) + "</b><span>" + esc(p.motif) + " · " + esc(p.mode) + (p.reste > 0 ? " · reste " + F(p.reste) : "") + "</span><small>Reçu n° " + esc(p.numero) + (p.annule ? ' · <b class="tm-ko">Annulé' + (p.annule_motif ? " : " + esc(p.annule_motif) : "") + "</b>" : "") + '</small></div><div class="tm-acts">' + (window.__sodafRcLink ? '<a class="btn btn-line btn-sm" target="_blank" rel="noopener" href="' + window.__sodafRcLink(p) + '">Revoir le reçu</a>' : "") + (p.annule ? "" : '<button class="linkbtn" type="button" data-cancel>Annuler ce reçu</button>') + "</div></div>").join("") : '<p class="tm-empty">Aucun reçu ce mois-ci pour l\'instant.</p>';
       $("#sd-pyLate").innerHTML = late.length ? '<div class="tm-sub"><div><p class="eyebrow">À relancer</p><h3>Reste à payer</h3></div></div><div class="tm-list">' + late.map((p) => { const n = waNum(p.telephone); return '<div class="tm-row"><div class="tm-main"><b>' + esc(p.eleve_nom) + " · reste " + F(p.reste) + "</b><span>" + esc(p.formation || "") + " · dernier paiement le " + dOf(p.jour).toLocaleDateString("fr-FR") + '</span></div><div class="tm-acts">' + (n ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" href="https://wa.me/228' + n + "?text=" + encodeURIComponent("Bonjour " + p.eleve_nom.split(" ")[0] + ", petit rappel de SODAF : il reste " + F(p.reste) + " à régler pour ta formation, avant ta première séance de conduite. Merci !") + '">Relancer</a>' : "") + "</div></div>"; }).join("") + "</div>" : "";
     }
+
+    $("#sd-pyList").addEventListener("click", (e) => {
+      const b = e.target.closest("[data-cancel]"); if (!b) return; const row = b.closest("[data-id]");
+      if (row.querySelector(".tm-edit")) return;
+      const f = document.createElement("form"); f.className = "tm-edit"; f.noValidate = true;
+      f.innerHTML = '<div class="field"><label>Pourquoi annuler ce reçu ?</label><input name="why" maxlength="200" placeholder="Ex. erreur de montant, refait sous un autre numéro"></div><p class="tm-note" style="margin:0 0 10px!important">Le reçu reste dans la liste, barré, et ne compte plus dans les totaux. Pense à refaire le bon reçu si besoin.</p><div class="tm-formact"><button class="btn btn-sm" style="background:var(--red);color:#fff" type="submit">Confirmer l\'annulation</button><button class="linkbtn" type="button" data-x>Garder le reçu</button><span class="tm-err"></span></div>';
+      row.appendChild(f); f.why.focus();
+      f.querySelector("[data-x]").addEventListener("click", () => f.remove());
+      f.addEventListener("submit", async (ev) => {
+        ev.preventDefault(); const why = f.why.value.trim();
+        if (why.length < 3) { f.querySelector(".tm-err").textContent = "Écris la raison (obligatoire)."; return; }
+        const ok = await run(() => DB.q("paiements?id=eq." + row.dataset.id, { method: "PATCH", body: { annule: true, annule_motif: why, annule_le: new Date().toISOString() }, prefer: "return=minimal" }), "Reçu annulé");
+        if (ok) loadPay();
+      });
+    });
 
     // ---- Devoirs
     async function loadDev() {
