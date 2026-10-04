@@ -2,6 +2,9 @@
 // ---------- Base de données SODAF (Supabase) ----------
 // Clé publique : elle ne donne accès qu'à ce que les règles de sécurité de la base autorisent
 // (visiteurs : s'inscrire et envoyer un devoir ; équipe connectée : le reste).
+// Outils communs (une seule version pour tout le site) : protéger un texte avant de l'afficher, écrire un nombre en milliers
+const escHtml = (t) => String(t == null ? "" : t).replace(/[<>&"]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" }[c]));
+const milliers = (n) => String(Math.round(n || 0)).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 const SB_URL = "https://fpfmpiodbznjofxjfyjf.supabase.co";
 const SB_KEY = "sb_publishable_Up-XDNsPpfOsMR00Owu6wQ_FCFCwmwP";
 const DB = {
@@ -2095,21 +2098,6 @@ const progRows = (cur, lundi) => [0, 1, 2, 3, 4, 5].map((k) => { const m = lundi
 
 const CK = ["Aucune fuite sous le véhicule","Carrosserie, feux et vitres propres","Pression des 4 pneus","Liquide de refroidissement","Huile moteur (entre MIN et MAX)","Liquide de frein et d'embrayage","Eau de la batterie (si non scellée)","Liquide de direction assistée","Lot de bord complet","Documents de bord valides","Carburant suffisant","Feux, frein et klaxon fonctionnent"];
 
-function hideOtherBlocks(root) {
-  const hidden = [];
-  let el = root;
-  while (el && el.parentElement && el.parentElement !== document.body) {
-    const parent = el.parentElement;
-    for (const sib of Array.from(parent.children)) {
-      if (sib === el) continue;
-      if (["SCRIPT", "STYLE", "LINK", "NOSCRIPT"].includes(sib.tagName)) continue;
-      if (sib.style.display !== "none") { hidden.push([sib, sib.style.display]); sib.style.display = "none"; }
-    }
-    el = parent;
-  }
-  return () => hidden.forEach(([n, d]) => (n.style.display = d));
-}
-
 function signSVG(name) { const g = SIGNS.find((x) => x.n === name); return g ? g.s : ""; }
 function qVisual(q) { if (!q[5]) return ""; return q[5].startsWith("p:") ? '<div class="qsign">' + signSVG(q[5].slice(2)) + "</div>" : '<div class="qscene">' + SCENE(q[5]) + "</div>"; }
 function optsHTML(q) {
@@ -2323,7 +2311,7 @@ function init(root) {
 
   // ---------- Devoirs de la semaine ----------
   const devEl = $("#sd-dev");
-  const escH = (t) => String(t).replace(/[<>&"]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" }[c]));
+  const escH = escHtml;
   const MOIS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
   const frDay = (d) => d.getUTCDate() + (d.getUTCDate() === 1 ? "er" : "") + " " + MOIS[d.getUTCMonth()];
   const cap = (t) => t.trim().replace(/\s+/g, " ").toLowerCase().replace(/(^|[\s'-])(\p{L})/gu, (m, a, b) => a + b.toUpperCase());
@@ -2463,7 +2451,7 @@ function init(root) {
       return s.charAt(0).toUpperCase() + s.slice(1);
     }
     window.__sodafLettres = lettres;
-    const escR = (t) => String(t).replace(/[<>&"]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" }[c]));
+    const escR = escHtml;
     const pad = (x) => String(x).padStart(2, "0");
     let current = null, lib = null;
     function loadLib() {
@@ -2695,12 +2683,12 @@ function init(root) {
   const TEAM = (function () {
     const lock = $("#sd-teamLock"), panel = $("#sd-teamPanel");
     const J = ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"], M = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
-    const esc = (t) => String(t == null ? "" : t).replace(/[<>&"]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" }[c]));
+    const esc = escHtml;
     const pad = (x) => String(x).padStart(2, "0");
     const iso = (d) => d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
     const dOf = (s) => new Date(s + "T12:00:00");
     const longDay = (s) => { const d = dOf(s); return J[d.getDay()] + " " + d.getDate() + " " + M[d.getMonth()]; };
-    const F = (n) => String(Math.round(n || 0)).replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " F";
+    const F = (n) => milliers(n) + " F";
     const hmin = (h) => { const m = /(\d+) h ?(\d*)/.exec(h) || [0, 0, 0]; return +m[1] * 60 + (+m[2] || 0); };
     const waNum = (t) => (t || "").replace(/\D/g, "").replace(/^228/, "");
     let me = null, eleves = [], cdDay = iso(new Date());
@@ -2776,7 +2764,6 @@ function init(root) {
     }
 
     // ---- Parcours élèves : Accueil → Appels → En formation → Archivés
-    const ST = ["Nouveau", "Contacté", "Inscrit", "En formation", "Permis obtenu", "Abandon"];
     const ETAPES = { accueil: ["Nouveau"], appels: ["Contacté"], formation: ["Inscrit", "En formation", "Permis obtenu"], archives: ["Abandon"] };
     const etapeOf = (x) => (x.statut === "Permis obtenu" ? "archives" : ["Inscrit", "En formation"].includes(x.statut) && x.examen_etape ? "examen" : x.statut === "Contacté" && x.dossier_envoye_le ? "dossier" : Object.keys(ETAPES).find((k) => ETAPES[k].includes(x.statut)) || "accueil");
     const CFG = {};
@@ -2838,8 +2825,6 @@ function init(root) {
       if (k === 2) return "Bonjour " + prenom(x) + ",\n\nPetit rappel de *SODAF Auto-École* : ton inscription au " + (x.formation || "permis") + " t'attend toujours.\n\nLes cours de code se font en petits groupes de 6, " + hCode() + " : tu peux commencer dès ton inscription. Paiement " + payWhere() + ", en une ou deux fois.\n\nFinaliser mon inscription :\n" + L + S;
       if (k === 3) return "Bonjour " + prenom(x) + ",\n\nNous n'avons pas eu de nouvelles de ta part concernant ton inscription chez *SODAF Auto-École*.\n\nSi tu as besoin de plus de temps ou si tu as changé d'avis, dis-le-nous simplement : aucun souci.\n\nPour t'inscrire :\n" + L + S;
       return "Bonjour " + prenom(x) + ",\n\nSans nouvelles de ta part, nous mettons ton dossier d'inscription (N° Client : " + CODE(x) + ") en pause.\n\nIl reste disponible : le jour où tu veux commencer, réponds simplement à ce message ou appelle-nous au *+228 72 54 41 66*, et nous le réactivons tout de suite.\n\nMerci et à bientôt !" + S; };
-    const PRIX = { "Permis B": "55 000 F la formation complète (formule courte dès 35 000 F, accélérée 75 000 ou 80 000 F)", "Permis A": "30 000 F", "Pack A + B": "80 000 F", "Remise à niveau": "20 000 F", "Formation entreprise": "sur devis" };
-    const PIECES = [["acte", "Acte de naissance"], ["cni", "Photocopie carte d'identité"], ["photos", "2 photos passeport"], ["examen", "Dépôt examen 30 000 F payé"], ["deja", "A déjà conduit"]];
     const CODE = (x) => "SO" + x.id;
     const SRC = { site: "Site web", agence: "Venu à l'agence", bureau: "Venu à l'agence", appel: "Appel téléphonique", whatsapp: "WhatsApp", bouche: "Bouche-à-oreille", reseaux: "Facebook / TikTok", affiche: "Affiche, flyer, QR", entreprise: "Entreprise", autre: "Autre" };
     const srcOf = (x) => (x.source === "site" ? SRC.site : SRC[x.provenance] || SRC.agence);
@@ -2851,7 +2836,6 @@ function init(root) {
       if (n === 2) return "Bonjour " + prenom(x) + ",\n\nNouvel essai de *SODAF Auto-École* pour ta pré-inscription au " + (x.formation || "permis") + " (N° Client : " + CODE(x) + "), toujours sans réponse.\n\nNous réessaierons " + q + ". Tu peux aussi nous écrire ici à tout moment : nous répondons à tes questions sur les prix, les horaires et le paiement." + S;
       if (n === 3) return "Bonjour " + prenom(x) + ",\n\nNous n'arrivons pas à te joindre au sujet de ton inscription chez *SODAF Auto-École* (N° Client : " + CODE(x) + ").\n\nNous ferons un dernier essai " + q + ". Si c'est plus simple pour toi, passe directement nous voir :\n" + AGENCE + S;
       return "Bonjour " + prenom(x) + ",\n\nNous avons essayé de te joindre plusieurs fois, sans succès. Nous arrêtons donc nos appels et ton dossier (N° Client : " + CODE(x) + ") est classé dans notre base.\n\nIl reste disponible : *à tout moment*, réponds simplement à ce message ou appelle-nous au *+228 72 54 41 66*, et nous reprenons ton inscription là où elle s'est arrêtée.\n\nEn attendant, révise le code gratuitement sur autosodaf.com" + S; };
-    const msgRelance = (x) => "Bonjour " + prenom(x) + ",\n\nIci le secrétariat de *SODAF Auto-École*. Nous avons essayé de te joindre plusieurs fois au sujet de ta pré-inscription, sans succès.\n\n*TON DOSSIER*\n• N° Client : " + CODE(x) + "\n• Formation : " + (x.formation || "à préciser") + "\n\nTon dossier reste ouvert. Si tu es toujours intéressé(e) :\n• Réponds simplement à ce message, nous te rappelons au moment qui t'arrange ;\n• Ou appelle-nous au *72 54 41 66*.\n\nEn attendant, découvre nos formations et révise le code gratuitement sur notre site :\nautosodaf.com\n\nÀ bientôt !\n*L'équipe SODAF · L'art de conduire, la force de réussir.*";
     // ---------- Étape « Examen » ----------
     const PX = [["cni", "Photocopie de la carte d'identité"], ["acte", "Acte de naissance"], ["photo1", "Photo d'identité n° 1"], ["photo2", "Photo d'identité n° 2"]];
     const dOnly = (d) => new Date(String(d).slice(0, 10) + "T12:00:00");
@@ -2952,7 +2936,7 @@ function init(root) {
     const msgSolde = (x, nr) => { const n = nr || (susp(x) ? 2 : 1), ec = solEche(x), pay = CFG.mixx_numero ? "\n\nTu peux payer à l'agence ou par *Mixx by Yas* au " + CFG.mixx_numero + (CFG.mixx_nom ? " (" + CFG.mixx_nom + ")" : "") + ", motif *" + CODE(x) + " SOLDE*, puis nous envoyer la capture du SMS ici." : "\n\nTu peux payer à l'agence aux heures de bureau.";
       if (n === 1) return "Bonjour " + prenom(x) + ",\n\nPetit rappel de *SODAF Auto-École* : il te reste *" + F(x.solde) + "* à régler pour ta formation (N° Client : " + CODE(x) + ")" + (ec ? ", *avant le " + ec.toLocaleDateString("fr-FR", { day: "numeric", month: "long" }) + "*" : "") + ".\n\nTant que le solde n'est pas réglé, nous ne pouvons pas réserver tes séances de conduite." + pay + "\n\nTu reçois ensuite ton reçu sur WhatsApp." + SIGN;
       return "Bonjour " + prenom(x) + ",\n\nLe délai pour régler le solde de ta formation chez *SODAF Auto-École* est dépassé (*" + F(x.solde) + "*, N° Client : " + CODE(x) + ").\n\nTa place au cours de code en salle est donc *suspendue* : tu peux continuer à réviser en ligne sur autosodaf.com. Dès ton paiement, tu retrouves ta place en salle et nous réservons tes séances de conduite." + pay + SIGN; };
-    const fmtN = (n) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    const fmtN = milliers;
     const calledToday = (x) => !!x.dernier_appel_le && iso(new Date(x.dernier_appel_le)) === iso(new Date());
     const hm = (t) => { const d = new Date(t); return d.getHours() + " h " + pad(d.getMinutes()); };
     // Recherche globale : N° client (SO12 ou 12), téléphone (avec ou sans +228, espaces), ou nom
@@ -3678,7 +3662,7 @@ function init(root) {
     const prevB = $("#sd-clsPrev"), nextB = $("#sd-clsNext"), revB = $("#sd-clsReveal");
     const chs = $$("article.ch");
     let mode = "lecon", items = [], i = 0, shown = false;
-    const esc = (t) => String(t).replace(/[<>&]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" }[c]));
+    const esc = escHtml;
     function lessonSlides(id) {
       const art = root.querySelector("#" + id), idx = chs.indexOf(art);
       const out = ['<div class="cls-title"><p class="cls-kicker">' + esc(art.dataset.part) + " · Chapitre " + (idx + 1) + " / " + chs.length + '</p><h1 class="cls-h1">' + esc(art.dataset.title) + '</h1><div class="cls-bar"></div></div>'];
@@ -3831,7 +3815,7 @@ function init(root) {
   };
   const MAPS = "https://www.google.com/maps/search/?api=1&query=6.168785%2C1.225462";
   const fmtF = (n) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " F";
-  const escI = (t) => String(t == null ? "" : t).replace(/[<>&"]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" }[c]));
+  const escI = escHtml;
   function inscDecode(str) { return JSON.parse(decodeURIComponent(escape(atob(str.replace(/-/g, "+").replace(/_/g, "/"))))); }
   function inscFindUs(aPayer, id) {
     return '<div class="insc-find"><div class="insc-map"><iframe title="Plan : SODAF Auto-École" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=6.168785,1.225462&z=17&output=embed"></iframe></div>' +
