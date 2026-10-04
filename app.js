@@ -854,9 +854,25 @@ label.ex-doc input{position:absolute;left:14px;top:12px;width:20px;height:20px;a
 #sodaf-root [data-ko][aria-pressed="true"]{outline:3px solid var(--ink);outline-offset:2px}
 .pc-callnow{padding-bottom:14px;margin-bottom:14px;border-bottom:2px solid var(--ink)}
 .tm-newins{margin-left:auto;align-self:center;margin-bottom:6px}
-#sodaf-root .tm-newins{background:#E9EDEB;color:var(--ink);border:1.5px solid #C5CFCA;box-shadow:inset 0 2px 5px rgba(0,0,0,.14),inset 0 -1px 0 rgba(255,255,255,.7);font-weight:700}
-#sodaf-root .tm-newins:hover{background:#E1E7E4}
-#sodaf-root .tm-newins:active{box-shadow:inset 0 3px 7px rgba(0,0,0,.2)}
+#sodaf-root .tm-newins{background:#133A6C;color:#fff;border:1.5px solid #0E2A4E;box-shadow:inset 0 2px 6px rgba(0,0,0,.35),inset 0 -1px 0 rgba(255,255,255,.12);font-weight:700}
+#sodaf-root .tm-newins:hover{background:#0E2A4E}
+#sodaf-root .tm-newins:active{box-shadow:inset 0 3px 8px rgba(0,0,0,.45)}
+#sodaf-root .ins-box{background:linear-gradient(160deg,#0E2A4E 0%,#133A6C 100%);color:#fff}
+#sodaf-root .ins-box .eyebrow{color:var(--yellow)}
+#sodaf-root .ins-hd h3{color:#fff}
+#sodaf-root .ins-x{background:rgba(255,255,255,.12);color:#fff}
+#sodaf-root .ins-step{border-color:rgba(255,255,255,.18)}
+#sodaf-root .ins-step legend{color:#fff}#sodaf-root .ins-step legend i{background:var(--yellow);color:#0E2A4E}
+#sodaf-root .ins-box label{color:#D6E2F2}
+#sodaf-root .ins-box input,#sodaf-root .ins-box select{background:#fff;color:var(--ink);border-color:#fff}
+#sodaf-root .ins-box .tel{border-color:#fff;background:#fff}
+#sodaf-root .ins-ft{border-top-color:rgba(255,255,255,.18)}
+#sodaf-root .ins-sum{color:#D6E2F2}
+#sodaf-root .ins-box .tm-err{color:#FFB4AB}
+#sodaf-root .ins-box .btn-green{background:var(--yellow);color:#0E2A4E;border-color:var(--yellow)}
+#sodaf-root .ins-ok{background:rgba(255,255,255,.1)}#sodaf-root .ins-ok small{color:#D6E2F2}
+#sodaf-root .ins-check{background:var(--yellow);color:#0E2A4E}
+#sodaf-root .ins-acts .linkbtn{color:#D6E2F2}
 .ins-ok{display:flex;gap:12px;align-items:center;background:var(--green-soft);border-radius:14px;padding:14px;margin:8px 0 12px}
 .ins-ok b{display:block;font-size:1.05rem}.ins-ok small{color:var(--muted)}
 .ins-check{width:42px;height:42px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-size:1.3rem;font-weight:700;flex-shrink:0}
