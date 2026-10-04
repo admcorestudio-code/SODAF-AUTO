@@ -853,6 +853,22 @@ label.ex-doc input{position:absolute;left:14px;top:12px;width:20px;height:20px;a
 #sodaf-root [data-rappel=""][aria-pressed="true"]{background:var(--green);color:#fff}
 #sodaf-root [data-ko][aria-pressed="true"]{outline:3px solid var(--ink);outline-offset:2px}
 .pc-callnow{padding-bottom:14px;margin-bottom:14px;border-bottom:2px solid var(--ink)}
+.wl-card{background:linear-gradient(135deg,#0F3D2E 0%,#14523C 60%,#1B6B4D 100%);color:#fff;border-radius:18px;padding:22px 22px 16px;box-shadow:0 14px 34px rgba(15,61,46,.22);position:relative;overflow:hidden}
+.wl-card:after{content:"";position:absolute;right:-60px;top:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(255,214,107,.22),transparent 70%)}
+.wl-top{display:flex;gap:14px;align-items:flex-start;position:relative}
+.wl-ico{flex-shrink:0;width:56px;height:56px;border-radius:16px;background:rgba(255,255,255,.12);display:grid;place-items:center;color:#FFD66B}
+.wl-k{margin:0!important;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#FFD66B}
+.wl-top h4{margin:2px 0 4px;font:700 1.35rem var(--f-display);color:#fff}
+.wl-sub{margin:0!important;font-size:.9rem;color:#CFE3D9;max-width:52ch}
+.wl-chips{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 18px;position:relative}
+.wl-chips span{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:.35em .85em;font-size:.82rem;color:#CFE3D9}
+.wl-chips b{color:#fff;font-weight:700;margin-left:4px}
+.wl-act{display:flex;flex-wrap:wrap;gap:14px;align-items:center;position:relative}
+#sodaf-root .wl-btn{display:inline-flex;align-items:center;gap:10px;font-size:1.02rem;padding:.85em 1.4em;border-radius:14px;box-shadow:0 6px 18px rgba(37,211,102,.35)}
+#sodaf-root .wl-act .linkbtn{color:#CFE3D9}
+.wl-act .tm-err{color:#FFB4AB}
+.wl-more{margin-top:14px;position:relative}.wl-more summary{cursor:pointer;font-size:.85rem;color:#CFE3D9;font-weight:600}
+.wl-more textarea{margin-top:8px;width:100%;border-radius:12px;border:0;padding:12px;font:.92rem var(--f-body);color:var(--ink)}
 .se-bar{height:8px;background:#E6EAE8;border-radius:99px;overflow:hidden;margin:2px 0 8px}.se-bar i{display:block;height:100%;background:var(--green);border-radius:99px}
 .se-txt{margin:0 0 6px!important;font-size:.92rem;color:var(--muted)}.se-txt b{color:var(--ink)}
 .se-al{border-radius:10px;padding:10px 12px;font-size:.92rem;margin-top:6px}.se-al .tm-formact{margin-top:8px}
@@ -2941,9 +2957,12 @@ function init(root) {
         (st === "formation" ? '<div><span>Payé</span><b id="sd-pcPaid">…</b></div><div><span>Reste à payer</span><b id="sd-pcRest">…</b></div><div class="wide pc-paylist" id="sd-pcPay"></div>' : "") + "</div>";
       let body = "";
       if (st === "accueil") {
-        body = '<p class="pc-proto">Protocole : envoie le message d\'accueil sur WhatsApp. Le dossier passe tout seul en zone d\'appel.</p>' +
-          '<div class="pc-block"><div class="pc-bh"><b>Message d\'accueil</b>' + (x.accueil_le ? '<span class="pc-ok">✓ Envoyé ' + ago(x.accueil_le) + "</span>" : "") + '</div><textarea id="sd-pcMsg" rows="14">' + esc(msgAccueil(x)) + '</textarea>' +
-          '<div class="tm-formact">' + (n ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-a="sendWelcome" href="' + wa(msgAccueil(x)) + '">Envoyer l\'accueil sur WhatsApp ↗</a>' : '<span class="tm-err">Pas de numéro : ajoute-le avec Modifier.</span>') + '<button class="linkbtn" type="button" data-a="toCall">Passer en zone d\'appel sans envoyer</button></div></div>' ;
+        const CHAT = '<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.3 7.5L3 21l2-5.4A8.5 8.5 0 1 1 21 11.5z"/><path d="M8.5 10.5h7M8.5 13.5h4.5"/></svg>';
+        const hrs = Math.max(0, Math.round((Date.now() - new Date(x.cree_le)) / 36e5)) || 0;
+        body = '<div class="wl-card"><div class="wl-top"><span class="wl-ico">' + CHAT + '</span><div><p class="wl-k">Étape 1 sur 6 · Accueil</p><h4>Souhaite la bienvenue à ' + esc(prenom(x)) + '</h4><p class="wl-sub">Pré-inscription ' + (hrs < 1 ? "il y a moins d'une heure" : hrs < 24 ? "il y a " + hrs + " h" : "il y a " + Math.round(hrs / 24) + " j") + (hrs >= 24 ? " : réponds vite, il attend notre message." : ". Le message part sur son WhatsApp, puis le dossier passe tout seul en zone d'appel.") + '</p></div></div>' +
+          '<div class="wl-chips"><span>N° client <b>' + CODE(x) + '</b></span><span>Formation <b>' + esc(x.formation || "à préciser") + '</b></span><span>Annonce <b>appel très bientôt</b></span></div>' +
+          '<div class="wl-act">' + (n ? '<a class="btn btn-wa wl-btn" target="_blank" rel="noopener" data-a="sendWelcome" href="' + wa(msgAccueil(x)) + '">' + CHAT.replace('width="30" height="30"', 'width="20" height="20"') + 'Envoyer l\'accueil sur WhatsApp</a>' : '<span class="tm-err">Pas de numéro : ajoute-le avec « Modifier la fiche ».</span>') + '<button class="linkbtn" type="button" data-a="toCall">Passer sans envoyer</button></div>' +
+          '<details class="wl-more"><summary>Voir ou modifier le message</summary><textarea id="sd-pcMsg" rows="12">' + esc(msgAccueil(x)) + '</textarea></details></div>';
       } else if (st === "appels") {
         const t = x.appels || 0;
         const IC = (d) => '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + "</svg>";
