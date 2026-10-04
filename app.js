@@ -2567,7 +2567,13 @@ function init(root) {
       const jt = (() => { const a = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789", r = new Uint32Array(8); crypto.getRandomValues(r); return [...r].map((n) => a[n % a.length]).join(""); })();
       const longLink = "https://autosodaf.com/#recu-" + rcEncode(d), link = "https://autosodaf.com/#recu-" + no + "-" + jt;
       const isEx = /examen/i.test(d.motif), sp = (v) => fmt(v).replace(/[\u202F\u00A0]/g, " ");
-      const mkMsg = (lk) => "Bonjour " + eleve.split(" ")[0] + ",\n\nMerci pour ton paiement. Voici ton *reçu officiel SODAF Auto-École*.\n\n*TON REÇU*\n• N° : " + no + "\n• Montant : " + sp(montant) + "\n• Motif : " + d.motif + "\n• Reste à payer : " + (isEx || d.reste === 0 ? "soldé ✓" : d.reste > 0 ? sp(d.reste) : "—") + "\n\nVoir et télécharger ton reçu :\n" + lk + "\n\nGarde-le précieusement " + (isEx ? "jusqu'au résultat de ton examen." : "jusqu'à la fin de ta formation.") + (!isEx && d.reste > 0 ? "\n\n*TON SOLDE : " + sp(d.reste) + "*\nTu as *2 semaines* pour le régler, soit *avant le " + new Date(Date.now() + 14 * 864e5).toLocaleDateString("fr-FR", { day: "numeric", month: "long" }) + "*.\n• D'ici là, tu suis les cours de code en salle avec le moniteur.\n• Passé ce délai sans paiement, tu continues le code en ligne sur autosodaf.com, jusqu'au règlement.\n• Dès que le solde est réglé, tu retrouves ta place en salle et nous réservons tes séances de conduite." : "") + "\n\n*L'équipe SODAF · L'art de conduire, la force de réussir.*";
+      const mkMsg = (lk) => "Bonjour " + eleve.split(" ")[0] + ",\n\nMerci pour ton paiement. Voici ton *reçu officiel SODAF Auto-École*.\n\n*TON REÇU*\n• N° : " + no + "\n• Montant : " + sp(montant) + "\n• Motif : " + d.motif + "\n• Reste à payer : " + (isEx || d.reste === 0 ? "soldé ✓" : d.reste > 0 ? sp(d.reste) : "—") + "\n\nVoir et télécharger ton reçu :\n" + lk + "\n\nGarde-le précieusement " + (isEx ? "jusqu'au résultat de ton examen." : "jusqu'à la fin de ta formation.") + (!isEx && d.reste > 0 ? "\n\n*TON SOLDE : " + sp(d.reste) + "*\nTu as *2 semaines* pour le régler, soit *avant le " + new Date(Date.now() + 14 * 864e5).toLocaleDateString("fr-FR", { day: "numeric", month: "long" }) + "*.\n• D'ici là, tu suis les cours de code en salle avec le moniteur.\n• Passé ce délai sans paiement, tu continues le code en ligne sur autosodaf.com, jusqu'au règlement.\n• Dès que le solde est réglé, tu retrouves ta place en salle et nous réservons tes séances de conduite." : "") + (!isEx && d.reste === 0 && mk() === "rest" ? soldeOk() : "") + "\n\n*L'équipe SODAF · L'art de conduire, la force de réussir.*";
+      // 2e paiement (solde) : il continue le code en salle et commence la conduite
+      function soldeOk() {
+        const i = (window.TEAM_INFO && window.TEAM_INFO(+($("#sd-rcEid").value || 0))) || { code: true };
+        const code = !i.code ? "" : i.fini ? "\n• *Code* : ton cycle en salle est terminé ; tu peux toujours venir au rattrapage et examen blanc du *mercredi à 14 h 30*, et réviser sur autosodaf.com." : i.susp ? (i.groupe ? "\n• *Code* : ta place au cours de code en salle est *rétablie*, " + i.groupe + "." : "\n• *Code* : tu retrouves une place au cours de code en salle ; nous t'envoyons tes horaires.") : "\n• *Code* : tu continues les cours de code en salle" + (i.groupe ? " avec ton groupe, " + i.groupe : "") + ".";
+        return "\n\n*TA FORMATION EST SOLDÉE*" + code + "\n• *Conduite* : tu peux maintenant *commencer tes séances de conduite*" + (i.quota ? " (" + i.quota + " séances d'une heure prévues dans ta formule)" : "") + ".\n• Pour réserver ta première séance, réponds simplement à ce message ou passe à l'agence : nous choisissons ensemble le créneau qui t'arrange (en semaine de 6 h 30 à 10 h 45 et de 15 h 45 à 17 h 45, le samedi matin).";
+      }
       const mkEx = (lk) => "Bonjour " + eleve.split(" ")[0] + ",\n\nNous avons bien reçu ton *dossier d'examen complet* et ton dépôt. Merci !\n\n*TON REÇU*\n• N° : " + no + "\n• Montant : " + sp(montant) + "\n• Motif : " + d.motif + "\n• Soldé ✓\n\nVoir et télécharger ton reçu :\n" + lk + "\n\n*LA SUITE*\n• SODAF dépose ton dossier auprès de l'État.\n• Tu recevras ensuite un *message officiel* avec la date de ton examen, à passer à *SOTOPLA*.\n• Le jour de l'examen : ta carte d'identité originale et 30 minutes d'avance.\n\nUne question ? Écris-nous ici sur WhatsApp, ou appelle le *+228 72 54 41 66*.\n\nToute l'équipe SODAF te souhaite bonne chance !\n*L'équipe SODAF · L'art de conduire, la force de réussir.*";
       const msg = isEx ? mkEx(link) : mkMsg(link);
       const wa = $("#sd-rcWa");
@@ -3572,7 +3578,10 @@ function init(root) {
       await loadEleves(true); loadMon();
     });
 
-    window.TEAM_ELEVES = () => eleves; window.TEAM_RELOAD_PAY = () => { if (!$('.tm-sec[data-s="paiements"]').hidden) loadPay(); };
+    window.TEAM_ELEVES = () => eleves;
+    // Pour le message du reçu de solde : son groupe de code (ou sa place rétablie) et ses séances de conduite
+    window.TEAM_INFO = (id) => { const x = eleves.find((y) => y.id === id); if (!x) return null; const g = !sansCode(x) && x.groupe_code && gOf(x.groupe_code), sp = susp(x);
+      return { code: !sansCode(x), susp: sp, fini: !!g && !cycleOk(x), groupe: g && cycleOk(x) && (!sp || occ(g.id) < g.places) ? g.nom + " (" + gJours(g) + ", " + g.heure + ")" : null, quota: x.quota }; }; window.TEAM_RELOAD_PAY = () => { if (!$('.tm-sec[data-s="paiements"]').hidden) loadPay(); };
     // ---- Mise à jour automatique : nouvelles pré-inscriptions, inscriptions en ligne… sans recharger la page
     const sig = (x) => x ? JSON.stringify([x.statut, x.nom, x.telephone, x.formation, x.quartier, x.accueil_le, x.appels, x.rappel, x.dossier_envoye_le, x.dossier_relance_le, x.dossier_relances, x.archive_motif, x.archive_le, x.notes, x.dossier, x.web && x.web.id, x.solde, x.examen_etape, x.examen_lien_le, x.examen_paye, x.examen_bordereau_le, x.examen_depose_le, x.examen_resultat, x.examen_passages, x.quota, x.faits, x.resa, x.evaluation, x.groupe_code, x.groupe_depuis, x.groupe_msg_le, x.solde_rappels, x.ins_le]) : "";
     let polling = false;
@@ -4047,27 +4056,30 @@ html:has(#sodaf-root.app-mode),body:has(#sodaf-root.app-mode){background:#ECEFEE
 .pc-gh .gh-t{font-weight:inherit;display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 8px}
 .pc-gh .gh-t small{font-weight:500;letter-spacing:0;text-transform:none;font-size:.78rem;opacity:.85}
 .pc-gh.g-fdue{background:#D7263D;color:#fff;border-left:5px solid #8E0F20;font-size:.84rem}.pc-gh.g-fdue span{color:#8E0F20;font-weight:800}
-.pc-gh.g-fwait{background:#FFF4E8;color:#7A3E06;border-left:5px solid #F08A24;font-size:.8rem}.pc-gh.g-fwait span{font-weight:800}
+.pc-gh.g-fwait{background:#FFF6D6;color:#6B4E00;border-left:5px dashed #E0A400;font-size:.8rem}.pc-gh.g-fwait span{font-weight:800}
 .pc-gh.g-fgrp{background:#E3ECF7;color:#123A6B;border-left:5px solid var(--blue);font-size:.8rem}.pc-gh.g-fgrp span{font-weight:800;color:var(--ink)}
 .pc-gh.g-fcond{background:var(--soft);color:#3D444D;border-left:5px solid #9AA3AB;font-size:.8rem}
 .pc-gh.g-fsus{background:#3D444D;color:#fff;border-left:5px solid #15191E;font-size:.8rem}.pc-gh.g-fsus span{color:var(--ink);font-weight:800}
 .pc-item.i-fdue{border-left-color:#D7263D;background:#FFF6F7}.pc-item.on.i-fdue{background:#FDE7EA}
 .pc-item.i-fsus b{color:#5B636C}
-.t-fdue{background:#D7263D;color:#fff}.t-fsus{background:#3D444D;color:#fff}.t-fwait{background:#FFF4E8;color:#7A3E06}.t-fhor{background:#FFF1C2;color:#6B4E00}.t-fpret{background:var(--green-soft);color:#064D36}.t-feval{background:#E3ECF7;color:#123A6B}.t-ffin{background:#FDE3D6;color:#7A2E0E}
+.t-fdue{background:#D7263D;color:#fff}.t-fsus{background:#3D444D;color:#fff}.t-fwait{background:#FFF6D6;color:#6B4E00}.t-fhor{background:#FFF1C2;color:#6B4E00}.t-fpret{background:var(--green-soft);color:#064D36}.t-feval{background:#E3ECF7;color:#123A6B}.t-ffin{background:#FDE3D6;color:#7A2E0E}
 .pc-gempty{margin:0!important;padding:10px 14px;font-size:.86rem;color:var(--muted);border-bottom:1px solid var(--line);background:#fff}
 #sodaf-root .tm-formact .btn[disabled]{opacity:.55;cursor:not-allowed;box-shadow:none}
 
-/* Couleurs des groupes de code : A bleu, B violet, C sarcelle (matin), D framboise */
-.pc-gh.gc-A{background:#E2ECF9;color:#123F78;border-left:5px solid #1F5FAE}
-.pc-gh.gc-B{background:#EFE6F8;color:#4B2275;border-left:5px solid #7B3FB5}
-.pc-gh.gc-C{background:#DCF1EF;color:#08504C;border-left:5px solid #0B7570}
-.pc-gh.gc-D{background:#F8E3EE;color:#6E1945;border-left:5px solid #B83275}
-.pc-item.ig-A{border-left-color:#1F5FAE}.pc-item.on.ig-A{background:#EEF4FC}
-.pc-item.ig-B{border-left-color:#7B3FB5}.pc-item.on.ig-B{background:#F5EFFB}
-.pc-item.ig-C{border-left-color:#0B7570}.pc-item.on.ig-C{background:#EBF7F6}
-.pc-item.ig-D{border-left-color:#B83275}.pc-item.on.ig-D{background:#FBEFF5}
+/* Couleurs des groupes de code (en-têtes pleins, bien distincts) : A bleu, B orange, C vert sarcelle (matin), D violet */
+.pc-gh.gc-A,.pc-gh.gc-B,.pc-gh.gc-C,.pc-gh.gc-D{color:#fff}
+.pc-gh.gc-A{background:#1F5FAE;border-left:5px solid #0F3A70}
+.pc-gh.gc-B{background:#B45309;border-left:5px solid #7A3604}
+.pc-gh.gc-C{background:#0B7570;border-left:5px solid #054642}
+.pc-gh.gc-D{background:#7B3FB5;border-left:5px solid #4B2275}
+.pc-gh.gc-A small,.pc-gh.gc-B small,.pc-gh.gc-C small,.pc-gh.gc-D small{opacity:.92}
+.pc-fold.gc-A:hover,.pc-fold.gc-B:hover,.pc-fold.gc-C:hover,.pc-fold.gc-D:hover{filter:brightness(1.08)}
+.pc-item.ig-A{border-left-color:#1F5FAE}.pc-item.on.ig-A{background:#EAF1FB}
+.pc-item.ig-B{border-left-color:#B45309}.pc-item.on.ig-B{background:#FDF1E6}
+.pc-item.ig-C{border-left-color:#0B7570}.pc-item.on.ig-C{background:#E6F4F3}
+.pc-item.ig-D{border-left-color:#7B3FB5}.pc-item.on.ig-D{background:#F3ECFA}
 .gb{font-style:normal;font-weight:700;font-size:.74rem;letter-spacing:.02em;padding:.05em .5em;border-radius:6px;color:#fff!important;background:#5B6B7D;white-space:nowrap;text-transform:none}
-.gb-A{background:#1F5FAE}.gb-B{background:#7B3FB5}.gb-C{background:#0B7570}.gb-D{background:#B83275}
+.gb-A{background:#1F5FAE}.gb-B{background:#B45309}.gb-C{background:#0B7570}.gb-D{background:#7B3FB5}
 .pc-bh .gb{font-size:.78rem;margin-left:6px;vertical-align:1px}
 .gdot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:7px;padding:0}
 .pc-fold.g-fgrp,.pc-fold.g-fcond,.pc-fold.g-fsus{padding:9px 14px}
