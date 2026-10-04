@@ -853,6 +853,12 @@ label.ex-doc input{position:absolute;left:14px;top:12px;width:20px;height:20px;a
 #sodaf-root [data-rappel=""][aria-pressed="true"]{background:var(--green);color:#fff}
 #sodaf-root [data-ko][aria-pressed="true"]{outline:3px solid var(--ink);outline-offset:2px}
 .pc-callnow{padding-bottom:14px;margin-bottom:14px;border-bottom:2px solid var(--ink)}
+.se-bar{height:8px;background:#E6EAE8;border-radius:99px;overflow:hidden;margin:2px 0 8px}.se-bar i{display:block;height:100%;background:var(--green);border-radius:99px}
+.se-txt{margin:0 0 6px!important;font-size:.92rem;color:var(--muted)}.se-txt b{color:var(--ink)}
+.se-al{border-radius:10px;padding:10px 12px;font-size:.92rem;margin-top:6px}.se-al .tm-formact{margin-top:8px}
+.se-ok{background:#E8F5EE;border:1px solid #9BD3B4}.se-warn{background:#FFF4E8;border:1px solid #F5C08A}.se-info{background:#EEF3FB;border:1px solid #AFC4E6}
+.se-num{font-style:normal;font-size:.75rem;font-weight:700;color:var(--green);background:#E8F5EE;border-radius:99px;padding:.1em .6em;margin-left:4px}.se-num.hot{color:#B45309;background:#FFF4E8}
+.se-mev{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:6px}.se-mev span{font-size:.85rem;font-weight:700;color:#B45309;flex-basis:100%}
 .gc-bar{background:#F3F6F4;border-bottom:1px solid var(--line);padding:10px 12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
 .gc-chips{display:flex;flex-wrap:wrap;gap:6px}
 .gc-chip{display:flex;flex-direction:column;background:#fff;border:1.5px solid var(--green);border-radius:10px;padding:4px 10px;font-size:.84rem;line-height:1.25}
@@ -2675,13 +2681,28 @@ function init(root) {
     let GROUPES = [], gMan = false, monIdx = 0;
     const sansCode = (x) => /Remise à niveau|entreprise/i.test(x.formation || "");
     const enCode = (x) => etapeOf(x) === "formation" && !sansCode(x);
-    const occ = (gid) => eleves.filter((x) => x.groupe_code === gid && enCode(x)).length;
+    const occ = (gid) => eleves.filter((x) => x.groupe_code === gid && enCode(x) && (!x.groupe_depuis || Date.now() - new Date(x.groupe_depuis) < 42 * 864e5)).length;
     const JN = ["", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"];
     const gJours = (g) => g.jours.map((d) => JN[d]).join(" et ");
     const gHeure = (g) => g.heure.split(" – ")[0];
     const gOf = (id) => GROUPES.find((g) => g.id === id);
     const gLibre = () => GROUPES.filter((g) => g.actif).sort((a, b) => a.ordre - b.ordre).find((g) => occ(g.id) < g.places);
     const attente = () => eleves.filter((x) => enCode(x) && !x.groupe_code);
+    // ---- Séances de conduite par formule (calculées depuis les reçus, comme dans la base)
+    const quotaF = (f) => !f ? null : /remise/i.test(f) ? 4 : /pack/i.test(f) ? 18 : /courte/i.test(f) ? 6 : /moto|^permis a/i.test(f) ? 6 : /théorique/i.test(f) ? 0 : /complète|accélérée/i.test(f) ? 12 : null;
+    const attach = (r, pr, cr) => {
+      const SL = {}, INS = {}, PLUS = {}, FA = {}, RE = {}, td = iso(new Date());
+      (pr || []).forEach((p) => { if (p.reste !== null && p.reste !== undefined) SL[p.eleve_id] = p.reste; if (/^Droit d'inscription/.test(p.motif || "")) INS[p.eleve_id] = p.formation; if (p.motif === "Séance de conduite supplémentaire") PLUS[p.eleve_id] = (PLUS[p.eleve_id] || 0) + Math.max(1, Math.round((p.montant || 5000) / 5000)); });
+      (cr || []).forEach((c) => { if (c.statut === "Fait") FA[c.eleve_id] = (FA[c.eleve_id] || 0) + 1; else if (c.statut === "Réservé" && c.jour >= td) RE[c.eleve_id] = (RE[c.eleve_id] || 0) + 1; });
+      r.forEach((x) => { x.solde = x.id in SL ? SL[x.id] : null; x.formule = INS[x.id] || null; const q = quotaF(INS[x.id]); x.quota = q === null ? null : q + (PLUS[x.id] || 0); x.plus = PLUS[x.id] || 0; x.faits = FA[x.id] || 0; x.resa = RE[x.id] || 0; });
+    };
+    const PAY_Q = "paiements?select=eleve_id,reste,cree_le,motif,formation,montant&annule=is.false&eleve_id=not.is.null&order=cree_le.asc&limit=10000";
+    const CR_Q = "creneaux_conduite?select=eleve_id,statut,jour&eleve_id=not.is.null&statut=in.(Fait,Réservé)&limit=20000";
+    const evalAt = (x) => (x.quota ? Math.max(1, x.quota - 2) : null);
+    const seEtat = (x) => x.evaluation === "pret" ? "pret" : x.quota === null ? "cours" : x.evaluation === "plus" || x.faits >= x.quota ? "fin" : x.faits >= evalAt(x) ? "eval" : "cours";
+    const plein = (x) => x.quota !== null && x.faits + x.resa >= x.quota;
+    const cycleOk = (x) => !x.groupe_depuis || Date.now() - new Date(x.groupe_depuis) < 42 * 864e5;
+    const msgPlus = (x) => "Bonjour " + prenom(x) + ",\n\nTu as fait les *" + x.faits + " séances de conduite* prévues dans ta formule. Ton moniteur te conseille quelques séances de plus avant l'examen, pour que tu sois vraiment à l'aise le jour J.\n\n*SÉANCE EN PLUS* : 5 000 F l'heure (tu choisis combien)." + (CFG.mixx_numero ? "\n\nTu peux payer à l'agence ou par *Mixx by Yas* au " + CFG.mixx_numero + (CFG.mixx_nom ? " (" + CFG.mixx_nom + ")" : "") + ", motif *" + CODE(x) + " SEANCE*, puis nous envoyer la capture du SMS ici." : "\n\nTu peux payer à l'agence aux heures de bureau.") + "\n\nDès le paiement, nous réservons tes séances." + SIGN;
     const msgGroupe = (x) => { const g = gOf(x.groupe_code); return "Bonjour " + prenom(x) + ",\n\nVoici tes horaires de *cours de code en salle* chez SODAF Auto-École.\n\n*TON GROUPE : " + g.nom.toUpperCase() + "*\n• " + gJours(g).replace(/^./, (c) => c.toUpperCase()) + " : " + g.heure + "\n• Mercredi 14 h 30 : rattrapage et examen blanc (si tu as manqué un cours, ou pour t'entraîner)\n\nLa salle compte 6 places : merci d'arriver à l'heure. Tu peux aussi réviser à tout moment sur autosodaf.com (cours, quiz et devoir de la semaine).\n\nUn empêchement ? Préviens-nous en répondant à ce message." + SIGN; };
     const PRIXM = { "Permis B": "55 000 F la formation complète (formule courte 35 000 F, accélérée 75 000 F en 2 mois ou 80 000 F en 1 mois)", "Permis A": "30 000 F", "Pack A + B": "80 000 F", "Remise à niveau": "20 000 F", "Formation entreprise": "sur devis, selon le nombre de chauffeurs" };
     const jours = (d) => Math.floor((Date.now() - new Date(d)) / 864e5);
@@ -2753,7 +2774,7 @@ function init(root) {
         if (w) await run(() => DB.q("inscriptions_web?id=eq." + w.id, { method: "PATCH", body: { statut: "Vérifié" }, prefer: "return=minimal" }));
         const extra = w ? { nom: (w.prenoms + " " + w.nom).trim(), nom_famille: w.nom, prenoms: w.prenoms, telephone: w.telephone || x.telephone, quartier: w.quartier || x.quartier } : {};
         const gl = sansCode(x) || x.groupe_code ? null : gLibre();
-        if (gl) extra.groupe_code = gl.id;
+        if (gl) { extra.groupe_code = gl.id; extra.groupe_depuis = new Date().toISOString(); }
         if (await patchEl(x, Object.assign({ statut: "En formation", rappel: null }, extra), "Reçu enregistré : il passe en formation" + (sansCode(x) ? "" : gl ? " · " + gl.nom : x.groupe_code ? "" : " · liste d'attente du code (groupes complets)"), ["Étape", "En formation (reçu d'inscription" + (w ? ", " + (w.mode === "mixx" ? "Mixx vérifié" : "payé à l'agence") : "") + ")"])) { delete pendWeb[x.id]; x.web = null; }
       } else if (dt.motif === "examen" && x.examen_etape === "pret") {
         const le = new Date().toISOString(), docs = {}; PX.forEach((p) => (docs[p[0]] = { main: true, le }));
@@ -2766,11 +2787,11 @@ function init(root) {
       sub("eleves"); pcSel = null; await loadEleves(true); $("#sd-pc").scrollIntoView({ block: "start" });
     });
     async function loadEleves(silent) {
-      const [r, wb, pr, gr] = await Promise.all([run(() => DB.q("eleves?select=*&order=cree_le.desc&limit=2000")), run(() => DB.q("inscriptions_web?select=*&order=le.desc&limit=2000")), run(() => DB.q("paiements?select=eleve_id,reste,cree_le&annule=is.false&reste=not.is.null&eleve_id=not.is.null&order=cree_le.asc&limit=5000")), run(() => DB.q("groupes_code?select=*&order=ordre"))]);
+      const [r, wb, pr, gr, cr] = await Promise.all([run(() => DB.q("eleves?select=*&order=cree_le.desc&limit=2000")), run(() => DB.q("inscriptions_web?select=*&order=le.desc&limit=2000")), run(() => DB.q(PAY_Q)), run(() => DB.q("groupes_code?select=*&order=ordre")), run(() => DB.q(CR_Q))]);
       if (!r) return; if (gr) GROUPES = gr;
       const W = {}; (wb || []).forEach((w) => { if (!W[w.eleve_id]) W[w.eleve_id] = w; });
-      const SL = {}; (pr || []).forEach((p) => (SL[p.eleve_id] = p.reste));
-      r.forEach((x) => { x.web = W[x.id] && W[x.id].statut === "Nouveau" ? W[x.id] : null; x.solde = x.id in SL ? SL[x.id] : null; });
+      attach(r, pr, cr);
+      r.forEach((x) => { x.web = W[x.id] && W[x.id].statut === "Nouveau" ? W[x.id] : null; });
       eleves = r; // remplacé d'un coup, déjà complet (solde compris)
       const nb = eleves.filter((x) => x.statut === "Nouveau").length + eleves.filter((x) => x.web && x.web.mode === "mixx" && etapeOf(x) === "dossier").length;
       $("#sd-cntNew").textContent = nb ? nb : "";
@@ -2797,7 +2818,7 @@ function init(root) {
       if (stage === "accueil") return [["À accueillir", list.slice().sort((a, b) => (a.cree_le < b.cree_le ? -1 : 1))]];
       if (stage === "appels") { const o = (a) => a.filter((x) => !calledToday(x)).concat(a.filter(calledToday)); return [["À appeler · 1er appel", o(list.filter((x) => !x.rappel)), "first"], ["Rappeler le matin", o(list.filter((x) => x.rappel === "matin")), "matin"], ["Rappeler l'après-midi", o(list.filter((x) => x.rappel === "apres-midi")), "am"]]; }
       if (stage === "dossier") return [["Paiement Mixx à vérifier", list.filter((x) => x.web && x.web.mode === "mixx"), "verif"], ["Viendra payer à l'agence", list.filter((x) => agence(x) && dosAge(x) < 5), "agence"], ["À relancer · 5 jours sans nouvelles", list.filter((x) => (!x.web || agence(x)) && dosAge(x) >= 5), "late"], ["En attente", list.filter((x) => !x.web && dosAge(x) < 5), "wait"]];
-      if (stage === "formation") return [["Solde à payer · pas de conduite", list.filter(doit), "fdue"], ["Formation soldée", list.filter((x) => !doit(x)), "fok"]];
+      if (stage === "formation") { const ok = list.filter((x) => !doit(x)); return [["Solde à payer · pas de conduite", list.filter(doit), "fdue"], ["Prêt pour l'examen", ok.filter((x) => seEtat(x) === "pret"), "fpret"], ["Séances terminées · séances en plus ?", ok.filter((x) => seEtat(x) === "fin"), "ffin"], ["Évaluation à faire", ok.filter((x) => seEtat(x) === "eval"), "feval"], ["En cours de formation", ok.filter((x) => seEtat(x) === "cours"), "fok"]]; }
       if (stage === "examen") return [["Dossier complet à apporter", list.filter((x) => x.examen_etape === "pret"), "xpret"], ["Dossier reçu · à déposer", list.filter((x) => x.examen_etape === "complet"), "xcomplet"], ["Déposé · résultat à noter", list.filter((x) => ["depose", "convoque"].includes(x.examen_etape)), "xdepose"]];
       const ko = (x) => x.statut === "Abandon" && x.examen_resultat === "echoue";
       return [["Permis obtenu", list.filter((x) => x.statut === "Permis obtenu"), "xok"], ["Permis échoué", list.filter(ko), "xko"]].concat([["Formation terminée", "afin"], ["Plus tard", "aplus"], ["Injoignable", "ainj"], ["Rétractation", "aretr"], ["Faux numéro", "afaux"]].map((m) => [m[0], list.filter((x) => x.archive_motif === m[0] && !ko(x)), m[1]])).concat([["Sans motif", list.filter((x) => !x.archive_motif && x.statut !== "Permis obtenu" && !ko(x)), "asans"]]);
@@ -2808,7 +2829,7 @@ function init(root) {
       $$("#sd-pcStages button").forEach((b) => { const n = eleves.filter((x) => etapeOf(x) === b.dataset.st).length; b.querySelector("em").textContent = n; b.setAttribute("aria-selected", b.dataset.st === pcStage); });
       const sg = () => pcStage;
       const list = eleves.filter((x) => etapeOf(x) === pcStage && (!q || trouve(x, q)));
-      const fold = foldState(), TAG = { first: "1er appel", matin: "Matin", am: "Après-midi", late: "À relancer", wait: "En attente", verif: "Mixx à vérifier", agence: "Vient à l'agence", xpret: "À apporter", xcomplet: "À déposer", xdepose: "Déposé", xconvoque: "Convoqué", xok: "Permis ✓", xko: "Échoué", fdue: "Solde dû", fok: "Soldé" };
+      const fold = foldState(), TAG = { first: "1er appel", matin: "Matin", am: "Après-midi", late: "À relancer", wait: "En attente", verif: "Mixx à vérifier", agence: "Vient à l'agence", xpret: "À apporter", xcomplet: "À déposer", xdepose: "Déposé", xconvoque: "Convoqué", xok: "Permis ✓", xko: "Échoué", fdue: "Solde dû", fok: "En cours", fpret: "Prêt", ffin: "Séances finies", feval: "À évaluer" };
       const canFold = (g) => ["matin", "am", "xdepose"].includes(g[2]) || pcStage === "archives";
       const isOpen = (g) => !canFold(g) || !!q || fold[g[2]];
       const ST_LAB = { accueil: "Accueil", appels: "Appels", dossier: "Paiement en attente", formation: "En formation", examen: "Dépôt d'examen", archives: "Archivés" };
@@ -2820,7 +2841,7 @@ function init(root) {
         ? '<button type="button" class="pc-gh pc-fold g-' + g[2] + '" data-fold="' + g[2] + '" aria-expanded="' + isOpen(g) + '"><i aria-hidden="true">▸</i>' + esc(g[0]) + " <span>" + g[1].length + "</span></button>"
         : '<p class="pc-gh' + (g[2] ? " g-" + g[2] : "") + '">' + esc(g[0]) + " <span>" + g[1].length + "</span></p>") + (isOpen(g) ? g[1].map((x) =>
         '<button type="button" class="pc-item' + (g[2] ? " i-" + g[2] : "") + (sg(x) === "appels" && calledToday(x) ? " i-done" : "") + (x.id === pcSel ? " on" : "") + '" data-id="' + x.id + '"><b>' + esc(x.nom) + (g[2] && TAG[g[2]] ? ' <em class="pc-tag t-' + g[2] + '">' + TAG[g[2]] + "</em>" : "") + '</b><span>' + esc((x.telephone || "").replace("+228", "+228 ")) + (x.formation ? " · " + esc(x.formation) : "") + "</span><small>" + CODE(x) + " · " +
-        (sg(x) === "accueil" ? (x.accueil_le ? "accueil envoyé ✓" : "arrivé " + ago(x.cree_le)) : sg(x) === "appels" ? (x.appels ? x.appels + "X sans réponse" : "pas encore appelé") + (calledToday(x) ? " · appelé à " + hm(x.dernier_appel_le) : "") : sg(x) === "dossier" ? (x.web ? (x.web.mode === "mixx" ? "a payé " + F(x.web.a_payer) + " par Mixx " : "paiera " + F(x.web.a_payer) + " à l'agence · ") + ago(x.web.le) : "message envoyé " + ago(x.dossier_envoye_le)) + (x.dossier_relances ? " · relance " + x.dossier_relances + "/4 " + ago(x.dossier_relance_le) : "") : sg(x) === "examen" ? exLine(x) : sg(x) === "archives" ? (x.examen_resultat === "echoue" && x.statut === "Abandon" ? "examen à repasser · " + (x.examen_passages || 1) + (x.examen_passages > 1 ? " échecs" : " échec") : x.statut === "Permis obtenu" ? "permis obtenu" + (x.examen_date ? " le " + dFr(x.examen_date) : "") : "archivé " + (x.archive_le ? ago(x.archive_le) : "")) : sg(x) === "formation" ? soldeTxt(x) + (sansCode(x) ? "" : x.groupe_code ? " · groupe " + x.groupe_code : " · attente code") : esc(x.statut)) + "</small></button>").join("") : "")).join("");
+        (sg(x) === "accueil" ? (x.accueil_le ? "accueil envoyé ✓" : "arrivé " + ago(x.cree_le)) : sg(x) === "appels" ? (x.appels ? x.appels + "X sans réponse" : "pas encore appelé") + (calledToday(x) ? " · appelé à " + hm(x.dernier_appel_le) : "") : sg(x) === "dossier" ? (x.web ? (x.web.mode === "mixx" ? "a payé " + F(x.web.a_payer) + " par Mixx " : "paiera " + F(x.web.a_payer) + " à l'agence · ") + ago(x.web.le) : "message envoyé " + ago(x.dossier_envoye_le)) + (x.dossier_relances ? " · relance " + x.dossier_relances + "/4 " + ago(x.dossier_relance_le) : "") : sg(x) === "examen" ? exLine(x) : sg(x) === "archives" ? (x.examen_resultat === "echoue" && x.statut === "Abandon" ? "examen à repasser · " + (x.examen_passages || 1) + (x.examen_passages > 1 ? " échecs" : " échec") : x.statut === "Permis obtenu" ? "permis obtenu" + (x.examen_date ? " le " + dFr(x.examen_date) : "") : "archivé " + (x.archive_le ? ago(x.archive_le) : "")) : sg(x) === "formation" ? (doit(x) ? soldeTxt(x) : x.quota !== null ? x.faits + "/" + x.quota + " séances" + (x.resa ? " (+" + x.resa + " réservée" + (x.resa > 1 ? "s" : "") + ")" : "") : soldeTxt(x)) + (sansCode(x) ? "" : x.groupe_code ? (cycleOk(x) ? " · groupe " + x.groupe_code : " · code terminé") : " · attente code") : esc(x.statut)) + "</small></button>").join("") : "")).join("");
       const ailleurs = q && !list.length ? Object.keys(ST_LAB).map((k) => [k, eleves.filter((x) => etapeOf(x) === k && trouve(x, q)).length]).filter((t) => t[1]) : [];
       $("#sd-pcList").innerHTML = (q && !list.length) ? '<p class="tm-empty">Aucun client trouvé dans « ' + ST_LAB[pcStage] + " » pour « " + esc(q) + " »." + (ailleurs.length ? '<span class="pc-else">Trouvé ailleurs : ' + ailleurs.map((t) => '<button class="linkbtn" type="button" data-goto="' + t[0] + '">' + ST_LAB[t[0]] + " (" + t[1] + ")</button>").join(" ") + "</span>" : " Vérifie le N° client (SO12) ou le numéro de téléphone.") + "</p>" : html || '<p class="tm-empty">' + ({ accueil: "Aucune nouvelle pré-inscription. Elles arrivent ici toutes seules depuis le site.", appels: "Personne à appeler pour l'instant.", dossier: "Aucun dossier en attente. Après un appel, « Envoyer le lien d'inscription » les range ici.", formation: "Aucun élève en formation pour l'instant.", examen: "Aucun élève à l'étape examen. Quand un élève termine sa formation, touche « Formation terminée : passer à l'examen » sur sa fiche.", archives: "Aucun dossier archivé." }[pcStage]) + "</p>";
       if (!q && pcStage === "formation" && GROUPES.length) {
@@ -2966,7 +2987,12 @@ function init(root) {
           (sansCode(x) ? "" : '<div class="pc-block"><div class="pc-bh"><b>Cours de code en salle</b>' + (x.groupe_code ? "" : '<span class="pc-waittag">Liste d\'attente</span>') + '</div><div class="gc-pick"><select data-a="groupe" aria-label="Groupe de code"><option value="">Liste d\'attente</option>' +
             GROUPES.filter((g) => g.actif || g.id === x.groupe_code).map((g) => { const o = occ(g.id), mine = g.id === x.groupe_code, full = !mine && o >= g.places; return '<option value="' + g.id + '"' + (mine ? " selected" : full ? " disabled" : "") + ">" + esc(g.nom) + " · " + gJours(g) + " · " + gHeure(g) + " · " + o + "/" + g.places + (full ? " (complet)" : "") + "</option>"; }).join("") + "</select>" +
             (x.groupe_code && n && gOf(x.groupe_code) ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-a="sendGroupe" href="' + wa(msgGroupe(x)) + '">Envoyer ses horaires ↗</a>' : "") + "</div>" +
-            '<p class="tm-note" style="margin:8px 0 0!important">' + (x.groupe_code ? "Il vient à ses 2 cours par semaine, et le mercredi en rattrapage s'il en a manqué un." : "Tous les groupes sont complets : il révise en ligne et prend la première place libre (choisis son groupe ici dès qu'une place se libère).") + "</p></div>") +
+            '<p class="tm-note" style="margin:8px 0 0!important">' + (x.groupe_code && !cycleOk(x) ? "Cycle de 6 semaines terminé" + (x.groupe_depuis ? " (commencé le " + dFr(x.groupe_depuis) + ")" : "") + " : sa place est libérée. Il révise en ligne et peut venir au rattrapage du mercredi. Pour un nouveau cycle, choisis à nouveau son groupe." : x.groupe_code ? "Cycle de code : semaine " + Math.min(6, Math.floor((Date.now() - new Date(x.groupe_depuis || Date.now())) / (7 * 864e5)) + 1) + " sur 6. Il vient à ses 2 cours par semaine, et le mercredi en rattrapage s'il en a manqué un." : "Tous les groupes sont complets : il révise en ligne et prend la première place libre (choisis son groupe ici dès qu'une place se libère).") + "</p></div>") +
+          (x.quota !== null ? (() => { const q = x.quota, f = x.faits, et = seEtat(x), ea = evalAt(x), pct = q ? Math.min(100, Math.round((f / q) * 100)) : 100, rest = Math.max(0, q - f - x.resa);
+            const al = et === "pret" ? '<div class="se-al se-ok"><b>Le moniteur le juge prêt' + (x.evaluation_le ? " (" + dFr(x.evaluation_le) + ")" : "") + '.</b> Prochaine étape : « Formation terminée : passer à l\'examen » (plus bas).</div>'
+              : et === "fin" ? '<div class="se-al se-warn"><b>' + (x.evaluation === "plus" ? "Le moniteur conseille des séances en plus." : "Toutes ses séances prévues sont faites.") + '</b> Prochaine étape : lui proposer des séances en plus (5 000 F l\'heure), ou le passer à l\'examen s\'il est prêt.<div class="tm-formact">' + (n ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-a="relPlus" href="' + wa(msgPlus(x)) + '">Proposer des séances en plus ↗</a>' : "") + '<button class="btn btn-green btn-sm" type="button" data-a="rcPlus">Séance payée ? Faire le reçu</button>' + (x.evaluation !== "pret" ? '<button class="linkbtn" type="button" data-ev="pret">Il est prêt quand même</button>' : "") + "</div></div>"
+              : et === "eval" ? '<div class="se-al se-info"><b>Évaluation à faire : ' + f + " séances sur " + q + ".</b> Après la séance " + ea + ", le moniteur dit s'il est prêt pour l'examen ou s'il lui faut des séances en plus." + '<div class="tm-formact"><button class="btn btn-line btn-sm" type="button" data-ev="pret">Prêt pour l\'examen</button><button class="btn btn-line btn-sm" type="button" data-ev="plus">Séances en plus conseillées</button></div></div>' : "";
+            return '<div class="pc-block"><div class="pc-bh"><b>Séances de conduite · ' + esc(x.formule || x.formation || "") + '</b><span class="tm-note" style="margin:0!important">' + q + " prévues" + (x.plus ? " (dont " + x.plus + " en plus)" : "") + '</span></div><div class="se-bar"><i style="width:' + pct + '%"></i></div><p class="se-txt"><b>' + f + " / " + q + "</b> faites · " + x.resa + " réservée" + (x.resa > 1 ? "s" : "") + " · " + rest + " à réserver" + (ea && f < ea && et === "cours" ? " · évaluation à la séance " + ea : "") + "</p>" + al + "</div>"; })() : "") +
           '<div class="pc-block"><div class="pc-bh"><b>Conduite</b></div><div id="sd-pcDrive"><p class="tm-note">Chargement…</p></div></div>' +
           (/Permis|Pack/.test(x.formation || "") ? '<div class="pc-block pc-fin"><div class="pc-bh"><b>Fin de formation</b>' + (x.examen_passages ? '<span class="tm-note" style="margin:0!important">' + (x.examen_passages + 1) + 'e passage</span>' : "") + '</div><p class="tm-note" style="margin:0 0 10px!important">Quand l\'élève a terminé (ou qu\'il lui reste 1 ou 2 séances), passe-le à l\'étape examen, puis envoie-lui le message des papiers et du dépôt de 30 000 F (bouton en haut).</p><div class="tm-formact">' + (due ? '<button class="btn btn-sm" type="button" disabled>Formation terminée : passer à l\'examen →</button><span class="tm-note" style="margin:0!important">D\'abord solder la formation.</span>' : '<button class="btn btn-green btn-sm" type="button" data-a="toExam">Formation terminée : passer à l\'examen →</button>') + '</div></div>' : '<div class="pc-block pc-fin"><div class="pc-bh"><b>Fin de formation</b></div><p class="tm-note" style="margin:0 0 10px!important">Cette formation n\'a pas d\'examen d\'État. Quand elle est terminée, range le dossier dans les archives « Formation terminée ».</p><div class="tm-formact">' + (due ? '<button class="btn btn-sm" type="button" disabled>Formation terminée</button><span class="tm-note" style="margin:0!important">D\'abord solder la formation.</span>' : '<button class="btn btn-green btn-sm" type="button" data-a="finForm">Formation terminée</button>') + '</div></div>');
       } else if (st === "examen") {
@@ -3008,6 +3034,8 @@ function init(root) {
     }
     $("#sd-pcDetail").addEventListener("click", async (e) => {
       const x = eleves.find((y) => y.id === pcSel); if (!x) return;
+      const evb = e.target.closest("[data-ev]");
+      if (evb) { const v = evb.dataset.ev; if (await patchEl(x, { evaluation: v, evaluation_le: new Date().toISOString() }, v === "pret" ? "Noté : prêt pour l'examen" : "Noté : séances en plus conseillées", ["Note", v === "pret" ? "Évaluation : prêt pour l'examen" : "Évaluation : séances en plus conseillées"])) renderList(true); return; }
       const a = e.target.closest("[data-a]"), ar = e.target.closest("[data-arch]"), rp = e.target.closest("[data-rappel]");
       if (ar) { confirmBtn(ar, () => archive(x, ar.dataset.arch)); return; }
       const ko = e.target.closest("[data-ko]");
@@ -3032,6 +3060,8 @@ function init(root) {
       }
       else if (k === "webReject") { const w = x.web; if (!w) return; confirmBtn(a, async () => { const ok = await run(() => DB.q("inscriptions_web?id=eq." + w.id, { method: "PATCH", body: { statut: "Rejeté" }, prefer: "return=minimal" }), "Paiement marqué introuvable"); if (ok) { await addSuivi(x, "Note", "Paiement Mixx introuvable (" + F(w.a_payer) + (w.mixx_ref ? ", réf. " + w.mixx_ref : "") + "). Contacter l'élève."); x.web = null; renderList(); } }); }
       else if (k === "rcSolde") { if (window.__sodafRcFill) { sub("paiements"); window.__sodafRcFill(x, x.solde ? { formation: x.formation || "", motif: "rest", mode: "Espèces", note: "" } : null); } }
+      else if (k === "relPlus") { await addSuivi(x, "Note", "Proposition de séances en plus envoyée"); toast("Proposition envoyée"); }
+      else if (k === "rcPlus") { if (window.__sodafRcFill) { sub("paiements"); window.__sodafRcFill(x, { formation: x.formule || x.formation || "", motif: "seance", mode: "Espèces", note: "" }); } }
       else if (k === "sendGroupe") { await addSuivi(x, "Note", "Horaires de code envoyés (" + x.groupe_code + ")"); toast("Horaires envoyés"); }
       else if (k === "relSolde") { await addSuivi(x, "Note", "Rappel du solde envoyé (" + F(x.solde) + ")"); toast("Rappel du solde envoyé"); }
       else if (k === "rc") { if (window.__sodafRcFill) { sub("paiements"); window.__sodafRcFill(x); } }
@@ -3055,7 +3085,7 @@ function init(root) {
       const x = eleves.find((y) => y.id === pcSel); if (!x) return;
       const pc = e.target.closest("[data-piece]");
       if (pc) { const d = Object.assign({}, x.dossier || {}); d[pc.dataset.piece] = pc.checked; await patchEl(x, { dossier: d }, "Dossier mis à jour"); return; }
-      if (e.target.matches('[data-a="groupe"]')) { const v = e.target.value || null, g = v && gOf(v); if (await patchEl(x, { groupe_code: v }, v ? "Placé dans le " + g.nom : "Mis en liste d'attente", ["Note", v ? "Groupe de code : " + g.nom : "Groupe de code : liste d'attente"])) renderList(true); return; }
+      if (e.target.matches('[data-a="groupe"]')) { const v = e.target.value || null, g = v && gOf(v); if (await patchEl(x, { groupe_code: v, groupe_depuis: v ? new Date().toISOString() : null }, v ? "Placé dans le " + g.nom : "Mis en liste d'attente", ["Note", v ? "Groupe de code : " + g.nom : "Groupe de code : liste d'attente"])) renderList(true); return; }
       if (e.target.matches('[data-a="statut"]')) { if (await patchEl(x, { statut: e.target.value }, "Statut enregistré", ["Étape", e.target.value])) renderList(); }
     });
     const FORMS = [...$$("#sd-elFo option")].map((o) => o.textContent);
@@ -3115,7 +3145,7 @@ function init(root) {
         const el = eleves.find((x) => x.id === c.eleve_id), n = el ? waNum(el.telephone) : "";
         const conf = el && n && c.statut === "Réservé" ? "https://wa.me/228" + n + "?text=" + encodeURIComponent(msgSeance(el, c)) : "";
         const rap = el && n && c.statut === "Réservé" && c.jour === tomorrow ? "https://wa.me/228" + n + "?text=" + encodeURIComponent(msgRappelSeance(el, c)) : "";
-        return '<div class="tm-row st-' + c.statut.normalize("NFD").replace(/[^a-z]/gi, "").toLowerCase() + '" data-id="' + c.id + '"><div class="tm-time">' + esc(c.heure) + '</div><div class="tm-main"><select data-el aria-label="Élève"><option value="">— Créneau libre —</option>' + actifs.map((x) => '<option value="' + x.id + '"' + (x.id === c.eleve_id ? " selected" : doit(x) ? " disabled" : "") + ">" + esc(x.nom) + (doit(x) && x.id !== c.eleve_id ? " · solde non payé" : "") + "</option>").join("") + (el && !actifs.includes(el) ? '<option value="' + el.id + '" selected>' + esc(el.nom) + "</option>" : "") + '</select>' + (c.note ? "<small>" + esc(c.note) + "</small>" : "") + '</div><div class="tm-acts"><select data-cs aria-label="Statut">' + CST.map((t) => "<option" + (t === c.statut ? " selected" : "") + ">" + t + "</option>").join("") + "</select>" + (conf ? (c.confirme_le ? '<span class="cd-done">✓ Élève prévenu</span><a class="linkbtn" target="_blank" rel="noopener" data-cf="confirme_le" href="' + conf + '">Renvoyer</a>' : '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-cf="confirme_le" href="' + conf + '">Prévenir l\'élève ↗</a>') : "") + (rap ? (c.rappel_le ? '<span class="cd-done">✓ Rappel envoyé</span>' : '<a class="btn btn-yellow btn-sm" target="_blank" rel="noopener" data-cf="rappel_le" href="' + rap + '">Rappel de la veille ↗</a>') : "") + "</div></div>";
+        return '<div class="tm-row st-' + c.statut.normalize("NFD").replace(/[^a-z]/gi, "").toLowerCase() + '" data-id="' + c.id + '"><div class="tm-time">' + esc(c.heure) + '</div><div class="tm-main"><select data-el aria-label="Élève"><option value="">— Créneau libre —</option>' + actifs.map((x) => '<option value="' + x.id + '"' + (x.id === c.eleve_id ? " selected" : doit(x) || plein(x) ? " disabled" : "") + ">" + esc(x.nom) + (x.id !== c.eleve_id ? (doit(x) ? " · solde non payé" : plein(x) ? " · séances terminées (" + x.quota + ")" : x.quota !== null ? " · " + (x.faits + x.resa) + "/" + x.quota : "") : "") + "</option>").join("") + (el && !actifs.includes(el) ? '<option value="' + el.id + '" selected>' + esc(el.nom) + "</option>" : "") + '</select>' + (c.note ? "<small>" + esc(c.note) + "</small>" : "") + '</div><div class="tm-acts"><select data-cs aria-label="Statut">' + CST.map((t) => "<option" + (t === c.statut ? " selected" : "") + ">" + t + "</option>").join("") + "</select>" + (conf ? (c.confirme_le ? '<span class="cd-done">✓ Élève prévenu</span><a class="linkbtn" target="_blank" rel="noopener" data-cf="confirme_le" href="' + conf + '">Renvoyer</a>' : '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-cf="confirme_le" href="' + conf + '">Prévenir l\'élève ↗</a>') : "") + (rap ? (c.rappel_le ? '<span class="cd-done">✓ Rappel envoyé</span>' : '<a class="btn btn-yellow btn-sm" target="_blank" rel="noopener" data-cf="rappel_le" href="' + rap + '">Rappel de la veille ↗</a>') : "") + "</div></div>";
       }).join("") : '<p class="tm-empty">Pas de créneau ce jour-là (dimanche ou jour férié).</p>';
     }
     $("#sd-cdList").addEventListener("change", async (e) => {
@@ -3131,7 +3161,7 @@ function init(root) {
       else if (e.target.matches("[data-cs]")) body = { statut: e.target.value, modifie_le: new Date().toISOString() };
       if (!body) return;
       await run(() => DB.q("creneaux_conduite?id=eq." + id, { method: "PATCH", body, prefer: "return=minimal" }), "Planning enregistré");
-      loadDay();
+      await loadEleves(true); loadDay();
     });
     $("#sd-cdCloseBtn").addEventListener("click", () => { $("#sd-cdCloseForm").hidden = false; $("#sd-cdWhy").value = ""; $("#sd-cdWhy").focus(); });
     $("#sd-cdCloseCancel").addEventListener("click", () => { $("#sd-cdCloseForm").hidden = true; });
@@ -3284,6 +3314,10 @@ function init(root) {
       const exDep = eleves.filter((x) => etapeOf(x) === "examen" && x.examen_etape === "complet").length; if (exDep) w.push(["o", exDep + (exDep > 1 ? " dossiers d'examen complets à déposer" : " dossier d'examen complet à déposer"), "Secrétariat → Parcours élèves → Dépôt d'examen"]);
       const exM = eleves.filter((x) => etapeOf(x) === "examen" && x.examen_etape === "pret" && !x.examen_lien_le).length; if (exM) w.push(["o", exM + (exM > 1 ? " messages d'examen à envoyer" : " message d'examen à envoyer"), "Secrétariat → Parcours élèves → Dépôt d'examen"]);
       const sDu = eleves.filter((x) => etapeOf(x) === "formation" && doit(x)).length; if (sDu) w.push(["y", sDu + (sDu > 1 ? " élèves en formation n'ont pas soldé" : " élève en formation n'a pas soldé") + " (pas de conduite)", "Secrétariat → Parcours élèves → En formation"]);
+      { const fo = eleves.filter((x) => etapeOf(x) === "formation" && !doit(x)), pr = fo.filter((x) => seEtat(x) === "pret").length, fi = fo.filter((x) => seEtat(x) === "fin").length, ev = fo.filter((x) => seEtat(x) === "eval").length;
+        if (pr) w.push(["o", pr + (pr > 1 ? " élèves sont prêts" : " élève est prêt") + " pour l'examen : passer au dépôt d'examen", "Secrétariat → Parcours élèves → En formation → Prêt pour l'examen"]);
+        if (fi) w.push(["y", fi + (fi > 1 ? " élèves ont fini leurs séances" : " élève a fini ses séances") + " : proposer des séances en plus ou passer à l'examen", "Secrétariat → Parcours élèves → En formation"]);
+        if (ev) w.push(["y", ev + (ev > 1 ? " évaluations" : " évaluation") + " à faire par le moniteur", "Moniteur → Mes séances d'aujourd'hui"]); }
       { const att = attente().length, lib = gLibre(); if (att) w.push([lib ? "o" : "r", att + (att > 1 ? " élèves attendent" : " élève attend") + " une place au code" + (lib ? " : une place est libre dans le " + lib.nom : " : groupes complets, ouvrir un groupe du matin"), "Secrétariat → Parcours élèves → En formation"]); }
       const aApp = eleves.filter((x) => etapeOf(x) === "appels").length; if (aApp) w.push(["y", aApp + (aApp > 1 ? " élèves à appeler" : " élève à appeler"), "Secrétariat → Parcours élèves → Appels"]);
       const vieuxDus = dus.filter((p) => Date.now() - dOf(p.jour) > 30 * 864e5);
@@ -3335,7 +3369,7 @@ function init(root) {
         else {
           const pr = await run(() => DB.q("presences?select=eleve_id&seance_id=eq." + se.id)) || [];
           const ids = new Set(pr.map((x) => x.eleve_id));
-          const act = eleves.filter((x) => enCode(x) && (!se.groupe || x.groupe_code === se.groupe)).sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
+          const act = eleves.filter((x) => enCode(x) && (!se.groupe || (x.groupe_code === se.groupe && cycleOk(x)))).sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
           $("#sd-mcTitle").textContent = (se.jour === today ? "Aujourd'hui" : longDay(se.jour).replace(/^./, (c) => c.toUpperCase())) + " · " + (se.groupe ? (gOf(se.groupe) || { nom: "Groupe " + se.groupe }).nom + " · " : "") + se.type + " · " + se.heure + (se.statut === "Fait" ? " ✓" : "");
           $("#sd-mcBody").innerHTML = picker + (se.groupe ? "" : '<p class="tm-note" style="margin:0 0 8px!important">Séance commune : élèves de tous les groupes qui ont manqué un cours ou veulent s\'entraîner. 6 places au maximum.</p>') + '<div class="field"><label for="sd-mcTheme">Thème traité</label><select id="sd-mcTheme"><option value="">— Choisir —</option>' + THEMES.map((t) => "<option" + (t === se.theme ? " selected" : "") + ">" + esc(t) + "</option>").join("") + '</select></div><p class="tm-lab">Présents (' + ids.size + ")</p>" + (act.length ? '<div class="tm-checks">' + act.map((x) => '<label><input type="checkbox" data-pe="' + x.id + '"' + (ids.has(x.id) ? " checked" : "") + "> " + esc(x.nom) + "</label>").join("") + "</div>" : '<p class="tm-empty">Aucun élève inscrit pour l\'instant.</p>') + '<div class="field"><label for="sd-mcNote">Note (facultatif)</label><input id="sd-mcNote" value="' + esc(se.note || "") + '"></div><button class="btn btn-green btn-sm" type="button" id="sd-mcDone" data-id="' + se.id + '">' + (se.statut === "Fait" ? "Mettre à jour" : "Cours fait") + "</button>";
           $$("#sd-mcBody [data-pe]").forEach((c) => c.addEventListener("change", async () => {
@@ -3352,28 +3386,30 @@ function init(root) {
       const c = await run(() => DB.q("creneaux_conduite?select=*&jour=eq." + today + "&eleve_id=not.is.null"));
       if (c) {
         c.sort((a, b) => hmin(a.heure) - hmin(b.heure));
-        $("#sd-mcList").innerHTML = c.length ? c.map((x) => { const el = eleves.find((y) => y.id === x.eleve_id) || { nom: "Élève" }; return '<div class="tm-row" data-id="' + x.id + '"><div class="tm-time">' + esc(x.heure) + '</div><div class="tm-main"><b>' + esc(el.nom) + "</b><span>" + esc(x.statut) + '</span><input data-note placeholder="Note sur les progrès" value="' + esc(x.note || "") + '"></div><div class="tm-acts"><button class="btn btn-green btn-sm" type="button" data-set="Fait">Fait</button><button class="btn btn-line btn-sm" type="button" data-set="Absent">Absent</button></div></div>'; }).join("") : '<p class="tm-empty">Aucune séance réservée aujourd\'hui.</p>';
+        $("#sd-mcList").innerHTML = c.length ? c.map((x) => { const el = eleves.find((y) => y.id === x.eleve_id) || { nom: "Élève", quota: null }; const num = el.quota ? (el.faits || 0) + (x.statut === "Fait" ? 0 : 1) : 0, ea = el.quota ? Math.max(1, el.quota - 2) : 0, aEval = el.quota && !el.evaluation && (el.faits || 0) >= ea && x.statut === "Fait"; return '<div class="tm-row" data-id="' + x.id + '"><div class="tm-time">' + esc(x.heure) + '</div><div class="tm-main"><b>' + esc(el.nom) + (el.quota ? ' <em class="se-num' + (num >= ea ? " hot" : "") + '">Séance ' + Math.min(num, el.quota) + "/" + el.quota + (num === ea && !el.evaluation ? " · évaluation" : num >= el.quota ? " · dernière" : "") + "</em>" : "") + "</b><span>" + esc(x.statut) + (el.evaluation ? " · " + (el.evaluation === "pret" ? "jugé prêt pour l'examen" : "séances en plus conseillées") : "") + '</span>' + (aEval ? '<div class="se-mev"><span>Évaluation : est-il prêt pour l\'examen ?</span><button class="btn btn-green btn-sm" type="button" data-mev="pret" data-el="' + el.id + '">Prêt pour l\'examen</button><button class="btn btn-line btn-sm" type="button" data-mev="plus" data-el="' + el.id + '">Il lui faut des séances en plus</button></div>' : "") + '<input data-note placeholder="Note sur les progrès" value="' + esc(x.note || "") + '"></div><div class="tm-acts"><button class="btn btn-green btn-sm" type="button" data-set="Fait">Fait</button><button class="btn btn-line btn-sm" type="button" data-set="Absent">Absent</button></div></div>'; }).join("") : '<p class="tm-empty">Aucune séance réservée aujourd\'hui.</p>';
       }
     }
     $("#sd-mcCode").addEventListener("click", (e) => { const b = e.target.closest("[data-mses]"); if (b) { monIdx = +b.dataset.mses; loadMon(); } });
     $("#sd-mcList").addEventListener("click", async (e) => {
+      const ev = e.target.closest("[data-mev]");
+      if (ev) { const el = eleves.find((y) => y.id === +ev.dataset.el); if (el) { const v = ev.dataset.mev; await run(() => DB.q("eleves?id=eq." + el.id, { method: "PATCH", body: { evaluation: v, evaluation_le: new Date().toISOString() }, prefer: "return=minimal" }), v === "pret" ? "Noté : prêt pour l'examen" : "Noté : séances en plus conseillées"); await addSuivi(el, "Note", v === "pret" ? "Évaluation (moniteur) : prêt pour l'examen" : "Évaluation (moniteur) : séances en plus conseillées"); await loadEleves(true); loadMon(); } return; }
       const b = e.target.closest("[data-set]"); if (!b) return; const row = b.closest("[data-id]");
       await run(() => DB.q("creneaux_conduite?id=eq." + row.dataset.id, { method: "PATCH", body: { statut: b.dataset.set, note: row.querySelector("[data-note]").value.trim() || null, modifie_le: new Date().toISOString() }, prefer: "return=minimal" }), "Séance : " + b.dataset.set);
-      loadMon();
+      await loadEleves(true); loadMon();
     });
 
     window.TEAM_ELEVES = () => eleves; window.TEAM_RELOAD_PAY = () => { if (!$('.tm-sec[data-s="paiements"]').hidden) loadPay(); };
     // ---- Mise à jour automatique : nouvelles pré-inscriptions, inscriptions en ligne… sans recharger la page
-    const sig = (x) => x ? JSON.stringify([x.statut, x.nom, x.telephone, x.formation, x.quartier, x.accueil_le, x.appels, x.rappel, x.dossier_envoye_le, x.dossier_relance_le, x.dossier_relances, x.archive_motif, x.archive_le, x.notes, x.dossier, x.web && x.web.id, x.solde, x.examen_etape, x.examen_lien_le, x.examen_paye, x.examen_bordereau_le, x.examen_depose_le, x.examen_resultat, x.examen_passages]) : "";
+    const sig = (x) => x ? JSON.stringify([x.statut, x.nom, x.telephone, x.formation, x.quartier, x.accueil_le, x.appels, x.rappel, x.dossier_envoye_le, x.dossier_relance_le, x.dossier_relances, x.archive_motif, x.archive_le, x.notes, x.dossier, x.web && x.web.id, x.solde, x.examen_etape, x.examen_lien_le, x.examen_paye, x.examen_bordereau_le, x.examen_depose_le, x.examen_resultat, x.examen_passages, x.quota, x.faits, x.resa, x.evaluation, x.groupe_code, x.groupe_depuis]) : "";
     let polling = false;
     async function poll() {
       if (!me || polling || document.hidden || !DB.session) return;
       polling = true;
       try {
-        const [r, wb, pr] = await Promise.all([DB.q("eleves?select=*&order=cree_le.desc&limit=2000"), DB.q("inscriptions_web?select=*&order=le.desc&limit=2000"), DB.q("paiements?select=eleve_id,reste,cree_le&annule=is.false&reste=not.is.null&eleve_id=not.is.null&order=cree_le.asc&limit=5000")]);
+        const [r, wb, pr, cr] = await Promise.all([DB.q("eleves?select=*&order=cree_le.desc&limit=2000"), DB.q("inscriptions_web?select=*&order=le.desc&limit=2000"), DB.q(PAY_Q), DB.q(CR_Q)]);
         const W = {}; (wb || []).forEach((w) => { if (!W[w.eleve_id]) W[w.eleve_id] = w; });
-        const SL = {}; (pr || []).forEach((p) => (SL[p.eleve_id] = p.reste));
-        r.forEach((x) => { x.web = W[x.id] && W[x.id].statut === "Nouveau" ? W[x.id] : null; x.solde = x.id in SL ? SL[x.id] : null; });
+        attach(r, pr, cr);
+        r.forEach((x) => { x.web = W[x.id] && W[x.id].statut === "Nouveau" ? W[x.id] : null; });
         const old = {}; eleves.forEach((x) => (old[x.id] = x));
         const nouveaux = r.filter((x) => !old[x.id] && x.source === "site");
         const payes = r.filter((x) => x.web && (!old[x.id] || !old[x.id].web || old[x.id].web.id !== x.web.id));
