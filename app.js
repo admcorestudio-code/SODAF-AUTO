@@ -1344,15 +1344,16 @@ ${HEAD("Formations", "Nos formations et tarifs", "Chaque formule comprend le cod
 <div class="wk"><b>Après-midi</b><span>14 h 30 – 15 h 30 · lundi et jeudi, ou mardi et vendredi</span></div>
 <div class="wk"><b>Matin</b><span>11 h – 12 h · lundi et jeudi</span></div>
 <div class="wk"><b>Mercredi 14 h 30</b><span>Rattrapage et examen blanc, tous groupes</span></div>
-<p style="margin-top:12px;font-size:.92rem;color:var(--muted)">1er cours de la semaine : le thème de la semaine. 2e cours : entraînement type examen.</p></div>
+<p style="margin-top:12px;font-size:.92rem;color:var(--muted)">Un thème par cours, 12 cours en 6 semaines : tu peux commencer n'importe quelle semaine.</p></div>
 <div class="card"><p class="eyebrow">Conduite · 1 h, sur rendez-vous</p><h3 style="margin-top:10px">Choisis ton créneau</h3>
 <div class="wk"><b>Lun – ven matin</b><span>6 h 30 · 7 h 30 · 8 h 45 · 9 h 45</span></div>
 <div class="wk"><b>Lun – ven soir</b><span>15 h 45 · 16 h 45</span></div>
 <div class="wk"><b>Samedi</b><span>6 h 30 à 11 h 45</span></div>
 <p style="margin-top:12px;font-size:.92rem;color:var(--muted)">Tu travailles ? Les créneaux de 6 h 30, de 16 h 45 et du samedi sont faits pour toi.</p></div>
 <div class="card"><p class="eyebrow">Ton parcours</p><h3 style="margin-top:10px">Étape par étape</h3>
-<ol class="steps-ol"><li><b>Semaines 1 et 2 :</b> le code d'abord, signalisation et priorités.</li><li><b>Dès la semaine 3 :</b> une séance de conduite par semaine, le code continue.</li><li><b>Tous les chapitres</b> reviennent en salle environ toutes les 10 semaines. Tu rattrapes sur le site.</li><li><b>Avant l'examen :</b> examens blancs du mercredi.</li></ol></div>
+<ol class="steps-ol"><li><b>Semaines 1 et 2 :</b> le code d'abord, signalisation et priorités.</li><li><b>Dès la semaine 3 :</b> une séance de conduite par semaine, le code continue.</li><li><b>En 6 semaines</b>, tu vois tous les chapitres en salle (12 cours). Un cours manqué : mercredi 14 h 30 ou sur le site.</li><li><b>Avant l'examen :</b> examens blancs du mercredi.</li></ol></div>
 </div>
+<div class="card prog-pub" id="sd-progPub" style="margin-top:18px"></div>
 </div>
 <div class="wrap sec"><div class="grid g3">
 <div class="card soft"><p class="eyebrow">Paiement</p><h3 style="margin-top:10px">En 2 tranches</h3><p style="margin-top:8px">La moitié à l'inscription, le reste dans les 2 semaines (avant ta première séance de conduite). Un reçu pour chaque paiement.</p><div class="pills"><span>Espèces</span><span>Mixx by Yas (T-Money)</span></div></div>
@@ -1650,7 +1651,7 @@ ${HEAD("Entraînement", "Le quiz SODAF", "Questions tirées du manuel, avec l'ex
 </section>
 
 <section class="page" data-page="devoirs" hidden>
-${HEAD("Devoirs", "Le devoir de la semaine", "Un devoir par semaine sur le thème vu en salle le lundi. Ton résultat part directement au moniteur, et la correction se fait le mercredi à 14 h 30.")}
+${HEAD("Devoirs", "Le devoir de la semaine", "Un devoir après chaque cours de code en salle : 10 questions sur le thème du cours. Ton résultat part directement au moniteur, et la correction se fait au début du cours suivant.")}
 <div class="wrap sec"><div id="sd-dev"></div></div>
 </section>
 
@@ -1785,7 +1786,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <section class="tm-sec" data-s="devoirs" hidden>
 <div class="tm-bar"><label for="sd-dvWeek" class="sr-only">Semaine</label><select id="sd-dvWeek"></select></div>
 <div class="tm-stats" id="sd-dvStats"></div>
-<div class="tm-sub"><div><p class="eyebrow">Mercredi</p><h3>Message pour le groupe WhatsApp</h3></div></div>
+<div class="tm-sub"><div><p class="eyebrow">Fin de semaine</p><h3>Message pour le groupe WhatsApp</h3></div></div>
 <textarea id="sd-dvMsg" class="tm-msg" readonly rows="10"></textarea>
 <div class="tm-formact"><button class="btn btn-green btn-sm" type="button" id="sd-dvCopy">Copier le message</button><a class="btn btn-wa btn-sm" id="sd-dvWa" target="_blank" rel="noopener" href="#">Ouvrir WhatsApp avec le message</a></div>
 <div id="sd-dvRes" class="tm-list" style="margin-top:18px"></div>
@@ -1794,7 +1795,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="grid g2 tm-guides">
 <div class="card soft"><p class="eyebrow">Le parcours d'un élève</p><ol class="teamsteps"><li><b>Accueil</b> : <b>Envoyer l'accueil</b> (WhatsApp). Le dossier passe tout seul en zone d'appel.</li><li><b>Appels</b> : appelle avec le script. Pas de réponse : choisis quand rappeler. À 4 tentatives : relance WhatsApp ou <b>Injoignable</b>.</li><li>Il est intéressé : <b>Envoyer le lien d'inscription</b> (en haut). Le dossier passe tout seul en paiement en attente.</li><li><b>Paiement en attente</b> : Mixx à vérifier sur le téléphone de l'agence, ou paiement à l'agence. Sans nouvelles : relance tous les 5 jours (4 au maximum).</li><li><b>Formation payée ? Faire le reçu</b> : le reçu s'ouvre déjà rempli, envoie-le. L'élève passe <b>En formation</b> et reçoit tout seul une place dans un groupe de code (6 places). Touche <b>Envoyer ses horaires</b>. Groupes complets : il passe en liste d'attente et il est placé tout seul dès qu'une place se libère (pour aller plus vite, ouvre un groupe dans « Gérer les groupes »).</li><li><b>Solde</b> : à payer dans les 2 semaines après l'inscription (c'est écrit sur son reçu). À 7 jours, il passe dans « Rappel de paiement » (en rouge, tout en haut) : le bouton du rappel s'active ce jour-là, envoie-le ; l'élève retourne ensuite dans son groupe. À 14 jours sans paiement, sa place au code est suspendue toute seule jusqu'au règlement.</li><li>Formation terminée : <b>Passer à l'examen</b>, message des papiers. Dossier complet + 30 000 F : reçu.</li><li><b>Dépôt d'examen</b> : coche le lot, imprime le bordereau, fais-le signer, puis <b>Lot déposé</b>. Au résultat : <b>Permis obtenu</b> ou <b>À repasser</b> (archivé « Permis échoué »).</li></ol></div>
 <div class="card soft"><p class="eyebrow">Réserver une séance de conduite</p><ol class="teamsteps"><li>Seuls les élèves dont la formation est soldée peuvent être réservés : les autres sont grisés. S'il doit encore payer : fiche de l'élève → <b>Rappel du solde</b>.</li><li><b>Planning conduite</b> : choisis le jour, puis l'élève sur un créneau libre.</li><li>Le choix est enregistré tout de suite. Touche <b>Prévenir l'élève</b> : le message WhatsApp avec le jour et l'heure est prêt. La veille, touche <b>Rappel</b>.</li></ol></div>
-<div class="card soft"><p class="eyebrow">Mercredi : résultats du devoir</p><ol class="teamsteps"><li>Onglet <b>Devoirs</b> : le message de la semaine est déjà écrit.</li><li>Touche <b>Ouvrir WhatsApp avec le message</b> et choisis le groupe.</li></ol></div>
+<div class="card soft"><p class="eyebrow">Fin de semaine : résultats des devoirs</p><ol class="teamsteps"><li>Onglet <b>Devoirs</b> : le message de la semaine (les 2 devoirs) est déjà écrit.</li><li>Touche <b>Ouvrir WhatsApp avec le message</b> et choisis le groupe.</li></ol></div>
 <div class="card soft"><p class="eyebrow">Règles</p><ol class="teamsteps"><li>On ne supprime rien : une séance annulée passe en <b>Annulé</b>, un dossier qui s'arrête va dans <b>Archivés</b> avec son motif, un reçu faux se fait <b>Annuler</b> (avec la raison) puis on refait le bon.</li><li>Erreur de nom ou de numéro : <b>Modifier</b> sur la fiche de l'élève.</li><li>Jour férié ou fermeture : <b>Planning conduite</b> → le jour → « Fermer ce jour », puis <b>Prévenir</b> chaque élève.</li><li>Les créneaux du mois suivant se créent tout seuls le 24.</li></ol></div>
 </div></div>
 <div class="tm-pane" data-pane="dir" role="tabpanel" hidden>
@@ -1812,12 +1813,8 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="tm-pane" data-pane="mon" role="tabpanel" hidden>
 <p class="tm-role">Cours de code en salle, séances de conduite et progression des élèves.</p>
 <div class="tm-week card"><div class="tm-wk-head"><div><p class="eyebrow">Cette semaine</p><h3 id="sd-tmTheme">Thème</h3></div><a class="btn btn-yellow btn-sm" href="#classe">Ouvrir le Mode classe</a></div>
-<div class="tm-days">
-<a class="tm-day" href="#classe-lecon"><b>1er cours du groupe</b><span>A : lundi · B : mardi · 14 h 30. Cours complet du thème</span><em>Mode classe → Leçon</em></a>
-<a class="tm-day" href="#classe-devoir"><b>2e cours du groupe</b><span>A : jeudi · B : vendredi · 14 h 30. Correction du devoir et entraînement</span><em>Mode classe → Devoir, Quiz</em></a>
-<a class="tm-day" href="#classe-situations"><b>Mercredi · 14 h 30</b><span>Rattrapage et examen blanc, tous groupes (6 places)</span><em>Quiz, situations, panneaux</em></a>
-<a class="tm-day" href="#classe-quiz"><b>Groupes du matin</b><span>C et D à 11 h, mêmes jours, quand A et B sont complets</span><em>Ouverts par le secrétariat</em></a>
-</div></div>
+<div class="tm-days" id="sd-tmDays"></div></div>
+<details class="card tm-prog" id="sd-tmProgBox"><summary><span><b>Programme du code en salle</b><small>12 cours en 6 semaines, puis on recommence</small></span><em>Voir le programme</em></summary><div id="sd-tmProg"></div></details>
 <div class="grid g2 tm-mon">
 <div class="card" id="sd-mcCode"><p class="eyebrow">Cours de code</p><h3 class="tm-h3" id="sd-mcTitle">Chargement…</h3><div id="sd-mcBody"></div></div>
 <div class="card" id="sd-mcDrive"><p class="eyebrow">Conduite</p><h3 class="tm-h3">Mes séances d'aujourd'hui</h3><div id="sd-mcList" class="tm-list"></div></div>
@@ -2073,14 +2070,28 @@ const DEV = [
 ["Lequel fait partie du lot de bord ?",["Le triangle","Le permis","La carte grise","La radio"],0,"Lot de bord : cric, clé démonte-roue, roue de secours, tournevis, extincteur, trousse de secours, triangle.","cours-tableau"],
 ["Lequel est un document de bord ?",["La carte grise","L'extincteur","Le cric","La roue de secours"],0,"Documents : carte grise, attestation d'assurance, permis, pièce d'identité.","cours-tableau"]] },
 ];
-// Semaine en cours (heure de Lomé = UTC) : lundi au format AAAA-MM-JJ et devoir correspondant.
+// Programme du code en salle : 12 cours en boucle sur 6 semaines (2 par semaine), le même pour tous les groupes.
+// Cours 1 à 10 = les 10 thèmes (1 devoir par cours, A à J) ; cours 11 = révision générale ; cours 12 = examen blanc.
+// Même calcul que la base (prive.cours_boucle) : semaine k → 1er jour du groupe = cours 2k+1, 2e jour = cours 2k+2.
+const BOUCLE = DEV.map((d, k) => ({ n: k + 1, t: d.t, dv: k, ch: [...new Set(d.q.map((q) => q[4]))] })).concat([{ n: 11, t: "Révision générale", dv: null, ch: [] }, { n: 12, t: "Examen blanc", dv: null, ch: [] }]);
+const bIdx = (t) => BOUCLE.findIndex((b) => b.t === t);
+const chNoms = (b) => b.ch.map((id) => { const a = document.getElementById(id); return a ? a.dataset.title : ""; }).filter(Boolean).join(", ");
+// Semaine en cours (heure de Lomé = UTC) : lundi AAAA-MM-JJ, semaine du programme (0 à 5) et ses 2 cours
 function devWeek(d) {
   d = d || new Date();
   const day = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
   day.setUTCDate(day.getUTCDate() - ((day.getUTCDay() + 6) % 7));
-  const n = Math.floor((day - new Date(DEV_START + "T00:00:00Z")) / 6048e5);
-  return { key: day.toISOString().slice(0, 10), idx: Math.max(0, n) % DEV.length, monday: day };
+  const n = Math.floor((day - new Date(DEV_START + "T00:00:00Z")) / 6048e5), sem = ((n % 6) + 6) % 6;
+  return { key: day.toISOString().slice(0, 10), sem, c: [2 * sem, 2 * sem + 1], monday: day };
 }
+// Devoir du cours qui précède le cours k (corrigé au début du cours k)
+const devAvant = (k) => { let i = (k + 11) % 12; while (BOUCLE[i].dv === null) i = (i + 11) % 12; return BOUCLE[i].dv; };
+// Devoir à corriger aujourd'hui : lun.–mer. celui du 2e cours de la semaine passée, jeu.–dim. celui du 1er cours de la semaine
+// Début du cours k : correction du devoir du cours précédent (ou retour sur l'examen blanc)
+const debutCours = (k) => { const p = (k + 11) % 12; return BOUCLE[p].dv !== null ? "correction du devoir " + DEV[BOUCLE[p].dv].l : p === 11 ? "retour sur l'examen blanc" : "pas de devoir à corriger"; };
+const devCorr = (d) => { d = d || new Date(); const w = devWeek(d); return devAvant((d.getUTCDay() + 6) % 7 <= 2 ? w.c[0] : w.c[1]); };
+const progRows = (cur, lundi) => [0, 1, 2, 3, 4, 5].map((k) => { const m = lundi ? new Date(lundi.getTime() + (k - cur) * 6048e5) : null, a = BOUCLE[2 * k], b = BOUCLE[2 * k + 1], lab = (x) => "<span><i>" + x.n + "</i>" + x.t + (x.dv !== null ? " <em>devoir " + DEV[x.dv].l + "</em>" : "") + "</span>";
+  return '<div class="prog-w' + (k === cur ? " now" : "") + '"><b>Semaine ' + (k + 1) + (m ? "<small>" + (k === cur ? "cette semaine · " : "") + "lun. " + m.getUTCDate() + " " + ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."][m.getUTCMonth()] + "</small>" : "") + "</b>" + lab(a) + lab(b) + "</div>"; }).join("");
 
 const CK = ["Aucune fuite sous le véhicule","Carrosserie, feux et vitres propres","Pression des 4 pneus","Liquide de refroidissement","Huile moteur (entre MIN et MAX)","Liquide de frein et d'embrayage","Eau de la batterie (si non scellée)","Liquide de direction assistée","Lot de bord complet","Documents de bord valides","Carburant suffisant","Feux, frein et klaxon fonctionnent"];
 
@@ -2318,15 +2329,16 @@ function init(root) {
   const cap = (t) => t.trim().replace(/\s+/g, " ").toLowerCase().replace(/(^|[\s'-])(\p{L})/gu, (m, a, b) => a + b.toUpperCase());
   let dv = null;
   function devList() {
-    const w = devWeek(), cur = DEV[w.idx], sent = S.get("devSent", {}), best = S.get("devBest", {});
-    const mine = sent[w.key + cur.l];
-    devEl.innerHTML =
-      '<div class="devnow"><div class="dl">' + cur.l + '</div><div><p class="eyebrow">Semaine du ' + frDay(w.monday) + '</p><h3>Devoir ' + cur.l + " · " + escH(cur.t) + "</h3><p>" +
-      (mine != null ? '<span class="done">✓ Envoyé au moniteur : ' + mine + "/" + cur.q.length + "</span>" : "10 questions · à faire avant mercredi 14 h 30") + '</p></div><div class="devacts">' +
-      '<button class="btn btn-yellow" data-dev="' + w.idx + '">' + (mine != null ? "Refaire pour m'entraîner" : "Commencer le devoir") + '</button><a class="btn btn-line btn-sm" href="#' + cur.q[0][4] + '">Réviser le cours</a></div></div>' +
-      '<p class="devlist-h">Tous les devoirs · un cycle de 10 semaines</p><div class="devgrid">' +
-      DEV.map((d, k) => '<button class="devtile' + (k === w.idx ? " now" : "") + '" data-dev="' + k + '"><b>' + d.l + "</b><span>" + escH(d.t) + "</span>" +
-        (best[d.l] != null ? '<em class="ok">Ta meilleure note : ' + best[d.l] + "/" + d.q.length + "</em>" : "<em>" + (k === w.idx ? "Devoir de la semaine" : "Pas encore fait") + "</em>") + "</button>").join("") + "</div>";
+    const w = devWeek(), sent = S.get("devSent", {}), best = S.get("devBest", {});
+    const card = (k, quand) => { const d = DEV[k], mine = sent[w.key + d.l]; return '<div class="devnow"><div class="dl">' + d.l + '</div><div><p class="eyebrow">' + quand + '</p><h3>Devoir ' + d.l + " · " + escH(d.t) + "</h3><p>" +
+      (mine != null ? '<span class="done">✓ Envoyé au moniteur : ' + mine + "/" + d.q.length + "</span>" : "10 questions · à faire après ce cours, avant le cours suivant") + '</p></div><div class="devacts">' +
+      '<button class="btn btn-yellow" data-dev="' + k + '">' + (mine != null ? "Refaire pour m'entraîner" : "Commencer le devoir") + '</button><a class="btn btn-line btn-sm" href="#' + d.q[0][4] + '">Réviser le cours</a></div></div>'; };
+    devEl.innerHTML = '<p class="devwk">Semaine du ' + frDay(w.monday) + " · <b>semaine " + (w.sem + 1) + " sur 6</b> du programme</p>" +
+      (w.sem < 5 ? card(w.c[0], "Cours " + (w.c[0] + 1) + " · lundi (groupes A et C) ou mardi (B et D)") + card(w.c[1], "Cours " + (w.c[1] + 1) + " · jeudi (groupes A et C) ou vendredi (B et D)")
+        : '<div class="devnow"><div class="dl">6</div><div><p class="eyebrow">Cours 11 et 12</p><h3>Semaine de révision · pas de devoir</h3><p>Révision générale, puis examen blanc en salle. Entraîne-toi avec l\'examen blanc de 40 questions.</p></div><div class="devacts"><a class="btn btn-yellow" href="#quiz">Faire un examen blanc</a></div></div>') +
+      '<p class="devlist-h">Tous les devoirs · un par cours, le programme fait le tour en 6 semaines</p><div class="devgrid">' +
+      DEV.map((d, k) => '<button class="devtile' + (w.c.includes(k) ? " now" : "") + '" data-dev="' + k + '"><b>' + d.l + "</b><span>" + escH(d.t) + "</span>" +
+        (best[d.l] != null ? '<em class="ok">Ta meilleure note : ' + best[d.l] + "/" + d.q.length + "</em>" : "<em>" + (w.c.includes(k) ? "Cette semaine" : "Semaine " + (Math.floor(k / 2) + 1) + " du programme") + "</em>") + "</button>").join("") + "</div>";
     devEl.querySelectorAll("[data-dev]").forEach((b) => b.addEventListener("click", () => devName(+b.dataset.dev)));
   }
   function devName(k) {
@@ -2388,6 +2400,7 @@ function init(root) {
     send();
   }
   devList();
+  { const pp = $("#sd-progPub"); if (pp) { const w = devWeek(); pp.innerHTML = '<p class="eyebrow">Le programme du code en salle</p><h3 style="margin-top:10px">12 cours en 6 semaines, puis il recommence</h3><p style="margin-top:8px;color:var(--muted)">Tous les groupes suivent le même cours la même semaine. Tu commences n\'importe quelle semaine : en 6 semaines, tu as tout vu. Après chaque cours, un devoir de 10 questions sur le site.</p><div class="prog">' + progRows(w.sem, w.monday) + "</div>"; } }
 
   // ---------- Reçus de paiement (Espace équipe) ----------
   let rcPublic = () => {};
@@ -2719,9 +2732,12 @@ function init(root) {
     const sub = (k) => { subs.forEach((b) => b.setAttribute("aria-selected", b.dataset.s === k)); secs.forEach((x) => { if (x === cdSec && cdSec.parentNode !== cdHome.p) return; x.hidden = x.dataset.s !== k; }); LOAD[k](); };
     subs.forEach((b) => b.addEventListener("click", () => sub(b.dataset.s)));
     $$('a[href="#equipe-recu"]').forEach((x) => x.addEventListener("click", () => { pick("sec"); sub("paiements"); }));
-    { const w = devWeek(), dv = DEV[w.idx], n = new Date();
-      $("#sd-tmTheme").textContent = "Devoir " + dv.l + " · " + dv.t;
-      $("#sd-tmToday").textContent = "Nous sommes le " + J[n.getDay()] + " " + n.getDate() + " " + M[n.getMonth()] + ". Thème de la semaine : " + dv.t + " (devoir " + dv.l + ")."; }
+    { const w = devWeek(), n = new Date(), c1 = BOUCLE[w.c[0]], c2 = BOUCLE[w.c[1]];
+      $("#sd-tmTheme").textContent = "Semaine " + (w.sem + 1) + " sur 6 · cours " + c1.n + " et " + c2.n;
+      $("#sd-tmToday").textContent = "Nous sommes le " + J[n.getDay()] + " " + n.getDate() + " " + M[n.getMonth()] + ". Code en salle : semaine " + (w.sem + 1) + " sur 6 du programme.";
+      const day = (b, quand) => '<a class="tm-day" href="#' + (b.dv === null ? "classe-quiz" : "classe-lecon") + '"><b>Cours ' + b.n + " · " + esc(b.t) + "</b><span>" + quand + " · " + (b.dv !== null ? "chapitres : " + esc(chNoms(b)) : b.n === 11 ? "révision de tous les thèmes" : "examen blanc de 40 questions") + "</span><em>Début : " + debutCours(b.n - 1) + " · Mode classe → " + (b.dv === null ? "Quiz" : "Leçon") + "</em></a>";
+      $("#sd-tmDays").innerHTML = day(c1, "A et C : lundi · B et D : mardi") + day(c2, "A et C : jeudi · B et D : vendredi") + '<a class="tm-day" href="#classe-quiz"><b>Mercredi · 14 h 30</b><span>Rattrapage et examen blanc, tous groupes (6 places)</span><em>Ceux qui ont manqué un cours</em></a>';
+      $("#sd-tmProg").innerHTML = '<p class="tm-note" style="margin:0 0 4px!important">Tous les groupes font le même cours la même semaine. Un élève qui arrive commence au cours du jour : en 6 semaines (son cycle), il a tout vu. Après chaque cours, il fait le devoir du cours sur le site ; on le corrige au début du cours suivant.</p><div class="prog">' + progRows(w.sem, w.monday) + "</div>"; }
 
     // Connexion
     $("#sd-teamForm").addEventListener("submit", async (e) => {
@@ -2802,7 +2818,11 @@ function init(root) {
     const plein = (x) => x.quota !== null && x.faits + x.resa >= x.quota;
     const cycleOk = (x) => !x.groupe_depuis || Date.now() - new Date(x.groupe_depuis) < 42 * 864e5;
     const msgPlus = (x) => "Bonjour " + prenom(x) + ",\n\nTu as fait les *" + x.faits + " séances de conduite* prévues dans ta formule. Ton moniteur te conseille quelques séances de plus avant l'examen, pour que tu sois vraiment à l'aise le jour J.\n\n*SÉANCE EN PLUS* : 5 000 F l'heure (tu choisis combien)." + (CFG.mixx_numero ? "\n\nTu peux payer à l'agence ou par *Mixx by Yas* au " + CFG.mixx_numero + (CFG.mixx_nom ? " (" + CFG.mixx_nom + ")" : "") + ", motif *" + CODE(x) + " SEANCE*, puis nous envoyer la capture du SMS ici." : "\n\nTu peux payer à l'agence aux heures de bureau.") + "\n\nDès le paiement, nous réservons tes séances." + SIGN;
-    const msgGroupe = (x) => { const g = gOf(x.groupe_code); return "Bonjour " + prenom(x) + ",\n\nVoici tes horaires de *cours de code en salle* chez SODAF Auto-École.\n\n*TON GROUPE : " + g.nom.toUpperCase() + "*\n• " + gJours(g).replace(/^./, (c) => c.toUpperCase()) + " : " + g.heure + "\n• Mercredi 14 h 30 : rattrapage et examen blanc (si tu as manqué un cours, ou pour t'entraîner)\n\nLa salle compte 6 places : merci d'arriver à l'heure. Tu peux aussi réviser à tout moment sur autosodaf.com (cours, quiz et devoir de la semaine).\n\nUn empêchement ? Préviens-nous en répondant à ce message." + SIGN; };
+    // Prochain cours d'un groupe (date + cours du programme)
+    const prochainCours = (g) => { const n = new Date(); for (let i = 0; i < 15; i++) { const d = new Date(n.getFullYear(), n.getMonth(), n.getDate() + i), dow = ((d.getDay() + 6) % 7) + 1; if (!g.jours.includes(dow) || (i === 0 && n.getHours() * 60 + n.getMinutes() >= hmin(g.heure))) continue; return { d, b: BOUCLE[devWeek(new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), 12))).c[dow === g.jours[0] ? 0 : 1]] }; } return null; };
+    const msgGroupe = (x) => { const g = gOf(x.groupe_code), pc = prochainCours(g); return "Bonjour " + prenom(x) + ",\n\nVoici tes horaires de *cours de code en salle* chez SODAF Auto-École.\n\n*TON GROUPE : " + g.nom.toUpperCase() + "*\n• " + gJours(g).replace(/^./, (c) => c.toUpperCase()) + " : " + g.heure + "\n• Mercredi 14 h 30 : rattrapage et examen blanc (si tu as manqué un cours, ou pour t'entraîner)" +
+      (pc ? "\n\n*TON PROCHAIN COURS*\n" + pc.d.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" }).replace(/^./, (c) => c.toUpperCase()) + " à " + gHeure(g) + " : cours " + pc.b.n + " sur 12, *" + pc.b.t + "*." : "") +
+      "\n\n*LE PROGRAMME*\n12 cours en 6 semaines, puis il recommence : tu peux commencer n'importe quelle semaine, en 6 semaines tu vois tout. Après chaque cours, fais le *devoir du cours* sur autosodaf.com/#devoirs (10 questions, ton résultat part au moniteur).\n\nLa salle compte 6 places : merci d'arriver à l'heure. Tu peux aussi réviser à tout moment sur autosodaf.com (cours, quiz et devoir de la semaine).\n\nUn empêchement ? Préviens-nous en répondant à ce message." + SIGN; };
     const PRIXM = { "Permis B": "55 000 F la formation complète (formule courte 35 000 F, accélérée 75 000 F en 2 mois ou 80 000 F en 1 mois)", "Permis A": "30 000 F", "Pack A + B": "80 000 F", "Remise à niveau": "20 000 F", "Formation entreprise": "sur devis, selon le nombre de chauffeurs" };
     const jours = (d) => Math.floor((Date.now() - new Date(d)) / 864e5);
     const dosAge = (x) => { const b = x.web && x.web.le > (x.dossier_envoye_le || "") ? x.web.le : x.dossier_envoye_le; return jours(x.dossier_relance_le && x.dossier_relance_le > b ? x.dossier_relance_le : b); };
@@ -3065,6 +3085,15 @@ function init(root) {
     }
     const archive = (x, motif) => patchEl(x, { statut: "Abandon", archive_motif: motif, archive_le: new Date().toISOString(), rappel: null }, "Dossier archivé : " + motif, ["Étape", "Archivé : " + motif]).then((ok) => ok && nextAfter(x));
 
+    // Fiche : cours du programme suivis (présences cochées par le moniteur) et cours à rattraper
+    async function fillCours(x) {
+      const el = $("#sd-pcCours"); if (!el) return;
+      let pr = null, ss = [];
+      try { [pr, ss] = await Promise.all([DB.q("presences?select=seances_code(theme)&eleve_id=eq." + x.id), x.groupe_code && x.groupe_depuis ? DB.q("seances_code?select=theme&groupe=eq." + x.groupe_code + "&statut=eq.Fait&jour=gte." + x.groupe_depuis.slice(0, 10) + "&jour=lte." + iso(new Date())) : Promise.resolve([])]); } catch (e) { return; }
+      if (!pr || $("#sd-pcCours") !== el) return;
+      const vus = new Set(pr.map((p) => p.seances_code && p.seances_code.theme).filter((t) => bIdx(t) >= 0)), manq = [...new Set((ss || []).map((z) => z.theme).filter((t) => bIdx(t) >= 0 && !vus.has(t)))];
+      el.innerHTML = "<b>Cours suivis : " + vus.size + " sur 12</b>" + (manq.length ? " · à rattraper (mercredi 14 h 30 ou sur le site) : " + manq.map(esc).join(", ") : vus.size ? "" : " · le moniteur coche les présents à chaque cours");
+    }
     async function renderDetail() {
       const box = $("#sd-pcDetail"), pc = $("#sd-pc");
       const x = eleves.find((y) => y.id === pcSel);
@@ -3131,7 +3160,7 @@ function init(root) {
           (sansCode(x) ? "" : '<div class="pc-block"><div class="pc-bh"><b>Cours de code en salle' + (x.groupe_code && gOf(x.groupe_code) ? ' <i class="gb gb-' + x.groupe_code + '">' + esc(gOf(x.groupe_code).nom) + "</i>" : "") + "</b>" + (!x.groupe_code ? '<span class="pc-waittag">Liste d\'attente</span>' : !cycleOk(x) || susp(x) ? "" : x.groupe_msg_le ? '<span class="pc-ok">horaires envoyés ' + ago(x.groupe_msg_le) + "</span>" : '<span class="pc-waittag">Horaires à envoyer</span>') + '</div><div class="gc-pick"><select data-a="groupe" aria-label="Groupe de code">' + (x.groupe_code ? "" : '<option value="" selected disabled>Liste d\'attente</option>') +
             GROUPES.slice().sort((a, b) => a.ordre - b.ordre).map((g) => { const o = occ(g.id), mine = g.id === x.groupe_code, full = !mine && o >= g.places, off = !mine && !g.actif; return '<option value="' + g.id + '"' + (mine ? " selected" : full || off ? " disabled" : "") + ">" + esc(g.nom) + " · " + gJours(g) + " · " + gHeure(g) + " · " + (off ? "fermé" : o + "/" + g.places + (full ? " (complet)" : "")) + "</option>"; }).join("") + "</select>" +
             (x.groupe_code && n && gOf(x.groupe_code) ? '<a class="btn ' + (x.groupe_msg_le ? "btn-line" : "btn-wa") + ' btn-sm" target="_blank" rel="noopener" data-a="sendGroupe" href="' + wa(msgGroupe(x)) + '">' + (x.groupe_msg_le ? "Renvoyer ses horaires ↗" : "Envoyer ses horaires ↗") + "</a>" : "") + "</div>" +
-            '<p class="tm-note" style="margin:8px 0 0!important">' + (susp(x) ? "Place suspendue tant que le solde n'est pas payé : il révise en ligne. Il la retrouve dès son paiement (ou la première place libre si son groupe s'est rempli)." : x.groupe_code && !cycleOk(x) ? "Cycle de 6 semaines terminé" + (x.groupe_depuis ? " (commencé le " + dFr(x.groupe_depuis) + ")" : "") + " : sa place est libérée. Il révise en ligne et peut venir au rattrapage du mercredi. Pour un nouveau cycle, choisis à nouveau son groupe." : x.groupe_code ? "Cycle de code : semaine " + Math.min(6, Math.floor((Date.now() - new Date(x.groupe_depuis || Date.now())) / (7 * 864e5)) + 1) + " sur 6. Il vient à ses 2 cours par semaine, et le mercredi en rattrapage s'il en a manqué un." : gLibre() ? "Une place est libre : il est placé automatiquement dans quelques secondes." : "Tous les groupes ouverts sont complets : il révise en ligne et sera placé automatiquement à la première place libre. Pour aller plus vite, ouvre un groupe (« Gérer les groupes », en haut de la liste).") + "</p></div>") +
+            '<p class="tm-note" style="margin:8px 0 0!important">' + (susp(x) ? "Place suspendue tant que le solde n'est pas payé : il révise en ligne. Il la retrouve dès son paiement (ou la première place libre si son groupe s'est rempli)." : x.groupe_code && !cycleOk(x) ? "Cycle de 6 semaines terminé" + (x.groupe_depuis ? " (commencé le " + dFr(x.groupe_depuis) + ")" : "") + " : sa place est libérée. Il révise en ligne et peut venir au rattrapage du mercredi. Pour un nouveau cycle, choisis à nouveau son groupe." : x.groupe_code ? "Cycle de code : semaine " + Math.min(6, Math.floor((Date.now() - new Date(x.groupe_depuis || Date.now())) / (7 * 864e5)) + 1) + " sur 6. Il vient à ses 2 cours par semaine, et le mercredi en rattrapage s'il en a manqué un." : gLibre() ? "Une place est libre : il est placé automatiquement dans quelques secondes." : "Tous les groupes ouverts sont complets : il révise en ligne et sera placé automatiquement à la première place libre. Pour aller plus vite, ouvre un groupe (« Gérer les groupes », en haut de la liste).") + '</p><p class="pc-cours" id="sd-pcCours"></p></div>') +
           (x.quota !== null ? (() => { const q = x.quota, f = x.faits, et = seEtat(x), ea = evalAt(x), pct = q ? Math.min(100, Math.round((f / q) * 100)) : 100, rest = Math.max(0, q - f - x.resa);
             const al = et === "pret" ? '<div class="se-al se-ok"><b>Le moniteur le juge prêt' + (x.evaluation_le ? " (" + dFr(x.evaluation_le) + ")" : "") + '.</b> Prochaine étape : « Formation terminée : passer à l\'examen » (plus bas).</div>'
               : et === "fin" ? '<div class="se-al se-warn"><b>' + (x.evaluation === "plus" ? "Le moniteur conseille des séances en plus." : "Toutes ses séances prévues sont faites.") + '</b> Prochaine étape : lui proposer des séances en plus (5 000 F l\'heure), ou le passer à l\'examen s\'il est prêt.<div class="tm-formact">' + (n ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-a="relPlus" href="' + wa(msgPlus(x)) + '">Proposer des séances en plus ↗</a>' : "") + '<button class="btn btn-green btn-sm" type="button" data-a="rcPlus">Séance payée ? Faire le reçu</button>' + (x.evaluation !== "pret" ? '<button class="linkbtn" type="button" data-ev="pret">Il est prêt quand même</button>' : "") + "</div></div>"
@@ -3165,6 +3194,7 @@ function init(root) {
       const suivi = '<div class="pc-edit"><button class="linkbtn" type="button" data-a="edit">Modifier la fiche</button></div>'; // l'historique reste enregistré dans la base (table suivi), sans l'afficher
       box.innerHTML = head + info + body + pieces + arch + suivi;
       const id = x.id;
+      if (st === "formation" && !sansCode(x)) fillCours(x);
       if (st === "formation") {
         const [py, cd] = await Promise.all([run(() => DB.q("paiements?select=*&eleve_id=eq." + id + "&order=cree_le.desc")), run(() => DB.q("creneaux_conduite?select=jour,heure,statut&eleve_id=eq." + id + "&order=jour.desc&limit=60"))]);
         if (pcSel !== id) return;
@@ -3413,7 +3443,8 @@ function init(root) {
       if (!sel.options.length) {
         const w = await run(() => DB.q("devoir_semaines?select=*&lundi=lte." + iso(new Date()) + "&order=lundi.desc&limit=15"));
         if (!w) return;
-        sel.innerHTML = w.map((x) => '<option value="' + x.lundi + '" data-l="' + x.lettre + '" data-t="' + esc(x.theme) + '">Semaine du ' + dOf(x.lundi).getDate() + " " + M[dOf(x.lundi).getMonth()] + " · Devoir " + x.lettre + " · " + esc(x.theme) + "</option>").join("") || '<option value="' + devWeek().key + '" data-l="' + DEV[devWeek().idx].l + '" data-t="' + esc(DEV[devWeek().idx].t) + '">Semaine en cours</option>';
+        const opt = (lundi) => { const k = devWeek(new Date(lundi + "T12:00:00Z")), dv = k.sem < 5 ? [DEV[k.c[0]], DEV[k.c[1]]] : []; return '<option value="' + lundi + '" data-l="' + (dv.length ? dv[0].l + " et " + dv[1].l : "") + '" data-t="' + esc(BOUCLE[k.c[0]].t + " · " + BOUCLE[k.c[1]].t) + '">Semaine du ' + dOf(lundi).getDate() + " " + M[dOf(lundi).getMonth()] + " · " + (dv.length ? "Devoirs " + dv[0].l + " et " + dv[1].l : "révision, pas de devoir") + "</option>"; };
+        sel.innerHTML = w.map((x) => opt(x.lundi)).join("") || opt(devWeek().key);
       }
       const o = sel.selectedOptions[0]; if (!o) return;
       const r = await run(() => DB.q("devoir_resultats?select=*&semaine=eq." + o.value + "&order=recu_le"));
@@ -3421,8 +3452,8 @@ function init(root) {
       const moy = r.length ? r.reduce((a, x) => a + (x.note * 10) / x.sur, 0) / r.length : 0;
       $("#sd-dvStats").innerHTML = "<div><span>Participants</span><b>" + r.length + "</b></div><div><span>Moyenne</span><b>" + (r.length ? String(Math.round(moy * 10) / 10).replace(".", ",") + "/10" : "—") + "</b></div><div><span>Niveau examen (9 ou 10)</span><b>" + r.filter((x) => x.note / x.sur >= 0.9).length + "</b></div>";
       const ic = (x) => (x.note / x.sur >= 0.9 ? "🏆" : x.note / x.sur >= 0.7 ? "✅" : "📘");
-      const lines = r.map((x) => ic(x) + " " + x.eleve_nom + " : " + x.note + "/" + x.sur + (x.devoir !== o.dataset.l ? " (devoir " + x.devoir + ")" : ""));
-      const msg = "📚 *SODAF Auto-École · Devoir " + o.dataset.l + "*\nSemaine du " + dOf(o.value).getDate() + " " + M[dOf(o.value).getMonth()] + " · " + o.dataset.t + "\n\n" + (r.length ? "👥 " + r.length + (r.length > 1 ? " participants" : " participant") + " · moyenne " + String(Math.round(moy * 10) / 10).replace(".", ",") + "/10\n\n" + lines.join("\n") : "Aucun résultat reçu pour l'instant.") + "\n\n🏆 9 ou 10 · ✅ 7 ou 8 · 📘 à revoir\nCorrection mercredi en salle à 14 h 30.\nPas encore fait ? autosodaf.com/#devoirs";
+      const lines = r.map((x) => ic(x) + " " + x.eleve_nom + " : " + x.note + "/" + x.sur + " (devoir " + x.devoir + ")");
+      const msg = "📚 *SODAF Auto-École · " + (o.dataset.l ? "Devoirs " + o.dataset.l : "Semaine de révision") + "*\nSemaine du " + dOf(o.value).getDate() + " " + M[dOf(o.value).getMonth()] + " · " + o.dataset.t + "\n\n" + (r.length ? "👥 " + r.length + (r.length > 1 ? " participants" : " participant") + " · moyenne " + String(Math.round(moy * 10) / 10).replace(".", ",") + "/10\n\n" + lines.join("\n") : "Aucun résultat reçu pour l'instant.") + "\n\n🏆 9 ou 10 · ✅ 7 ou 8 · 📘 à revoir\nCorrection au début du cours suivant.\nPas encore fait ? autosodaf.com/#devoirs";
       $("#sd-dvMsg").value = msg;
       $("#sd-dvWa").href = "https://wa.me/?text=" + encodeURIComponent(msg);
       $("#sd-dvRes").innerHTML = r.map((x) => '<div class="tm-row"><div class="tm-time tm-small">' + (x.note / x.sur >= 0.9 ? "Top" : x.note / x.sur >= 0.7 ? "Bien" : "À revoir") + '</div><div class="tm-main"><b>' + esc(x.eleve_nom) + " · " + x.note + "/" + x.sur + "</b><span>Devoir " + x.devoir + " · reçu le " + new Date(x.recu_le).toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" }) + "</span></div></div>").join("");
@@ -3535,7 +3566,7 @@ function init(root) {
     }
 
     // ---- Moniteur
-    const THEMES = [...$$("article.ch").map((c) => c.dataset.title), "Révision générale", "Examen blanc"];
+    const THEMES = [...$$("article.ch").map((c) => c.dataset.title)];
     async function loadMon() {
       if (!me) return;
       const today = iso(new Date());
@@ -3550,8 +3581,11 @@ function init(root) {
           const pr = await run(() => DB.q("presences?select=eleve_id&seance_id=eq." + se.id)) || [];
           const ids = new Set(pr.map((x) => x.eleve_id));
           const act = eleves.filter((x) => enCode(x) && !susp(x) && (!se.groupe || (x.groupe_code === se.groupe && cycleOk(x)))).sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
-          $("#sd-mcTitle").textContent = (se.jour === today ? "Aujourd'hui" : longDay(se.jour).replace(/^./, (c) => c.toUpperCase())) + " · " + (se.groupe ? (gOf(se.groupe) || { nom: "Groupe " + se.groupe }).nom + " · " : "") + se.type + " · " + se.heure + (se.statut === "Fait" ? " ✓" : "");
-          $("#sd-mcBody").innerHTML = picker + (se.groupe ? "" : '<p class="tm-note" style="margin:0 0 8px!important">Séance commune : élèves de tous les groupes qui ont manqué un cours ou veulent s\'entraîner. 6 places au maximum.</p>') + '<div class="field"><label for="sd-mcTheme">Thème traité</label><select id="sd-mcTheme"><option value="">— Choisir —</option>' + THEMES.map((t) => "<option" + (t === se.theme ? " selected" : "") + ">" + esc(t) + "</option>").join("") + '</select></div><p class="tm-lab">Présents (' + ids.size + ")</p>" + (act.length ? '<div class="tm-checks">' + act.map((x) => '<label><input type="checkbox" data-pe="' + x.id + '"' + (ids.has(x.id) ? " checked" : "") + "> " + esc(x.nom) + "</label>").join("") + "</div>" : '<p class="tm-empty">Aucun élève inscrit pour l\'instant.</p>') + '<div class="field"><label for="sd-mcNote">Note (facultatif)</label><input id="sd-mcNote" value="' + esc(se.note || "") + '"></div><button class="btn btn-green btn-sm" type="button" id="sd-mcDone" data-id="' + se.id + '">' + (se.statut === "Fait" ? "Mettre à jour" : "Cours fait") + "</button>";
+          $("#sd-mcTitle").textContent = (se.jour === today ? "Aujourd'hui" : longDay(se.jour).replace(/^./, (c) => c.toUpperCase())) + " · " + (se.groupe ? (gOf(se.groupe) || { nom: "Groupe " + se.groupe }).nom + " · " : "") + (se.groupe && bIdx(se.theme) >= 0 ? "Cours " + (bIdx(se.theme) + 1) + "/12 : " + se.theme : se.type) + " · " + se.heure + (se.statut === "Fait" ? " ✓" : "");
+          const bi = se.groupe ? bIdx(se.theme) : -1, bo = bi >= 0 ? BOUCLE[bi] : null;
+          $("#sd-mcBody").innerHTML = picker + (se.groupe ? "" : '<p class="tm-note" style="margin:0 0 8px!important">Séance commune : élèves de tous les groupes qui ont manqué un cours ou veulent s\'entraîner. 6 places au maximum. Choisis le cours que tu rattrapes : il compte pour les présents.</p>') +
+            (bo ? '<div class="mc-plan"><b>Au programme</b><ol><li><b>Début</b> : ' + debutCours(bi) + (BOUCLE[(bi + 11) % 12].dv !== null ? " (Mode classe → Devoir)" : "") + ".</li><li><b>Cours</b> : " + (bo.dv !== null ? "chapitres " + esc(chNoms(bo)) + " (Mode classe → Leçon)" : bo.n === 11 ? "révision de tous les thèmes : quiz, panneaux, situations" : "examen blanc de 40 questions (Mode classe → Quiz)") + ".</li>" + (bo.dv !== null ? "<li><b>Fin</b> : rappelle le devoir " + DEV[bo.dv].l + " à faire sur autosodaf.com.</li>" : "") + "</ol></div>" : "") +
+            '<div class="field"><label for="sd-mcTheme">Cours donné</label><select id="sd-mcTheme"><option value="">— Choisir —</option><optgroup label="Programme (12 cours)">' + BOUCLE.map((b) => "<option" + (b.t === se.theme ? " selected" : "") + ' value="' + esc(b.t) + '">' + b.n + ". " + esc(b.t) + "</option>").join("") + '</optgroup><optgroup label="Autre chapitre">' + THEMES.filter((t) => bIdx(t) < 0).map((t) => "<option" + (t === se.theme ? " selected" : "") + ">" + esc(t) + "</option>").join("") + "</optgroup>" + (se.theme && bIdx(se.theme) < 0 && !THEMES.includes(se.theme) ? "<option selected>" + esc(se.theme) + "</option>" : "") + '</select></div><p class="tm-lab">Présents (' + ids.size + ")</p>" + (act.length ? '<div class="tm-checks">' + act.map((x) => '<label><input type="checkbox" data-pe="' + x.id + '"' + (ids.has(x.id) ? " checked" : "") + "> " + esc(x.nom) + "</label>").join("") + "</div>" : '<p class="tm-empty">Aucun élève inscrit pour l\'instant.</p>') + '<div class="field"><label for="sd-mcNote">Note (facultatif)</label><input id="sd-mcNote" value="' + esc(se.note || "") + '"></div><button class="btn btn-green btn-sm" type="button" id="sd-mcDone" data-id="' + se.id + '">' + (se.statut === "Fait" ? "Mettre à jour" : "Cours fait") + "</button>";
           $$("#sd-mcBody [data-pe]").forEach((c) => c.addEventListener("change", async () => {
             const eid = +c.dataset.pe;
             if (c.checked) await run(() => DB.q("presences", { method: "POST", body: { seance_id: se.id, eleve_id: eid }, prefer: "return=minimal,resolution=ignore-duplicates" }), "Présence enregistrée");
@@ -3667,7 +3701,7 @@ function init(root) {
         const ids = [...new Set(Q.map((q) => q[4]))];
         sel.innerHTML = '<option value="all:10">10 questions au hasard</option><option value="all:20">20 questions au hasard</option><option value="all:99">Toutes les questions (' + Q.length + ")</option>" +
           ids.map((id) => '<option value="' + id + '">Chapitre : ' + esc(chTitle(id)) + "</option>").join("");
-      } else if (mode === "devoir") { const cw = devWeek().idx; sel.innerHTML = DEV.map((d, k) => '<option value="' + k + '"' + (k === cw ? " selected" : "") + ">Devoir " + d.l + " · " + esc(d.t) + (k === cw ? " (cette semaine)" : "") + "</option>").join(""); }
+      } else if (mode === "devoir") { const cw = devCorr(); sel.innerHTML = DEV.map((d, k) => '<option value="' + k + '"' + (k === cw ? " selected" : "") + ">Devoir " + d.l + " · " + esc(d.t) + (k === cw ? " (à corriger aujourd'hui)" : "") + "</option>").join(""); }
       else if (mode === "situations") sel.innerHTML = '<option value="all">Toutes les situations (' + SITS.length + ")</option>" + SITS.map((x) => '<option value="' + x.id + '">' + esc(x.t) + "</option>").join("");
       else sel.innerHTML = SIGN_FAMILIES.map(([k, l]) => '<option value="' + k + '">' + esc(l) + "</option>").join("");
     }
@@ -4087,6 +4121,26 @@ html:has(#sodaf-root.app-mode),body:has(#sodaf-root.app-mode){background:#ECEFEE
 
 .pc-gh.gc-off{opacity:.62}
 .pc-gempty .btn{margin-left:6px;vertical-align:middle}
+
+/* Programme du code en boucle */
+.prog{display:grid;gap:6px;margin-top:12px}
+.prog-w{display:grid;grid-template-columns:150px 1fr 1fr;gap:6px 14px;align-items:center;padding:10px 14px;border-radius:12px;background:var(--soft);border:1px solid var(--line);font-size:.92rem}
+.prog-w b{font-family:var(--f-ui);font-weight:700}.prog-w b small{display:block;font-weight:500;color:var(--muted);font-size:.78rem}
+.prog-w span i{font-style:normal;font-weight:800;display:inline-grid;place-items:center;min-width:24px;height:24px;border-radius:7px;background:#fff;border:1px solid var(--line);margin-right:8px;font-size:.8rem}
+.prog-w span em{font-style:normal;font-size:.74rem;color:var(--muted);margin-left:6px;white-space:nowrap}
+.prog-w.now{background:var(--asph);color:#fff;border-color:var(--asph)}.prog-w.now b small,.prog-w.now span em{color:var(--yellow)}.prog-w.now span i{background:var(--yellow);border-color:var(--yellow);color:var(--asph)}
+@media (max-width:700px){.prog-w{grid-template-columns:1fr}}
+.tm-prog{margin-top:16px;padding:0!important}
+.tm-prog>summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:16px 20px}
+.tm-prog>summary::-webkit-details-marker{display:none}
+.tm-prog>summary b{display:block;font-family:var(--f-display);font-size:1.35rem}.tm-prog>summary small{color:var(--muted);font-size:.86rem}
+.tm-prog>summary em{font-style:normal;font-weight:600;color:var(--ink);border-bottom:2px solid var(--yellow);white-space:nowrap}
+.tm-prog[open]>summary em{font-size:0}.tm-prog[open]>summary em::after{content:"Fermer";font-size:.95rem}
+.tm-prog>div{padding:0 20px 18px}
+.mc-plan{background:#FFF6D6;border-left:4px solid #E0A400;border-radius:10px;padding:10px 12px;margin:0 0 12px}
+.mc-plan>b{display:block;font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:#6B4E00}.mc-plan ol{margin:4px 0 0;padding-left:1.2em;font-size:.92rem}.mc-plan li{margin:2px 0}
+.pc-cours{margin:8px 0 0!important;font-size:.9rem;color:#3D444D}
+.devwk{margin:0 0 14px!important;color:var(--muted)}.devnow+.devnow{margin-top:-8px}
 `;
   const st = document.createElement("style"); st.textContent = CSS + CSS_REFONTE + 'html,body{margin:0;background:#15191E}#sodaf-root{min-height:100vh;display:flex;flex-direction:column}#sodaf-root>#app{flex:1;display:flex;flex-direction:column;background:#fff}#sodaf-root main{flex:1}'; document.head.appendChild(st);
   if (!document.querySelector("link[rel=icon]")) { const fi = document.createElement("link"); fi.rel = "icon"; fi.type = "image/svg+xml"; fi.href = FAVICON; document.head.appendChild(fi); }
