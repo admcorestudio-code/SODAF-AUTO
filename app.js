@@ -1272,14 +1272,14 @@ const HTML = `
 <a href="#cours-panneaux"><svg viewBox="0 0 48 48"><polygon points="24,5 45,42 3,42" fill="#fff" stroke="#C8372D" stroke-width="5" stroke-linejoin="round"/><path d="M24 18v12M24 34v2" stroke="#14171C" stroke-width="3.5" stroke-linecap="round"/></svg><div><b>Panneaux</b><span>Danger, interdiction…</span></div></a>
 <a href="#cours-feux"><svg viewBox="0 0 48 48"><rect x="14" y="3" width="20" height="42" rx="7" fill="#2A2F36"/><circle cx="24" cy="13" r="4.5" fill="#C8372D"/><circle cx="24" cy="24" r="4.5" fill="#F2B100"/><circle cx="24" cy="35" r="4.5" fill="#0B6E4F"/></svg><div><b>Feux</b><span>Vert, jaune, rouge</span></div></a>
 <a href="#cours-agents"><svg viewBox="0 0 48 48"><circle cx="24" cy="10" r="6" fill="#14171C"/><path d="M24 17v15M24 32l-7 11M24 32l7 11M8 22h32" stroke="#14171C" stroke-width="4" stroke-linecap="round"/></svg><div><b>Agents</b><span>Les gestes à connaître</span></div></a>
-</div></div>
+</div></div></div>
 
 <div class="wrap sec">
 <div class="sec-head"><div><p class="eyebrow">Pourquoi SODAF</p><h2>Une auto-école qui te suit partout</h2></div></div>
 <div class="grid g3">
-<div class="card feat"><span class="fico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/></svg></span><h3>Le manuel en ligne</h3><p>Les 7 parties du manuel SODAF en chapitres courts, à lire où tu veux.</p><a class="more" href="#cours">Ouvrir les cours →</a></div>
-<div class="card feat"><span class="fico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg></span><h3>Quiz corrigés</h3><p>Chaque réponse est expliquée et renvoie au chapitre à relire.</p><a class="more" href="#quiz">S'entraîner →</a></div>
-<div class="card feat"><span class="fico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg></span><h3>Paiement en tranches</h3><p>Règle ta formation en 2 fois (la moitié à l'inscription, le reste avant ta 1re conduite), en espèces ou par Mixx by Yas.</p><a class="more" href="#formations">Voir les formules →</a></div>
+<div class="card feat"><span class="fico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/></svg></span><h3>Le manuel en ligne</h3><p>Les 7 parties du manuel SODAF en chapitres courts, à lire où tu veux.</p><a class="more" href="#cours">Ouvrir les cours</a></div>
+<div class="card feat"><span class="fico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg></span><h3>Quiz corrigés</h3><p>Chaque réponse est expliquée et renvoie au chapitre à relire.</p><a class="more" href="#quiz">S'entraîner</a></div>
+<div class="card feat"><span class="fico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg></span><h3>Paiement en tranches</h3><p>Règle ta formation en 2 fois (la moitié à l'inscription, le reste avant ta 1re conduite), en espèces ou par Mixx by Yas.</p><a class="more" href="#formations">Voir les formules</a></div>
 </div></div>
 
 <div class="wrap sec">
@@ -1294,7 +1294,7 @@ const HTML = `
 
 <div class="band-dark"><span class="mono-wm" aria-hidden="true">${LOGO("#FFFFFF", "mono")}</span><div class="wrap" style="position:relative">
 <div class="qday">
-<div style="position:relative"><p class="eyebrow">Question du jour</p><h2 style="margin-top:10px">Teste-toi en 10 secondes</h2><p style="color:var(--muted);margin-top:10px">Une question tirée du manuel SODAF. Tu veux aller plus loin ? Le quiz complet t'attend.</p><a class="btn btn-line btn-sm" style="margin-top:16px" href="#quiz">Faire le quiz complet</a></div>
+<div style="position:relative"><p class="eyebrow">Question du jour</p><h2 style="margin-top:10px">Teste-toi en 10 secondes</h2><p style="margin-top:10px">Une question tirée du manuel SODAF. Tu veux aller plus loin ? Le quiz complet t'attend.</p><a class="btn btn-line btn-sm" style="margin-top:16px" href="#quiz">Faire le quiz complet</a></div>
 <div id="sd-qday" style="position:relative"></div>
 </div></div></div>
 
@@ -1528,7 +1528,7 @@ ${HEAD("Manuel officiel SODAF", "Les cours", "Tout ce qui est enseigné en salle
 <h4>L'action P.A.S.</h4>
 <p>Si les secours sont déjà là, ne t'arrête pas. Si l'accident vient d'arriver devant toi :</p>
 <div class="mnemo pas"><div>${PAS_ICO.p}<b>Protéger</b>Gare-toi en sécurité. Coupe le contact des véhicules, interdis de fumer. Triangle et feux de détresse.</div><div>${PAS_ICO.a}<b>Alerter</b>Appelle : nature de l'accident, nombre de blessés, véhicules, lieu exact, incendie éventuel.</div><div>${PAS_ICO.s}<b>Secourir</b>Position latérale de sécurité (PLS). Comprime les plaies qui saignent.</div></div>
-<p><a href="#outils-urgence">Numéros d'urgence du Togo →</a></p>
+<p><a href="#outils-urgence">Numéros d'urgence du Togo</a></p>
 </article>
 
 <article class="ch" id="cours-assurance" data-part="E · Assurance" data-title="L'assurance automobile">
@@ -1566,7 +1566,7 @@ ${HEAD("Manuel officiel SODAF", "Les cours", "Tout ce qui est enseigné en salle
 <tr><td>Freinage</td><td>Suit le carré de la vitesse</td><td>Vitesse × 2 → freinage × 4</td></tr>
 <tr><td>Route mouillée</td><td>Freinage doublé</td><td>Charge lourde : plus long</td></tr>
 </tbody></table></div>
-<p><a href="#outils">Essaie le calculateur →</a></p>
+<p><a href="#outils">Essaie le calculateur</a></p>
 </article>
 
 <article class="ch" id="cours-stationnement" data-part="F · Conduite" data-title="Arrêt et stationnement">
@@ -1608,7 +1608,7 @@ ${HEAD("Manuel officiel SODAF", "Les cours", "Tout ce qui est enseigné en salle
 
 <article class="ch" id="cours-tableau" data-part="G · Mécanique" data-title="Contrôles et tableau de bord">
 <header><div><p class="eyebrow">Partie G</p><h2>Contrôles et tableau de bord</h2></div></header>
-<p>Chaque matin, vérifie 12 points. <a href="#outils-check">Ouvrir la check-list →</a></p>
+<p>Chaque matin, vérifie 12 points. <a href="#outils-check">Ouvrir la check-list</a></p>
 <h4>Lot de bord</h4>
 <p>Cric, clé démonte-roue, roue de secours, tournevis, extincteur, trousse de secours, triangle.</p>
 <h4>Documents de bord</h4>
@@ -3805,7 +3805,104 @@ function init(root) {
 
 
 (function () {
-  const st = document.createElement("style"); st.textContent = CSS + 'html,body{margin:0;background:#15191E}#sodaf-root{min-height:100vh;display:flex;flex-direction:column}#sodaf-root>#app{flex:1;display:flex;flex-direction:column;background:#fff}#sodaf-root main{flex:1}'; document.head.appendChild(st);
+  const CSS_REFONTE = String.raw`/* ===== Refonte visuelle (oct. 2026) : univers « la route » — asphalte, marquage jaune, vert SODAF, bleu panneau ===== */
+#sodaf-root{--asph:#15191E;--asph2:#1E242B;--concrete:#F1F3F2;--sign:#1A4A85;--sign-d:#0E2A4E;
+--f-display:"Barlow Condensed","Outfit","DejaVu Sans Condensed",system-ui,sans-serif;--f-ui:"Outfit","Figtree",system-ui,sans-serif;--f-mono:"Outfit","Figtree",system-ui,sans-serif}
+/* Titres : lettrage de panneau, étroit et fort */
+#sodaf-root h1,#sodaf-root h2{font-family:var(--f-display);font-weight:700;letter-spacing:-.005em;line-height:.96}
+#sodaf-root h2{font-size:clamp(2.2rem,4.6vw,3.3rem)}
+#sodaf-root h3{font-family:var(--f-ui);font-weight:700;letter-spacing:-.01em}
+/* Petites étiquettes : plus calmes, en minuscules */
+.eyebrow{font-family:var(--f-ui);font-size:.95rem;letter-spacing:0;text-transform:none;color:var(--green);font-weight:600;margin-bottom:6px!important}
+.tag{font-family:var(--f-ui);letter-spacing:.01em;text-transform:none;font-size:.78rem;font-weight:600;border-radius:999px;padding:.22em .7em}
+.logo-sub,.logo small,.rule small{font-family:var(--f-ui);letter-spacing:.06em}
+/* Boutons */
+.btn{font-weight:700}
+#sodaf-root .btn-line{border-color:#CBD1D6}
+/* En-tête du site */
+header.top{background:rgba(255,255,255,.96)}
+#sodaf-root nav.main a{font-family:var(--f-ui);font-weight:600}
+#sodaf-root nav.main a.on{box-shadow:inset 0 -4px 0 var(--yellow)}
+#sodaf-root header.top .bar>.btn-green{background:var(--asph);color:#fff}
+
+/* ---- Accueil : bandeau asphalte, comme les autres pages ---- */
+.hero{background:var(--asph);color:#fff;min-height:min(88vh,760px)}
+.veil{background:linear-gradient(90deg,var(--asph) 0%,rgba(21,25,30,.95) 36%,rgba(21,25,30,.62) 60%,rgba(21,25,30,.18) 100%)}
+.hero::after{display:none}
+.greet{color:var(--yellow);font-family:var(--f-ui)}
+#sodaf-root .hero h1{color:#fff;font-size:clamp(3.6rem,8.4vw,6.8rem);font-weight:800;line-height:.9;letter-spacing:-.01em}
+.hero h1 em{color:#fff}
+#sodaf-root .hero h1::after{content:"";display:block;width:min(340px,70%);height:8px;margin-top:20px;background:repeating-linear-gradient(90deg,var(--yellow) 0 44px,transparent 44px 70px)}
+.hslogan{color:#fff;border-bottom:0;padding-bottom:0;margin-top:22px!important;font-family:var(--f-ui)}
+.hero p.lead{color:#C3CAD1}
+#sodaf-root .hero .btn-line{background:transparent;color:#fff;border-color:rgba(255,255,255,.4)}
+#sodaf-root .hero .btn-line:hover{border-color:#fff}
+#sodaf-root .hero .btn-green{background:var(--yellow);color:var(--asph)}
+#sodaf-root .hero .btn-green:hover{box-shadow:0 12px 26px -12px rgba(242,177,0,.8)}
+.facts{gap:20px 0;margin-top:40px}
+.facts>div{padding:0 26px;border-left:1px solid rgba(255,255,255,.18)}.facts>div:first-child{padding-left:0;border-left:0}
+.facts b{color:#fff;font-family:var(--f-display);font-size:2.6rem;font-weight:700}
+.facts span{color:#9EA7B0}
+.dots button{background:rgba(255,255,255,.22)}.dots button.on{background:var(--yellow)}
+.lane{background:repeating-linear-gradient(90deg,var(--yellow) 0 46px,transparent 46px 80px);opacity:1;height:6px}
+.rule{border:0;box-shadow:0 18px 40px -18px rgba(0,0,0,.6)}
+@media (max-width:820px){.veil{background:linear-gradient(180deg,rgba(21,25,30,.25) 0%,rgba(21,25,30,.82) 34%,var(--asph) 56%)}.hero-in{padding-block:200px 110px}#sodaf-root .hero h1{font-size:clamp(3.2rem,15vw,4.6rem)}.facts>div{padding:0 16px}}
+/* Barre des prix sous le bandeau */
+.pricebar{border:0;border-radius:18px;box-shadow:0 24px 50px -28px rgba(0,0,0,.45);padding:20px 24px}
+.pb-item{border-left-width:4px}.pb-item:first-child{border-left-color:var(--yellow)}
+.pb-item b{font-family:var(--f-display);font-size:1.9rem;font-weight:700;letter-spacing:0}
+
+/* ---- Rythme des sections ---- */
+.sec{padding-top:88px}
+.sec-head{margin-bottom:32px}
+.sec-head p{font-size:1.02rem}
+.band-soft{background:var(--concrete);padding-block:80px}
+.band-dark{margin-top:88px;padding-block:84px;background:var(--asph)}
+.band-dark .eyebrow{color:var(--yellow)}
+.page-head{padding-block:64px 54px}
+.page-head .eyebrow{color:var(--yellow)}
+#sodaf-root .page-head h1{font-size:clamp(3rem,6.6vw,5.2rem);font-weight:800;line-height:.92}
+#sodaf-root .page-head p.lead{margin-top:16px;font-size:1.1rem}
+
+/* ---- Cartes : moins de traits, plus de hiérarchie ---- */
+.card{border-color:#E3E7E5;border-radius:16px;padding:24px}
+.band-soft .card,.band-soft .signals{border-color:transparent}
+.card.soft{background:var(--concrete)}
+.fico{width:46px;height:46px;border-radius:12px;background:var(--asph);color:var(--yellow)}
+#sodaf-root .feat a.more{color:var(--ink);border-bottom:2px solid var(--yellow);align-self:flex-start;padding-bottom:1px}
+.signals{border:0;border-radius:18px;box-shadow:0 1px 0 #E3E7E5}
+#sodaf-root .signals a{padding:24px 22px}
+.signals b{font-family:var(--f-display);font-size:1.35rem;font-weight:700;letter-spacing:0}
+/* Formules */
+.offer .cat{font-family:var(--f-display);font-size:2.8rem;font-weight:700;letter-spacing:0}
+#sodaf-root .offer.star{background:var(--asph);border:0;color:#fff;box-shadow:0 26px 50px -28px rgba(0,0,0,.55)}
+#sodaf-root .offer.star h3,#sodaf-root .offer.star .cat{color:#fff}
+#sodaf-root .offer.star p,#sodaf-root .offer.star li{color:#C3CAD1}
+#sodaf-root .offer.star .price{border-top-color:rgba(255,255,255,.18)}
+#sodaf-root .offer.star .price b{color:#C3CAD1}
+#sodaf-root .offer.star .btn-green{background:var(--yellow);color:var(--asph)}
+#sodaf-root .offer.star .btn-line{background:transparent;color:#fff;border-color:rgba(255,255,255,.4)}
+/* Parcours */
+.stop i{font-family:var(--f-display);font-size:1.3rem;border-width:2.5px}
+.stop:last-child i{background:var(--yellow);border-color:var(--yellow);color:var(--asph)}
+.route::before{opacity:.28}
+/* Bandeau final */
+.band{border:0;background:var(--asph);color:#fff;border-radius:22px;padding:44px}
+#sodaf-root .band h2{color:#fff}
+.band p{color:#C3CAD1}
+.band .zebra{background:repeating-linear-gradient(90deg,rgba(255,255,255,.07) 0 16px,transparent 16px 32px)}
+#sodaf-root .band .btn-green{background:var(--yellow);color:var(--asph)}
+/* Bandeau « code en salle » */
+.classband{background:#fff;border:1.5px solid #E3E7E5;border-left:6px solid var(--yellow);border-radius:14px}
+.classband .cb-t{font-family:var(--f-display);font-size:1.35rem}
+/* Pied de page */
+footer.site{background:var(--asph)}
+/* Bouton WhatsApp flottant : plus discret */
+#sodaf-root .wa-float{box-shadow:0 10px 24px -10px rgba(0,0,0,.45)}
+/* Espace équipe : mêmes titres et chiffres */
+.tm-stats b{font-family:var(--f-display);font-size:1.7rem;font-weight:700;letter-spacing:0}
+`;
+  const st = document.createElement("style"); st.textContent = CSS + CSS_REFONTE + 'html,body{margin:0;background:#15191E}#sodaf-root{min-height:100vh;display:flex;flex-direction:column}#sodaf-root>#app{flex:1;display:flex;flex-direction:column;background:#fff}#sodaf-root main{flex:1}'; document.head.appendChild(st);
   if (!document.querySelector("link[rel=icon]")) { const fi = document.createElement("link"); fi.rel = "icon"; fi.type = "image/svg+xml"; fi.href = FAVICON; document.head.appendChild(fi); }
   const app = document.getElementById("app"); app.innerHTML = HTML;
   if (window.SODAF_APP) {
