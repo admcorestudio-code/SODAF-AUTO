@@ -853,10 +853,18 @@ label.ex-doc input{position:absolute;left:14px;top:12px;width:20px;height:20px;a
 #sodaf-root [data-rappel=""][aria-pressed="true"]{background:var(--green);color:#fff}
 #sodaf-root [data-ko][aria-pressed="true"]{outline:3px solid var(--ink);outline-offset:2px}
 .pc-callnow{padding-bottom:14px;margin-bottom:14px;border-bottom:2px solid var(--ink)}
-.tm-newins{margin-left:auto;align-self:center;margin-bottom:6px}
-#sodaf-root .tm-newins{background:#133A6C;color:#fff;border:1.5px solid #0E2A4E;box-shadow:inset 0 2px 6px rgba(0,0,0,.35),inset 0 -1px 0 rgba(255,255,255,.12);font-weight:700}
-#sodaf-root .tm-newins:hover{background:#0E2A4E}
-#sodaf-root .tm-newins:active{box-shadow:inset 0 3px 8px rgba(0,0,0,.45)}
+.tm-newins{margin:6px 6px 10px auto;align-self:center}
+#sodaf-root .tm-newins{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:10px;padding:7px 18px 7px 7px;border-radius:999px;border:2px solid var(--yellow);background:linear-gradient(135deg,#0E2A4E 0%,#1A4A85 100%);color:#fff;cursor:pointer;font:inherit;box-shadow:0 0 0 4px rgba(242,177,0,.18),0 8px 20px rgba(14,42,78,.35),inset 0 1px 0 rgba(255,255,255,.18);transition:transform .15s ease,box-shadow .15s ease}
+#sodaf-root .tm-newins:hover{transform:translateY(-1px);box-shadow:0 0 0 6px rgba(242,177,0,.25),0 12px 26px rgba(14,42,78,.45),inset 0 1px 0 rgba(255,255,255,.18)}
+#sodaf-root .tm-newins:active{transform:translateY(1px);box-shadow:0 0 0 3px rgba(242,177,0,.25),inset 0 3px 8px rgba(0,0,0,.4)}
+#sodaf-root .tm-newins:focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
+#sodaf-root .tm-newins:after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.28),transparent);transform:skewX(-20deg);animation:niShine 4.5s ease-in-out infinite}
+@keyframes niShine{0%,70%{left:-60%}100%{left:130%}}
+@media (prefers-reduced-motion:reduce){#sodaf-root .tm-newins:after{animation:none;display:none}}
+.ni-ico{width:36px;height:36px;border-radius:50%;background:var(--yellow);color:#0E2A4E;display:grid;place-items:center;flex-shrink:0;box-shadow:inset 0 -2px 0 rgba(0,0,0,.15)}
+.ni-txt{display:flex;flex-direction:column;line-height:1.1;text-align:left}
+.ni-txt b{font-size:.95rem;font-weight:800;letter-spacing:.01em}
+.ni-txt small{font-size:.7rem;color:#FFD66B;font-weight:600;text-transform:uppercase;letter-spacing:.08em}
 #sodaf-root .ins-box{background:linear-gradient(160deg,#0E2A4E 0%,#133A6C 100%);color:#fff}
 #sodaf-root .ins-box .eyebrow{color:var(--yellow)}
 #sodaf-root .ins-hd h3{color:#fff}
@@ -892,7 +900,7 @@ label.ex-doc input{position:absolute;left:14px;top:12px;width:20px;height:20px;a
 .ins-mode{display:flex;gap:16px;margin:0 0 10px;font-weight:600}.ins-mode[hidden]{display:none}
 .ins-ft{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:flex-end;border-top:1.5px solid var(--line);padding-top:14px}
 .ins-sum{margin-right:auto;font-size:.95rem}.ins-sum b{color:var(--green);font-size:1.1rem}
-@media (max-width:600px){.ins-forms,.ins-pay{grid-template-columns:1fr}.ins-box{padding:16px}.tm-newins{width:100%;margin:6px 0}}
+@media (max-width:600px){.ins-forms,.ins-pay{grid-template-columns:1fr}.ins-box{padding:16px}#sodaf-root .tm-newins{width:100%;margin:6px 0 10px;justify-content:center}}
 .wl-card{background:linear-gradient(135deg,#0F3D2E 0%,#14523C 60%,#1B6B4D 100%);color:#fff;border-radius:18px;padding:22px 22px 16px;box-shadow:0 14px 34px rgba(15,61,46,.22);position:relative;overflow:hidden}
 .wl-card:after{content:"";position:absolute;right:-60px;top:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(255,214,107,.22),transparent 70%)}
 .wl-top{display:flex;gap:14px;align-items:flex-start;position:relative}
@@ -1697,7 +1705,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <button data-s="conduite" aria-selected="false">Planning conduite</button>
 <button data-s="paiements" aria-selected="false">Paiements et reçus</button>
 <button data-s="devoirs" aria-selected="false">Devoirs</button>
-<button class="btn btn-sm tm-newins" type="button" id="sd-insNew">+ Nouvelle inscription</button>
+<button class="tm-newins" type="button" id="sd-insNew"><span class="ni-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="M19 8v6M16 11h6"/></svg></span><span class="ni-txt"><b>Nouvelle inscription</b><small>Client au bureau</small></span></button>
 </div>
 <div class="ins-ov" id="sd-insOv" hidden><form class="ins-box" id="sd-insForm" novalidate>
 <div class="ins-hd"><div><p class="eyebrow" style="margin:0">Au bureau</p><h3>Nouvelle inscription</h3></div><button class="ins-x" type="button" id="sd-insX" aria-label="Fermer">×</button></div>
