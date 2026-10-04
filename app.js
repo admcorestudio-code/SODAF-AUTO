@@ -2860,8 +2860,7 @@ function init(root) {
       if (st === "accueil") {
         body = '<p class="pc-proto">Protocole : envoie le message d\'accueil sur WhatsApp. Le dossier passe tout seul en zone d\'appel.</p>' +
           '<div class="pc-block"><div class="pc-bh"><b>Message d\'accueil</b>' + (x.accueil_le ? '<span class="pc-ok">✓ Envoyé ' + ago(x.accueil_le) + "</span>" : "") + '</div><textarea id="sd-pcMsg" rows="14">' + esc(msgAccueil(x)) + '</textarea>' +
-          '<div class="tm-formact">' + (n ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-a="sendWelcome" href="' + wa(msgAccueil(x)) + '">Envoyer l\'accueil sur WhatsApp ↗</a>' : '<span class="tm-err">Pas de numéro : ajoute-le avec Modifier.</span>') + '<button class="linkbtn" type="button" data-a="toCall">Passer en zone d\'appel sans envoyer</button></div></div>' +
-          '<div class="pc-foot"><span>Numéro qui ne marche pas ?</span><button class="btn btn-sm pc-red" type="button" data-arch="Faux numéro">Coordonnées erronées / Faux numéro</button></div>';
+          '<div class="tm-formact">' + (n ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-a="sendWelcome" href="' + wa(msgAccueil(x)) + '">Envoyer l\'accueil sur WhatsApp ↗</a>' : '<span class="tm-err">Pas de numéro : ajoute-le avec Modifier.</span>') + '<button class="linkbtn" type="button" data-a="toCall">Passer en zone d\'appel sans envoyer</button></div></div>' ;
       } else if (st === "appels") {
         const t = x.appels || 0;
         const IC = (d) => '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + "</svg>";
@@ -2894,7 +2893,7 @@ function init(root) {
           (w.mode === "mixx" ? '<div class="tm-formact"><button class="btn btn-sm pc-red" type="button" data-a="webReject">Paiement introuvable</button></div>' : "") + "</div>" : "";
         const kr = Math.min((x.dossier_relances || 0) + 1, 4), relBtn = (cls, label) => n ? '<a class="btn ' + cls + ' btn-sm" target="_blank" rel="noopener" data-a="relDossier" href="' + wa(msgRel(x, kr)) + '">' + label + "</a>" : "";
         const relLabel = kr === 4 ? "Dernière relance (4/4) : envoyer et archiver ↗" : "Envoyer la relance " + kr + "/4 ↗";
-        body = w ? webBlock : webBlock + '<p class="pc-proto">Protocole : l\'élève a reçu le message de paiement. Sans nouvelles après 5 jours, il passe dans « À relancer ». 4 relances au maximum : la 4e met le dossier en pause (archivé « Plus tard »). Dès qu\'il paie : « Formation payée ? Faire le reçu ».</p>' +
+        body = w ? webBlock : webBlock + '<p class="pc-proto">Protocole : l\'élève a reçu le message de paiement. Sans nouvelles après 5 jours, il passe dans « À relancer ». 4 relances au maximum : la 4e met le dossier en pause (archivé « Plus tard »). Dès qu\'il paie : « Formation payée ? Faire le reçu » (en haut).</p>' +
           '<div class="pc-block"><div class="pc-bh"><b>Paiement en attente</b><span class="pc-ok">message envoyé ' + (age === 0 ? "aujourd'hui" : "il y a " + age + (age > 1 ? " jours" : " jour")) + (x.dossier_relances ? " · relance " + x.dossier_relances + "/4 " + ago(x.dossier_relance_le) : "") + "</span></div>" +
           (late ? '<div class="pc-alert' + (kr === 4 ? "" : " pc-verif") + '" style="margin-top:0"><b>Pas de nouvelles depuis ' + dosAge(x) + " jours.</b> " + (kr === 4 ? "C'est la dernière relance : après l'envoi, le dossier est archivé « Plus tard ». Il pourra être ressorti s'il revient." : "Envoie la relance " + kr + " sur 4 (le message s'adapte).") + '<div class="tm-formact">' + relBtn(kr === 4 ? "pc-red" : "btn-wa", relLabel) + "</div></div>"
             : '<div class="tm-formact">' + relBtn("btn-line", "Relancer maintenant (" + kr + "/4) ↗") + '<span class="tm-note" style="margin:0!important">Relance conseillée après 5 jours sans nouvelles.</span></div>') +
@@ -2930,7 +2929,7 @@ function init(root) {
         body = '<div class="pc-block"><p>Archivé ' + (x.archive_le ? "le " + new Date(x.archive_le).toLocaleDateString("fr-FR") : "") + (x.archive_motif ? " · motif : <b>" + esc(x.archive_motif) + "</b>" : "") + '.</p><p class="tm-note">« Ressortir » le remet dans la zone d\'appel, compteur d\'appels remis à zéro.</p>' + (n ? '<div class="tm-formact"><a class="btn btn-wa btn-sm" target="_blank" rel="noopener" href="https://wa.me/228' + n + '">Écrire sur WhatsApp</a></div>' : "") + "</div>";
       }
       const pieces = ""; // Pièces du dossier d'examen : gérées plus tard (fin de formation)
-      const arch = st === "dossier" ? '<div class="pc-foot"><span>Ranger le dossier</span><div class="tm-acts"><button class="linkbtn" type="button" data-a="backCall">Revenir en zone d\'appel</button><button class="btn btn-line btn-sm" type="button" data-arch="Plus tard">Plus tard (potentiel)</button><button class="btn btn-sm pc-dark" type="button" data-arch="Rétractation">Archiver – Rétractation</button></div></div>' : "";
+      const arch = ""; // le rangement (Plus tard, Rétractation, Faux numéro) n'existe que dans la zone d'appel
       const suivi = '<div class="pc-edit"><button class="linkbtn" type="button" data-a="edit">Modifier la fiche</button></div>'; // l'historique reste enregistré dans la base (table suivi), sans l'afficher
       box.innerHTML = head + info + body + pieces + arch + suivi;
       const id = x.id;
