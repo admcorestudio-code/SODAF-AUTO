@@ -853,6 +853,7 @@ label.ex-doc input{position:absolute;left:14px;top:12px;width:20px;height:20px;a
 #sodaf-root [data-rappel=""][aria-pressed="true"]{background:var(--green);color:#fff}
 #sodaf-root [data-ko][aria-pressed="true"]{outline:3px solid var(--ink);outline-offset:2px}
 .pc-callnow{padding-bottom:14px;margin-bottom:14px;border-bottom:2px solid var(--ink)}
+.cd-done{font-size:.85rem;font-weight:700;color:var(--green);white-space:nowrap}
 .pc-status{display:flex;align-items:center;gap:10px;flex-wrap:wrap;color:var(--green)}
 .pc-status b{font-size:1.15rem;color:var(--ink)}
 .pc-status span{font-size:.85rem;font-weight:600;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:.15em .7em}
@@ -1693,7 +1694,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="tm-sub"><div><p class="eyebrow">Mode d'emploi</p><h3>Les gestes du secrétariat</h3></div></div>
 <div class="grid g2 tm-guides">
 <div class="card soft"><p class="eyebrow">Le parcours d'un élève</p><ol class="teamsteps"><li><b>Accueil</b> : <b>Envoyer l'accueil</b> (WhatsApp). Le dossier passe tout seul en zone d'appel.</li><li><b>Appels</b> : appelle avec le script. Pas de réponse : choisis quand rappeler. À 4 tentatives : relance WhatsApp ou <b>Injoignable</b>.</li><li>Il est intéressé : <b>Envoyer le lien d'inscription</b> (en haut). Le dossier passe tout seul en paiement en attente.</li><li><b>Paiement en attente</b> : Mixx à vérifier sur le téléphone de l'agence, ou paiement à l'agence. Sans nouvelles : relance tous les 5 jours (4 au maximum).</li><li><b>Formation payée ? Faire le reçu</b> : le reçu s'ouvre déjà rempli, envoie-le. L'élève passe <b>En formation</b>.</li><li>Formation terminée : <b>Passer à l'examen</b>, message des papiers. Dossier complet + 30 000 F : reçu.</li><li><b>Dépôt d'examen</b> : coche le lot, imprime le bordereau, fais-le signer, puis <b>Lot déposé</b>. Au résultat : <b>Permis obtenu</b> ou <b>À repasser</b> (archivé « Permis échoué »).</li></ol></div>
-<div class="card soft"><p class="eyebrow">Réserver une séance de conduite</p><ol class="teamsteps"><li>Seuls les élèves dont la formation est soldée peuvent être réservés : les autres sont grisés. S'il doit encore payer : fiche de l'élève → <b>Rappel du solde</b>.</li><li><b>Planning conduite</b> : choisis le jour, puis l'élève sur un créneau libre.</li><li>Touche <b>Confirmer</b> : le message WhatsApp est prêt. La veille, touche <b>Rappel</b>.</li></ol></div>
+<div class="card soft"><p class="eyebrow">Réserver une séance de conduite</p><ol class="teamsteps"><li>Seuls les élèves dont la formation est soldée peuvent être réservés : les autres sont grisés. S'il doit encore payer : fiche de l'élève → <b>Rappel du solde</b>.</li><li><b>Planning conduite</b> : choisis le jour, puis l'élève sur un créneau libre.</li><li>Le choix est enregistré tout de suite. Touche <b>Prévenir l'élève</b> : le message WhatsApp avec le jour et l'heure est prêt. La veille, touche <b>Rappel</b>.</li></ol></div>
 <div class="card soft"><p class="eyebrow">Mercredi : résultats du devoir</p><ol class="teamsteps"><li>Onglet <b>Devoirs</b> : le message de la semaine est déjà écrit.</li><li>Touche <b>Ouvrir WhatsApp avec le message</b> et choisis le groupe.</li></ol></div>
 <div class="card soft"><p class="eyebrow">Règles</p><ol class="teamsteps"><li>On ne supprime rien : une séance annulée passe en <b>Annulé</b>, un dossier qui s'arrête va dans <b>Archivés</b> avec son motif, un reçu faux se fait <b>Annuler</b> (avec la raison) puis on refait le bon.</li><li>Erreur de nom ou de numéro : <b>Modifier</b> sur la fiche de l'élève.</li><li>Jour férié ou fermeture : <b>Planning conduite</b> → le jour → « Fermer ce jour », puis <b>Prévenir</b> chaque élève.</li><li>Les créneaux du mois suivant se créent tout seuls le 24.</li></ol></div>
 </div></div>
@@ -2689,6 +2690,9 @@ function init(root) {
     const exMixx = (x) => (CFG.mixx_numero ? "\n\nTu peux aussi payer les 30 000 F par *Mixx by Yas* au " + CFG.mixx_numero + (CFG.mixx_nom ? " (" + CFG.mixx_nom + ")" : "") + ", motif *" + CODE(x) + " EXAMEN*, puis nous envoyer la capture du SMS ici." : "");
     const exLine = (x) => x.examen_etape === "pret" ? (x.examen_lien_le ? "message envoyé " + ago(x.examen_lien_le) + " · dossier à apporter" : "message à envoyer") : x.examen_etape === "complet" ? "dossier reçu · à déposer" + (x.examen_passages ? " · " + (x.examen_passages + 1) + "e passage" : "") : "déposé le " + dFr(x.examen_depose_le) + " · résultat à noter";
     const SIGN = "\n\n*L'équipe SODAF · L'art de conduire, la force de réussir.*";
+    const jourLong = (j) => longDay(j).replace(/^./, (c) => c.toUpperCase());
+    const msgSeance = (el, c) => "Bonjour " + prenom(el) + ",\n\nTa séance de conduite est *confirmée*.\n\n*TA SÉANCE*\n• Date : " + jourLong(c.jour) + "\n• Heure : " + c.heure + " (durée 1 h)\n• Départ : SODAF, 412 Avenue Akei, Tokoin Tamé (en face de la caisse)\n• N° Client : " + CODE(el) + "\n\nMerci d'être là *10 minutes avant l'heure*, en chaussures fermées.\n\nUn empêchement ? Préviens-nous au moins la veille en répondant à ce message : nous déplacerons ta séance." + SIGN;
+    const msgRappelSeance = (el, c) => "Bonjour " + prenom(el) + ",\n\nPetit rappel : ta séance de conduite est *demain, " + longDay(c.jour) + " à " + c.heure + "*.\n\nDépart : SODAF, 412 Avenue Akei, Tokoin Tamé (en face de la caisse). Merci d'être là 10 minutes avant l'heure.\n\nUn empêchement ? Réponds vite à ce message." + SIGN;
     const msgExamen = (x) => "Bonjour " + prenom(x) + ",\n\nFélicitations, ta formation chez *SODAF Auto-École* est terminée ! Pour la suite, nous devons faire le *dépôt de ton dossier d'examen* auprès de l'État.\n\n*À APPORTER À L'AGENCE*\n• Photocopie de ta carte d'identité\n• Ton acte de naissance\n• 2 photos d'identité (format passeport)\n• Le dépôt pour l'examen : 30 000 F\n\nLe dossier est accepté *uniquement complet* : apporte tout en une seule fois.\n\nN° Client : " + CODE(x) + exMixx(x) + "\n\n" + AGENCE + "\n\nÀ très vite !" + SIGN;
     const msgBravo = (x) => "Félicitations " + prenom(x) + " !\n\nToute l'équipe de *SODAF Auto-École* est fière de toi : tu as obtenu ton *permis de conduire*.\n\nUn dernier conseil : sur la route, la prudence reste ta meilleure alliée.\n\nSi tu es content(e) de ta formation, parle de SODAF autour de toi : ta famille et tes amis seront bien accueillis." + SIGN + "\nautosodaf.com";
     const say = (t) => '<p class="sc-say">« ' + t + " »</p>";
@@ -3065,9 +3069,9 @@ function init(root) {
       const tomorrow = iso(new Date(Date.now() + 864e5));
       $("#sd-cdList").innerHTML = r.length ? r.map((c) => {
         const el = eleves.find((x) => x.id === c.eleve_id), n = el ? waNum(el.telephone) : "";
-        const conf = el && n && c.statut === "Réservé" ? "https://wa.me/228" + n + "?text=" + encodeURIComponent("Bonjour " + el.nom.split(" ")[0] + ", ta séance de conduite SODAF est confirmée le " + longDay(c.jour) + " à " + c.heure + ". Rendez-vous au 412 Avenue Akei, Tokoin Tamé. À bientôt !") : "";
-        const rap = el && n && c.statut === "Réservé" && c.jour === tomorrow ? "https://wa.me/228" + n + "?text=" + encodeURIComponent("Bonjour " + el.nom.split(" ")[0] + ", petit rappel : ta séance de conduite SODAF est demain à " + c.heure + ". Merci d'être à l'heure !") : "";
-        return '<div class="tm-row st-' + c.statut.normalize("NFD").replace(/[^a-z]/gi, "").toLowerCase() + '" data-id="' + c.id + '"><div class="tm-time">' + esc(c.heure) + '</div><div class="tm-main"><select data-el aria-label="Élève"><option value="">— Créneau libre —</option>' + actifs.map((x) => '<option value="' + x.id + '"' + (x.id === c.eleve_id ? " selected" : doit(x) ? " disabled" : "") + ">" + esc(x.nom) + (doit(x) && x.id !== c.eleve_id ? " · solde non payé" : "") + "</option>").join("") + (el && !actifs.includes(el) ? '<option value="' + el.id + '" selected>' + esc(el.nom) + "</option>" : "") + '</select>' + (c.note ? "<small>" + esc(c.note) + "</small>" : "") + '</div><div class="tm-acts"><select data-cs aria-label="Statut">' + CST.map((t) => "<option" + (t === c.statut ? " selected" : "") + ">" + t + "</option>").join("") + "</select>" + (conf ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" href="' + conf + '">Confirmer</a>' : "") + (rap ? '<a class="btn btn-yellow btn-sm" target="_blank" rel="noopener" href="' + rap + '">Rappel</a>' : "") + "</div></div>";
+        const conf = el && n && c.statut === "Réservé" ? "https://wa.me/228" + n + "?text=" + encodeURIComponent(msgSeance(el, c)) : "";
+        const rap = el && n && c.statut === "Réservé" && c.jour === tomorrow ? "https://wa.me/228" + n + "?text=" + encodeURIComponent(msgRappelSeance(el, c)) : "";
+        return '<div class="tm-row st-' + c.statut.normalize("NFD").replace(/[^a-z]/gi, "").toLowerCase() + '" data-id="' + c.id + '"><div class="tm-time">' + esc(c.heure) + '</div><div class="tm-main"><select data-el aria-label="Élève"><option value="">— Créneau libre —</option>' + actifs.map((x) => '<option value="' + x.id + '"' + (x.id === c.eleve_id ? " selected" : doit(x) ? " disabled" : "") + ">" + esc(x.nom) + (doit(x) && x.id !== c.eleve_id ? " · solde non payé" : "") + "</option>").join("") + (el && !actifs.includes(el) ? '<option value="' + el.id + '" selected>' + esc(el.nom) + "</option>" : "") + '</select>' + (c.note ? "<small>" + esc(c.note) + "</small>" : "") + '</div><div class="tm-acts"><select data-cs aria-label="Statut">' + CST.map((t) => "<option" + (t === c.statut ? " selected" : "") + ">" + t + "</option>").join("") + "</select>" + (conf ? (c.confirme_le ? '<span class="cd-done">✓ Élève prévenu</span><a class="linkbtn" target="_blank" rel="noopener" data-cf="confirme_le" href="' + conf + '">Renvoyer</a>' : '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-cf="confirme_le" href="' + conf + '">Prévenir l\'élève ↗</a>') : "") + (rap ? (c.rappel_le ? '<span class="cd-done">✓ Rappel envoyé</span>' : '<a class="btn btn-yellow btn-sm" target="_blank" rel="noopener" data-cf="rappel_le" href="' + rap + '">Rappel de la veille ↗</a>') : "") + "</div></div>";
       }).join("") : '<p class="tm-empty">Pas de créneau ce jour-là (dimanche ou jour férié).</p>';
     }
     $("#sd-cdList").addEventListener("change", async (e) => {
@@ -3079,7 +3083,7 @@ function init(root) {
         if (el) el.solde = sd.s;
         if (sd.s === null || sd.s > 0) { toast((el ? el.nom.split(" ")[0] + " : " : "") + (sd.s ? "solde de " + F(sd.s) + " non payé" : "aucun paiement enregistré") + ". Réservation impossible.", true); loadDay(); return; }
       }
-      if (e.target.matches("[data-el]")) { const v = e.target.value; body = { eleve_id: v ? +v : null, statut: v ? "Réservé" : "Libre", modifie_le: new Date().toISOString() }; }
+      if (e.target.matches("[data-el]")) { const v = e.target.value; body = { eleve_id: v ? +v : null, statut: v ? "Réservé" : "Libre", confirme_le: null, rappel_le: null, modifie_le: new Date().toISOString() }; }
       else if (e.target.matches("[data-cs]")) body = { statut: e.target.value, modifie_le: new Date().toISOString() };
       if (!body) return;
       await run(() => DB.q("creneaux_conduite?id=eq." + id, { method: "PATCH", body, prefer: "return=minimal" }), "Planning enregistré");
@@ -3113,9 +3117,17 @@ function init(root) {
       }, "Jour rouvert");
       $("#sd-cdWarn").innerHTML = ""; if (ok) loadDay();
     }
-    const shift = (n) => { $("#sd-cdWarn").innerHTML = ""; const d = dOf(cdDay); d.setDate(d.getDate() + n); cdDay = iso(d); loadDay(); };
+    $("#sd-cdList").addEventListener("click", (e) => {
+      const b = e.target.closest("[data-cf]"); if (!b) return; const row = b.closest("[data-id]"); if (!row) return;
+      const k = b.dataset.cf, body = {}; body[k] = new Date().toISOString();
+      setTimeout(async () => { await run(() => DB.q("creneaux_conduite?id=eq." + row.dataset.id, { method: "PATCH", body, prefer: "return=minimal" }), k === "rappel_le" ? "Rappel noté comme envoyé" : "Élève noté comme prévenu"); loadDay(); }, 300);
+    });
+    // Pas de conduite le dimanche : la navigation saute ce jour
+    const sansDim = (d, n) => { while (d.getDay() === 0) d.setDate(d.getDate() + (n < 0 ? -1 : 1)); return d; };
+    const shift = (n) => { $("#sd-cdWarn").innerHTML = ""; const d = dOf(cdDay); d.setDate(d.getDate() + n); cdDay = iso(sansDim(d, n)); loadDay(); };
     $("#sd-cdPrev").addEventListener("click", () => shift(-1)); $("#sd-cdNext").addEventListener("click", () => shift(1));
-    $("#sd-cdToday").addEventListener("click", () => { cdDay = iso(new Date()); loadDay(); });
+    $("#sd-cdToday").addEventListener("click", () => { cdDay = iso(sansDim(new Date(), 1)); loadDay(); });
+    cdDay = iso(sansDim(dOf(cdDay), 1));
 
     // ---- Paiements
     async function loadPay() {
