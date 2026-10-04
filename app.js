@@ -1693,10 +1693,10 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <form id="sd-tmPwForm" class="card tmpw" hidden novalidate><label for="sd-tmPw1">Nouveau mot de passe (8 caractères minimum)</label><div><input id="sd-tmPw1" type="password" autocomplete="new-password"><button class="btn btn-green btn-sm" type="submit">Enregistrer</button></div><p id="sd-tmPwMsg" class="tm-note"></p></form>
 <div id="sd-tmToast" class="tm-toast" hidden></div>
 <div class="tm-tabs" role="tablist" id="sd-tmTabs">
-<button role="tab" data-t="dir" aria-selected="false" hidden><b>Direction</b><small>Chiffres du mois, à surveiller</small></button>
-<button role="tab" data-t="sec" aria-selected="true"><b>Secrétariat</b><small>Inscriptions, paiements, réservations</small></button>
-<button role="tab" data-t="mon" aria-selected="false"><b>Moniteur</b><small>Code en salle, conduite</small></button>
-<button role="tab" data-t="docs" aria-selected="false"><b>Documents</b><small>Carte, cachet, QR, affiches</small></button>
+<button role="tab" data-t="dir" aria-selected="false" hidden><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></i><b>Direction</b><small>Chiffres du mois, à surveiller</small></button>
+<button role="tab" data-t="sec" aria-selected="true"><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 3v2h6V3M9 10h6M9 14h6M9 18h3"/></svg></i><b>Secrétariat</b><small>Inscriptions, paiements, réservations</small></button>
+<button role="tab" data-t="mon" aria-selected="false"><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/><path d="M12 14.5V21M9.6 11.2 3.5 9.5M14.4 11.2l6.1-1.7"/></svg></i><b>Moniteur</b><small>Code en salle, conduite</small></button>
+<button role="tab" data-t="docs" aria-selected="false"><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></i><b>Documents</b><small>Carte, cachet, QR, affiches</small></button>
 </div>
 <div class="tm-pane" data-pane="sec" role="tabpanel">
 <p class="tm-role">Accueil des élèves, inscriptions, paiements, réservations de conduite et messages WhatsApp.</p>
@@ -3900,6 +3900,67 @@ footer.site{background:var(--asph)}
 /* Bouton WhatsApp flottant : plus discret */
 #sodaf-root .wa-float{box-shadow:0 10px 24px -10px rgba(0,0,0,.45)}
 /* Espace équipe : mêmes titres et chiffres */
+/* ===== Espace équipe : application pro (barre latérale asphalte + zone de travail claire) ===== */
+html:has(#sodaf-root.app-mode),body:has(#sodaf-root.app-mode){background:#ECEFEE}
+#sodaf-root.app-mode{background:#ECEFEE}
+#sodaf-root.app-mode section[data-page="equipe"]>.wrap{max-width:1440px}
+#sodaf-root.app-mode header.top>.wrap{max-width:1440px}
+@media (max-width:640px){#sodaf-root.app-mode .tm-top{padding:14px 16px}#sodaf-root.app-mode .tm-top .tm-today{font-size:.88rem}}
+#sodaf-root.app-mode header.top{background:var(--asph);border-bottom:0}
+#sodaf-root.app-mode header.top .logo{color:#fff}
+#sodaf-root.app-mode header.top .logo svg path,#sodaf-root.app-mode header.top .logo svg rect{fill:#fff}
+#sodaf-root.app-mode .logo-sub{color:var(--yellow);border-left-color:rgba(255,255,255,.2)}
+/* Bandeau d'accueil compact, clair */
+#sodaf-root.app-mode .tm-top{background:#fff;color:var(--ink);border:1px solid #DFE4E2;border-radius:16px;padding:18px 22px;margin-bottom:16px;box-shadow:none;align-items:center}
+#sodaf-root.app-mode .tm-top::after{left:0;right:auto;top:0;bottom:0;width:5px;height:auto;background:repeating-linear-gradient(180deg,var(--yellow) 0 14px,transparent 14px 22px)}
+#sodaf-root.app-mode .tm-top h2{color:var(--ink);font-size:clamp(1.7rem,3vw,2.2rem)}
+#sodaf-root.app-mode .tm-top .eyebrow{color:var(--green);margin:0!important}
+#sodaf-root.app-mode .tm-top .tm-today{color:var(--muted);font-size:.95rem}
+#sodaf-root.app-mode .tm-top .linkbtn{color:var(--ink);font-weight:600}
+/* Cartes et blocs : une seule famille, bordure fine, sans ombre lourde */
+#sodaf-root.app-mode .card,#sodaf-root.app-mode .pc-list,#sodaf-root.app-mode .pc-block,#sodaf-root.app-mode .pc-none,#sodaf-root.app-mode .pc-info,#sodaf-root.app-mode .tm-stats div{border-color:#DFE4E2;box-shadow:none;border-radius:14px}
+#sodaf-root.app-mode .tm-stats div.hl{background:var(--asph);border-color:var(--asph)}
+#sodaf-root.app-mode .tm-role{background:transparent;border-left:0;padding:0!important;color:var(--muted);font-weight:500;font-size:.95rem;margin-bottom:14px!important}
+#sodaf-root.app-mode .tm-sub h3{font-family:var(--f-display);font-size:1.6rem}
+/* Sous-onglets : commande segmentée */
+#sodaf-root.app-mode .tm-subnav{background:#fff;border:1px solid #DFE4E2;border-radius:14px;padding:6px;gap:4px;margin-bottom:16px;align-items:center}
+#sodaf-root.app-mode .tm-subnav button[data-s]{border:0;margin:0;border-radius:10px;padding:.6em 1em;color:#4A525C}
+#sodaf-root.app-mode .tm-subnav button[data-s]:hover{background:#F1F3F2;color:var(--ink)}
+#sodaf-root.app-mode .tm-subnav button[data-s][aria-selected="true"]{background:var(--asph);color:#fff}
+#sodaf-root.app-mode .tm-subnav .tm-newins{margin:0 0 0 auto}
+/* Étapes du parcours */
+#sodaf-root.app-mode .pc-stages{background:#F6F8F7;border-bottom-color:#DFE4E2}
+#sodaf-root.app-mode .pc-stages button{border-color:#DFE4E2}
+#sodaf-root.app-mode .pc-stages button[aria-selected="true"]{background:var(--asph);border-color:var(--asph)}
+#sodaf-root.app-mode .pc-head h3{font-family:var(--f-display);font-size:2rem;font-weight:700}
+/* Barre latérale (ordinateur) */
+.tm-ic{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;flex-shrink:0;font-style:normal}
+#sodaf-root .tm-ic svg{display:block}
+@media (min-width:1100px){
+#sodaf-root.app-mode #sd-teamPanel:not([hidden]){display:grid;grid-template-columns:248px minmax(0,1fr);column-gap:22px;align-items:start}
+#sodaf-root.app-mode #sd-teamPanel>*{grid-column:2;min-width:0}
+#sodaf-root.app-mode #sd-teamPanel>.tm-tabs{grid-column:1;grid-row:1/span 40;position:sticky;top:86px;display:flex;flex-direction:column;gap:4px;background:var(--asph);border-radius:18px;padding:12px;margin:0;overflow:hidden}
+#sodaf-root.app-mode #sd-teamPanel>.tm-tabs::after{content:"";display:block;height:6px;margin:10px -12px -12px;background:repeating-linear-gradient(90deg,var(--yellow) 0 22px,transparent 22px 36px)}
+#sodaf-root.app-mode .tm-tabs button{display:grid;grid-template-columns:34px 1fr;column-gap:12px;align-items:center;background:transparent;border:0;border-radius:12px;padding:10px;color:#C3CAD1;box-shadow:none}
+#sodaf-root.app-mode .tm-tabs button .tm-ic{grid-row:1/span 2;background:rgba(255,255,255,.06);color:#9EA7B0}
+#sodaf-root.app-mode .tm-tabs button b{font:700 1rem var(--f-ui);color:#fff}
+#sodaf-root.app-mode .tm-tabs button small{color:#8D96A0;font-size:.78rem;line-height:1.3}
+#sodaf-root.app-mode .tm-tabs button:hover{background:rgba(255,255,255,.05)}
+#sodaf-root.app-mode .tm-tabs button[aria-selected="true"]{background:rgba(255,255,255,.1)}
+#sodaf-root.app-mode .tm-tabs button[aria-selected="true"] .tm-ic{background:var(--yellow);color:var(--asph)}
+}
+/* Téléphone et tablette : barre d'onglets sombre, défilante */
+@media (max-width:1099px){
+#sodaf-root.app-mode .tm-tabs{display:flex;gap:6px;overflow-x:auto;background:var(--asph);border-radius:16px;padding:8px;scrollbar-width:none}
+#sodaf-root.app-mode .tm-tabs button{flex:1 0 auto;display:flex;flex-direction:row;align-items:center;gap:8px;background:transparent;border:0;border-radius:11px;padding:8px 12px;color:#fff;box-shadow:none}
+#sodaf-root.app-mode .tm-tabs button small{display:none}
+#sodaf-root.app-mode .tm-tabs button b{font:700 .95rem var(--f-ui);color:#fff}
+#sodaf-root.app-mode .tm-tabs button .tm-ic{width:28px;height:28px;background:rgba(255,255,255,.08);color:#C3CAD1}
+#sodaf-root.app-mode .tm-tabs button[aria-selected="true"]{background:rgba(255,255,255,.12)}
+#sodaf-root.app-mode .tm-tabs button[aria-selected="true"] .tm-ic{background:var(--yellow);color:var(--asph)}
+}
+
+
 .tm-stats b{font-family:var(--f-display);font-size:1.7rem;font-weight:700;letter-spacing:0}
 `;
   const st = document.createElement("style"); st.textContent = CSS + CSS_REFONTE + 'html,body{margin:0;background:#15191E}#sodaf-root{min-height:100vh;display:flex;flex-direction:column}#sodaf-root>#app{flex:1;display:flex;flex-direction:column;background:#fff}#sodaf-root main{flex:1}'; document.head.appendChild(st);
