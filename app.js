@@ -853,6 +853,23 @@ label.ex-doc input{position:absolute;left:14px;top:12px;width:20px;height:20px;a
 #sodaf-root [data-rappel=""][aria-pressed="true"]{background:var(--green);color:#fff}
 #sodaf-root [data-ko][aria-pressed="true"]{outline:3px solid var(--ink);outline-offset:2px}
 .pc-callnow{padding-bottom:14px;margin-bottom:14px;border-bottom:2px solid var(--ink)}
+.tm-newins{margin-left:auto;align-self:center;margin-bottom:6px}
+.ins-ov{position:fixed;inset:0;z-index:9000;background:rgba(15,22,20,.55);display:flex;align-items:flex-start;justify-content:center;padding:4vh 12px;overflow:auto}
+.ins-ov[hidden]{display:none}
+.ins-box{background:#fff;border-radius:20px;width:100%;max-width:680px;padding:20px 22px;box-shadow:0 24px 60px rgba(0,0,0,.3)}
+.ins-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}.ins-hd h3{margin:2px 0 0;font:700 1.5rem var(--f-display)}
+.ins-x{border:0;background:#F1F3F2;width:38px;height:38px;border-radius:50%;font-size:1.4rem;cursor:pointer;line-height:1}
+.ins-step{border:1.5px solid var(--line);border-radius:14px;padding:12px 14px 6px;margin:12px 0}
+.ins-step legend{font-weight:700;padding:0 6px;display:flex;align-items:center;gap:8px}.ins-step legend i{font-style:normal;width:24px;height:24px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:.8rem}
+.ins-forms,.ins-pay{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:6px 0 10px}
+.ins-f,.ins-p{display:flex;align-items:center;gap:10px;border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer}
+.ins-f.on,.ins-p.on{border-color:var(--green);background:var(--green-soft)}
+.ins-f span,.ins-p span{flex:1;display:flex;flex-direction:column;line-height:1.25}.ins-f small,.ins-p small{color:var(--muted);font-size:.78rem}
+.ins-f em,.ins-p em{font-style:normal;font-weight:700;color:var(--green);white-space:nowrap}
+.ins-mode{display:flex;gap:16px;margin:0 0 10px;font-weight:600}.ins-mode[hidden]{display:none}
+.ins-ft{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:flex-end;border-top:1.5px solid var(--line);padding-top:14px}
+.ins-sum{margin-right:auto;font-size:.95rem}.ins-sum b{color:var(--green);font-size:1.1rem}
+@media (max-width:600px){.ins-forms,.ins-pay{grid-template-columns:1fr}.ins-box{padding:16px}.tm-newins{width:100%;margin:6px 0}}
 .wl-card{background:linear-gradient(135deg,#0F3D2E 0%,#14523C 60%,#1B6B4D 100%);color:#fff;border-radius:18px;padding:22px 22px 16px;box-shadow:0 14px 34px rgba(15,61,46,.22);position:relative;overflow:hidden}
 .wl-card:after{content:"";position:absolute;right:-60px;top:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(255,214,107,.22),transparent 70%)}
 .wl-top{display:flex;gap:14px;align-items:flex-start;position:relative}
@@ -1657,9 +1674,22 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <button data-s="conduite" aria-selected="false">Planning conduite</button>
 <button data-s="paiements" aria-selected="false">Paiements et reçus</button>
 <button data-s="devoirs" aria-selected="false">Devoirs</button>
+<button class="btn btn-green btn-sm tm-newins" type="button" id="sd-insNew">+ Nouvelle inscription</button>
 </div>
+<div class="ins-ov" id="sd-insOv" hidden><form class="ins-box" id="sd-insForm" novalidate>
+<div class="ins-hd"><div><p class="eyebrow" style="margin:0">Au bureau</p><h3>Nouvelle inscription</h3></div><button class="ins-x" type="button" id="sd-insX" aria-label="Fermer">×</button></div>
+<fieldset class="ins-step"><legend><i>1</i>Le client</legend>
+<div class="row2"><div class="field"><label for="sd-insN">Nom</label><input id="sd-insN" autocomplete="off" placeholder="ex. AGBEKO"></div><div class="field"><label for="sd-insP">Prénoms</label><input id="sd-insP" autocomplete="off" placeholder="ex. Yao Koffi"></div></div>
+<div class="row2"><div class="field"><label for="sd-insT">Téléphone (WhatsApp)</label><div class="tel"><span>+228</span><input id="sd-insT" inputmode="numeric" maxlength="11" placeholder="90 00 00 00"></div></div><div class="field"><label for="sd-insQ">Quartier</label><input id="sd-insQ" autocomplete="off" placeholder="ex. Bè, Agoè, Tokoin"></div></div>
+<div class="field"><label for="sd-insSrc">Comment il nous a connus</label><select id="sd-insSrc"><option value="">— Choisir —</option><option value="agence">Venu à l'agence (passage, enseigne)</option><option value="appel">Appel téléphonique</option><option value="whatsapp">WhatsApp</option><option value="bouche">Bouche-à-oreille (ami, famille, ancien élève)</option><option value="reseaux">Facebook / TikTok / Instagram</option><option value="affiche">Affiche, flyer, QR code</option><option value="entreprise">Entreprise (chauffeur envoyé)</option><option value="autre">Autre</option></select></div>
+</fieldset>
+<fieldset class="ins-step"><legend><i>2</i>Sa formule</legend><div class="ins-forms" id="sd-insForms"></div></fieldset>
+<fieldset class="ins-step"><legend><i>3</i>Le paiement</legend><div class="ins-pay" id="sd-insPay"></div>
+<div class="ins-mode" id="sd-insMode"><label><input type="radio" name="insM" value="Espèces" checked> Espèces</label><label><input type="radio" name="insM" value="Mixx by Yas (T-Money)"> Mixx by Yas</label></div></fieldset>
+<div class="ins-ft"><div class="ins-sum" id="sd-insSum"></div><span class="tm-err" id="sd-insErr"></span><button class="btn btn-green" type="submit" id="sd-insGo">Inscrire</button></div>
+</form></div>
 <section class="tm-sec" data-s="eleves">
-<div class="pc-search"><label class="pc-sbox"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="sd-pcQ" type="search" placeholder="Rechercher un client : N° client (SO12), téléphone ou nom" autocomplete="off"></label><button class="btn btn-green btn-sm" type="button" id="sd-elAddBtn">+ Élève</button></div>
+<div class="pc-search"><label class="pc-sbox"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="sd-pcQ" type="search" placeholder="Rechercher un client : N° client (SO12), téléphone ou nom" autocomplete="off"></label></div>
 <div class="pc" id="sd-pc">
 <div class="pc-list">
 <div class="pc-stages" id="sd-pcStages" role="tablist"><button type="button" data-st="accueil">Accueil <em></em></button><button type="button" data-st="appels">Appels <em></em></button><button type="button" data-st="dossier">Paiement en attente <em></em></button><button type="button" data-st="formation">En formation <em></em></button><button type="button" data-st="examen">Dépôt d'examen <em></em></button><button type="button" data-st="archives">Archivés <em></em></button></div>
@@ -2644,7 +2674,7 @@ function init(root) {
     };
     const pick = (t) => { tabs.forEach((b) => b.setAttribute("aria-selected", b.dataset.t === t)); panes.forEach((p) => (p.hidden = p.dataset.pane !== t)); try { S.set("tmTab", t); } catch (e) {} placePlanning(t); if (t === "mon") loadMon(); if (t === "dir") loadDir(); };
     tabs.forEach((b) => b.addEventListener("click", () => pick(b.dataset.t)));
-    const subs = $$("#sd-secNav button"), secs = $$(".tm-sec");
+    const subs = $$("#sd-secNav button[data-s]"), secs = $$(".tm-sec");
     const LOAD = { eleves: () => loadEleves(), conduite: () => loadDay(), paiements: () => loadPay(), devoirs: () => loadDev() };
     const sub = (k) => { subs.forEach((b) => b.setAttribute("aria-selected", b.dataset.s === k)); secs.forEach((x) => { if (x === cdSec && cdSec.parentNode !== cdHome.p) return; x.hidden = x.dataset.s !== k; }); LOAD[k](); };
     subs.forEach((b) => b.addEventListener("click", () => sub(b.dataset.s)));
@@ -2961,7 +2991,7 @@ function init(root) {
         const hrs = Math.max(0, Math.round((Date.now() - new Date(x.cree_le)) / 36e5)) || 0;
         body = '<div class="wl-card"><div class="wl-top"><span class="wl-ico">' + CHAT + '</span><div><p class="wl-k">Étape 1 sur 6 · Accueil</p><h4>Souhaite la bienvenue à ' + esc(prenom(x)) + '</h4><p class="wl-sub">Pré-inscription ' + (hrs < 1 ? "il y a moins d'une heure" : hrs < 24 ? "il y a " + hrs + " h" : "il y a " + Math.round(hrs / 24) + " j") + (hrs >= 24 ? " : réponds vite, il attend notre message." : ". Le message part sur son WhatsApp, puis le dossier passe tout seul en zone d'appel.") + '</p></div></div>' +
           '<div class="wl-chips"><span>N° client <b>' + CODE(x) + '</b></span><span>Formation <b>' + esc(x.formation || "à préciser") + '</b></span><span>Annonce <b>appel très bientôt</b></span></div>' +
-          '<div class="wl-act">' + (n ? '<a class="btn btn-wa wl-btn" target="_blank" rel="noopener" data-a="sendWelcome" href="' + wa(msgAccueil(x)) + '">' + CHAT.replace('width="30" height="30"', 'width="20" height="20"') + 'Envoyer l\'accueil sur WhatsApp</a>' : '<span class="tm-err">Pas de numéro : ajoute-le avec « Modifier la fiche ».</span>') + '<button class="linkbtn" type="button" data-a="toCall">Passer sans envoyer</button></div>' +
+          '<div class="wl-act">' + (n ? '<a class="btn btn-wa wl-btn" target="_blank" rel="noopener" data-a="sendWelcome" href="' + wa(msgAccueil(x)) + '">' + CHAT.replace('width="30" height="30"', 'width="20" height="20"') + 'Envoyer l\'accueil sur WhatsApp</a>' : '<span class="tm-err">Pas de numéro WhatsApp : ajoute-le avec « Modifier la fiche », ou appelle-le directement.</span><button class="linkbtn" type="button" data-a="toCall">Passer en zone d\'appel</button>') + '</div>' +
           '<details class="wl-more"><summary>Voir ou modifier le message</summary><textarea id="sd-pcMsg" rows="12">' + esc(msgAccueil(x)) + '</textarea></details></div>';
       } else if (st === "appels") {
         const t = x.appels || 0;
@@ -3126,8 +3156,48 @@ function init(root) {
         if (await patchEl(x, body, "Fiche élève enregistrée")) { fillEleveSelect(); renderList(); }
       });
     }
-    $("#sd-elAddBtn").addEventListener("click", () => { $("#sd-elAdd").hidden = false; $("#sd-pcQ").value = ""; $("#sd-elN").focus(); });
-    $("#sd-elCancel").addEventListener("click", () => { $("#sd-elAdd").hidden = true; });
+    // ---- Nouvelle inscription au bureau (fenêtre) : client + formule + paiement → bonne étape directement
+    const INS_F = [["Formation complète (permis B)", 55000, "3 mois · 12 séances de conduite"], ["Formation accélérée 2 mois (permis B)", 75000, "12 séances en 2 mois"], ["Formation accélérée 1 mois (permis B)", 80000, "12 séances en 1 mois"], ["Formule courte (permis B)", 35000, "Sait déjà tenir un volant · 6 séances"], ["Permis A (moto)", 30000, "Environ 6 séances de moto"], ["Pack A + B (moto et voiture)", 80000, "12 séances voiture + 6 moto"], ["Remise à niveau", 20000, "4 séances, évaluation comprise"], ["Formation théorique seule", 25000, "Code, mécanique, secourisme"]];
+    const insCat = (f) => /moto\)|Permis A/.test(f) && !/Pack/.test(f) ? "Permis A" : /Pack/.test(f) ? "Pack A + B" : /Remise/.test(f) ? "Remise à niveau" : "Permis B";
+    $("#sd-insForms").innerHTML = INS_F.map((f, i) => '<label class="ins-f"><input type="radio" name="insF" value="' + i + '"' + (i === 0 ? " checked" : "") + '><span><b>' + esc(f[0].replace(" (permis B)", "")) + "</b><small>" + esc(f[2]) + "</small></span><em>" + F(f[1]) + "</em></label>").join("");
+    const insUpd = () => {
+      const f = INS_F[+($("#sd-insForm [name=insF]:checked") || {}).value || 0], p = f[1], pay = ($("#sd-insForm [name=insP]:checked") || {}).value || "half";
+      const opts = [["half", "Il paie la moitié maintenant", F(5000 + p / 2), "Le reste avant sa 1re séance de conduite"], ["full", "Il paie tout maintenant", F(5000 + p), "Formation soldée"], ["later", "Il paiera plus tard", "", "Il passe en « Paiement en attente »"], ["call", "Pas encore décidé", "", "À rappeler (zone d'appel)"]];
+      $("#sd-insPay").innerHTML = opts.map((o) => '<label class="ins-p' + (o[0] === pay ? " on" : "") + '"><input type="radio" name="insP" value="' + o[0] + '"' + (o[0] === pay ? " checked" : "") + '><span><b>' + o[1] + "</b><small>" + o[3] + "</small></span>" + (o[2] ? "<em>" + o[2] + "</em>" : "") + "</label>").join("");
+      const now = pay === "half" || pay === "full";
+      $("#sd-insMode").hidden = !now;
+      $("#sd-insSum").innerHTML = now ? "À encaisser maintenant : <b>" + F(pay === "half" ? 5000 + p / 2 : 5000 + p) + "</b>" : pay === "later" ? "Rien à encaisser aujourd'hui" : "Simple prise de contact";
+      $("#sd-insGo").textContent = now ? "Inscrire et faire le reçu" : pay === "later" ? "Inscrire (paiement en attente)" : "Enregistrer (à rappeler)";
+      $$("#sd-insForms .ins-f").forEach((l) => l.classList.toggle("on", l.querySelector("input").checked));
+    };
+    $("#sd-insForm").addEventListener("change", (e) => { if (e.target.name === "insF" || e.target.name === "insP") insUpd(); });
+    const insOpen = () => { $("#sd-insForm").reset(); $("#sd-insErr").textContent = ""; insUpd(); $("#sd-insOv").hidden = false; document.body.style.overflow = "hidden"; setTimeout(() => $("#sd-insN").focus(), 50); };
+    const insClose = () => { $("#sd-insOv").hidden = true; document.body.style.overflow = ""; };
+    $("#sd-insNew").addEventListener("click", insOpen);
+    $("#sd-insX").addEventListener("click", insClose);
+    $("#sd-insOv").addEventListener("click", (e) => { if (e.target.id === "sd-insOv") insClose(); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("#sd-insOv").hidden) insClose(); });
+    $("#sd-insForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const nf = $("#sd-insN").value.trim().replace(/\s+/g, " ").toUpperCase(), pr = $("#sd-insP").value.trim().replace(/\s+/g, " "), nom = (pr + " " + nf).trim();
+      const tel = $("#sd-insT").value.replace(/\D/g, ""), q = $("#sd-insQ").value.trim(), src = $("#sd-insSrc").value, err = $("#sd-insErr");
+      const f = INS_F[+$("#sd-insForm [name=insF]:checked").value], pay = $("#sd-insForm [name=insP]:checked").value, mode = ($("#sd-insForm [name=insM]:checked") || {}).value || "Espèces";
+      if (nf.length < 2 || pr.length < 2) { err.textContent = "Écris le nom et les prénoms."; return; }
+      if (tel.length !== 8) { err.textContent = "Numéro de téléphone à 8 chiffres."; return; }
+      if (!src) { err.textContent = "Choisis comment il nous a connus."; return; }
+      err.textContent = ""; $("#sd-insGo").disabled = true;
+      const now = new Date().toISOString(), toCall = pay === "call";
+      const body = Object.assign({ nom, nom_famille: nf, prenoms: pr, telephone: "+228" + tel, quartier: q || null, formation: insCat(f[0]), source: "bureau", provenance: src, statut: "Contacté", accueil_le: now, notes: "Formule choisie au bureau : " + f[0] }, toCall ? {} : { dossier_envoye_le: now });
+      const r = await run(() => DB.q("eleves", { method: "POST", body, prefer: "return=representation" }), toCall ? "Client enregistré : à rappeler" : pay === "later" ? "Inscrit : paiement en attente" : "Inscrit : fais son reçu");
+      $("#sd-insGo").disabled = false;
+      if (!r) return;
+      insClose(); sub("eleves");
+      pcStage = toCall ? "appels" : "dossier"; S.set("pcStage", pcStage); await loadEleves(true);
+      const nx = Array.isArray(r) && r[0] ? eleves.find((y) => y.id === r[0].id) : null;
+      pcSel = nx ? nx.id : null; renderList();
+      if (nx && (pay === "half" || pay === "full") && window.__sodafRcFill) { sub("paiements"); window.__sodafRcFill(nx, { formation: f[0], motif: pay === "half" ? "ins-half" : "ins-full", mode, note: "" }); }
+    });
+
     $("#sd-elAdd").addEventListener("submit", async (e) => {
       e.preventDefault();
       const nf = $("#sd-elN").value.trim().replace(/\s+/g, " ").toUpperCase(), pr = $("#sd-elP").value.trim().replace(/\s+/g, " "), nom = (pr + " " + nf).trim();
