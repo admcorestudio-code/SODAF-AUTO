@@ -2729,7 +2729,7 @@ function init(root) {
     tabs.forEach((b) => b.addEventListener("click", () => pick(b.dataset.t)));
     const subs = $$("#sd-secNav button[data-s]"), secs = $$(".tm-sec");
     const LOAD = { eleves: () => loadEleves(), conduite: () => loadDay(), paiements: () => loadPay(), devoirs: () => loadDev() };
-    const sub = (k) => { subs.forEach((b) => b.setAttribute("aria-selected", b.dataset.s === k)); secs.forEach((x) => { if (x === cdSec && cdSec.parentNode !== cdHome.p) return; x.hidden = x.dataset.s !== k; }); LOAD[k](); };
+    const sub = (k) => { if (k === "paiements" && me && me.role === "moniteur") { toast("Les reçus sont faits par le secrétariat ou la direction."); return; } subs.forEach((b) => b.setAttribute("aria-selected", b.dataset.s === k)); secs.forEach((x) => { if (x === cdSec && cdSec.parentNode !== cdHome.p) return; x.hidden = x.dataset.s !== k; }); LOAD[k](); };
     subs.forEach((b) => b.addEventListener("click", () => sub(b.dataset.s)));
     $$('a[href="#equipe-recu"]').forEach((x) => x.addEventListener("click", () => { pick("sec"); sub("paiements"); }));
     { const w = devWeek(), n = new Date(), c1 = BOUCLE[w.c[0]], c2 = BOUCLE[w.c[1]];
@@ -2768,6 +2768,7 @@ function init(root) {
       $("#sd-tmRole").textContent = { admin: "Direction", secretariat: "Secrétariat", moniteur: "Moniteur" }[me.role] + " · Espace équipe SODAF";
       show(true);
       const dirTab = $('#sd-tmTabs [data-t="dir"]'); dirTab.hidden = me.role !== "admin";
+      { const pb = $('#sd-secNav [data-s="paiements"]'); if (pb) pb.hidden = me.role === "moniteur"; } // reçus : direction et secrétariat seulement (règle aussi dans la base)
       await loadEleves(true);
       let t0 = S.get("tmTab", me.role === "admin" ? "dir" : me.role === "moniteur" ? "mon" : "sec"); if (t0 === "dir" && me.role !== "admin") t0 = "sec";
       pick(t0);
@@ -3567,6 +3568,7 @@ function init(root) {
 
     // ---- Moniteur
     const THEMES = [...$$("article.ch").map((c) => c.dataset.title)];
+    let appelEdit = null; // séance dont on modifie l'appel déjà validé
     async function loadMon() {
       if (!me) return;
       const today = iso(new Date());
@@ -3582,18 +3584,28 @@ function init(root) {
           const ids = new Set(pr.map((x) => x.eleve_id));
           const act = eleves.filter((x) => enCode(x) && !susp(x) && (!se.groupe || (x.groupe_code === se.groupe && cycleOk(x)))).sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
           $("#sd-mcTitle").textContent = (se.jour === today ? "Aujourd'hui" : longDay(se.jour).replace(/^./, (c) => c.toUpperCase())) + " · " + (se.groupe ? (gOf(se.groupe) || { nom: "Groupe " + se.groupe }).nom + " · " : "") + (se.groupe && bIdx(se.theme) >= 0 ? "Cours " + (bIdx(se.theme) + 1) + "/12 : " + se.theme : se.type) + " · " + se.heure + (se.statut === "Fait" ? " ✓" : "");
-          const bi = se.groupe ? bIdx(se.theme) : -1, bo = bi >= 0 ? BOUCLE[bi] : null;
+          const bi = se.groupe ? bIdx(se.theme) : -1, bo = bi >= 0 ? BOUCLE[bi] : null, lock = se.statut === "Fait" && appelEdit !== se.id;
           $("#sd-mcBody").innerHTML = picker + (se.groupe ? "" : '<p class="tm-note" style="margin:0 0 8px!important">Séance commune : élèves de tous les groupes qui ont manqué un cours ou veulent s\'entraîner. 6 places au maximum. Choisis le cours que tu rattrapes : il compte pour les présents.</p>') +
             (bo ? '<div class="mc-plan"><b>Au programme</b><ol><li><b>Début</b> : ' + debutCours(bi) + (BOUCLE[(bi + 11) % 12].dv !== null ? " (Mode classe → Devoir)" : "") + ".</li><li><b>Cours</b> : " + (bo.dv !== null ? "chapitres " + esc(chNoms(bo)) + " (Mode classe → Leçon)" : bo.n === 11 ? "révision de tous les thèmes : quiz, panneaux, situations" : "examen blanc de 40 questions (Mode classe → Quiz)") + ".</li>" + (bo.dv !== null ? "<li><b>Fin</b> : rappelle le devoir " + DEV[bo.dv].l + " à faire sur autosodaf.com.</li>" : "") + "</ol></div>" : "") +
-            '<div class="field"><label for="sd-mcTheme">Cours donné</label><select id="sd-mcTheme"><option value="">— Choisir —</option><optgroup label="Programme (12 cours)">' + BOUCLE.map((b) => "<option" + (b.t === se.theme ? " selected" : "") + ' value="' + esc(b.t) + '">' + b.n + ". " + esc(b.t) + "</option>").join("") + '</optgroup><optgroup label="Autre chapitre">' + THEMES.filter((t) => bIdx(t) < 0).map((t) => "<option" + (t === se.theme ? " selected" : "") + ">" + esc(t) + "</option>").join("") + "</optgroup>" + (se.theme && bIdx(se.theme) < 0 && !THEMES.includes(se.theme) ? "<option selected>" + esc(se.theme) + "</option>" : "") + '</select></div><p class="tm-lab">Présents (' + ids.size + ")</p>" + (act.length ? '<div class="tm-checks">' + act.map((x) => '<label><input type="checkbox" data-pe="' + x.id + '"' + (ids.has(x.id) ? " checked" : "") + "> " + esc(x.nom) + "</label>").join("") + "</div>" : '<p class="tm-empty">Aucun élève inscrit pour l\'instant.</p>') + '<div class="field"><label for="sd-mcNote">Note (facultatif)</label><input id="sd-mcNote" value="' + esc(se.note || "") + '"></div><button class="btn btn-green btn-sm" type="button" id="sd-mcDone" data-id="' + se.id + '">' + (se.statut === "Fait" ? "Mettre à jour" : "Cours fait") + "</button>";
+            (se.groupe ? "" : '<div class="field"><label for="sd-mcTheme">Cours rattrapé</label><select id="sd-mcTheme"><option value="">— Choisir —</option><optgroup label="Programme (12 cours)">' + BOUCLE.map((b) => "<option" + (b.t === se.theme ? " selected" : "") + ' value="' + esc(b.t) + '">' + b.n + ". " + esc(b.t) + "</option>").join("") + '</optgroup><optgroup label="Autre chapitre">' + THEMES.filter((t) => bIdx(t) < 0).map((t) => "<option" + (t === se.theme ? " selected" : "") + ">" + esc(t) + "</option>").join("") + "</optgroup>" + (se.theme && bIdx(se.theme) < 0 && !THEMES.includes(se.theme) ? "<option selected>" + esc(se.theme) + "</option>" : "") + "</select></div>") +
+            // L'appel : au début du cours, le moniteur coche les présents puis valide ; le cours compte alors comme fait
+            '<div class="mc-appel' + (lock ? " ok" : "") + '"><div class="mc-ah"><b>Présences</b><span id="sd-mcCnt">' + ids.size + " présent" + (ids.size > 1 ? "s" : "") + " sur " + act.length + "</span></div>" +
+            (lock ? '<p class="mc-done">✓ Présences validées : cours fait' + (bo ? " (cours " + bo.n + "/12)" : "") + ".</p>" : '<p class="tm-note" style="margin:0 0 8px!important">Au début du cours, fais l\'appel : coche les élèves présents, puis valide les présences.</p>') +
+            (act.length ? '<div class="tm-checks">' + act.map((x) => '<label><input type="checkbox" data-pe="' + x.id + '"' + (ids.has(x.id) ? " checked" : "") + (lock ? " disabled" : "") + "> " + esc(x.nom) + "</label>").join("") + "</div>" : '<p class="tm-empty">Aucun élève inscrit pour l\'instant.</p>') +
+            (lock ? '<div class="tm-formact"><button class="btn btn-line btn-sm" type="button" id="sd-mcEdit">Modifier les présences</button></div>' : '<details class="mc-nt"' + (se.note ? " open" : "") + '><summary>Ajouter une note (facultatif)</summary><input id="sd-mcNote" aria-label="Note" value="' + esc(se.note || "") + '"></details><div class="tm-formact"><button class="btn btn-green btn-sm" type="button" id="sd-mcDone" data-id="' + se.id + '">Valider les présences (' + ids.size + " présent" + (ids.size > 1 ? "s" : "") + ")</button></div>") + "</div>";
           $$("#sd-mcBody [data-pe]").forEach((c) => c.addEventListener("change", async () => {
             const eid = +c.dataset.pe;
-            if (c.checked) await run(() => DB.q("presences", { method: "POST", body: { seance_id: se.id, eleve_id: eid }, prefer: "return=minimal,resolution=ignore-duplicates" }), "Présence enregistrée");
-            else await run(() => DB.q("presences?seance_id=eq." + se.id + "&eleve_id=eq." + eid, { method: "DELETE", prefer: "return=minimal" }), "Présence retirée");
+            if (c.checked) await run(() => DB.q("presences", { method: "POST", body: { seance_id: se.id, eleve_id: eid }, prefer: "return=minimal,resolution=ignore-duplicates" }));
+            else await run(() => DB.q("presences?seance_id=eq." + se.id + "&eleve_id=eq." + eid, { method: "DELETE", prefer: "return=minimal" }));
+            const k = $$("#sd-mcBody [data-pe]:checked").length, pl = k + " présent" + (k > 1 ? "s" : "");
+            $("#sd-mcCnt").textContent = pl + " sur " + act.length; if ($("#sd-mcDone")) $("#sd-mcDone").textContent = "Valider les présences (" + pl + ")";
           }));
-          $("#sd-mcDone").addEventListener("click", async () => {
-            await run(() => DB.q("seances_code?id=eq." + se.id, { method: "PATCH", body: { theme: $("#sd-mcTheme").value || null, note: $("#sd-mcNote").value.trim() || null, statut: "Fait" }, prefer: "return=minimal" }), "Cours enregistré");
-            loadMon();
+          if ($("#sd-mcEdit")) $("#sd-mcEdit").addEventListener("click", () => { appelEdit = se.id; loadMon(); });
+          if ($("#sd-mcDone")) $("#sd-mcDone").addEventListener("click", async () => {
+            const th = se.groupe ? se.theme : ($("#sd-mcTheme") && $("#sd-mcTheme").value) || null;
+            if (!se.groupe && !th) { toast("Choisis d'abord le cours rattrapé"); return; }
+            const ok = await run(() => DB.q("seances_code?id=eq." + se.id, { method: "PATCH", body: { theme: th, note: ($("#sd-mcNote") && $("#sd-mcNote").value.trim()) || null, statut: "Fait" }, prefer: "return=minimal" }), "Présences validées : cours fait");
+            if (ok) { appelEdit = null; loadMon(); }
           });
         }
       }
@@ -4141,6 +4153,14 @@ html:has(#sodaf-root.app-mode),body:has(#sodaf-root.app-mode){background:#ECEFEE
 .mc-plan>b{display:block;font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:#6B4E00}.mc-plan ol{margin:4px 0 0;padding-left:1.2em;font-size:.92rem}.mc-plan li{margin:2px 0}
 .pc-cours{margin:8px 0 0!important;font-size:.9rem;color:#3D444D}
 .devwk{margin:0 0 14px!important;color:var(--muted)}.devnow+.devnow{margin-top:-8px}
+
+.mc-appel{border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;margin-top:4px}
+.mc-appel.ok{border-color:var(--green);background:var(--green-soft)}
+.mc-ah{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:6px}
+.mc-ah b{font-family:var(--f-display);font-size:1.25rem}.mc-ah span{font-weight:700;color:var(--muted);font-size:.9rem}
+#sodaf-root .mc-done{margin:0 0 8px!important;font-weight:700;color:#064D36}
+.mc-nt{margin:10px 0 0}.mc-nt summary{cursor:pointer;font-size:.88rem;color:var(--muted)}.mc-nt input{width:100%;margin-top:6px}
+.tm-checks input[disabled]+*{opacity:1}
 `;
   const st = document.createElement("style"); st.textContent = CSS + CSS_REFONTE + 'html,body{margin:0;background:#15191E}#sodaf-root{min-height:100vh;display:flex;flex-direction:column}#sodaf-root>#app{flex:1;display:flex;flex-direction:column;background:#fff}#sodaf-root main{flex:1}'; document.head.appendChild(st);
   if (!document.querySelector("link[rel=icon]")) { const fi = document.createElement("link"); fi.rel = "icon"; fi.type = "image/svg+xml"; fi.href = FAVICON; document.head.appendChild(fi); }
