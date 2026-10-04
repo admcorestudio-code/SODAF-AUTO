@@ -1722,6 +1722,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="card" id="sd-mcCode"><p class="eyebrow">Cours de code</p><h3 class="tm-h3" id="sd-mcTitle">Chargement…</h3><div id="sd-mcBody"></div></div>
 <div class="card" id="sd-mcDrive"><p class="eyebrow">Conduite</p><h3 class="tm-h3">Mes séances d'aujourd'hui</h3><div id="sd-mcList" class="tm-list"></div></div>
 </div>
+<div class="card tm-mnplan" id="sd-mnPlan" style="margin-top:16px"><p class="eyebrow">Planning conduite</p><h3 class="tm-h3">Réserver une séance</h3><p class="tm-note" style="margin:0 0 12px!important">À la fin d'une séance, regarde les créneaux libres avec l'élève et mets-le sur le prochain. La secrétaire voit la réservation tout de suite. Un élève qui n'a pas soldé sa formation ne peut pas être réservé.</p><div id="sd-mnPlanSlot"></div></div>
 <div class="teamgrid" style="margin-top:16px">
 <a class="card teamtile hl" href="#classe"><b>Mode classe</b><span>Projette les leçons, le devoir, le quiz, les panneaux et les carrefours en salle.</span><em>Lancer la projection →</em></a>
 <a class="card teamtile" href="#devoirs"><b>Devoir de la semaine</b><span>Ce que font les élèves sur le site cette semaine.</span><em>Voir le devoir →</em></a>
@@ -1729,7 +1730,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="tm-sub"><div><p class="eyebrow">Mode d'emploi</p><h3>Les gestes du moniteur</h3></div></div>
 <div class="grid g2 tm-guides">
 <div class="card soft"><p class="eyebrow">Après chaque cours de code</p><ol class="teamsteps"><li>Dans <b>Cours de code</b>, choisis le thème traité.</li><li>Coche les élèves présents (c'est enregistré tout de suite).</li><li>Touche <b>Cours fait</b>.</li></ol></div>
-<div class="card soft"><p class="eyebrow">Séances de conduite</p><ol class="teamsteps"><li>Le matin, regarde <b>Mes séances d'aujourd'hui</b>.</li><li>Avant de partir : vérification de la voiture (Outils → check-list du matin).</li><li>Après la séance : <b>Fait</b> ou <b>Absent</b>, et une courte note sur les progrès.</li></ol></div>
+<div class="card soft"><p class="eyebrow">Séances de conduite</p><ol class="teamsteps"><li>Le matin, regarde <b>Mes séances d'aujourd'hui</b>.</li><li>Avant de partir : vérification de la voiture (Outils → check-list du matin).</li><li>Après la séance : <b>Fait</b> ou <b>Absent</b>, et une courte note sur les progrès.</li><li>Avec l'élève, réserve sa prochaine séance dans <b>Réserver une séance</b>.</li></ol></div>
 </div></div>
 <div class="tm-pane" data-pane="docs" role="tabpanel" hidden>
 <p class="tm-role">Supports de communication et documents officiels SODAF, à télécharger ou à envoyer à l'imprimeur.</p>
@@ -2599,11 +2600,17 @@ function init(root) {
 
     // Onglets principaux et sous-onglets
     const tabs = $$("#sd-tmTabs button"), panes = $$(".tm-pane");
-    const pick = (t) => { tabs.forEach((b) => b.setAttribute("aria-selected", b.dataset.t === t)); panes.forEach((p) => (p.hidden = p.dataset.pane !== t)); try { S.set("tmTab", t); } catch (e) {} if (t === "mon") loadMon(); if (t === "dir") loadDir(); };
+    // Le planning conduite est partagé : affiché dans le Secrétariat et dans l'espace Moniteur (même section, mêmes règles)
+    const cdSec = $('section.tm-sec[data-s="conduite"]'), cdHome = { p: cdSec.parentNode, n: cdSec.nextSibling };
+    const placePlanning = (t) => {
+      if (t === "mon") { const slot = $("#sd-mnPlanSlot"); if (cdSec.parentNode !== slot) slot.appendChild(cdSec); cdSec.hidden = false; (eleves.length ? Promise.resolve() : loadEleves(true)).then(() => loadDay()); }
+      else if (cdSec.parentNode !== cdHome.p) { cdHome.p.insertBefore(cdSec, cdHome.n); const on = $('#sd-secNav button[aria-selected="true"]'); cdSec.hidden = !on || on.dataset.s !== "conduite"; }
+    };
+    const pick = (t) => { tabs.forEach((b) => b.setAttribute("aria-selected", b.dataset.t === t)); panes.forEach((p) => (p.hidden = p.dataset.pane !== t)); try { S.set("tmTab", t); } catch (e) {} placePlanning(t); if (t === "mon") loadMon(); if (t === "dir") loadDir(); };
     tabs.forEach((b) => b.addEventListener("click", () => pick(b.dataset.t)));
     const subs = $$("#sd-secNav button"), secs = $$(".tm-sec");
     const LOAD = { eleves: () => loadEleves(), conduite: () => loadDay(), paiements: () => loadPay(), devoirs: () => loadDev() };
-    const sub = (k) => { subs.forEach((b) => b.setAttribute("aria-selected", b.dataset.s === k)); secs.forEach((x) => (x.hidden = x.dataset.s !== k)); LOAD[k](); };
+    const sub = (k) => { subs.forEach((b) => b.setAttribute("aria-selected", b.dataset.s === k)); secs.forEach((x) => { if (x === cdSec && cdSec.parentNode !== cdHome.p) return; x.hidden = x.dataset.s !== k; }); LOAD[k](); };
     subs.forEach((b) => b.addEventListener("click", () => sub(b.dataset.s)));
     $$('a[href="#equipe-recu"]').forEach((x) => x.addEventListener("click", () => { pick("sec"); sub("paiements"); }));
     { const w = devWeek(), dv = DEV[w.idx], n = new Date();
@@ -2728,14 +2735,12 @@ function init(root) {
       sub("eleves"); pcSel = null; await loadEleves(true); $("#sd-pc").scrollIntoView({ block: "start" });
     });
     async function loadEleves(silent) {
-      const r = await run(() => DB.q("eleves?select=*&order=cree_le.desc&limit=2000"));
-      if (!r) return; eleves = r;
-      const wb = await run(() => DB.q("inscriptions_web?select=*&order=le.desc&limit=2000"));
+      const [r, wb, pr] = await Promise.all([run(() => DB.q("eleves?select=*&order=cree_le.desc&limit=2000")), run(() => DB.q("inscriptions_web?select=*&order=le.desc&limit=2000")), run(() => DB.q("paiements?select=eleve_id,reste,cree_le&annule=is.false&reste=not.is.null&eleve_id=not.is.null&order=cree_le.asc&limit=5000"))]);
+      if (!r) return;
       const W = {}; (wb || []).forEach((w) => { if (!W[w.eleve_id]) W[w.eleve_id] = w; });
-      eleves.forEach((x) => (x.web = W[x.id] && W[x.id].statut === "Nouveau" ? W[x.id] : null));
-      const pr = await run(() => DB.q("paiements?select=eleve_id,reste,cree_le&annule=is.false&reste=not.is.null&eleve_id=not.is.null&order=cree_le.asc&limit=5000"));
       const SL = {}; (pr || []).forEach((p) => (SL[p.eleve_id] = p.reste));
-      eleves.forEach((x) => (x.solde = x.id in SL ? SL[x.id] : null));
+      r.forEach((x) => { x.web = W[x.id] && W[x.id].statut === "Nouveau" ? W[x.id] : null; x.solde = x.id in SL ? SL[x.id] : null; });
+      eleves = r; // remplacé d'un coup, déjà complet (solde compris)
       const nb = eleves.filter((x) => x.statut === "Nouveau").length + eleves.filter((x) => x.web && x.web.mode === "mixx" && etapeOf(x) === "dossier").length;
       $("#sd-cntNew").textContent = nb ? nb : "";
       renderList();
