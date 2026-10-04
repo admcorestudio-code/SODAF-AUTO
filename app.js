@@ -853,6 +853,19 @@ label.ex-doc input{position:absolute;left:14px;top:12px;width:20px;height:20px;a
 #sodaf-root [data-rappel=""][aria-pressed="true"]{background:var(--green);color:#fff}
 #sodaf-root [data-ko][aria-pressed="true"]{outline:3px solid var(--ink);outline-offset:2px}
 .pc-callnow{padding-bottom:14px;margin-bottom:14px;border-bottom:2px solid var(--ink)}
+.gc-bar{background:#F3F6F4;border-bottom:1px solid var(--line);padding:10px 12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.gc-chips{display:flex;flex-wrap:wrap;gap:6px}
+.gc-chip{display:flex;flex-direction:column;background:#fff;border:1.5px solid var(--green);border-radius:10px;padding:4px 10px;font-size:.84rem;line-height:1.25}
+.gc-chip b{font-weight:700}.gc-chip small{color:var(--muted);font-size:.75rem}
+.gc-chip.full{border-color:#D7263D;background:#FDECEE}.gc-chip.wait{border-color:#F08A24;background:#FFF4E8}
+.gc-tip{flex-basis:100%;margin:0!important;font-size:.84rem;color:#B45309;font-weight:600}
+.gc-man{flex-basis:100%;display:grid;gap:6px;margin-top:4px}
+.gc-row{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.gc-row small{display:block;color:var(--muted);font-size:.8rem}
+.gc-pick{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.gc-pick select{flex:1;min-width:220px;font:600 .95rem var(--f-body);padding:.5em .6em;border:1.5px solid var(--line);border-radius:10px}
+.pc-waittag{font-size:.78rem;font-weight:700;color:#B45309;background:#FFF4E8;border-radius:999px;padding:.15em .7em}
+.gc-ses{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
 .cd-done{font-size:.85rem;font-weight:700;color:var(--green);white-space:nowrap}
 .pc-status{display:flex;align-items:center;gap:10px;flex-wrap:wrap;color:var(--green)}
 .pc-status b{font-size:1.15rem;color:var(--ink)}
@@ -1281,7 +1294,7 @@ ${HEAD("Formations", "Nos formations et tarifs", "Chaque formule comprend le cod
 
 <section class="page" data-page="cours" hidden>
 ${HEAD("Manuel officiel SODAF", "Les cours", "Tout ce qui est enseigné en salle, chapitre par chapitre. Marque chaque chapitre comme lu pour voir d'un coup d'œil où tu en es.")}
-<div class="wrap"><div class="classband"><p class="cb-t">Code en salle · 14 h 30 – 15 h 30</p><p class="cb-d">Lundi : cours complet · Mercredi : récap · Vendredi : entraînement · Samedi 10 h : examen blanc</p><a class="btn btn-line btn-sm" href="#formations" style="margin-left:auto">Voir le planning</a></div></div>
+<div class="wrap"><div class="classband"><p class="cb-t">Code en salle · groupes de 6 élèves · 14 h 30 – 15 h 30</p><p class="cb-d">Groupe A : lundi et jeudi · Groupe B : mardi et vendredi · Mercredi : rattrapage et examen blanc</p><a class="btn btn-line btn-sm" href="#formations" style="margin-left:auto">Voir le planning</a></div></div>
 <div class="wrap" style="margin-top:22px"><div class="card doc doc-cover"><img class="cover" src="/couverture-manuel.jpg" alt="Couverture du manuel de l'élève conducteur SODAF" width="120" height="160" loading="lazy"><div><span class="tag">Manuel officiel · 34 pages</span><h3 style="margin-top:8px">Manuel de l'élève conducteur</h3><p>Code, secourisme et mécanique, en 7 parties :</p>
 <ol class="toc-list"><li><a href="#cours-signalisation">Le code de la route</a></li><li><a href="#cours-intersections">Les intersections</a></li><li><a href="#cours-priorites">Les règles de priorité</a></li><li><a href="#cours-secourisme">Le secourisme routier</a></li><li><a href="#cours-assurance">L'assurance automobile</a></li><li><a href="#cours-conduite">Notions de conduite</a></li><li><a href="#cours-mecanique">Mécanique automobile</a></li></ol>
 <div class="acts"><a class="btn btn-green btn-sm" href="#cours-signalisation">Commencer la lecture</a><a class="btn btn-line btn-sm" target="_blank" rel="noopener" href="${WA}?text=${encodeURIComponent("Bonjour SODAF, je souhaite recevoir le manuel de l'élève en PDF.")}">Recevoir le PDF sur WhatsApp</a></div></div></div></div>
@@ -1693,7 +1706,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 </section>
 <div class="tm-sub"><div><p class="eyebrow">Mode d'emploi</p><h3>Les gestes du secrétariat</h3></div></div>
 <div class="grid g2 tm-guides">
-<div class="card soft"><p class="eyebrow">Le parcours d'un élève</p><ol class="teamsteps"><li><b>Accueil</b> : <b>Envoyer l'accueil</b> (WhatsApp). Le dossier passe tout seul en zone d'appel.</li><li><b>Appels</b> : appelle avec le script. Pas de réponse : choisis quand rappeler. À 4 tentatives : relance WhatsApp ou <b>Injoignable</b>.</li><li>Il est intéressé : <b>Envoyer le lien d'inscription</b> (en haut). Le dossier passe tout seul en paiement en attente.</li><li><b>Paiement en attente</b> : Mixx à vérifier sur le téléphone de l'agence, ou paiement à l'agence. Sans nouvelles : relance tous les 5 jours (4 au maximum).</li><li><b>Formation payée ? Faire le reçu</b> : le reçu s'ouvre déjà rempli, envoie-le. L'élève passe <b>En formation</b>.</li><li>Formation terminée : <b>Passer à l'examen</b>, message des papiers. Dossier complet + 30 000 F : reçu.</li><li><b>Dépôt d'examen</b> : coche le lot, imprime le bordereau, fais-le signer, puis <b>Lot déposé</b>. Au résultat : <b>Permis obtenu</b> ou <b>À repasser</b> (archivé « Permis échoué »).</li></ol></div>
+<div class="card soft"><p class="eyebrow">Le parcours d'un élève</p><ol class="teamsteps"><li><b>Accueil</b> : <b>Envoyer l'accueil</b> (WhatsApp). Le dossier passe tout seul en zone d'appel.</li><li><b>Appels</b> : appelle avec le script. Pas de réponse : choisis quand rappeler. À 4 tentatives : relance WhatsApp ou <b>Injoignable</b>.</li><li>Il est intéressé : <b>Envoyer le lien d'inscription</b> (en haut). Le dossier passe tout seul en paiement en attente.</li><li><b>Paiement en attente</b> : Mixx à vérifier sur le téléphone de l'agence, ou paiement à l'agence. Sans nouvelles : relance tous les 5 jours (4 au maximum).</li><li><b>Formation payée ? Faire le reçu</b> : le reçu s'ouvre déjà rempli, envoie-le. L'élève passe <b>En formation</b> et reçoit tout seul une place dans un groupe de code (6 places). Touche <b>Envoyer ses horaires</b>. Groupes complets : il passe en liste d'attente, et « Gérer les groupes » permet d'ouvrir un groupe du matin.</li><li>Formation terminée : <b>Passer à l'examen</b>, message des papiers. Dossier complet + 30 000 F : reçu.</li><li><b>Dépôt d'examen</b> : coche le lot, imprime le bordereau, fais-le signer, puis <b>Lot déposé</b>. Au résultat : <b>Permis obtenu</b> ou <b>À repasser</b> (archivé « Permis échoué »).</li></ol></div>
 <div class="card soft"><p class="eyebrow">Réserver une séance de conduite</p><ol class="teamsteps"><li>Seuls les élèves dont la formation est soldée peuvent être réservés : les autres sont grisés. S'il doit encore payer : fiche de l'élève → <b>Rappel du solde</b>.</li><li><b>Planning conduite</b> : choisis le jour, puis l'élève sur un créneau libre.</li><li>Le choix est enregistré tout de suite. Touche <b>Prévenir l'élève</b> : le message WhatsApp avec le jour et l'heure est prêt. La veille, touche <b>Rappel</b>.</li></ol></div>
 <div class="card soft"><p class="eyebrow">Mercredi : résultats du devoir</p><ol class="teamsteps"><li>Onglet <b>Devoirs</b> : le message de la semaine est déjà écrit.</li><li>Touche <b>Ouvrir WhatsApp avec le message</b> et choisis le groupe.</li></ol></div>
 <div class="card soft"><p class="eyebrow">Règles</p><ol class="teamsteps"><li>On ne supprime rien : une séance annulée passe en <b>Annulé</b>, un dossier qui s'arrête va dans <b>Archivés</b> avec son motif, un reçu faux se fait <b>Annuler</b> (avec la raison) puis on refait le bon.</li><li>Erreur de nom ou de numéro : <b>Modifier</b> sur la fiche de l'élève.</li><li>Jour férié ou fermeture : <b>Planning conduite</b> → le jour → « Fermer ce jour », puis <b>Prévenir</b> chaque élève.</li><li>Les créneaux du mois suivant se créent tout seuls le 24.</li></ol></div>
@@ -1714,10 +1727,10 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <p class="tm-role">Cours de code en salle, séances de conduite et progression des élèves.</p>
 <div class="tm-week card"><div class="tm-wk-head"><div><p class="eyebrow">Cette semaine</p><h3 id="sd-tmTheme">Thème</h3></div><a class="btn btn-yellow btn-sm" href="#classe">Ouvrir le Mode classe</a></div>
 <div class="tm-days">
-<a class="tm-day" href="#classe-lecon"><b>Lundi · 14 h 30</b><span>Cours complet du thème</span><em>Mode classe → Leçon</em></a>
-<a class="tm-day" href="#classe-devoir"><b>Mercredi · 14 h 30</b><span>Correction du devoir de la semaine</span><em>Mode classe → Devoir</em></a>
-<a class="tm-day" href="#classe-quiz"><b>Vendredi · 14 h 30</b><span>Entraînement type examen</span><em>Mode classe → Quiz</em></a>
-<a class="tm-day" href="#classe-situations"><b>Samedi · 10 h</b><span>Examen blanc</span><em>Quiz, situations, panneaux</em></a>
+<a class="tm-day" href="#classe-lecon"><b>1er cours du groupe</b><span>A : lundi · B : mardi · 14 h 30. Cours complet du thème</span><em>Mode classe → Leçon</em></a>
+<a class="tm-day" href="#classe-devoir"><b>2e cours du groupe</b><span>A : jeudi · B : vendredi · 14 h 30. Correction du devoir et entraînement</span><em>Mode classe → Devoir, Quiz</em></a>
+<a class="tm-day" href="#classe-situations"><b>Mercredi · 14 h 30</b><span>Rattrapage et examen blanc, tous groupes (6 places)</span><em>Quiz, situations, panneaux</em></a>
+<a class="tm-day" href="#classe-quiz"><b>Groupes du matin</b><span>C et D à 11 h, mêmes jours, quand A et B sont complets</span><em>Ouverts par le secrétariat</em></a>
 </div></div>
 <div class="grid g2 tm-mon">
 <div class="card" id="sd-mcCode"><p class="eyebrow">Cours de code</p><h3 class="tm-h3" id="sd-mcTitle">Chargement…</h3><div id="sd-mcBody"></div></div>
@@ -2658,6 +2671,18 @@ function init(root) {
     const ETAPES = { accueil: ["Nouveau"], appels: ["Contacté"], formation: ["Inscrit", "En formation", "Permis obtenu"], archives: ["Abandon"] };
     const etapeOf = (x) => (x.statut === "Permis obtenu" ? "archives" : ["Inscrit", "En formation"].includes(x.statut) && x.examen_etape ? "examen" : x.statut === "Contacté" && x.dossier_envoye_le ? "dossier" : Object.keys(ETAPES).find((k) => ETAPES[k].includes(x.statut)) || "accueil");
     const CFG = {};
+    // ---- Groupes de code (salle de 6 places) : A lun+jeu, B mar+ven à 14 h 30 ; C, D le matin (fermés au départ) ; mercredi = rattrapage commun
+    let GROUPES = [], gMan = false, monIdx = 0;
+    const sansCode = (x) => /Remise à niveau|entreprise/i.test(x.formation || "");
+    const enCode = (x) => etapeOf(x) === "formation" && !sansCode(x);
+    const occ = (gid) => eleves.filter((x) => x.groupe_code === gid && enCode(x)).length;
+    const JN = ["", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"];
+    const gJours = (g) => g.jours.map((d) => JN[d]).join(" et ");
+    const gHeure = (g) => g.heure.split(" – ")[0];
+    const gOf = (id) => GROUPES.find((g) => g.id === id);
+    const gLibre = () => GROUPES.filter((g) => g.actif).sort((a, b) => a.ordre - b.ordre).find((g) => occ(g.id) < g.places);
+    const attente = () => eleves.filter((x) => enCode(x) && !x.groupe_code);
+    const msgGroupe = (x) => { const g = gOf(x.groupe_code); return "Bonjour " + prenom(x) + ",\n\nVoici tes horaires de *cours de code en salle* chez SODAF Auto-École.\n\n*TON GROUPE : " + g.nom.toUpperCase() + "*\n• " + gJours(g).replace(/^./, (c) => c.toUpperCase()) + " : " + g.heure + "\n• Mercredi 14 h 30 : rattrapage et examen blanc (si tu as manqué un cours, ou pour t'entraîner)\n\nLa salle compte 6 places : merci d'arriver à l'heure. Tu peux aussi réviser à tout moment sur autosodaf.com (cours, quiz et devoir de la semaine).\n\nUn empêchement ? Préviens-nous en répondant à ce message." + SIGN; };
     const PRIXM = { "Permis B": "55 000 F la formation complète (formule courte 35 000 F, accélérée 75 000 F en 2 mois ou 80 000 F en 1 mois)", "Permis A": "30 000 F", "Pack A + B": "80 000 F", "Remise à niveau": "20 000 F", "Formation entreprise": "sur devis, selon le nombre de chauffeurs" };
     const jours = (d) => Math.floor((Date.now() - new Date(d)) / 864e5);
     const dosAge = (x) => { const b = x.web && x.web.le > (x.dossier_envoye_le || "") ? x.web.le : x.dossier_envoye_le; return jours(x.dossier_relance_le && x.dossier_relance_le > b ? x.dossier_relance_le : b); };
@@ -2669,7 +2694,7 @@ function init(root) {
     const payWhere = () => "à l'agence" + (CFG.mixx_numero ? " ou par Mixx by Yas" : "");
     const msgRel = (x, k) => { const L = inscLink(x), S = "\n\n*L'équipe SODAF · L'art de conduire, la force de réussir.*";
       if (k === 1) return "Bonjour " + prenom(x) + ",\n\nC'est le secrétariat de *SODAF Auto-École*. As-tu pu regarder ton inscription (N° Client : " + CODE(x) + ") ?\n\nTu peux la finaliser en 2 minutes ici :\n" + L + "\n\nUne question sur le prix, les horaires ou le paiement ? Réponds simplement à ce message." + S;
-      if (k === 2) return "Bonjour " + prenom(x) + ",\n\nPetit rappel de *SODAF Auto-École* : ton inscription au " + (x.formation || "permis") + " t'attend toujours.\n\nLes cours de code ont lieu chaque lundi, mercredi et vendredi à 14 h 30 : tu peux commencer dès ton inscription. Paiement " + payWhere() + ", en une ou deux fois.\n\nFinaliser mon inscription :\n" + L + S;
+      if (k === 2) return "Bonjour " + prenom(x) + ",\n\nPetit rappel de *SODAF Auto-École* : ton inscription au " + (x.formation || "permis") + " t'attend toujours.\n\nLes cours de code se font en petits groupes de 6, deux fois par semaine à 14 h 30 : tu peux commencer dès ton inscription. Paiement " + payWhere() + ", en une ou deux fois.\n\nFinaliser mon inscription :\n" + L + S;
       if (k === 3) return "Bonjour " + prenom(x) + ",\n\nNous n'avons pas eu de nouvelles de ta part concernant ton inscription chez *SODAF Auto-École*.\n\nSi tu as besoin de plus de temps ou si tu as changé d'avis, dis-le-nous simplement : aucun souci.\n\nPour t'inscrire :\n" + L + S;
       return "Bonjour " + prenom(x) + ",\n\nSans nouvelles de ta part, nous mettons ton dossier d'inscription (N° Client : " + CODE(x) + ") en pause.\n\nIl reste disponible : le jour où tu veux commencer, réponds simplement à ce message ou appelle-nous au *+228 72 54 41 66*, et nous le réactivons tout de suite.\n\nMerci et à bientôt !" + S; };
     const PRIX = { "Permis B": "55 000 F la formation complète (formule courte dès 35 000 F, accélérée 75 000 ou 80 000 F)", "Permis A": "30 000 F", "Pack A + B": "80 000 F", "Remise à niveau": "20 000 F", "Formation entreprise": "sur devis" };
@@ -2711,7 +2736,7 @@ function init(root) {
         tip("<b>Le prix :</b> on n'en parle pas au téléphone. « Tout est dans le message WhatsApp que je vous envoie juste après, avec les différentes formules. »") +
         tip("<b>Les papiers :</b> « Rien à apporter pour commencer. Les papiers, c'est à la fin, pour l'examen. »") +
         (exam ? tip("<b>L'examen :</b> « C'est nous qui déposons votre dossier à la fin de la formation, et l'État vous envoie la date par message. »") : "") +
-        tip("<b>Les cours :</b> « Le code, c'est le lundi, le mercredi et le vendredi à 14 h 30. La conduite, c'est par séances d'une heure. »") +
+        tip("<b>Les cours :</b> « Le code, c'est en petit groupe de 6, deux fois par semaine à 14 h 30, et tout est aussi sur notre site. La conduite, c'est par séances d'une heure. »") +
         tip("<b>L'adresse :</b> « On est au 412 avenue Akei, à Tokoin Tamé, en face de la caisse. Le bureau est ouvert en semaine de 8 h à 18 h, avec une pause à midi, et le samedi matin. »") + "</details>";
     };
     const ago = (d) => { const m = Math.round((Date.now() - new Date(d)) / 60000); return m < 60 ? "il y a " + Math.max(m, 1) + " min" : m < 1440 ? "il y a " + Math.round(m / 60) + " h" : "il y a " + Math.round(m / 1440) + " j"; };
@@ -2727,7 +2752,9 @@ function init(root) {
         const w = pendWeb[x.id] || x.web;
         if (w) await run(() => DB.q("inscriptions_web?id=eq." + w.id, { method: "PATCH", body: { statut: "Vérifié" }, prefer: "return=minimal" }));
         const extra = w ? { nom: (w.prenoms + " " + w.nom).trim(), nom_famille: w.nom, prenoms: w.prenoms, telephone: w.telephone || x.telephone, quartier: w.quartier || x.quartier } : {};
-        if (await patchEl(x, Object.assign({ statut: "En formation", rappel: null }, extra), "Reçu enregistré : il passe en formation", ["Étape", "En formation (reçu d'inscription" + (w ? ", " + (w.mode === "mixx" ? "Mixx vérifié" : "payé à l'agence") : "") + ")"])) { delete pendWeb[x.id]; x.web = null; }
+        const gl = sansCode(x) || x.groupe_code ? null : gLibre();
+        if (gl) extra.groupe_code = gl.id;
+        if (await patchEl(x, Object.assign({ statut: "En formation", rappel: null }, extra), "Reçu enregistré : il passe en formation" + (sansCode(x) ? "" : gl ? " · " + gl.nom : x.groupe_code ? "" : " · liste d'attente du code (groupes complets)"), ["Étape", "En formation (reçu d'inscription" + (w ? ", " + (w.mode === "mixx" ? "Mixx vérifié" : "payé à l'agence") : "") + ")"])) { delete pendWeb[x.id]; x.web = null; }
       } else if (dt.motif === "examen" && x.examen_etape === "pret") {
         const le = new Date().toISOString(), docs = {}; PX.forEach((p) => (docs[p[0]] = { main: true, le }));
         await patchEl(x, { examen_paye: true, examen_docs: docs, examen_etape: "complet" }, "Reçu enregistré : dossier d'examen complet", ["Étape", "Examen : Dossier complet reçu (papiers + 30 000 F)"]);
@@ -2739,8 +2766,8 @@ function init(root) {
       sub("eleves"); pcSel = null; await loadEleves(true); $("#sd-pc").scrollIntoView({ block: "start" });
     });
     async function loadEleves(silent) {
-      const [r, wb, pr] = await Promise.all([run(() => DB.q("eleves?select=*&order=cree_le.desc&limit=2000")), run(() => DB.q("inscriptions_web?select=*&order=le.desc&limit=2000")), run(() => DB.q("paiements?select=eleve_id,reste,cree_le&annule=is.false&reste=not.is.null&eleve_id=not.is.null&order=cree_le.asc&limit=5000"))]);
-      if (!r) return;
+      const [r, wb, pr, gr] = await Promise.all([run(() => DB.q("eleves?select=*&order=cree_le.desc&limit=2000")), run(() => DB.q("inscriptions_web?select=*&order=le.desc&limit=2000")), run(() => DB.q("paiements?select=eleve_id,reste,cree_le&annule=is.false&reste=not.is.null&eleve_id=not.is.null&order=cree_le.asc&limit=5000")), run(() => DB.q("groupes_code?select=*&order=ordre"))]);
+      if (!r) return; if (gr) GROUPES = gr;
       const W = {}; (wb || []).forEach((w) => { if (!W[w.eleve_id]) W[w.eleve_id] = w; });
       const SL = {}; (pr || []).forEach((p) => (SL[p.eleve_id] = p.reste));
       r.forEach((x) => { x.web = W[x.id] && W[x.id].statut === "Nouveau" ? W[x.id] : null; x.solde = x.id in SL ? SL[x.id] : null; });
@@ -2793,9 +2820,17 @@ function init(root) {
         ? '<button type="button" class="pc-gh pc-fold g-' + g[2] + '" data-fold="' + g[2] + '" aria-expanded="' + isOpen(g) + '"><i aria-hidden="true">▸</i>' + esc(g[0]) + " <span>" + g[1].length + "</span></button>"
         : '<p class="pc-gh' + (g[2] ? " g-" + g[2] : "") + '">' + esc(g[0]) + " <span>" + g[1].length + "</span></p>") + (isOpen(g) ? g[1].map((x) =>
         '<button type="button" class="pc-item' + (g[2] ? " i-" + g[2] : "") + (sg(x) === "appels" && calledToday(x) ? " i-done" : "") + (x.id === pcSel ? " on" : "") + '" data-id="' + x.id + '"><b>' + esc(x.nom) + (g[2] && TAG[g[2]] ? ' <em class="pc-tag t-' + g[2] + '">' + TAG[g[2]] + "</em>" : "") + '</b><span>' + esc((x.telephone || "").replace("+228", "+228 ")) + (x.formation ? " · " + esc(x.formation) : "") + "</span><small>" + CODE(x) + " · " +
-        (sg(x) === "accueil" ? (x.accueil_le ? "accueil envoyé ✓" : "arrivé " + ago(x.cree_le)) : sg(x) === "appels" ? (x.appels ? x.appels + "X sans réponse" : "pas encore appelé") + (calledToday(x) ? " · appelé à " + hm(x.dernier_appel_le) : "") : sg(x) === "dossier" ? (x.web ? (x.web.mode === "mixx" ? "a payé " + F(x.web.a_payer) + " par Mixx " : "paiera " + F(x.web.a_payer) + " à l'agence · ") + ago(x.web.le) : "message envoyé " + ago(x.dossier_envoye_le)) + (x.dossier_relances ? " · relance " + x.dossier_relances + "/4 " + ago(x.dossier_relance_le) : "") : sg(x) === "examen" ? exLine(x) : sg(x) === "archives" ? (x.examen_resultat === "echoue" && x.statut === "Abandon" ? "examen à repasser · " + (x.examen_passages || 1) + (x.examen_passages > 1 ? " échecs" : " échec") : x.statut === "Permis obtenu" ? "permis obtenu" + (x.examen_date ? " le " + dFr(x.examen_date) : "") : "archivé " + (x.archive_le ? ago(x.archive_le) : "")) : sg(x) === "formation" ? soldeTxt(x) : esc(x.statut)) + "</small></button>").join("") : "")).join("");
+        (sg(x) === "accueil" ? (x.accueil_le ? "accueil envoyé ✓" : "arrivé " + ago(x.cree_le)) : sg(x) === "appels" ? (x.appels ? x.appels + "X sans réponse" : "pas encore appelé") + (calledToday(x) ? " · appelé à " + hm(x.dernier_appel_le) : "") : sg(x) === "dossier" ? (x.web ? (x.web.mode === "mixx" ? "a payé " + F(x.web.a_payer) + " par Mixx " : "paiera " + F(x.web.a_payer) + " à l'agence · ") + ago(x.web.le) : "message envoyé " + ago(x.dossier_envoye_le)) + (x.dossier_relances ? " · relance " + x.dossier_relances + "/4 " + ago(x.dossier_relance_le) : "") : sg(x) === "examen" ? exLine(x) : sg(x) === "archives" ? (x.examen_resultat === "echoue" && x.statut === "Abandon" ? "examen à repasser · " + (x.examen_passages || 1) + (x.examen_passages > 1 ? " échecs" : " échec") : x.statut === "Permis obtenu" ? "permis obtenu" + (x.examen_date ? " le " + dFr(x.examen_date) : "") : "archivé " + (x.archive_le ? ago(x.archive_le) : "")) : sg(x) === "formation" ? soldeTxt(x) + (sansCode(x) ? "" : x.groupe_code ? " · groupe " + x.groupe_code : " · attente code") : esc(x.statut)) + "</small></button>").join("") : "")).join("");
       const ailleurs = q && !list.length ? Object.keys(ST_LAB).map((k) => [k, eleves.filter((x) => etapeOf(x) === k && trouve(x, q)).length]).filter((t) => t[1]) : [];
       $("#sd-pcList").innerHTML = (q && !list.length) ? '<p class="tm-empty">Aucun client trouvé dans « ' + ST_LAB[pcStage] + " » pour « " + esc(q) + " »." + (ailleurs.length ? '<span class="pc-else">Trouvé ailleurs : ' + ailleurs.map((t) => '<button class="linkbtn" type="button" data-goto="' + t[0] + '">' + ST_LAB[t[0]] + " (" + t[1] + ")</button>").join(" ") + "</span>" : " Vérifie le N° client (SO12) ou le numéro de téléphone.") + "</p>" : html || '<p class="tm-empty">' + ({ accueil: "Aucune nouvelle pré-inscription. Elles arrivent ici toutes seules depuis le site.", appels: "Personne à appeler pour l'instant.", dossier: "Aucun dossier en attente. Après un appel, « Envoyer le lien d'inscription » les range ici.", formation: "Aucun élève en formation pour l'instant.", examen: "Aucun élève à l'étape examen. Quand un élève termine sa formation, touche « Formation terminée : passer à l'examen » sur sa fiche.", archives: "Aucun dossier archivé." }[pcStage]) + "</p>";
+      if (!q && pcStage === "formation" && GROUPES.length) {
+        const act = GROUPES.filter((g) => g.actif), att = attente().length, plein = act.length && act.every((g) => occ(g.id) >= g.places);
+        const bar = '<div class="gc-bar"><div class="gc-chips">' + act.map((g) => { const o = occ(g.id); return '<span class="gc-chip' + (o >= g.places ? " full" : "") + '"><b>' + esc(g.nom) + " · " + o + "/" + g.places + "</b><small>" + gJours(g) + " · " + gHeure(g) + "</small></span>"; }).join("") +
+          (att ? '<span class="gc-chip wait"><b>Liste d\'attente · ' + att + "</b><small>" + (plein ? "groupes complets" : "une place est libre") + "</small></span>" : "") + '</div><button class="linkbtn" type="button" data-gman>' + (gMan ? "Fermer" : "Gérer les groupes") + "</button>" +
+          (plein && GROUPES.some((g) => !g.actif) ? '<p class="gc-tip">Tous les groupes sont complets : ouvre un groupe du matin dans « Gérer les groupes ».</p>' : "") +
+          (gMan ? '<div class="gc-man">' + GROUPES.map((g) => { const o = occ(g.id); return '<div class="gc-row"><div><b>' + esc(g.nom) + "</b><small>" + gJours(g) + " · " + g.heure + " · " + o + "/" + g.places + " élèves</small></div>" + (g.actif ? (o ? '<span class="tm-note" style="margin:0!important">Ouvert (' + o + " inscrit" + (o > 1 ? "s" : "") + ")</span>" : '<button class="btn btn-line btn-sm" type="button" data-gtog="' + g.id + '" data-on="0">Fermer</button>') : '<button class="btn btn-green btn-sm" type="button" data-gtog="' + g.id + '" data-on="1">Ouvrir ce groupe</button>') + "</div>"; }).join("") + '<p class="tm-note" style="margin:6px 0 0!important">Ouvrir un groupe crée ses séances de code jusqu\'à la fin du planning. Un groupe qui a des élèves ne peut pas être fermé.</p></div>' : "") + "</div>";
+        $("#sd-pcList").insertAdjacentHTML("afterbegin", bar);
+      }
       if (pcSel && !list.some((x) => x.id === pcSel)) pcSel = null;
       if (!pcSel && isWide()) { const first = $("#sd-pcList .pc-item:not(.i-done)") || $("#sd-pcList .pc-item"); if (first) { pcSel = +first.dataset.id; first.classList.add("on"); } }
       if (!keepDetail || keepDetail !== pcSel) renderDetail();
@@ -2808,6 +2843,9 @@ function init(root) {
     }
     // Dépôt en lot : un seul bordereau, une seule signature, un seul clic
     $("#sd-pcList").addEventListener("click", async (e) => {
+      if (e.target.closest("[data-gman]")) { gMan = !gMan; renderList(true); return; }
+      const gt = e.target.closest("[data-gtog]");
+      if (gt) { confirmBtn(gt, async () => { const on = gt.dataset.on === "1"; const r = await run(() => DB.q("rpc/groupe_ouvrir", { method: "POST", body: { p_id: gt.dataset.gtog, p_actif: on } }), on ? "Groupe ouvert : ses séances de code sont créées" : "Groupe fermé"); await loadEleves(true); }); return; }
       const lb = e.target.closest("[data-lot]"); if (!lb) return;
       const lot = eleves.filter((x) => etapeOf(x) === "examen" && x.examen_etape === "complet").sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
       if (!lot.length) return;
@@ -2925,6 +2963,10 @@ function init(root) {
         const due = doit(x);
         body = (due ? '<div class="pc-alert"><b>' + (x.solde ? "Solde à payer : " + F(x.solde) + "." : "Aucun paiement de formation enregistré.") + "</b> Pas de séance de conduite ni de passage à l'examen tant que la formation n'est pas soldée." +
             '<div class="tm-formact"><button class="btn btn-green btn-sm" type="button" data-a="rcSolde">' + (x.solde ? "Solde payé ? Faire le reçu" : "Paiement reçu ? Faire le reçu") + '</button>' + (n && x.solde ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-a="relSolde" href="' + wa(msgSolde(x)) + '">Rappel du solde ↗</a>' : "") + "</div></div>" : "") +
+          (sansCode(x) ? "" : '<div class="pc-block"><div class="pc-bh"><b>Cours de code en salle</b>' + (x.groupe_code ? "" : '<span class="pc-waittag">Liste d\'attente</span>') + '</div><div class="gc-pick"><select data-a="groupe" aria-label="Groupe de code"><option value="">Liste d\'attente</option>' +
+            GROUPES.filter((g) => g.actif || g.id === x.groupe_code).map((g) => { const o = occ(g.id), mine = g.id === x.groupe_code, full = !mine && o >= g.places; return '<option value="' + g.id + '"' + (mine ? " selected" : full ? " disabled" : "") + ">" + esc(g.nom) + " · " + gJours(g) + " · " + gHeure(g) + " · " + o + "/" + g.places + (full ? " (complet)" : "") + "</option>"; }).join("") + "</select>" +
+            (x.groupe_code && n && gOf(x.groupe_code) ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-a="sendGroupe" href="' + wa(msgGroupe(x)) + '">Envoyer ses horaires ↗</a>' : "") + "</div>" +
+            '<p class="tm-note" style="margin:8px 0 0!important">' + (x.groupe_code ? "Il vient à ses 2 cours par semaine, et le mercredi en rattrapage s'il en a manqué un." : "Tous les groupes sont complets : il révise en ligne et prend la première place libre (choisis son groupe ici dès qu'une place se libère).") + "</p></div>") +
           '<div class="pc-block"><div class="pc-bh"><b>Conduite</b></div><div id="sd-pcDrive"><p class="tm-note">Chargement…</p></div></div>' +
           (/Permis|Pack/.test(x.formation || "") ? '<div class="pc-block pc-fin"><div class="pc-bh"><b>Fin de formation</b>' + (x.examen_passages ? '<span class="tm-note" style="margin:0!important">' + (x.examen_passages + 1) + 'e passage</span>' : "") + '</div><p class="tm-note" style="margin:0 0 10px!important">Quand l\'élève a terminé (ou qu\'il lui reste 1 ou 2 séances), passe-le à l\'étape examen, puis envoie-lui le message des papiers et du dépôt de 30 000 F (bouton en haut).</p><div class="tm-formact">' + (due ? '<button class="btn btn-sm" type="button" disabled>Formation terminée : passer à l\'examen →</button><span class="tm-note" style="margin:0!important">D\'abord solder la formation.</span>' : '<button class="btn btn-green btn-sm" type="button" data-a="toExam">Formation terminée : passer à l\'examen →</button>') + '</div></div>' : '<div class="pc-block pc-fin"><div class="pc-bh"><b>Fin de formation</b></div><p class="tm-note" style="margin:0 0 10px!important">Cette formation n\'a pas d\'examen d\'État. Quand elle est terminée, range le dossier dans les archives « Formation terminée ».</p><div class="tm-formact">' + (due ? '<button class="btn btn-sm" type="button" disabled>Formation terminée</button><span class="tm-note" style="margin:0!important">D\'abord solder la formation.</span>' : '<button class="btn btn-green btn-sm" type="button" data-a="finForm">Formation terminée</button>') + '</div></div>');
       } else if (st === "examen") {
@@ -2990,6 +3032,7 @@ function init(root) {
       }
       else if (k === "webReject") { const w = x.web; if (!w) return; confirmBtn(a, async () => { const ok = await run(() => DB.q("inscriptions_web?id=eq." + w.id, { method: "PATCH", body: { statut: "Rejeté" }, prefer: "return=minimal" }), "Paiement marqué introuvable"); if (ok) { await addSuivi(x, "Note", "Paiement Mixx introuvable (" + F(w.a_payer) + (w.mixx_ref ? ", réf. " + w.mixx_ref : "") + "). Contacter l'élève."); x.web = null; renderList(); } }); }
       else if (k === "rcSolde") { if (window.__sodafRcFill) { sub("paiements"); window.__sodafRcFill(x, x.solde ? { formation: x.formation || "", motif: "rest", mode: "Espèces", note: "" } : null); } }
+      else if (k === "sendGroupe") { await addSuivi(x, "Note", "Horaires de code envoyés (" + x.groupe_code + ")"); toast("Horaires envoyés"); }
       else if (k === "relSolde") { await addSuivi(x, "Note", "Rappel du solde envoyé (" + F(x.solde) + ")"); toast("Rappel du solde envoyé"); }
       else if (k === "rc") { if (window.__sodafRcFill) { sub("paiements"); window.__sodafRcFill(x); } }
       else if (k === "reExam") { if (await patchEl(x, { statut: "En formation", archive_motif: null, archive_le: null, examen_resultat: null, examen_etape: "pret", examen_pret_le: new Date().toISOString(), examen_lien_le: null, examen_paye: false, examen_docs: {}, examen_bordereau_le: null, jeton: jetonOf(x) }, "Nouveau dépôt d'examen : envoie le message à l'élève", ["Étape", "Examen : ressorti pour repasser (" + ((x.examen_passages || 1) + 1) + "e passage)"])) { pcStage = "examen"; S.set("pcStage", pcStage); renderList(); } }
@@ -3012,6 +3055,7 @@ function init(root) {
       const x = eleves.find((y) => y.id === pcSel); if (!x) return;
       const pc = e.target.closest("[data-piece]");
       if (pc) { const d = Object.assign({}, x.dossier || {}); d[pc.dataset.piece] = pc.checked; await patchEl(x, { dossier: d }, "Dossier mis à jour"); return; }
+      if (e.target.matches('[data-a="groupe"]')) { const v = e.target.value || null, g = v && gOf(v); if (await patchEl(x, { groupe_code: v }, v ? "Placé dans le " + g.nom : "Mis en liste d'attente", ["Note", v ? "Groupe de code : " + g.nom : "Groupe de code : liste d'attente"])) renderList(true); return; }
       if (e.target.matches('[data-a="statut"]')) { if (await patchEl(x, { statut: e.target.value }, "Statut enregistré", ["Étape", e.target.value])) renderList(); }
     });
     const FORMS = [...$$("#sd-elFo option")].map((o) => o.textContent);
@@ -3240,6 +3284,7 @@ function init(root) {
       const exDep = eleves.filter((x) => etapeOf(x) === "examen" && x.examen_etape === "complet").length; if (exDep) w.push(["o", exDep + (exDep > 1 ? " dossiers d'examen complets à déposer" : " dossier d'examen complet à déposer"), "Secrétariat → Parcours élèves → Dépôt d'examen"]);
       const exM = eleves.filter((x) => etapeOf(x) === "examen" && x.examen_etape === "pret" && !x.examen_lien_le).length; if (exM) w.push(["o", exM + (exM > 1 ? " messages d'examen à envoyer" : " message d'examen à envoyer"), "Secrétariat → Parcours élèves → Dépôt d'examen"]);
       const sDu = eleves.filter((x) => etapeOf(x) === "formation" && doit(x)).length; if (sDu) w.push(["y", sDu + (sDu > 1 ? " élèves en formation n'ont pas soldé" : " élève en formation n'a pas soldé") + " (pas de conduite)", "Secrétariat → Parcours élèves → En formation"]);
+      { const att = attente().length, lib = gLibre(); if (att) w.push([lib ? "o" : "r", att + (att > 1 ? " élèves attendent" : " élève attend") + " une place au code" + (lib ? " : une place est libre dans le " + lib.nom : " : groupes complets, ouvrir un groupe du matin"), "Secrétariat → Parcours élèves → En formation"]); }
       const aApp = eleves.filter((x) => etapeOf(x) === "appels").length; if (aApp) w.push(["y", aApp + (aApp > 1 ? " élèves à appeler" : " élève à appeler"), "Secrétariat → Parcours élèves → Appels"]);
       const vieuxDus = dus.filter((p) => Date.now() - dOf(p.jour) > 30 * 864e5);
       if (vieuxDus.length) w.push(["r", vieuxDus.length + (vieuxDus.length > 1 ? " élèves doivent" : " élève doit") + " encore payer depuis plus d'un mois", vieuxDus.slice(0, 4).map((p) => p.eleve_nom + " (" + F(p.reste) + ")").join(", ")]);
@@ -3281,16 +3326,18 @@ function init(root) {
     async function loadMon() {
       if (!me) return;
       const today = iso(new Date());
-      const s = await run(() => DB.q("seances_code?select=*&jour=gte." + today + "&statut=neq.Annulé&order=jour&limit=1"));
-      if (s) {
-        const se = s[0];
+      const s0 = await run(() => DB.q("seances_code?select=*&jour=gte." + today + "&statut=neq.Annulé&order=jour&limit=12"));
+      if (s0) {
+        const ses = s0.filter((x) => x.jour === (s0[0] && s0[0].jour)).sort((a, b) => hmin(a.heure) - hmin(b.heure));
+        if (monIdx >= ses.length) monIdx = 0;
+        const se = ses[monIdx], picker = ses.length > 1 ? '<div class="gc-ses">' + ses.map((x, i) => '<button type="button" class="btn btn-sm ' + (i === monIdx ? "btn-green" : "btn-line") + '" data-mses="' + i + '">' + esc(x.groupe ? (gOf(x.groupe) || { nom: "Groupe " + x.groupe }).nom : "Rattrapage") + " · " + esc(x.heure.split(" – ")[0]) + "</button>").join("") + "</div>" : "";
         if (!se) { $("#sd-mcTitle").textContent = "Aucune séance prévue"; $("#sd-mcBody").innerHTML = ""; }
         else {
           const pr = await run(() => DB.q("presences?select=eleve_id&seance_id=eq." + se.id)) || [];
           const ids = new Set(pr.map((x) => x.eleve_id));
-          const act = eleves.filter((x) => ["Inscrit", "En formation"].includes(x.statut)).sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
-          $("#sd-mcTitle").textContent = (se.jour === today ? "Aujourd'hui" : longDay(se.jour).replace(/^./, (c) => c.toUpperCase())) + " · " + se.type + " · " + se.heure + (se.statut === "Fait" ? " ✓" : "");
-          $("#sd-mcBody").innerHTML = '<div class="field"><label for="sd-mcTheme">Thème traité</label><select id="sd-mcTheme"><option value="">— Choisir —</option>' + THEMES.map((t) => "<option" + (t === se.theme ? " selected" : "") + ">" + esc(t) + "</option>").join("") + '</select></div><p class="tm-lab">Présents (' + ids.size + ")</p>" + (act.length ? '<div class="tm-checks">' + act.map((x) => '<label><input type="checkbox" data-pe="' + x.id + '"' + (ids.has(x.id) ? " checked" : "") + "> " + esc(x.nom) + "</label>").join("") + "</div>" : '<p class="tm-empty">Aucun élève inscrit pour l\'instant.</p>') + '<div class="field"><label for="sd-mcNote">Note (facultatif)</label><input id="sd-mcNote" value="' + esc(se.note || "") + '"></div><button class="btn btn-green btn-sm" type="button" id="sd-mcDone" data-id="' + se.id + '">' + (se.statut === "Fait" ? "Mettre à jour" : "Cours fait") + "</button>";
+          const act = eleves.filter((x) => enCode(x) && (!se.groupe || x.groupe_code === se.groupe)).sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
+          $("#sd-mcTitle").textContent = (se.jour === today ? "Aujourd'hui" : longDay(se.jour).replace(/^./, (c) => c.toUpperCase())) + " · " + (se.groupe ? (gOf(se.groupe) || { nom: "Groupe " + se.groupe }).nom + " · " : "") + se.type + " · " + se.heure + (se.statut === "Fait" ? " ✓" : "");
+          $("#sd-mcBody").innerHTML = picker + (se.groupe ? "" : '<p class="tm-note" style="margin:0 0 8px!important">Séance commune : élèves de tous les groupes qui ont manqué un cours ou veulent s\'entraîner. 6 places au maximum.</p>') + '<div class="field"><label for="sd-mcTheme">Thème traité</label><select id="sd-mcTheme"><option value="">— Choisir —</option>' + THEMES.map((t) => "<option" + (t === se.theme ? " selected" : "") + ">" + esc(t) + "</option>").join("") + '</select></div><p class="tm-lab">Présents (' + ids.size + ")</p>" + (act.length ? '<div class="tm-checks">' + act.map((x) => '<label><input type="checkbox" data-pe="' + x.id + '"' + (ids.has(x.id) ? " checked" : "") + "> " + esc(x.nom) + "</label>").join("") + "</div>" : '<p class="tm-empty">Aucun élève inscrit pour l\'instant.</p>') + '<div class="field"><label for="sd-mcNote">Note (facultatif)</label><input id="sd-mcNote" value="' + esc(se.note || "") + '"></div><button class="btn btn-green btn-sm" type="button" id="sd-mcDone" data-id="' + se.id + '">' + (se.statut === "Fait" ? "Mettre à jour" : "Cours fait") + "</button>";
           $$("#sd-mcBody [data-pe]").forEach((c) => c.addEventListener("change", async () => {
             const eid = +c.dataset.pe;
             if (c.checked) await run(() => DB.q("presences", { method: "POST", body: { seance_id: se.id, eleve_id: eid }, prefer: "return=minimal,resolution=ignore-duplicates" }), "Présence enregistrée");
@@ -3308,6 +3355,7 @@ function init(root) {
         $("#sd-mcList").innerHTML = c.length ? c.map((x) => { const el = eleves.find((y) => y.id === x.eleve_id) || { nom: "Élève" }; return '<div class="tm-row" data-id="' + x.id + '"><div class="tm-time">' + esc(x.heure) + '</div><div class="tm-main"><b>' + esc(el.nom) + "</b><span>" + esc(x.statut) + '</span><input data-note placeholder="Note sur les progrès" value="' + esc(x.note || "") + '"></div><div class="tm-acts"><button class="btn btn-green btn-sm" type="button" data-set="Fait">Fait</button><button class="btn btn-line btn-sm" type="button" data-set="Absent">Absent</button></div></div>'; }).join("") : '<p class="tm-empty">Aucune séance réservée aujourd\'hui.</p>';
       }
     }
+    $("#sd-mcCode").addEventListener("click", (e) => { const b = e.target.closest("[data-mses]"); if (b) { monIdx = +b.dataset.mses; loadMon(); } });
     $("#sd-mcList").addEventListener("click", async (e) => {
       const b = e.target.closest("[data-set]"); if (!b) return; const row = b.closest("[data-id]");
       await run(() => DB.q("creneaux_conduite?id=eq." + row.dataset.id, { method: "PATCH", body: { statut: b.dataset.set, note: row.querySelector("[data-note]").value.trim() || null, modifie_le: new Date().toISOString() }, prefer: "return=minimal" }), "Séance : " + b.dataset.set);
