@@ -854,8 +854,15 @@ label.ex-doc input{position:absolute;left:14px;top:12px;width:20px;height:20px;a
 #sodaf-root [data-ko][aria-pressed="true"]{outline:3px solid var(--ink);outline-offset:2px}
 .pc-callnow{padding-bottom:14px;margin-bottom:14px;border-bottom:2px solid var(--ink)}
 .tm-newins{margin-left:auto;align-self:center;margin-bottom:6px}
+#sodaf-root .tm-newins{background:#E9EDEB;color:var(--ink);border:1.5px solid #C5CFCA;box-shadow:inset 0 2px 5px rgba(0,0,0,.14),inset 0 -1px 0 rgba(255,255,255,.7);font-weight:700}
+#sodaf-root .tm-newins:hover{background:#E1E7E4}
+#sodaf-root .tm-newins:active{box-shadow:inset 0 3px 7px rgba(0,0,0,.2)}
+.ins-ok{display:flex;gap:12px;align-items:center;background:var(--green-soft);border-radius:14px;padding:14px;margin:8px 0 12px}
+.ins-ok b{display:block;font-size:1.05rem}.ins-ok small{color:var(--muted)}
+.ins-check{width:42px;height:42px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-size:1.3rem;font-weight:700;flex-shrink:0}
+.ins-acts{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:12px}
 .ins-ov{position:fixed;inset:0;z-index:9000;background:rgba(15,22,20,.55);display:flex;align-items:flex-start;justify-content:center;padding:4vh 12px;overflow:auto}
-.ins-ov[hidden]{display:none}
+.ins-ov[hidden],.ins-ft[hidden],.ins-step[hidden],.ins-done[hidden]{display:none}
 .ins-box{background:#fff;border-radius:20px;width:100%;max-width:680px;padding:20px 22px;box-shadow:0 24px 60px rgba(0,0,0,.3)}
 .ins-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}.ins-hd h3{margin:2px 0 0;font:700 1.5rem var(--f-display)}
 .ins-x{border:0;background:#F1F3F2;width:38px;height:38px;border-radius:50%;font-size:1.4rem;cursor:pointer;line-height:1}
@@ -1674,19 +1681,17 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <button data-s="conduite" aria-selected="false">Planning conduite</button>
 <button data-s="paiements" aria-selected="false">Paiements et reçus</button>
 <button data-s="devoirs" aria-selected="false">Devoirs</button>
-<button class="btn btn-green btn-sm tm-newins" type="button" id="sd-insNew">+ Nouvelle inscription</button>
+<button class="btn btn-sm tm-newins" type="button" id="sd-insNew">+ Nouvelle inscription</button>
 </div>
 <div class="ins-ov" id="sd-insOv" hidden><form class="ins-box" id="sd-insForm" novalidate>
 <div class="ins-hd"><div><p class="eyebrow" style="margin:0">Au bureau</p><h3>Nouvelle inscription</h3></div><button class="ins-x" type="button" id="sd-insX" aria-label="Fermer">×</button></div>
 <fieldset class="ins-step"><legend><i>1</i>Le client</legend>
 <div class="row2"><div class="field"><label for="sd-insN">Nom</label><input id="sd-insN" autocomplete="off" placeholder="ex. AGBEKO"></div><div class="field"><label for="sd-insP">Prénoms</label><input id="sd-insP" autocomplete="off" placeholder="ex. Yao Koffi"></div></div>
 <div class="row2"><div class="field"><label for="sd-insT">Téléphone (WhatsApp)</label><div class="tel"><span>+228</span><input id="sd-insT" inputmode="numeric" maxlength="11" placeholder="90 00 00 00"></div></div><div class="field"><label for="sd-insQ">Quartier</label><input id="sd-insQ" autocomplete="off" placeholder="ex. Bè, Agoè, Tokoin"></div></div>
-<div class="field"><label for="sd-insSrc">Comment il nous a connus</label><select id="sd-insSrc"><option value="">— Choisir —</option><option value="agence">Venu à l'agence (passage, enseigne)</option><option value="appel">Appel téléphonique</option><option value="whatsapp">WhatsApp</option><option value="bouche">Bouche-à-oreille (ami, famille, ancien élève)</option><option value="reseaux">Facebook / TikTok / Instagram</option><option value="affiche">Affiche, flyer, QR code</option><option value="entreprise">Entreprise (chauffeur envoyé)</option><option value="autre">Autre</option></select></div>
+<div class="row2"><div class="field"><label for="sd-insFo">Formation qui l'intéresse</label><select id="sd-insFo"><option>Permis B</option><option>Permis A</option><option>Pack A + B</option><option>Remise à niveau</option><option>Formation entreprise</option></select></div><div class="field"><label for="sd-insSrc">Comment il nous a connus</label><select id="sd-insSrc"><option value="">— Choisir —</option><option value="agence">Venu à l'agence (passage, enseigne)</option><option value="appel">Appel téléphonique</option><option value="whatsapp">WhatsApp</option><option value="bouche">Bouche-à-oreille (ami, famille, ancien élève)</option><option value="reseaux">Facebook / TikTok / Instagram</option><option value="affiche">Affiche, flyer, QR code</option><option value="entreprise">Entreprise (chauffeur envoyé)</option><option value="autre">Autre</option></select></div></div>
 </fieldset>
-<fieldset class="ins-step"><legend><i>2</i>Sa formule</legend><div class="ins-forms" id="sd-insForms"></div></fieldset>
-<fieldset class="ins-step"><legend><i>3</i>Le paiement</legend><div class="ins-pay" id="sd-insPay"></div>
-<div class="ins-mode" id="sd-insMode"><label><input type="radio" name="insM" value="Espèces" checked> Espèces</label><label><input type="radio" name="insM" value="Mixx by Yas (T-Money)"> Mixx by Yas</label></div></fieldset>
-<div class="ins-ft"><div class="ins-sum" id="sd-insSum"></div><span class="tm-err" id="sd-insErr"></span><button class="btn btn-green" type="submit" id="sd-insGo">Inscrire</button></div>
+<div class="ins-ft"><p class="ins-sum">Il recevra sur WhatsApp le lien pour finaliser son inscription lui-même : choix de la formule, puis paiement à l'agence ou par Mixx.</p><span class="tm-err" id="sd-insErr"></span><button class="btn btn-green" type="submit" id="sd-insGo">Enregistrer</button></div>
+<div class="ins-done" id="sd-insDone" hidden></div>
 </form></div>
 <section class="tm-sec" data-s="eleves">
 <div class="pc-search"><label class="pc-sbox"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="sd-pcQ" type="search" placeholder="Rechercher un client : N° client (SO12), téléphone ou nom" autocomplete="off"></label></div>
@@ -3156,23 +3161,10 @@ function init(root) {
         if (await patchEl(x, body, "Fiche élève enregistrée")) { fillEleveSelect(); renderList(); }
       });
     }
-    // ---- Nouvelle inscription au bureau (fenêtre) : client + formule + paiement → bonne étape directement
-    const INS_F = [["Formation complète (permis B)", 55000, "3 mois · 12 séances de conduite"], ["Formation accélérée 2 mois (permis B)", 75000, "12 séances en 2 mois"], ["Formation accélérée 1 mois (permis B)", 80000, "12 séances en 1 mois"], ["Formule courte (permis B)", 35000, "Sait déjà tenir un volant · 6 séances"], ["Permis A (moto)", 30000, "Environ 6 séances de moto"], ["Pack A + B (moto et voiture)", 80000, "12 séances voiture + 6 moto"], ["Remise à niveau", 20000, "4 séances, évaluation comprise"], ["Formation théorique seule", 25000, "Code, mécanique, secourisme"]];
-    const insCat = (f) => /moto\)|Permis A/.test(f) && !/Pack/.test(f) ? "Permis A" : /Pack/.test(f) ? "Pack A + B" : /Remise/.test(f) ? "Remise à niveau" : "Permis B";
-    $("#sd-insForms").innerHTML = INS_F.map((f, i) => '<label class="ins-f"><input type="radio" name="insF" value="' + i + '"' + (i === 0 ? " checked" : "") + '><span><b>' + esc(f[0].replace(" (permis B)", "")) + "</b><small>" + esc(f[2]) + "</small></span><em>" + F(f[1]) + "</em></label>").join("");
-    const insUpd = () => {
-      const f = INS_F[+($("#sd-insForm [name=insF]:checked") || {}).value || 0], p = f[1], pay = ($("#sd-insForm [name=insP]:checked") || {}).value || "half";
-      const opts = [["half", "Il paie la moitié maintenant", F(5000 + p / 2), "Le reste avant sa 1re séance de conduite"], ["full", "Il paie tout maintenant", F(5000 + p), "Formation soldée"], ["later", "Il paiera plus tard", "", "Il passe en « Paiement en attente »"], ["call", "Pas encore décidé", "", "À rappeler (zone d'appel)"]];
-      $("#sd-insPay").innerHTML = opts.map((o) => '<label class="ins-p' + (o[0] === pay ? " on" : "") + '"><input type="radio" name="insP" value="' + o[0] + '"' + (o[0] === pay ? " checked" : "") + '><span><b>' + o[1] + "</b><small>" + o[3] + "</small></span>" + (o[2] ? "<em>" + o[2] + "</em>" : "") + "</label>").join("");
-      const now = pay === "half" || pay === "full";
-      $("#sd-insMode").hidden = !now;
-      $("#sd-insSum").innerHTML = now ? "À encaisser maintenant : <b>" + F(pay === "half" ? 5000 + p / 2 : 5000 + p) + "</b>" : pay === "later" ? "Rien à encaisser aujourd'hui" : "Simple prise de contact";
-      $("#sd-insGo").textContent = now ? "Inscrire et faire le reçu" : pay === "later" ? "Inscrire (paiement en attente)" : "Enregistrer (à rappeler)";
-      $$("#sd-insForms .ins-f").forEach((l) => l.classList.toggle("on", l.querySelector("input").checked));
-    };
-    $("#sd-insForm").addEventListener("change", (e) => { if (e.target.name === "insF" || e.target.name === "insP") insUpd(); });
-    const insOpen = () => { $("#sd-insForm").reset(); $("#sd-insErr").textContent = ""; insUpd(); $("#sd-insOv").hidden = false; document.body.style.overflow = "hidden"; setTimeout(() => $("#sd-insN").focus(), 50); };
-    const insClose = () => { $("#sd-insOv").hidden = true; document.body.style.overflow = ""; };
+    // ---- Nouvelle inscription au bureau : on enregistre le client, puis on lui envoie le lien de finalisation (il choisit et paie lui-même)
+    let insX = null;
+    const insOpen = () => { insX = null; $("#sd-insForm").reset(); $("#sd-insErr").textContent = ""; $("#sd-insDone").hidden = true; $$("#sd-insForm .ins-step, #sd-insForm .ins-ft").forEach((el) => (el.hidden = false)); $("#sd-insOv").hidden = false; document.body.style.overflow = "hidden"; setTimeout(() => $("#sd-insN").focus(), 50); };
+    const insClose = () => { $("#sd-insOv").hidden = true; document.body.style.overflow = ""; if (insX) { sub("eleves"); pcStage = etapeOf(insX); S.set("pcStage", pcStage); pcSel = insX.id; renderList(); } insX = null; };
     $("#sd-insNew").addEventListener("click", insOpen);
     $("#sd-insX").addEventListener("click", insClose);
     $("#sd-insOv").addEventListener("click", (e) => { if (e.target.id === "sd-insOv") insClose(); });
@@ -3181,23 +3173,26 @@ function init(root) {
       e.preventDefault();
       const nf = $("#sd-insN").value.trim().replace(/\s+/g, " ").toUpperCase(), pr = $("#sd-insP").value.trim().replace(/\s+/g, " "), nom = (pr + " " + nf).trim();
       const tel = $("#sd-insT").value.replace(/\D/g, ""), q = $("#sd-insQ").value.trim(), src = $("#sd-insSrc").value, err = $("#sd-insErr");
-      const f = INS_F[+$("#sd-insForm [name=insF]:checked").value], pay = $("#sd-insForm [name=insP]:checked").value, mode = ($("#sd-insForm [name=insM]:checked") || {}).value || "Espèces";
       if (nf.length < 2 || pr.length < 2) { err.textContent = "Écris le nom et les prénoms."; return; }
       if (tel.length !== 8) { err.textContent = "Numéro de téléphone à 8 chiffres."; return; }
       if (!src) { err.textContent = "Choisis comment il nous a connus."; return; }
       err.textContent = ""; $("#sd-insGo").disabled = true;
-      const now = new Date().toISOString(), toCall = pay === "call";
-      const body = Object.assign({ nom, nom_famille: nf, prenoms: pr, telephone: "+228" + tel, quartier: q || null, formation: insCat(f[0]), source: "bureau", provenance: src, statut: "Contacté", accueil_le: now, notes: "Formule choisie au bureau : " + f[0] }, toCall ? {} : { dossier_envoye_le: now });
-      const r = await run(() => DB.q("eleves", { method: "POST", body, prefer: "return=representation" }), toCall ? "Client enregistré : à rappeler" : pay === "later" ? "Inscrit : paiement en attente" : "Inscrit : fais son reçu");
+      const body = { nom, nom_famille: nf, prenoms: pr, telephone: "+228" + tel, quartier: q || null, formation: $("#sd-insFo").value, source: "bureau", provenance: src, statut: "Contacté", accueil_le: new Date().toISOString(), jeton: newJeton() };
+      const r = await run(() => DB.q("eleves", { method: "POST", body, prefer: "return=representation" }), "Client enregistré");
       $("#sd-insGo").disabled = false;
-      if (!r) return;
-      insClose(); sub("eleves");
-      pcStage = toCall ? "appels" : "dossier"; S.set("pcStage", pcStage); await loadEleves(true);
-      const nx = Array.isArray(r) && r[0] ? eleves.find((y) => y.id === r[0].id) : null;
-      pcSel = nx ? nx.id : null; renderList();
-      if (nx && (pay === "half" || pay === "full") && window.__sodafRcFill) { sub("paiements"); window.__sodafRcFill(nx, { formation: f[0], motif: pay === "half" ? "ins-half" : "ins-full", mode, note: "" }); }
+      if (!r || !Array.isArray(r) || !r[0]) return;
+      await loadEleves(true);
+      insX = eleves.find((y) => y.id === r[0].id) || r[0];
+      $$("#sd-insForm .ins-step, #sd-insForm .ins-ft").forEach((el) => (el.hidden = true));
+      const n = waNum(insX.telephone);
+      $("#sd-insDone").innerHTML = '<div class="ins-ok"><span class="ins-check">✓</span><div><b>' + esc(insX.nom) + " est enregistré</b><small>N° client " + CODE(insX) + " · " + esc(insX.formation || "") + '</small></div></div><p class="ins-sum">Envoie-lui maintenant le lien pour finaliser son inscription. Il choisira sa formule et sa façon de payer, à son rythme.</p><div class="ins-acts"><a class="btn btn-wa wl-btn" target="_blank" rel="noopener" id="sd-insSend" href="https://wa.me/228' + n + "?text=" + encodeURIComponent(msgDossier(insX)) + '">Envoyer le lien d\'inscription sur WhatsApp ↗</a><button class="linkbtn" type="button" id="sd-insLater">Plus tard : le garder dans les appels</button></div>';
+      $("#sd-insDone").hidden = false;
+      $("#sd-insSend").addEventListener("click", async () => {
+        const x = insX; if (!x) return;
+        if (await patchEl(x, { dossier_envoye_le: new Date().toISOString(), dossier_relance_le: null, dossier_relances: 0, rappel: null }, "Lien envoyé : paiement en attente", ["Étape", "Inscription au bureau : lien d'inscription envoyé (paiement en attente)"])) { setTimeout(insClose, 300); }
+      });
+      $("#sd-insLater").addEventListener("click", insClose);
     });
-
     $("#sd-elAdd").addEventListener("submit", async (e) => {
       e.preventDefault();
       const nf = $("#sd-elN").value.trim().replace(/\s+/g, " ").toUpperCase(), pr = $("#sd-elP").value.trim().replace(/\s+/g, " "), nom = (pr + " " + nf).trim();
