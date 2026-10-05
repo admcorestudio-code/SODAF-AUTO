@@ -527,7 +527,7 @@ article.ch p+p{margin-top:10px}
 a.teamtile.hl{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
 .tm-pane[data-pane="mon"] a.teamtile.hl{border-color:var(--yellow);box-shadow:inset 0 0 0 1px var(--yellow)}
 .tm-week{margin-bottom:16px;border-top:4px solid var(--yellow)}
-.tm-wk-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.tm-wk-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px 20px;flex-wrap:wrap;margin-bottom:14px}
 .tm-wk-head h3{font:700 1.3rem var(--f-display);margin-top:2px}
 .tm-days{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
 @media (max-width:900px){.tm-days{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -1815,7 +1815,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 </div>
 <div class="tm-pane" data-pane="mon" role="tabpanel" hidden>
 <p class="tm-role">Cours de code en salle, séances de conduite et progression des élèves.</p>
-<div class="tm-week card"><div class="tm-wk-head"><div><p class="eyebrow">Cette semaine</p><h3 id="sd-tmTheme">Thème</h3></div><a class="btn btn-yellow btn-sm" href="#classe">Ouvrir le Mode classe</a></div>
+<div class="tm-week card"><div class="tm-wk-head"><div><p class="eyebrow">Cette semaine</p><h3 id="sd-tmTheme">Thème</h3></div><div class="mc-launch"><a class="mc-cta" href="#classe-lecon"><i aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="13" rx="2"/><path d="M12 16v4M8 21h8"/><path d="M10 7.5l4 2.5-4 2.5z" fill="currentColor"/></svg></i><span><b>Mode classe</b><small id="sd-mcCtaSub">Projeter le cours du jour au tableau</small></span></a><div class="mc-quick" id="sd-mcQuick"><a href="#classe-lecon">Leçon</a><a href="#classe-devoir">Correction du devoir</a><a href="#classe-quiz">Quiz</a></div></div></div>
 <div class="tm-days" id="sd-tmDays"></div></div>
 <details class="card tm-prog" id="sd-tmProgBox"><summary><span><b>Programme du code en salle</b><small>12 cours en 6 semaines, puis on recommence</small></span><em>Voir le programme</em></summary><div id="sd-tmProg"></div></details>
 <div class="grid g2 tm-mon">
@@ -2076,7 +2076,10 @@ const DEV = [
 // Programme du code en salle : 12 cours en boucle sur 6 semaines (2 par semaine), le même pour tous les groupes.
 // Cours 1 à 10 = les 10 thèmes (1 devoir par cours, A à J) ; cours 11 = révision générale ; cours 12 = examen blanc.
 // Même calcul que la base (prive.cours_boucle) : semaine k → 1er jour du groupe = cours 2k+1, 2e jour = cours 2k+2.
-const BOUCLE = DEV.map((d, k) => ({ n: k + 1, t: d.t, dv: k, ch: [...new Set(d.q.map((q) => q[4]))] })).concat([{ n: 11, t: "Révision générale", dv: null, ch: [] }, { n: 12, t: "Examen blanc", dv: null, ch: [] }]);
+// Chapitres de chaque cours : d'abord ceux qui lui appartiennent (le devoir qui a le plus de questions dessus), puis les chapitres liés
+const DEV_CH = (() => { const n = DEV.map((d) => { const c = {}; d.q.forEach((q) => (c[q[4]] = (c[q[4]] || 0) + 1)); return c; }), own = (id, k) => DEV.every((d, j) => (n[j][id] || 0) <= (n[k][id] || 0));
+  return DEV.map((d, k) => { const all = [...new Set(d.q.map((q) => q[4]))]; return all.filter((id) => own(id, k)).concat(all.filter((id) => !own(id, k))); }); })();
+const BOUCLE = DEV.map((d, k) => ({ n: k + 1, t: d.t, dv: k, ch: DEV_CH[k] })).concat([{ n: 11, t: "Révision générale", dv: null, ch: [] }, { n: 12, t: "Examen blanc", dv: null, ch: [] }]);
 const bIdx = (t) => BOUCLE.findIndex((b) => b.t === t);
 const chNoms = (b) => b.ch.map((id) => { const a = document.getElementById(id); return a ? a.dataset.title : ""; }).filter(Boolean).join(", ");
 // Semaine en cours (heure de Lomé = UTC) : lundi AAAA-MM-JJ, semaine du programme (0 à 5) et ses 2 cours
@@ -2092,6 +2095,8 @@ const devAvant = (k) => { let i = (k + 11) % 12; while (BOUCLE[i].dv === null) i
 // Devoir à corriger aujourd'hui : lun.–mer. celui du 2e cours de la semaine passée, jeu.–dim. celui du 1er cours de la semaine
 // Début du cours k : correction du devoir du cours précédent (ou retour sur l'examen blanc)
 const debutCours = (k) => { const p = (k + 11) % 12; return BOUCLE[p].dv !== null ? "correction du devoir " + DEV[BOUCLE[p].dv].l : p === 11 ? "retour sur l'examen blanc" : "pas de devoir à corriger"; };
+// Cours du jour pour le Mode classe : lun.–mer. le 1er cours de la semaine, jeu.–dim. le 2e
+const coursDuJour = (d) => { d = d || new Date(); const w = devWeek(d); return (d.getUTCDay() + 6) % 7 <= 2 ? w.c[0] : w.c[1]; };
 const devCorr = (d) => { d = d || new Date(); const w = devWeek(d); return devAvant((d.getUTCDay() + 6) % 7 <= 2 ? w.c[0] : w.c[1]); };
 const progRows = (cur, lundi) => [0, 1, 2, 3, 4, 5].map((k) => { const m = lundi ? new Date(lundi.getTime() + (k - cur) * 6048e5) : null, a = BOUCLE[2 * k], b = BOUCLE[2 * k + 1], lab = (x) => "<span><i>" + x.n + "</i>" + x.t + (x.dv !== null ? " <em>devoir " + DEV[x.dv].l + "</em>" : "") + "</span>";
   return '<div class="prog-w' + (k === cur ? " now" : "") + '"><b>Semaine ' + (k + 1) + (m ? "<small>" + (k === cur ? "cette semaine · " : "") + "lun. " + m.getUTCDate() + " " + ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."][m.getUTCMonth()] + "</small>" : "") + "</b>" + lab(a) + lab(b) + "</div>"; }).join("");
@@ -2724,6 +2729,9 @@ function init(root) {
       $("#sd-tmTheme").textContent = "Semaine " + (w.sem + 1) + " sur 6 · cours " + c1.n + " et " + c2.n;
       $("#sd-tmToday").textContent = "Nous sommes le " + J[n.getDay()] + " " + n.getDate() + " " + M[n.getMonth()] + ". Code en salle : semaine " + (w.sem + 1) + " sur 6 du programme.";
       const day = (b, quand) => '<a class="tm-day" href="#' + (b.dv === null ? "classe-quiz" : "classe-lecon") + '"><b>Cours ' + b.n + " · " + esc(b.t) + "</b><span>" + quand + " · " + (b.dv !== null ? "chapitres : " + esc(chNoms(b)) : b.n === 11 ? "révision de tous les thèmes" : "examen blanc de 40 questions") + "</span><em>Début : " + debutCours(b.n - 1) + " · Mode classe → " + (b.dv === null ? "Quiz" : "Leçon") + "</em></a>";
+      { const k = coursDuJour(), b = BOUCLE[k], dvc = DEV[devCorr()];
+        $("#sd-mcCtaSub").textContent = "Cours " + b.n + " : " + b.t;
+        $("#sd-mcQuick").innerHTML = (b.dv !== null ? '<a href="#classe-lecon">Leçon · ' + esc(b.t) + "</a>" : "") + '<a href="#classe-devoir">Corriger le devoir ' + dvc.l + "</a>" + '<a href="#classe-quiz">' + (b.n === 12 ? "Examen blanc · 40 questions" : "Quiz") + "</a>"; }
       $("#sd-tmDays").innerHTML = day(c1, "A et C : lundi · B et D : mardi") + day(c2, "A et C : jeudi · B et D : vendredi") + '<a class="tm-day" href="#classe-quiz"><b>Mercredi · 14 h 30</b><span>Rattrapage et examen blanc, tous groupes (6 places)</span><em>Ceux qui ont manqué un cours</em></a>';
       $("#sd-tmProg").innerHTML = '<p class="tm-note" style="margin:0 0 4px!important">Tous les groupes font le même cours la même semaine. Un élève qui arrive commence au cours du jour : en 6 semaines (son cycle), il a tout vu. Après chaque cours, il fait le devoir du cours sur le site ; on le corrige au début du cours suivant.</p><div class="prog">' + progRows(w.sem, w.monday) + "</div>"; }
 
@@ -3694,10 +3702,10 @@ function init(root) {
       return out;
     }
     function fillSelect() {
-      if (mode === "lecon") sel.innerHTML = chs.map((c, k) => '<option value="' + c.id + '">' + (k + 1) + ". " + esc(c.dataset.title) + "</option>").join("");
+      if (mode === "lecon") { const cj = BOUCLE[coursDuJour()].ch; sel.innerHTML = chs.map((c, k) => '<option value="' + c.id + '"' + (c.id === cj[0] ? " selected" : "") + ">" + (k + 1) + ". " + esc(c.dataset.title) + (cj.includes(c.id) ? " (cours du jour)" : "") + "</option>").join(""); }
       else if (mode === "quiz") {
         const ids = [...new Set(Q.map((q) => q[4]))];
-        sel.innerHTML = '<option value="all:10">10 questions au hasard</option><option value="all:20">20 questions au hasard</option><option value="all:99">Toutes les questions (' + Q.length + ")</option>" +
+        sel.innerHTML = '<option value="all:10">10 questions au hasard</option><option value="all:20">20 questions au hasard</option><option value="all:40"' + (BOUCLE[coursDuJour()].n === 12 ? " selected" : "") + '>Examen blanc · 40 questions</option><option value="all:99">Toutes les questions (' + Q.length + ")</option>" +
           ids.map((id) => '<option value="' + id + '">Chapitre : ' + esc(chTitle(id)) + "</option>").join("");
       } else if (mode === "devoir") { const cw = devCorr(); sel.innerHTML = DEV.map((d, k) => '<option value="' + k + '"' + (k === cw ? " selected" : "") + ">Devoir " + d.l + " · " + esc(d.t) + (k === cw ? " (à corriger aujourd'hui)" : "") + "</option>").join(""); }
       else if (mode === "situations") sel.innerHTML = '<option value="all">Toutes les situations (' + SITS.length + ")</option>" + SITS.map((x) => '<option value="' + x.id + '">' + esc(x.t) + "</option>").join("");
@@ -4151,6 +4159,19 @@ html:has(#sodaf-root.app-mode),body:has(#sodaf-root.app-mode){background:#ECEFEE
 .tm-visio{display:inline-flex;align-items:center;gap:7px;background:var(--green);color:#fff!important;border-radius:999px;padding:.45em 1em;font-weight:700;font-size:.92rem;text-decoration:none!important;box-shadow:0 1px 0 rgba(0,0,0,.08)}
 .tm-visio:hover{filter:brightness(1.08)}.tm-visio:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
 .tm-visio-inv{font-size:.88rem;font-weight:600;color:var(--ink)!important;border-bottom:2px solid var(--yellow);text-decoration:none!important}
+
+/* Lanceur du Mode classe */
+.mc-launch{display:flex;flex-direction:column;align-items:stretch;gap:8px;min-width:min(100%,300px)}
+.mc-cta{display:flex;align-items:center;gap:14px;background:var(--asph);color:#fff!important;text-decoration:none!important;border-radius:16px;padding:12px 18px 12px 12px;box-shadow:0 6px 18px rgba(21,25,30,.18);position:relative;overflow:hidden;transition:transform .12s}
+.mc-cta::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:repeating-linear-gradient(90deg,var(--yellow) 0 18px,transparent 18px 30px)}
+.mc-cta:hover{transform:translateY(-1px)}.mc-cta:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+.mc-cta i{display:grid;place-items:center;width:48px;height:48px;border-radius:12px;background:var(--yellow);color:var(--asph);flex-shrink:0}
+.mc-cta b{display:block;font-family:var(--f-display);font-size:1.45rem;line-height:1;letter-spacing:0}
+.mc-cta small{display:block;margin-top:4px;color:#C9CED4;font-size:.86rem}
+.mc-quick{display:flex;flex-wrap:wrap;gap:6px}
+.mc-quick a{font-size:.84rem;font-weight:600;color:var(--ink)!important;text-decoration:none!important;background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:.3em .8em}
+.mc-quick a:hover{border-color:var(--ink)}
+@media (prefers-reduced-motion:reduce){.mc-cta{transition:none}}
 `;
   const st = document.createElement("style"); st.textContent = CSS + CSS_REFONTE + 'html,body{margin:0;background:#15191E}#sodaf-root{min-height:100vh;display:flex;flex-direction:column}#sodaf-root>#app{flex:1;display:flex;flex-direction:column;background:#fff}#sodaf-root main{flex:1}'; document.head.appendChild(st);
   if (!document.querySelector("link[rel=icon]")) { const fi = document.createElement("link"); fi.rel = "icon"; fi.type = "image/svg+xml"; fi.href = FAVICON; document.head.appendChild(fi); }
