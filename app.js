@@ -1698,7 +1698,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <a class="btn btn-line btn-sm" href="/" style="margin-top:16px">Retour au site</a>
 </div>
 <div id="sd-teamPanel" hidden>
-<div class="tm-top"><div><p class="eyebrow" id="sd-tmRole">Espace équipe SODAF</p><h2 id="sd-tmHello">Bonjour</h2><p class="tm-today" id="sd-tmToday"></p></div><div class="tm-acc"><button class="linkbtn" type="button" id="sd-tmPwBtn">Changer mon mot de passe</button><button class="linkbtn" type="button" id="sd-teamOut">Se déconnecter</button></div></div>
+<div class="tm-top"><div><p class="eyebrow" id="sd-tmRole">Espace équipe SODAF</p><h2 id="sd-tmHello">Bonjour</h2><p class="tm-today" id="sd-tmToday"></p></div><div class="tm-acc"><a class="tm-visio" id="sd-tmVisio" href="https://meet.google.com/new" target="_blank" rel="noopener" title="Ouvrir une visio Google Meet"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="M16 10l6-4v12l-6-4z"/></svg>Visio</a><a class="tm-visio-inv" id="sd-tmVisioWa" target="_blank" rel="noopener" hidden>Inviter l'équipe</a><button class="linkbtn" type="button" id="sd-tmPwBtn">Changer mon mot de passe</button><button class="linkbtn" type="button" id="sd-teamOut">Se déconnecter</button></div></div>
 <form id="sd-tmPwForm" class="card tmpw" hidden novalidate><label for="sd-tmPw1">Nouveau mot de passe (8 caractères minimum)</label><div><input id="sd-tmPw1" type="password" autocomplete="new-password"><button class="btn btn-green btn-sm" type="submit">Enregistrer</button></div><p id="sd-tmPwMsg" class="tm-note"></p></form>
 <div id="sd-tmToast" class="tm-toast" hidden></div>
 <div class="tm-tabs" role="tablist" id="sd-tmTabs">
@@ -2752,6 +2752,8 @@ function init(root) {
       if (!rows.length) { await DB.logout(); show(false); $("#sd-teamErr").textContent = "Ce compte n'est pas autorisé dans l'espace équipe."; $("#sd-teamErr").hidden = false; return; }
       me = rows[0];
       const rg = await run(() => DB.q("reglages?select=*")); if (rg) rg.forEach((r) => (CFG[r.cle] = r.valeur));
+      // Visio Google Meet : salle fixe de l'équipe si elle est enregistrée (réglage visio_lien), sinon nouvelle réunion
+      if (/^https:\/\/meet\.google\.com\//.test(CFG.visio_lien || "")) { $("#sd-tmVisio").href = CFG.visio_lien; $("#sd-tmVisio").title = "Rejoindre la visio de l'équipe"; const iv = $("#sd-tmVisioWa"); iv.href = "https://wa.me/?text=" + encodeURIComponent("Visio SODAF : on se retrouve ici maintenant\n" + CFG.visio_lien); iv.hidden = false; }
       $("#sd-tmHello").textContent = "Bonjour " + me.nom.split(" ")[0];
       $("#sd-tmRole").textContent = { admin: "Direction", secretariat: "Secrétariat", moniteur: "Moniteur" }[me.role] + " · Espace équipe SODAF";
       show(true);
@@ -4145,6 +4147,10 @@ html:has(#sodaf-root.app-mode),body:has(#sodaf-root.app-mode){background:#ECEFEE
 #sodaf-root .mc-done{margin:0 0 8px!important;font-weight:700;color:#064D36}
 .mc-nt{margin:10px 0 0}.mc-nt summary{cursor:pointer;font-size:.88rem;color:var(--muted)}.mc-nt input{width:100%;margin-top:6px}
 .tm-checks input[disabled]+*{opacity:1}
+
+.tm-visio{display:inline-flex;align-items:center;gap:7px;background:var(--green);color:#fff!important;border-radius:999px;padding:.45em 1em;font-weight:700;font-size:.92rem;text-decoration:none!important;box-shadow:0 1px 0 rgba(0,0,0,.08)}
+.tm-visio:hover{filter:brightness(1.08)}.tm-visio:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+.tm-visio-inv{font-size:.88rem;font-weight:600;color:var(--ink)!important;border-bottom:2px solid var(--yellow);text-decoration:none!important}
 `;
   const st = document.createElement("style"); st.textContent = CSS + CSS_REFONTE + 'html,body{margin:0;background:#15191E}#sodaf-root{min-height:100vh;display:flex;flex-direction:column}#sodaf-root>#app{flex:1;display:flex;flex-direction:column;background:#fff}#sodaf-root main{flex:1}'; document.head.appendChild(st);
   if (!document.querySelector("link[rel=icon]")) { const fi = document.createElement("link"); fi.rel = "icon"; fi.type = "image/svg+xml"; fi.href = FAVICON; document.head.appendChild(fi); }
