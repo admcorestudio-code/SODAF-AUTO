@@ -1813,6 +1813,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="card" style="margin-top:16px"><p class="eyebrow">Examen</p><h3 class="tm-h3">Dossiers d'examen et résultats</h3><div id="sd-drExam" class="tm-stats tm-dr tm-drex"></div></div>
 <div class="card" style="margin-top:16px"><p class="eyebrow">Ce mois-ci</p><h3 class="tm-h3">D'où viennent les nouveaux clients</h3><div id="sd-drSrc" class="tm-src"></div></div>
 <div class="card" style="margin-top:16px"><p class="eyebrow">6 derniers mois</p><h3 class="tm-h3">Inscriptions et encaissements</h3><div id="sd-drMonths" class="tm-months"></div></div>
+<div class="card" style="margin-top:16px" id="sd-drSec"><p class="eyebrow">Sécurité</p><h3 class="tm-h3">Comptes de l'équipe</h3><p class="tm-note" style="margin:0 0 10px!important">Un compte désactivé ne voit plus rien, tout de suite, sur tous ses appareils. Son historique (reçus, messages) est gardé. Tu reçois une notification quand un compte se connecte depuis un appareil jamais vu ; chaque appareil se déconnecte seul après 8 heures sans activité.</p><div id="sd-drComptes" class="sc-list"></div><h4 class="sc-h">Dernières connexions</h4><div id="sd-drCx" class="tm-list"></div></div>
 </div>
 <div class="tm-pane" data-pane="mon" role="tabpanel" hidden>
 <p class="tm-role">Cours de code en salle, séances de conduite et progression des élèves.</p>
@@ -2749,9 +2750,14 @@ function init(root) {
       const err = $("#sd-teamErr"), btn = $("#sd-tmGo"), email = $("#sd-tmEmail").value.trim(), pw = $("#sd-tmPw").value;
       if (!email || !pw) { err.textContent = "Indique ton e-mail et ton mot de passe."; err.hidden = false; return; }
       btn.disabled = true; btn.textContent = "Connexion…";
-      try { await DB.login(email, pw); err.hidden = true; $("#sd-tmPw").value = ""; await start(); }
+      try { await DB.login(email, pw); err.hidden = true; $("#sd-tmPw").value = ""; SEC.login = true; await start(); }
       catch (ex) { err.textContent = /Invalid login/i.test(ex.message) ? "E-mail ou mot de passe incorrect." : navigator.onLine === false ? "Pas de connexion internet." : ex.message; err.hidden = false; }
       btn.disabled = false; btn.textContent = "Se connecter";
+    });
+    $("#sd-drComptes").addEventListener("click", async (e) => {
+      const b = e.target.closest("[data-cpt]"); if (!b) return; const on = b.dataset.on === "1";
+      if (!on && !b.dataset.ok) { b.dataset.ok = "1"; b.textContent = "Confirmer la désactivation"; b.classList.add("sc-conf"); setTimeout(() => { if (b.isConnected) { delete b.dataset.ok; b.textContent = "Désactiver"; b.classList.remove("sc-conf"); } }, 5000); return; }
+      b.disabled = true; await run(() => DB.q("rpc/compte_activer", { method: "POST", body: { p_id: b.dataset.cpt, p_actif: on } }), on ? "Compte réactivé" : "Compte désactivé : il ne voit plus rien"); loadSec();
     });
     $("#sd-teamOut").addEventListener("click", async () => { rtFermer(); AUD.pause(); await DB.logout(); me = null; show(false); });
     $("#sd-tmPwBtn").addEventListener("click", () => { $("#sd-tmPwForm").hidden = !$("#sd-tmPwForm").hidden; });
@@ -3014,14 +3020,14 @@ function init(root) {
       ws.onmessage = (e) => {
         let m; try { m = JSON.parse(e.data); } catch (x) { return; }
         if (m.topic !== RT.topic) return;
-        if (m.event === "phx_reply" && m.ref === RT.jref) { if (m.payload && m.payload.status === "ok") { RT.ok = true; RT.essais = 0; msPoll(true); } else { try { ws.close(); } catch (x) {} } return; } // rattrapage de ce qui est arrivé pendant la coupure
+        if (m.event === "phx_reply" && m.ref === RT.jref) { if (m.payload && m.payload.status === "ok") { RT.ok = true; RT.essais = 0; msPoll(true); } else { try { ws.close(1000, "fin"); } catch (x) {} } return; } // rattrapage de ce qui est arrivé pendant la coupure
         if (m.event === "postgres_changes" && m.payload && m.payload.data) {
           const d = m.payload.data, rec = d.record; if (!rec) return;
           if (d.table === "messages") msRecus(msAjout(rec) ? [rec] : []);
           else if (d.table === "ecoutes" && msEcAjout(rec) && document.querySelector('#sd-msList [data-mid="' + rec.message_id + '"]')) msRender(); // « Écouté par … » se met à jour en direct
           return;
         }
-        if (m.event === "phx_error" || m.event === "phx_close") { try { ws.close(); } catch (x) {} }
+        if (m.event === "phx_error" || m.event === "phx_close") { try { ws.close(1000, "fin"); } catch (x) {} }
       };
       ws.onerror = () => {};
       ws.onclose = () => {
@@ -3030,7 +3036,7 @@ function init(root) {
         const attente = Math.min(30000, 1000 * Math.pow(2, RT.essais++)); RT.relance = setTimeout(rtConnecter, attente);
       };
     }
-    function rtFermer() { clearTimeout(RT.relance); clearInterval(RT.hb); const ws = RT.ws; RT.ws = null; RT.ok = false; if (ws) { ws.onclose = null; try { ws.close(); } catch (e) {} } }
+    function rtFermer() { clearTimeout(RT.relance); clearInterval(RT.hb); const ws = RT.ws; RT.ws = null; RT.ok = false; if (ws) { ws.onclose = null; try { ws.close(1000, "fin"); } catch (e) {} } }
     // Retour sur l'application (téléphone sorti de veille) : on se reconnecte et on rattrape tout de suite
     document.addEventListener("visibilitychange", () => { if (document.hidden || !me || !MS.pret) return; if (!RT.ws) { RT.essais = 0; rtConnecter(); } msPoll(true); msTraiter(); });
     window.addEventListener("online", () => { if (!me || !MS.pret) return; RT.essais = 0; if (!RT.ws) rtConnecter(); msPoll(true); MS.file.forEach((f) => { if (f.etat === "echec") f.etat = "attente"; }); msTraiter(); });
@@ -3281,12 +3287,60 @@ function init(root) {
     }
     document.addEventListener("visibilitychange", () => { if (!document.hidden) majVerifier(true); });
     setInterval(() => { if (!document.hidden) majVerifier(false); }, 300000);
+    // ---- Sécurité de l'espace équipe
+    // 1. Déconnexion automatique après 8 h sans activité (même téléphone oublié ouvert). 2. Compte désactivé par la direction : sortie immédiate.
+    // 3. Journal des connexions : chaque appareil est reconnu ; une connexion depuis un appareil jamais vu prévient la direction et la personne.
+    const SEC = { login: false, limite: 8 * 3600000, ecrit: 0, compteTic: 0 };
+    const secLire = () => { try { return +localStorage.getItem("sodaf.actif") || 0; } catch (e) { return 0; } };
+    function secActif(force) { const n = Date.now(); if (!force && n - SEC.ecrit < 30000) return; SEC.ecrit = n; try { localStorage.setItem("sodaf.actif", String(n)); } catch (e) {} }
+    ["pointerdown", "keydown", "touchstart", "wheel"].forEach((ev) => document.addEventListener(ev, () => { if (me) secActif(); }, { passive: true, capture: true }));
+    async function secSortir(msg) {
+      try { rtFermer(); AUD.pause(); recArret(false); } catch (e) {}
+      await DB.logout(); me = null; show(false); const er = $("#sd-teamErr"); er.textContent = msg; er.hidden = false;
+    }
+    async function secVerifier(compte) {
+      if (!me) return;
+      const d = secLire(); if (d && Date.now() - d > SEC.limite) { await secSortir("Déconnecté après 8 heures sans activité. Reconnecte-toi."); return; }
+      if (!compte) return;
+      try { const r = await DB.q("profils?select=actif&id=eq." + me.id); if (!r.length || r[0].actif === false) await secSortir("Ce compte a été désactivé par la direction."); } catch (e) {}
+    }
+    setInterval(() => { if (document.hidden) return; SEC.compteTic++; secVerifier(SEC.compteTic % 5 === 0); }, 60000); // inactivité : chaque minute ; compte : toutes les 5 min
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) secVerifier(true); });
+    function secAppareil() {
+      try { let a = localStorage.getItem("sodaf.appareil"); if (!a || a.length < 16) { a = Array.from(crypto.getRandomValues(new Uint8Array(12)), (b) => b.toString(16).padStart(2, "0")).join(""); localStorage.setItem("sodaf.appareil", a); } return a; }
+      catch (e) { return "sans-memoire-" + (navigator.userAgent.length || 0); }
+    }
+    function secDescription() {
+      const ua = navigator.userAgent;
+      const os = /iPhone/.test(ua) ? "iPhone" : /iPad/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1) ? "iPad" : /Android/.test(ua) ? "Android" : /Windows/.test(ua) ? "Windows" : /Mac OS X/.test(ua) ? "Mac" : /Linux/.test(ua) ? "Linux" : "Appareil";
+      const nav = /Edg\//.test(ua) ? "Edge" : /OPR\//.test(ua) ? "Opera" : /SamsungBrowser/.test(ua) ? "Samsung Internet" : /CriOS|Chrome\//.test(ua) ? "Chrome" : /FxiOS|Firefox\//.test(ua) ? "Firefox" : /Safari\//.test(ua) ? "Safari" : "navigateur";
+      return os + " · " + nav + (matchMedia("(display-mode: standalone)").matches || navigator.standalone ? " (application)" : "");
+    }
+    async function secNoter() {
+      const k = "sodaf.cx." + me.id; let deja = false; try { deja = localStorage.getItem(k) === "1"; } catch (e) {}
+      const login = SEC.login; SEC.login = false; if (!login && deja) return; // appareil déjà connu et simple réouverture : rien à noter
+      try { await DB.q("rpc/connexion_noter", { method: "POST", body: { p_appareil: secAppareil(), p_description: secDescription(), p_login: login } }); try { localStorage.setItem(k, "1"); } catch (e) {} } catch (e) {}
+    }
+    // Direction : comptes (désactiver / réactiver) et dernières connexions
+    async function loadSec() {
+      if (!me || me.role !== "admin" || !$("#sd-drComptes")) return;
+      const [pr, cx] = await Promise.all([DB.q("profils?select=id,nom,role,actif").catch(() => null), DB.q("connexions?select=*&order=le.desc&limit=40").catch(() => null)]);
+      if (!pr) return;
+      const R = { admin: "Direction", secretariat: "Secrétariat", moniteur: "Moniteur" }, quand = (d) => { const x = new Date(d), j = msJour(d); return (j === "Aujourd'hui" ? "aujourd'hui" : j === "Hier" ? "hier" : x.toLocaleDateString("fr-FR", { day: "numeric", month: "short" })) + " à " + x.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }); };
+      const der = {}; (cx || []).forEach((c) => { if (!der[c.profil]) der[c.profil] = c; });
+      pr.sort((a, b) => (b.actif !== false) - (a.actif !== false) || ["admin", "secretariat", "moniteur"].indexOf(a.role) - ["admin", "secretariat", "moniteur"].indexOf(b.role));
+      $("#sd-drComptes").innerHTML = pr.map((p) => { const on = p.actif !== false, c = der[p.id]; return '<div class="sc-row' + (on ? "" : " off") + '"><div class="sc-who"><b>' + esc(p.nom) + "</b><small>" + esc(R[p.role] || p.role) + (p.id === me.id ? " · toi" : "") + "</small></div><div class=\"sc-last\">" + (c ? "Dernière connexion " + esc(quand(c.le)) + "<small>" + esc(c.description || "") + "</small>" : "<small>Aucune connexion notée depuis l'activation du journal</small>") + '</div><div class="sc-act"><em class="sc-st">' + (on ? "Actif" : "Désactivé") + "</em>" + (p.id === me.id ? "" : '<button type="button" class="btn btn-sm ' + (on ? "btn-line sc-off" : "btn-green") + '" data-cpt="' + esc(p.id) + '" data-on="' + (on ? 0 : 1) + '">' + (on ? "Désactiver" : "Réactiver") + "</button>") + "</div></div>"; }).join("");
+      $("#sd-drCx").innerHTML = (cx || []).length ? cx.slice(0, 15).map((c) => { const p = pr.find((x) => x.id === c.profil) || { nom: "Compte", role: "" }; return '<div class="tm-row sc-cx' + (c.nouvel ? " neuf" : "") + '"><div class="tm-time">' + esc(quand(c.le)) + '</div><div class="tm-main"><b>' + esc(msPrenom(p)) + " · " + esc(R[p.role] || "") + (c.nouvel ? ' <em class="sc-new">Nouvel appareil</em>' : "") + "</b><span>" + esc(c.description || "Appareil") + (c.ip ? " · adresse " + esc(c.ip) : "") + "</span></div></div>"; }).join("") : '<p class="tm-empty">Les connexions apparaîtront ici à partir de maintenant.</p>';
+    }
     async function start() {
       const s = DB.session; if (!s) { show(false); return; }
+      { const d = secLire(); if (!SEC.login && d && Date.now() - d > SEC.limite) { await DB.logout(); show(false); const er = $("#sd-teamErr"); er.textContent = "Déconnecté après 8 heures sans activité. Reconnecte-toi."; er.hidden = false; return; } }
+      secActif(true);
       const rows = await run(() => DB.q("profils?select=nom,role,actif&id=eq." + s.user.id));
       if (!rows) return;
       if (!rows.length || rows[0].actif === false) { await DB.logout(); show(false); $("#sd-teamErr").textContent = rows.length ? "Ce compte a été désactivé par la direction." : "Ce compte n'est pas autorisé dans l'espace équipe."; $("#sd-teamErr").hidden = false; return; }
       me = Object.assign({ id: s.user.id }, rows[0]);
+      secNoter();
       const rg = await run(() => DB.q("reglages?select=*")); if (rg) rg.forEach((r) => (CFG[r.cle] = r.valeur));
       // Visio Google Meet : salle fixe de l'équipe si elle est enregistrée (réglage visio_lien), sinon nouvelle réunion
       if (/^https:\/\/meet\.google\.com\//.test(CFG.visio_lien || "")) { $("#sd-tmVisio").href = CFG.visio_lien; $("#sd-tmVisio").title = "Rejoindre la visio de l'équipe"; const iv = $("#sd-tmVisioWa"); iv.href = "https://wa.me/?text=" + encodeURIComponent("Visio SODAF : on se retrouve ici maintenant\n" + CFG.visio_lien); iv.hidden = false; }
@@ -3991,6 +4045,7 @@ function init(root) {
     // ---- Direction
     async function loadDir() {
       if (!me || me.role !== "admin") return;
+      loadSec();
       const now = new Date(), m0 = new Date(now.getFullYear(), now.getMonth(), 1), m6 = new Date(now.getFullYear(), now.getMonth() - 5, 1), mPrev = new Date(now.getFullYear(), now.getMonth() - 1, 1);
       const mEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0), today = iso(now);
       const lun = new Date(now); lun.setDate(now.getDate() - ((now.getDay() + 6) % 7)); const dim = new Date(lun); dim.setDate(lun.getDate() + 6);
@@ -4797,6 +4852,18 @@ html:has(#sodaf-root.app-mode),body:has(#sodaf-root.app-mode){background:#ECEFEE
 .tm-auj>summary em{font-style:normal;font-weight:700;font-size:.85rem;color:#8A6500;white-space:nowrap}
 .tm-auj>div{padding:14px}.tm-auj .tm-mon{margin:0}.tm-auj .tm-mon>.card{box-shadow:none;border:1px solid var(--line)}
 html.ms-plein,html.ms-plein body{overflow:hidden}
+.sc-list{display:grid;gap:8px}
+.sc-row{display:grid;grid-template-columns:220px 1fr 210px;gap:6px 16px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:12px}
+.sc-row.off{background:var(--soft);opacity:.75}
+.sc-who b{display:block}.sc-who small,.sc-last small{display:block;color:var(--muted);font-size:.8rem}
+.sc-last{font-size:.88rem}
+.sc-act{display:flex;align-items:center;gap:10px;justify-content:flex-end}
+.sc-st{font-style:normal;font-weight:700;font-size:.78rem;border-radius:999px;padding:.25em .7em;background:var(--green-soft);color:var(--green)}
+.sc-row.off .sc-st{background:#E5E8EB;color:#5B6670}
+.btn.sc-conf{background:#D7263D!important;border-color:#D7263D!important;color:#fff!important}
+.sc-h{margin:18px 0 6px;font-size:1rem}
+.sc-new{font-style:normal;font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:#fff;background:#D7263D;border-radius:999px;padding:.2em .6em;margin-left:4px;vertical-align:middle}
+@media (max-width:700px){.sc-row{grid-template-columns:1fr}.sc-act{justify-content:flex-start}}
 .ms-list .ms-who b{color:#EEF1F3}.ms-list .ms-who small{color:#9AA4AD}
 .ms-list .ms-day span{background:#2C333B;color:#D3D9DE;border-color:#3A424B}
 .ms-list .ms-vide{color:#AEB7BF}

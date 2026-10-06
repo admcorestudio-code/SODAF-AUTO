@@ -1,6 +1,6 @@
 // SODAF · Fonction « notifier » : envoie les notifications sur les téléphones de l'équipe.
 // Appelée uniquement par la base (déclencheurs de la migration 0028) avec un secret partagé.
-// Types : message (canal), preinscription (formulaire du site), inscription (finalisée en ligne), test (bouton « Tester »).
+// Types : message (canal), preinscription (formulaire du site), inscription (finalisée en ligne), connexion (nouvel appareil), test (bouton « Tester »).
 // Les clés VAPID et le secret sont lus dans prive.config_push : rien de secret dans ce fichier.
 import webpush from "npm:web-push@3.6.7";
 import postgres from "npm:postgres@3.4.5";
@@ -18,7 +18,7 @@ Deno.serve(async (req) => {
   let p: { type?: string; id?: number; profil?: string };
   try { p = await req.json(); } catch { return json({ erreur: "requête illisible" }, 400); }
 
-  let roles: string[] | null = null, exclure: string | null = null, seulement: string | null = null;
+  let roles: string[] | null = null, exclure: string | null = null, seulement: string | null = null, aussi: string | null = null;
   let mentionnes: string[] = [], auteurPrenom = "", canalNom = "";
   let note: { title: string; body: string; url: string; tag: string } | null = null;
 
@@ -43,13 +43,20 @@ Deno.serve(async (req) => {
     note = w.mode === "mixx"
       ? { title: "Paiement Mixx à vérifier", body: qui + " · " + milliers(w.a_payer) + " F" + (w.mixx_ref ? " · réf. " + w.mixx_ref : "") + " (SO" + w.eleve_id + ")", url: "/equipe/?eleve=" + w.eleve_id, tag: "eleve-" + w.eleve_id }
       : { title: "Inscription finalisée", body: qui + " viendra payer " + milliers(w.a_payer) + " F à l'agence (SO" + w.eleve_id + ")", url: "/equipe/?eleve=" + w.eleve_id, tag: "eleve-" + w.eleve_id };
+  } else if (p.type === "connexion") {
+    // Sécurité : un compte s'est connecté sur un appareil jamais vu → la direction et la personne concernée sont prévenues
+    const [c] = await sql`select c.id, c.description, c.le, c.profil, pr.nom, pr.role from public.connexions c join public.profils pr on pr.id = c.profil where c.id = ${p.id ?? 0}`;
+    if (!c) return json({ envoyes: 0, raison: "connexion introuvable" });
+    roles = ["admin"]; aussi = c.profil;
+    const heure = new Date(c.le).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: "Africa/Lome" });
+    note = { title: "Nouvelle connexion · " + (ROLE[c.role] || "Équipe"), body: prenom(c.nom) + " (" + (ROLE[c.role] || "Équipe") + ") s'est connecté sur un nouvel appareil : " + (c.description || "appareil inconnu") + ", à " + heure + ". Si ce n'est pas normal : Direction → Comptes → Désactiver.", url: "/equipe/", tag: "cx-" + c.id };
   } else if (p.type === "test") {
     seulement = p.profil || null;
     note = { title: "Notifications SODAF activées", body: "Tu recevras ici les messages de l'équipe et les nouvelles inscriptions.", url: "/equipe/?canal=general", tag: "test" };
   } else return json({ erreur: "type inconnu" }, 400);
 
   const abos = await sql`select s.id, s.endpoint, s.p256dh, s.auth, s.profil, pr.role from public.push_abonnements s join public.profils pr on pr.id = s.profil where pr.actif`; // comptes désactivés : plus de notifications
-  const cibles = abos.filter((a) => (seulement ? a.profil === seulement : (!roles || roles.includes(a.role)) && a.profil !== exclure));
+  const cibles = abos.filter((a) => (seulement ? a.profil === seulement : ((!roles || roles.includes(a.role)) || a.profil === aussi) && a.profil !== exclure));
   webpush.setVapidDetails(cfg.vapid_sujet, cfg.vapid_public, cfg.vapid_private);
   const corps = JSON.stringify(note);
   const corpsMention = note && mentionnes.length ? JSON.stringify({ ...note, title: auteurPrenom + " t'a mentionné · " + canalNom }) : corps; // @mention : titre dédié
