@@ -4344,6 +4344,14 @@ html:has(#sodaf-root.app-mode),body:has(#sodaf-root.app-mode){background:#ECEFEE
 .mf-x:focus-visible{outline:2px solid var(--yellow)}
 .mf-dl{display:grid;gap:10px;margin:14px 0 0}.mf-dl div{display:grid;grid-template-columns:110px 1fr;gap:8px;align-items:baseline}
 .mf-dl dt{font-size:.82rem;color:var(--muted)}.mf-dl dd{margin:0;font-weight:600}
+
+/* Téléphone : onglets de l'équipe en liste verticale (tout visible, sans défiler de côté) */
+@media (max-width:1099px){
+#sodaf-root.app-mode .tm-tabs{flex-direction:column;overflow:visible;gap:2px;padding:8px}
+#sodaf-root.app-mode .tm-tabs button{flex:0 0 auto;width:100%;justify-content:flex-start;padding:9px 12px}
+#sodaf-root.app-mode .tm-tabs button[hidden]{display:none}
+#sodaf-root.app-mode .tm-tabs .tm-badge{top:50%;transform:translateY(-50%);right:12px}
+}
 `;
   const st = document.createElement("style"); st.textContent = CSS + CSS_REFONTE + 'html,body{margin:0;background:#15191E}#sodaf-root{min-height:100vh;display:flex;flex-direction:column}#sodaf-root>#app{flex:1;display:flex;flex-direction:column;background:#fff}#sodaf-root main{flex:1}'; document.head.appendChild(st);
   if (!document.querySelector("link[rel=icon]")) { const fi = document.createElement("link"); fi.rel = "icon"; fi.type = "image/svg+xml"; fi.href = FAVICON; document.head.appendChild(fi); }
