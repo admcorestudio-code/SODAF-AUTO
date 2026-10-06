@@ -1835,7 +1835,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 </div></div>
 <div class="mf-ov" id="sd-mfOv" hidden><div class="mf-box" id="sd-mfBox" role="dialog" aria-modal="true" aria-label="Fiche de l'élève"></div></div>
 <div class="tm-pane" data-pane="msg" role="tabpanel" hidden>
-<p class="tm-role">Les échanges de l'équipe. Le cadenas indique une conversation privée : seules les personnes nommées en haut de la conversation la lisent. Écris @ pour prévenir quelqu'un, SO12 pour ouvrir la fiche d'un élève, et le trombone pour joindre une photo ou un document.</p>
+<p class="tm-role">Les échanges de l'équipe. Le cadenas indique une conversation privée : seules les personnes nommées en haut de la conversation la lisent. Écris @ pour prévenir quelqu'un, SO12 pour ouvrir la fiche d'un élève, et le trombone (ou glisse le fichier dans la conversation) pour joindre une photo ou un document.</p>
 <div class="ms-notif" id="sd-msNotif"></div>
 <div class="ms-wrap card" id="sd-msWrap"><nav class="ms-canaux" id="sd-msCanaux" aria-label="Conversations"></nav><section class="ms-fil"><header class="ms-head"><button type="button" class="ms-back" id="sd-msBack" aria-label="Retour aux conversations"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button><div class="ms-hd" id="sd-msHead"></div></header><div class="ms-list" id="sd-msList" aria-live="polite"><p class="ms-vide">Chargement…</p></div><div class="ms-sug" id="sd-msSug" role="listbox" aria-label="Mentionner" hidden></div><div class="ms-pj" id="sd-msPj" hidden></div><form class="ms-form" id="sd-msForm" novalidate><label class="ms-clip" title="Joindre une photo ou un fichier" aria-label="Joindre une photo ou un fichier"><input type="file" id="sd-msFile" accept="image/*,.pdf,.txt,.doc,.docx,.xls,.xlsx"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.4 11.1l-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a2 2 0 0 1-2.8-2.8l8.5-8.5"/></svg></label><textarea id="sd-msTxt" rows="1" maxlength="2000" placeholder="Message… (@ pour mentionner)" aria-label="Message"></textarea><button class="btn btn-green" id="sd-msSend" type="submit" aria-label="Envoyer"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button></form></section></div>
 </div>
@@ -2942,8 +2942,8 @@ function init(root) {
       });
     }
     function msPjVider() { if (MS.pj && MS.pj.apercu) URL.revokeObjectURL(MS.pj.apercu); MS.pj = null; const el = $("#sd-msPj"); el.hidden = true; el.innerHTML = ""; $("#sd-msFile").value = ""; }
-    $("#sd-msFile").addEventListener("change", async (e) => {
-      const file = e.target.files && e.target.files[0]; if (!file) return; msPjVider();
+    async function msPrendre(file) {
+      if (!file) return; msPjVider();
       const ext = (file.name.split(".").pop() || "").toLowerCase(); let pj = null;
       if (/^image\//.test(file.type) || /^(jpe?g|png|webp|heic|heif)$/.test(ext)) {
         const r = await msReduire(file); if (!r) { toast("Photo illisible : essaie en JPEG ou PNG"); return; }
@@ -2958,7 +2958,18 @@ function init(root) {
       if (pj.w) pj.apercu = URL.createObjectURL(pj.blob);
       const el = $("#sd-msPj"); el.innerHTML = (pj.apercu ? '<img src="' + pj.apercu + '" alt="">' : '<i class="ms-fic">' + esc(pj.ext.slice(0, 4).toUpperCase()) + "</i>") + "<span><b>" + esc(pj.nom) + "</b><small>" + msTaille(pj.taille) + " · ajoute un message si tu veux, puis Envoyer</small></span>" + '<button type="button" class="ms-pjx" aria-label="Retirer la pièce jointe">×</button>';
       el.hidden = false; msTa.focus();
-    });
+    }
+    $("#sd-msFile").addEventListener("change", (e) => msPrendre(e.target.files && e.target.files[0]));
+    // Glisser-déposer un fichier sur la conversation (ordinateur) ou coller une capture d'écran (Ctrl + V)
+    const msFil = $(".ms-fil"); let msDragN = 0;
+    const msAvecFichier = (e) => e.dataTransfer && [...(e.dataTransfer.types || [])].includes("Files");
+    msFil.addEventListener("dragenter", (e) => { if (!msAvecFichier(e)) return; e.preventDefault(); msDragN++; msFil.classList.add("drop"); });
+    msFil.addEventListener("dragover", (e) => { if (!msAvecFichier(e)) return; e.preventDefault(); e.dataTransfer.dropEffect = "copy"; });
+    msFil.addEventListener("dragleave", (e) => { if (!msAvecFichier(e)) return; if (--msDragN <= 0) { msDragN = 0; msFil.classList.remove("drop"); } });
+    msFil.addEventListener("drop", (e) => { if (!msAvecFichier(e)) return; e.preventDefault(); msDragN = 0; msFil.classList.remove("drop"); const f = e.dataTransfer.files; if (f.length > 1) toast("Un fichier à la fois : le premier est joint"); msPrendre(f[0]); });
+    window.addEventListener("dragover", (e) => { if (msAvecFichier(e) && !$('.tm-pane[data-pane="msg"]').hidden) e.preventDefault(); }); // déposé à côté : le navigateur n'ouvre pas le fichier à la place de l'espace équipe
+    window.addEventListener("drop", (e) => { if (msAvecFichier(e) && !$('.tm-pane[data-pane="msg"]').hidden && !e.target.closest(".ms-fil")) { e.preventDefault(); toast("Dépose le fichier dans la conversation"); } });
+    msTa.addEventListener("paste", (e) => { const f = [...((e.clipboardData && e.clipboardData.files) || [])][0]; if (f) { e.preventDefault(); msPrendre(f); } });
     $("#sd-msPj").addEventListener("click", (e) => { if (e.target.closest(".ms-pjx")) msPjVider(); });
     async function msEnvoyerFichier(canal, pj) {
       const path = canal + "/" + Date.now() + "-" + Math.random().toString(36).slice(2, 8) + "." + pj.ext, t = await DB.token();
@@ -4535,6 +4546,7 @@ html:has(#sodaf-root.app-mode),body:has(#sodaf-root.app-mode){background:#ECEFEE
 .tm-auj>summary em{font-style:normal;font-weight:700;font-size:.85rem;color:#8A6500;white-space:nowrap}
 .tm-auj>div{padding:14px}.tm-auj .tm-mon{margin:0}.tm-auj .tm-mon>.card{box-shadow:none;border:1px solid var(--line)}
 html.ms-plein,html.ms-plein body{overflow:hidden}
+.ms-fil.drop::after{content:"Dépose le fichier ici pour l'envoyer";position:absolute;inset:8px;z-index:6;display:grid;place-items:center;border:3px dashed var(--green);border-radius:14px;background:rgba(223,243,232,.92);color:var(--green);font:700 1.15rem/1.3 var(--f-ui);pointer-events:none}
 
 /* Contacts élève (moniteur) et fiche courte */
 .ct-btns{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 2px}
