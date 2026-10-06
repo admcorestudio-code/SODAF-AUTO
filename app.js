@@ -1909,28 +1909,42 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 
 <section class="page" data-page="inscription" hidden>
 ${HEAD("Pré-inscription", "Rejoins SODAF", "Envoie ta demande en une minute : elle arrive directement au secrétariat, qui te recontacte pour fixer ton premier cours.")}
-<div class="wrap sec"><div class="insc">
-<form class="card" id="sd-form" novalidate>
+<div class="wrap sec"><div class="insc pi">
+<form class="card pi-form" id="sd-form" novalidate>
+<div class="pi-hd"><div><p class="eyebrow">Pré-inscription en ligne</p><h3>Tes coordonnées</h3></div><ul class="pi-tags"><li>1 minute</li><li>Gratuit</li><li>Sans engagement</li></ul></div>
 <div class="row2"><div class="field"><label for="sd-fName">Nom</label><input id="sd-fName" autocomplete="family-name" maxlength="60" placeholder="Ex. AGBEKO"></div><div class="field"><label for="sd-fFirst">Prénoms</label><input id="sd-fFirst" autocomplete="given-name" maxlength="80" placeholder="Ex. Kossi Mawuli"></div></div>
 <div class="row2"><div class="field"><label for="sd-fPhone">Téléphone / WhatsApp</label><div class="tel"><span>+228</span><input id="sd-fPhone" inputmode="numeric" maxlength="11" autocomplete="tel-national" placeholder="90 00 00 00"></div></div><div class="field"><label for="sd-fCity">Quartier</label><input id="sd-fCity" maxlength="80" placeholder="Ex. Bè, Adidogomé"></div></div>
 <div class="field"><label for="sd-fCat">Formation</label><select id="sd-fCat"><option value="Permis B">Permis B (voiture)</option><option value="Permis A">Permis A (moto)</option><option value="Remise à niveau">Remise à niveau (déjà titulaire du permis)</option><option value="Pack A + B">Pack A + B (moto et voiture)</option><option value="Formation entreprise">Formation entreprise (chauffeurs)</option></select></div>
 <div class="field"><label for="sd-fMsg">Message (facultatif)</label><textarea id="sd-fMsg" placeholder="Une question, une contrainte d'horaire…"></textarea></div>
-<p id="sd-fErr" style="color:var(--red);font-weight:600;margin-bottom:10px" hidden>Indique ton nom, tes prénoms et ton numéro à 8 chiffres (après le +228).</p>
-<button class="btn btn-green" type="submit" id="sd-send">Envoyer ma pré-inscription</button>
+<p id="sd-fErr" class="pi-err" hidden>Indique ton nom, tes prénoms et ton numéro à 8 chiffres (après le +228).</p>
+<button class="btn btn-green pi-go" type="submit" id="sd-send">Envoyer ma pré-inscription</button>
+<p class="pi-priv">Tes informations servent uniquement au secrétariat SODAF pour te recontacter. Elles ne sont jamais partagées.</p>
 <div class="okbox" id="sd-ok" hidden>
-<div class="okhead"><span class="okcheck" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div><b>Pré-inscription envoyée !</b><span id="sd-okWhen"></span></div></div>
-<p>Merci <span id="sd-okName"></span>, ta demande est bien arrivée au secrétariat SODAF. On te recontacte au <b id="sd-okPhone"></b> pour fixer ton premier cours.</p>
+<div class="ok-top"><span class="okcheck" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div><p class="ok-kicker">Demande reçue</p><b class="ok-title">Pré-inscription envoyée</b><span class="ok-when" id="sd-okWhen"></span></div></div>
+<div class="ok-body">
+<p class="ok-lead">Merci <span id="sd-okName"></span>. Ta demande est bien arrivée au secrétariat SODAF.</p>
 <dl class="okrecap" id="sd-okRecap"></dl>
-<div class="okwa"><p><b>Tu veux aller plus vite ?</b> Écris-nous aussi sur WhatsApp, c'est facultatif.</p><a class="btn btn-wa btn-sm" id="sd-waLink" target="_blank" rel="noopener" href="${WA}">Écrire sur WhatsApp</a></div>
+<p class="ok-h">La suite</p>
+<ol class="ok-steps"><li><b>Le secrétariat t'appelle</b><span>Au <b id="sd-okPhone"></b>, aux heures de bureau, pour répondre à tes questions.</span></li><li><b>Tu reçois ton lien d'inscription sur WhatsApp</b><span>Tu choisis ta formule, tu ajoutes ton selfie et tu paies à l'agence ou par Mixx by Yas.</span></li><li><b>Tu commences le code</b><span>Dans un groupe de 6 élèves au plus, avec le programme en 12 cours.</span></li></ol>
+<div class="okwa"><p><b>Pressé ?</b> Écris-nous sur WhatsApp, c'est facultatif.</p><a class="btn btn-wa btn-sm" id="sd-waLink" target="_blank" rel="noopener" href="${WA}">Écrire sur WhatsApp</a></div>
 <button class="linkbtn" type="button" id="sd-again">Faire une autre pré-inscription</button>
+</div>
 </div>
 <div class="failbox" id="sd-fail" hidden><b>L'envoi n'a pas abouti.</b><p>Vérifie ta connexion internet puis réessaie. Tu peux aussi envoyer ta demande directement sur WhatsApp.</p><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px"><button class="btn btn-green btn-sm" type="button" id="sd-retry">Réessayer</button><a class="btn btn-line btn-sm" id="sd-waFail" target="_blank" rel="noopener" href="${WA}">Envoyer sur WhatsApp</a></div></div>
 </form>
-<div style="display:flex;flex-direction:column;gap:18px;min-width:0">
-<div class="card pat-dots"><p class="eyebrow">Secrétariat</p><p class="bignum">72 54 41 66</p><p style="color:var(--muted)">Appel ou WhatsApp · +228</p><button class="btn btn-line btn-sm" style="margin-top:14px" data-copy="+228 72 54 41 66">Copier le numéro</button></div>
-<div class="card"><p class="eyebrow">Nous trouver</p><p style="margin-top:8px;font-weight:600">412 Avenue Akei, Tokoin Tamé, Lomé</p><p style="color:var(--muted)">En face de la caisse</p><p style="margin-top:10px;font-size:.94rem"><b>Secrétariat</b> : du lundi au vendredi de 8 h à 12 h 30 et de 14 h 30 à 18 h, le samedi de 8 h à 12 h. Fermé le dimanche.</p><p style="margin-top:6px;font-size:.94rem"><b>Conduite</b>, sur rendez-vous : dès 6 h 30 en semaine et le samedi.</p><p style="margin-top:6px;font-size:.94rem;color:var(--muted)">Pendant la pause, écris-nous sur WhatsApp : on te répond au retour.</p><a class="btn btn-line btn-sm" style="margin-top:12px" href="https://www.google.com/maps/search/?api=1&query=6.168785%2C1.225462" target="_blank" rel="noopener">Ouvrir l'itinéraire</a></div>
-<div class="card soft"><p class="eyebrow">Ensuite</p><ol style="padding-left:1.2em;margin:10px 0 0;color:var(--muted)"><li>Le secrétariat te répond.</li><li>Tu déposes ton dossier.</li><li>On fixe ton premier cours.</li></ol></div>
-</div></div></div>
+<aside class="pi-side">
+<div class="pi-contact">
+<p class="pi-k">Secrétariat SODAF</p><a class="pi-num" href="tel:+22872544166">72 54 41 66</a><p class="pi-sub">Appel ou WhatsApp · +228</p>
+<div class="pi-btns"><a class="btn btn-yellow btn-sm" href="tel:+22872544166">Appeler</a><a class="btn btn-wa btn-sm" href="${WA}" target="_blank" rel="noopener">WhatsApp</a><button class="pi-copy" type="button" data-copy="+228 72 54 41 66">Copier le numéro</button></div>
+<div class="pi-sep" aria-hidden="true"></div>
+<p class="pi-k">Nous trouver</p><p class="pi-addr">412 Avenue Akei, Tokoin Tamé, Lomé</p><p class="pi-sub">En face de la caisse</p>
+<dl class="pi-hours"><div><dt>Lundi – vendredi</dt><dd>8 h – 12 h 30<br>14 h 30 – 18 h</dd></div><div><dt>Samedi</dt><dd>8 h – 12 h</dd></div><div><dt>Dimanche</dt><dd>Fermé</dd></div><div><dt>Conduite</dt><dd>Dès 6 h 30, sur rendez-vous</dd></div></dl>
+<p class="pi-note">Pendant la pause, écris-nous sur WhatsApp : on te répond au retour.</p>
+<a class="pi-map" href="https://www.google.com/maps/search/?api=1&query=6.168785%2C1.225462" target="_blank" rel="noopener">Ouvrir l'itinéraire dans Google Maps</a>
+</div>
+<div class="card pi-how" id="sd-piHow"><p class="eyebrow">Comment ça se passe</p><ol class="ok-steps"><li><b>Le secrétariat t'appelle</b><span>Aux heures de bureau, pour répondre à tes questions.</span></li><li><b>Ton lien d'inscription sur WhatsApp</b><span>Formule, selfie et paiement à l'agence ou par Mixx by Yas.</span></li><li><b>Ton premier cours de code</b><span>En groupe de 6 élèves au plus, programme en 12 cours.</span></li></ol></div>
+</aside>
+</div></div>
 </section>
 </main>
 
@@ -2700,10 +2714,10 @@ function init(root) {
     $("#sd-okName").textContent = payload.nom.split(" ")[0];
     $("#sd-okPhone").textContent = payload.telephone;
     const catLabel = $("#sd-fCat").selectedOptions[0].textContent;
-    const rows = [["Formation", catLabel], ["Quartier", payload.quartier || "—"]];
-    $("#sd-okRecap").innerHTML = rows.map(([k, v]) => "<dt>" + k + "</dt><dd>" + String(v).replace(/[<>&]/g, "") + "</dd>").join("");
+    const rows = [["Nom", payload.nom], ["Téléphone", payload.telephone], ["Formation", catLabel], ["Quartier", payload.quartier || "—"]];
+    $("#sd-okRecap").innerHTML = rows.map(([k, v]) => "<div><dt>" + k + "</dt><dd>" + String(v).replace(/[<>&]/g, "") + "</dd></div>").join("");
     $("#sd-waLink").href = WA + "?text=" + encodeURIComponent("Bonjour SODAF, je viens d'envoyer ma pré-inscription sur le site (" + payload.nom + ", " + payload.formation + "). Quand puis-je passer au secrétariat ?");
-    fieldsBox().forEach((c) => (c.hidden = true));
+    fieldsBox().forEach((c) => (c.hidden = true)); form.classList.add("is-sent"); $("#sd-piHow").hidden = true;
     $("#sd-ok").hidden = false;
     $("#sd-ok").scrollIntoView({ behavior: "smooth", block: "center" });
   }
@@ -2720,7 +2734,7 @@ function init(root) {
   });
   $("#sd-retry").addEventListener("click", () => form.requestSubmit());
   $("#sd-again").addEventListener("click", () => {
-    form.reset(); $("#sd-ok").hidden = true; fieldsBox().forEach((c) => (c.hidden = false)); $("#sd-fErr").hidden = true; $("#sd-fail").hidden = true; $("#sd-fName").focus();
+    form.reset(); $("#sd-ok").hidden = true; form.classList.remove("is-sent"); $("#sd-piHow").hidden = false; fieldsBox().forEach((c) => (c.hidden = false)); $("#sd-fErr").hidden = true; $("#sd-fail").hidden = true; $("#sd-fName").focus();
   });
 
   // ---------- Espace équipe (connexion + données Supabase) ----------
@@ -5117,7 +5131,67 @@ background:radial-gradient(circle at 35% 30%,#fff 0%,#F1F7F4 55%,#D5E7DE 100%);b
 .tm-auj>summary em{font-style:normal;font-weight:700;font-size:.85rem;color:#8A6500;white-space:nowrap}
 .tm-auj>div{padding:14px}.tm-auj .tm-mon{margin:0}.tm-auj .tm-mon>.card{box-shadow:none;border:1px solid var(--line)}
 html.ms-plein,html.ms-plein body{overflow:hidden}
-html{scrollbar-gutter:stable} /* place de la barre de défilement toujours réservée : rien ne bouge en changeant d'onglet */
+html{scrollbar-gutter:stable}
+/* Page Pré-inscription : formulaire + panneau contact sombre */
+#sodaf-root .pi{grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:22px;align-items:start}
+#sodaf-root .pi-form{padding:26px 26px 22px;border-radius:18px;border:1px solid #DDE1E5;box-shadow:0 18px 40px -26px rgba(21,25,30,.28)}
+#sodaf-root .pi-form.is-sent{padding:0;border:0;box-shadow:none;background:transparent}
+#sodaf-root .pi-hd{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;padding-bottom:16px;margin-bottom:18px;border-bottom:1px solid #E6E8EB}
+#sodaf-root .pi-hd h3{margin:0;font:700 1.6rem/1 var(--f-display)}
+#sodaf-root .pi-tags{list-style:none;margin:0;padding:0;display:flex;gap:6px;flex-wrap:wrap}
+#sodaf-root .pi-tags li{font:600 .76rem/1 var(--f-ui);padding:.5em .8em;border-radius:999px;background:#EEF8F2;color:var(--green)}
+#sodaf-root .pi-err{color:var(--red);font-weight:600;margin:0 0 10px}
+#sodaf-root .pi-go{width:100%;justify-content:center;font-size:1.05rem;padding:.95em 1.4em}
+#sodaf-root .pi-priv{margin:10px 0 0;font-size:.8rem;color:#7F8994;text-align:center}
+#sodaf-root .pi-side{display:flex;flex-direction:column;gap:18px;min-width:0}
+#sodaf-root .pi-contact{position:relative;border-radius:18px;padding:24px;background:var(--asph,#15191E);color:#fff;overflow:hidden}
+#sodaf-root .pi-contact::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:repeating-linear-gradient(90deg,#F2B705 0 26px,transparent 26px 44px)}
+#sodaf-root .pi-k{margin:0;font:700 .72rem/1 var(--f-ui);letter-spacing:.12em;text-transform:uppercase;color:#F2B705}
+#sodaf-root .pi-num{display:block;margin-top:8px;font:700 2.6rem/1 var(--f-display);color:#fff;text-decoration:none;letter-spacing:.01em}
+#sodaf-root .pi-sub{margin:6px 0 0;font-size:.88rem;color:#AEB6BF}
+#sodaf-root .pi-btns{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:14px}
+#sodaf-root .pi-copy{all:unset;cursor:pointer;font:600 .82rem var(--f-ui);color:#D5DBE1;text-decoration:underline;text-underline-offset:3px;padding:4px 2px}
+#sodaf-root .pi-copy:focus-visible{outline:2px solid #F2B705}
+#sodaf-root .pi-sep{height:1px;margin:20px 0;background:repeating-linear-gradient(90deg,#3A424B 0 6px,transparent 6px 11px)}
+#sodaf-root .pi-addr{margin:8px 0 0;font-weight:700;font-size:1.05rem;color:#fff}
+#sodaf-root .pi-hours{margin:14px 0 0;display:grid;gap:0;border-top:1px solid #2C333B}
+#sodaf-root .pi-hours div{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #2C333B;font-size:.88rem}
+#sodaf-root .pi-hours dt{color:#AEB6BF;white-space:nowrap}#sodaf-root .pi-hours dd{margin:0;font-weight:600;text-align:right;color:#fff;white-space:nowrap;line-height:1.45}
+#sodaf-root .pi-note{margin:12px 0 0;font-size:.84rem;color:#AEB6BF}
+#sodaf-root .pi-map{display:inline-block;margin-top:14px;font:700 .9rem var(--f-ui);color:#F2B705;text-decoration:none}
+#sodaf-root .pi-map::after{content:" \2192"}
+#sodaf-root .pi-how{border-radius:18px;padding:22px}
+#sodaf-root .pi-how .ok-steps{margin-top:14px}
+@media (max-width:860px){#sodaf-root .pi{grid-template-columns:1fr}}
+@media (max-width:520px){#sodaf-root .pi-form{padding:20px 16px 18px}#sodaf-root .pi-num{font-size:2.2rem}#sodaf-root .pi-contact{padding:20px}}
+/* Confirmation de pré-inscription : bandeau « route », récapitulatif, étapes */
+#sodaf-root .okbox{display:block;padding:0;border:1px solid #DDE1E5;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 18px 40px -22px rgba(21,25,30,.35);animation:okin .35s ease-out}
+@keyframes okin{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+#sodaf-root .ok-top{position:relative;display:flex;gap:16px;align-items:center;padding:22px 24px 26px;background:var(--asph,#15191E);color:#fff}
+#sodaf-root .ok-top::after{content:"";position:absolute;left:24px;right:24px;bottom:10px;height:3px;background:repeating-linear-gradient(90deg,#F2B705 0 26px,transparent 26px 44px);opacity:.9}
+#sodaf-root .okcheck{width:52px;height:52px;background:var(--green);color:#fff;box-shadow:0 0 0 6px rgba(26,163,96,.18)}
+#sodaf-root .okcheck svg{width:26px;height:26px;stroke:#fff!important;color:#fff!important}
+#sodaf-root .ok-kicker{margin:0;font:700 .72rem/1 var(--f-ui);letter-spacing:.12em;text-transform:uppercase;color:#F2B705}
+#sodaf-root .ok-title{display:block;margin-top:6px;font:700 1.75rem/1 var(--f-display);color:#fff;letter-spacing:-.01em}
+#sodaf-root .ok-when{display:block;margin-top:6px;font-size:.84rem;color:#AEB6BF}
+#sodaf-root .ok-body{padding:22px 24px 20px;display:grid;gap:16px}
+#sodaf-root .ok-lead{margin:0;font-size:1.02rem;color:var(--ink)}
+#sodaf-root .okrecap{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;margin:0;padding:0;background:#E4E8EC;border:1px solid #E4E8EC;border-radius:12px;overflow:hidden}
+#sodaf-root .okrecap div{background:#F7F9FA;padding:10px 14px;min-width:0}
+#sodaf-root .okrecap dt{font:600 .72rem/1.2 var(--f-ui);letter-spacing:.06em;text-transform:uppercase;color:#7F8994}
+#sodaf-root .okrecap dd{margin:4px 0 0;font-weight:700;color:var(--ink);overflow-wrap:anywhere}
+#sodaf-root .ok-h{margin:2px 0 -4px;font:700 .78rem/1 var(--f-ui);letter-spacing:.1em;text-transform:uppercase;color:#7F8994}
+#sodaf-root .ok-steps{list-style:none;margin:0;padding:0;counter-reset:ok;display:grid;gap:0}
+#sodaf-root .ok-steps li{counter-increment:ok;position:relative;padding:0 0 16px 46px;display:grid;gap:2px}
+#sodaf-root .ok-steps li::before{content:counter(ok);position:absolute;left:0;top:0;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--ink);color:#fff;font:700 .9rem var(--f-ui)}
+#sodaf-root .ok-steps li:first-child::before{background:var(--green)}
+#sodaf-root .ok-steps li:not(:last-child)::after{content:"";position:absolute;left:14px;top:34px;bottom:2px;width:2px;background:repeating-linear-gradient(180deg,#C9CFD5 0 5px,transparent 5px 9px)}
+#sodaf-root .ok-steps li:last-child{padding-bottom:0}
+#sodaf-root .ok-steps b{font-size:.98rem;color:var(--ink)}#sodaf-root .ok-steps span{font-size:.9rem;color:#5B6670}
+#sodaf-root .okwa{padding:12px 14px;border:0;border-radius:12px;background:#EEF8F2}
+#sodaf-root .okwa p{margin:0;color:#24402F}
+#sodaf-root #sd-again{justify-self:center;font-size:.86rem}
+@media (max-width:520px){#sodaf-root .ok-top{padding:18px 18px 24px}#sodaf-root .ok-top::after{left:18px;right:18px}#sodaf-root .ok-body{padding:18px}#sodaf-root .ok-title{font-size:1.5rem}#sodaf-root .okwa{flex-direction:column;align-items:stretch}#sodaf-root .okwa .btn{text-align:center}} /* place de la barre de défilement toujours réservée : rien ne bouge en changeant d'onglet */
 .sc-mail{font-size:.76rem;color:#1F5FA8;word-break:break-all}
 .ms-vimg img{user-select:none;-webkit-user-drag:none;max-width:100%!important;max-height:calc(100dvh - 96px)!important;width:auto;height:auto}
 #sodaf-root .ms-vdl,.ms-vdl{color:#fff!important}
