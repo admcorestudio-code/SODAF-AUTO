@@ -41,23 +41,23 @@ const DB = {
 
 const WA = "https://wa.me/22872544166";
 // Photo d'élève : recadrée au centre en carré, 1080 px, réduite par paliers (image nette), JPEG de bonne qualité (≈ 150 à 300 Ko)
-async function photoCompresse(file, cote = 1080) {
+async function photoCompresse(file, cote = 1080, carre = true) {
   const url = URL.createObjectURL(file);
   try {
     const img = await new Promise((ok, ko) => { const i = new Image(); i.onload = () => ok(i); i.onerror = ko; i.src = url; });
-    const c = Math.min(img.naturalWidth, img.naturalHeight), t = Math.min(cote, c);
-    let cv = document.createElement("canvas"); cv.width = cv.height = c;
-    let g = cv.getContext("2d"); g.drawImage(img, (img.naturalWidth - c) / 2, (img.naturalHeight - c) / 2, c, c, 0, 0, c, c);
-    while (cv.width / 2 >= t) { const n = document.createElement("canvas"); n.width = n.height = Math.round(cv.width / 2); const ng = n.getContext("2d"); ng.imageSmoothingEnabled = true; ng.imageSmoothingQuality = "high"; ng.drawImage(cv, 0, 0, n.width, n.height); cv = n; }
-    if (cv.width !== t) { const n = document.createElement("canvas"); n.width = n.height = t; const ng = n.getContext("2d"); ng.imageSmoothingEnabled = true; ng.imageSmoothingQuality = "high"; ng.drawImage(cv, 0, 0, t, t); cv = n; }
+    const W = img.naturalWidth, H = img.naturalHeight, c = Math.min(W, H), sw = carre ? c : W, sh = carre ? c : H, k = Math.min(1, cote / Math.max(sw, sh)), tw = Math.round(sw * k), th = Math.round(sh * k);
+    let cv = document.createElement("canvas"); cv.width = sw; cv.height = sh;
+    let g = cv.getContext("2d"); g.drawImage(img, (W - sw) / 2, (H - sh) / 2, sw, sh, 0, 0, sw, sh);
+    while (cv.width / 2 >= tw) { const n = document.createElement("canvas"); n.width = Math.round(cv.width / 2); n.height = Math.round(cv.height / 2); const ng = n.getContext("2d"); ng.imageSmoothingEnabled = true; ng.imageSmoothingQuality = "high"; ng.drawImage(cv, 0, 0, n.width, n.height); cv = n; }
+    if (cv.width !== tw) { const n = document.createElement("canvas"); n.width = tw; n.height = th; const ng = n.getContext("2d"); ng.imageSmoothingEnabled = true; ng.imageSmoothingQuality = "high"; ng.drawImage(cv, 0, 0, tw, th); cv = n; }
     for (const q of [0.92, 0.86, 0.78]) { const b = await new Promise((ok) => cv.toBlob((x) => ok(x), "image/jpeg", q)); if (b && b.size < 900000) return b; }
     return await new Promise((ok) => cv.toBlob((x) => ok(x), "image/jpeg", 0.7));
   } finally { URL.revokeObjectURL(url); }
 }
 // Envoi dans l'espace privé « photos » (jeton de l'équipe, ou clé publique pour le lien d'inscription)
-async function photoEnvoyer(path, blob, jeton) {
+async function photoEnvoyer(path, blob, jeton, espace = "photos") {
   const h = { apikey: SB_KEY, "Content-Type": "image/jpeg", "x-upsert": "false" }; if (jeton) h.Authorization = "Bearer " + jeton;
-  const r = await fetch(SB_URL + "/storage/v1/object/photos/" + path, { method: "POST", headers: h, body: blob });
+  const r = await fetch(SB_URL + "/storage/v1/object/" + espace + "/" + path, { method: "POST", headers: h, body: blob });
   if (!r.ok) throw new Error("La photo n'a pas pu être envoyée");
   return path;
 }
@@ -810,7 +810,7 @@ label.ex-doc input{position:absolute;left:14px;top:12px;width:20px;height:20px;a
 .insc-ph.on{background:#15191E;border-color:#15191E;box-shadow:0 0 0 3px #fff,0 6px 16px -6px rgba(21,25,30,.45)}.insc-ph.on::before{border-color:#F2B705}
 .insc-ph img{width:100%;height:100%;object-fit:cover;border-radius:50%}
 .insc-phtx{flex:1 1 220px}.insc-phtx p{margin:0 0 10px;color:#3D444D;font-size:.95rem}
-.insc-file{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.insc-file{position:absolute;left:0;top:0;width:1px;height:1px;opacity:0;pointer-events:none;overflow:hidden}
 .insc-accord{display:flex;gap:10px;align-items:flex-start;margin-top:14px;font-size:.93rem;cursor:pointer}.insc-accord input{width:20px;height:20px;flex:none;margin-top:2px;accent-color:var(--green)}
 .insc-load{color:var(--muted);padding:30px 0;text-align:center}
 .insc-hint{font-size:.9rem;color:var(--muted);margin:-4px 0 10px!important}
@@ -1270,7 +1270,7 @@ const HTML = `
 <a class="logo" href="#accueil" aria-label="SODAF, accueil">${LOGO("#14171C", "word")}<small class="logo-sub">Auto-école · Togo</small></a>
 <button class="burger" id="sd-burger" aria-expanded="false">Menu</button>
 <nav class="main" id="sd-nav">
-<a href="#accueil" data-nav="accueil">Accueil</a><a href="#formations" data-nav="formations">Formations et tarifs</a><a href="#cours" data-nav="cours">Cours</a><a href="#panneaux" data-nav="panneaux">Panneaux</a><a href="#quiz" data-nav="quiz">Quiz</a><a href="#devoirs" data-nav="devoirs">Devoirs</a><a href="#outils" data-nav="outils">Outils</a><a href="/equipe/" target="sodaf-equipe" class="navteam">Espace équipe</a>
+<a href="#accueil" data-nav="accueil">Accueil</a><a href="#formations" data-nav="formations">Formations et tarifs</a><a href="#cours" data-nav="cours">Cours</a><a href="#panneaux" data-nav="panneaux">Panneaux</a><a href="#quiz" data-nav="quiz">Quiz</a><a href="#devoirs" data-nav="devoirs">Devoirs</a><a href="#outils" data-nav="outils">Outils</a><a href="#tirage" data-nav="tirage" class="navtir">Tirage au sort</a><a href="/equipe/" target="sodaf-equipe" class="navteam">Espace équipe</a>
 </nav>
 <a class="btn btn-green btn-sm" href="/equipe/" target="sodaf-equipe">Espace équipe</a>
 </div></header>
@@ -1292,6 +1292,8 @@ const HTML = `
 <div class="dots" id="sd-dots">${SLIDES.map((s, i) => `<button aria-label="Image ${i + 1}" data-i="${i}"${i ? "" : ' class="on"'}></button>`).join("")}</div>
 <div class="lane" aria-hidden="true"></div>
 </div>
+
+<div class="wrap"><a class="tirband" href="#tirage"><span class="tb-k">Tirage au sort étudiant</span><span class="tb-t">Ton permis à <b>15&nbsp;000&nbsp;F</b> au lieu de 60&nbsp;000&nbsp;F</span><span class="tb-s">2 gagnants chaque mois · participation gratuite</span><span class="tb-go">Je tente ma chance</span></a></div>
 
 <div class="wrap"><div class="pricebar">
 <div class="pb-item"><span>Permis B dès</span><b>35 000 F</b></div>
@@ -1832,10 +1834,14 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="tm-pane" data-pane="ger" role="tabpanel" hidden>
 <p class="tm-role" id="sd-grRole"></p>
 <div class="card gr-card" id="sd-gr" hidden><p class="eyebrow">Gérance</p><h3 class="tm-h3" id="sd-grTitre">Gérante et direction</h3><p class="tm-note" id="sd-grIntro" style="margin:0 0 10px!important"></p>
-<div class="gr-tabs" role="tablist"><button type="button" role="tab" data-gr="demandes" aria-selected="true">Demandes d'accord<em class="gr-badge" id="sd-grBDem" hidden></em></button><button type="button" role="tab" data-gr="decisions" aria-selected="false">Décisions<em class="gr-badge" id="sd-grBDec" hidden></em></button><button type="button" role="tab" data-gr="rapports" aria-selected="false">Rapport de la semaine<em class="gr-badge" id="sd-grBRap" hidden></em></button></div>
+<div class="gr-tabs" role="tablist"><button type="button" role="tab" data-gr="demandes" aria-selected="true">Demandes d'accord<em class="gr-badge" id="sd-grBDem" hidden></em></button><button type="button" role="tab" data-gr="decisions" aria-selected="false">Décisions<em class="gr-badge" id="sd-grBDec" hidden></em></button><button type="button" role="tab" data-gr="rapports" aria-selected="false">Rapport de la semaine<em class="gr-badge" id="sd-grBRap" hidden></em></button><button type="button" role="tab" data-gr="tirage" aria-selected="false">Tirage au sort<em class="gr-badge" id="sd-grBTir" hidden></em></button></div>
 <div class="gr-pane" data-grp="demandes"><form id="sd-grDemForm" class="gr-form" hidden novalidate><div class="row2"><div class="field"><label for="sd-grDemType">Pour quoi ?</label><select id="sd-grDemType"><option>Remise</option><option>Annulation de reçu</option><option>Report de paiement</option><option>Dépense</option><option>Autre</option></select></div><div class="field"><label for="sd-grDemMt">Montant (F, si besoin)</label><input id="sd-grDemMt" inputmode="numeric" autocomplete="off" placeholder="ex. 5 000"></div></div><div class="field gr-elf"><label for="sd-grDemElQ">Élève concerné (si besoin)</label><div class="gr-elbox"><input id="sd-grDemElQ" type="search" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Tape un nom ou un numéro (SO12)" role="combobox" aria-expanded="false" aria-controls="sd-grDemElL" aria-autocomplete="list"><input type="hidden" id="sd-grDemEl" value=""><div class="gr-elsel" id="sd-grDemElSel" hidden></div><div class="gr-ell" id="sd-grDemElL" role="listbox" hidden></div></div></div><div class="field"><label for="sd-grDemTx">Explique en quelques mots</label><textarea id="sd-grDemTx" rows="2" maxlength="600" placeholder="ex. Deux frères inscrits ensemble, je propose 5 000 F de remise au second."></textarea></div><button type="submit" class="btn btn-sm btn-green">Envoyer à la direction</button></form><div id="sd-grDemList" class="gr-list"></div></div>
 <div class="gr-pane" data-grp="decisions" hidden><form id="sd-grDecForm" class="gr-form" hidden novalidate><div class="row2"><div class="field"><label for="sd-grDecCat">Sujet</label><select id="sd-grDecCat"><option>Élèves</option><option>Argent</option><option>Planning</option><option>Équipe</option><option>Autre</option></select></div><div class="field gr-grow"><label for="sd-grDecTx">Ce que j'ai décidé</label><textarea id="sd-grDecTx" rows="2" maxlength="600" placeholder="ex. Séance de samedi 7 h 30 déplacée à 8 h 45, le moniteur est prévenu."></textarea></div></div><button type="submit" class="btn btn-sm btn-green">Noter la décision</button></form><div id="sd-grDecList" class="gr-list"></div></div>
 <div class="gr-pane" data-grp="rapports" hidden><div id="sd-grRapNew" hidden><p class="gr-sem" id="sd-grRapSem"></p><div class="tm-stats tm-dr" id="sd-grRapChiffres"></div><div class="field"><label for="sd-grRapTx">Mes remarques pour la direction</label><textarea id="sd-grRapTx" rows="4" maxlength="3000" placeholder="Ce qui s'est bien passé, les problèmes, ce qu'il faudrait changer, ce dont j'ai besoin."></textarea></div><button type="button" class="btn btn-sm btn-green" id="sd-grRapSend">Envoyer le rapport</button></div><div id="sd-grRapList" class="gr-list"></div></div>
+<div class="gr-pane" data-grp="tirage" hidden><div class="tr-hd"><div class="field"><label for="sd-trCamp">Tirage du mois</label><select id="sd-trCamp"></select></div><div class="tr-stats" id="sd-trStats"></div></div>
+<div class="tr-act"><button type="button" class="btn tir-btn" id="sd-trGo">Tirer un gagnant</button><button type="button" class="btn btn-line btn-sm" id="sd-trScreen">Grand écran pour la vidéo</button></div>
+<div id="sd-trWin" class="tr-wins"></div>
+<details class="tr-all"><summary id="sd-trAllSum">Tous les participants</summary><div id="sd-trAll" class="tr-alllist"></div></details></div>
 </div>
 </div>
 <div class="tm-pane" data-pane="dir" role="tabpanel" hidden>
@@ -1910,6 +1916,83 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <span class="cls-help">Flèches ← → pour avancer · Espace ou R pour montrer la réponse · F pour le plein écran</span>
 <div style="display:flex;gap:10px"><button class="btn btn-yellow" type="button" id="sd-clsReveal" hidden>Montrer la réponse</button><button class="btn btn-green" type="button" id="sd-clsNext">Suivant →</button></div>
 </div>
+</div>
+</section>
+
+<section class="page tir" data-page="tirage" hidden>
+<div class="tir-hero"><div class="wrap tir-in">
+<div class="tir-copy">
+<p class="tir-k">Tirage au sort étudiant · SODAF Auto-École</p>
+<h1>Ton permis<br>à <span class="tir-px">15&nbsp;000&nbsp;F</span></h1>
+<p class="tir-lead">Au lieu de <s>60&nbsp;000&nbsp;F</s>. Chaque mois, <b>2 étudiants</b> gagnent leur formation complète, inscription offerte. Participer est gratuit et prend une minute.</p>
+<div class="tir-ctas"><a class="btn tir-btn" href="#tirage-jouer" data-tirgo>Je tente ma chance</a><span class="tir-count"><b id="sd-tirN">…</b> étudiants déjà inscrits ce mois-ci</span></div>
+<div class="tir-clock" aria-live="off"><p class="tir-ck" id="sd-tirClockLab">Tirage en direct dans</p><div class="tir-cd" id="sd-tirCd"><div><b>--</b><span>jours</span></div><div><b>--</b><span>heures</span></div><div><b>--</b><span>min</span></div><div><b>--</b><span>s</span></div></div></div>
+</div>
+<div class="tir-ticket" aria-hidden="true"><div class="tk-top"><span>SODAF · Ticket gagnant</span><span id="sd-tirTkMonth">Novembre</span></div>
+<div class="tk-mid"><p class="tk-lab">Formation complète permis B</p><p class="tk-old">60 000 F</p><p class="tk-new">15 000 F</p><p class="tk-inc">Inscription offerte</p></div>
+<div class="tk-cut"></div>
+<div class="tk-bot"><div><span>Gagnants</span><b>2</b></div><div><span>Tirage</span><b id="sd-tirTkDate">1er</b></div><div><span>Prix</span><b>Gratuit</b></div></div><div class="tk-bars"></div></div>
+</div><div class="tir-lane" aria-hidden="true"></div></div>
+
+<div class="wrap sec">
+<div class="tir-sh"><p class="tir-k2">Le lot</p><h2>Ce que tu gagnes</h2></div>
+<div class="tir-gifts">
+<div class="tg tg-main"><span class="tg-v">55 000 F</span><b>La formation complète</b><p>12 cours de code en salle et 12 blocs de conduite, en 6 semaines.</p></div>
+<div class="tg"><span class="tg-v">5 000 F</span><b>Inscription offerte</b><p>Tu ne paies pas les frais d'inscription.</p></div>
+<div class="tg"><span class="tg-v">5 000 F</span><b>Une séance de conduite en plus</b><p>Pour t'entraîner encore avant l'examen.</p></div>
+<div class="tg"><span class="tg-v">Offert</span><b>Le t-shirt SODAF</b><p>Celui de l'équipe, rien que pour les gagnants.</p></div>
+<div class="tg"><span class="tg-v">Priorité</span><b>Tu choisis tes horaires</b><p>Ton équipe de conduite, avant tout le monde.</p></div>
+</div>
+<div class="tir-sum"><div><span>Valeur du lot</span><b>plus de 65 000 F</b></div><div class="tir-arrow" aria-hidden="true"></div><div class="tir-pay"><span>Tu paies</span><b>15 000 F</b></div></div>
+
+<div class="tir-sh"><p class="tir-k2">Comment ça marche</p><h2>Trois étapes, et c'est joué</h2></div>
+<ol class="tir-steps">
+<li><b>Tu t'inscris ici</b><span>Ton nom, ton numéro WhatsApp, ton université et la photo de ta carte d'étudiant. Une minute.</span></li>
+<li><b>Tirage en direct le <span class="sd-tirDay">1er</span></b><span>Filmé et diffusé sur notre WhatsApp et nos réseaux. 2 gagnants, tirés au hasard par l'ordinateur.</span></li>
+<li><b>Tu passes à l'agence</b><span>Sous 48 h, avec ta carte d'étudiant et ta carte d'identité. Ta formation commence.</span></li>
+</ol>
+
+<div class="tir-play" id="tirage-jouer">
+<div class="tir-formcol">
+<form class="tir-form" id="sd-tirForm" novalidate>
+<div class="tir-fh"><p class="tir-k2">Participation gratuite</p><h2>Je tente ma chance</h2><p id="sd-tirFormSub">Une seule participation par numéro et par mois.</p></div>
+<div class="row2"><div class="field"><label for="sd-tirNom">Nom</label><input id="sd-tirNom" autocomplete="family-name" maxlength="60" placeholder="Ex. AGBEKO"></div><div class="field"><label for="sd-tirPre">Prénoms</label><input id="sd-tirPre" autocomplete="given-name" maxlength="80" placeholder="Ex. Kossi"></div></div>
+<div class="row2"><div class="field"><label for="sd-tirTel">Numéro WhatsApp</label><div class="tel"><span>+228</span><input id="sd-tirTel" inputmode="numeric" maxlength="11" autocomplete="tel-national" placeholder="90 00 00 00"></div></div><div class="field"><label for="sd-tirUniv">Université ou école</label><input id="sd-tirUniv" list="sd-tirUnivL" maxlength="80" placeholder="Ex. Université de Lomé"><datalist id="sd-tirUnivL"><option value="Université de Lomé"><option value="Université de Kara"><option value="UCAO-UUT"><option value="ESGIS"><option value="IAI-Togo"><option value="ESA"><option value="IPNET Institute of Technology"><option value="Autre école"></datalist></div></div>
+<div class="field"><span class="tir-lab">Photo de ta carte d'étudiant</span>
+<label class="tir-card" for="sd-tirCarte" id="sd-tirCardBox"><span class="tir-cardph" id="sd-tirCardPh"><svg viewBox="0 0 48 32" width="64" height="44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="44" height="28" rx="4"/><circle cx="15" cy="14" r="5"/><path d="M8 25c1.6-3.4 4.2-5 7-5s5.4 1.6 7 5M28 11h12M28 17h12M28 23h7"/></svg></span><span class="tir-cardtx"><b id="sd-tirCardBtn">Prendre la photo</b><small>Carte de l'année en cours, nom bien lisible. Seule l'équipe SODAF la voit.</small></span></label>
+<input type="file" id="sd-tirCarte" accept="image/*" capture="environment" class="insc-file"></div>
+<label class="tir-check"><input type="checkbox" id="sd-tirOk1"><span>Je suis étudiant(e) et j'ai <b>18 ans ou plus</b>.</span></label>
+<label class="tir-check"><input type="checkbox" id="sd-tirOk2"><span>J'accepte le règlement du tirage et que SODAF me contacte sur WhatsApp.</span></label>
+<p class="tir-err" id="sd-tirErr" hidden></p>
+<button class="btn tir-btn tir-go" type="submit" id="sd-tirGo">Valider ma participation</button>
+</form>
+<div class="tir-done" id="sd-tirDone" hidden></div>
+<div class="tir-closed" id="sd-tirClosed" hidden></div>
+</div>
+<aside class="tir-side">
+<div class="tir-why"><p class="tir-k2">Pas le temps d'attendre ?</p><b>Le tarif étudiant</b><p>Formation complète à <b>30 000 F</b>, inscription à 3 000 F, sans tirage. Places limitées chaque mois.</p><a class="btn btn-line btn-sm" href="#inscription">Je me pré-inscris</a></div>
+<div class="tir-why"><p class="tir-k2">Parrainage</p><b>2 000 F pour toi</b><p>Pour chaque personne que tu amènes et qui s'inscrit chez SODAF, étudiant ou pas.</p></div>
+</aside>
+</div>
+
+<div class="tir-sh"><p class="tir-k2">Questions</p><h2>Ce qu'on nous demande</h2></div>
+<div class="tir-faq">
+<details><summary>C'est vraiment gratuit ?</summary><p>Oui. Participer ne coûte rien. Seuls les 2 gagnants paient 15 000 F, s'ils veulent faire leur formation.</p></details>
+<details><summary>J'ai déjà le permis, ou je n'ai pas encore 18 ans</summary><p>Tu peux offrir ton lot à un proche de 18 ans ou plus qui n'a pas le permis. Il fait alors la formation au tarif étudiant, 30 000 F.</p></details>
+<details><summary>Comment je saurai si j'ai gagné ?</summary><p>On t'appelle et on t'écrit sur WhatsApp le jour du tirage. La vidéo du tirage est publiée le même jour.</p></details>
+<details><summary>Je n'ai pas gagné. Je peux rejouer ?</summary><p>Oui, chaque mois. Les inscriptions rouvrent le 2 du mois pour le tirage suivant.</p></details>
+<details><summary>Pourquoi la photo de ma carte ?</summary><p>Le tirage est réservé aux étudiants. On vérifie la carte des gagnants avant d'annoncer leur nom. Si elle ne correspond pas, on tire un autre gagnant.</p></details>
+</div>
+<details class="tir-rules"><summary>Règlement du tirage</summary><ol>
+<li>Le tirage est organisé chaque mois par SODAF Auto-École, 412 Avenue Akei, Tokoin Tamé, Lomé. La participation est gratuite et sans obligation d'achat.</li>
+<li>Il est réservé aux étudiants de 18 ans ou plus, inscrits dans une université ou une école pour l'année en cours.</li>
+<li>Inscriptions du 2 au 28 du mois. Une seule participation par numéro de téléphone et par mois.</li>
+<li>Le 1er du mois suivant, 2 gagnants sont tirés au hasard par l'ordinateur. Le tirage est filmé.</li>
+<li>Chaque gagnant présente à l'agence, sous 48 h, sa carte d'étudiant de l'année et sa carte d'identité. Si les informations ne correspondent pas, ou sans nouvelles sous 48 h, un autre gagnant est tiré.</li>
+<li>Le lot : la formation complète permis B à 15 000 F au lieu de 55 000 F, l'inscription offerte (5 000 F), une séance de conduite en plus, un t-shirt SODAF et la priorité sur les horaires de conduite.</li>
+<li>Le lot est valable 3 mois. Il peut être cédé une fois à un proche de 18 ans ou plus sans permis, qui paie alors 30 000 F. Il ne peut pas être échangé contre de l'argent.</li>
+<li>Les informations et la photo de la carte servent uniquement à organiser le tirage. Elles ne sont jamais publiées ni transmises.</li>
+</ol></details>
 </div>
 </section>
 
@@ -3778,7 +3861,10 @@ function init(root) {
     async function phSigner() {
       const imgs = [...document.querySelectorAll("#sodaf-root img[data-ph]:not([src])")]; if (!imgs.length) return;
       const now = Date.now(), manque = [...new Set(imgs.map((i) => i.dataset.ph))].filter((x) => !PH[x] || PH[x].exp < now + 300000);
-      if (manque.length) { try { const t = await DB.token(), r = await fetch(SB_URL + "/storage/v1/object/sign/photos", { method: "POST", headers: { apikey: SB_KEY, Authorization: "Bearer " + t, "Content-Type": "application/json" }, body: JSON.stringify({ expiresIn: 3600, paths: manque }) }); if (r.ok) (await r.json()).forEach((y) => { if (y.signedURL) PH[y.path] = { u: SB_URL + "/storage/v1" + y.signedURL, exp: now + 3500000 }; }); } catch (e) {} }
+      for (const esp of ["photos", "tirage"]) { // « tirage:… » = photo de carte d'étudiant (espace privé du tirage)
+        const lot = manque.filter((x) => (esp === "tirage") === x.startsWith("tirage:")).map((x) => x.replace(/^tirage:/, "")); if (!lot.length) continue;
+        try { const t = await DB.token(), r = await fetch(SB_URL + "/storage/v1/object/sign/" + esp, { method: "POST", headers: { apikey: SB_KEY, Authorization: "Bearer " + t, "Content-Type": "application/json" }, body: JSON.stringify({ expiresIn: 3600, paths: lot }) }); if (r.ok) (await r.json()).forEach((y) => { if (y.signedURL) PH[(esp === "tirage" ? "tirage:" : "") + y.path] = { u: SB_URL + "/storage/v1" + y.signedURL, exp: now + 3500000 }; }); } catch (e) {}
+      }
       imgs.forEach((i) => { const v = PH[i.dataset.ph]; if (v) i.src = v.u; });
     }
     new MutationObserver(() => { clearTimeout(phT); phT = setTimeout(phSigner, 60); }).observe($("#sodaf-root") || document.body, { childList: true, subtree: true });
@@ -4194,7 +4280,7 @@ function init(root) {
     const grLundi = (d) => { const x = new Date(d); x.setHours(12, 0, 0, 0); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return iso(x); };
     const grSemTxt = (l) => { const a = dOf(l), b = new Date(a); b.setDate(a.getDate() + 6); return "du " + a.toLocaleDateString("fr-FR", { day: "numeric", month: "long" }) + " au " + b.toLocaleDateString("fr-FR", { day: "numeric", month: "long" }); };
     function grOnglet(k) {
-      if (!["demandes", "decisions", "rapports"].includes(k)) k = "demandes"; GR.ong = k;
+      if (!["demandes", "decisions", "rapports", "tirage"].includes(k)) k = "demandes"; GR.ong = k;
       $$("#sd-gr [data-gr]").forEach((b) => b.setAttribute("aria-selected", b.dataset.gr === k)); $$("#sd-gr [data-grp]").forEach((p) => (p.hidden = p.dataset.grp !== k));
       if (k === "rapports" && me && me.role === "admin") GR.rap.filter((r) => !r.lu_le).forEach((r) => DB.q("rpc/rapport_lu", { method: "POST", body: { p_id: r.id } }).then(() => { r.lu_le = new Date().toISOString(); grBadges(); }).catch(() => {}));
     }
@@ -4203,7 +4289,8 @@ function init(root) {
       b("#sd-grBDem", adm ? GR.dem.filter((d) => d.statut === "attente").length : GR.dem.filter((d) => d.statut !== "attente" && d.repondu_le && !grVu("dem", d.id)).length);
       b("#sd-grBDec", adm ? GR.dec.filter((d) => !d.avis).length : GR.dec.filter((d) => d.avis === "revoir" && !grVu("dec", d.id)).length);
       b("#sd-grBRap", adm ? GR.rap.filter((r) => !r.lu_le).length : grSemaineAFaire() ? 1 : 0);
-      b("#sd-grTabBadge", ["#sd-grBDem", "#sd-grBDec", "#sd-grBRap"].reduce((n, id) => n + (+$(id).textContent || 0), 0));
+      b("#sd-grBTir", (GR.tir || []).filter((x) => x.statut === "gagnant").length);
+      b("#sd-grTabBadge", ["#sd-grBDem", "#sd-grBDec", "#sd-grBRap", "#sd-grBTir"].reduce((n, id) => n + (+$(id).textContent || 0), 0));
     }
     const grVu = (k, id) => { try { return (JSON.parse(localStorage.getItem("sodaf.gr." + k) || "[]")).includes(id); } catch (e) { return true; } };
     const grMarquer = (k, ids) => { try { const v = new Set(JSON.parse(localStorage.getItem("sodaf.gr." + k) || "[]")); ids.forEach((i) => v.add(i)); localStorage.setItem("sodaf.gr." + k, JSON.stringify([...v].slice(-300))); } catch (e) {} };
@@ -4217,7 +4304,7 @@ function init(root) {
       const [dm, dc, rp] = await Promise.all([DB.q("demandes?select=*&order=le.desc&limit=60").catch(() => null), DB.q("decisions?select=*&order=le.desc&limit=60").catch(() => null), DB.q("rapports?select=*&order=semaine.desc&limit=20").catch(() => null)]);
       if (!dm && !dc && !rp) { $("#sd-grDemList").innerHTML = '<p class="tm-empty">La gérance n\'est pas encore activée dans la base.</p>'; return; }
       GR.dem = dm || []; GR.dec = dc || []; GR.rap = rp || [];
-      grDemRender(); grDecRender(); await grRapRender(); grBadges(); grOnglet(GR.ong);
+      grDemRender(); grDecRender(); await grRapRender(); await trCharger(); grBadges(); grOnglet(GR.ong);
     }
     function grDemRender() {
       const adm = me.role === "admin", ST = { attente: ["att", "En attente"], accordee: ["oui", "Accordé"], refusee: ["non", "Refusé"] };
@@ -4251,6 +4338,53 @@ function init(root) {
       $("#sd-grRapList").innerHTML = GR.rap.length ? GR.rap.map((r) => '<div class="gr-it' + (!g && !r.lu_le ? " att" : "") + '"><div class="gr-hd"><b>Semaine ' + esc(grSemTxt(r.semaine)) + '</b><em class="gr-st ' + (r.lu_le ? "oui" : "neu") + '">' + (r.lu_le ? "Lu par la direction" : g ? "Envoyé" : "Nouveau") + "</em></div><small>Envoyé " + esc(grQuand(r.envoye_le)) + '</small><div class="gr-ch">' + grChHtml(r.chiffres || {}, false) + "</div>" + (r.texte ? "<p>" + esc(r.texte) + "</p>" : "") + "</div>").join("")
         : '<p class="tm-empty">' + (g ? "Aucun rapport envoyé pour l'instant." : "Aucun rapport reçu pour l'instant.") + "</p>";
     }
+    // ---- Tirage au sort (direction et gérante) : 2 gagnants validés par mois
+    const trCampActuelle = () => { const d = new Date(), m = (d.getUTCMonth() + 1) % 12, y = d.getUTCMonth() === 11 ? d.getUTCFullYear() + 1 : d.getUTCFullYear(); return y + "-" + String(m + 1).padStart(2, "0"); };
+    const trNomMois = (c) => { const [y, m] = c.split("-"); return ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"][+m - 1] + " " + y; };
+    async function trCharger() {
+      const sel = $("#sd-trCamp"); if (!sel) return;
+      const tous = await DB.q("tirage_participants?select=*&order=id.asc&limit=5000").catch(() => null);
+      if (!tous) { $("#sd-trWin").innerHTML = '<p class="tm-empty">Le tirage au sort n\'est pas encore activé dans la base.</p>'; $("#sd-trGo").disabled = true; return; }
+      GR.tirTous = tous; const camps = [...new Set([trCampActuelle(), ...tous.map((x) => x.campagne)])].sort().reverse(), v = sel.value || trCampActuelle();
+      sel.innerHTML = camps.map((c) => '<option value="' + c + '"' + (c === v ? " selected" : "") + ">Tirage du 1er " + trNomMois(c) + "</option>").join(""); trRender();
+    }
+    function trRender() {
+      const c = $("#sd-trCamp").value, L = (GR.tirTous || []).filter((x) => x.campagne === c); GR.tir = L;
+      const ok = L.filter((x) => x.statut === "valide").length, att = L.filter((x) => x.statut === "gagnant"), uni = {}; L.forEach((x) => (uni[x.universite] = (uni[x.universite] || 0) + 1));
+      const top = Object.entries(uni).sort((a, b) => b[1] - a[1]).slice(0, 3).map((u) => esc(u[0]) + " (" + u[1] + ")").join(" · ");
+      $("#sd-trStats").innerHTML = "<div><b>" + L.length + "</b><span>participants</span></div><div><b>" + ok + " / 2</b><span>gagnants validés</span></div>" + (top ? '<div class="tr-top"><span>Universités en tête</span>' + top + "</div>" : "");
+      $("#sd-trGo").disabled = ok >= 2 || att.length > 0 || !L.some((x) => x.statut === "inscrit"); $("#sd-trGo").textContent = ok >= 2 ? "Les 2 gagnants sont validés" : att.length ? "Vérifie d'abord le gagnant tiré" : "Tirer un gagnant";
+      const tires = L.filter((x) => x.statut !== "inscrit").sort((a, b) => (a.tire_le < b.tire_le ? 1 : -1));
+      $("#sd-trWin").innerHTML = tires.length ? tires.map((x) => '<div class="tr-win st-' + x.statut + '"><img data-ph="tirage:' + esc(x.carte_photo) + '" alt="Carte d\'étudiant de ' + esc(x.prenoms + " " + x.nom) + '" class="tr-card"><div class="tr-who"><em class="gr-st ' + { gagnant: "att", valide: "oui", refuse: "non" }[x.statut] + '">' + { gagnant: "À vérifier", valide: "Gagnant validé", refuse: "Refusé" }[x.statut] + "</em><b>" + esc(x.prenoms + " " + x.nom) + "</b><span>" + esc(x.universite) + " · " + esc(x.telephone.replace("+228", "+228 ")) + "</span><small>Tiré " + esc(grQuand(x.tire_le)) + (x.note ? " · " + esc(x.note) : "") + "</small>" +
+        (x.statut === "gagnant" ? '<p class="tr-q">Même nom que sur la carte ? Carte de l\'année en cours ?</p><div class="gr-act" data-tr="' + x.id + '"><input type="text" maxlength="300" placeholder="Motif si refusé (facultatif)" aria-label="Motif"><button type="button" class="btn btn-sm btn-green" data-trok="1">Valide</button><button type="button" class="btn btn-sm btn-line" data-trok="0">Pas valide, choisir un autre</button></div>' : x.statut === "valide" ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" href="https://wa.me/' + x.telephone.replace(/\D/g, "") + "?text=" + encodeURIComponent("Bonjour " + x.prenoms + ", félicitations ! Tu as gagné le tirage au sort SODAF : ta formation complète du permis B à 15 000 F, inscription offerte. Passe à l'agence (412 Avenue Akei, Tokoin Tamé) sous 48 h avec ta carte d'étudiant et ta carte d'identité.") + '">Prévenir le gagnant sur WhatsApp</a>' : "") + "</div></div>").join("")
+        : '<p class="tm-empty">Aucun gagnant tiré pour ce mois.</p>';
+      $("#sd-trAllSum").textContent = "Tous les participants (" + L.length + ")";
+      $("#sd-trAll").innerHTML = L.length ? L.slice().reverse().map((x) => "<div><b>" + esc(x.prenoms + " " + x.nom) + "</b><span>" + esc(x.universite) + " · " + esc(x.telephone) + "</span><em>" + esc({ inscrit: "Inscrit", gagnant: "Tiré", valide: "Gagnant", refuse: "Refusé" }[x.statut]) + "</em></div>").join("") : '<p class="tm-empty">Pas encore de participant.</p>';
+      grBadges();
+    }
+    // Grand écran : les prénoms défilent, puis le gagnant s'affiche (pour la vidéo du tirage)
+    async function trSuspense(gagnant) {
+      const ov = document.createElement("div"); ov.className = "tr-ov"; ov.innerHTML = '<div class="tr-ovin"><p class="tir-k">SODAF · Tirage au sort étudiant</p><p class="tr-ovname" id="sd-trName">…</p><p class="tr-ovsub" id="sd-trSub">Tirage en cours</p><button type="button" class="btn btn-line tr-ovx">Fermer</button></div>';
+      document.getElementById("sodaf-root").appendChild(ov); ov.querySelector(".tr-ovx").addEventListener("click", () => ov.remove());
+      const noms = (GR.tir || []).map((x) => x.prenoms + " " + x.nom.charAt(0) + "."), el = ov.querySelector("#sd-trName");
+      if (!gagnant) { el.textContent = (GR.tir || []).length + " participants"; ov.querySelector("#sd-trSub").textContent = "Tirage du 1er " + trNomMois($("#sd-trCamp").value); return; }
+      const reduit = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      for (let i = 0, d = 50; !reduit && i < 34 && noms.length; i++, d *= 1.07) { el.textContent = noms[Math.floor(Math.random() * noms.length)]; await new Promise((r) => setTimeout(r, d)); }
+      el.textContent = gagnant.prenoms + " " + gagnant.nom; el.classList.add("win"); ov.querySelector("#sd-trSub").textContent = gagnant.universite + " · à vérifier avant l'annonce";
+    }
+    $("#sd-trCamp").addEventListener("change", trRender);
+    $("#sd-trScreen").addEventListener("click", () => trSuspense(null));
+    $("#sd-trGo").addEventListener("click", async () => {
+      const b = $("#sd-trGo"); b.disabled = true;
+      const id = await run(() => DB.q("rpc/tirage_tirer", { method: "POST", body: { p_campagne: $("#sd-trCamp").value } }));
+      if (id) { await trCharger(); const g = (GR.tirTous || []).find((x) => x.id === id); await trSuspense(g); } else b.disabled = false;
+    });
+    $("#sd-gr").addEventListener("click", async (e) => {
+      const tk = e.target.closest("[data-trok]"); if (tk) { const bx = tk.closest("[data-tr]"), ok = tk.dataset.trok === "1"; bx.querySelectorAll("button").forEach((b) => (b.disabled = true));
+        const r = await run(() => DB.q("rpc/tirage_decider", { method: "POST", body: { p_id: +bx.dataset.tr, p_valide: ok, p_note: bx.querySelector("input").value.trim() || null } }).then(() => true), ok ? "Gagnant validé" : "Refusé : on tire un autre gagnant");
+        if (!r) { bx.querySelectorAll("button").forEach((b) => (b.disabled = false)); return; }
+        await trCharger(); if (!ok && !$("#sd-trGo").disabled) $("#sd-trGo").click(); return; }
+    });
     $("#sd-gr").addEventListener("click", async (e) => {
       const t = e.target.closest("[data-gr]"); if (t) { grOnglet(t.dataset.gr); if (me.role === "gerant") { if (t.dataset.gr === "demandes") grMarquer("dem", GR.dem.filter((d) => d.statut !== "attente").map((d) => d.id)); if (t.dataset.gr === "decisions") grMarquer("dec", GR.dec.filter((d) => d.avis).map((d) => d.id)); grBadges(); } return; }
       const ok = e.target.closest("[data-ok]"), av = e.target.closest("[data-avis]");
@@ -4760,6 +4894,60 @@ function init(root) {
     });
   }
 
+  // ---- Tirage au sort étudiant : compte à rebours, compteur, participation avec photo de la carte
+  const TIR = { blob: null, t: 0, infos: null };
+  const TMOIS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
+  const tirCampagne = () => { const d = new Date(); return { y: d.getUTCMonth() === 11 ? d.getUTCFullYear() + 1 : d.getUTCFullYear(), m: (d.getUTCMonth() + 1) % 12 }; }; // Lomé = UTC
+  const tirOuvert = () => { const j = new Date().getUTCDate(); return j >= 2 && j <= 28; };
+  function tirHorloge() {
+    const c = tirCampagne(), tirage = Date.UTC(c.y, c.m, 1, 18, 0, 0), fin = Date.UTC(c.y, c.m - 1 < 0 ? 11 : c.m - 1, 28, 23, 59, 59) , now = Date.now();
+    const ouvert = tirOuvert(), cible = tirage, ms = Math.max(0, cible - now), d = Math.floor(ms / 864e5), h = Math.floor(ms / 36e5) % 24, mi = Math.floor(ms / 6e4) % 60, se = Math.floor(ms / 1e3) % 60;
+    const b = $$("#sd-tirCd b"); if (b.length === 4) [d, h, mi, se].forEach((v, i) => (b[i].textContent = String(v).padStart(2, "0")));
+    const mois = TMOIS[c.m]; $("#sd-tirTkMonth").textContent = mois.replace(/^./, (x) => x.toUpperCase()); $("#sd-tirTkDate").textContent = "1er " + ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."][c.m];
+    $$(".sd-tirDay").forEach((e) => (e.textContent = "1er " + mois)); $("#sd-tirClockLab").textContent = "Tirage en direct le 1er " + mois + " à 18 h, dans";
+    $("#sd-tirFormSub").textContent = "Inscriptions jusqu'au 28 " + TMOIS[(c.m + 11) % 12] + " à minuit. Une seule participation par numéro.";
+    return { ouvert, fin };
+  }
+  async function tirPage() {
+    clearInterval(TIR.t); tirHorloge(); TIR.t = setInterval(() => { if ($('section.page[data-page="tirage"]').hidden) { clearInterval(TIR.t); return; } tirHorloge(); }, 1000);
+    try { const r = await DB.q("rpc/tirage_infos", { method: "POST", body: {}, anon: true }); TIR.infos = r; $("#sd-tirN").textContent = r && r.participants != null ? r.participants : "—"; if (r && r.ouvert === false) tirFerme(); } catch (e) { $("#sd-tirN").textContent = "—"; }
+    if (!tirOuvert()) tirFerme();
+    const deja = S.get("tirTicket", null); if (deja && deja.c === (TIR.infos && TIR.infos.campagne)) tirTicket(deja.n, true);
+  }
+  function tirFerme() {
+    const c = tirCampagne(); $("#sd-tirForm").hidden = true; const box = $("#sd-tirClosed"); box.hidden = false;
+    box.innerHTML = '<p class="tir-k2">Inscriptions fermées</p><h2>Tirage le 1er ' + TMOIS[c.m] + '</h2><p>Les inscriptions pour le tirage suivant rouvrent le 2 du mois. Reviens tenter ta chance.</p>';
+  }
+  function tirTicket(n, deja) {
+    const c = tirCampagne(), num = String(n).padStart(4, "0"), url = location.origin + "/#tirage";
+    const msg = "Le permis à 15 000 F au lieu de 60 000 F chez SODAF Auto-École. 2 étudiants gagnants tirés au sort le 1er " + TMOIS[c.m] + ". C'est gratuit, inscris-toi ici : " + url;
+    $("#sd-tirForm").hidden = true; const box = $("#sd-tirDone"); box.hidden = false;
+    box.innerHTML = '<div class="tir-myticket"><div class="mt-l"><p class="tir-k">Ton ticket</p><b>N° ' + num + '</b><span>Tirage le 1er ' + TMOIS[c.m] + ' à 18 h, en direct</span></div><div class="mt-r"><span>' + (deja ? "Tu es déjà inscrit ce mois-ci" : "Participation enregistrée") + '</span><b>Bonne chance</b></div></div>' +
+      '<p class="tir-donep">On t\'appelle et on t\'écrit sur WhatsApp si tu gagnes. Plus tes amis jouent, plus on parle de SODAF dans ton université : partage le tirage.</p>' +
+      '<div class="tir-share"><a class="btn btn-wa" target="_blank" rel="noopener" href="https://wa.me/?text=' + encodeURIComponent(msg) + '">Partager sur WhatsApp</a><button class="btn btn-line" type="button" data-copy="' + escHtml(url) + '">Copier le lien</button></div>';
+  }
+  $("#sd-tirCarte").addEventListener("change", async (e) => {
+    const f = e.target.files && e.target.files[0]; if (!f) return; const er = $("#sd-tirErr");
+    try { TIR.blob = await photoCompresse(f, 1400, false); $("#sd-tirCardPh").innerHTML = '<img src="' + URL.createObjectURL(TIR.blob) + '" alt="Ta carte d\'étudiant">'; $("#sd-tirCardBox").classList.add("on"); $("#sd-tirCardBtn").textContent = "Reprendre la photo"; er.hidden = true; }
+    catch (x) { TIR.blob = null; er.textContent = "Cette photo n'a pas pu être lue. Reprends-la avec l'appareil photo."; er.hidden = false; }
+  });
+  $("#sd-tirForm").addEventListener("submit", async (e) => {
+    e.preventDefault(); const er = $("#sd-tirErr"), btn = $("#sd-tirGo");
+    const nom = $("#sd-tirNom").value.trim(), pre = $("#sd-tirPre").value.trim(), tel = $("#sd-tirTel").value.replace(/\D/g, "").replace(/^228(?=\d{8}$)/, ""), uni = $("#sd-tirUniv").value.trim();
+    const bad = nom.length < 2 ? "Écris ton nom." : pre.length < 2 ? "Écris tes prénoms." : tel.length !== 8 ? "Ton numéro doit avoir 8 chiffres (après le +228)." : uni.length < 2 ? "Indique ton université ou ton école." : !TIR.blob ? "Ajoute la photo de ta carte d'étudiant." : !$("#sd-tirOk1").checked ? "Le tirage est réservé aux étudiants de 18 ans ou plus." : !$("#sd-tirOk2").checked ? "Coche la case pour accepter le règlement." : "";
+    if (bad) { er.textContent = bad; er.hidden = false; return; }
+    er.hidden = true; btn.disabled = true; btn.textContent = "Envoi…";
+    const c = tirCampagne(), camp = c.y + "-" + String(c.m + 1).padStart(2, "0");
+    try {
+      const path = await photoEnvoyer(camp + "/" + Date.now() + "-" + Math.random().toString(36).slice(2, 10) + ".jpg", TIR.blob, null, "tirage");
+      const r = await DB.q("rpc/tirage_participer", { method: "POST", body: { p_nom: nom, p_prenoms: pre, p_telephone: tel, p_universite: uni, p_photo: path }, anon: true });
+      S.set("tirTicket", { c: r.campagne, n: r.numero }); tirTicket(r.numero, r.deja);
+      const n = $("#sd-tirN"); if (!r.deja && /^\d+$/.test(n.textContent)) n.textContent = +n.textContent + 1;
+    } catch (x) { er.textContent = navigator.onLine === false ? "Pas de connexion internet. Réessaie quand tu as du réseau." : (x && x.message && !/^Erreur \d/.test(x.message) ? x.message : "L'envoi n'a pas marché. Vérifie ta connexion et réessaie."); er.hidden = false; }
+    btn.disabled = false; btn.textContent = "Valider ma participation";
+  });
+  root.addEventListener("click", (e) => { const a = e.target.closest("[data-tirgo]"); if (!a) return; e.preventDefault(); const t = $("#tirage-jouer"); if (t) t.scrollIntoView({ behavior: "smooth", block: "start" }); });
+
   function route() {
     const APP = !!window.SODAF_APP;
     if (!APP && (location.hash === "#documents" || location.hash.startsWith("#equipe"))) { location.replace("/equipe/" + (location.hash.startsWith("#equipe-") ? location.hash : "")); return; }
@@ -4768,6 +4956,7 @@ function init(root) {
     if (APP && !["equipe", "classe", "recu"].includes(p)) { if (location.hash && location.hash !== "#accueil") window.open("/" + location.hash, "_blank"); history.replaceState(null, "", "#equipe"); p = "equipe"; }
     if (p === "recu") rcPublic(h.slice(5));
     if (p === "inscrire") inscPage(h.slice(9));
+    if (p === "tirage") tirPage();
     $$("section.page").forEach((s) => (s.hidden = s.dataset.page !== p));
     $$("#sd-nav [data-nav]").forEach((a) => a.classList.toggle("on", a.dataset.nav === p));
     nav.classList.remove("open"); burger.setAttribute("aria-expanded", "false");
@@ -5139,6 +5328,106 @@ background:radial-gradient(circle at 35% 30%,#fff 0%,#F1F7F4 55%,#D5E7DE 100%);b
 .tm-auj>div{padding:14px}.tm-auj .tm-mon{margin:0}.tm-auj .tm-mon>.card{box-shadow:none;border:1px solid var(--line)}
 html.ms-plein,html.ms-plein body{overflow:hidden}
 html{scrollbar-gutter:stable}
+/* ===== Tirage au sort étudiant : asphalte, marquage jaune, ticket gagnant ===== */
+#sodaf-root .navtir{color:#B07F00!important;font-weight:700}
+#sodaf-root .tirband{display:grid;grid-template-columns:auto 1fr auto;grid-template-areas:"k t go" "k s go";gap:2px 18px;align-items:center;margin-top:18px;padding:16px 20px;border-radius:16px;background:#15191E;color:#fff;text-decoration:none;position:relative;overflow:hidden}
+#sodaf-root .tirband::before{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:repeating-linear-gradient(90deg,#F2B705 0 24px,transparent 24px 40px)}
+#sodaf-root .tb-k{grid-area:k;font:800 .7rem/1.2 var(--f-ui);letter-spacing:.12em;text-transform:uppercase;color:#15191E;background:#F2B705;border-radius:8px;padding:8px 10px;max-width:120px;text-align:center}
+#sodaf-root .tb-t{grid-area:t;font:700 1.35rem/1.1 var(--f-display)}#sodaf-root .tb-t b{color:#F2B705}
+#sodaf-root .tb-s{grid-area:s;font-size:.86rem;color:#AEB6BF}
+#sodaf-root .tb-go{grid-area:go;font:700 .92rem var(--f-ui);background:#fff;color:#15191E;border-radius:999px;padding:.7em 1.2em;white-space:nowrap}
+#sodaf-root .tirband:hover .tb-go{background:#F2B705}
+@media (max-width:640px){#sodaf-root .tirband{grid-template-columns:1fr;grid-template-areas:"k" "t" "s" "go";justify-items:start}#sodaf-root .tb-k{max-width:none}}
+#sodaf-root .tir-hero{position:relative;background:radial-gradient(1200px 500px at 85% -10%,rgba(242,183,5,.18),transparent 60%),radial-gradient(900px 500px at -10% 110%,rgba(11,110,79,.35),transparent 60%),#121519;color:#fff;overflow:hidden;padding:56px 0 84px}
+#sodaf-root .tir-hero::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.06) 1px,transparent 1.4px);background-size:22px 22px;pointer-events:none}
+#sodaf-root .tir-in{position:relative;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:40px;align-items:center}
+#sodaf-root .tir-lane{position:absolute;left:0;right:0;bottom:26px;height:6px;background:repeating-linear-gradient(90deg,#F2B705 0 48px,transparent 48px 80px);opacity:.95;animation:tirlane 1.6s linear infinite}
+@keyframes tirlane{to{background-position:80px 0}}
+#sodaf-root .tir-k{margin:0;font:800 .74rem/1.3 var(--f-ui);letter-spacing:.14em;text-transform:uppercase;color:#F2B705}
+#sodaf-root .tir-hero h1{margin:14px 0 0;font:700 clamp(3rem,8.5vw,5.6rem)/.9 var(--f-display);letter-spacing:-.01em;color:#fff}
+#sodaf-root .tir-px{color:#F2B705;white-space:nowrap;position:relative}
+#sodaf-root .tir-lead{margin:18px 0 0;max-width:46ch;font-size:1.08rem;color:#C9D0D6}
+#sodaf-root .tir-lead s{color:#8D97A1}#sodaf-root .tir-lead b{color:#fff}
+#sodaf-root .tir-ctas{display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px;margin-top:26px}
+#sodaf-root .tir-btn{background:#F2B705;color:#15191E;font-weight:800;font-size:1.08rem;padding:.95em 1.7em;border-radius:999px;box-shadow:0 10px 30px -10px rgba(242,183,5,.7);transition:transform .15s}
+#sodaf-root .tir-btn:hover{transform:translateY(-2px);background:#FFC61A}
+#sodaf-root .tir-count{font-size:.95rem;color:#C9D0D6}#sodaf-root .tir-count b{color:#fff;font:700 1.35rem var(--f-display);font-variant-numeric:tabular-nums}
+#sodaf-root .tir-clock{margin-top:30px}
+#sodaf-root .tir-ck{margin:0 0 8px;font:600 .82rem var(--f-ui);color:#AEB6BF}
+#sodaf-root .tir-cd{display:flex;gap:8px}
+#sodaf-root .tir-cd div{min-width:68px;padding:10px 8px 8px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);text-align:center}
+#sodaf-root .tir-cd b{display:block;font:700 2.1rem/1 var(--f-display);font-variant-numeric:tabular-nums;color:#fff}
+#sodaf-root .tir-cd span{font-size:.72rem;color:#AEB6BF;text-transform:uppercase;letter-spacing:.08em}
+/* Ticket */
+#sodaf-root .tir-ticket{position:relative;justify-self:center;width:min(100%,360px);background:#FBF6E6;color:#15191E;border-radius:20px;box-shadow:0 30px 60px -20px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.1);transform:rotate(3deg);overflow:hidden;animation:tirfloat 6s ease-in-out infinite}
+@keyframes tirfloat{50%{transform:rotate(1.5deg) translateY(-8px)}}
+#sodaf-root .tir-ticket::after{content:"";position:absolute;top:0;bottom:0;width:60%;left:-80%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-18deg);animation:tirshine 4.5s ease-in-out infinite}
+@keyframes tirshine{0%,55%{left:-80%}100%{left:140%}}
+#sodaf-root .tk-top{display:flex;justify-content:space-between;padding:14px 18px;background:#15191E;color:#F2B705;font:800 .72rem var(--f-ui);letter-spacing:.12em;text-transform:uppercase}
+#sodaf-root .tk-mid{padding:20px 18px 14px;text-align:center}
+#sodaf-root .tk-lab{margin:0;font:700 .9rem var(--f-ui);color:#5B6570}
+#sodaf-root .tk-old{margin:10px 0 0;font:700 1.4rem var(--f-display);color:#8D97A1;text-decoration:line-through;text-decoration-color:#D7263D;text-decoration-thickness:3px}
+#sodaf-root .tk-new{margin:0;font:700 4rem/1 var(--f-display);color:#0B6E4F;letter-spacing:-.01em}
+#sodaf-root .tk-inc{display:inline-block;margin:10px 0 0;font:800 .78rem var(--f-ui);letter-spacing:.06em;text-transform:uppercase;background:#F2B705;border-radius:999px;padding:.4em .9em}
+#sodaf-root .tk-cut{position:relative;height:0;border-top:2.5px dashed #CDBF94;margin:6px 14px}
+#sodaf-root .tk-cut::before,#sodaf-root .tk-cut::after{content:"";position:absolute;top:-14px;width:28px;height:28px;border-radius:50%;background:#121519}
+#sodaf-root .tk-cut::before{left:-30px}#sodaf-root .tk-cut::after{right:-30px}
+#sodaf-root .tk-bot{display:grid;grid-template-columns:repeat(3,1fr);padding:14px 18px 10px;text-align:center}
+#sodaf-root .tk-bot span{display:block;font:700 .68rem var(--f-ui);letter-spacing:.1em;text-transform:uppercase;color:#7F8994}
+#sodaf-root .tk-bot b{font:700 1.3rem var(--f-display)}
+#sodaf-root .tk-bars{height:34px;margin:4px 18px 16px;background:repeating-linear-gradient(90deg,#15191E 0 2px,transparent 2px 4px,#15191E 4px 7px,transparent 7px 9px,#15191E 9px 10px,transparent 10px 14px);opacity:.85}
+/* Sections */
+#sodaf-root .tir-sh{margin:48px 0 16px}#sodaf-root .tir .wrap.sec>.tir-sh:first-child{margin-top:0}
+#sodaf-root .tir-sh h2{margin:6px 0 0}
+#sodaf-root .tir-k2{margin:0;font:800 .74rem/1.3 var(--f-ui);letter-spacing:.13em;text-transform:uppercase;color:#B07F00}
+#sodaf-root .tir-gifts{display:grid;grid-template-columns:minmax(0,1.25fr) repeat(2,minmax(0,1fr));gap:12px}
+#sodaf-root .tg{position:relative;border:1px solid #DDE1E5;border-radius:16px;padding:18px;background:#fff;display:flex;flex-direction:column;gap:6px;min-width:0}
+#sodaf-root .tg b{font:700 1.15rem/1.15 var(--f-display)}#sodaf-root .tg p{margin:0;font-size:.9rem;color:#5B6570}
+#sodaf-root .tg-v{align-self:flex-start;font:800 .74rem var(--f-ui);letter-spacing:.06em;text-transform:uppercase;background:#EEF8F2;color:#0B6E4F;border-radius:999px;padding:.35em .75em}
+#sodaf-root .tg-main{grid-row:span 2;background:#15191E;color:#fff;border-color:#15191E;justify-content:flex-end;min-height:220px;background-image:repeating-linear-gradient(90deg,#F2B705 0 30px,transparent 30px 52px);background-size:100% 4px;background-repeat:no-repeat;background-position:0 100%}
+#sodaf-root .tg-main b{font-size:1.9rem;color:#fff}#sodaf-root .tg-main p{color:#C9D0D6}#sodaf-root .tg-main .tg-v{background:#F2B705;color:#15191E}
+#sodaf-root .tir-sum{display:flex;align-items:center;justify-content:center;gap:22px;flex-wrap:wrap;margin-top:14px;padding:18px 22px;border-radius:16px;background:#FBF6E6;border:1px solid #EADFB8}
+#sodaf-root .tir-sum div span{display:block;font:700 .72rem var(--f-ui);letter-spacing:.1em;text-transform:uppercase;color:#7F8994}
+#sodaf-root .tir-sum b{font:700 1.7rem var(--f-display)}
+#sodaf-root .tir-arrow{width:46px;height:3px;background:#15191E;position:relative}#sodaf-root .tir-arrow::after{content:"";position:absolute;right:-2px;top:-5px;border:6.5px solid transparent;border-left:9px solid #15191E;border-right:0}
+#sodaf-root .tir-pay b{color:#0B6E4F;font-size:2.3rem}
+#sodaf-root .tir-steps{list-style:none;margin:0;padding:0;counter-reset:ts;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+#sodaf-root .tir-steps li{counter-increment:ts;position:relative;padding:22px 18px 18px;border-radius:16px;background:#fff;border:1px solid #DDE1E5;display:grid;gap:6px}
+#sodaf-root .tir-steps li::before{content:counter(ts);font:700 2.6rem/1 var(--f-display);color:#F2B705;-webkit-text-stroke:1.5px #15191E}
+#sodaf-root .tir-steps b{font:700 1.2rem var(--f-display)}#sodaf-root .tir-steps b span{font:inherit;color:inherit}#sodaf-root .tir-steps li{align-content:start}#sodaf-root .tir-steps span{font-size:.92rem;color:#5B6570}
+/* Formulaire */
+#sodaf-root .tir-play{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:20px;margin-top:48px;scroll-margin-top:90px;align-items:start}
+#sodaf-root .tir-form,#sodaf-root .tir-done,#sodaf-root .tir-closed{background:#fff;border:2px solid #15191E;border-radius:20px;padding:26px;box-shadow:8px 8px 0 #F2B705}
+#sodaf-root .tir-fh{margin-bottom:16px}#sodaf-root .tir-fh h2{margin:4px 0 0}#sodaf-root .tir-fh p:not(.tir-k2){margin:6px 0 0;color:#5B6570;font-size:.92rem}
+#sodaf-root .tir-lab{display:block;font-weight:600;margin-bottom:6px}
+#sodaf-root .tir-card{display:flex;gap:14px;align-items:center;padding:12px;border:2px dashed #C9CFD5;border-radius:14px;cursor:pointer;background:#F7F9FA}
+#sodaf-root .tir-card:hover{border-color:#15191E}
+#sodaf-root .tir-card.on{border-style:solid;border-color:#0B6E4F;background:#EEF8F2}
+#sodaf-root .tir-cardph{flex:none;width:96px;height:64px;border-radius:10px;display:grid;place-items:center;background:#fff;color:#9AA3AB;overflow:hidden;border:1px solid #E1E5E9}
+#sodaf-root .tir-cardph img{width:100%;height:100%;object-fit:cover}
+#sodaf-root .tir-cardtx b{display:block;font-weight:700}#sodaf-root .tir-cardtx small{display:block;color:#5B6570;font-size:.84rem;margin-top:2px}
+#sodaf-root .tir-check{display:flex;gap:10px;align-items:flex-start;margin-top:10px;font-size:.93rem;cursor:pointer}
+#sodaf-root .tir-check input{width:20px;height:20px;flex:none;margin-top:2px;accent-color:#0B6E4F}
+#sodaf-root .tir-err{color:var(--red);font-weight:600;margin:12px 0 0}
+#sodaf-root .tir-go{width:100%;justify-content:center;margin-top:16px}
+#sodaf-root .tir-side{display:grid;gap:14px}
+#sodaf-root .tir-why{border-radius:16px;padding:18px;background:#fff;border:1px solid #DDE1E5;display:grid;gap:6px;justify-items:start}
+#sodaf-root .tir-why b{font:700 1.3rem var(--f-display)}#sodaf-root .tir-why p:not(.tir-k2){margin:0;color:#5B6570;font-size:.92rem}#sodaf-root .tir-why p b{font:inherit;font-weight:700;color:#15191E}
+#sodaf-root .tir-myticket{display:grid;grid-template-columns:1.3fr 1fr;border-radius:16px;overflow:hidden;background:#15191E;color:#fff}
+#sodaf-root .mt-l{padding:20px;border-right:2.5px dashed #3A434C}#sodaf-root .mt-l b{display:block;font:700 3rem/1 var(--f-display);color:#F2B705;margin-top:6px}#sodaf-root .mt-l span{display:block;color:#AEB6BF;font-size:.86rem;margin-top:6px}
+#sodaf-root .mt-r{padding:20px;display:grid;align-content:center;gap:4px;background:#0B6E4F}#sodaf-root .mt-r span{font-size:.86rem;color:#D8F0E4}#sodaf-root .mt-r b{font:700 1.6rem var(--f-display)}
+#sodaf-root .tir-donep{margin:16px 0 0;color:#3D444D}
+#sodaf-root .tir-share{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+#sodaf-root .tir-closed h2{margin:6px 0 0}#sodaf-root .tir-closed p:not(.tir-k2){margin:8px 0 0;color:#5B6570}
+/* Questions et règlement */
+#sodaf-root .tir-faq{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+#sodaf-root .tir-faq details,#sodaf-root .tir-rules{border:1px solid #DDE1E5;border-radius:14px;background:#fff;padding:14px 16px}
+#sodaf-root .tir-faq summary,#sodaf-root .tir-rules summary{cursor:pointer;font-weight:700}
+#sodaf-root .tir-faq p{margin:8px 0 0;color:#5B6570;font-size:.93rem}
+#sodaf-root .tir-rules{margin-top:14px}#sodaf-root .tir-rules ol{margin:10px 0 0;padding-left:1.2em;display:grid;gap:6px;font-size:.88rem;color:#5B6570}
+@media (max-width:900px){#sodaf-root .tir-in{grid-template-columns:1fr}#sodaf-root .tir-ticket{transform:rotate(2deg);max-width:320px}#sodaf-root .tir-gifts{grid-template-columns:repeat(2,minmax(0,1fr))}#sodaf-root .tg-main{grid-column:span 2;grid-row:auto;min-height:0}#sodaf-root .tir-play{grid-template-columns:1fr}#sodaf-root .tir-steps{grid-template-columns:1fr}}
+@media (max-width:560px){#sodaf-root .tir-hero{padding:36px 0 70px}#sodaf-root .tir-cd div{min-width:0;flex:1}#sodaf-root .tir-cd b{font-size:1.7rem}#sodaf-root .tir-faq{grid-template-columns:1fr}#sodaf-root .tir-gifts{grid-template-columns:1fr}#sodaf-root .tg-main{grid-column:auto}#sodaf-root .tir-form,#sodaf-root .tir-done,#sodaf-root .tir-closed{padding:20px 16px;box-shadow:5px 5px 0 #F2B705}#sodaf-root .tir-myticket{grid-template-columns:1fr}#sodaf-root .mt-l{border-right:0;border-bottom:2.5px dashed #3A434C}#sodaf-root .tir-ctas .tir-btn{width:100%;justify-content:center}}
+@media (prefers-reduced-motion:reduce){#sodaf-root .tir-lane,#sodaf-root .tir-ticket,#sodaf-root .tir-ticket::after{animation:none}}
 /* Lien d'inscription : sections nettes, séparateurs, cartes homogènes */
 #sodaf-root .insc-form{gap:24px}
 #sodaf-root .insc-step{padding:24px 22px 22px;border:1px solid #DDE1E5;border-radius:18px;box-shadow:0 14px 34px -26px rgba(21,25,30,.3)}
@@ -5282,6 +5571,27 @@ html{scrollbar-gutter:stable}
 .gr-ch{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px;margin-top:8px}
 .gr-ch span{background:var(--soft);border-radius:8px;padding:6px 9px;font-size:.84rem}.gr-ch b{display:block;font-size:1rem}
 .gr-grow{flex:1}
+.tr-hd{display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap}.tr-hd .field{margin:0;min-width:220px}
+.tr-stats{display:flex;gap:10px;flex-wrap:wrap;flex:1}.tr-stats>div{background:var(--soft);border-radius:12px;padding:8px 14px}.tr-stats b{display:block;font:700 1.4rem var(--f-display)}.tr-stats span{font-size:.8rem;color:var(--muted)}
+.tr-top{font-size:.85rem}.tr-top span{display:block}
+.tr-act{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:14px 0}
+.tr-wins{display:grid;gap:10px}
+.tr-win{display:grid;grid-template-columns:minmax(0,260px) 1fr;gap:16px;border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff}
+.tr-win.st-gagnant{border-color:#E8A317;box-shadow:inset 3px 0 0 #E8A317}.tr-win.st-valide{box-shadow:inset 3px 0 0 var(--green)}.tr-win.st-refuse{opacity:.6}
+.tr-card{width:100%;aspect-ratio:3/2;object-fit:contain;background:#F1F3F5;border-radius:10px;cursor:zoom-in}
+.tr-who{display:grid;gap:4px;align-content:start}.tr-who b{font:700 1.3rem var(--f-display)}.tr-who span,.tr-who small{color:var(--muted);font-size:.86rem}.tr-who em{justify-self:start}
+.tr-q{margin:6px 0 0;font-weight:600;font-size:.9rem}
+.tr-all{margin-top:14px}.tr-all summary{cursor:pointer;font-weight:700}
+.tr-alllist{display:grid;gap:4px;margin-top:8px;max-height:360px;overflow:auto}.tr-alllist div{display:flex;gap:10px;align-items:baseline;padding:6px 0;border-bottom:1px solid var(--line);font-size:.88rem}.tr-alllist span{color:var(--muted);flex:1}.tr-alllist em{font-style:normal;font-size:.78rem;font-weight:700}
+.tr-ov{position:fixed;inset:0;z-index:200;background:#121519;display:grid;place-items:center;padding:24px;text-align:center}
+.tr-ov::after{content:"";position:absolute;left:0;right:0;bottom:40px;height:8px;background:repeating-linear-gradient(90deg,#F2B705 0 60px,transparent 60px 100px)}
+.tr-ovin{display:grid;gap:18px;justify-items:center}
+.tr-ovname{margin:0;font:700 clamp(2.6rem,9vw,6.5rem)/1 var(--f-display);color:#fff}
+.tr-ovname.win{color:#F2B705;animation:trwin .6s ease-out}
+@keyframes trwin{from{transform:scale(.7);opacity:0}to{transform:none;opacity:1}}
+.tr-ovsub{margin:0;color:#AEB6BF;font-size:1.1rem}
+.tr-ov .tr-ovx{color:#fff;border-color:#3A434C;margin-top:20px}
+@media (max-width:640px){.tr-win{grid-template-columns:1fr}}
 .ph{display:inline-grid;place-items:center;flex:none;border-radius:50%;overflow:hidden;background:#E3E7EB;color:#5B6670;font-style:normal;font-weight:800;vertical-align:middle}
 .ph img{width:100%;height:100%;object-fit:cover;display:block}.ph span{font-size:.75em;letter-spacing:.02em}
 .ph-sm{width:30px;height:30px;font-size:13px;margin-right:8px}.ph-md{width:40px;height:40px;font-size:15px;margin-right:10px;align-self:center}.ph-lg{width:76px;height:76px;font-size:24px}.ph-xl{width:110px;height:110px;font-size:34px;margin:6px 0 8px}
