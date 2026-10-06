@@ -21,11 +21,6 @@ const DB = {
   login(email, password) { return this._auth("token?grant_type=password", { email, password }); },
   async refresh() { const s = this.session; if (!s) throw new Error("Session expirée"); return this._auth("token?grant_type=refresh_token", { refresh_token: s.refresh }); },
   async logout() { const s = this.session; this.session = null; if (s) fetch(SB_URL + "/auth/v1/logout", { method: "POST", headers: { apikey: SB_KEY, Authorization: "Bearer " + s.access } }).catch(() => {}); },
-  async changePassword(password) {
-    const t = await this.token();
-    const r = await fetch(SB_URL + "/auth/v1/user", { method: "PUT", headers: { apikey: SB_KEY, Authorization: "Bearer " + t, "Content-Type": "application/json" }, body: JSON.stringify({ password }) });
-    if (!r.ok) { const j = await r.json().catch(() => ({})); throw new Error(j.msg || j.message || "Mot de passe refusé"); }
-  },
   async token() { let s = this.session; if (!s) return null; if (Date.now() > s.exp - 60000) s = await this.refresh(); return s.access; },
   // Requête à l'API de la base. path ex. "eleves?select=*&order=cree_le.desc"
   async q(path, opt = {}) {
@@ -1698,8 +1693,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <a class="btn btn-line btn-sm" href="/" style="margin-top:16px">Retour au site</a>
 </div>
 <div id="sd-teamPanel" hidden>
-<div class="tm-top"><div><p class="eyebrow" id="sd-tmRole">Espace équipe SODAF</p><h2 id="sd-tmHello">Bonjour</h2><p class="tm-today" id="sd-tmToday"></p></div><div class="tm-acc"><a class="tm-visio" id="sd-tmVisio" href="https://meet.google.com/new" target="_blank" rel="noopener" title="Ouvrir une visio Google Meet"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="M16 10l6-4v12l-6-4z"/></svg>Visio</a><a class="tm-visio-inv" id="sd-tmVisioWa" target="_blank" rel="noopener" hidden>Inviter l'équipe</a><button class="linkbtn" type="button" id="sd-tmPwBtn">Changer mon mot de passe</button><button class="linkbtn" type="button" id="sd-teamOut">Se déconnecter</button></div></div>
-<form id="sd-tmPwForm" class="card tmpw" hidden novalidate><label for="sd-tmPw1">Nouveau mot de passe (8 caractères minimum)</label><div><input id="sd-tmPw1" type="password" autocomplete="new-password"><button class="btn btn-green btn-sm" type="submit">Enregistrer</button></div><p id="sd-tmPwMsg" class="tm-note"></p></form>
+<div class="tm-top"><div><p class="eyebrow" id="sd-tmRole">Espace équipe SODAF</p><h2 id="sd-tmHello">Bonjour</h2><p class="tm-today" id="sd-tmToday"></p></div><div class="tm-acc"><a class="tm-visio" id="sd-tmVisio" href="https://meet.google.com/new" target="_blank" rel="noopener" title="Ouvrir une visio Google Meet"><span class="tv-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="14" height="12" rx="3"/><path d="M16 10.5l5.2-3.2a.6.6 0 0 1 .8.5v8.4a.6.6 0 0 1-.8.5L16 13.5z"/></svg><i class="tv-live"></i></span><span class="tv-tx"><b>Visio</b><small>Google Meet</small></span></a><a class="tm-visio-inv" id="sd-tmVisioWa" target="_blank" rel="noopener" hidden>Inviter l'équipe</a><button class="linkbtn" type="button" id="sd-teamOut">Se déconnecter</button></div></div>
 <div id="sd-tmToast" class="tm-toast" hidden></div>
 <div class="tm-tabs" role="tablist" id="sd-tmTabs">
 <button role="tab" data-t="dir" aria-selected="false" hidden><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></i><b>Direction</b><small>Chiffres du mois, à surveiller</small></button>
@@ -2760,12 +2754,6 @@ function init(root) {
       b.disabled = true; await run(() => DB.q("rpc/compte_activer", { method: "POST", body: { p_id: b.dataset.cpt, p_actif: on } }), on ? "Compte réactivé" : "Compte désactivé : il ne voit plus rien"); loadSec();
     });
     $("#sd-teamOut").addEventListener("click", async () => { rtFermer(); AUD.pause(); await DB.logout(); me = null; show(false); });
-    $("#sd-tmPwBtn").addEventListener("click", () => { $("#sd-tmPwForm").hidden = !$("#sd-tmPwForm").hidden; });
-    $("#sd-tmPwForm").addEventListener("submit", async (e) => {
-      e.preventDefault(); const v = $("#sd-tmPw1").value, m = $("#sd-tmPwMsg");
-      if (v.length < 8) { m.textContent = "8 caractères minimum."; return; }
-      try { await DB.changePassword(v); m.textContent = "✓ Mot de passe changé."; $("#sd-tmPw1").value = ""; } catch (ex) { m.textContent = "Erreur : " + ex.message; }
-    });
 
     // Boutons Appeler / WhatsApp d'un élève (moniteur : séances du jour, liste de présence, fiche courte)
     const contactEl = (x, cls) => { const n = waNum(x && x.telephone); return n ? '<span class="' + (cls || "ct-btns") + '"><a class="ct-tel" href="tel:+228' + n + '" aria-label="Appeler ' + esc(x.nom) + '"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg><span>Appeler</span></a><a class="ct-wa" href="https://wa.me/228' + n + '" target="_blank" rel="noopener" aria-label="WhatsApp ' + esc(x.nom) + '"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg><span>WhatsApp</span></a></span>' : ""; };
@@ -4783,8 +4771,21 @@ html:has(#sodaf-root.app-mode),body:has(#sodaf-root.app-mode){background:#ECEFEE
 .mc-nt{margin:10px 0 0}.mc-nt summary{cursor:pointer;font-size:.88rem;color:var(--muted)}.mc-nt input{width:100%;margin-top:6px}
 .tm-checks input[disabled]+*{opacity:1}
 
-.tm-visio{display:inline-flex;align-items:center;gap:7px;background:var(--green);color:#fff!important;border-radius:999px;padding:.45em 1em;font-weight:700;font-size:.92rem;text-decoration:none!important;box-shadow:0 1px 0 rgba(0,0,0,.08)}
-.tm-visio:hover{filter:brightness(1.08)}.tm-visio:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+.tm-visio{position:relative;display:inline-flex;align-items:center;gap:10px;padding:6px 18px 6px 6px;border-radius:999px;color:#fff!important;text-decoration:none!important;
+background:linear-gradient(180deg,#25B377 0%,#14915D 48%,#0E7A4F 100%);
+box-shadow:inset 0 1px 0 rgba(255,255,255,.45),inset 0 -2px 0 rgba(0,0,0,.18),0 5px 0 #075236,0 9px 16px -4px rgba(7,82,54,.55);
+transform:translateY(0);transition:transform .12s ease,box-shadow .12s ease,filter .12s ease;margin-bottom:5px}
+.tm-visio::after{content:"";position:absolute;left:14px;right:14px;top:3px;height:42%;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.32),rgba(255,255,255,0));pointer-events:none}
+.tm-visio .tv-ic{position:relative;display:grid;place-items:center;width:38px;height:38px;border-radius:50%;color:#0E7A4F;
+background:radial-gradient(circle at 35% 30%,#fff 0%,#F1F7F4 55%,#D5E7DE 100%);box-shadow:inset 0 -2px 3px rgba(0,0,0,.12),0 2px 4px rgba(0,0,0,.22)}
+.tm-visio .tv-live{position:absolute;top:1px;right:1px;width:11px;height:11px;border-radius:50%;background:#F2B100;box-shadow:0 0 0 2px #fff;animation:tvpulse 2s ease-in-out infinite}
+@keyframes tvpulse{0%,100%{box-shadow:0 0 0 2px #fff,0 0 0 2px rgba(242,177,0,.6)}50%{box-shadow:0 0 0 2px #fff,0 0 0 7px rgba(242,177,0,0)}}
+.tm-visio .tv-tx{display:flex;flex-direction:column;line-height:1.05;text-shadow:0 1px 0 rgba(0,0,0,.25)}
+.tm-visio .tv-tx b{font:800 1.02rem var(--f-ui);letter-spacing:.01em}.tm-visio .tv-tx small{font-size:.7rem;font-weight:600;opacity:.85;letter-spacing:.03em}
+.tm-visio:hover{transform:translateY(-1px);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 -2px 0 rgba(0,0,0,.18),0 6px 0 #075236,0 12px 20px -4px rgba(7,82,54,.55);filter:brightness(1.05)}
+.tm-visio:active{transform:translateY(4px);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),inset 0 -1px 0 rgba(0,0,0,.18),0 1px 0 #075236,0 3px 6px -2px rgba(7,82,54,.5)}
+@media (prefers-reduced-motion:reduce){.tm-visio,.tm-visio .tv-live{transition:none;animation:none}}
+.tm-visio:focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
 .tm-visio-inv{font-size:.88rem;font-weight:600;color:var(--ink)!important;border-bottom:2px solid var(--yellow);text-decoration:none!important}
 
 /* Lanceur du Mode classe */
