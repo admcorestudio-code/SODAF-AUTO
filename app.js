@@ -1838,7 +1838,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="tm-pane" data-pane="msg" role="tabpanel" hidden>
 <p class="tm-role">Les échanges de l'équipe. Le cadenas indique une conversation privée : seules les personnes nommées en haut de la conversation la lisent. Écris @ pour prévenir quelqu'un, SO12 pour ouvrir la fiche d'un élève, et le trombone (ou glisse le fichier dans la conversation) pour joindre une photo ou un document.</p>
 <div class="ms-notif" id="sd-msNotif"></div>
-<div class="ms-wrap card" id="sd-msWrap"><nav class="ms-canaux" id="sd-msCanaux" aria-label="Conversations"></nav><section class="ms-fil"><header class="ms-head"><button type="button" class="ms-back" id="sd-msBack" aria-label="Retour aux conversations"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button><div class="ms-hd" id="sd-msHead"></div></header><div class="ms-list" id="sd-msList" aria-live="polite"><p class="ms-vide">Chargement…</p></div><div class="ms-sug" id="sd-msSug" role="listbox" aria-label="Mentionner" hidden></div><div class="ms-pj" id="sd-msPj" hidden></div><div class="ms-rec" id="sd-msRec" hidden><i class="ms-recdot" aria-hidden="true"></i><b id="sd-msRecT">0:00</b><span>Enregistrement… (3 min au plus)</span><button type="button" class="linkbtn" id="sd-msRecX">Annuler</button><button type="button" class="btn btn-green btn-sm" id="sd-msRecOk">Envoyer le vocal</button></div><form class="ms-form" id="sd-msForm" novalidate><label class="ms-clip" title="Joindre une photo ou un fichier" aria-label="Joindre une photo ou un fichier"><input type="file" id="sd-msFile" multiple accept="image/*,.pdf,.txt,.doc,.docx,.xls,.xlsx"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.4 11.1l-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a2 2 0 0 1-2.8-2.8l8.5-8.5"/></svg></label><button type="button" class="ms-mic" id="sd-msMic" title="Message vocal" aria-label="Enregistrer un message vocal"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5"/></svg></button><textarea id="sd-msTxt" rows="1" maxlength="2000" placeholder="Message… (@ pour mentionner)" aria-label="Message"></textarea><button class="btn btn-green" id="sd-msSend" type="submit" aria-label="Envoyer"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button></form></section></div>
+<div class="ms-wrap card" id="sd-msWrap"><nav class="ms-canaux" id="sd-msCanaux" aria-label="Conversations"></nav><section class="ms-fil"><header class="ms-head"><button type="button" class="ms-back" id="sd-msBack" aria-label="Retour aux conversations"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button><div class="ms-hd" id="sd-msHead"></div></header><div class="ms-list" id="sd-msList" aria-live="polite"><p class="ms-vide">Chargement…</p></div><button type="button" class="ms-bas" id="sd-msBas" hidden></button><div class="ms-sug" id="sd-msSug" role="listbox" aria-label="Mentionner" hidden></div><div class="ms-pj" id="sd-msPj" hidden></div><div class="ms-rec" id="sd-msRec" hidden><i class="ms-recdot" aria-hidden="true"></i><b id="sd-msRecT">0:00</b><span>Enregistrement… (3 min au plus)</span><button type="button" class="linkbtn" id="sd-msRecX">Annuler</button><button type="button" class="btn btn-green btn-sm" id="sd-msRecOk">Envoyer le vocal</button></div><form class="ms-form" id="sd-msForm" novalidate><label class="ms-clip" title="Joindre une photo ou un fichier" aria-label="Joindre une photo ou un fichier"><input type="file" id="sd-msFile" multiple accept="image/*,.pdf,.txt,.doc,.docx,.xls,.xlsx"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.4 11.1l-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a2 2 0 0 1-2.8-2.8l8.5-8.5"/></svg></label><button type="button" class="ms-mic" id="sd-msMic" title="Message vocal" aria-label="Enregistrer un message vocal"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5"/></svg></button><textarea id="sd-msTxt" rows="1" maxlength="2000" placeholder="Message… (@ pour mentionner)" aria-label="Message"></textarea><button class="btn btn-green" id="sd-msSend" type="submit" aria-label="Envoyer"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button></form></section></div>
 </div>
 <div class="tm-pane" data-pane="docs" role="tabpanel" hidden>
 <p class="tm-role">Supports de communication et documents officiels SODAF, à télécharger ou à envoyer à l'imprimeur.</p>
@@ -2726,7 +2726,7 @@ function init(root) {
       if (t === "mon") { const slot = $("#sd-mnPlanSlot"); if (cdSec.parentNode !== slot) slot.appendChild(cdSec); cdSec.hidden = false; (eleves.length ? Promise.resolve() : loadEleves(true)).then(() => loadDay()); }
       else if (cdSec.parentNode !== cdHome.p) { cdHome.p.insertBefore(cdSec, cdHome.n); const on = $('#sd-secNav button[aria-selected="true"]'); cdSec.hidden = !on || on.dataset.s !== "conduite"; }
     };
-    const pick = (t) => { if (t === "sec" && me && me.role === "moniteur") t = "mon"; if (t === "mon" && me && me.role === "secretariat") t = "sec"; tabs.forEach((b) => b.setAttribute("aria-selected", b.dataset.t === t)); panes.forEach((p) => (p.hidden = p.dataset.pane !== t)); try { S.set("tmTab", t); } catch (e) {} placePlanning(t); if (t === "mon" || (t === "sec" && $("#sd-secAuj"))) loadMon(); if (t === "dir") loadDir(); msVoirFil(false); if (t === "msg") { MS.forceBas = true; msRender(); msNotifBox(); if (!isWide()) setTimeout(() => $(".ms-wrap").scrollIntoView({ block: "start" }), 60); } };
+    const pick = (t) => { if (t === "sec" && me && me.role === "moniteur") t = "mon"; if (t === "mon" && me && me.role === "secretariat") t = "sec"; tabs.forEach((b) => b.setAttribute("aria-selected", b.dataset.t === t)); panes.forEach((p) => (p.hidden = p.dataset.pane !== t)); try { S.set("tmTab", t); } catch (e) {} placePlanning(t); if (t === "mon" || (t === "sec" && $("#sd-secAuj"))) loadMon(); if (t === "dir") loadDir(); msVoirFil(false); if (t === "msg") { MS.repere = {}; MS.forceBas = true; msRender(); msNotifBox(); if (!isWide()) setTimeout(() => $(".ms-wrap").scrollIntoView({ block: "start" }), 60); } };
     tabs.forEach((b) => b.addEventListener("click", () => pick(b.dataset.t)));
     const subs = $$("#sd-secNav button[data-s]"), secs = $$(".tm-sec");
     const LOAD = { eleves: () => loadEleves(), conduite: () => loadDay(), paiements: () => loadPay(), devoirs: () => loadDev() };
@@ -2779,7 +2779,7 @@ function init(root) {
     // ---- Messages de l'équipe (canaux) et notifications sur téléphone
     // La base envoie les notifications (fonction « notifier ») ; ici : lire, écrire, compter les non-lus, activer les notifications.
     const VAPID_PUB = "BOMPgiFqajAv-Mqb1SXD7WOGWJVEK_sDJQGULUCSgV5eAm10bOq7WctPkE51LqGgFHqe4S2y2COGmt0DWbWMv8o";
-    const MS = { canaux: [], cur: null, msgs: {}, lu: {}, profs: {}, dernier: null, pret: false, envoi: false, total: 0, forceBas: false, urls: {}, pjs: [], sug: [], sugI: 0 };
+    const MS = { canaux: [], cur: null, msgs: {}, lu: {}, profs: {}, dernier: null, pret: false, envoi: false, total: 0, forceBas: false, urls: {}, pjs: [], repere: {}, arrivees: 0, attente: 0, sug: [], sugI: 0 };
     const msRole = { admin: "Direction", secretariat: "Secrétariat", moniteur: "Moniteur" };
     const msLarge = () => matchMedia("(min-width: 761px)").matches;
     // Téléphone : liste des conversations d'abord, puis la conversation en plein écran (bouton retour ou geste retour du téléphone)
@@ -2864,19 +2864,32 @@ function init(root) {
       if ([...document.querySelectorAll("#sd-msList audio")].some((a) => !a.paused)) { MS.rendreApres = true; return; } // un vocal est en lecture : on rafraîchit à la fin
       MS.rendreApres = false;
       const k = MS.canaux.find((c) => c.id === MS.cur) || MS.canaux[0], list = MS.msgs[k.id] || [];
+      // Repère « Nouveaux messages » : fixé à l'ouverture de la conversation (dernière lecture), il reste en place pendant la lecture
+      if (MS.repere.canal !== k.id) MS.repere = { canal: k.id, le: MS.lu[k.id] || "", aller: true };
+      const iNeuf = list.findIndex((x) => x.auteur !== me.id && x.le > MS.repere.le), nNeuf = iNeuf < 0 ? 0 : list.slice(iNeuf).filter((x) => x.auteur !== me.id).length;
       $("#sd-msHead").innerHTML = '<b><i class="ms-ic' + (k.prive ? " pv" : "") + '">' + (k.prive ? IC_LOCK : "#") + "</i>" + esc(k.nom) + "</b><span>" + esc(msQui(k)) + "</span>";
       let jour = "", html = "";
       list.forEach((x, i) => {
         const j = msJour(x.le), p = MS.profs[x.auteur] || { nom: "Équipe", role: "" }, moi = x.auteur === me.id, pv = list[i - 1], pourMoi = !moi && (x.mentions || []).includes(me.id);
         if (j !== jour) { jour = j; html += '<p class="ms-day"><span>' + esc(j) + "</span></p>"; }
-        const suite = pv && pv.auteur === x.auteur && msJour(pv.le) === j && new Date(x.le) - new Date(pv.le) < 5 * 60000;
+        if (i === iNeuf) html += '<p class="ms-neuf" id="sd-msNeuf"><span>' + (nNeuf > 1 ? nNeuf + " nouveaux messages" : "Nouveau message") + "</span></p>";
+        const suite = i !== iNeuf && pv && pv.auteur === x.auteur && msJour(pv.le) === j && new Date(x.le) - new Date(pv.le) < 5 * 60000;
         html += '<div class="ms-m' + (moi ? " moi" : "") + (suite ? " suite" : "") + (pourMoi ? " pourmoi" : "") + '">' + (suite ? "" : '<p class="ms-who"><i class="ms-av r-' + esc(p.role) + '">' + esc((p.nom || "?").trim()[0]) + "</i><b>" + esc(moi ? "Moi" : msPrenom(p)) + "</b><small>" + esc(msRole[p.role] || "") + " · " + msHeure(x.le) + "</small></p>") + '<div class="ms-b' + (x.fichier && msEstImg(x.fichier) && x.texte === x.fichier.nom ? " seule" : "") + '">' + msBulle(x) + (suite ? '<small class="ms-t">' + msHeure(x.le) + "</small>" : "") + "</div></div>";
       });
       const box = $("#sd-msList"), bas = box.scrollHeight - box.scrollTop - box.clientHeight < 80;
       box.innerHTML = html || '<p class="ms-vide">Aucun message ici pour l\'instant. Écris le premier !</p>';
-      if (bas || MS.forceBas) { box.scrollTop = box.scrollHeight; MS.forceBas = false; }
+      const neuf = $("#sd-msNeuf");
+      if (MS.repere.aller && msFilVu() && !$('.tm-pane[data-pane="msg"]').hidden) { MS.repere.aller = false; MS.forceBas = false; if (neuf) box.scrollTop = Math.max(0, box.scrollTop + neuf.getBoundingClientRect().top - box.getBoundingClientRect().top - 12); else box.scrollTop = box.scrollHeight; } // à l'ouverture : on arrive sur le premier message non lu
+      else if (bas || MS.forceBas) { box.scrollTop = box.scrollHeight; MS.forceBas = false; }
+      else if (MS.arrivees) MS.attente += MS.arrivees;
+      MS.arrivees = 0; msBasBtn();
       msSigner();
       if (msOpen() && msNonLus(k.id)) msLu(k.id);
+    }
+    function msBasBtn() {
+      const box = $("#sd-msList"), b = $("#sd-msBas"); if (!b) return; const loin = box.scrollHeight - box.scrollTop - box.clientHeight > 160;
+      if (!loin) MS.attente = 0; b.hidden = !loin; b.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg>' + (MS.attente ? "<em>" + MS.attente + "</em>" : "");
+      b.setAttribute("aria-label", MS.attente ? MS.attente + " nouveau" + (MS.attente > 1 ? "x" : "") + " message" + (MS.attente > 1 ? "s" : "") + " : descendre" : "Descendre au dernier message");
     }
     // Fichiers : stockage privé, liens temporaires (1 h) demandés à la base pour ceux qui ont le droit de lire la conversation
     async function msSigne(paths) {
@@ -2897,13 +2910,14 @@ function init(root) {
       const box = $("#sd-msList"), bas = box.scrollHeight - box.scrollTop - box.clientHeight < 80;
       imgs.forEach((i) => { if (m[i.dataset.sp]) { i.src = m[i.dataset.sp]; i.addEventListener("load", () => { if (bas) box.scrollTop = box.scrollHeight; }, { once: true }); } });
     }
-    let msTick = 0;
+    let msTick = 0, msBasTic = 0;
     async function msPoll() { // toutes les 5 s quand l'onglet Messages est ouvert, toutes les 20 s sinon
       if (!me || !MS.pret || document.hidden) return;
       msTick++; if (!msOpen() && msTick % 4) return;
       const depuis = MS.dernier ? new Date(new Date(MS.dernier).getTime() - 10000).toISOString() : null;
       let r = null; try { r = await DB.q("messages?select=*&order=le.asc&limit=200" + (depuis ? "&le=gt." + encodeURIComponent(depuis) : "")); } catch (e) { return; }
       const neuf = (r || []).filter(msAjout); if (!neuf.length) return;
+      MS.arrivees = neuf.filter((x) => x.canal === MS.cur && x.auteur !== me.id).length;
       msBadge(); msRender();
       const autres = neuf.filter((x) => x.auteur !== me.id);
       if (autres.length && !msOpen()) { const x = autres[autres.length - 1], p = MS.profs[x.auteur]; toast(((x.mentions || []).includes(me.id) ? msPrenom(p) + " t'a mentionné : " : msPrenom(p) + " : ") + msApercu(x).replace(/^[^:]+ : /, "").slice(0, 70)); }
@@ -2913,6 +2927,8 @@ function init(root) {
     function msOuvrir(c, el) { if (el) { goEleve(el); return; } if (c && MS.msgs[c]) { MS.cur = c; S.set("msCanal", c); } pick("msg"); if (c) { msVoirFil(true); MS.forceBas = true; msRender(); } }
     if ("serviceWorker" in navigator) navigator.serviceWorker.addEventListener("message", (e) => { const u = e.data && e.data.sodafOuvrir; if (!u || !me) return; try { const q = new URL(u).searchParams; msOuvrir(q.get("canal"), +q.get("eleve") || 0); } catch (x) {} });
     $("#sd-msCanaux").addEventListener("click", (e) => { const b = e.target.closest("[data-ch]"); if (!b) return; if (MS.cur !== b.dataset.ch) { msPjVider(); recArret(false); } MS.cur = b.dataset.ch; S.set("msCanal", MS.cur); MS.forceBas = true; msVoirFil(true); msRender(); if (msLarge()) $("#sd-msTxt").focus(); });
+    $("#sd-msList").addEventListener("scroll", () => { if (!msBasTic) msBasTic = requestAnimationFrame(() => { msBasTic = 0; msBasBtn(); }); }, { passive: true });
+    $("#sd-msBas").addEventListener("click", () => { const box = $("#sd-msList"); MS.attente = 0; box.scrollTo({ top: box.scrollHeight, behavior: "smooth" }); });
     $("#sd-msBack").addEventListener("click", () => { if (history.state && history.state.sdMsFil) history.back(); else msVoirFil(false); });
     $("#sd-msList").addEventListener("click", async (e) => {
       const b = e.target.closest("[data-goel]"); if (b) { goEleve(+b.dataset.goel); return; }
@@ -3045,7 +3061,7 @@ function init(root) {
       const k = MS.canaux.find((c) => c.id === canal), mentions = k ? msMembres(k).filter((p) => p.id !== me.id && new RegExp("(^|[\\s(])@" + msPrenom(p).replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "(?![\\wÀ-ÿ])", "i").test(t)).map((p) => p.id) : [];
       MS.envoi = true; const btn = $("#sd-msSend"); btn.disabled = true; btn.classList.add("wait");
       const fin = () => { MS.envoi = false; btn.disabled = false; btn.classList.remove("wait"); btn.removeAttribute("data-n"); };
-      const poster = async (body) => { const r = await run(() => DB.q("messages", { method: "POST", body, prefer: "return=representation" })); if (r && r[0]) { msAjout(r[0]); MS.forceBas = true; msRender(); return true; } return false; };
+      const poster = async (body) => { const r = await run(() => DB.q("messages", { method: "POST", body, prefer: "return=representation" })); if (r && r[0]) { MS.repere.le = r[0].le; MS.attente = 0; msAjout(r[0]); MS.forceBas = true; msRender(); return true; } return false; };
       if (!pjs.length) { if (await poster(Object.assign({ canal, texte: t }, mentions.length ? { mentions } : {}))) { msTa.value = ""; msGrow(); } fin(); return; }
       let texteParti = false;
       for (let i = 0; i < pjs.length; i++) {
@@ -4634,6 +4650,12 @@ html:has(#sodaf-root.app-mode),body:has(#sodaf-root.app-mode){background:#ECEFEE
 .tm-auj>summary em{font-style:normal;font-weight:700;font-size:.85rem;color:#8A6500;white-space:nowrap}
 .tm-auj>div{padding:14px}.tm-auj .tm-mon{margin:0}.tm-auj .tm-mon>.card{box-shadow:none;border:1px solid var(--line)}
 html.ms-plein,html.ms-plein body{overflow:hidden}
+.ms-neuf{display:flex;align-items:center;gap:10px;margin:16px 0 6px!important;color:#C0262F}
+.ms-neuf::before,.ms-neuf::after{content:"";flex:1;height:2px;background:#E4434D;border-radius:2px}
+.ms-neuf span{font:800 .74rem/1 var(--f-ui);letter-spacing:.06em;text-transform:uppercase;background:#FDE8EA;border:1.5px solid #E4434D;border-radius:999px;padding:.4em .9em;white-space:nowrap}
+.ms-bas{all:unset;cursor:pointer;position:absolute;right:18px;bottom:84px;z-index:4;width:42px;height:42px;border-radius:50%;background:#fff;border:1px solid var(--line);box-shadow:0 6px 18px rgba(0,0,0,.16);display:grid;place-items:center;color:var(--asph)}
+.ms-bas[hidden]{display:none}.ms-bas:focus-visible{outline:2px solid var(--green)}
+.ms-bas em{position:absolute;top:-6px;right:-6px;font-style:normal;background:#D7263D;color:#fff;font:800 .7rem/1 var(--f-ui);border-radius:999px;padding:.3em .5em;min-width:1.4em;text-align:center}
 .ms-mic{all:unset;cursor:pointer;display:grid;place-items:center;width:44px;height:46px;border-radius:12px;color:#5B6670;flex-shrink:0}
 .ms-mic:hover{background:var(--soft);color:var(--asph)}.ms-mic:focus-visible{outline:2px solid var(--green)}
 .ms-mic.on{background:#D7263D;color:#fff}
