@@ -40,14 +40,18 @@ const DB = {
 };
 
 const WA = "https://wa.me/22872544166";
-// Photo d'élève : recadrée au centre en carré, réduite (640 px, JPEG) pour passer même avec une connexion faible
-async function photoCompresse(file, cote = 640) {
+// Photo d'élève : recadrée au centre en carré, 1080 px, réduite par paliers (image nette), JPEG de bonne qualité (≈ 150 à 300 Ko)
+async function photoCompresse(file, cote = 1080) {
   const url = URL.createObjectURL(file);
   try {
     const img = await new Promise((ok, ko) => { const i = new Image(); i.onload = () => ok(i); i.onerror = ko; i.src = url; });
-    const c = Math.min(img.naturalWidth, img.naturalHeight), t = Math.min(cote, c), cv = document.createElement("canvas"); cv.width = cv.height = t;
-    cv.getContext("2d").drawImage(img, (img.naturalWidth - c) / 2, (img.naturalHeight - c) / 2, c, c, 0, 0, t, t);
-    return await new Promise((ok) => cv.toBlob((b) => ok(b), "image/jpeg", 0.82));
+    const c = Math.min(img.naturalWidth, img.naturalHeight), t = Math.min(cote, c);
+    let cv = document.createElement("canvas"); cv.width = cv.height = c;
+    let g = cv.getContext("2d"); g.drawImage(img, (img.naturalWidth - c) / 2, (img.naturalHeight - c) / 2, c, c, 0, 0, c, c);
+    while (cv.width / 2 >= t) { const n = document.createElement("canvas"); n.width = n.height = Math.round(cv.width / 2); const ng = n.getContext("2d"); ng.imageSmoothingEnabled = true; ng.imageSmoothingQuality = "high"; ng.drawImage(cv, 0, 0, n.width, n.height); cv = n; }
+    if (cv.width !== t) { const n = document.createElement("canvas"); n.width = n.height = t; const ng = n.getContext("2d"); ng.imageSmoothingEnabled = true; ng.imageSmoothingQuality = "high"; ng.drawImage(cv, 0, 0, t, t); cv = n; }
+    for (const q of [0.92, 0.86, 0.78]) { const b = await new Promise((ok) => cv.toBlob((x) => ok(x), "image/jpeg", q)); if (b && b.size < 900000) return b; }
+    return await new Promise((ok) => cv.toBlob((x) => ok(x), "image/jpeg", 0.7));
   } finally { URL.revokeObjectURL(url); }
 }
 // Envoi dans l'espace privé « photos » (jeton de l'équipe, ou clé publique pour le lien d'inscription)
@@ -801,8 +805,10 @@ label.ex-doc input{position:absolute;left:14px;top:12px;width:20px;height:20px;a
 .insc-note{font-size:.95rem;color:#3D444D;background:var(--soft);border-radius:12px;padding:12px 14px}
 .insc-err{color:var(--red);font-weight:600}
 .insc-photo{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
-.insc-ph{width:112px;height:112px;border-radius:50%;flex:none;display:grid;place-items:center;background:var(--soft);color:#9AA3AB;border:2px dashed #C9CFD5;overflow:hidden}
-.insc-ph.on{border:3px solid var(--green)}.insc-ph img{width:100%;height:100%;object-fit:cover}
+.insc-ph{position:relative;width:116px;height:116px;margin:12px;border-radius:50%;flex:none;display:grid;place-items:center;background:var(--soft);color:#9AA3AB;border:3px solid #fff;box-shadow:0 0 0 2px #E1E5E9}
+.insc-ph::before{content:"";position:absolute;inset:-11px;border-radius:50%;border:2.5px dashed #C9CFD5}
+.insc-ph.on{background:#15191E;border-color:#15191E;box-shadow:0 0 0 3px #fff,0 6px 16px -6px rgba(21,25,30,.45)}.insc-ph.on::before{border-color:#F2B705}
+.insc-ph img{width:100%;height:100%;object-fit:cover;border-radius:50%}
 .insc-phtx{flex:1 1 220px}.insc-phtx p{margin:0 0 10px;color:#3D444D;font-size:.95rem}
 .insc-file{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
 .insc-accord{display:flex;gap:10px;align-items:flex-start;margin-top:14px;font-size:.93rem;cursor:pointer}.insc-accord input{width:20px;height:20px;flex:none;margin-top:2px;accent-color:var(--green)}
@@ -5282,7 +5288,15 @@ html{scrollbar-gutter:stable}
 .pc-item{position:relative;padding-left:56px!important}.pc-item .pc-ph{position:absolute;left:14px;top:12px;margin:0}
 .pc-who{display:flex;flex-direction:column;align-items:center;gap:4px;margin-right:4px}.pc-head{flex-wrap:nowrap}.pc-head>div:nth-child(2){flex:1}
 .pc-phbtn{font-size:.8rem!important;cursor:pointer;white-space:nowrap}
-.pc-who .ph:not(:has(img)){outline:2px dashed #E0A400;outline-offset:2px}
+/* Visage « SODAF » : anneau asphalte + marquage jaune en pointillés + pastille S */
+.ph-lg,.ph-xl{position:relative;overflow:visible;background:#15191E;border:3px solid #15191E;box-shadow:0 0 0 3px #fff,0 6px 16px -6px rgba(21,25,30,.45)}
+.ph-lg::before,.ph-xl::before{content:"";position:absolute;inset:-10px;border-radius:50%;border:2.5px dashed #F2B705;pointer-events:none}
+.ph-lg img,.ph-xl img{border-radius:50%}
+.ph-lg span,.ph-xl span{color:#fff}
+.ph-lg::after,.ph-xl::after{content:"S";position:absolute;right:-6px;bottom:-4px;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--green);color:#fff;font:800 14px/1 var(--f-display);border:2.5px solid #fff}
+.ph-lg{width:92px;height:92px;margin:10px}.ph-xl{display:grid;width:120px;height:120px;margin:16px auto 12px}
+.ph-lg:not(:has(img))::before,.ph-xl:not(:has(img))::before{border-color:#C9CFD5}
+.pc-who{gap:2px}
 .gr-elbox{position:relative}
 .gr-ell{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:20;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 30px rgba(20,23,28,.14);max-height:300px;overflow:auto;padding:4px}
 .gr-ell[hidden],.gr-elsel[hidden],#sd-grDemElQ[hidden]{display:none}
