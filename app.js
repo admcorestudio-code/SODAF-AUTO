@@ -1833,6 +1833,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="card soft"><p class="eyebrow">Après chaque cours de code</p><ol class="teamsteps"><li>Dans <b>Cours de code</b>, choisis le thème traité.</li><li>Coche les élèves présents (c'est enregistré tout de suite).</li><li>Touche <b>Cours fait</b>.</li></ol></div>
 <div class="card soft"><p class="eyebrow">Séances de conduite</p><ol class="teamsteps"><li>Le matin, regarde <b>Mes séances d'aujourd'hui</b>.</li><li>Avant de partir : vérification de la voiture (Outils → check-list du matin).</li><li>Après la séance : <b>Fait</b> ou <b>Absent</b>, et une courte note sur les progrès.</li><li>Avec l'élève, réserve sa prochaine séance dans <b>Réserver une séance</b>.</li></ol></div>
 </div></div>
+<div class="mf-ov" id="sd-mfOv" hidden><div class="mf-box" id="sd-mfBox" role="dialog" aria-modal="true" aria-label="Fiche de l'élève"></div></div>
 <div class="tm-pane" data-pane="msg" role="tabpanel" hidden>
 <p class="tm-role">Les échanges de l'équipe, rangés par canal. Écris le numéro d'un élève (par exemple SO12) : il devient un lien vers sa fiche.</p>
 <div class="ms-notif" id="sd-msNotif"></div>
@@ -2724,7 +2725,7 @@ function init(root) {
       if (t === "mon") { const slot = $("#sd-mnPlanSlot"); if (cdSec.parentNode !== slot) slot.appendChild(cdSec); cdSec.hidden = false; (eleves.length ? Promise.resolve() : loadEleves(true)).then(() => loadDay()); }
       else if (cdSec.parentNode !== cdHome.p) { cdHome.p.insertBefore(cdSec, cdHome.n); const on = $('#sd-secNav button[aria-selected="true"]'); cdSec.hidden = !on || on.dataset.s !== "conduite"; }
     };
-    const pick = (t) => { tabs.forEach((b) => b.setAttribute("aria-selected", b.dataset.t === t)); panes.forEach((p) => (p.hidden = p.dataset.pane !== t)); try { S.set("tmTab", t); } catch (e) {} placePlanning(t); if (t === "mon") loadMon(); if (t === "dir") loadDir(); if (t === "msg") { MS.forceBas = true; msRender(); msNotifBox(); if (!isWide()) setTimeout(() => $(".ms-wrap").scrollIntoView({ block: "start" }), 60); } };
+    const pick = (t) => { if (t === "sec" && me && me.role === "moniteur") t = "mon"; tabs.forEach((b) => b.setAttribute("aria-selected", b.dataset.t === t)); panes.forEach((p) => (p.hidden = p.dataset.pane !== t)); try { S.set("tmTab", t); } catch (e) {} placePlanning(t); if (t === "mon") loadMon(); if (t === "dir") loadDir(); if (t === "msg") { MS.forceBas = true; msRender(); msNotifBox(); if (!isWide()) setTimeout(() => $(".ms-wrap").scrollIntoView({ block: "start" }), 60); } };
     tabs.forEach((b) => b.addEventListener("click", () => pick(b.dataset.t)));
     const subs = $$("#sd-secNav button[data-s]"), secs = $$(".tm-sec");
     const LOAD = { eleves: () => loadEleves(), conduite: () => loadDay(), paiements: () => loadPay(), devoirs: () => loadDev() };
@@ -2758,6 +2759,21 @@ function init(root) {
       if (v.length < 8) { m.textContent = "8 caractères minimum."; return; }
       try { await DB.changePassword(v); m.textContent = "✓ Mot de passe changé."; $("#sd-tmPw1").value = ""; } catch (ex) { m.textContent = "Erreur : " + ex.message; }
     });
+
+    // Boutons Appeler / WhatsApp d'un élève (moniteur : séances du jour, liste de présence, fiche courte)
+    const contactEl = (x, cls) => { const n = waNum(x && x.telephone); return n ? '<span class="' + (cls || "ct-btns") + '"><a class="ct-tel" href="tel:+228' + n + '" aria-label="Appeler ' + esc(x.nom) + '"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg><span>Appeler</span></a><a class="ct-wa" href="https://wa.me/228' + n + '" target="_blank" rel="noopener" aria-label="WhatsApp ' + esc(x.nom) + '"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg><span>WhatsApp</span></a></span>' : ""; };
+    // Fiche courte d'un élève (moniteur, depuis un lien SO12 dans les messages)
+    function ficheCourte(x) {
+      const g = x.groupe_code && gOf(x.groupe_code), ov = $("#sd-mfOv");
+      $("#sd-mfBox").innerHTML = '<button type="button" class="mf-x" data-mf="close" aria-label="Fermer">×</button><p class="eyebrow">' + CODE(x) + "</p><h3>" + esc(x.nom) + "</h3>" + contactEl(x, "ct-btns ct-big") +
+        '<dl class="mf-dl"><div><dt>Formation</dt><dd>' + esc(x.formule || x.formation || "—") + "</dd></div>" +
+        (sansCode(x) ? "" : "<div><dt>Code en salle</dt><dd>" + (g ? '<i class="gb gb-' + x.groupe_code + '">' + esc(g.nom) + "</i> " + esc(gJours(g) + " · " + gHeure(g)) : "liste d'attente") + "</dd></div>") +
+        (x.quota !== null && x.quota !== undefined ? "<div><dt>Conduite</dt><dd>" + (x.faits || 0) + " séance" + ((x.faits || 0) > 1 ? "s" : "") + " faite" + ((x.faits || 0) > 1 ? "s" : "") + " sur " + x.quota + (x.resa ? " · " + x.resa + " réservée" + (x.resa > 1 ? "s" : "") : "") + (x.evaluation ? " · " + (x.evaluation === "pret" ? "jugé prêt pour l'examen" : "séances en plus conseillées") : "") + "</dd></div>" : "") +
+        "<div><dt>Étape</dt><dd>" + esc({ accueil: "Pré-inscription", appels: "Appels", dossier: "Paiement en attente", formation: "En formation", examen: "Dépôt d'examen", archives: "Archivé" }[etapeOf(x)] || "") + "</dd></div></dl>";
+      ov.hidden = false; $("#sd-mfBox [data-mf=close]").focus();
+    }
+    $("#sd-mfOv").addEventListener("click", (e) => { if (e.target === e.currentTarget || e.target.closest("[data-mf=close]")) $("#sd-mfOv").hidden = true; });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("#sd-mfOv").hidden) $("#sd-mfOv").hidden = true; });
 
     // ---- Messages de l'équipe (canaux) et notifications sur téléphone
     // La base envoie les notifications (fonction « notifier ») ; ici : lire, écrire, compter les non-lus, activer les notifications.
@@ -2810,7 +2826,7 @@ function init(root) {
       if (autres.length && !msOpen()) { const x = autres[autres.length - 1], p = MS.profs[x.auteur]; toast((p ? p.nom.split(" ")[0] : "Équipe") + " : " + x.texte.slice(0, 70)); }
     }
     setInterval(msPoll, 5000);
-    function goEleve(id) { const x = eleves.find((y) => y.id === id); if (!x) { toast("Élève introuvable"); return; } pick("sec"); sub("eleves"); pcStage = etapeOf(x); S.set("pcStage", pcStage); pcSel = id; $("#sd-pcQ").value = ""; renderList(); $("#sd-pc").scrollIntoView({ block: "start" }); }
+    function goEleve(id) { const x = eleves.find((y) => y.id === id); if (!x) { toast("Élève introuvable"); return; } if (me && me.role === "moniteur") { ficheCourte(x); return; } pick("sec"); sub("eleves"); pcStage = etapeOf(x); S.set("pcStage", pcStage); pcSel = id; $("#sd-pcQ").value = ""; renderList(); $("#sd-pc").scrollIntoView({ block: "start" }); }
     function msOuvrir(c, el) { if (el) { goEleve(el); return; } if (c && MS.msgs[c]) { MS.cur = c; S.set("msCanal", c); } pick("msg"); }
     if ("serviceWorker" in navigator) navigator.serviceWorker.addEventListener("message", (e) => { const u = e.data && e.data.sodafOuvrir; if (!u || !me) return; try { const q = new URL(u).searchParams; msOuvrir(q.get("canal"), +q.get("eleve") || 0); } catch (x) {} });
     $("#sd-msCanaux").addEventListener("click", (e) => { const b = e.target.closest("[data-ch]"); if (!b) return; MS.cur = b.dataset.ch; S.set("msCanal", MS.cur); MS.forceBas = true; msRender(); $("#sd-msTxt").focus(); });
@@ -2869,6 +2885,7 @@ function init(root) {
       $("#sd-tmRole").textContent = { admin: "Direction", secretariat: "Secrétariat", moniteur: "Moniteur" }[me.role] + " · Espace équipe SODAF";
       show(true);
       const dirTab = $('#sd-tmTabs [data-t="dir"]'); dirTab.hidden = me.role !== "admin";
+      $('#sd-tmTabs [data-t="sec"]').hidden = me.role === "moniteur"; // le moniteur a son espace : cours, conduite, réservations, messages
       { const pb = $('#sd-secNav [data-s="paiements"]'); if (pb) pb.hidden = me.role === "moniteur"; } // reçus : direction et secrétariat seulement (règle aussi dans la base)
       await loadEleves(true);
       let t0 = S.get("tmTab", me.role === "admin" ? "dir" : me.role === "moniteur" ? "mon" : "sec"); if (t0 === "dir" && me.role !== "admin") t0 = "sec";
@@ -3690,7 +3707,7 @@ function init(root) {
             // L'appel : au début du cours, le moniteur coche les présents puis valide ; le cours compte alors comme fait
             '<div class="mc-appel' + (lock ? " ok" : "") + '"><div class="mc-ah"><b>Présences</b><span id="sd-mcCnt">' + ids.size + " présent" + (ids.size > 1 ? "s" : "") + " sur " + act.length + "</span></div>" +
             (lock ? '<p class="mc-done">✓ Présences validées : cours fait' + (bo ? " (cours " + bo.n + "/12)" : "") + ".</p>" : '<p class="tm-note" style="margin:0 0 8px!important">Au début du cours, fais l\'appel : coche les élèves présents, puis valide les présences.</p>') +
-            (act.length ? '<div class="tm-checks">' + act.map((x) => '<label><input type="checkbox" data-pe="' + x.id + '"' + (ids.has(x.id) ? " checked" : "") + (lock ? " disabled" : "") + "> " + esc(x.nom) + "</label>").join("") + "</div>" : '<p class="tm-empty">Aucun élève inscrit pour l\'instant.</p>') +
+            (act.length ? '<div class="tm-checks">' + act.map((x) => '<label><input type="checkbox" data-pe="' + x.id + '"' + (ids.has(x.id) ? " checked" : "") + (lock ? " disabled" : "") + "> " + esc(x.nom) + (waNum(x.telephone) ? '<a class="pe-tel" href="tel:+228' + waNum(x.telephone) + '" aria-label="Appeler ' + esc(x.nom) + '" title="Appeler"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></a>' : "") + "</label>").join("") + "</div>" : '<p class="tm-empty">Aucun élève inscrit pour l\'instant.</p>') +
             (lock ? '<div class="tm-formact"><button class="btn btn-line btn-sm" type="button" id="sd-mcEdit">Modifier les présences</button></div>' : '<details class="mc-nt"' + (se.note ? " open" : "") + '><summary>Ajouter une note (facultatif)</summary><input id="sd-mcNote" aria-label="Note" value="' + esc(se.note || "") + '"></details><div class="tm-formact"><button class="btn btn-green btn-sm" type="button" id="sd-mcDone" data-id="' + se.id + '">Valider les présences (' + ids.size + " présent" + (ids.size > 1 ? "s" : "") + ")</button></div>") + "</div>";
           $$("#sd-mcBody [data-pe]").forEach((c) => c.addEventListener("change", async () => {
             const eid = +c.dataset.pe;
@@ -3711,7 +3728,7 @@ function init(root) {
       const c = await run(() => DB.q("creneaux_conduite?select=*&jour=eq." + today + "&eleve_id=not.is.null"));
       if (c) {
         c.sort((a, b) => hmin(a.heure) - hmin(b.heure));
-        $("#sd-mcList").innerHTML = c.length ? c.map((x) => { const el = eleves.find((y) => y.id === x.eleve_id) || { nom: "Élève", quota: null }; const num = el.quota ? (el.faits || 0) + (x.statut === "Fait" ? 0 : 1) : 0, ea = el.quota ? Math.max(1, el.quota - 2) : 0, aEval = el.quota && !el.evaluation && (el.faits || 0) >= ea && x.statut === "Fait"; return '<div class="tm-row" data-id="' + x.id + '"><div class="tm-time">' + esc(x.heure) + '</div><div class="tm-main"><b>' + esc(el.nom) + (el.quota ? ' <em class="se-num' + (num >= ea ? " hot" : "") + '">Séance ' + Math.min(num, el.quota) + "/" + el.quota + (num === ea && !el.evaluation ? " · évaluation" : num >= el.quota ? " · dernière" : "") + "</em>" : "") + "</b><span>" + esc(x.statut) + (el.evaluation ? " · " + (el.evaluation === "pret" ? "jugé prêt pour l'examen" : "séances en plus conseillées") : "") + '</span>' + (aEval ? '<div class="se-mev"><span>Évaluation : est-il prêt pour l\'examen ?</span><button class="btn btn-green btn-sm" type="button" data-mev="pret" data-el="' + el.id + '">Prêt pour l\'examen</button><button class="btn btn-line btn-sm" type="button" data-mev="plus" data-el="' + el.id + '">Il lui faut des séances en plus</button></div>' : "") + '<input data-note placeholder="Note sur les progrès" value="' + esc(x.note || "") + '"></div><div class="tm-acts"><button class="btn btn-green btn-sm" type="button" data-set="Fait">Fait</button><button class="btn btn-line btn-sm" type="button" data-set="Absent">Absent</button></div></div>'; }).join("") : '<p class="tm-empty">Aucune séance réservée aujourd\'hui.</p>';
+        $("#sd-mcList").innerHTML = c.length ? c.map((x) => { const el = eleves.find((y) => y.id === x.eleve_id) || { nom: "Élève", quota: null }; const num = el.quota ? (el.faits || 0) + (x.statut === "Fait" ? 0 : 1) : 0, ea = el.quota ? Math.max(1, el.quota - 2) : 0, aEval = el.quota && !el.evaluation && (el.faits || 0) >= ea && x.statut === "Fait"; return '<div class="tm-row" data-id="' + x.id + '"><div class="tm-time">' + esc(x.heure) + '</div><div class="tm-main"><b>' + esc(el.nom) + (el.quota ? ' <em class="se-num' + (num >= ea ? " hot" : "") + '">Séance ' + Math.min(num, el.quota) + "/" + el.quota + (num === ea && !el.evaluation ? " · évaluation" : num >= el.quota ? " · dernière" : "") + "</em>" : "") + "</b><span>" + esc(x.statut) + (el.evaluation ? " · " + (el.evaluation === "pret" ? "jugé prêt pour l'examen" : "séances en plus conseillées") : "") + '</span>' + contactEl(el) + (aEval ? '<div class="se-mev"><span>Évaluation : est-il prêt pour l\'examen ?</span><button class="btn btn-green btn-sm" type="button" data-mev="pret" data-el="' + el.id + '">Prêt pour l\'examen</button><button class="btn btn-line btn-sm" type="button" data-mev="plus" data-el="' + el.id + '">Il lui faut des séances en plus</button></div>' : "") + '<input data-note placeholder="Note sur les progrès" value="' + esc(x.note || "") + '"></div><div class="tm-acts"><button class="btn btn-green btn-sm" type="button" data-set="Fait">Fait</button><button class="btn btn-line btn-sm" type="button" data-set="Absent">Absent</button></div></div>'; }).join("") : '<p class="tm-empty">Aucune séance réservée aujourd\'hui.</p>';
       }
     }
     $("#sd-mcCode").addEventListener("click", (e) => { const b = e.target.closest("[data-mses]"); if (b) { monIdx = +b.dataset.mses; loadMon(); } });
@@ -4310,6 +4327,23 @@ html:has(#sodaf-root.app-mode),body:has(#sodaf-root.app-mode){background:#ECEFEE
 .ms-form .btn{height:46px;width:50px;padding:0;display:grid;place-items:center;border-radius:12px;flex-shrink:0}
 .ms-notif.on{display:flex;justify-content:space-between;align-items:center;gap:8px 16px;flex-wrap:wrap;padding:9px 14px}.ms-notif.on .ms-na{margin:0}
 @media (max-width:760px){.ms-wrap{grid-template-columns:1fr}.ms-canaux{flex-direction:row;overflow-x:auto;padding:8px}.ms-ch{min-width:max-content}.ms-ch small{display:none}.ms-head span{display:none}.ms-list{height:calc(100dvh - 270px);min-height:260px}.ms-m{max-width:88%}.tm-pane[data-pane="msg"]>.tm-role{display:none}}
+
+/* Contacts élève (moniteur) et fiche courte */
+.ct-btns{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 2px}
+.ct-btns a{display:inline-flex;align-items:center;gap:5px;font-size:.82rem;font-weight:700;text-decoration:none!important;border-radius:999px;padding:.3em .8em;border:1.5px solid var(--line);color:var(--ink)!important;background:#fff}
+.ct-btns a.ct-wa{border-color:#BFE3D2;background:#E9F7EF;color:#064D36!important}
+.ct-btns a:hover{border-color:var(--ink)}
+.ct-big a{font-size:.95rem;padding:.5em 1.1em}
+.pe-tel{display:inline-grid;place-items:center;width:28px;height:28px;margin-left:auto;border-radius:50%;color:var(--green)!important;background:#E9F7EF;flex-shrink:0}
+.tm-checks label{display:flex;align-items:center;gap:8px}
+.mf-ov{position:fixed;inset:0;z-index:80;background:rgba(21,25,30,.55);display:grid;place-items:center;padding:16px}
+.mf-ov[hidden]{display:none}
+.mf-box{position:relative;background:#fff;border-radius:18px;padding:22px 22px 18px;width:min(440px,100%);box-shadow:0 20px 60px rgba(0,0,0,.3);border-top:5px solid var(--yellow)}
+.mf-box h3{font-family:var(--f-display);font-size:1.7rem;margin:2px 0 8px}
+.mf-x{all:unset;cursor:pointer;position:absolute;top:10px;right:14px;font-size:1.8rem;line-height:1;color:var(--muted)}
+.mf-x:focus-visible{outline:2px solid var(--yellow)}
+.mf-dl{display:grid;gap:10px;margin:14px 0 0}.mf-dl div{display:grid;grid-template-columns:110px 1fr;gap:8px;align-items:baseline}
+.mf-dl dt{font-size:.82rem;color:var(--muted)}.mf-dl dd{margin:0;font-weight:600}
 `;
   const st = document.createElement("style"); st.textContent = CSS + CSS_REFONTE + 'html,body{margin:0;background:#15191E}#sodaf-root{min-height:100vh;display:flex;flex-direction:column}#sodaf-root>#app{flex:1;display:flex;flex-direction:column;background:#fff}#sodaf-root main{flex:1}'; document.head.appendChild(st);
   if (!document.querySelector("link[rel=icon]")) { const fi = document.createElement("link"); fi.rel = "icon"; fi.type = "image/svg+xml"; fi.href = FAVICON; document.head.appendChild(fi); }
