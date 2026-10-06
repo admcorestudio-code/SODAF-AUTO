@@ -4674,7 +4674,7 @@ function init(root) {
       '<a class="btn btn-green" href="' + MAPS + '" target="_blank" rel="noopener">Ouvrir l\'itinéraire dans Google Maps</a>' +
       '<ul class="insc-list"><li><b>Bureau</b> : lundi – vendredi 8 h – 12 h 30 et 14 h 30 – 18 h · samedi 8 h – 12 h</li><li><b>Téléphone et WhatsApp</b> : <a href="tel:+22872544166">+228 72 54 41 66</a></li>' +
       (aPayer ? "<li><b>À apporter</b> : " + fmtF(aPayer) + " en espèces</li>" : "") +
-      (id ? "<li><b>Ton N° client</b> : SO" + id + " (donne-le au secrétariat)</li>" : "") + '</ul><a class="btn btn-wa btn-sm" target="_blank" rel="noopener" href="' + WA + "?text=" + encodeURIComponent("Bonjour SODAF, je suis en route pour l'agence (N° client SO" + (id || "") + ").") + '">Prévenir l\'agence sur WhatsApp</a></div></div>';
+      "</ul></div></div>";
   }
   async function inscPage(str) {
     const box = $("#sd-insc");
@@ -4691,8 +4691,8 @@ function init(root) {
     const exam = /Permis|Pack/.test(d.f), mixxOk = !!d.m;
     const show = (res) => {
       box.innerHTML = res.mode === "agence"
-        ? '<div class="card insc-ok"><p class="eyebrow">Inscription enregistrée · N° client SO' + d.i + '</p><h3>Merci ' + escI(d.p) + ', nous t\'attendons à l\'agence !</h3><p>Viens avec <b>' + fmtF(res.a) + '</b> en espèces. Tu repars avec ton reçu officiel.</p><button class="linkbtn" type="button" id="sd-inRedo">Modifier mon inscription</button></div>' + inscFindUs(res.a, d.i)
-        : '<div class="card insc-ok"><p class="eyebrow">Paiement envoyé · N° client SO' + d.i + '</p><h3>Merci ' + escI(d.p) + ' !</h3><p>Le secrétariat vérifie ton paiement Mixx by Yas de <b>' + fmtF(res.a) + '</b> et t\'envoie ton <b>reçu officiel sur WhatsApp</b> (aux heures de bureau).</p><button class="linkbtn" type="button" id="sd-inRedo">Modifier mon inscription</button></div>' + inscFindUs(0, d.i);
+        ? '<div class="okbox insc-okbox"><div class="ok-top"><span class="okcheck" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div><p class="ok-kicker">Inscription enregistrée</p><b class="ok-title">Nous t\'attendons à l\'agence</b></div></div><div class="ok-body"><p class="ok-lead">Merci ' + escI(d.p) + '. Viens au bureau avec ton paiement en espèces : tu repars avec ton reçu officiel.</p><div class="insc-sumrow insc-okamt"><span>À apporter</span><b>' + fmtF(res.a) + '</b></div><button class="linkbtn" type="button" id="sd-inRedo">Modifier mon inscription</button></div></div>' + inscFindUs(0, 0)
+        : '<div class="okbox insc-okbox"><div class="ok-top"><span class="okcheck" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div><p class="ok-kicker">Paiement envoyé</p><b class="ok-title">Merci ' + escI(d.p) + '</b></div></div><div class="ok-body"><p class="ok-lead">Le secrétariat vérifie ton paiement Mixx by Yas et t\'envoie ton <b>reçu officiel sur WhatsApp</b>, aux heures de bureau.</p><div class="insc-sumrow insc-okamt"><span>Montant envoyé</span><b>' + fmtF(res.a) + '</b></div><button class="linkbtn" type="button" id="sd-inRedo">Modifier mon inscription</button></div></div>' + inscFindUs(0, 0);
       $("#sd-inRedo").addEventListener("click", () => { S.set("insc" + d.i, null); inscPage(str); });
       window.scrollTo({ top: Math.max(0, box.getBoundingClientRect().top + window.scrollY - 90) });
     };
@@ -5157,6 +5157,22 @@ html{scrollbar-gutter:stable}
 #sodaf-root .insc-sum>span:not(.insc-sumrow){font-size:.88rem;color:#5B6670}
 #sodaf-root .insc-reste b{font:inherit;color:var(--ink);font-weight:700}
 #sodaf-root .insc-hint{display:none}
+#sodaf-root #sd-insc{display:block;max-width:820px;margin:0 auto}
+#sodaf-root .insc-okbox{margin-bottom:20px}
+#sodaf-root .insc-find{gap:0;border:1px solid #DDE1E5;border-radius:18px;overflow:hidden;background:#fff;box-shadow:0 14px 34px -26px rgba(21,25,30,.3);align-items:stretch}
+#sodaf-root .insc-map{border:0;border-radius:0;aspect-ratio:auto;min-height:260px}
+#sodaf-root .insc-addr{padding:22px;gap:8px}
+#sodaf-root .insc-addr .eyebrow{margin:0!important;font:700 .74rem/1.2 var(--f-ui);letter-spacing:.11em;text-transform:uppercase;color:#7F8994}
+#sodaf-root .insc-addr h3{margin:0;font:700 1.5rem/1 var(--f-display)}
+#sodaf-root .insc-addr .insc-big{margin:0;font:600 1rem var(--f-ui);color:var(--ink)}
+#sodaf-root .insc-addr>p:not(.eyebrow):not(.insc-big){margin:0;color:#5B6670;font-size:.92rem}
+#sodaf-root .insc-addr .btn{margin-top:6px}
+#sodaf-root .insc-list{list-style:none;padding:0;margin:8px 0 0;gap:0;width:100%;border-top:1px solid #E6E8EB}
+#sodaf-root .insc-list li{padding:9px 0;border-bottom:1px solid #E6E8EB;font-size:.9rem;color:#3D444D}
+@media (max-width:720px){#sodaf-root .insc-map{min-height:200px}#sodaf-root .insc-addr{padding:18px}#sodaf-root .insc-addr .btn{width:100%;text-align:center;justify-content:center}}
+#sodaf-root .insc-okamt{padding:12px 16px;margin:0;border:1px solid #E4E8EC;border-radius:14px;background:#F4F6F8}
+#sodaf-root .insc-okamt b{font:800 1.5rem var(--f-display);color:var(--green)}
+#sodaf-root .insc-okbox #sd-inRedo{justify-self:center;font-size:.86rem}
 #sodaf-root .insc-hello{padding:4px 2px}
 @media (max-width:520px){#sodaf-root .insc-step{padding:20px 14px 16px}#sodaf-root .insc-step .rcm{padding:12px 13px}}
 /* Page Pré-inscription : formulaire + panneau contact sombre */
