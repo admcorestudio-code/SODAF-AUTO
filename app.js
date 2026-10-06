@@ -601,6 +601,9 @@ a.teamtile.hl{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
 @media (min-width:641px){.tm-tabs{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}}
 @media (max-width:640px){.tm-tabs button{flex-wrap:wrap;row-gap:0}}
 .tm-tabs button[data-t="dir"][aria-selected="true"]{border-color:var(--blue);border-top-color:var(--blue);background:#EAF1FB}
+.tm-tabs button[data-t="ger"][aria-selected="true"]{border-color:#6B4FA0;border-top-color:#6B4FA0;background:#F1ECF9}
+.tm-pane[data-pane="ger"] .tm-role{border-left-color:#6B4FA0}
+.tm-tabs button{position:relative}
 .tm-pane[data-pane="dir"] .tm-role{border-left-color:var(--blue)}
 .tm-drmonth{font:700 1.15rem var(--f-display);flex:1}
 .tm-dr div{position:relative}
@@ -1697,6 +1700,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div id="sd-tmToast" class="tm-toast" hidden></div>
 <div class="tm-tabs" role="tablist" id="sd-tmTabs">
 <button role="tab" data-t="dir" aria-selected="false" hidden><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></i><b>Direction</b><small>Chiffres du mois, à surveiller</small></button>
+<button role="tab" data-t="ger" aria-selected="false" hidden><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l2 2 4-4"/><path d="M4 5h16v11a2 2 0 0 1-2 2H9l-5 3z"/></svg></i><b>Gérance</b><small>Demandes, décisions, rapport</small><em class="tm-badge" id="sd-grTabBadge" hidden></em></button>
 <button role="tab" data-t="msg" aria-selected="false"><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 10.5h7M8.5 14h4.5"/></svg></i><b>Messages</b><small>Canaux de l'équipe</small><em class="tm-badge" id="sd-msBadge" hidden></em></button>
 <button role="tab" data-t="sec" aria-selected="true"><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 3v2h6V3M9 10h6M9 14h6M9 18h3"/></svg></i><b>Secrétariat</b><small>Inscriptions, paiements, réservations</small></button>
 <button role="tab" data-t="mon" aria-selected="false"><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/><path d="M12 14.5V21M9.6 11.2 3.5 9.5M14.4 11.2l6.1-1.7"/></svg></i><b>Moniteur</b><small>Code en salle, conduite</small></button>
@@ -1796,6 +1800,15 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="card soft"><p class="eyebrow">Fin de semaine : résultats des devoirs</p><ol class="teamsteps"><li>Onglet <b>Devoirs</b> : le message de la semaine (les 2 devoirs) est déjà écrit.</li><li>Touche <b>Ouvrir WhatsApp avec le message</b> et choisis le groupe.</li></ol></div>
 <div class="card soft"><p class="eyebrow">Règles</p><ol class="teamsteps"><li>On ne supprime rien : une séance annulée passe en <b>Annulé</b>, un dossier qui s'arrête va dans <b>Archivés</b> avec son motif, un reçu faux se fait <b>Annuler</b> (avec la raison) puis on refait le bon.</li><li>Erreur de nom ou de numéro : <b>Modifier</b> sur la fiche de l'élève.</li><li>Jour férié ou fermeture : <b>Planning conduite</b> → le jour → « Fermer ce jour », puis <b>Prévenir</b> chaque élève.</li><li>Les créneaux du mois suivant se créent tout seuls le 24.</li></ol></div>
 </div></div>
+<div class="tm-pane" data-pane="ger" role="tabpanel" hidden>
+<p class="tm-role" id="sd-grRole"></p>
+<div class="card gr-card" id="sd-gr" hidden><p class="eyebrow">Gérance</p><h3 class="tm-h3" id="sd-grTitre">Gérante et direction</h3><p class="tm-note" id="sd-grIntro" style="margin:0 0 10px!important"></p>
+<div class="gr-tabs" role="tablist"><button type="button" role="tab" data-gr="demandes" aria-selected="true">Demandes d'accord<em class="gr-badge" id="sd-grBDem" hidden></em></button><button type="button" role="tab" data-gr="decisions" aria-selected="false">Décisions<em class="gr-badge" id="sd-grBDec" hidden></em></button><button type="button" role="tab" data-gr="rapports" aria-selected="false">Rapport de la semaine<em class="gr-badge" id="sd-grBRap" hidden></em></button></div>
+<div class="gr-pane" data-grp="demandes"><form id="sd-grDemForm" class="gr-form" hidden novalidate><div class="row2"><div class="field"><label for="sd-grDemType">Pour quoi ?</label><select id="sd-grDemType"><option>Remise</option><option>Annulation de reçu</option><option>Report de paiement</option><option>Dépense</option><option>Autre</option></select></div><div class="field"><label for="sd-grDemMt">Montant (F, si besoin)</label><input id="sd-grDemMt" inputmode="numeric" autocomplete="off" placeholder="ex. 5 000"></div></div><div class="field"><label for="sd-grDemEl">Élève concerné (si besoin)</label><select id="sd-grDemEl"><option value="">Aucun</option></select></div><div class="field"><label for="sd-grDemTx">Explique en quelques mots</label><textarea id="sd-grDemTx" rows="2" maxlength="600" placeholder="ex. Deux frères inscrits ensemble, je propose 5 000 F de remise au second."></textarea></div><button type="submit" class="btn btn-sm btn-green">Envoyer à la direction</button></form><div id="sd-grDemList" class="gr-list"></div></div>
+<div class="gr-pane" data-grp="decisions" hidden><form id="sd-grDecForm" class="gr-form" hidden novalidate><div class="row2"><div class="field"><label for="sd-grDecCat">Sujet</label><select id="sd-grDecCat"><option>Élèves</option><option>Argent</option><option>Planning</option><option>Équipe</option><option>Autre</option></select></div><div class="field gr-grow"><label for="sd-grDecTx">Ce que j'ai décidé</label><textarea id="sd-grDecTx" rows="2" maxlength="600" placeholder="ex. Séance de samedi 7 h 30 déplacée à 8 h 45, le moniteur est prévenu."></textarea></div></div><button type="submit" class="btn btn-sm btn-green">Noter la décision</button></form><div id="sd-grDecList" class="gr-list"></div></div>
+<div class="gr-pane" data-grp="rapports" hidden><div id="sd-grRapNew" hidden><p class="gr-sem" id="sd-grRapSem"></p><div class="tm-stats tm-dr" id="sd-grRapChiffres"></div><div class="field"><label for="sd-grRapTx">Mes remarques pour la direction</label><textarea id="sd-grRapTx" rows="4" maxlength="3000" placeholder="Ce qui s'est bien passé, les problèmes, ce qu'il faudrait changer, ce dont j'ai besoin."></textarea></div><button type="button" class="btn btn-sm btn-green" id="sd-grRapSend">Envoyer le rapport</button></div><div id="sd-grRapList" class="gr-list"></div></div>
+</div>
+</div>
 <div class="tm-pane" data-pane="dir" role="tabpanel" hidden>
 <p class="tm-role">Vue d'ensemble de l'auto-école, mise à jour à chaque ouverture. Visible seulement par la direction.</p>
 <div class="tm-bar"><b id="sd-drMonth" class="tm-drmonth"></b><button class="linkbtn" type="button" id="sd-drReload">Actualiser</button></div>
@@ -1803,12 +1816,6 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="grid g2 tm-mon" style="margin-top:18px">
 <div class="card"><p class="eyebrow">À surveiller</p><h3 class="tm-h3">Ce qui attend une action</h3><div id="sd-drWatch" class="tm-list"></div></div>
 <div class="card"><p class="eyebrow">Activité</p><h3 class="tm-h3">Derniers mouvements</h3><div id="sd-drFeed" class="tm-list"></div></div>
-</div>
-<div class="card gr-card" id="sd-gr" style="margin-top:16px" hidden><p class="eyebrow">Gérance</p><h3 class="tm-h3" id="sd-grTitre">Gérante et direction</h3><p class="tm-note" id="sd-grIntro" style="margin:0 0 10px!important"></p>
-<div class="gr-tabs" role="tablist"><button type="button" role="tab" data-gr="demandes" aria-selected="true">Demandes d'accord<em class="gr-badge" id="sd-grBDem" hidden></em></button><button type="button" role="tab" data-gr="decisions" aria-selected="false">Décisions<em class="gr-badge" id="sd-grBDec" hidden></em></button><button type="button" role="tab" data-gr="rapports" aria-selected="false">Rapport de la semaine<em class="gr-badge" id="sd-grBRap" hidden></em></button></div>
-<div class="gr-pane" data-grp="demandes"><form id="sd-grDemForm" class="gr-form" hidden novalidate><div class="row2"><div class="field"><label for="sd-grDemType">Pour quoi ?</label><select id="sd-grDemType"><option>Remise</option><option>Annulation de reçu</option><option>Report de paiement</option><option>Dépense</option><option>Autre</option></select></div><div class="field"><label for="sd-grDemMt">Montant (F, si besoin)</label><input id="sd-grDemMt" inputmode="numeric" autocomplete="off" placeholder="ex. 5 000"></div></div><div class="field"><label for="sd-grDemEl">Élève concerné (si besoin)</label><select id="sd-grDemEl"><option value="">Aucun</option></select></div><div class="field"><label for="sd-grDemTx">Explique en quelques mots</label><textarea id="sd-grDemTx" rows="2" maxlength="600" placeholder="ex. Deux frères inscrits ensemble, je propose 5 000 F de remise au second."></textarea></div><button type="submit" class="btn btn-sm btn-green">Envoyer à la direction</button></form><div id="sd-grDemList" class="gr-list"></div></div>
-<div class="gr-pane" data-grp="decisions" hidden><form id="sd-grDecForm" class="gr-form" hidden novalidate><div class="row2"><div class="field"><label for="sd-grDecCat">Sujet</label><select id="sd-grDecCat"><option>Élèves</option><option>Argent</option><option>Planning</option><option>Équipe</option><option>Autre</option></select></div><div class="field gr-grow"><label for="sd-grDecTx">Ce que j'ai décidé</label><textarea id="sd-grDecTx" rows="2" maxlength="600" placeholder="ex. Séance de samedi 7 h 30 déplacée à 8 h 45, le moniteur est prévenu."></textarea></div></div><button type="submit" class="btn btn-sm btn-green">Noter la décision</button></form><div id="sd-grDecList" class="gr-list"></div></div>
-<div class="gr-pane" data-grp="rapports" hidden><div id="sd-grRapNew" hidden><p class="gr-sem" id="sd-grRapSem"></p><div class="tm-stats tm-dr" id="sd-grRapChiffres"></div><div class="field"><label for="sd-grRapTx">Mes remarques pour la direction</label><textarea id="sd-grRapTx" rows="4" maxlength="3000" placeholder="Ce qui s'est bien passé, les problèmes, ce qu'il faudrait changer, ce dont j'ai besoin."></textarea></div><button type="button" class="btn btn-sm btn-green" id="sd-grRapSend">Envoyer le rapport</button></div><div id="sd-grRapList" class="gr-list"></div></div>
 </div>
 <div class="card" style="margin-top:16px"><p class="eyebrow">Examen</p><h3 class="tm-h3">Dossiers d'examen et résultats</h3><div id="sd-drExam" class="tm-stats tm-dr tm-drex"></div></div>
 <div class="card" style="margin-top:16px"><p class="eyebrow">Ce mois-ci</p><h3 class="tm-h3">D'où viennent les nouveaux clients</h3><div id="sd-drSrc" class="tm-src"></div></div>
@@ -2727,7 +2734,7 @@ function init(root) {
       if (t === "mon") { const slot = $("#sd-mnPlanSlot"); if (cdSec.parentNode !== slot) slot.appendChild(cdSec); cdSec.hidden = false; (eleves.length ? Promise.resolve() : loadEleves(true)).then(() => loadDay()); }
       else if (cdSec.parentNode !== cdHome.p) { cdHome.p.insertBefore(cdSec, cdHome.n); const on = $('#sd-secNav button[aria-selected="true"]'); cdSec.hidden = !on || on.dataset.s !== "conduite"; }
     };
-    const pick = (t) => { if (t === "sec" && me && me.role === "moniteur") t = "mon"; if (t === "mon" && me && me.role === "secretariat") t = "sec"; tabs.forEach((b) => b.setAttribute("aria-selected", b.dataset.t === t)); panes.forEach((p) => (p.hidden = p.dataset.pane !== t)); try { S.set("tmTab", t); } catch (e) {} placePlanning(t); if (t === "mon" || (t === "sec" && $("#sd-secAuj"))) loadMon(); if (t === "dir") loadDir(); msVoirFil(false); if (t === "msg") { MS.repere = {}; MS.forceBas = true; msRender(); msNotifBox(); if (!isWide()) setTimeout(() => $(".ms-wrap").scrollIntoView({ block: "start" }), 60); } };
+    const pick = (t) => { if (t === "sec" && me && me.role === "moniteur") t = "mon"; if (t === "mon" && me && me.role === "secretariat") t = "sec"; tabs.forEach((b) => b.setAttribute("aria-selected", b.dataset.t === t)); panes.forEach((p) => (p.hidden = p.dataset.pane !== t)); try { S.set("tmTab", t); } catch (e) {} placePlanning(t); if (t === "mon" || (t === "sec" && $("#sd-secAuj"))) loadMon(); if (t === "dir") loadDir(); if (t === "ger") grCharger(); msVoirFil(false); if (t === "msg") { MS.repere = {}; MS.forceBas = true; msRender(); msNotifBox(); if (!isWide()) setTimeout(() => $(".ms-wrap").scrollIntoView({ block: "start" }), 60); } };
     tabs.forEach((b) => b.addEventListener("click", () => pick(b.dataset.t)));
     const subs = $$("#sd-secNav button[data-s]"), secs = $$(".tm-sec");
     const LOAD = { eleves: () => loadEleves(), conduite: () => loadDay(), paiements: () => loadPay(), devoirs: () => loadDev() };
@@ -3101,7 +3108,7 @@ function init(root) {
     window.addEventListener("online", () => { if (!me || !MS.pret) return; RT.essais = 0; if (!RT.ws) rtConnecter(); msPoll(true); MS.file.forEach((f) => { if (f.etat === "echec") f.etat = "attente"; }); msTraiter(); });
     function goEleve(id) { const x = eleves.find((y) => y.id === id); if (!x) { toast("Élève introuvable"); return; } if (me && me.role === "moniteur") { ficheCourte(x); return; } msVoirFil(false); pick("sec"); sub("eleves"); pcStage = etapeOf(x); S.set("pcStage", pcStage); pcSel = id; $("#sd-pcQ").value = ""; renderList(); $("#sd-pc").scrollIntoView({ block: "start" }); }
     function msOuvrir(c, el) { if (el) { goEleve(el); return; } if (c && MS.msgs[c]) { MS.cur = c; S.set("msCanal", c); } pick("msg"); if (c) { msVoirFil(true); MS.forceBas = true; msRender(); } }
-    if ("serviceWorker" in navigator) navigator.serviceWorker.addEventListener("message", (e) => { const u = e.data && e.data.sodafOuvrir; if (!u || !me) return; try { const q = new URL(u).searchParams; if (q.get("gerance") && DIR()) { pick("dir"); grOnglet(q.get("gerance")); setTimeout(() => $("#sd-gr").scrollIntoView({ block: "start" }), 300); return; } msOuvrir(q.get("canal"), +q.get("eleve") || 0); } catch (x) {} });
+    if ("serviceWorker" in navigator) navigator.serviceWorker.addEventListener("message", (e) => { const u = e.data && e.data.sodafOuvrir; if (!u || !me) return; try { const q = new URL(u).searchParams; if (q.get("gerance") && DIR()) { pick("ger"); grOnglet(q.get("gerance")); setTimeout(() => $("#sd-gr").scrollIntoView({ block: "start" }), 300); return; } msOuvrir(q.get("canal"), +q.get("eleve") || 0); } catch (x) {} });
     $("#sd-msCanaux").addEventListener("click", (e) => { const b = e.target.closest("[data-ch]"); if (!b) return; if (MS.cur !== b.dataset.ch) { msPjVider(); recArret(false); } MS.cur = b.dataset.ch; S.set("msCanal", MS.cur); MS.forceBas = true; msVoirFil(true); msRender(); if (msLarge()) $("#sd-msTxt").focus(); });
     $("#sd-msList").addEventListener("scroll", () => { if (!msBasTic) msBasTic = requestAnimationFrame(() => { msBasTic = 0; msBasBtn(); }); }, { passive: true });
     $("#sd-msBas").addEventListener("click", () => { const box = $("#sd-msList"); MS.attente = 0; box.scrollTo({ top: box.scrollHeight, behavior: "smooth" }); });
@@ -3412,18 +3419,21 @@ function init(root) {
       $("#sd-tmRole").textContent = { admin: "Direction", gerant: "Gérante", secretariat: "Secrétariat", moniteur: "Moniteur" }[me.role] + " · Espace équipe SODAF";
       show(true);
       const dirTab = $('#sd-tmTabs [data-t="dir"]'); dirTab.hidden = !DIR(); // direction et gérante
-      dirTab.querySelector("b").textContent = me.role === "gerant" ? "Gérance" : "Direction"; dirTab.querySelector("small").textContent = me.role === "gerant" ? "Chiffres, demandes, rapport" : "Chiffres du mois, à surveiller";
+      dirTab.querySelector("b").textContent = me.role === "gerant" ? "Chiffres" : "Direction"; dirTab.querySelector("small").textContent = me.role === "gerant" ? "Vue d'ensemble de l'agence" : "Chiffres du mois, à surveiller";
+      $('#sd-tmTabs [data-t="ger"]').hidden = !DIR(); // onglet Gérance : la gérante y travaille, la direction y répond
+      $("#sd-grRole").textContent = me.role === "gerant" ? "Ton espace de gérante : demande l'accord de la direction, note tes décisions, envoie ton rapport de la semaine. Tu as aussi les chiffres de l'agence, le secrétariat et le moniteur." : "L'espace de la gérante. Ici tu réponds à ses demandes, tu donnes ton avis sur ses décisions et tu lis ses rapports.";
       { const sec = $("#sd-drSec"); if (sec) sec.hidden = me.role !== "admin"; } // comptes et sécurité : direction seulement
       { const rl = $('.tm-pane[data-pane="dir"] .tm-role'); if (rl) rl.textContent = me.role === "gerant" ? "Vue d'ensemble de l'auto-école, mise à jour à chaque ouverture. Visible par la direction et toi." : "Vue d'ensemble de l'auto-école, mise à jour à chaque ouverture. Visible par la direction et la gérante."; }
       $('#sd-tmTabs [data-t="sec"]').hidden = me.role === "moniteur"; // le moniteur a son espace : cours, conduite, réservations, messages
       { const pb = $('#sd-secNav [data-s="paiements"]'); if (pb) pb.hidden = me.role === "moniteur"; } // reçus : direction et secrétariat seulement (règle aussi dans la base)
       if (me.role === "secretariat") secAujourdhui();
       await loadEleves(true);
-      let t0 = S.get("tmTab", DIR() ? "dir" : me.role === "moniteur" ? "mon" : "sec"); if (t0 === "dir" && !DIR()) t0 = "sec";
+      let t0 = S.get("tmTab", me.role === "gerant" ? "ger" : me.role === "admin" ? "dir" : me.role === "moniteur" ? "mon" : "sec"); if ((t0 === "dir" || t0 === "ger") && !DIR()) t0 = "sec";
+      if (DIR()) grCharger(); // pastilles de la gérance dès l'ouverture
       pick(t0);
       sub("eleves");
       await msInit();
-      { const g = new URLSearchParams(location.search).get("gerance"); if (g && DIR()) { history.replaceState(null, "", location.pathname + location.hash); pick("dir"); grOnglet(g); setTimeout(() => $("#sd-gr").scrollIntoView({ block: "start" }), 300); } }
+      { const g = new URLSearchParams(location.search).get("gerance"); if (g && DIR()) { history.replaceState(null, "", location.pathname + location.hash); pick("ger"); grOnglet(g); setTimeout(() => $("#sd-gr").scrollIntoView({ block: "start" }), 300); } }
       { const q = new URLSearchParams(location.search), c = q.get("canal"), el = +q.get("eleve") || 0; if (c || el) { history.replaceState(null, "", location.pathname + location.hash); msOuvrir(c, el); } }
     }
 
@@ -4127,6 +4137,7 @@ function init(root) {
       b("#sd-grBDem", adm ? GR.dem.filter((d) => d.statut === "attente").length : GR.dem.filter((d) => d.statut !== "attente" && d.repondu_le && !grVu("dem", d.id)).length);
       b("#sd-grBDec", adm ? GR.dec.filter((d) => !d.avis).length : GR.dec.filter((d) => d.avis === "revoir" && !grVu("dec", d.id)).length);
       b("#sd-grBRap", adm ? GR.rap.filter((r) => !r.lu_le).length : grSemaineAFaire() ? 1 : 0);
+      b("#sd-grTabBadge", ["#sd-grBDem", "#sd-grBDec", "#sd-grBRap"].reduce((n, id) => n + (+$(id).textContent || 0), 0));
     }
     const grVu = (k, id) => { try { return (JSON.parse(localStorage.getItem("sodaf.gr." + k) || "[]")).includes(id); } catch (e) { return true; } };
     const grMarquer = (k, ids) => { try { const v = new Set(JSON.parse(localStorage.getItem("sodaf.gr." + k) || "[]")); ids.forEach((i) => v.add(i)); localStorage.setItem("sodaf.gr." + k, JSON.stringify([...v].slice(-300))); } catch (e) {} };
@@ -4207,7 +4218,6 @@ function init(root) {
     async function loadDir() {
       if (!me || !DIR()) return;
       if (me.role === "admin") loadSec();
-      grCharger();
       const now = new Date(), m0 = new Date(now.getFullYear(), now.getMonth(), 1), m6 = new Date(now.getFullYear(), now.getMonth() - 5, 1), mPrev = new Date(now.getFullYear(), now.getMonth() - 1, 1);
       const mEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0), today = iso(now);
       const lun = new Date(now); lun.setDate(now.getDate() - ((now.getDay() + 6) % 7)); const dim = new Date(lun); dim.setDate(lun.getDate() + 6);
