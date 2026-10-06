@@ -1813,7 +1813,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="card" style="margin-top:16px"><p class="eyebrow">Examen</p><h3 class="tm-h3">Dossiers d'examen et résultats</h3><div id="sd-drExam" class="tm-stats tm-dr tm-drex"></div></div>
 <div class="card" style="margin-top:16px"><p class="eyebrow">Ce mois-ci</p><h3 class="tm-h3">D'où viennent les nouveaux clients</h3><div id="sd-drSrc" class="tm-src"></div></div>
 <div class="card" style="margin-top:16px"><p class="eyebrow">6 derniers mois</p><h3 class="tm-h3">Inscriptions et encaissements</h3><div id="sd-drMonths" class="tm-months"></div></div>
-<div class="card" style="margin-top:16px" id="sd-drSec"><p class="eyebrow">Sécurité</p><h3 class="tm-h3">Comptes de l'équipe</h3><p class="tm-note" style="margin:0 0 10px!important">Un compte désactivé ne voit plus rien, tout de suite, sur tous ses appareils. Son historique (reçus, messages) est gardé. Tu reçois une notification quand un compte se connecte depuis un appareil jamais vu ; chaque appareil se déconnecte seul après 8 heures sans activité.</p><div id="sd-drComptes" class="sc-list"></div><h4 class="sc-h">Dernières connexions</h4><div id="sd-drCx" class="tm-list"></div></div>
+<div class="card" style="margin-top:16px" id="sd-drSec"><p class="eyebrow">Sécurité</p><h3 class="tm-h3">Comptes de l'équipe</h3><p class="tm-note" style="margin:0 0 10px!important">Un compte désactivé ne voit plus rien, tout de suite, sur tous ses appareils. Son historique (reçus, messages) est gardé. Tu reçois une notification quand un compte se connecte depuis un appareil jamais vu, avec le pays et la ville (approximatifs, d'après l'adresse internet) ; chaque appareil se déconnecte seul après 8 heures sans activité.</p><div id="sd-drComptes" class="sc-list"></div><h4 class="sc-h">Dernières connexions</h4><div id="sd-drCx" class="tm-list"></div></div>
 </div>
 <div class="tm-pane" data-pane="mon" role="tabpanel" hidden>
 <p class="tm-role">Cours de code en salle, séances de conduite et progression des élèves.</p>
@@ -3310,16 +3310,18 @@ function init(root) {
       try { let a = localStorage.getItem("sodaf.appareil"); if (!a || a.length < 16) { a = Array.from(crypto.getRandomValues(new Uint8Array(12)), (b) => b.toString(16).padStart(2, "0")).join(""); localStorage.setItem("sodaf.appareil", a); } return a; }
       catch (e) { return "sans-memoire-" + (navigator.userAgent.length || 0); }
     }
-    function secDescription() {
-      const ua = navigator.userAgent;
+    async function secDescription() {
+      const ua = navigator.userAgent; let modele = "";
+      // Modèle exact du téléphone quand le navigateur le donne (Android + Chrome) ; l'iPhone ne le donne jamais
+      try { if (navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) { const h = await navigator.userAgentData.getHighEntropyValues(["model"]); modele = String(h.model || "").trim().slice(0, 40); if (/^SM-/i.test(modele)) modele = "Samsung " + modele; } } catch (e) {}
       const os = /iPhone/.test(ua) ? "iPhone" : /iPad/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1) ? "iPad" : /Android/.test(ua) ? "Android" : /Windows/.test(ua) ? "Windows" : /Mac OS X/.test(ua) ? "Mac" : /Linux/.test(ua) ? "Linux" : "Appareil";
       const nav = /Edg\//.test(ua) ? "Edge" : /OPR\//.test(ua) ? "Opera" : /SamsungBrowser/.test(ua) ? "Samsung Internet" : /CriOS|Chrome\//.test(ua) ? "Chrome" : /FxiOS|Firefox\//.test(ua) ? "Firefox" : /Safari\//.test(ua) ? "Safari" : "navigateur";
-      return os + " · " + nav + (matchMedia("(display-mode: standalone)").matches || navigator.standalone ? " (application)" : "");
+      return os + (modele ? " " + modele : "") + " · " + nav + (matchMedia("(display-mode: standalone)").matches || navigator.standalone ? " (application)" : "");
     }
     async function secNoter() {
       const k = "sodaf.cx." + me.id; let deja = false; try { deja = localStorage.getItem(k) === "1"; } catch (e) {}
       const login = SEC.login; SEC.login = false; if (!login && deja) return; // appareil déjà connu et simple réouverture : rien à noter
-      try { await DB.q("rpc/connexion_noter", { method: "POST", body: { p_appareil: secAppareil(), p_description: secDescription(), p_login: login } }); try { localStorage.setItem(k, "1"); } catch (e) {} } catch (e) {}
+      try { await DB.q("rpc/connexion_noter", { method: "POST", body: { p_appareil: secAppareil(), p_description: await secDescription(), p_login: login } }); try { localStorage.setItem(k, "1"); } catch (e) {} } catch (e) {}
     }
     // Direction : comptes (désactiver / réactiver) et dernières connexions
     async function loadSec() {
@@ -3328,9 +3330,10 @@ function init(root) {
       if (!pr) return;
       const R = { admin: "Direction", secretariat: "Secrétariat", moniteur: "Moniteur" }, quand = (d) => { const x = new Date(d), j = msJour(d); return (j === "Aujourd'hui" ? "aujourd'hui" : j === "Hier" ? "hier" : x.toLocaleDateString("fr-FR", { day: "numeric", month: "short" })) + " à " + x.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }); };
       const der = {}; (cx || []).forEach((c) => { if (!der[c.profil]) der[c.profil] = c; });
+      const lieu = (c) => (c.pays ? (c.ville ? c.ville + ", " : "") + c.pays : ""), loin = (c) => c.pays && c.pays !== "Togo";
       pr.sort((a, b) => (b.actif !== false) - (a.actif !== false) || ["admin", "secretariat", "moniteur"].indexOf(a.role) - ["admin", "secretariat", "moniteur"].indexOf(b.role));
-      $("#sd-drComptes").innerHTML = pr.map((p) => { const on = p.actif !== false, c = der[p.id]; return '<div class="sc-row' + (on ? "" : " off") + '"><div class="sc-who"><b>' + esc(p.nom) + "</b><small>" + esc(R[p.role] || p.role) + (p.id === me.id ? " · toi" : "") + "</small></div><div class=\"sc-last\">" + (c ? "Dernière connexion " + esc(quand(c.le)) + "<small>" + esc(c.description || "") + "</small>" : "<small>Aucune connexion notée depuis l'activation du journal</small>") + '</div><div class="sc-act"><em class="sc-st">' + (on ? "Actif" : "Désactivé") + "</em>" + (p.id === me.id ? "" : '<button type="button" class="btn btn-sm ' + (on ? "btn-line sc-off" : "btn-green") + '" data-cpt="' + esc(p.id) + '" data-on="' + (on ? 0 : 1) + '">' + (on ? "Désactiver" : "Réactiver") + "</button>") + "</div></div>"; }).join("");
-      $("#sd-drCx").innerHTML = (cx || []).length ? cx.slice(0, 15).map((c) => { const p = pr.find((x) => x.id === c.profil) || { nom: "Compte", role: "" }; return '<div class="tm-row sc-cx' + (c.nouvel ? " neuf" : "") + '"><div class="tm-time">' + esc(quand(c.le)) + '</div><div class="tm-main"><b>' + esc(msPrenom(p)) + " · " + esc(R[p.role] || "") + (c.nouvel ? ' <em class="sc-new">Nouvel appareil</em>' : "") + "</b><span>" + esc(c.description || "Appareil") + (c.ip ? " · adresse " + esc(c.ip) : "") + "</span></div></div>"; }).join("") : '<p class="tm-empty">Les connexions apparaîtront ici à partir de maintenant.</p>';
+      $("#sd-drComptes").innerHTML = pr.map((p) => { const on = p.actif !== false, c = der[p.id]; return '<div class="sc-row' + (on ? "" : " off") + '"><div class="sc-who"><b>' + esc(p.nom) + "</b><small>" + esc(R[p.role] || p.role) + (p.id === me.id ? " · toi" : "") + "</small></div><div class=\"sc-last\">" + (c ? "Dernière connexion " + esc(quand(c.le)) + "<small>" + esc(c.description || "") + (lieu(c) ? " · " + esc(lieu(c)) : "") + "</small>" : "<small>Aucune connexion notée depuis l'activation du journal</small>") + '</div><div class="sc-act"><em class="sc-st">' + (on ? "Actif" : "Désactivé") + "</em>" + (p.id === me.id ? "" : '<button type="button" class="btn btn-sm ' + (on ? "btn-line sc-off" : "btn-green") + '" data-cpt="' + esc(p.id) + '" data-on="' + (on ? 0 : 1) + '">' + (on ? "Désactiver" : "Réactiver") + "</button>") + "</div></div>"; }).join("");
+      $("#sd-drCx").innerHTML = (cx || []).length ? cx.slice(0, 15).map((c) => { const p = pr.find((x) => x.id === c.profil) || { nom: "Compte", role: "" }; return '<div class="tm-row sc-cx' + (c.nouvel ? " neuf" : "") + '"><div class="tm-time">' + esc(quand(c.le)) + '</div><div class="tm-main"><b>' + esc(msPrenom(p)) + " · " + esc(R[p.role] || "") + (c.nouvel ? ' <em class="sc-new">Nouvel appareil</em>' : "") + (loin(c) ? ' <em class="sc-new sc-loin">Hors du Togo</em>' : "") + "</b><span>" + esc(c.description || "Appareil") + (lieu(c) ? " · <strong>" + esc(lieu(c)) + "</strong>" + (c.operateur ? " (" + esc(c.operateur) + ")" : "") : c.ip ? " · lieu en cours de recherche" : "") + "</span></div></div>"; }).join("") : '<p class="tm-empty">Les connexions apparaîtront ici à partir de maintenant.</p>';
     }
     async function start() {
       const s = DB.session; if (!s) { show(false); return; }
@@ -4862,6 +4865,7 @@ html.ms-plein,html.ms-plein body{overflow:hidden}
 .sc-row.off .sc-st{background:#E5E8EB;color:#5B6670}
 .btn.sc-conf{background:#D7263D!important;border-color:#D7263D!important;color:#fff!important}
 .sc-h{margin:18px 0 6px;font-size:1rem}
+.sc-loin{background:#B45309!important}
 .sc-new{font-style:normal;font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:#fff;background:#D7263D;border-radius:999px;padding:.2em .6em;margin-left:4px;vertical-align:middle}
 @media (max-width:700px){.sc-row{grid-template-columns:1fr}.sc-act{justify-content:flex-start}}
 .ms-list .ms-who b{color:#EEF1F3}.ms-list .ms-who small{color:#9AA4AD}

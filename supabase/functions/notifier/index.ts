@@ -1,6 +1,6 @@
 // SODAF · Fonction « notifier » : envoie les notifications sur les téléphones de l'équipe.
 // Appelée uniquement par la base (déclencheurs de la migration 0028) avec un secret partagé.
-// Types : message (canal), preinscription (formulaire du site), inscription (finalisée en ligne), connexion (nouvel appareil), test (bouton « Tester »).
+// Types : message (canal), preinscription (formulaire du site), inscription (finalisée en ligne), connexion (lieu + alerte nouvel appareil), test (bouton « Tester »), geotest (contrôle du lieu).
 // Les clés VAPID et le secret sont lus dans prive.config_push : rien de secret dans ce fichier.
 import webpush from "npm:web-push@3.6.7";
 import postgres from "npm:postgres@3.4.5";
@@ -9,13 +9,28 @@ const sql = postgres(Deno.env.get("SUPABASE_DB_URL")!, { prepare: false, max: 2,
 const prenom = (n: string) => (n || "").trim().split(/\s+/)[0] || "Équipe";
 const milliers = (n: number) => String(Math.round(n || 0)).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 const ROLE: Record<string, string> = { admin: "Direction", secretariat: "Secrétariat", moniteur: "Moniteur" };
+// Lieu approximatif d'une adresse internet (pays, ville, opérateur). Adresses locales ignorées. Deux services de secours, 4 s au plus chacun.
+const nomPays = (cc: string, n: string) => { try { return new Intl.DisplayNames(["fr"], { type: "region" }).of(String(cc).toUpperCase()) || n; } catch { return n; } };
+async function geo(ip: string): Promise<{ pays: string; ville: string | null; op: string | null } | null> {
+  if (!ip || /^(10\.|127\.|0\.|192\.168\.|169\.254\.|172\.(1[6-9]|2\d|3[01])\.|::1$|f[cd]|fe80)/i.test(ip)) return null;
+  const net = (t: unknown, n: number) => { const v = t ? String(t).replace(/^AS\d+\s*/, "").trim().slice(0, n) : ""; return v && !/-AS\d*$/i.test(v) ? v : null; }; // codes techniques du type « XXXX-AS » : ignorés
+  try {
+    const r = await fetch("https://get.geojs.io/v1/ip/geo/" + encodeURIComponent(ip) + ".json", { signal: AbortSignal.timeout(4000) });
+    if (r.ok) { const j = await r.json(); if (j && j.country_code) return { pays: nomPays(j.country_code, j.country || "").slice(0, 60), ville: net(j.city, 80), op: net(j.organization_name || j.organization, 80) }; }
+  } catch { /* service suivant */ }
+  try {
+    const r = await fetch("https://ipwho.is/" + encodeURIComponent(ip) + "?lang=fr", { signal: AbortSignal.timeout(4000) });
+    if (r.ok) { const j = await r.json(); if (j && j.success) return { pays: nomPays(j.country_code, j.country || "").slice(0, 60), ville: net(j.city, 80), op: net(j.connection && (j.connection.isp || j.connection.org), 80) }; }
+  } catch { /* lieu inconnu */ }
+  return null;
+}
 const json = (o: unknown, status = 200) => new Response(JSON.stringify(o), { status, headers: { "Content-Type": "application/json" } });
 
 Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ ok: true });
   const cfg: Record<string, string> = Object.fromEntries((await sql`select cle, valeur from prive.config_push`).map((r) => [r.cle, r.valeur]));
   if (!cfg.secret_fonction || req.headers.get("x-sodaf-secret") !== cfg.secret_fonction) return json({ erreur: "refusé" }, 401);
-  let p: { type?: string; id?: number; profil?: string };
+  let p: { type?: string; id?: number; profil?: string; ip?: string };
   try { p = await req.json(); } catch { return json({ erreur: "requête illisible" }, 400); }
 
   let roles: string[] | null = null, exclure: string | null = null, seulement: string | null = null, aussi: string | null = null;
@@ -45,11 +60,20 @@ Deno.serve(async (req) => {
       : { title: "Inscription finalisée", body: qui + " viendra payer " + milliers(w.a_payer) + " F à l'agence (SO" + w.eleve_id + ")", url: "/equipe/?eleve=" + w.eleve_id, tag: "eleve-" + w.eleve_id };
   } else if (p.type === "connexion") {
     // Sécurité : un compte s'est connecté sur un appareil jamais vu → la direction et la personne concernée sont prévenues
-    const [c] = await sql`select c.id, c.description, c.le, c.profil, pr.nom, pr.role from public.connexions c join public.profils pr on pr.id = c.profil where c.id = ${p.id ?? 0}`;
+    // Chaque connexion : on cherche le lieu (pays, ville, opérateur) et on l'enregistre ; l'alerte ne part que pour un nouvel appareil
+    const [c] = await sql`select c.id, c.description, c.le, c.profil, c.ip, c.pays, c.ville, c.operateur, c.nouvel, pr.nom, pr.role from public.connexions c join public.profils pr on pr.id = c.profil where c.id = ${p.id ?? 0}`;
     if (!c) return json({ envoyes: 0, raison: "connexion introuvable" });
+    if (c.ip && !c.pays) {
+      const g = await geo(c.ip);
+      if (g) { await sql`update public.connexions set pays = ${g.pays}, ville = ${g.ville}, operateur = ${g.op} where id = ${c.id}`; c.pays = g.pays; c.ville = g.ville; c.operateur = g.op; }
+    }
+    const lieu = c.pays ? (c.ville ? c.ville + ", " : "") + c.pays + (c.operateur ? " (" + c.operateur + ")" : "") : "";
+    if (!c.nouvel) return json({ type: p.type, lieu, envoyes: 0, raison: "appareil déjà connu" });
     roles = ["admin"]; aussi = c.profil;
     const heure = new Date(c.le).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: "Africa/Lome" });
-    note = { title: "Nouvelle connexion · " + (ROLE[c.role] || "Équipe"), body: prenom(c.nom) + " (" + (ROLE[c.role] || "Équipe") + ") s'est connecté sur un nouvel appareil : " + (c.description || "appareil inconnu") + ", à " + heure + ". Si ce n'est pas normal : Direction → Comptes → Désactiver.", url: "/equipe/", tag: "cx-" + c.id };
+    note = { title: "Nouvelle connexion · " + (ROLE[c.role] || "Équipe"), body: prenom(c.nom) + " (" + (ROLE[c.role] || "Équipe") + ") s'est connecté sur un nouvel appareil : " + (c.description || "appareil inconnu") + (lieu ? ", depuis " + lieu : "") + ", à " + heure + ". Si ce n'est pas normal : Direction → Comptes → Désactiver.", url: "/equipe/", tag: "cx-" + c.id };
+  } else if (p.type === "geotest") {
+    return json({ ip: p.ip || null, lieu: await geo(p.ip || "") }); // contrôle technique (secret obligatoire), aucune écriture
   } else if (p.type === "test") {
     seulement = p.profil || null;
     note = { title: "Notifications SODAF activées", body: "Tu recevras ici les messages de l'équipe et les nouvelles inscriptions.", url: "/equipe/?canal=general", tag: "test" };
