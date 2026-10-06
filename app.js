@@ -1833,11 +1833,12 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="card soft"><p class="eyebrow">Après chaque cours de code</p><ol class="teamsteps"><li>Au début du cours, ouvre <b>Cours de code</b> : le programme du jour s'affiche.</li><li>Fais l'appel : coche les élèves présents.</li><li>Touche <b>Valider les présences</b> : le cours compte comme fait.</li></ol></div>
 <div class="card soft"><p class="eyebrow">Séances de conduite</p><ol class="teamsteps"><li>Le matin, regarde <b>Mes séances d'aujourd'hui</b>.</li><li>Avant de partir : vérification de la voiture (Outils → check-list du matin).</li><li>Après la séance : <b>Fait</b> ou <b>Absent</b>, et une courte note sur les progrès.</li><li>Avec l'élève, réserve sa prochaine séance dans <b>Réserver une séance</b>.</li></ol></div>
 </div></div>
+<div class="ms-vue" id="sd-msVue" role="dialog" aria-modal="true" aria-label="Photo" hidden><div class="ms-vbar"><b id="sd-msVueNom"></b><a class="ms-vdl" id="sd-msVueDl" href="#" target="_blank" rel="noopener">Télécharger</a><button type="button" class="ms-vx" id="sd-msVueX" aria-label="Fermer">×</button></div><div class="ms-vimg"><img id="sd-msVueImg" alt=""></div></div>
 <div class="mf-ov" id="sd-mfOv" hidden><div class="mf-box" id="sd-mfBox" role="dialog" aria-modal="true" aria-label="Fiche de l'élève"></div></div>
 <div class="tm-pane" data-pane="msg" role="tabpanel" hidden>
 <p class="tm-role">Les échanges de l'équipe. Le cadenas indique une conversation privée : seules les personnes nommées en haut de la conversation la lisent. Écris @ pour prévenir quelqu'un, SO12 pour ouvrir la fiche d'un élève, et le trombone (ou glisse le fichier dans la conversation) pour joindre une photo ou un document.</p>
 <div class="ms-notif" id="sd-msNotif"></div>
-<div class="ms-wrap card" id="sd-msWrap"><nav class="ms-canaux" id="sd-msCanaux" aria-label="Conversations"></nav><section class="ms-fil"><header class="ms-head"><button type="button" class="ms-back" id="sd-msBack" aria-label="Retour aux conversations"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button><div class="ms-hd" id="sd-msHead"></div></header><div class="ms-list" id="sd-msList" aria-live="polite"><p class="ms-vide">Chargement…</p></div><div class="ms-sug" id="sd-msSug" role="listbox" aria-label="Mentionner" hidden></div><div class="ms-pj" id="sd-msPj" hidden></div><form class="ms-form" id="sd-msForm" novalidate><label class="ms-clip" title="Joindre une photo ou un fichier" aria-label="Joindre une photo ou un fichier"><input type="file" id="sd-msFile" accept="image/*,.pdf,.txt,.doc,.docx,.xls,.xlsx"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.4 11.1l-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a2 2 0 0 1-2.8-2.8l8.5-8.5"/></svg></label><textarea id="sd-msTxt" rows="1" maxlength="2000" placeholder="Message… (@ pour mentionner)" aria-label="Message"></textarea><button class="btn btn-green" id="sd-msSend" type="submit" aria-label="Envoyer"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button></form></section></div>
+<div class="ms-wrap card" id="sd-msWrap"><nav class="ms-canaux" id="sd-msCanaux" aria-label="Conversations"></nav><section class="ms-fil"><header class="ms-head"><button type="button" class="ms-back" id="sd-msBack" aria-label="Retour aux conversations"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button><div class="ms-hd" id="sd-msHead"></div></header><div class="ms-list" id="sd-msList" aria-live="polite"><p class="ms-vide">Chargement…</p></div><div class="ms-sug" id="sd-msSug" role="listbox" aria-label="Mentionner" hidden></div><div class="ms-pj" id="sd-msPj" hidden></div><div class="ms-rec" id="sd-msRec" hidden><i class="ms-recdot" aria-hidden="true"></i><b id="sd-msRecT">0:00</b><span>Enregistrement… (3 min au plus)</span><button type="button" class="linkbtn" id="sd-msRecX">Annuler</button><button type="button" class="btn btn-green btn-sm" id="sd-msRecOk">Envoyer le vocal</button></div><form class="ms-form" id="sd-msForm" novalidate><label class="ms-clip" title="Joindre une photo ou un fichier" aria-label="Joindre une photo ou un fichier"><input type="file" id="sd-msFile" multiple accept="image/*,.pdf,.txt,.doc,.docx,.xls,.xlsx"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.4 11.1l-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a2 2 0 0 1-2.8-2.8l8.5-8.5"/></svg></label><button type="button" class="ms-mic" id="sd-msMic" title="Message vocal" aria-label="Enregistrer un message vocal"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5"/></svg></button><textarea id="sd-msTxt" rows="1" maxlength="2000" placeholder="Message… (@ pour mentionner)" aria-label="Message"></textarea><button class="btn btn-green" id="sd-msSend" type="submit" aria-label="Envoyer"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button></form></section></div>
 </div>
 <div class="tm-pane" data-pane="docs" role="tabpanel" hidden>
 <p class="tm-role">Supports de communication et documents officiels SODAF, à télécharger ou à envoyer à l'imprimeur.</p>
@@ -2778,7 +2779,7 @@ function init(root) {
     // ---- Messages de l'équipe (canaux) et notifications sur téléphone
     // La base envoie les notifications (fonction « notifier ») ; ici : lire, écrire, compter les non-lus, activer les notifications.
     const VAPID_PUB = "BOMPgiFqajAv-Mqb1SXD7WOGWJVEK_sDJQGULUCSgV5eAm10bOq7WctPkE51LqGgFHqe4S2y2COGmt0DWbWMv8o";
-    const MS = { canaux: [], cur: null, msgs: {}, lu: {}, profs: {}, dernier: null, pret: false, envoi: false, total: 0, forceBas: false, urls: {}, pj: null, sug: [], sugI: 0 };
+    const MS = { canaux: [], cur: null, msgs: {}, lu: {}, profs: {}, dernier: null, pret: false, envoi: false, total: 0, forceBas: false, urls: {}, pjs: [], sug: [], sugI: 0 };
     const msRole = { admin: "Direction", secretariat: "Secrétariat", moniteur: "Moniteur" };
     const msLarge = () => matchMedia("(min-width: 761px)").matches;
     // Téléphone : liste des conversations d'abord, puis la conversation en plein écran (bouton retour ou geste retour du téléphone)
@@ -2787,7 +2788,19 @@ function init(root) {
       const avant = w.classList.contains("voir-fil"); w.classList.toggle("voir-fil", !!on); document.documentElement.classList.toggle("ms-plein", !!on && !msLarge());
       if (on && !avant && !msLarge()) { try { history.pushState({ sdMsFil: 1 }, ""); } catch (e) {} }
     }
-    window.addEventListener("popstate", () => { const w = document.getElementById("sd-msWrap"); if (w && w.classList.contains("voir-fil")) msVoirFil(false); });
+    window.addEventListener("popstate", () => { const v = document.getElementById("sd-msVue"); if (v && !v.hidden) { v.hidden = true; return; } const w = document.getElementById("sd-msWrap"); if (w && w.classList.contains("voir-fil")) msVoirFil(false); });
+    // Visionneuse photo : plein écran, fermer avec ×, Échap, un toucher à côté ou le geste retour du téléphone
+    async function msVue(btn) {
+      const img = btn.querySelector("img"), path = btn.dataset.pj, nom = (img && img.alt) || "Photo", v = $("#sd-msVue");
+      $("#sd-msVueNom").textContent = nom; $("#sd-msVueImg").src = (img && img.src) || ""; $("#sd-msVueDl").href = "#";
+      v.hidden = false; try { history.pushState({ sdMsVue: 1 }, ""); } catch (x) {}
+      const [u] = await msSigne([path]); if (!u) { toast("Photo indisponible"); return; }
+      $("#sd-msVueImg").src = u; $("#sd-msVueDl").href = u + "&download=" + encodeURIComponent(nom);
+      $("#sd-msVueX").focus();
+    }
+    function msVueFermer() { const v = $("#sd-msVue"); if (v.hidden) return; if (history.state && history.state.sdMsVue) history.back(); else v.hidden = true; }
+    $("#sd-msVue").addEventListener("click", (e) => { if (e.target.closest("#sd-msVueX") || e.target.classList.contains("ms-vimg")) msVueFermer(); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") msVueFermer(); });
     const msFilVu = () => msLarge() || $("#sd-msWrap").classList.contains("voir-fil");
     const msOpen = () => !$('.tm-pane[data-pane="msg"]').hidden && !document.hidden && msFilVu();
     async function msInit() {
@@ -2812,6 +2825,8 @@ function init(root) {
     const msMembres = (k) => Object.values(MS.profs).filter((p) => p.actif !== false && (!k.roles || k.roles.includes(p.role)));
     const msTaille = (n) => (n >= 1048576 ? (n / 1048576).toFixed(1).replace(".", ",") + " Mo" : Math.max(1, Math.round(n / 1024)) + " Ko");
     const msEstImg = (f) => f && /^image\//.test(f.type || "");
+    const msEstAud = (f) => f && /^audio\//.test(f.type || "");
+    const msDuree = (n) => Math.floor(n / 60) + ":" + String(Math.floor(n % 60)).padStart(2, "0");
     function msTexte(t, x) {
       const noms = Object.values(MS.profs).filter((p) => p.actif !== false).map(msPrenom), moiNom = msPlat(msPrenom(MS.profs[me.id]));
       return esc(t).replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>')
@@ -2819,7 +2834,7 @@ function init(root) {
         .replace(/(^|[\s(])@([A-Za-zÀ-ÿ][\wÀ-ÿ'-]*)/g, (m, av, n) => (noms.some((y) => msPlat(y) === msPlat(n)) ? av + '<span class="ms-at' + (msPlat(n) === moiNom ? " moi" : "") + '">@' + n + "</span>" : m))
         .replace(/\n/g, "<br>");
     }
-    const msApercu = (x) => { if (!x) return "Aucun message"; const p = MS.profs[x.auteur], f = x.fichier, t = f ? (msEstImg(f) ? "Photo" : "Fichier : " + (f.nom || "Fichier")) + (x.texte && x.texte !== f.nom ? " · " + x.texte : "") : x.texte; return (x.auteur === me.id ? "Toi" : msPrenom(p)) + " : " + t.replace(/\s+/g, " "); };
+    const msApercu = (x) => { if (!x) return "Aucun message"; const p = MS.profs[x.auteur], f = x.fichier, t = f ? (msEstAud(f) ? "Message vocal" : msEstImg(f) ? "Photo" : "Fichier : " + (f.nom || "Fichier")) + (x.texte && x.texte !== f.nom ? " · " + x.texte : "") : x.texte; return (x.auteur === me.id ? "Toi" : msPrenom(p)) + " : " + t.replace(/\s+/g, " "); };
     const IC_LOCK = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
     // Qui lit la conversation (affiché en haut) : la règle de confidentialité doit se voir
     function msQui(k) {
@@ -2837,7 +2852,8 @@ function init(root) {
     function msBulle(x) {
       const f = x.fichier; let h = "";
       if (f && f.path) {
-        if (msEstImg(f)) h += '<button type="button" class="ms-img" data-pj="' + esc(f.path) + '" aria-label="Agrandir la photo"><img alt="' + esc(f.nom || "Photo") + '" data-sp="' + esc(f.path) + '"' + (f.w && f.h ? ' style="aspect-ratio:' + (+f.w) + "/" + (+f.h) + '"' : "") + "></button>";
+        if (msEstAud(f)) h += '<div class="ms-aud"><audio controls preload="metadata" data-sa="' + esc(f.path) + '"></audio>' + (f.duree ? "<small>Vocal · " + msDuree(f.duree) + "</small>" : "") + "</div>";
+        else if (msEstImg(f)) h += '<button type="button" class="ms-img" data-pj="' + esc(f.path) + '" aria-label="Agrandir la photo"><img alt="' + esc(f.nom || "Photo") + '" data-sp="' + esc(f.path) + '"' + (f.w && f.h ? ' style="aspect-ratio:' + (+f.w) + "/" + (+f.h) + '"' : "") + "></button>";
         else h += '<button type="button" class="ms-file" data-pj="' + esc(f.path) + '"><i>' + esc(((f.nom || "").split(".").pop() || "doc").slice(0, 4).toUpperCase()) + "</i><span><b>" + esc(f.nom || "Fichier") + "</b><small>" + (f.taille ? msTaille(f.taille) + " · " : "") + "ouvrir</small></span></button>";
       }
       if (x.texte && (!f || x.texte !== f.nom)) h += '<div class="ms-tx">' + msTexte(x.texte, x) + "</div>";
@@ -2845,6 +2861,8 @@ function init(root) {
     }
     function msRender() {
       if (!MS.pret) return; msChans();
+      if ([...document.querySelectorAll("#sd-msList audio")].some((a) => !a.paused)) { MS.rendreApres = true; return; } // un vocal est en lecture : on rafraîchit à la fin
+      MS.rendreApres = false;
       const k = MS.canaux.find((c) => c.id === MS.cur) || MS.canaux[0], list = MS.msgs[k.id] || [];
       $("#sd-msHead").innerHTML = '<b><i class="ms-ic' + (k.prive ? " pv" : "") + '">' + (k.prive ? IC_LOCK : "#") + "</i>" + esc(k.nom) + "</b><span>" + esc(msQui(k)) + "</span>";
       let jour = "", html = "";
@@ -2872,6 +2890,8 @@ function init(root) {
       return paths.map((x) => (MS.urls[x] ? MS.urls[x].u : null));
     }
     async function msSigner() {
+      const auds = [...document.querySelectorAll("#sd-msList audio[data-sa]:not([src])")];
+      if (auds.length) { const ua = await msSigne(auds.map((a) => a.dataset.sa)); auds.forEach((a, i) => { if (ua[i]) a.src = ua[i]; }); }
       const imgs = [...document.querySelectorAll("#sd-msList img[data-sp]:not([src])")]; if (!imgs.length) return;
       const u = await msSigne([...new Set(imgs.map((i) => i.dataset.sp))]), m = {}; [...new Set(imgs.map((i) => i.dataset.sp))].forEach((x, i) => (m[x] = u[i]));
       const box = $("#sd-msList"), bas = box.scrollHeight - box.scrollTop - box.clientHeight < 80;
@@ -2892,11 +2912,12 @@ function init(root) {
     function goEleve(id) { const x = eleves.find((y) => y.id === id); if (!x) { toast("Élève introuvable"); return; } if (me && me.role === "moniteur") { ficheCourte(x); return; } msVoirFil(false); pick("sec"); sub("eleves"); pcStage = etapeOf(x); S.set("pcStage", pcStage); pcSel = id; $("#sd-pcQ").value = ""; renderList(); $("#sd-pc").scrollIntoView({ block: "start" }); }
     function msOuvrir(c, el) { if (el) { goEleve(el); return; } if (c && MS.msgs[c]) { MS.cur = c; S.set("msCanal", c); } pick("msg"); if (c) { msVoirFil(true); MS.forceBas = true; msRender(); } }
     if ("serviceWorker" in navigator) navigator.serviceWorker.addEventListener("message", (e) => { const u = e.data && e.data.sodafOuvrir; if (!u || !me) return; try { const q = new URL(u).searchParams; msOuvrir(q.get("canal"), +q.get("eleve") || 0); } catch (x) {} });
-    $("#sd-msCanaux").addEventListener("click", (e) => { const b = e.target.closest("[data-ch]"); if (!b) return; if (MS.cur !== b.dataset.ch) msPjVider(); MS.cur = b.dataset.ch; S.set("msCanal", MS.cur); MS.forceBas = true; msVoirFil(true); msRender(); if (msLarge()) $("#sd-msTxt").focus(); });
+    $("#sd-msCanaux").addEventListener("click", (e) => { const b = e.target.closest("[data-ch]"); if (!b) return; if (MS.cur !== b.dataset.ch) { msPjVider(); recArret(false); } MS.cur = b.dataset.ch; S.set("msCanal", MS.cur); MS.forceBas = true; msVoirFil(true); msRender(); if (msLarge()) $("#sd-msTxt").focus(); });
     $("#sd-msBack").addEventListener("click", () => { if (history.state && history.state.sdMsFil) history.back(); else msVoirFil(false); });
     $("#sd-msList").addEventListener("click", async (e) => {
       const b = e.target.closest("[data-goel]"); if (b) { goEleve(+b.dataset.goel); return; }
       const f = e.target.closest("[data-pj]"); if (!f) return;
+      if (f.classList.contains("ms-img")) { msVue(f); return; } // photo : visionneuse plein écran dans l'application (téléphone compris)
       const w = window.open("", "_blank"); const [u] = await msSigne([f.dataset.pj]);
       if (!u) { if (w) w.close(); toast("Fichier indisponible"); return; }
       if (w) w.location = u; else location.href = u;
@@ -2941,52 +2962,102 @@ function init(root) {
         im.src = u;
       });
     }
-    function msPjVider() { if (MS.pj && MS.pj.apercu) URL.revokeObjectURL(MS.pj.apercu); MS.pj = null; const el = $("#sd-msPj"); el.hidden = true; el.innerHTML = ""; $("#sd-msFile").value = ""; }
-    async function msPrendre(file) {
-      if (!file) return; msPjVider();
+    // Plusieurs pièces jointes (10 au plus) : chacune part dans son propre message, le texte accompagne la première
+    const MS_MAX = 10;
+    function msPjListe() {
+      const el = $("#sd-msPj"), l = MS.pjs; el.hidden = !l.length;
+      el.innerHTML = l.map((pj, i) => '<div class="ms-pji">' + (pj.apercu ? '<img src="' + pj.apercu + '" alt="">' : '<i class="ms-fic">' + esc(pj.ext.slice(0, 4).toUpperCase()) + "</i>") + "<span><b>" + esc(pj.nom) + "</b><small>" + msTaille(pj.taille) + '</small></span><button type="button" class="ms-pjx" data-pjx="' + i + '" aria-label="Retirer ' + esc(pj.nom) + '">×</button></div>').join("") +
+        (l.length ? '<p class="ms-pjn">' + l.length + " fichier" + (l.length > 1 ? "s" : "") + " prêt" + (l.length > 1 ? "s" : "") + " · ajoute un message si tu veux, puis Envoyer" + (l.length < MS_MAX ? " · le trombone en ajoute d'autres" : "") + "</p>" : "");
+    }
+    function msPjRetirer(i) { const pj = MS.pjs[i]; if (pj && pj.apercu) URL.revokeObjectURL(pj.apercu); MS.pjs.splice(i, 1); msPjListe(); }
+    function msPjVider() { MS.pjs.forEach((pj) => pj.apercu && URL.revokeObjectURL(pj.apercu)); MS.pjs = []; msPjListe(); $("#sd-msFile").value = ""; }
+    async function msPrendreUn(file) {
       const ext = (file.name.split(".").pop() || "").toLowerCase(); let pj = null;
       if (/^image\//.test(file.type) || /^(jpe?g|png|webp|heic|heif)$/.test(ext)) {
-        const r = await msReduire(file); if (!r) { toast("Photo illisible : essaie en JPEG ou PNG"); return; }
-        pj = { blob: r.blob, type: r.type, nom: file.name.replace(/\.[^.]+$/, "") + ".jpg", ext: "jpg", w: r.w, h: r.h };
+        const r = await msReduire(file); if (!r) { toast(file.name + " : photo illisible, essaie en JPEG ou PNG"); return null; }
+        pj = { blob: r.blob, type: r.type, nom: (file.name.replace(/\.[^.]+$/, "") || "photo") + ".jpg", ext: "jpg", w: r.w, h: r.h };
       } else {
         const type = MS_TYPES.includes(file.type) ? file.type : MS_EXT[ext];
-        if (!type) { toast("Format non accepté : photo, PDF, Word, Excel ou texte"); return; }
+        if (!type) { toast(file.name + " : format non accepté (photo, PDF, Word, Excel ou texte)"); return null; }
         pj = { blob: file, type, nom: file.name, ext };
       }
-      if (pj.blob.size > 10485760) { toast("Fichier trop lourd (10 Mo au plus)"); return; }
-      pj.taille = pj.blob.size; MS.pj = pj;
-      if (pj.w) pj.apercu = URL.createObjectURL(pj.blob);
-      const el = $("#sd-msPj"); el.innerHTML = (pj.apercu ? '<img src="' + pj.apercu + '" alt="">' : '<i class="ms-fic">' + esc(pj.ext.slice(0, 4).toUpperCase()) + "</i>") + "<span><b>" + esc(pj.nom) + "</b><small>" + msTaille(pj.taille) + " · ajoute un message si tu veux, puis Envoyer</small></span>" + '<button type="button" class="ms-pjx" aria-label="Retirer la pièce jointe">×</button>';
-      el.hidden = false; msTa.focus();
+      if (pj.blob.size > 10485760) { toast(file.name + " : trop lourd (10 Mo au plus)"); return null; }
+      pj.taille = pj.blob.size; if (pj.w) pj.apercu = URL.createObjectURL(pj.blob); return pj;
     }
-    $("#sd-msFile").addEventListener("change", (e) => msPrendre(e.target.files && e.target.files[0]));
+    async function msPrendre(files) {
+      let l = [...(files || [])]; if (!l.length) return;
+      const place = MS_MAX - MS.pjs.length; if (place <= 0) { toast(MS_MAX + " fichiers au plus par envoi"); return; }
+      if (l.length > place) { toast(MS_MAX + " fichiers au plus par envoi : les " + place + " premiers sont joints"); l = l.slice(0, place); }
+      for (const f of l) { const pj = await msPrendreUn(f); if (pj) { MS.pjs.push(pj); msPjListe(); } }
+      $("#sd-msFile").value = ""; msTa.focus();
+    }
+    $("#sd-msFile").addEventListener("change", (e) => msPrendre(e.target.files));
     // Glisser-déposer un fichier sur la conversation (ordinateur) ou coller une capture d'écran (Ctrl + V)
     const msFil = $(".ms-fil"); let msDragN = 0;
     const msAvecFichier = (e) => e.dataTransfer && [...(e.dataTransfer.types || [])].includes("Files");
     msFil.addEventListener("dragenter", (e) => { if (!msAvecFichier(e)) return; e.preventDefault(); msDragN++; msFil.classList.add("drop"); });
     msFil.addEventListener("dragover", (e) => { if (!msAvecFichier(e)) return; e.preventDefault(); e.dataTransfer.dropEffect = "copy"; });
     msFil.addEventListener("dragleave", (e) => { if (!msAvecFichier(e)) return; if (--msDragN <= 0) { msDragN = 0; msFil.classList.remove("drop"); } });
-    msFil.addEventListener("drop", (e) => { if (!msAvecFichier(e)) return; e.preventDefault(); msDragN = 0; msFil.classList.remove("drop"); const f = e.dataTransfer.files; if (f.length > 1) toast("Un fichier à la fois : le premier est joint"); msPrendre(f[0]); });
+    msFil.addEventListener("drop", (e) => { if (!msAvecFichier(e)) return; e.preventDefault(); msDragN = 0; msFil.classList.remove("drop"); msPrendre(e.dataTransfer.files); });
     window.addEventListener("dragover", (e) => { if (msAvecFichier(e) && !$('.tm-pane[data-pane="msg"]').hidden) e.preventDefault(); }); // déposé à côté : le navigateur n'ouvre pas le fichier à la place de l'espace équipe
     window.addEventListener("drop", (e) => { if (msAvecFichier(e) && !$('.tm-pane[data-pane="msg"]').hidden && !e.target.closest(".ms-fil")) { e.preventDefault(); toast("Dépose le fichier dans la conversation"); } });
-    msTa.addEventListener("paste", (e) => { const f = [...((e.clipboardData && e.clipboardData.files) || [])][0]; if (f) { e.preventDefault(); msPrendre(f); } });
-    $("#sd-msPj").addEventListener("click", (e) => { if (e.target.closest(".ms-pjx")) msPjVider(); });
+    msTa.addEventListener("paste", (e) => { const f = (e.clipboardData && e.clipboardData.files) || []; if (f.length) { e.preventDefault(); msPrendre(f); } });
+    $("#sd-msPj").addEventListener("click", (e) => { const x = e.target.closest("[data-pjx]"); if (x) msPjRetirer(+x.dataset.pjx); });
     async function msEnvoyerFichier(canal, pj) {
       const path = canal + "/" + Date.now() + "-" + Math.random().toString(36).slice(2, 8) + "." + pj.ext, t = await DB.token();
       const r = await fetch(SB_URL + "/storage/v1/object/messages/" + path, { method: "POST", headers: { apikey: SB_KEY, Authorization: "Bearer " + t, "Content-Type": pj.type, "x-upsert": "false" }, body: pj.blob });
       if (!r.ok) { const j = await r.json().catch(() => ({})); throw new Error(j.message || "Envoi du fichier impossible"); }
       const f = { path, nom: pj.nom.slice(0, 120), type: pj.type, taille: pj.taille }; if (pj.w) { f.w = pj.w; f.h = pj.h; } return f;
     }
+    // Messages vocaux : appuie sur le micro, parle, puis « Envoyer le vocal » (3 min au plus). Le fichier part comme une pièce jointe.
+    $("#sd-msList").addEventListener("pause", () => { if (MS.rendreApres) setTimeout(msRender, 50); }, true);
+    $("#sd-msList").addEventListener("ended", () => { if (MS.rendreApres) setTimeout(msRender, 50); }, true);
+    const REC = { mr: null, flux: null, morceaux: [], debut: 0, tic: null, envoyer: false };
+    function recArret(envoyer) { if (!REC.mr) return; REC.envoyer = envoyer; try { REC.mr.stop(); } catch (x) {} }
+    function recNettoyer() { clearInterval(REC.tic); if (REC.flux) REC.flux.getTracks().forEach((t) => t.stop()); REC.mr = null; REC.flux = null; REC.morceaux = []; $("#sd-msRec").hidden = true; $("#sd-msMic").classList.remove("on"); }
+    $("#sd-msMic").addEventListener("click", async () => {
+      if (REC.mr) { recArret(true); return; }
+      if (!navigator.mediaDevices || !window.MediaRecorder) { toast("Les vocaux ne marchent pas sur ce navigateur : utilise Chrome (Android) ou Safari (iPhone)"); return; }
+      if (!MS.cur || MS.envoi) return;
+      try { REC.flux = await navigator.mediaDevices.getUserMedia({ audio: true }); } catch (x) { toast("Micro refusé : autorise le micro pour autosodaf.com dans les réglages du navigateur"); return; }
+      const type = ["audio/webm;codecs=opus", "audio/mp4", "audio/ogg;codecs=opus", "audio/webm"].find((t) => MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t));
+      try { REC.mr = new MediaRecorder(REC.flux, type ? { mimeType: type, audioBitsPerSecond: 32000 } : undefined); } catch (x) { recNettoyer(); toast("Enregistrement impossible sur ce téléphone"); return; }
+      REC.morceaux = []; REC.envoyer = false; REC.debut = Date.now(); const canal = MS.cur;
+      REC.mr.ondataavailable = (e) => { if (e.data && e.data.size) REC.morceaux.push(e.data); };
+      REC.mr.onstop = async () => {
+        const duree = (Date.now() - REC.debut) / 1000, mime = ((REC.mr && REC.mr.mimeType) || type || "audio/webm").split(";")[0], blob = new Blob(REC.morceaux, { type: mime }), go = REC.envoyer;
+        recNettoyer();
+        if (!go) return; if (duree < 1 || !blob.size) { toast("Vocal trop court"); return; }
+        const ext = mime === "audio/mp4" ? "m4a" : mime === "audio/ogg" ? "ogg" : "webm", h = new Date();
+        const pj = { blob, type: mime, ext, taille: blob.size, nom: "vocal-" + String(h.getHours()).padStart(2, "0") + "h" + String(h.getMinutes()).padStart(2, "0") + "." + ext };
+        MS.envoi = true; const btn = $("#sd-msSend"); btn.disabled = true; btn.classList.add("wait");
+        try { const f = await msEnvoyerFichier(canal, pj); f.duree = Math.round(duree); const r = await run(() => DB.q("messages", { method: "POST", body: { canal, texte: f.nom, fichier: f }, prefer: "return=representation" })); if (r && r[0]) { msAjout(r[0]); MS.forceBas = true; msRender(); } }
+        catch (x) { toast("Vocal non envoyé : " + (x.message || "réessaie")); }
+        MS.envoi = false; btn.disabled = false; btn.classList.remove("wait");
+      };
+      REC.mr.start(1000); $("#sd-msMic").classList.add("on"); $("#sd-msRec").hidden = false; $("#sd-msRecT").textContent = "0:00";
+      REC.tic = setInterval(() => { const n = (Date.now() - REC.debut) / 1000; $("#sd-msRecT").textContent = msDuree(n); if (n >= 180) recArret(true); }, 250);
+    });
+    $("#sd-msRecX").addEventListener("click", () => recArret(false));
+    $("#sd-msRecOk").addEventListener("click", () => recArret(true));
     $("#sd-msForm").addEventListener("submit", async (e) => {
-      e.preventDefault(); const t = msTa.value.trim(), pj = MS.pj; if ((!t && !pj) || MS.envoi || !MS.cur) return;
-      const k = MS.canaux.find((c) => c.id === MS.cur), mentions = k ? msMembres(k).filter((p) => p.id !== me.id && new RegExp("(^|[\\s(])@" + msPrenom(p).replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "(?![\\wÀ-ÿ])", "i").test(t)).map((p) => p.id) : [];
+      e.preventDefault(); const t = msTa.value.trim(), canal = MS.cur, pjs = MS.pjs.slice(); if ((!t && !pjs.length) || MS.envoi || !canal) return;
+      const k = MS.canaux.find((c) => c.id === canal), mentions = k ? msMembres(k).filter((p) => p.id !== me.id && new RegExp("(^|[\\s(])@" + msPrenom(p).replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "(?![\\wÀ-ÿ])", "i").test(t)).map((p) => p.id) : [];
       MS.envoi = true; const btn = $("#sd-msSend"); btn.disabled = true; btn.classList.add("wait");
-      let fichier = null;
-      if (pj) { try { fichier = await msEnvoyerFichier(MS.cur, pj); } catch (x) { toast(x.message || "Envoi du fichier impossible"); MS.envoi = false; btn.disabled = false; btn.classList.remove("wait"); return; } }
-      const body = { canal: MS.cur, texte: t || fichier.nom }; if (mentions.length) body.mentions = mentions; if (fichier) body.fichier = fichier;
-      const r = await run(() => DB.q("messages", { method: "POST", body, prefer: "return=representation" }));
-      MS.envoi = false; btn.disabled = false; btn.classList.remove("wait");
-      if (r && r[0]) { msTa.value = ""; msGrow(); msPjVider(); msAjout(r[0]); MS.forceBas = true; msRender(); }
+      const fin = () => { MS.envoi = false; btn.disabled = false; btn.classList.remove("wait"); btn.removeAttribute("data-n"); };
+      const poster = async (body) => { const r = await run(() => DB.q("messages", { method: "POST", body, prefer: "return=representation" })); if (r && r[0]) { msAjout(r[0]); MS.forceBas = true; msRender(); return true; } return false; };
+      if (!pjs.length) { if (await poster(Object.assign({ canal, texte: t }, mentions.length ? { mentions } : {}))) { msTa.value = ""; msGrow(); } fin(); return; }
+      let texteParti = false;
+      for (let i = 0; i < pjs.length; i++) {
+        const pj = pjs[i]; if (pjs.length > 1) btn.dataset.n = i + 1 + "/" + pjs.length;
+        let fichier; try { fichier = await msEnvoyerFichier(canal, pj); } catch (x) { toast(pj.nom + " : " + (x.message || "envoi impossible") + ". Les fichiers restants sont gardés."); break; }
+        const body = { canal, texte: !texteParti && t ? t : fichier.nom, fichier }; if (!texteParti && mentions.length) body.mentions = mentions;
+        if (!(await poster(body))) break;
+        if (!texteParti && t) { msTa.value = ""; msGrow(); } texteParti = true;
+        if (pj.apercu) URL.revokeObjectURL(pj.apercu); MS.pjs.splice(MS.pjs.indexOf(pj), 1); msPjListe();
+      }
+      if (!MS.pjs.length) $("#sd-msFile").value = "";
+      fin();
     });
     // Notifications : activer, tester, désactiver (par téléphone)
     const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
@@ -3032,6 +3103,21 @@ function init(root) {
       const h = $("#sd-mcDrive .tm-h3"); if (h) h.textContent = "Séances de conduite d'aujourd'hui";
       d.addEventListener("toggle", () => { S.set("secAuj", d.open ? "1" : "0"); if (d.open) loadMon(); });
     }
+    // Nouvelle version publiée : l'application ouverte sur un téléphone peut rester des heures en mémoire.
+    // Au retour sur l'application (et toutes les 5 min), on compare la version ; si elle a changé, on recharge (ou on propose si un message est en cours d'écriture).
+    const APP_V = (() => { const sc = document.querySelector('script[src*="app.js?v="]'); return sc ? sc.getAttribute("src").split("v=")[1] : ""; })();
+    let majVue = false;
+    async function majVerifier(retour) {
+      if (!APP_V || majVue || navigator.onLine === false) return;
+      let t = ""; try { t = await (await fetch(location.pathname + "?maj=" + Date.now(), { cache: "no-store" })).text(); } catch (e) { return; }
+      const m = t.match(/app\.js\?v=(\d+)/); if (!m || m[1] === APP_V) return;
+      const occupe = (msTa && msTa.value.trim()) || MS.pjs.length || document.querySelector(".tm-pane:not([hidden]) form input:focus, .tm-pane:not([hidden]) form textarea:focus");
+      if (retour && !occupe) { location.reload(); return; }
+      majVue = true; const d = document.createElement("div"); d.className = "maj-bar"; d.innerHTML = "<span>Nouvelle version de l'espace équipe</span><button type=\"button\" class=\"btn btn-sm btn-green\">Mettre à jour</button>";
+      d.querySelector("button").addEventListener("click", () => location.reload()); document.body.appendChild(d);
+    }
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) majVerifier(true); });
+    setInterval(() => { if (!document.hidden) majVerifier(false); }, 300000);
     async function start() {
       const s = DB.session; if (!s) { show(false); return; }
       const rows = await run(() => DB.q("profils?select=nom,role,actif&id=eq." + s.user.id));
@@ -4511,8 +4597,9 @@ html:has(#sodaf-root.app-mode),body:has(#sodaf-root.app-mode){background:#ECEFEE
 .ms-sug{position:absolute;left:58px;right:70px;bottom:70px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.14);padding:4px;z-index:5;max-height:220px;overflow:auto}
 .ms-so{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:10px;width:100%;padding:8px 10px;border-radius:8px}
 .ms-so small{color:var(--muted);font-size:.8rem;margin-left:auto}.ms-so.on,.ms-so:hover{background:var(--green-soft)}
-.ms-pj{display:flex;align-items:center;gap:10px;padding:8px 12px;border-top:1px solid var(--line);background:#FAFBFB}
-.ms-pj img{width:48px;height:48px;object-fit:cover;border-radius:8px}.ms-pj span{flex:1;min-width:0}
+.ms-pj{display:flex;flex-direction:column;gap:6px;padding:8px 12px;border-top:1px solid var(--line);background:#FAFBFB;max-height:220px;overflow:auto}.ms-pji{display:flex;align-items:center;gap:10px}.ms-pjn{margin:0!important;font-size:.78rem;color:var(--muted)}
+.ms-form .btn[data-n]::after{content:attr(data-n);position:absolute;font-size:.62rem;font-weight:800;bottom:2px}.ms-form .btn{position:relative}
+.ms-pj img{width:44px;height:44px;object-fit:cover;border-radius:8px}.ms-pj span{flex:1;min-width:0}
 .ms-pj b{display:block;font-size:.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ms-pj small{font-size:.76rem;color:var(--muted)}
 .ms-pjx{all:unset;cursor:pointer;width:34px;height:34px;display:grid;place-items:center;border-radius:50%;font-size:1.4rem;color:var(--muted)}.ms-pjx:hover{background:var(--soft);color:#D7263D}
 .ms-form{display:flex;gap:8px;align-items:flex-end;padding:10px 12px;border-top:1px solid var(--line);background:#fff}
@@ -4546,6 +4633,24 @@ html:has(#sodaf-root.app-mode),body:has(#sodaf-root.app-mode){background:#ECEFEE
 .tm-auj>summary em{font-style:normal;font-weight:700;font-size:.85rem;color:#8A6500;white-space:nowrap}
 .tm-auj>div{padding:14px}.tm-auj .tm-mon{margin:0}.tm-auj .tm-mon>.card{box-shadow:none;border:1px solid var(--line)}
 html.ms-plein,html.ms-plein body{overflow:hidden}
+.ms-mic{all:unset;cursor:pointer;display:grid;place-items:center;width:44px;height:46px;border-radius:12px;color:#5B6670;flex-shrink:0}
+.ms-mic:hover{background:var(--soft);color:var(--asph)}.ms-mic:focus-visible{outline:2px solid var(--green)}
+.ms-mic.on{background:#D7263D;color:#fff}
+.ms-rec{display:flex;align-items:center;gap:12px;padding:10px 14px;border-top:1px solid var(--line);background:#FFF1F2;flex-wrap:wrap}
+.ms-rec[hidden]{display:none}.ms-rec b{font-variant-numeric:tabular-nums;font-size:1.05rem}.ms-rec span{flex:1;font-size:.86rem;color:#5B6670;min-width:120px}
+.ms-recdot{width:12px;height:12px;border-radius:50%;background:#D7263D;animation:recb 1s infinite}
+@keyframes recb{50%{opacity:.25}}
+.ms-aud{display:flex;flex-direction:column;gap:2px;min-width:240px;max-width:100%}.ms-aud audio{width:100%;height:40px}.ms-aud small{font-size:.74rem;color:var(--muted)}
+@media (max-width:760px){.ms-mic,.ms-clip{width:40px}.ms-aud{min-width:220px}}
+.ms-vue{position:fixed;inset:0;z-index:95;background:rgba(10,12,15,.94);display:flex;flex-direction:column}
+.ms-vue[hidden]{display:none}
+.ms-vbar{display:flex;align-items:center;gap:12px;padding:10px 14px;padding-top:max(10px,env(safe-area-inset-top));color:#fff}
+.ms-vbar b{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.ms-vdl{color:#fff;font-weight:700;font-size:.9rem;border:1.5px solid rgba(255,255,255,.5);border-radius:999px;padding:.45em 1em;text-decoration:none}
+.ms-vx{all:unset;cursor:pointer;width:42px;height:42px;display:grid;place-items:center;font-size:2rem;color:#fff;border-radius:50%}.ms-vx:focus-visible{outline:2px solid var(--yellow)}
+.ms-vimg{flex:1;min-height:0;display:grid;place-items:center;padding:8px 8px max(16px,env(safe-area-inset-bottom))}
+.ms-vimg img{max-width:100%;max-height:100%;object-fit:contain;border-radius:6px}
+.maj-bar{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:98;display:flex;gap:14px;align-items:center;background:var(--asph);color:#fff;padding:10px 12px 10px 18px;border-radius:999px;box-shadow:0 12px 30px -10px rgba(0,0,0,.5);font-weight:600;font-size:.92rem;max-width:calc(100% - 32px)}
 .ms-fil.drop::after{content:"Dépose le fichier ici pour l'envoyer";position:absolute;inset:8px;z-index:6;display:grid;place-items:center;border:3px dashed var(--green);border-radius:14px;background:rgba(223,243,232,.92);color:var(--green);font:700 1.15rem/1.3 var(--f-ui);pointer-events:none}
 
 /* Contacts élève (moniteur) et fiche courte */
