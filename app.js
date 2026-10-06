@@ -1838,7 +1838,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="tm-pane" data-pane="msg" role="tabpanel" hidden>
 <p class="tm-role">Les échanges de l'équipe. Le cadenas indique une conversation privée : seules les personnes nommées en haut de la conversation la lisent. Écris @ pour prévenir quelqu'un, SO12 pour ouvrir la fiche d'un élève, et le trombone (ou glisse le fichier dans la conversation) pour joindre une photo ou un document.</p>
 <div class="ms-notif" id="sd-msNotif"></div>
-<div class="ms-wrap card" id="sd-msWrap"><nav class="ms-canaux" id="sd-msCanaux" aria-label="Conversations"></nav><section class="ms-fil"><header class="ms-head"><button type="button" class="ms-back" id="sd-msBack" aria-label="Retour aux conversations"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button><div class="ms-hd" id="sd-msHead"></div></header><div class="ms-list" id="sd-msList" aria-live="polite"><p class="ms-vide">Chargement…</p></div><button type="button" class="ms-bas" id="sd-msBas" hidden></button><div class="ms-sug" id="sd-msSug" role="listbox" aria-label="Mentionner" hidden></div><div class="ms-pj" id="sd-msPj" hidden></div><div class="ms-rec" id="sd-msRec" hidden><i class="ms-recdot" aria-hidden="true"></i><b id="sd-msRecT">0:00</b><span>Enregistrement… (3 min au plus)</span><button type="button" class="linkbtn" id="sd-msRecX">Annuler</button><button type="button" class="btn btn-green btn-sm" id="sd-msRecOk">Envoyer le vocal</button></div><form class="ms-form" id="sd-msForm" novalidate><label class="ms-clip" title="Joindre une photo ou un fichier" aria-label="Joindre une photo ou un fichier"><input type="file" id="sd-msFile" multiple accept="image/*,.pdf,.txt,.doc,.docx,.xls,.xlsx"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.4 11.1l-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a2 2 0 0 1-2.8-2.8l8.5-8.5"/></svg></label><button type="button" class="ms-mic" id="sd-msMic" title="Message vocal" aria-label="Enregistrer un message vocal"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5"/></svg></button><textarea id="sd-msTxt" rows="1" maxlength="2000" placeholder="Message… (@ pour mentionner)" aria-label="Message"></textarea><button class="btn btn-green" id="sd-msSend" type="submit" aria-label="Envoyer"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button></form></section></div>
+<div class="ms-wrap card" id="sd-msWrap"><nav class="ms-canaux" id="sd-msCanaux" aria-label="Conversations"></nav><section class="ms-fil"><header class="ms-head"><button type="button" class="ms-back" id="sd-msBack" aria-label="Retour aux conversations"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button><div class="ms-hd" id="sd-msHead"></div></header><div class="ms-list" id="sd-msList" aria-live="polite"><p class="ms-vide">Chargement…</p></div><button type="button" class="ms-bas" id="sd-msBas" hidden></button><div class="ms-sug" id="sd-msSug" role="listbox" aria-label="Mentionner" hidden></div><div class="ms-pj" id="sd-msPj" hidden></div><div class="ms-rec" id="sd-msRec" hidden><i class="ms-recdot" aria-hidden="true"></i><b id="sd-msRecT">0:00</b><span>Enregistrement… Touche la flèche pour envoyer (avec ton texte ou ta @mention)</span><button type="button" class="linkbtn" id="sd-msRecX">Annuler</button></div><form class="ms-form" id="sd-msForm" novalidate><label class="ms-clip" title="Joindre une photo ou un fichier" aria-label="Joindre une photo ou un fichier"><input type="file" id="sd-msFile" multiple accept="image/*,.pdf,.txt,.doc,.docx,.xls,.xlsx"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.4 11.1l-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a2 2 0 0 1-2.8-2.8l8.5-8.5"/></svg></label><button type="button" class="ms-mic" id="sd-msMic" title="Message vocal" aria-label="Enregistrer un message vocal"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5"/></svg></button><textarea id="sd-msTxt" rows="1" maxlength="2000" placeholder="Message… (@ pour mentionner)" aria-label="Message"></textarea><button class="btn btn-green" id="sd-msSend" type="submit" aria-label="Envoyer"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button></form></section></div>
 </div>
 <div class="tm-pane" data-pane="docs" role="tabpanel" hidden>
 <p class="tm-role">Supports de communication et documents officiels SODAF, à télécharger ou à envoyer à l'imprimeur.</p>
@@ -3179,11 +3179,14 @@ function init(root) {
       } finally { MS.traite = false; }
     }
     // Messages vocaux : appuie sur le micro, parle, puis « Envoyer le vocal » (3 min au plus). Le vocal s'affiche tout de suite chez toi et part en arrière-plan.
-    const REC = { mr: null, flux: null, morceaux: [], debut: 0, tic: null, envoyer: false };
+    const REC = { mr: null, flux: null, morceaux: [], debut: 0, tic: null, envoyer: false, texte: "", mentions: null };
+    const msMentions = (canal, t) => { const k = MS.canaux.find((c) => c.id === canal); return k && t ? msMembres(k).filter((p) => p.id !== me.id && new RegExp("(^|[\\s(])@" + msPrenom(p).replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "(?![\\wÀ-ÿ])", "i").test(t)).map((p) => p.id) : []; };
+    // Fin du vocal par le bouton d'envoi (ou le micro, ou la limite de 3 min) : le texte écrit et les @mentions partent avec le vocal, dans le même message
+    function recEnvoyer() { if (!REC.mr) return; const t = msTa.value.trim(); REC.texte = t; REC.mentions = msMentions(MS.cur, t); msTa.value = ""; msGrow(); msSugEl.hidden = true; recArret(true); }
     function recArret(envoyer) { if (!REC.mr) return; REC.envoyer = envoyer; try { if (REC.mr.state !== "inactive") REC.mr.stop(); else recNettoyer(); } catch (x) { recNettoyer(); } }
-    function recNettoyer() { clearInterval(REC.tic); if (REC.flux) REC.flux.getTracks().forEach((t) => t.stop()); REC.mr = null; REC.flux = null; REC.morceaux = []; $("#sd-msRec").hidden = true; $("#sd-msMic").classList.remove("on"); }
+    function recNettoyer() { REC.texte = ""; REC.mentions = null; $("#sd-msSend").classList.remove("enreg"); $("#sd-msSend").setAttribute("aria-label", "Envoyer"); clearInterval(REC.tic); if (REC.flux) REC.flux.getTracks().forEach((t) => t.stop()); REC.mr = null; REC.flux = null; REC.morceaux = []; $("#sd-msRec").hidden = true; $("#sd-msMic").classList.remove("on"); }
     $("#sd-msMic").addEventListener("click", async () => {
-      if (REC.mr) { recArret(true); return; }
+      if (REC.mr) { recEnvoyer(); return; }
       if (!navigator.mediaDevices || !window.MediaRecorder) { toast("Les vocaux ne marchent pas sur ce navigateur : utilise Chrome (Android) ou Safari (iPhone)"); return; }
       if (!MS.cur) return;
       if (MS.lect && MS.lect.etat === "joue") AUD.pause();
@@ -3196,21 +3199,22 @@ function init(root) {
       REC.morceaux = []; REC.envoyer = false; REC.debut = Date.now(); const canal = MS.cur, mr = REC.mr;
       mr.ondataavailable = (e) => { if (e.data && e.data.size) REC.morceaux.push(e.data); };
       mr.onstop = () => {
-        const duree = (Date.now() - REC.debut) / 1000, mime = (mr.mimeType || type || "audio/webm").split(";")[0], blob = new Blob(REC.morceaux, { type: mime }), go = REC.envoyer;
+        const duree = (Date.now() - REC.debut) / 1000, mime = (mr.mimeType || type || "audio/webm").split(";")[0], blob = new Blob(REC.morceaux, { type: mime }), go = REC.envoyer, texte = REC.texte, mentions = REC.mentions, pjs = go ? MS.pjs.splice(0) : [];
         recNettoyer();
-        if (!go) return; if (duree < 1 || !blob.size) { toast("Vocal trop court"); return; }
+        if (!go) return; if (duree < 1 || !blob.size) { toast("Vocal trop court"); if (texte) { msTa.value = texte; msGrow(); } MS.pjs = pjs.concat(MS.pjs); msPjListe(); return; }
         const ext = mime === "audio/mp4" ? "m4a" : mime === "audio/ogg" ? "ogg" : "webm", h = new Date();
         const pj = { blob, type: mime, ext, taille: blob.size, duree: Math.max(1, Math.round(duree)), local: URL.createObjectURL(blob), nom: "vocal-" + String(h.getHours()).padStart(2, "0") + "h" + String(h.getMinutes()).padStart(2, "0") + "." + ext };
-        const f = msMettreEnFile(canal, "", pj, null); MS.blobs["local:" + f.cle] = pj.local;
+        const f = msMettreEnFile(canal, texte, pj, mentions); MS.blobs["local:" + f.cle] = pj.local;
+        msPjListe(); $("#sd-msFile").value = ""; pjs.forEach((x) => msMettreEnFile(canal, "", x, null)); // fichiers joints pendant l'enregistrement : juste après le vocal
       };
-      mr.start(1000); $("#sd-msMic").classList.add("on"); $("#sd-msRec").hidden = false; $("#sd-msRecT").textContent = "0:00";
-      REC.tic = setInterval(() => { const n = (Date.now() - REC.debut) / 1000; $("#sd-msRecT").textContent = msDuree(n); if (n >= 180) recArret(true); }, 250);
+      mr.start(1000); $("#sd-msMic").classList.add("on"); $("#sd-msSend").classList.add("enreg"); $("#sd-msSend").setAttribute("aria-label", "Envoyer le vocal"); $("#sd-msRec").hidden = false; $("#sd-msRecT").textContent = "0:00";
+      REC.tic = setInterval(() => { const n = (Date.now() - REC.debut) / 1000; $("#sd-msRecT").textContent = msDuree(n); if (n >= 180) recEnvoyer(); }, 250);
     });
     $("#sd-msRecX").addEventListener("click", () => recArret(false));
-    $("#sd-msRecOk").addEventListener("click", () => recArret(true));
     $("#sd-msForm").addEventListener("submit", (e) => {
-      e.preventDefault(); const t = msTa.value.trim(), canal = MS.cur, pjs = MS.pjs.slice(); if ((!t && !pjs.length) || !canal) return;
-      const k = MS.canaux.find((c) => c.id === canal), mentions = k ? msMembres(k).filter((p) => p.id !== me.id && new RegExp("(^|[\\s(])@" + msPrenom(p).replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "(?![\\wÀ-ÿ])", "i").test(t)).map((p) => p.id) : [];
+      e.preventDefault(); if (REC.mr) { recEnvoyer(); return; } // un vocal en cours : la flèche l'envoie, avec le texte et la mention
+      const t = msTa.value.trim(), canal = MS.cur, pjs = MS.pjs.slice(); if ((!t && !pjs.length) || !canal) return;
+      const mentions = msMentions(canal, t);
       // Tout part dans la file : la zone de saisie se vide tout de suite, on peut continuer à écrire
       msTa.value = ""; msGrow(); MS.pjs = []; msPjListe(); $("#sd-msFile").value = ""; msSugEl.hidden = true;
       if (!pjs.length) { msMettreEnFile(canal, t, null, mentions); return; }
@@ -4730,7 +4734,7 @@ html:has(#sodaf-root.app-mode),body:has(#sodaf-root.app-mode){background:#ECEFEE
 .ms-hd b{display:flex;align-items:center;gap:8px;font-family:var(--f-display);font-size:1.25rem;line-height:1.15}
 .ms-hd b .ms-ic{width:26px;height:26px;font-size:.9rem;background:var(--soft);color:var(--asph)}.ms-hd b .ms-ic.pv{background:#FFF1BF;color:#8A6500}
 .ms-hd span{display:block;font-size:.82rem;color:var(--muted);margin-top:2px}
-.ms-list{flex:1 1 auto;overflow-y:auto;overscroll-behavior:contain;padding:8px 16px 14px;height:0;min-height:0;background:#F4F5F6}
+.ms-list{flex:1 1 auto;overflow-y:auto;overscroll-behavior:contain;padding:8px 16px 14px;height:0;min-height:0;background:#1B2026 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 150 150'%3E%3Cg fill='%23F2B100' fill-opacity='.07'%3E%3Cg transform='translate(26 12) rotate(-14) scale(.16)'%3E%3Cg transform='matrix(6.9124421532822655,0,0,6.9124421532822655,-16.58986182709929,-24.47007132780466)'%3E%3Cpath d='M15.42 43.8 l0 10.32 c0 3.66 -1.5 6.24 -6.12 6.24 l-0.84 0 c-4.5 0 -6.06 -2.58 -6.06 -6.24 l0 -14.64 l2.28 0 l0 13.68 c0 2.64 0.6 4.92 4.26 4.92 c3.6 0 4.2 -2.28 4.2 -4.92 l0 -9.96 c0 -3.9 -2.64 -7.2 -4.92 -10.5 c-3.84 -5.58 -5.82 -7.74 -5.82 -13.56 l0 -9.36 c0 -3.66 1.5 -6.24 6.06 -6.24 l0.84 0 c4.56 0 6.12 2.58 6.12 6.24 l0 14.76 l-2.28 0 l0 -13.8 c0 -2.64 -0.66 -4.92 -4.26 -4.92 s-4.2 2.28 -4.2 4.92 l0 9 c-0.06 3.78 1.62 6.3 4.62 10.62 c4.08 5.88 6.12 8.04 6.12 13.44 z'/%3E%3C/g%3E%3C/g%3E%3Cg transform='translate(98 80) rotate(-14) scale(.16)'%3E%3Cg transform='matrix(6.9124421532822655,0,0,6.9124421532822655,-16.58986182709929,-24.47007132780466)'%3E%3Cpath d='M15.42 43.8 l0 10.32 c0 3.66 -1.5 6.24 -6.12 6.24 l-0.84 0 c-4.5 0 -6.06 -2.58 -6.06 -6.24 l0 -14.64 l2.28 0 l0 13.68 c0 2.64 0.6 4.92 4.26 4.92 c3.6 0 4.2 -2.28 4.2 -4.92 l0 -9.96 c0 -3.9 -2.64 -7.2 -4.92 -10.5 c-3.84 -5.58 -5.82 -7.74 -5.82 -13.56 l0 -9.36 c0 -3.66 1.5 -6.24 6.06 -6.24 l0.84 0 c4.56 0 6.12 2.58 6.12 6.24 l0 14.76 l-2.28 0 l0 -13.8 c0 -2.64 -0.66 -4.92 -4.26 -4.92 s-4.2 2.28 -4.2 4.92 l0 9 c-0.06 3.78 1.62 6.3 4.62 10.62 c4.08 5.88 6.12 8.04 6.12 13.44 z'/%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;background-size:150px 150px}
 .ms-day{text-align:center;margin:14px 0 4px!important}.ms-day span{font-size:.74rem;font-weight:700;color:var(--muted);background:#fff;border:1px solid var(--line);border-radius:999px;padding:.2em .8em}
 .ms-m{margin-top:12px;max-width:76%}.ms-m.suite{margin-top:3px}.ms-m.moi{margin-left:auto}
 .ms-who{display:flex;align-items:center;gap:8px;margin:0 0 4px!important}.ms-m.moi .ms-who{flex-direction:row-reverse}
@@ -4793,6 +4797,16 @@ html:has(#sodaf-root.app-mode),body:has(#sodaf-root.app-mode){background:#ECEFEE
 .tm-auj>summary em{font-style:normal;font-weight:700;font-size:.85rem;color:#8A6500;white-space:nowrap}
 .tm-auj>div{padding:14px}.tm-auj .tm-mon{margin:0}.tm-auj .tm-mon>.card{box-shadow:none;border:1px solid var(--line)}
 html.ms-plein,html.ms-plein body{overflow:hidden}
+.ms-list .ms-who b{color:#EEF1F3}.ms-list .ms-who small{color:#9AA4AD}
+.ms-list .ms-day span{background:#2C333B;color:#D3D9DE;border-color:#3A424B}
+.ms-list .ms-vide{color:#AEB7BF}
+.ms-list .ms-m:not(.moi) .ms-b{border-color:transparent;box-shadow:0 1px 2px rgba(0,0,0,.3)}
+.ms-list .ms-m.moi .ms-b{border-color:transparent;box-shadow:0 1px 2px rgba(0,0,0,.3)}
+.ms-list .ms-m.echec .ms-b{border-color:#E4434D}
+.ms-list .ms-neuf span{background:#3A1F24;color:#FFB3BA;border-color:#E4434D}
+.ms-list .ms-el{color:#1F5FA8}
+.ms-form .btn.enreg{box-shadow:0 0 0 4px rgba(14,122,79,.28)}
+.ms-list .ms-av{box-shadow:0 0 0 2px rgba(255,255,255,.22)}
 .ms-aud{display:flex;align-items:center;gap:10px;min-width:250px;max-width:100%;padding:2px 2px 2px 0}
 .ms-play{all:unset;cursor:pointer;flex-shrink:0;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:#8C96A0;color:#fff;position:relative;transition:background .15s}
 .ms-play:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
