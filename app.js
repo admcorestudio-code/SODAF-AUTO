@@ -4699,17 +4699,18 @@ function init(root) {
     if (done) { show(done); return; }
     box.innerHTML = '<form class="insc-form" id="sd-inForm" novalidate>' +
       '<div class="insc-hello"><p class="eyebrow">N° client SO' + d.i + ' · ' + escI(d.f) + '</p><h2>Bonjour ' + escI(d.p) + '</h2><p>Quatre petites étapes et ton inscription est faite.</p></div>' +
-      '<fieldset class="insc-step"><legend><i>1</i>Ta formule</legend><div class="insc-cards">' + forms.map((f, k) => '<label class="rcm' + (k ? "" : " on") + '"><input type="radio" name="inF" value="' + k + '"' + (k ? "" : " checked") + '><span><b>' + escI(f[0].replace(/ \(permis B\)$/, "")) + "</b><small>" + escI(f[2]) + "</small></span><em>" + fmtF(f[1]) + "</em></label>").join("") + "</div>" +
-      '<div class="insc-cards insc-two"><label class="rcm on"><input type="radio" name="inP" value="moitie" checked><span><b>Je paie la moitié maintenant</b><small>Le reste dans les 2 semaines</small></span><em data-p="moitie"></em></label><label class="rcm"><input type="radio" name="inP" value="total"><span><b>Je paie tout maintenant</b><small>Formation soldée, plus rien à payer</small></span><em data-p="total"></em></label></div>' +
+      '<fieldset class="insc-step"><legend><i>1</i>Ta formule</legend><p class="insc-sub">Choisis ta formation</p><div class="insc-cards">' + forms.map((f, k) => '<label class="rcm' + (k ? "" : " on") + '"><input type="radio" name="inF" value="' + k + '"' + (k ? "" : " checked") + '><span><b>' + escI(f[0].replace(/ \(permis B\)$/, "")) + "</b><small>" + escI(f[2]) + "</small></span><em>" + fmtF(f[1]) + "</em></label>").join("") + "</div>" +
+      '<div class="insc-div" role="separator"></div><p class="insc-sub">Combien paies-tu maintenant ?</p>' +
+      '<div class="insc-cards insc-two insc-pay"><label class="rcm on"><input type="radio" name="inP" value="moitie" checked><span><b>Je paie la moitié maintenant</b><small>Le reste dans les 2 semaines</small></span><em data-p="moitie"></em></label><label class="rcm"><input type="radio" name="inP" value="total"><span><b>Je paie tout maintenant</b><small>Formation soldée, plus rien à payer</small></span><em data-p="total"></em></label></div>' +
       '<p class="insc-sum" id="sd-inSum"></p></fieldset>' +
-      '<fieldset class="insc-step"><legend><i>2</i>Tes informations</legend><p class="insc-hint">Vérifie et corrige si besoin.</p><div class="insc-grid">' +
+      '<fieldset class="insc-step"><legend><i>2</i>Tes informations</legend><p class="insc-sub">Vérifie et corrige si besoin</p><div class="insc-grid">' +
       '<div class="field"><label for="sd-inNom">Nom</label><input id="sd-inNom" autocomplete="family-name" maxlength="60" value="' + escI(d.nf || "") + '"></div><div class="field"><label for="sd-inPre">Prénoms</label><input id="sd-inPre" autocomplete="given-name" maxlength="80" value="' + escI(d.pr || d.nc || d.p || "") + '"></div>' +
       '<div class="field"><label for="sd-inTel">Téléphone / WhatsApp</label><div class="tel"><span>+228</span><input id="sd-inTel" inputmode="numeric" maxlength="11" value="' + escI(String(d.t || "").replace(/\D/g, "").replace(/^228/, "").replace(/(\d{2})(?=\d)/g, "$1 ")) + '"></div></div><div class="field"><label for="sd-inQ">Quartier</label><input id="sd-inQ" maxlength="80" placeholder="Ex. Bè, Adidogomé" value="' + escI(d.q || "") + '"></div>' +
       "</div></fieldset>" +
       '<fieldset class="insc-step"><legend><i>3</i>Ta photo</legend><div class="insc-photo"><div class="insc-ph" id="sd-inPh" aria-hidden="true"><svg viewBox="0 0 24 24" width="54" height="54" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="4"/><path d="M4.5 20.5c1.2-3.8 4.2-5.8 7.5-5.8s6.3 2 7.5 5.8"/></svg></div>' +
       '<div class="insc-phtx"><p><b>Un selfie de ton visage</b>, bien éclairé, sans lunettes de soleil. L\'équipe SODAF s\'en sert pour te reconnaître au code et en conduite. Il n\'est jamais publié.</p><label class="btn btn-green btn-sm" for="sd-inPhF" id="sd-inPhBtn">Prendre mon selfie</label><input type="file" id="sd-inPhF" accept="image/*" capture="user" class="insc-file"></div></div>' +
       '<label class="insc-accord"><input type="checkbox" id="sd-inPhOk"><span>J\'accepte que SODAF garde ma photo pour me reconnaître pendant ma formation.</span></label></fieldset>' +
-      '<fieldset class="insc-step"><legend><i>4</i>Comment veux-tu payer ?</legend><div class="insc-cards insc-two">' +
+      '<fieldset class="insc-step"><legend><i>4</i>Ton paiement</legend><p class="insc-sub">Comment veux-tu payer ?</p><div class="insc-cards insc-two insc-pay">' +
       '<label class="rcm on"><input type="radio" name="inM" value="agence" checked><span><b>À l\'agence</b><small>En espèces, au 412 Avenue Akei, Tokoin Tamé</small></span></label>' +
       '<label class="rcm' + (mixxOk ? "" : " off") + '"><input type="radio" name="inM" value="mixx"' + (mixxOk ? "" : " disabled") + '><span><b>Par Mixx by Yas (T-Money)</b><small>' + (mixxOk ? "Depuis ton téléphone, sans te déplacer" : "Bientôt disponible : pour l'instant, paie à l'agence") + "</small></span></label></div>" +
       '<div class="insc-mixx" id="sd-inMixx" hidden><ol><li>Sur ton téléphone, envoie <b id="sd-inAmt"></b> par Mixx by Yas au <b>' + escI(d.m) + "</b>" + (d.n ? " (" + escI(d.n) + ")" : "") + ".</li><li>Motif : <b>SO" + d.i + "</b></li><li>Écris ci-dessous le numéro qui a payé et la référence du SMS de confirmation.</li></ol>" +
@@ -4722,7 +4723,7 @@ function init(root) {
     const upd = () => {
       const v = val();
       form.querySelector('[data-p="moitie"]').textContent = fmtF(5000 + v.f[1] / 2); form.querySelector('[data-p="total"]').textContent = fmtF(5000 + v.f[1]);
-      $("#sd-inSum").innerHTML = "À payer maintenant : <b>" + fmtF(v.a) + "</b> <span>(droit d'inscription 5&nbsp;000&nbsp;F + " + (v.p === "total" ? "toute la formation" : "la moitié de la formation") + ")</span>" + (v.p === "moitie" ? "<span>Reste à payer avant la 1re séance de conduite : " + fmtF(v.f[1] / 2) + "</span>" : "");
+      $("#sd-inSum").innerHTML = '<span class="insc-sumrow"><span>À payer maintenant</span><b>' + fmtF(v.a) + "</b></span><span>Droit d'inscription 5&nbsp;000&nbsp;F + " + (v.p === "total" ? "toute la formation" : "la moitié de la formation") + "</span>" + (v.p === "moitie" ? '<span class="insc-reste">Reste à payer avant la 1re séance de conduite : <b>' + fmtF(v.f[1] / 2) + "</b></span>" : '<span class="insc-reste">Formation soldée : plus rien à payer ensuite</span>');
       $("#sd-inAmt").textContent = fmtF(v.a);
       form.querySelectorAll(".rcm").forEach((l) => l.classList.toggle("on", l.querySelector("input").checked));
       $("#sd-inMixx").hidden = form.querySelector("[name=inM]:checked").value !== "mixx";
@@ -5132,6 +5133,32 @@ background:radial-gradient(circle at 35% 30%,#fff 0%,#F1F7F4 55%,#D5E7DE 100%);b
 .tm-auj>div{padding:14px}.tm-auj .tm-mon{margin:0}.tm-auj .tm-mon>.card{box-shadow:none;border:1px solid var(--line)}
 html.ms-plein,html.ms-plein body{overflow:hidden}
 html{scrollbar-gutter:stable}
+/* Lien d'inscription : sections nettes, séparateurs, cartes homogènes */
+#sodaf-root .insc-form{gap:24px}
+#sodaf-root .insc-step{padding:24px 22px 22px;border:1px solid #DDE1E5;border-radius:18px;box-shadow:0 14px 34px -26px rgba(21,25,30,.3)}
+#sodaf-root .insc-step legend{font-size:1.25rem;padding:0 8px;background:#fff}
+#sodaf-root .insc-sub{margin:0 0 12px!important;font:700 .74rem/1.2 var(--f-ui);letter-spacing:.11em;text-transform:uppercase;color:#7F8994}
+#sodaf-root .insc-div{height:2px;margin:22px 0 20px;background:repeating-linear-gradient(90deg,#D3D8DD 0 14px,transparent 14px 24px)}
+#sodaf-root .insc-cards{gap:10px}
+#sodaf-root .insc-step .rcm{padding:14px 16px;border-radius:14px;border:1.5px solid #E1E5E9;transition:border-color .15s,background .15s}
+#sodaf-root .insc-step .rcm:hover{border-color:#B8C0C8}
+#sodaf-root .insc-step .rcm.on{border-color:var(--green);background:var(--green-soft);box-shadow:inset 0 0 0 1px var(--green)}
+#sodaf-root .insc-step .rcm em{font-size:1.15rem}
+#sodaf-root .insc-two{margin-top:0;gap:10px}
+#sodaf-root .insc-pay .rcm{display:grid;grid-template-columns:20px minmax(0,1fr);column-gap:12px;row-gap:2px;align-items:start}
+#sodaf-root .insc-pay .rcm input{grid-row:1;margin-top:2px}
+#sodaf-root .insc-pay .rcm span{grid-column:2}
+#sodaf-root .insc-pay .rcm em{grid-column:2;margin:8px 0 0;font-size:1.3rem}
+#sodaf-root .insc-pay .rcm em:empty{display:none}
+#sodaf-root .insc-sum{margin-top:16px!important;padding:14px 16px;border-radius:14px;background:#F4F6F8;border:1px solid #E4E8EC;gap:4px}
+#sodaf-root .insc-sumrow{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding-bottom:8px;margin-bottom:4px;border-bottom:1px dashed #CDD3D9}
+#sodaf-root .insc-sumrow span{font-weight:700;color:var(--ink);font-size:1rem}
+#sodaf-root .insc-sumrow b{font-size:1.5rem}
+#sodaf-root .insc-sum>span:not(.insc-sumrow){font-size:.88rem;color:#5B6670}
+#sodaf-root .insc-reste b{font:inherit;color:var(--ink);font-weight:700}
+#sodaf-root .insc-hint{display:none}
+#sodaf-root .insc-hello{padding:4px 2px}
+@media (max-width:520px){#sodaf-root .insc-step{padding:20px 14px 16px}#sodaf-root .insc-step .rcm{padding:12px 13px}}
 /* Page Pré-inscription : formulaire + panneau contact sombre */
 #sodaf-root .pi{grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:22px;align-items:start}
 #sodaf-root .pi-form{padding:26px 26px 22px;border-radius:18px;border:1px solid #DDE1E5;box-shadow:0 18px 40px -26px rgba(21,25,30,.28)}
