@@ -2819,7 +2819,7 @@ function init(root) {
         .replace(/(^|[\s(])@([A-Za-zÀ-ÿ][\wÀ-ÿ'-]*)/g, (m, av, n) => (noms.some((y) => msPlat(y) === msPlat(n)) ? av + '<span class="ms-at' + (msPlat(n) === moiNom ? " moi" : "") + '">@' + n + "</span>" : m))
         .replace(/\n/g, "<br>");
     }
-    const msApercu = (x) => { if (!x) return "Aucun message"; const p = MS.profs[x.auteur], f = x.fichier, t = f ? (msEstImg(f) ? "📷 Photo" : "📎 " + (f.nom || "Fichier")) + (x.texte && x.texte !== f.nom ? " · " + x.texte : "") : x.texte; return (x.auteur === me.id ? "Toi" : msPrenom(p)) + " : " + t.replace(/\s+/g, " "); };
+    const msApercu = (x) => { if (!x) return "Aucun message"; const p = MS.profs[x.auteur], f = x.fichier, t = f ? (msEstImg(f) ? "Photo" : "Fichier : " + (f.nom || "Fichier")) + (x.texte && x.texte !== f.nom ? " · " + x.texte : "") : x.texte; return (x.auteur === me.id ? "Toi" : msPrenom(p)) + " : " + t.replace(/\s+/g, " "); };
     const IC_LOCK = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
     // Qui lit la conversation (affiché en haut) : la règle de confidentialité doit se voir
     function msQui(k) {

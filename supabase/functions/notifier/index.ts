@@ -27,7 +27,7 @@ Deno.serve(async (req) => {
                             from public.messages m join public.canaux c on c.id = m.canal join public.profils pr on pr.id = m.auteur where m.id = ${p.id ?? 0}`;
     if (!m) return json({ envoyes: 0, raison: "message introuvable" });
     roles = m.roles; exclure = m.auteur; mentionnes = m.mentions || [];
-    const corpsTexte = (m.fichier ? (String(m.fichier.type || "").startsWith("image/") ? "📷 Photo" : "📎 " + (m.fichier.nom || "Fichier")) + (m.texte && m.texte !== m.fichier.nom ? " · " : "") : "") + (m.texte && (!m.fichier || m.texte !== m.fichier.nom) ? m.texte : "");
+    const corpsTexte = (m.fichier ? (String(m.fichier.type || "").startsWith("image/") ? "Photo" : "Fichier : " + (m.fichier.nom || "Fichier")) + (m.texte && m.texte !== m.fichier.nom ? " · " : "") : "") + (m.texte && (!m.fichier || m.texte !== m.fichier.nom) ? m.texte : "");
     note = { title: prenom(m.auteur_nom) + " (" + (ROLE[m.auteur_role] || "Équipe") + ") · " + m.canal_nom, body: corpsTexte.length > 180 ? corpsTexte.slice(0, 177) + "…" : corpsTexte, url: "/equipe/?canal=" + m.canal, tag: "canal-" + m.canal };
     auteurPrenom = prenom(m.auteur_nom); canalNom = m.canal_nom;
   } else if (p.type === "preinscription") {
