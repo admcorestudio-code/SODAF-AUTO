@@ -1807,7 +1807,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="card" style="margin-top:16px"><p class="eyebrow">Examen</p><h3 class="tm-h3">Dossiers d'examen et résultats</h3><div id="sd-drExam" class="tm-stats tm-dr tm-drex"></div></div>
 <div class="card" style="margin-top:16px"><p class="eyebrow">Ce mois-ci</p><h3 class="tm-h3">D'où viennent les nouveaux clients</h3><div id="sd-drSrc" class="tm-src"></div></div>
 <div class="card" style="margin-top:16px"><p class="eyebrow">6 derniers mois</p><h3 class="tm-h3">Inscriptions et encaissements</h3><div id="sd-drMonths" class="tm-months"></div></div>
-<div class="card" style="margin-top:16px" id="sd-drSec"><p class="eyebrow">Sécurité</p><h3 class="tm-h3">Comptes de l'équipe</h3><p class="tm-note" style="margin:0 0 10px!important">Un compte désactivé ne voit plus rien, tout de suite, sur tous ses appareils. Son historique (reçus, messages) est gardé. Tu reçois une notification quand un compte se connecte depuis un appareil jamais vu, avec le pays et la ville (approximatifs, d'après l'adresse internet) ; chaque appareil se déconnecte seul après 8 heures sans activité.</p><div id="sd-drComptes" class="sc-list"></div><h4 class="sc-h">Dernières connexions</h4><div id="sd-drCx" class="tm-list"></div></div>
+<div class="card" style="margin-top:16px" id="sd-drSec"><p class="eyebrow">Sécurité</p><h3 class="tm-h3">Comptes de l'équipe</h3><p class="tm-note" style="margin:0 0 10px!important">Un compte désactivé ne voit plus rien, tout de suite, sur tous ses appareils. Son historique (reçus, messages) est gardé. Tu reçois une notification quand un compte se connecte depuis un appareil jamais vu, avec le pays et la ville (approximatifs, d'après l'adresse internet) ; chaque appareil se déconnecte seul après 8 heures sans activité.</p><div id="sd-drComptes" class="sc-list"></div><div class="sc-add"><button type="button" class="btn btn-sm btn-line" id="sd-cptAddBtn">Ajouter un compte</button><form id="sd-cptAdd" class="sc-form" hidden novalidate><div class="row2"><div class="field"><label for="sd-cptAddRole">Rôle</label><select id="sd-cptAddRole"><option value="secretariat">Secrétariat</option><option value="moniteur">Moniteur</option><option value="admin">Direction</option></select></div><div class="field"><label for="sd-cptAddMail">Prénom ou adresse</label><input id="sd-cptAddMail" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="ex. awa"><small class="sc-apercu" data-for="sd-cptAddMail"></small></div></div><div class="field"><label for="sd-cptAddPw">Mot de passe (8 caractères au moins)</label><input id="sd-cptAddPw" type="password" autocomplete="new-password"></div><div class="sc-fbtn"><button type="submit" class="btn btn-sm btn-green">Créer le compte</button><button type="button" class="btn btn-sm btn-line" data-annul="add">Annuler</button></div></form></div><p class="tm-note sc-aide">Pour changer de personne sur un compte : <b>Modifier</b>, tape son prénom et un nouveau mot de passe. Le compte garde tout son historique, l'ancien mot de passe ne marche plus et ses autres appareils sont déconnectés. Les comptes ne se suppriment pas : on change l'adresse, ou on désactive.</p><h4 class="sc-h">Dernières connexions</h4><div id="sd-drCx" class="tm-list"></div></div>
 </div>
 <div class="tm-pane" data-pane="mon" role="tabpanel" hidden>
 <p class="tm-role">Cours de code en salle, séances de conduite et progression des élèves.</p>
@@ -2753,6 +2753,36 @@ function init(root) {
       if (!on && !b.dataset.ok) { b.dataset.ok = "1"; b.textContent = "Confirmer la désactivation"; b.classList.add("sc-conf"); setTimeout(() => { if (b.isConnected) { delete b.dataset.ok; b.textContent = "Désactiver"; b.classList.remove("sc-conf"); } }, 5000); return; }
       b.disabled = true; await run(() => DB.q("rpc/compte_activer", { method: "POST", body: { p_id: b.dataset.cpt, p_actif: on } }), on ? "Compte réactivé" : "Compte désactivé : il ne voit plus rien"); loadSec();
     });
+    // Direction : modifier l'adresse / le mot de passe d'un compte, ou en créer un (fonctions compte_modifier / compte_creer, réservées à la direction)
+    // « awa » tout court devient societesodaf+awa@gmail.com (d'après l'adresse de la direction)
+    const cptAdresse = (v) => { v = (v || "").trim().toLowerCase(); if (!v || v.includes("@")) return v; const b = /^([^+@]+)(?:\+[^@]*)?@(.+)$/.exec(SEC.mailDir || ""); const n = v.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9._-]/g, ""); return b && n ? b[1] + "+" + n + "@" + b[2] : v; };
+    const cptApercu = (inp) => { const a = $('.sc-apercu[data-for="' + inp.id + '"]'); if (a) { const v = inp.value.trim(); a.textContent = v && !v.includes("@") ? "Adresse : " + cptAdresse(v) : ""; } };
+    $("#sd-drSec").addEventListener("input", (e) => { if (e.target.matches("input:not([type=password])")) cptApercu(e.target); });
+    $("#sd-drComptes").addEventListener("click", (e) => {
+      const ed = e.target.closest("[data-edit]"), an = e.target.closest("[data-annul]");
+      if (ed) { const f = ed.closest(".sc-row").querySelector(".sc-edit"); f.hidden = !f.hidden; if (!f.hidden) f.querySelector("input").focus(); }
+      if (an) { const f = an.closest("form"); f.hidden = true; f.reset(); }
+    });
+    $("#sd-drComptes").addEventListener("submit", async (e) => {
+      e.preventDefault(); const f = e.target, id = f.dataset.id, mi = f.querySelector('[data-k="mail"]'), pi = f.querySelector('[data-k="pw"]');
+      const email = cptAdresse(mi.value), pw = pi.value, actuel = mi.defaultValue.trim().toLowerCase();
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { toast("Adresse invalide", true); mi.focus(); return; }
+      if (pw && pw.length < 8) { toast("Mot de passe trop court : 8 caractères au moins", true); pi.focus(); return; }
+      if (email === actuel && !pw) { f.hidden = true; return; }
+      const b = f.querySelector("[type=submit]"); b.disabled = true;
+      const r = await run(() => DB.q("rpc/compte_modifier", { method: "POST", body: { p_id: id, p_email: email === actuel ? null : email, p_motdepasse: pw || null } }).then(() => true), pw ? (id === me.id ? "Enregistré. Ton nouveau mot de passe marche dès la prochaine connexion" : "Enregistré. Ses autres appareils sont déconnectés") : "Adresse enregistrée");
+      b.disabled = false; pi.value = ""; if (r) loadSec();
+    });
+    $("#sd-cptAddBtn").addEventListener("click", () => { const f = $("#sd-cptAdd"); f.hidden = !f.hidden; if (!f.hidden) $("#sd-cptAddMail").focus(); });
+    $("#sd-cptAdd").addEventListener("click", (e) => { if (e.target.closest("[data-annul]")) { $("#sd-cptAdd").reset(); $("#sd-cptAdd").hidden = true; cptApercu($("#sd-cptAddMail")); } });
+    $("#sd-cptAdd").addEventListener("submit", async (e) => {
+      e.preventDefault(); const email = cptAdresse($("#sd-cptAddMail").value), pw = $("#sd-cptAddPw").value, role = $("#sd-cptAddRole").value;
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { toast("Indique un prénom ou une adresse", true); $("#sd-cptAddMail").focus(); return; }
+      if (pw.length < 8) { toast("Mot de passe trop court : 8 caractères au moins", true); $("#sd-cptAddPw").focus(); return; }
+      const b = e.target.querySelector("[type=submit]"); b.disabled = true;
+      const r = await run(() => DB.q("rpc/compte_creer", { method: "POST", body: { p_email: email, p_motdepasse: pw, p_role: role } }).then(() => true), "Compte créé : " + email);
+      b.disabled = false; $("#sd-cptAddPw").value = ""; if (r) { e.target.reset(); e.target.hidden = true; cptApercu($("#sd-cptAddMail")); loadSec(); }
+    });
     $("#sd-teamOut").addEventListener("click", async () => { rtFermer(); AUD.pause(); await DB.logout(); me = null; show(false); });
 
     // Boutons Appeler / WhatsApp d'un élève (moniteur : séances du jour, liste de présence, fiche courte)
@@ -3356,7 +3386,8 @@ function init(root) {
       const alias = (id) => { const m = (mail[id] || "").match(/\+([^@]+)@/); return m && !/^(secretariat|moniteur|direction|admin)$/i.test(m[1]) ? " (" + m[1] + ")" : ""; }; // alias du rôle lui-même : rien à ajouter
       const lieu = (c) => (c.pays ? (c.ville ? c.ville + ", " : "") + c.pays : ""), loin = (c) => c.pays && c.pays !== "Togo";
       pr.sort((a, b) => (b.actif !== false) - (a.actif !== false) || ["admin", "secretariat", "moniteur"].indexOf(a.role) - ["admin", "secretariat", "moniteur"].indexOf(b.role));
-      $("#sd-drComptes").innerHTML = pr.map((p) => { const on = p.actif !== false, c = der[p.id]; return '<div class="sc-row' + (on ? "" : " off") + '"><div class="sc-who"><b>' + esc(p.nom) + "</b><small>" + esc(R[p.role] || p.role) + (p.id === me.id ? " · toi" : "") + (mail[p.id] ? "<br><span class=\"sc-mail\">" + esc(mail[p.id]) + "</span>" : "") + "</small></div><div class=\"sc-last\">" + (c ? "Dernière connexion " + esc(quand(c.le)) + "<small>" + esc(c.description || "") + (lieu(c) ? " · " + esc(lieu(c)) : "") + "</small>" : "<small>Aucune connexion notée depuis l'activation du journal</small>") + '</div><div class="sc-act"><em class="sc-st">' + (on ? "Actif" : "Désactivé") + "</em>" + (p.id === me.id ? "" : '<button type="button" class="btn btn-sm ' + (on ? "btn-line sc-off" : "btn-green") + '" data-cpt="' + esc(p.id) + '" data-on="' + (on ? 0 : 1) + '">' + (on ? "Désactiver" : "Réactiver") + "</button>") + "</div></div>"; }).join("");
+      $("#sd-drComptes").innerHTML = pr.map((p) => { const on = p.actif !== false, c = der[p.id]; return '<div class="sc-row' + (on ? "" : " off") + '"><div class="sc-who"><b>' + esc(p.nom) + "</b><small>" + esc(R[p.role] || p.role) + (p.id === me.id ? " · toi" : "") + (mail[p.id] ? "<br><span class=\"sc-mail\">" + esc(mail[p.id]) + "</span>" : "") + "</small></div><div class=\"sc-last\">" + (c ? "Dernière connexion " + esc(quand(c.le)) + "<small>" + esc(c.description || "") + (lieu(c) ? " · " + esc(lieu(c)) : "") + "</small>" : "<small>Aucune connexion notée depuis l'activation du journal</small>") + '</div><div class="sc-act"><em class="sc-st">' + (on ? "Actif" : "Désactivé") + "</em>" + (on ? '<button type="button" class="btn btn-sm btn-line" data-edit="' + esc(p.id) + '">Modifier</button>' : "") + (p.id === me.id ? "" : '<button type="button" class="btn btn-sm ' + (on ? "btn-line sc-off" : "btn-green") + '" data-cpt="' + esc(p.id) + '" data-on="' + (on ? 0 : 1) + '">' + (on ? "Désactiver" : "Réactiver") + "</button>") + '</div><form class="sc-form sc-edit" data-id="' + esc(p.id) + '" hidden novalidate><div class="row2"><div class="field"><label for="sd-cm-' + esc(p.id) + '">Prénom ou adresse</label><input id="sd-cm-' + esc(p.id) + '" data-k="mail" autocomplete="off" autocapitalize="off" spellcheck="false" value="' + esc(mail[p.id] || "") + '"><small class="sc-apercu" data-for="sd-cm-' + esc(p.id) + '"></small></div><div class="field"><label for="sd-cp-' + esc(p.id) + '">Nouveau mot de passe</label><input id="sd-cp-' + esc(p.id) + '" data-k="pw" type="password" autocomplete="new-password" placeholder="Vide = on garde l\'actuel"></div></div><div class="sc-fbtn"><button type="submit" class="btn btn-sm btn-green">Enregistrer</button><button type="button" class="btn btn-sm btn-line" data-annul="1">Annuler</button></div></form></div>'; }).join("");
+      SEC.mailDir = mail[me.id] || "";
       $("#sd-drCx").innerHTML = (cx || []).length ? cx.slice(0, 15).map((c) => { const p = pr.find((x) => x.id === c.profil) || { nom: "Compte", role: "" }; return '<div class="tm-row sc-cx' + (c.nouvel ? " neuf" : "") + '"><div class="tm-time">' + esc(quand(c.le)) + '</div><div class="tm-main"><b>' + esc(msPrenom(p) + alias(p.id)) + " · " + esc(R[p.role] || "") + (c.nouvel ? ' <em class="sc-new">Nouvel appareil</em>' : "") + (loin(c) ? ' <em class="sc-new sc-loin">Hors du Togo</em>' : "") + "</b><span>" + esc(c.description || "Appareil") + (lieu(c) ? " · <strong>" + esc(lieu(c)) + "</strong>" + (c.operateur ? " (" + esc(c.operateur) + ")" : "") : c.ip ? " · lieu en cours de recherche" : "") + "</span></div></div>"; }).join("") : '<p class="tm-empty">Les connexions apparaîtront ici à partir de maintenant.</p>';
     }
     async function start() {
@@ -4900,7 +4931,7 @@ html.ms-plein,html.ms-plein body{overflow:hidden}
 .ms-vnav:hover{background:rgba(0,0,0,.7)}.ms-vnav:focus-visible{outline:2px solid var(--yellow)}
 @media (pointer:coarse){.ms-vnav{width:42px;height:42px;margin-top:-21px;background:rgba(0,0,0,.3)}}
 .sc-list{display:grid;gap:8px}
-.sc-row{display:grid;grid-template-columns:220px 1fr 210px;gap:6px 16px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:12px}
+.sc-row{display:grid;grid-template-columns:220px 1fr auto;gap:6px 16px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:12px}
 .sc-row.off{background:var(--soft);opacity:.75}
 .sc-who b{display:block}.sc-who small,.sc-last small{display:block;color:var(--muted);font-size:.8rem}
 .sc-last{font-size:.88rem}
@@ -4909,6 +4940,15 @@ html.ms-plein,html.ms-plein body{overflow:hidden}
 .sc-row.off .sc-st{background:#E5E8EB;color:#5B6670}
 .btn.sc-conf{background:#D7263D!important;border-color:#D7263D!important;color:#fff!important}
 .sc-h{margin:18px 0 6px;font-size:1rem}
+.sc-form{grid-column:1/-1;border-top:1px dashed var(--line);padding-top:10px;margin-top:4px}
+.sc-form[hidden]{display:none}
+.sc-form .field{margin-bottom:8px}
+.sc-apercu{display:block;color:#1F5FA8;font-size:.78rem;margin-top:3px;word-break:break-all}
+.sc-fbtn{display:flex;gap:8px;flex-wrap:wrap}
+.sc-add{margin-top:10px}
+.sc-add .sc-form{border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:8px}
+.sc-aide{margin:10px 0 0!important;font-size:.84rem!important}
+.sc-act{flex-wrap:wrap}
 .sc-loin{background:#B45309!important}
 .sc-new{font-style:normal;font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:#fff;background:#D7263D;border-radius:999px;padding:.2em .6em;margin-left:4px;vertical-align:middle}
 @media (max-width:700px){.sc-row{grid-template-columns:1fr}.sc-act{justify-content:flex-start}}
