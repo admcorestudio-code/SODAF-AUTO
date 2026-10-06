@@ -1804,7 +1804,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <p class="tm-role" id="sd-grRole"></p>
 <div class="card gr-card" id="sd-gr" hidden><p class="eyebrow">Gérance</p><h3 class="tm-h3" id="sd-grTitre">Gérante et direction</h3><p class="tm-note" id="sd-grIntro" style="margin:0 0 10px!important"></p>
 <div class="gr-tabs" role="tablist"><button type="button" role="tab" data-gr="demandes" aria-selected="true">Demandes d'accord<em class="gr-badge" id="sd-grBDem" hidden></em></button><button type="button" role="tab" data-gr="decisions" aria-selected="false">Décisions<em class="gr-badge" id="sd-grBDec" hidden></em></button><button type="button" role="tab" data-gr="rapports" aria-selected="false">Rapport de la semaine<em class="gr-badge" id="sd-grBRap" hidden></em></button></div>
-<div class="gr-pane" data-grp="demandes"><form id="sd-grDemForm" class="gr-form" hidden novalidate><div class="row2"><div class="field"><label for="sd-grDemType">Pour quoi ?</label><select id="sd-grDemType"><option>Remise</option><option>Annulation de reçu</option><option>Report de paiement</option><option>Dépense</option><option>Autre</option></select></div><div class="field"><label for="sd-grDemMt">Montant (F, si besoin)</label><input id="sd-grDemMt" inputmode="numeric" autocomplete="off" placeholder="ex. 5 000"></div></div><div class="field"><label for="sd-grDemEl">Élève concerné (si besoin)</label><select id="sd-grDemEl"><option value="">Aucun</option></select></div><div class="field"><label for="sd-grDemTx">Explique en quelques mots</label><textarea id="sd-grDemTx" rows="2" maxlength="600" placeholder="ex. Deux frères inscrits ensemble, je propose 5 000 F de remise au second."></textarea></div><button type="submit" class="btn btn-sm btn-green">Envoyer à la direction</button></form><div id="sd-grDemList" class="gr-list"></div></div>
+<div class="gr-pane" data-grp="demandes"><form id="sd-grDemForm" class="gr-form" hidden novalidate><div class="row2"><div class="field"><label for="sd-grDemType">Pour quoi ?</label><select id="sd-grDemType"><option>Remise</option><option>Annulation de reçu</option><option>Report de paiement</option><option>Dépense</option><option>Autre</option></select></div><div class="field"><label for="sd-grDemMt">Montant (F, si besoin)</label><input id="sd-grDemMt" inputmode="numeric" autocomplete="off" placeholder="ex. 5 000"></div></div><div class="field gr-elf"><label for="sd-grDemElQ">Élève concerné (si besoin)</label><div class="gr-elbox"><input id="sd-grDemElQ" type="search" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Tape un nom ou un numéro (SO12)" role="combobox" aria-expanded="false" aria-controls="sd-grDemElL" aria-autocomplete="list"><input type="hidden" id="sd-grDemEl" value=""><div class="gr-elsel" id="sd-grDemElSel" hidden></div><div class="gr-ell" id="sd-grDemElL" role="listbox" hidden></div></div></div><div class="field"><label for="sd-grDemTx">Explique en quelques mots</label><textarea id="sd-grDemTx" rows="2" maxlength="600" placeholder="ex. Deux frères inscrits ensemble, je propose 5 000 F de remise au second."></textarea></div><button type="submit" class="btn btn-sm btn-green">Envoyer à la direction</button></form><div id="sd-grDemList" class="gr-list"></div></div>
 <div class="gr-pane" data-grp="decisions" hidden><form id="sd-grDecForm" class="gr-form" hidden novalidate><div class="row2"><div class="field"><label for="sd-grDecCat">Sujet</label><select id="sd-grDecCat"><option>Élèves</option><option>Argent</option><option>Planning</option><option>Équipe</option><option>Autre</option></select></div><div class="field gr-grow"><label for="sd-grDecTx">Ce que j'ai décidé</label><textarea id="sd-grDecTx" rows="2" maxlength="600" placeholder="ex. Séance de samedi 7 h 30 déplacée à 8 h 45, le moniteur est prévenu."></textarea></div></div><button type="submit" class="btn btn-sm btn-green">Noter la décision</button></form><div id="sd-grDecList" class="gr-list"></div></div>
 <div class="gr-pane" data-grp="rapports" hidden><div id="sd-grRapNew" hidden><p class="gr-sem" id="sd-grRapSem"></p><div class="tm-stats tm-dr" id="sd-grRapChiffres"></div><div class="field"><label for="sd-grRapTx">Mes remarques pour la direction</label><textarea id="sd-grRapTx" rows="4" maxlength="3000" placeholder="Ce qui s'est bien passé, les problèmes, ce qu'il faudrait changer, ce dont j'ai besoin."></textarea></div><button type="button" class="btn btn-sm btn-green" id="sd-grRapSend">Envoyer le rapport</button></div><div id="sd-grRapList" class="gr-list"></div></div>
 </div>
@@ -1820,7 +1820,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="card" style="margin-top:16px"><p class="eyebrow">Examen</p><h3 class="tm-h3">Dossiers d'examen et résultats</h3><div id="sd-drExam" class="tm-stats tm-dr tm-drex"></div></div>
 <div class="card" style="margin-top:16px"><p class="eyebrow">Ce mois-ci</p><h3 class="tm-h3">D'où viennent les nouveaux clients</h3><div id="sd-drSrc" class="tm-src"></div></div>
 <div class="card" style="margin-top:16px"><p class="eyebrow">6 derniers mois</p><h3 class="tm-h3">Inscriptions et encaissements</h3><div id="sd-drMonths" class="tm-months"></div></div>
-<div class="card" style="margin-top:16px" id="sd-drSec"><p class="eyebrow">Sécurité</p><h3 class="tm-h3">Comptes de l'équipe</h3><p class="tm-note" style="margin:0 0 10px!important">Un compte désactivé ne voit plus rien, tout de suite, sur tous ses appareils. Son historique (reçus, messages) est gardé. Tu reçois une notification quand un compte se connecte depuis un appareil jamais vu, avec le pays et la ville (approximatifs, d'après l'adresse internet) ; chaque appareil se déconnecte seul après 8 heures sans activité.</p><div id="sd-drComptes" class="sc-list"></div><div class="sc-add"><button type="button" class="btn btn-sm btn-line" id="sd-cptAddBtn">Ajouter un compte</button><form id="sd-cptAdd" class="sc-form" hidden novalidate><div class="row2"><div class="field"><label for="sd-cptAddRole">Rôle</label><select id="sd-cptAddRole"><option value="secretariat">Secrétariat</option><option value="moniteur">Moniteur</option><option value="gerant">Gérante</option><option value="admin">Direction</option></select></div><div class="field"><label for="sd-cptAddMail">Prénom ou adresse</label><input id="sd-cptAddMail" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="ex. awa"><small class="sc-apercu" data-for="sd-cptAddMail"></small></div></div><div class="field"><label for="sd-cptAddPw">Mot de passe (6 caractères au moins)</label><input id="sd-cptAddPw" type="password" autocomplete="new-password"></div><div class="sc-fbtn"><button type="submit" class="btn btn-sm btn-green">Créer le compte</button><button type="button" class="btn btn-sm btn-line" data-annul="add">Annuler</button></div></form></div><p class="tm-note sc-aide">Pour changer de personne sur un compte : <b>Modifier</b>, tape son prénom et un nouveau mot de passe. Le compte garde tout son historique, l'ancien mot de passe ne marche plus et ses autres appareils sont déconnectés. Les comptes ne se suppriment pas : on change l'adresse, ou on désactive.</p><h4 class="sc-h">Dernières connexions</h4><div id="sd-drCx" class="tm-list"></div></div>
+<div class="card" style="margin-top:16px" id="sd-drSec"><p class="eyebrow">Sécurité</p><h3 class="tm-h3">Comptes de l'équipe</h3><p class="tm-note" style="margin:0 0 10px!important">Un compte désactivé ne voit plus rien, tout de suite, sur tous ses appareils. Son historique (reçus, messages) est gardé. Tu reçois une notification quand un compte se connecte depuis un appareil jamais vu, avec le pays et la ville (approximatifs, d'après l'adresse internet) ; chaque appareil se déconnecte seul après 3 jours sans utiliser l'application.</p><div id="sd-drComptes" class="sc-list"></div><div class="sc-add"><button type="button" class="btn btn-sm btn-line" id="sd-cptAddBtn">Ajouter un compte</button><form id="sd-cptAdd" class="sc-form" hidden novalidate><div class="row2"><div class="field"><label for="sd-cptAddRole">Rôle</label><select id="sd-cptAddRole"><option value="secretariat">Secrétariat</option><option value="moniteur">Moniteur</option><option value="gerant">Gérante</option><option value="admin">Direction</option></select></div><div class="field"><label for="sd-cptAddMail">Prénom ou adresse</label><input id="sd-cptAddMail" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="ex. awa"><small class="sc-apercu" data-for="sd-cptAddMail"></small></div></div><div class="field"><label for="sd-cptAddPw">Mot de passe (6 caractères au moins)</label><input id="sd-cptAddPw" type="password" autocomplete="new-password"></div><div class="sc-fbtn"><button type="submit" class="btn btn-sm btn-green">Créer le compte</button><button type="button" class="btn btn-sm btn-line" data-annul="add">Annuler</button></div></form></div><p class="tm-note sc-aide">Pour changer de personne sur un compte : <b>Modifier</b>, tape son prénom et un nouveau mot de passe. Le compte garde tout son historique, l'ancien mot de passe ne marche plus et ses autres appareils sont déconnectés. Les comptes ne se suppriment pas : on change l'adresse, ou on désactive.</p><h4 class="sc-h">Dernières connexions</h4><div id="sd-drCx" class="tm-list"></div></div>
 </div>
 <div class="tm-pane" data-pane="mon" role="tabpanel" hidden>
 <p class="tm-role">Cours de code en salle, séances de conduite et progression des élèves.</p>
@@ -2757,10 +2757,11 @@ function init(root) {
       const err = $("#sd-teamErr"), btn = $("#sd-tmGo"), email = $("#sd-tmEmail").value.trim(), pw = $("#sd-tmPw").value;
       if (!email || !pw) { err.textContent = "Indique ton e-mail et ton mot de passe."; err.hidden = false; return; }
       btn.disabled = true; btn.textContent = "Connexion…";
-      try { await DB.login(email, pw); err.hidden = true; $("#sd-tmPw").value = ""; SEC.login = true; await start(); }
+      try { await DB.login(email, pw); err.hidden = true; $("#sd-tmPw").value = ""; try { localStorage.setItem("sodaf.email", email); } catch (x) {} SEC.login = true; await start(); }
       catch (ex) { err.textContent = /Invalid login/i.test(ex.message) ? "E-mail ou mot de passe incorrect." : navigator.onLine === false ? "Pas de connexion internet." : ex.message; err.hidden = false; }
       btn.disabled = false; btn.textContent = "Se connecter";
     });
+    try { const em = localStorage.getItem("sodaf.email"); if (em && !$("#sd-tmEmail").value) $("#sd-tmEmail").value = em; } catch (x) {} // adresse retenue sur cet appareil : seul le mot de passe est à taper
     $("#sd-drComptes").addEventListener("click", async (e) => {
       const b = e.target.closest("[data-cpt]"); if (!b) return; const on = b.dataset.on === "1";
       if (!on && !b.dataset.ok) { b.dataset.ok = "1"; b.textContent = "Confirmer la désactivation"; b.classList.add("sc-conf"); setTimeout(() => { if (b.isConnected) { delete b.dataset.ok; b.textContent = "Désactiver"; b.classList.remove("sc-conf"); } }, 5000); return; }
@@ -2923,14 +2924,16 @@ function init(root) {
     function msQui(k) {
       const mb = msMembres(k).map((p) => msPrenom(p) === msRole[p.role] ? msRole[p.role] : msPrenom(p) + " (" + (msRole[p.role] || "") + ")");
       if (!k.roles) return "Toute l'équipe";
-      if (k.id === "planning") { if (me.role === "admin" || me.role === "gerant") return "Privé entre le secrétariat et le moniteur · tu peux lire (supervision)"; return "Privé · " + msMembres(k).filter((p) => p.role !== "admin" && p.role !== "gerant").map((p) => msPrenom(p) + " (" + (msRole[p.role] || "") + ")").join(" et ") + " · la direction peut lire"; }
+      if (k.id === "planning") { if (me.role === "admin" || me.role === "gerant") return "Privé entre le secrétariat et le moniteur · tu peux lire (supervision)"; return "Privé · " + msMembres(k).filter((p) => p.role !== "admin" && p.role !== "gerant").map((p) => msPrenom(p) + " (" + (msRole[p.role] || "") + ")").join(" et ") + " · la direction et la gérante peuvent lire"; }
       return "Privé · lu seulement par : " + (mb.join(" et ") || k.roles.map((r) => msRole[r] || r).join(" et "));
     }
     function msChans() {
       const el = $("#sd-msCanaux"); if (!el) return;
       const ligne = (k) => { const n = msNonLus(k.id), l = MS.msgs[k.id] || [], d = l[l.length - 1], att = MS.file.filter((f) => f.canal === k.id).length; return '<button type="button" class="ms-ch' + (k.id === MS.cur ? " on" : "") + (n ? " nl" : "") + '" data-ch="' + esc(k.id) + '"><i class="ms-ic' + (k.prive ? " pv" : "") + '">' + (k.prive ? IC_LOCK : "#") + "</i><b>" + esc(k.nom) + "</b><time>" + (att ? "Envoi…" : d ? esc(msQuand(d.le)) : "") + "</time><small>" + esc(msApercu(d)) + "</small>" + (n ? "<em>" + n + "</em>" : "") + "</button>"; };
-      const pub = MS.canaux.filter((k) => !k.prive), pv = MS.canaux.filter((k) => k.prive);
-      el.innerHTML = (pub.length ? '<p class="ms-sec">Canaux</p>' + pub.map(ligne).join("") : "") + (pv.length ? '<p class="ms-sec">Messages privés</p>' + pv.map(ligne).join("") : "");
+      const ger = MS.canaux.filter((k) => k.id === "gerance"), pub = MS.canaux.filter((k) => !k.prive), pv = MS.canaux.filter((k) => k.prive && k.id !== "gerance");
+      // Conversation Direction ↔ Gérante : à part, en haut, jamais mélangée avec les canaux de l'équipe
+      el.innerHTML = (ger.length ? '<div class="ms-ger"><p class="ms-sec">' + (me && me.role === "gerant" ? "Avec la direction" : "Avec la gérante") + "</p>" + ger.map(ligne).join("") + "</div>" : "") +
+        (pub.length ? '<p class="ms-sec">Canaux</p>' + pub.map(ligne).join("") : "") + (pv.length ? '<p class="ms-sec">' + (ger.length ? "Messages privés de l'équipe" : "Messages privés") + "</p>" + pv.map(ligne).join("") : "");
     }
     // Lecteur de vocal : un seul lecteur pour toute l'application (la lecture continue quand la liste se met à jour)
     function msAudHtml(x, f, moi) {
@@ -3354,9 +3357,9 @@ function init(root) {
     document.addEventListener("visibilitychange", () => { if (!document.hidden) majVerifier(true); });
     setInterval(() => { if (!document.hidden) majVerifier(false); }, 300000);
     // ---- Sécurité de l'espace équipe
-    // 1. Déconnexion automatique après 8 h sans activité (même téléphone oublié ouvert). 2. Compte désactivé par la direction : sortie immédiate.
+    // 1. Déconnexion automatique après 3 jours sans activité (choix de la direction, 6 oct.) (même téléphone oublié ouvert). 2. Compte désactivé par la direction : sortie immédiate.
     // 3. Journal des connexions : chaque appareil est reconnu ; une connexion depuis un appareil jamais vu prévient la direction et la personne.
-    const SEC = { login: false, limite: 8 * 3600000, ecrit: 0, compteTic: 0 };
+    const SEC = { login: false, limite: 3 * 24 * 3600000, ecrit: 0, compteTic: 0 };
     const secLire = () => { try { return +localStorage.getItem("sodaf.actif") || 0; } catch (e) { return 0; } };
     function secActif(force) { const n = Date.now(); if (!force && n - SEC.ecrit < 30000) return; SEC.ecrit = n; try { localStorage.setItem("sodaf.actif", String(n)); } catch (e) {} }
     ["pointerdown", "keydown", "touchstart", "wheel"].forEach((ev) => document.addEventListener(ev, () => { if (me) secActif(); }, { passive: true, capture: true }));
@@ -3366,7 +3369,7 @@ function init(root) {
     }
     async function secVerifier(compte) {
       if (!me) return;
-      const d = secLire(); if (d && Date.now() - d > SEC.limite) { await secSortir("Déconnecté après 8 heures sans activité. Reconnecte-toi."); return; }
+      const d = secLire(); if (d && Date.now() - d > SEC.limite) { await secSortir("Déconnecté après 3 jours sans utiliser l'application. Reconnecte-toi."); return; }
       if (!compte) return;
       try { const r = await DB.q("profils?select=actif&id=eq." + me.id); if (!r.length || r[0].actif === false) await secSortir("Ce compte a été désactivé par la direction."); } catch (e) {}
     }
@@ -3405,7 +3408,7 @@ function init(root) {
     }
     async function start() {
       const s = DB.session; if (!s) { show(false); return; }
-      { const d = secLire(); if (!SEC.login && d && Date.now() - d > SEC.limite) { await DB.logout(); show(false); const er = $("#sd-teamErr"); er.textContent = "Déconnecté après 8 heures sans activité. Reconnecte-toi."; er.hidden = false; return; } }
+      { const d = secLire(); if (!SEC.login && d && Date.now() - d > SEC.limite) { await DB.logout(); show(false); const er = $("#sd-teamErr"); er.textContent = "Déconnecté après 3 jours sans utiliser l'application. Reconnecte-toi."; er.hidden = false; return; } }
       secActif(true);
       const rows = await run(() => DB.q("profils?select=nom,role,actif&id=eq." + s.user.id));
       if (!rows) return;
@@ -4151,7 +4154,6 @@ function init(root) {
       const [dm, dc, rp] = await Promise.all([DB.q("demandes?select=*&order=le.desc&limit=60").catch(() => null), DB.q("decisions?select=*&order=le.desc&limit=60").catch(() => null), DB.q("rapports?select=*&order=semaine.desc&limit=20").catch(() => null)]);
       if (!dm && !dc && !rp) { $("#sd-grDemList").innerHTML = '<p class="tm-empty">La gérance n\'est pas encore activée dans la base.</p>'; return; }
       GR.dem = dm || []; GR.dec = dc || []; GR.rap = rp || [];
-      if (g) { const sel = $("#sd-grDemEl"), v = sel.value; sel.innerHTML = '<option value="">Aucun</option>' + eleves.filter((x) => x.statut !== "Abandon").slice().sort((a, b) => a.nom.localeCompare(b.nom, "fr")).map((x) => '<option value="' + x.id + '">' + esc(x.nom) + " (SO" + x.id + ")</option>").join(""); sel.value = v; }
       grDemRender(); grDecRender(); await grRapRender(); grBadges(); grOnglet(GR.ong);
     }
     function grDemRender() {
@@ -4192,12 +4194,33 @@ function init(root) {
       if (ok) { const bx = ok.closest("[data-dem]"); bx.querySelectorAll("button").forEach((b) => (b.disabled = true)); const r = await run(() => DB.q("rpc/demande_repondre", { method: "POST", body: { p_id: +bx.dataset.dem, p_accord: ok.dataset.ok === "1", p_note: bx.querySelector("input").value.trim() || null } }).then(() => true), ok.dataset.ok === "1" ? "Accordé : la gérante est prévenue" : "Refusé : la gérante est prévenue"); if (r) grCharger(); else bx.querySelectorAll("button").forEach((b) => (b.disabled = false)); }
       if (av) { const bx = av.closest("[data-dec]"); bx.querySelectorAll("button").forEach((b) => (b.disabled = true)); const r = await run(() => DB.q("rpc/decision_avis", { method: "POST", body: { p_id: +bx.dataset.dec, p_avis: av.dataset.avis, p_note: bx.querySelector("input").value.trim() || null } }).then(() => true), av.dataset.avis === "ok" ? "Noté : d'accord" : "Noté : à revoir, la gérante est prévenue"); if (r) grCharger(); else bx.querySelectorAll("button").forEach((b) => (b.disabled = false)); }
     });
+    // Élève concerné : on tape le nom (ou SO12) et la liste se filtre
+    const grPlat = (t) => (t || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    function grElListe() {
+      const q = grPlat($("#sd-grDemElQ").value.trim()), n = +(q.replace(/^so\s*/, "")) || 0, L = $("#sd-grDemElL");
+      const res = eleves.filter((x) => !q || grPlat(x.nom).includes(q) || (n && x.id === n)).sort((a, b) => (a.statut === "Abandon") - (b.statut === "Abandon") || a.nom.localeCompare(b.nom, "fr")).slice(0, 8);
+      L.innerHTML = res.length ? res.map((x) => '<button type="button" role="option" data-el="' + x.id + '"><b>' + esc(x.nom) + "</b><small>SO" + x.id + " · " + esc(x.statut || "") + (x.formation ? " · " + esc(x.formation) : "") + "</small></button>").join("") : '<p class="gr-elvide">Aucun élève trouvé</p>';
+      L.hidden = false; $("#sd-grDemElQ").setAttribute("aria-expanded", "true");
+    }
+    const grElFermer = () => { $("#sd-grDemElL").hidden = true; $("#sd-grDemElQ").setAttribute("aria-expanded", "false"); };
+    function grElChoisir(id) {
+      const x = eleves.find((y) => y.id === id); $("#sd-grDemEl").value = x ? x.id : ""; grElFermer();
+      const ch = $("#sd-grDemElSel"); ch.hidden = !x; $("#sd-grDemElQ").hidden = !!x;
+      ch.innerHTML = x ? "<span><b>" + esc(x.nom) + "</b> · SO" + x.id + '</span><button type="button" aria-label="Retirer l\'élève">Changer</button>' : "";
+      if (!x) { $("#sd-grDemElQ").value = ""; }
+    }
+    $("#sd-grDemElQ").addEventListener("input", grElListe);
+    $("#sd-grDemElQ").addEventListener("focus", grElListe);
+    $("#sd-grDemElQ").addEventListener("keydown", (e) => { if (e.key === "Escape") grElFermer(); if (e.key === "Enter") { e.preventDefault(); const f = $("#sd-grDemElL [data-el]"); if (f) grElChoisir(+f.dataset.el); } });
+    $("#sd-grDemElL").addEventListener("click", (e) => { const b = e.target.closest("[data-el]"); if (b) grElChoisir(+b.dataset.el); });
+    $("#sd-grDemElSel").addEventListener("click", (e) => { if (e.target.closest("button")) { grElChoisir(0); $("#sd-grDemElQ").focus(); } });
+    document.addEventListener("click", (e) => { if (!e.target.closest(".gr-elbox")) grElFermer(); });
     $("#sd-grDemForm").addEventListener("submit", async (e) => {
       e.preventDefault(); const tx = $("#sd-grDemTx").value.trim(), mt = +($("#sd-grDemMt").value.replace(/\D/g, "")) || null, el = +$("#sd-grDemEl").value || null;
       if (tx.length < 3) { toast("Explique ta demande en quelques mots", true); $("#sd-grDemTx").focus(); return; }
       const b = e.target.querySelector("[type=submit]"); b.disabled = true;
       const r = await run(() => DB.q("demandes", { method: "POST", body: { type: $("#sd-grDemType").value, montant: mt, eleve_id: el, texte: tx }, prefer: "return=minimal" }).then(() => true), "Demande envoyée à la direction");
-      b.disabled = false; if (r) { e.target.reset(); grCharger(); }
+      b.disabled = false; if (r) { e.target.reset(); grElChoisir(0); grCharger(); }
     });
     $("#sd-grDecForm").addEventListener("submit", async (e) => {
       e.preventDefault(); const tx = $("#sd-grDecTx").value.trim();
@@ -4955,6 +4978,9 @@ background:radial-gradient(circle at 35% 30%,#fff 0%,#F1F7F4 55%,#D5E7DE 100%);b
 .ms-notif:empty{display:none}.ms-notif b{font-weight:700}.ms-notif span{font-size:.9rem;color:#3D444D}.ms-na{display:flex;gap:16px;align-items:center;margin-top:6px;flex-wrap:wrap}
 .ms-wrap{display:grid;grid-template-columns:300px 1fr;grid-template-rows:minmax(0,1fr);height:clamp(460px,calc(100dvh - 190px),860px);padding:0!important;overflow:hidden;border:1px solid var(--line)}
 .ms-canaux{background:var(--asph);padding:10px 8px 14px;display:flex;flex-direction:column;gap:2px;overflow:auto;min-height:0}
+.ms-ger{margin:2px 0 14px;padding:2px 0 8px;border-radius:12px;background:rgba(107,79,160,.16);box-shadow:inset 3px 0 0 #8E72C7}
+.ms-ger .ms-sec{color:#C9B6EF!important}
+.ms-ger .ms-ic.pv{background:rgba(142,114,199,.25)!important;color:#D9CCF5!important}
 .ms-sec{margin:12px 10px 4px!important;font:700 .7rem/1 var(--f-ui);letter-spacing:.09em;text-transform:uppercase;color:#7F8994}
 .ms-sec:first-child{margin-top:4px!important}
 .ms-ch{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:30px 1fr auto;grid-template-rows:auto auto;column-gap:10px;row-gap:1px;align-items:center;padding:9px 10px;border-radius:10px}
@@ -5078,6 +5104,15 @@ html.ms-plein,html.ms-plein body{overflow:hidden}
 .gr-ch{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px;margin-top:8px}
 .gr-ch span{background:var(--soft);border-radius:8px;padding:6px 9px;font-size:.84rem}.gr-ch b{display:block;font-size:1rem}
 .gr-grow{flex:1}
+.gr-elbox{position:relative}
+.gr-ell{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:20;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 30px rgba(20,23,28,.14);max-height:300px;overflow:auto;padding:4px}
+.gr-ell[hidden],.gr-elsel[hidden],#sd-grDemElQ[hidden]{display:none}
+.gr-ell button{all:unset;box-sizing:border-box;cursor:pointer;display:block;width:100%;padding:8px 10px;border-radius:8px}
+.gr-ell button:hover,.gr-ell button:focus-visible{background:var(--soft)}
+.gr-ell b{display:block;font-size:.93rem}.gr-ell small{color:var(--muted);font-size:.78rem}
+.gr-elvide{margin:0;padding:10px;color:var(--muted);font-size:.88rem}
+.gr-elsel{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--soft)}
+.gr-elsel button{all:unset;cursor:pointer;font-weight:700;font-size:.85rem;color:#1F5FA8}
 #sd-grRapChiffres{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))!important;gap:8px!important}
 @media (max-width:600px){#sd-grRapChiffres{grid-template-columns:repeat(2,minmax(0,1fr))!important}#sd-grRapChiffres div{padding:8px 10px!important}#sd-grRapChiffres b{font-size:1.1rem!important}}
 .sc-form{grid-column:1/-1;border-top:1px dashed var(--line);padding-top:10px;margin-top:4px}
