@@ -1834,7 +1834,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="card soft"><p class="eyebrow">Après chaque cours de code</p><ol class="teamsteps"><li>Au début du cours, ouvre <b>Cours de code</b> : le programme du jour s'affiche.</li><li>Fais l'appel : coche les élèves présents.</li><li>Touche <b>Valider les présences</b> : le cours compte comme fait.</li></ol></div>
 <div class="card soft"><p class="eyebrow">Séances de conduite</p><ol class="teamsteps"><li>Le matin, regarde <b>Mes séances d'aujourd'hui</b>.</li><li>Avant de partir : vérification de la voiture (Outils → check-list du matin).</li><li>Après la séance : <b>Fait</b> ou <b>Absent</b>, et une courte note sur les progrès.</li><li>Avec l'élève, réserve sa prochaine séance dans <b>Réserver une séance</b>.</li></ol></div>
 </div></div>
-<div class="ms-vue" id="sd-msVue" role="dialog" aria-modal="true" aria-label="Photo" hidden><div class="ms-vbar"><b id="sd-msVueNom"></b><a class="ms-vdl" id="sd-msVueDl" href="#" target="_blank" rel="noopener">Télécharger</a><button type="button" class="ms-vx" id="sd-msVueX" aria-label="Fermer">×</button></div><div class="ms-vimg"><img id="sd-msVueImg" alt=""></div></div>
+<div class="ms-vue" id="sd-msVue" role="dialog" aria-modal="true" aria-label="Photos de la conversation" hidden><div class="ms-vbar"><div class="ms-vtit"><b id="sd-msVueNom"></b><small id="sd-msVueInfo"></small></div><span class="ms-vcpt" id="sd-msVueCpt"></span><a class="ms-vdl" id="sd-msVueDl" href="#" target="_blank" rel="noopener">Télécharger</a><button type="button" class="ms-vx" id="sd-msVueX" aria-label="Fermer">×</button></div><div class="ms-vimg" id="sd-msVueZone"><button type="button" class="ms-vnav prev" id="sd-msVuePrev" aria-label="Photo précédente"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button><img id="sd-msVueImg" alt="" draggable="false"><button type="button" class="ms-vnav next" id="sd-msVueNext" aria-label="Photo suivante"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button></div></div>
 <div class="mf-ov" id="sd-mfOv" hidden><div class="mf-box" id="sd-mfBox" role="dialog" aria-modal="true" aria-label="Fiche de l'élève"></div></div>
 <div class="tm-pane" data-pane="msg" role="tabpanel" hidden>
 <p class="tm-role">Les échanges de l'équipe. Le cadenas indique une conversation privée : seules les personnes nommées en haut de la conversation la lisent. Écris @ pour prévenir quelqu'un, SO12 pour ouvrir la fiche d'un élève, et le trombone (ou glisse le fichier dans la conversation) pour joindre une photo ou un document.</p>
@@ -2798,18 +2798,53 @@ function init(root) {
     }
     window.addEventListener("popstate", () => { const v = document.getElementById("sd-msVue"); if (v && !v.hidden) { v.hidden = true; return; } const w = document.getElementById("sd-msWrap"); if (w && w.classList.contains("voir-fil")) msVoirFil(false); });
     // Visionneuse photo : plein écran, fermer avec ×, Échap, un toucher à côté ou le geste retour du téléphone
+    // Visionneuse photo : toutes les photos de la conversation, de la plus ancienne à la plus récente.
+    // Téléphone : glisser vers la gauche = photo suivante (plus récente), vers la droite = précédente. Ordinateur : flèches ‹ › ou touches ← →.
+    // Fermer : ×, Échap, un toucher à côté de la photo, ou le geste retour du téléphone.
+    const VUE = { list: [], i: 0, glisse: false };
     async function msVue(btn) {
-      const img = btn.querySelector("img"), path = btn.dataset.pj, nom = (img && img.alt) || "Photo", v = $("#sd-msVue");
-      $("#sd-msVueNom").textContent = nom; $("#sd-msVueImg").src = (img && img.src) || ""; $("#sd-msVueDl").href = "#";
+      const path = btn.dataset.pj, img = btn.querySelector("img"), v = $("#sd-msVue");
+      VUE.list = path ? (MS.msgs[MS.cur] || []).filter((x) => x.fichier && x.fichier.path && msEstImg(x.fichier)).map((x) => ({ path: x.fichier.path, nom: x.fichier.nom || "Photo", auteur: x.auteur, le: x.le, w: x.fichier.w, h: x.fichier.h })) : [];
+      VUE.i = VUE.list.findIndex((x) => x.path === path);
+      if (VUE.i < 0) { VUE.list = [{ path: path || null, nom: (img && img.alt) || "Photo", local: img && img.src, auteur: me.id, le: new Date().toISOString() }]; VUE.i = 0; } // photo encore en cours d'envoi
+      $("#sd-msVueImg").src = (img && img.src) || "";
       v.hidden = false; try { history.pushState({ sdMsVue: 1 }, ""); } catch (x) {}
-      if (!path) { $("#sd-msVueDl").href = (img && img.src) || "#"; return; } // photo encore en cours d'envoi
-      const [u] = await msSigne([path]); if (!u) { toast("Photo indisponible"); return; }
-      $("#sd-msVueImg").src = MS.blobs[path] || u; $("#sd-msVueDl").href = u + "&download=" + encodeURIComponent(nom);
-      $("#sd-msVueX").focus();
+      msVueAff(); $("#sd-msVueX").focus();
     }
+    async function msVueAff() {
+      const ph = VUE.list[VUE.i]; if (!ph) return; const n = VUE.list.length, p = MS.profs[ph.auteur];
+      $("#sd-msVueNom").textContent = ph.auteur === me.id ? "Moi" : msPrenom(p);
+      $("#sd-msVueInfo").textContent = msJour(ph.le) + " à " + msHeure(ph.le);
+      $("#sd-msVueCpt").textContent = n > 1 ? VUE.i + 1 + " / " + n : "";
+      $("#sd-msVuePrev").hidden = VUE.i <= 0; $("#sd-msVueNext").hidden = VUE.i >= n - 1;
+      const im = $("#sd-msVueImg"); im.alt = ph.nom; im.style.transform = "";
+      if (ph.local) { im.src = ph.local; $("#sd-msVueDl").href = ph.local; return; }
+      if (MS.blobs[ph.path]) im.src = MS.blobs[ph.path];
+      const [u] = await msSigne([ph.path]); if (VUE.list[VUE.i] !== ph) return;
+      if (!u) { toast("Photo indisponible pour l'instant"); return; }
+      if (!MS.blobs[ph.path]) im.src = u; $("#sd-msVueDl").href = u + "&download=" + encodeURIComponent(ph.nom);
+      // Les photos voisines sont préparées pour passer de l'une à l'autre sans attendre
+      const voisins = [VUE.list[VUE.i - 1], VUE.list[VUE.i + 1]].filter((x) => x && x.path && !MS.blobs[x.path]);
+      if (voisins.length) msSigne(voisins.map((x) => x.path)).then((us) => us.forEach((x) => { if (x) { const pre = new Image(); pre.src = x; } }));
+    }
+    function msVueAller(d) { const j = VUE.i + d; if (j < 0 || j >= VUE.list.length) { const im = $("#sd-msVueImg"); im.style.transition = "transform .15s"; im.style.transform = "translateX(" + (d > 0 ? -18 : 18) + "px)"; setTimeout(() => { im.style.transform = ""; }, 150); return; } VUE.i = j; msVueAff(); }
     function msVueFermer() { const v = $("#sd-msVue"); if (v.hidden) return; if (history.state && history.state.sdMsVue) history.back(); else v.hidden = true; }
-    $("#sd-msVue").addEventListener("click", (e) => { if (e.target.closest("#sd-msVueX") || e.target.classList.contains("ms-vimg")) msVueFermer(); });
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape") msVueFermer(); });
+    $("#sd-msVue").addEventListener("click", (e) => {
+      if (VUE.glisse) { VUE.glisse = false; return; }
+      if (e.target.closest("#sd-msVuePrev")) { msVueAller(-1); return; }
+      if (e.target.closest("#sd-msVueNext")) { msVueAller(1); return; }
+      if (e.target.closest("#sd-msVueX") || e.target.classList.contains("ms-vimg")) msVueFermer();
+    });
+    document.addEventListener("keydown", (e) => {
+      if ($("#sd-msVue").hidden) return;
+      if (e.key === "Escape") msVueFermer(); else if (e.key === "ArrowLeft") msVueAller(-1); else if (e.key === "ArrowRight") msVueAller(1);
+    });
+    { // glisser du doigt : la photo suit le doigt, puis passe à la suivante ou revient
+      const z = $("#sd-msVueZone"); let x0 = null, y0 = 0, dx = 0;
+      z.addEventListener("touchstart", (e) => { if (e.touches.length !== 1) { x0 = null; return; } x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; dx = 0; $("#sd-msVueImg").style.transition = "none"; }, { passive: true });
+      z.addEventListener("touchmove", (e) => { if (x0 === null) return; dx = e.touches[0].clientX - x0; if (Math.abs(dx) > Math.abs(e.touches[0].clientY - y0)) $("#sd-msVueImg").style.transform = "translateX(" + dx + "px)"; }, { passive: true });
+      z.addEventListener("touchend", () => { if (x0 === null) return; const im = $("#sd-msVueImg"); im.style.transition = "transform .18s"; x0 = null; if (Math.abs(dx) > 50) { VUE.glisse = true; setTimeout(() => (VUE.glisse = false), 400); msVueAller(dx < 0 ? 1 : -1); } else im.style.transform = ""; });
+    }
     const msFilVu = () => msLarge() || $("#sd-msWrap").classList.contains("voir-fil");
     const msOpen = () => !$('.tm-pane[data-pane="msg"]').hidden && !document.hidden && msFilVu();
     async function msInit() {
@@ -4855,6 +4890,12 @@ html:has(#sodaf-root.app-mode),body:has(#sodaf-root.app-mode){background:#ECEFEE
 .tm-auj>summary em{font-style:normal;font-weight:700;font-size:.85rem;color:#8A6500;white-space:nowrap}
 .tm-auj>div{padding:14px}.tm-auj .tm-mon{margin:0}.tm-auj .tm-mon>.card{box-shadow:none;border:1px solid var(--line)}
 html.ms-plein,html.ms-plein body{overflow:hidden}
+.ms-vimg img{user-select:none;-webkit-user-drag:none;max-width:100%!important;max-height:calc(100dvh - 96px)!important;width:auto;height:auto}
+#sodaf-root .ms-vdl,.ms-vdl{color:#fff!important}
+.ms-vnav{all:unset;cursor:pointer;position:absolute;top:50%;margin-top:-26px;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:rgba(0,0,0,.45);color:#fff;z-index:2}
+.ms-vnav.prev{left:12px}.ms-vnav.next{right:12px}.ms-vnav[hidden]{display:none}
+.ms-vnav:hover{background:rgba(0,0,0,.7)}.ms-vnav:focus-visible{outline:2px solid var(--yellow)}
+@media (pointer:coarse){.ms-vnav{width:42px;height:42px;margin-top:-21px;background:rgba(0,0,0,.3)}}
 .sc-list{display:grid;gap:8px}
 .sc-row{display:grid;grid-template-columns:220px 1fr 210px;gap:6px 16px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:12px}
 .sc-row.off{background:var(--soft);opacity:.75}
@@ -4919,13 +4960,14 @@ html.ms-plein,html.ms-plein body{overflow:hidden}
 .ms-recdot{width:12px;height:12px;border-radius:50%;background:#D7263D;animation:recb 1s infinite}
 @keyframes recb{50%{opacity:.25}}
 @media (max-width:760px){.ms-mic,.ms-clip{width:40px}.ms-aud{min-width:215px}}
-.ms-vue{position:fixed;inset:0;z-index:95;background:rgba(10,12,15,.94);display:flex;flex-direction:column}
+.ms-vue{position:fixed;inset:0;z-index:95;background:#0B0D10;display:flex;flex-direction:column}
 .ms-vue[hidden]{display:none}
 .ms-vbar{display:flex;align-items:center;gap:12px;padding:10px 14px;padding-top:max(10px,env(safe-area-inset-top));color:#fff}
-.ms-vbar b{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.ms-vtit{flex:1;min-width:0;display:flex;flex-direction:column}.ms-vtit b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:700}.ms-vtit small{color:#B7C0C8;font-size:.8rem}
+.ms-vcpt{font-variant-numeric:tabular-nums;font-weight:700;font-size:.9rem;color:#E8ECEF}
 .ms-vdl{color:#fff;font-weight:700;font-size:.9rem;border:1.5px solid rgba(255,255,255,.5);border-radius:999px;padding:.45em 1em;text-decoration:none}
 .ms-vx{all:unset;cursor:pointer;width:42px;height:42px;display:grid;place-items:center;font-size:2rem;color:#fff;border-radius:50%}.ms-vx:focus-visible{outline:2px solid var(--yellow)}
-.ms-vimg{flex:1;min-height:0;display:grid;place-items:center;padding:8px 8px max(16px,env(safe-area-inset-bottom))}
+.ms-vimg{flex:1;min-height:0;display:grid;place-items:center;position:relative;overflow:hidden;touch-action:pan-y;padding:8px 8px max(16px,env(safe-area-inset-bottom))}
 .ms-vimg img{max-width:100%;max-height:100%;object-fit:contain;border-radius:6px}
 .maj-bar{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:98;display:flex;gap:14px;align-items:center;background:var(--asph);color:#fff;padding:10px 12px 10px 18px;border-radius:999px;box-shadow:0 12px 30px -10px rgba(0,0,0,.5);font-weight:600;font-size:.92rem;max-width:calc(100% - 32px)}
 .ms-fil.drop::after{content:"Dépose le fichier ici pour l'envoyer";position:absolute;inset:8px;z-index:6;display:grid;place-items:center;border:3px dashed var(--green);border-radius:14px;background:rgba(223,243,232,.92);color:var(--green);font:700 1.15rem/1.3 var(--f-ui);pointer-events:none}
