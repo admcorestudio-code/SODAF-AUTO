@@ -2753,7 +2753,7 @@ function init(root) {
       catch (ex) { err.textContent = /Invalid login/i.test(ex.message) ? "E-mail ou mot de passe incorrect." : navigator.onLine === false ? "Pas de connexion internet." : ex.message; err.hidden = false; }
       btn.disabled = false; btn.textContent = "Se connecter";
     });
-    $("#sd-teamOut").addEventListener("click", async () => { await DB.logout(); me = null; show(false); });
+    $("#sd-teamOut").addEventListener("click", async () => { rtFermer(); AUD.pause(); await DB.logout(); me = null; show(false); });
     $("#sd-tmPwBtn").addEventListener("click", () => { $("#sd-tmPwForm").hidden = !$("#sd-tmPwForm").hidden; });
     $("#sd-tmPwForm").addEventListener("submit", async (e) => {
       e.preventDefault(); const v = $("#sd-tmPw1").value, m = $("#sd-tmPwMsg");
@@ -2779,9 +2779,11 @@ function init(root) {
     // ---- Messages de l'équipe (canaux) et notifications sur téléphone
     // La base envoie les notifications (fonction « notifier ») ; ici : lire, écrire, compter les non-lus, activer les notifications.
     const VAPID_PUB = "BOMPgiFqajAv-Mqb1SXD7WOGWJVEK_sDJQGULUCSgV5eAm10bOq7WctPkE51LqGgFHqe4S2y2COGmt0DWbWMv8o";
-    const MS = { canaux: [], cur: null, msgs: {}, lu: {}, profs: {}, dernier: null, pret: false, envoi: false, total: 0, forceBas: false, urls: {}, pjs: [], repere: {}, arrivees: 0, attente: 0, sug: [], sugI: 0 };
+    const MS = { canaux: [], cur: null, msgs: {}, lu: {}, profs: {}, dernier: null, pret: false, total: 0, forceBas: false, urls: {}, blobs: {}, pjs: [], repere: {}, arrivees: 0, attente: 0, sug: [], sugI: 0, file: [], traite: false, ec: {}, vitesse: 1, lect: null };
     const msRole = { admin: "Direction", secretariat: "Secrétariat", moniteur: "Moniteur" };
     const msLarge = () => matchMedia("(min-width: 761px)").matches;
+    // Dates : la base (API) et le temps réel n'écrivent pas l'heure de la même façon ; on ramène tout au même format pour trier et comparer
+    const msLe = (s) => { if (!s) return s; let t = String(s).replace(" ", "T").replace(/(\.\d{3})\d+/, "$1"); if (/[+-]\d\d$/.test(t)) t += ":00"; const d = new Date(t); return isNaN(d) ? String(s) : d.toISOString(); };
     // Téléphone : liste des conversations d'abord, puis la conversation en plein écran (bouton retour ou geste retour du téléphone)
     function msVoirFil(on) {
       const w = document.getElementById("sd-msWrap"); if (!w) return;
@@ -2794,8 +2796,9 @@ function init(root) {
       const img = btn.querySelector("img"), path = btn.dataset.pj, nom = (img && img.alt) || "Photo", v = $("#sd-msVue");
       $("#sd-msVueNom").textContent = nom; $("#sd-msVueImg").src = (img && img.src) || ""; $("#sd-msVueDl").href = "#";
       v.hidden = false; try { history.pushState({ sdMsVue: 1 }, ""); } catch (x) {}
+      if (!path) { $("#sd-msVueDl").href = (img && img.src) || "#"; return; } // photo encore en cours d'envoi
       const [u] = await msSigne([path]); if (!u) { toast("Photo indisponible"); return; }
-      $("#sd-msVueImg").src = u; $("#sd-msVueDl").href = u + "&download=" + encodeURIComponent(nom);
+      $("#sd-msVueImg").src = MS.blobs[path] || u; $("#sd-msVueDl").href = u + "&download=" + encodeURIComponent(nom);
       $("#sd-msVueX").focus();
     }
     function msVueFermer() { const v = $("#sd-msVue"); if (v.hidden) return; if (history.state && history.state.sdMsVue) history.back(); else v.hidden = true; }
@@ -2804,15 +2807,22 @@ function init(root) {
     const msFilVu = () => msLarge() || $("#sd-msWrap").classList.contains("voir-fil");
     const msOpen = () => !$('.tm-pane[data-pane="msg"]').hidden && !document.hidden && msFilVu();
     async function msInit() {
-      const [c, l, p, m] = await Promise.all([run(() => DB.q("canaux?select=*&order=ordre")), run(() => DB.q("lectures?select=*")), run(() => DB.q("profils?select=id,nom,role,actif")), run(() => DB.q("messages?select=*&order=le.desc&limit=400"))]);
+      const [c, l, p, m, e] = await Promise.all([run(() => DB.q("canaux?select=*&order=ordre")), run(() => DB.q("lectures?select=*")), run(() => DB.q("profils?select=id,nom,role,actif")), run(() => DB.q("messages?select=*&order=le.desc&limit=400")), DB.q("ecoutes?select=message_id,profil&limit=5000").catch(() => [])]);
       if (!c || !c.length) return;
-      MS.canaux = c; (l || []).forEach((x) => (MS.lu[x.canal] = x.lu_le)); (p || []).forEach((x) => (MS.profs[x.id] = x));
+      MS.canaux = c; (l || []).forEach((x) => (MS.lu[x.canal] = msLe(x.lu_le))); (p || []).forEach((x) => (MS.profs[x.id] = x));
       MS.msgs = {}; c.forEach((k) => (MS.msgs[k.id] = []));
-      (m || []).reverse().forEach(msAjout);
+      (m || []).reverse().forEach(msAjout); (e || []).forEach(msEcAjout);
       const sv = S.get("msCanal", null); MS.cur = MS.msgs[MS.cur] ? MS.cur : MS.msgs[sv] ? sv : c[0].id;
-      MS.pret = true; msBadge(); msRender(); msNotifBox();
+      MS.pret = true; msBadge(); msRender(); msNotifBox(); rtConnecter();
     }
-    function msAjout(x) { const a = MS.msgs[x.canal]; if (!a || a.some((y) => y.id === x.id)) return false; a.push(x); a.sort((u, v) => (u.le < v.le ? -1 : 1)); if (!MS.dernier || x.le > MS.dernier) MS.dernier = x.le; return true; }
+    function msAjout(x) {
+      x.le = msLe(x.le);
+      const a = MS.msgs[x.canal]; if (!a || a.some((y) => y.id === x.id)) return false;
+      if (x.cle) { const i = MS.file.findIndex((f) => f.cle === x.cle); if (i >= 0) { const f = MS.file[i]; if (f.pj && f.pj.local && x.fichier && x.fichier.path) { MS.blobs[x.fichier.path] = f.pj.local; if (MS.lect && MS.lect.cle === "local:" + f.cle) { MS.lect.cle = x.fichier.path; MS.lect.id = x.id; } } MS.file.splice(i, 1); } } // mon message en attente : remplacé par le vrai, sans doublon
+      a.push(x); a.sort((u, v) => (u.le < v.le ? -1 : u.le > v.le ? 1 : u.id - v.id)); if (!MS.dernier || x.le > MS.dernier) MS.dernier = x.le; return true;
+    }
+    function msEcAjout(e) { const s = MS.ec[e.message_id] || (MS.ec[e.message_id] = new Set()); if (s.has(e.profil)) return false; s.add(e.profil); return true; }
+    const msEcoute = (id, qui) => !!(MS.ec[id] && MS.ec[id].has(qui));
     const msNonLus = (k) => (MS.msgs[k] || []).filter((x) => x.auteur !== me.id && (!MS.lu[k] || x.le > MS.lu[k])).length;
     function msBadge() { const n = MS.canaux.reduce((t, k) => t + msNonLus(k.id), 0), b = $("#sd-msBadge"); MS.total = n; if (b) { b.textContent = n > 99 ? "99+" : n; b.hidden = !n; } }
     async function msLu(k) { const t = new Date().toISOString(); MS.lu[k] = t; msBadge(); msChans(); try { await DB.q("lectures?on_conflict=profil,canal", { method: "POST", body: { canal: k, lu_le: t }, prefer: "resolution=merge-duplicates,return=minimal" }); } catch (e) {} }
@@ -2827,15 +2837,16 @@ function init(root) {
     const msEstImg = (f) => f && /^image\//.test(f.type || "");
     const msEstAud = (f) => f && /^audio\//.test(f.type || "");
     const msDuree = (n) => Math.floor(n / 60) + ":" + String(Math.floor(n % 60)).padStart(2, "0");
-    function msTexte(t, x) {
+    function msTexte(t) {
       const noms = Object.values(MS.profs).filter((p) => p.actif !== false).map(msPrenom), moiNom = msPlat(msPrenom(MS.profs[me.id]));
       return esc(t).replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>')
         .replace(/\b[Ss][Oo] ?(\d{1,6})\b/g, (m, id) => (eleves.some((y) => y.id === +id) ? '<button type="button" class="ms-el" data-goel="' + id + '">SO' + id + "</button>" : m))
         .replace(/(^|[\s(])@([A-Za-zÀ-ÿ][\wÀ-ÿ'-]*)/g, (m, av, n) => (noms.some((y) => msPlat(y) === msPlat(n)) ? av + '<span class="ms-at' + (msPlat(n) === moiNom ? " moi" : "") + '">@' + n + "</span>" : m))
         .replace(/\n/g, "<br>");
     }
-    const msApercu = (x) => { if (!x) return "Aucun message"; const p = MS.profs[x.auteur], f = x.fichier, t = f ? (msEstAud(f) ? "Message vocal" : msEstImg(f) ? "Photo" : "Fichier : " + (f.nom || "Fichier")) + (x.texte && x.texte !== f.nom ? " · " + x.texte : "") : x.texte; return (x.auteur === me.id ? "Toi" : msPrenom(p)) + " : " + t.replace(/\s+/g, " "); };
+    const msApercu = (x) => { if (!x) return "Aucun message"; const p = MS.profs[x.auteur], f = x.fichier, t = f ? (msEstAud(f) ? "Message vocal" + (f.duree ? " (" + msDuree(f.duree) + ")" : "") : msEstImg(f) ? "Photo" : "Fichier : " + (f.nom || "Fichier")) + (x.texte && x.texte !== f.nom ? " · " + x.texte : "") : x.texte; return (x.auteur === me.id ? "Toi" : msPrenom(p)) + " : " + t.replace(/\s+/g, " "); };
     const IC_LOCK = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+    const IC_PLAY = '<svg class="i-play" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.4-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z" fill="currentColor"/></svg><svg class="i-pause" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><rect x="6.5" y="5" width="4" height="14" rx="1.2" fill="currentColor"/><rect x="13.5" y="5" width="4" height="14" rx="1.2" fill="currentColor"/></svg><i class="i-load" aria-hidden="true"></i>';
     // Qui lit la conversation (affiché en haut) : la règle de confidentialité doit se voir
     function msQui(k) {
       const mb = msMembres(k).map((p) => msPrenom(p) === msRole[p.role] ? msRole[p.role] : msPrenom(p) + " (" + (msRole[p.role] || "") + ")");
@@ -2845,36 +2856,47 @@ function init(root) {
     }
     function msChans() {
       const el = $("#sd-msCanaux"); if (!el) return;
-      const ligne = (k) => { const n = msNonLus(k.id), l = MS.msgs[k.id] || [], d = l[l.length - 1]; return '<button type="button" class="ms-ch' + (k.id === MS.cur ? " on" : "") + (n ? " nl" : "") + '" data-ch="' + esc(k.id) + '"><i class="ms-ic' + (k.prive ? " pv" : "") + '">' + (k.prive ? IC_LOCK : "#") + "</i><b>" + esc(k.nom) + "</b><time>" + (d ? esc(msQuand(d.le)) : "") + "</time><small>" + esc(msApercu(d)) + "</small>" + (n ? "<em>" + n + "</em>" : "") + "</button>"; };
+      const ligne = (k) => { const n = msNonLus(k.id), l = MS.msgs[k.id] || [], d = l[l.length - 1], att = MS.file.filter((f) => f.canal === k.id).length; return '<button type="button" class="ms-ch' + (k.id === MS.cur ? " on" : "") + (n ? " nl" : "") + '" data-ch="' + esc(k.id) + '"><i class="ms-ic' + (k.prive ? " pv" : "") + '">' + (k.prive ? IC_LOCK : "#") + "</i><b>" + esc(k.nom) + "</b><time>" + (att ? "Envoi…" : d ? esc(msQuand(d.le)) : "") + "</time><small>" + esc(msApercu(d)) + "</small>" + (n ? "<em>" + n + "</em>" : "") + "</button>"; };
       const pub = MS.canaux.filter((k) => !k.prive), pv = MS.canaux.filter((k) => k.prive);
       el.innerHTML = (pub.length ? '<p class="ms-sec">Canaux</p>' + pub.map(ligne).join("") : "") + (pv.length ? '<p class="ms-sec">Messages privés</p>' + pv.map(ligne).join("") : "");
     }
-    function msBulle(x) {
+    // Lecteur de vocal : un seul lecteur pour toute l'application (la lecture continue quand la liste se met à jour)
+    function msAudHtml(x, f, moi) {
+      const id = x.id || "", k = f.path || "local:" + x.cle, l = MS.lect, enCours = l && l.cle === k, nonEcoute = !moi && x.id && !msEcoute(x.id, me.id);
+      const d = f.duree || 0, t = enCours ? l.t : 0, pct = d ? Math.min(100, (t / d) * 100) : 0;
+      let ecoute = "";
+      if (moi && x.id) { const k2 = MS.canaux.find((c) => c.id === x.canal), qui = k2 ? msMembres(k2).filter((p) => p.id !== me.id && msEcoute(x.id, p.id)).map(msPrenom) : []; ecoute = '<small class="ms-ecq' + (qui.length ? " ok" : "") + '">' + (qui.length ? "Écouté par " + esc(qui.join(", ")) : "Pas encore écouté") + "</small>"; }
+      return '<div class="ms-aud' + (nonEcoute ? " neuf" : "") + (enCours ? " " + l.etat : "") + '" data-aud="' + esc(k) + '" data-id="' + id + '" data-d="' + d + '"><button type="button" class="ms-play" aria-label="' + (enCours && l.etat === "joue" ? "Pause" : "Écouter le vocal") + '">' + IC_PLAY + '</button><div class="ms-aw"><div class="ms-prog" role="slider" aria-label="Avancer dans le vocal" aria-valuemin="0" aria-valuemax="' + d + '" aria-valuenow="' + Math.round(t) + '" tabindex="0"><i style="width:' + pct + '%"></i><b style="left:' + pct + '%"></b></div><div class="ms-ainf"><span class="ms-atm">' + (enCours ? msDuree(t) + " / " : "") + msDuree(d) + "</span>" + (nonEcoute ? '<span class="ms-pt">Nouveau</span>' : "") + '<button type="button" class="ms-vit" aria-label="Vitesse de lecture">' + String(MS.vitesse).replace(".", ",") + "×</button></div>" + ecoute + "</div></div>";
+    }
+    function msBulle(x, moi) {
       const f = x.fichier; let h = "";
-      if (f && f.path) {
-        if (msEstAud(f)) h += '<div class="ms-aud"><audio controls preload="metadata" data-sa="' + esc(f.path) + '"></audio>' + (f.duree ? "<small>Vocal · " + msDuree(f.duree) + "</small>" : "") + "</div>";
-        else if (msEstImg(f)) h += '<button type="button" class="ms-img" data-pj="' + esc(f.path) + '" aria-label="Agrandir la photo"><img alt="' + esc(f.nom || "Photo") + '" data-sp="' + esc(f.path) + '"' + (f.w && f.h ? ' style="aspect-ratio:' + (+f.w) + "/" + (+f.h) + '"' : "") + "></button>";
-        else h += '<button type="button" class="ms-file" data-pj="' + esc(f.path) + '"><i>' + esc(((f.nom || "").split(".").pop() || "doc").slice(0, 4).toUpperCase()) + "</i><span><b>" + esc(f.nom || "Fichier") + "</b><small>" + (f.taille ? msTaille(f.taille) + " · " : "") + "ouvrir</small></span></button>";
+      if (f && (f.path || f.local)) {
+        const src = f.local ? ' src="' + f.local + '"' : "", dp = f.path ? ' data-pj="' + esc(f.path) + '"' : "";
+        if (msEstAud(f)) h += msAudHtml(x, f, moi);
+        else if (msEstImg(f)) h += '<button type="button" class="ms-img"' + dp + ' aria-label="Agrandir la photo"><img alt="' + esc(f.nom || "Photo") + '"' + (f.path && !f.local ? ' data-sp="' + esc(f.path) + '"' : "") + src + (f.w && f.h ? ' style="aspect-ratio:' + (+f.w) + "/" + (+f.h) + '"' : "") + "></button>";
+        else h += '<button type="button" class="ms-file"' + dp + "><i>" + esc(((f.nom || "").split(".").pop() || "doc").slice(0, 4).toUpperCase()) + "</i><span><b>" + esc(f.nom || "Fichier") + "</b><small>" + (f.taille ? msTaille(f.taille) + " · " : "") + (f.path ? "ouvrir" : "envoi…") + "</small></span></button>";
       }
-      if (x.texte && (!f || x.texte !== f.nom)) h += '<div class="ms-tx">' + msTexte(x.texte, x) + "</div>";
+      if (x.texte && (!f || x.texte !== f.nom)) h += '<div class="ms-tx">' + msTexte(x.texte) + "</div>";
       return h;
     }
     function msRender() {
       if (!MS.pret) return; msChans();
-      if ([...document.querySelectorAll("#sd-msList audio")].some((a) => !a.paused)) { MS.rendreApres = true; return; } // un vocal est en lecture : on rafraîchit à la fin
-      MS.rendreApres = false;
       const k = MS.canaux.find((c) => c.id === MS.cur) || MS.canaux[0], list = MS.msgs[k.id] || [];
       // Repère « Nouveaux messages » : fixé à l'ouverture de la conversation (dernière lecture), il reste en place pendant la lecture
       if (MS.repere.canal !== k.id) MS.repere = { canal: k.id, le: MS.lu[k.id] || "", aller: true };
       const iNeuf = list.findIndex((x) => x.auteur !== me.id && x.le > MS.repere.le), nNeuf = iNeuf < 0 ? 0 : list.slice(iNeuf).filter((x) => x.auteur !== me.id).length;
       $("#sd-msHead").innerHTML = '<b><i class="ms-ic' + (k.prive ? " pv" : "") + '">' + (k.prive ? IC_LOCK : "#") + "</i>" + esc(k.nom) + "</b><span>" + esc(msQui(k)) + "</span>";
+      // Mes messages en cours d'envoi s'affichent tout de suite, à la suite des autres
+      const enAttente = MS.file.filter((f) => f.canal === k.id).map((f) => ({ cle: f.cle, canal: f.canal, auteur: me.id, le: f.le, texte: f.texte, fichier: f.pj ? { local: f.pj.local, type: f.pj.type, nom: f.pj.nom, taille: f.pj.taille, w: f.pj.w, h: f.pj.h, duree: f.pj.duree } : null, envoi: f }));
+      const tout = list.concat(enAttente);
       let jour = "", html = "";
-      list.forEach((x, i) => {
-        const j = msJour(x.le), p = MS.profs[x.auteur] || { nom: "Équipe", role: "" }, moi = x.auteur === me.id, pv = list[i - 1], pourMoi = !moi && (x.mentions || []).includes(me.id);
+      tout.forEach((x, i) => {
+        const j = msJour(x.le), p = MS.profs[x.auteur] || { nom: "Équipe", role: "" }, moi = x.auteur === me.id, pv = tout[i - 1], pourMoi = !moi && (x.mentions || []).includes(me.id), ev = x.envoi;
         if (j !== jour) { jour = j; html += '<p class="ms-day"><span>' + esc(j) + "</span></p>"; }
         if (i === iNeuf) html += '<p class="ms-neuf" id="sd-msNeuf"><span>' + (nNeuf > 1 ? nNeuf + " nouveaux messages" : "Nouveau message") + "</span></p>";
         const suite = i !== iNeuf && pv && pv.auteur === x.auteur && msJour(pv.le) === j && new Date(x.le) - new Date(pv.le) < 5 * 60000;
-        html += '<div class="ms-m' + (moi ? " moi" : "") + (suite ? " suite" : "") + (pourMoi ? " pourmoi" : "") + '">' + (suite ? "" : '<p class="ms-who"><i class="ms-av r-' + esc(p.role) + '">' + esc((p.nom || "?").trim()[0]) + "</i><b>" + esc(moi ? "Moi" : msPrenom(p)) + "</b><small>" + esc(msRole[p.role] || "") + " · " + msHeure(x.le) + "</small></p>") + '<div class="ms-b' + (x.fichier && msEstImg(x.fichier) && x.texte === x.fichier.nom ? " seule" : "") + '">' + msBulle(x) + (suite ? '<small class="ms-t">' + msHeure(x.le) + "</small>" : "") + "</div></div>";
+        const etat = ev ? (ev.etat === "echec" ? '<small class="ms-st err">Non envoyé' + (ev.err ? " : " + esc(ev.err) : "") + ' · <button type="button" class="linkbtn" data-renvoi="' + esc(ev.cle) + '">Réessayer</button> · <button type="button" class="linkbtn" data-annule="' + esc(ev.cle) + '">Supprimer</button></small>' : '<small class="ms-st"><i class="ms-spin" aria-hidden="true"></i>' + (ev.pct != null && ev.pj ? "Envoi " + ev.pct + " %" : "Envoi…") + "</small>") : suite ? '<small class="ms-t">' + msHeure(x.le) + "</small>" : "";
+        html += '<div class="ms-m' + (moi ? " moi" : "") + (suite ? " suite" : "") + (pourMoi ? " pourmoi" : "") + (ev ? " envoi" + (ev.etat === "echec" ? " echec" : "") : "") + '"' + (x.id ? ' data-mid="' + x.id + '"' : "") + (ev ? ' data-cle="' + esc(ev.cle) + '"' : "") + ">" + (suite ? "" : '<p class="ms-who"><i class="ms-av r-' + esc(p.role) + '">' + esc((p.nom || "?").trim()[0]) + "</i><b>" + esc(moi ? "Moi" : msPrenom(p)) + "</b><small>" + esc(msRole[p.role] || "") + " · " + msHeure(x.le) + "</small></p>") + '<div class="ms-b' + (x.fichier && msEstImg(x.fichier) && x.texte === x.fichier.nom ? " seule" : "") + '">' + msBulle(x, moi) + etat + "</div></div>";
       });
       const box = $("#sd-msList"), bas = box.scrollHeight - box.scrollTop - box.clientHeight < 80;
       box.innerHTML = html || '<p class="ms-vide">Aucun message ici pour l\'instant. Écris le premier !</p>';
@@ -2903,26 +2925,115 @@ function init(root) {
       return paths.map((x) => (MS.urls[x] ? MS.urls[x].u : null));
     }
     async function msSigner() {
-      const auds = [...document.querySelectorAll("#sd-msList audio[data-sa]:not([src])")];
-      if (auds.length) { const ua = await msSigne(auds.map((a) => a.dataset.sa)); auds.forEach((a, i) => { if (ua[i]) a.src = ua[i]; }); }
       const imgs = [...document.querySelectorAll("#sd-msList img[data-sp]:not([src])")]; if (!imgs.length) return;
-      const u = await msSigne([...new Set(imgs.map((i) => i.dataset.sp))]), m = {}; [...new Set(imgs.map((i) => i.dataset.sp))].forEach((x, i) => (m[x] = u[i]));
+      imgs.forEach((i) => { if (MS.blobs[i.dataset.sp]) i.src = MS.blobs[i.dataset.sp]; }); // ma photo envoyée : déjà sur le téléphone, rien à retélécharger
+      const reste = imgs.filter((i) => !i.getAttribute("src")); if (!reste.length) return;
+      const paths = [...new Set(reste.map((i) => i.dataset.sp))], u = await msSigne(paths), m = {}; paths.forEach((x, i) => (m[x] = u[i]));
       const box = $("#sd-msList"), bas = box.scrollHeight - box.scrollTop - box.clientHeight < 80;
-      imgs.forEach((i) => { if (m[i.dataset.sp]) { i.src = m[i.dataset.sp]; i.addEventListener("load", () => { if (bas) box.scrollTop = box.scrollHeight; }, { once: true }); } });
+      reste.forEach((i) => { if (m[i.dataset.sp]) { i.src = m[i.dataset.sp]; i.addEventListener("load", () => { if (bas) box.scrollTop = box.scrollHeight; }, { once: true }); } });
+    }
+    // Lecture des vocaux : le fichier est téléchargé en entier puis lu sur le téléphone (lecture fluide, on peut avancer ou reculer)
+    const AUD = new Audio(); AUD.preload = "auto";
+    function msAudMaj() {
+      const l = MS.lect; document.querySelectorAll("#sd-msList .ms-aud").forEach((el) => {
+        const on = l && el.dataset.aud === l.cle, d = +el.dataset.d || (on && isFinite(AUD.duration) ? AUD.duration : 0), t = on ? l.t : 0, pct = d ? Math.min(100, (t / d) * 100) : 0;
+        el.classList.toggle("charge", !!(on && l.etat === "charge")); el.classList.toggle("joue", !!(on && l.etat === "joue")); el.classList.toggle("pause", !!(on && l.etat === "pause"));
+        el.querySelector(".ms-prog i").style.width = pct + "%"; el.querySelector(".ms-prog b").style.left = pct + "%";
+        el.querySelector(".ms-atm").textContent = (on ? msDuree(t) + " / " : "") + msDuree(d);
+        el.querySelector(".ms-play").setAttribute("aria-label", on && l.etat === "joue" ? "Pause" : "Écouter le vocal");
+      });
+    }
+    async function msAudSource(cle) {
+      if (MS.blobs[cle]) return MS.blobs[cle];
+      if (cle.startsWith("local:")) return null;
+      const [u] = await msSigne([cle]); if (!u) return null;
+      for (let essai = 0; essai < 2; essai++) { try { const r = await fetch(u); if (r.ok) { const b = await r.blob(); MS.blobs[cle] = URL.createObjectURL(b); return MS.blobs[cle]; } } catch (e) {} }
+      return u; // dernier recours : lecture directe depuis le stockage
+    }
+    async function msAudJouer(el, depuis) {
+      const cle = el.dataset.aud, id = +el.dataset.id || 0, l = MS.lect;
+      if (l && l.cle === cle && depuis == null) { if (l.etat === "joue") { AUD.pause(); return; } if (l.etat === "pause") { AUD.play().catch(() => {}); return; } if (l.etat === "charge") return; }
+      AUD.pause();
+      MS.lect = { cle, id, t: depuis || 0, etat: "charge", d: +el.dataset.d || 0 }; msAudMaj();
+      const src = await msAudSource(cle); if (!MS.lect || MS.lect.cle !== cle) return;
+      if (!src) { MS.lect = null; msAudMaj(); toast("Vocal indisponible pour l'instant : vérifie la connexion"); return; }
+      if (AUD.src !== src) AUD.src = src;
+      AUD.playbackRate = MS.vitesse;
+      try { if (depuis) AUD.currentTime = depuis; } catch (e) {}
+      try { await AUD.play(); } catch (e) { if (MS.lect && MS.lect.cle === cle) { MS.lect = null; msAudMaj(); if (e && e.name !== "AbortError") toast("Lecture impossible sur ce téléphone"); } return; }
+      if (id && !msEcoute(id, me.id)) { msEcAjout({ message_id: id, profil: me.id }); el.classList.remove("neuf"); const pt = el.querySelector(".ms-pt"); if (pt) pt.remove(); DB.q("ecoutes", { method: "POST", body: { message_id: id }, prefer: "return=minimal,resolution=ignore-duplicates" }).catch(() => {}); }
+    }
+    AUD.addEventListener("playing", () => { if (MS.lect) { MS.lect.etat = "joue"; msAudMaj(); } });
+    AUD.addEventListener("pause", () => { if (MS.lect && MS.lect.etat === "joue") { MS.lect.etat = "pause"; msAudMaj(); } });
+    AUD.addEventListener("waiting", () => { if (MS.lect && MS.lect.etat === "joue") { MS.lect.etat = "charge"; msAudMaj(); } });
+    AUD.addEventListener("timeupdate", () => { if (MS.lect) { MS.lect.t = AUD.currentTime; msAudMaj(); } });
+    AUD.addEventListener("error", () => { if (MS.lect) { MS.lect = null; msAudMaj(); toast("Ce vocal ne peut pas être lu sur ce téléphone"); } });
+    AUD.addEventListener("ended", () => {
+      const fini = MS.lect; MS.lect = null; msAudMaj(); if (!fini) return;
+      // Vocal suivant pas encore écouté, juste après dans la conversation : il démarre tout seul
+      const list = MS.msgs[MS.cur] || [], i = list.findIndex((x) => x.id === fini.id), nx = i >= 0 ? list[i + 1] : null;
+      if (nx && nx.auteur !== me.id && msEstAud(nx.fichier) && !msEcoute(nx.id, me.id)) { const el = document.querySelector('#sd-msList .ms-aud[data-id="' + nx.id + '"]'); if (el) msAudJouer(el); }
+    });
+    function msAudSauter(el, e) {
+      const bar = el.querySelector(".ms-prog"), r = bar.getBoundingClientRect(), d = +el.dataset.d || (isFinite(AUD.duration) ? AUD.duration : 0); if (!d) return;
+      const x = (e.touches ? e.touches[0].clientX : e.clientX) - r.left, t = Math.max(0, Math.min(d - 0.05, (x / r.width) * d));
+      if (MS.lect && MS.lect.cle === el.dataset.aud && MS.lect.etat !== "charge") { try { AUD.currentTime = t; } catch (x2) {} MS.lect.t = t; msAudMaj(); if (AUD.paused) AUD.play().catch(() => {}); }
+      else msAudJouer(el, t);
     }
     let msTick = 0, msBasTic = 0;
-    async function msPoll() { // toutes les 5 s quand l'onglet Messages est ouvert, toutes les 20 s sinon
-      if (!me || !MS.pret || document.hidden) return;
-      msTick++; if (!msOpen() && msTick % 4) return;
-      const depuis = MS.dernier ? new Date(new Date(MS.dernier).getTime() - 10000).toISOString() : null;
-      let r = null; try { r = await DB.q("messages?select=*&order=le.asc&limit=200" + (depuis ? "&le=gt." + encodeURIComponent(depuis) : "")); } catch (e) { return; }
-      const neuf = (r || []).filter(msAjout); if (!neuf.length) return;
+    // Réception : en direct (temps réel) ; la vérification régulière reste en secours si la connexion directe tombe
+    function msRecus(neuf) {
+      if (!neuf.length) return;
       MS.arrivees = neuf.filter((x) => x.canal === MS.cur && x.auteur !== me.id).length;
       msBadge(); msRender();
       const autres = neuf.filter((x) => x.auteur !== me.id);
       if (autres.length && !msOpen()) { const x = autres[autres.length - 1], p = MS.profs[x.auteur]; toast(((x.mentions || []).includes(me.id) ? msPrenom(p) + " t'a mentionné : " : msPrenom(p) + " : ") + msApercu(x).replace(/^[^:]+ : /, "").slice(0, 70)); }
     }
+    async function msPoll(force) {
+      if (!me || !MS.pret || (document.hidden && !force)) return;
+      msTick++; if (!force) { if (RT.ok) { if (msTick % 12) return; } else if (!msOpen() && msTick % 4) return; } // en direct : un contrôle par minute suffit
+      const depuis = MS.dernier ? new Date(new Date(MS.dernier).getTime() - 15000).toISOString() : null;
+      let r = null; try { r = await DB.q("messages?select=*&order=le.asc&limit=200" + (depuis ? "&le=gt." + encodeURIComponent(depuis) : "")); } catch (e) { return; }
+      msRecus((r || []).filter(msAjout));
+    }
     setInterval(msPoll, 5000);
+    // Connexion directe (Supabase Realtime) : chaque nouveau message arrive en moins d'une seconde, selon les mêmes règles de lecture que la base
+    const RT = { ws: null, ref: 0, hb: null, ok: false, essais: 0, jref: null, jeton: null, topic: "realtime:sodaf-equipe", relance: null };
+    const rtEnvoi = (m) => { try { if (RT.ws && RT.ws.readyState === 1) RT.ws.send(JSON.stringify(m)); } catch (e) {} };
+    async function rtJeton() { let t = null; try { t = await DB.token(); } catch (e) {} if (t && t !== RT.jeton && RT.ok) { RT.jeton = t; rtEnvoi({ topic: RT.topic, event: "access_token", payload: { access_token: t }, ref: String(++RT.ref), join_ref: RT.jref }); } }
+    async function rtConnecter() {
+      if (!me || RT.ws || typeof WebSocket === "undefined") return;
+      clearTimeout(RT.relance);
+      let ws; try { ws = new WebSocket(SB_URL.replace(/^http/, "ws") + "/realtime/v1/websocket?apikey=" + encodeURIComponent(SB_KEY) + "&vsn=1.0.0"); } catch (e) { return; }
+      RT.ws = ws;
+      ws.onopen = async () => {
+        let t = null; try { t = await DB.token(); } catch (e) {} RT.jeton = t; RT.jref = String(++RT.ref);
+        rtEnvoi({ topic: RT.topic, event: "phx_join", payload: { config: { broadcast: { ack: false, self: false }, presence: { key: "" }, postgres_changes: [{ event: "INSERT", schema: "public", table: "messages" }, { event: "INSERT", schema: "public", table: "ecoutes" }], private: false }, access_token: t }, ref: RT.jref, join_ref: RT.jref });
+        clearInterval(RT.hb); RT.hb = setInterval(() => { rtEnvoi({ topic: "phoenix", event: "heartbeat", payload: {}, ref: String(++RT.ref) }); rtJeton(); }, 25000);
+      };
+      ws.onmessage = (e) => {
+        let m; try { m = JSON.parse(e.data); } catch (x) { return; }
+        if (m.topic !== RT.topic) return;
+        if (m.event === "phx_reply" && m.ref === RT.jref) { if (m.payload && m.payload.status === "ok") { RT.ok = true; RT.essais = 0; msPoll(true); } else { try { ws.close(); } catch (x) {} } return; } // rattrapage de ce qui est arrivé pendant la coupure
+        if (m.event === "postgres_changes" && m.payload && m.payload.data) {
+          const d = m.payload.data, rec = d.record; if (!rec) return;
+          if (d.table === "messages") msRecus(msAjout(rec) ? [rec] : []);
+          else if (d.table === "ecoutes" && msEcAjout(rec) && document.querySelector('#sd-msList [data-mid="' + rec.message_id + '"]')) msRender(); // « Écouté par … » se met à jour en direct
+          return;
+        }
+        if (m.event === "phx_error" || m.event === "phx_close") { try { ws.close(); } catch (x) {} }
+      };
+      ws.onerror = () => {};
+      ws.onclose = () => {
+        clearInterval(RT.hb); if (RT.ws === ws) { RT.ws = null; RT.ok = false; }
+        if (!me || !DB.session) return;
+        const attente = Math.min(30000, 1000 * Math.pow(2, RT.essais++)); RT.relance = setTimeout(rtConnecter, attente);
+      };
+    }
+    function rtFermer() { clearTimeout(RT.relance); clearInterval(RT.hb); const ws = RT.ws; RT.ws = null; RT.ok = false; if (ws) { ws.onclose = null; try { ws.close(); } catch (e) {} } }
+    // Retour sur l'application (téléphone sorti de veille) : on se reconnecte et on rattrape tout de suite
+    document.addEventListener("visibilitychange", () => { if (document.hidden || !me || !MS.pret) return; if (!RT.ws) { RT.essais = 0; rtConnecter(); } msPoll(true); msTraiter(); });
+    window.addEventListener("online", () => { if (!me || !MS.pret) return; RT.essais = 0; if (!RT.ws) rtConnecter(); msPoll(true); MS.file.forEach((f) => { if (f.etat === "echec") f.etat = "attente"; }); msTraiter(); });
     function goEleve(id) { const x = eleves.find((y) => y.id === id); if (!x) { toast("Élève introuvable"); return; } if (me && me.role === "moniteur") { ficheCourte(x); return; } msVoirFil(false); pick("sec"); sub("eleves"); pcStage = etapeOf(x); S.set("pcStage", pcStage); pcSel = id; $("#sd-pcQ").value = ""; renderList(); $("#sd-pc").scrollIntoView({ block: "start" }); }
     function msOuvrir(c, el) { if (el) { goEleve(el); return; } if (c && MS.msgs[c]) { MS.cur = c; S.set("msCanal", c); } pick("msg"); if (c) { msVoirFil(true); MS.forceBas = true; msRender(); } }
     if ("serviceWorker" in navigator) navigator.serviceWorker.addEventListener("message", (e) => { const u = e.data && e.data.sodafOuvrir; if (!u || !me) return; try { const q = new URL(u).searchParams; msOuvrir(q.get("canal"), +q.get("eleve") || 0); } catch (x) {} });
@@ -2932,12 +3043,22 @@ function init(root) {
     $("#sd-msBack").addEventListener("click", () => { if (history.state && history.state.sdMsFil) history.back(); else msVoirFil(false); });
     $("#sd-msList").addEventListener("click", async (e) => {
       const b = e.target.closest("[data-goel]"); if (b) { goEleve(+b.dataset.goel); return; }
-      const f = e.target.closest("[data-pj]"); if (!f) return;
+      const rv = e.target.closest("[data-renvoi]"); if (rv) { const f = MS.file.find((y) => y.cle === rv.dataset.renvoi); if (f) { f.etat = "attente"; f.err = ""; msRender(); msTraiter(); } return; }
+      const an = e.target.closest("[data-annule]"); if (an) { const i = MS.file.findIndex((y) => y.cle === an.dataset.annule); if (i >= 0 && MS.file[i].etat === "echec") { MS.file.splice(i, 1); msRender(); } return; }
+      const au = e.target.closest(".ms-aud"); if (au) {
+        if (e.target.closest(".ms-vit")) { MS.vitesse = MS.vitesse === 1 ? 1.5 : MS.vitesse === 1.5 ? 2 : 1; AUD.playbackRate = MS.vitesse; document.querySelectorAll("#sd-msList .ms-vit").forEach((v) => (v.textContent = String(MS.vitesse).replace(".", ",") + "×")); return; }
+        if (e.target.closest(".ms-prog")) { msAudSauter(au, e); return; }
+        if (e.target.closest(".ms-play")) msAudJouer(au);
+        return;
+      }
+      const f = e.target.closest(".ms-img, .ms-file"); if (!f) return;
       if (f.classList.contains("ms-img")) { msVue(f); return; } // photo : visionneuse plein écran dans l'application (téléphone compris)
+      if (!f.dataset.pj) return;
       const w = window.open("", "_blank"); const [u] = await msSigne([f.dataset.pj]);
       if (!u) { if (w) w.close(); toast("Fichier indisponible"); return; }
       if (w) w.location = u; else location.href = u;
     });
+    $("#sd-msList").addEventListener("keydown", (e) => { const p = e.target.closest(".ms-prog"); if (!p || !MS.lect) return; const el = p.closest(".ms-aud"); if (el.dataset.aud !== MS.lect.cle) return; if (e.key === "ArrowRight" || e.key === "ArrowLeft") { e.preventDefault(); try { AUD.currentTime = Math.max(0, AUD.currentTime + (e.key === "ArrowRight" ? 5 : -5)); } catch (x) {} } });
     const msTa = $("#sd-msTxt"), msGrow = () => { const l = $("#sd-msList"), bas = l.scrollHeight - l.scrollTop - l.clientHeight < 80; msTa.style.height = "auto"; msTa.style.height = Math.min(msTa.scrollHeight, 150) + "px"; if (bas) l.scrollTop = l.scrollHeight; }; // le fil reste collé en bas quand la zone de saisie change de taille
     // @mentions : propositions parmi les membres de la conversation
     const msSugEl = $("#sd-msSug");
@@ -2982,11 +3103,11 @@ function init(root) {
     const MS_MAX = 10;
     function msPjListe() {
       const el = $("#sd-msPj"), l = MS.pjs; el.hidden = !l.length;
-      el.innerHTML = l.map((pj, i) => '<div class="ms-pji">' + (pj.apercu ? '<img src="' + pj.apercu + '" alt="">' : '<i class="ms-fic">' + esc(pj.ext.slice(0, 4).toUpperCase()) + "</i>") + "<span><b>" + esc(pj.nom) + "</b><small>" + msTaille(pj.taille) + '</small></span><button type="button" class="ms-pjx" data-pjx="' + i + '" aria-label="Retirer ' + esc(pj.nom) + '">×</button></div>').join("") +
+      el.innerHTML = l.map((pj, i) => '<div class="ms-pji">' + (pj.local && pj.w ? '<img src="' + pj.local + '" alt="">' : '<i class="ms-fic">' + esc(pj.ext.slice(0, 4).toUpperCase()) + "</i>") + "<span><b>" + esc(pj.nom) + "</b><small>" + msTaille(pj.taille) + '</small></span><button type="button" class="ms-pjx" data-pjx="' + i + '" aria-label="Retirer ' + esc(pj.nom) + '">×</button></div>').join("") +
         (l.length ? '<p class="ms-pjn">' + l.length + " fichier" + (l.length > 1 ? "s" : "") + " prêt" + (l.length > 1 ? "s" : "") + " · ajoute un message si tu veux, puis Envoyer" + (l.length < MS_MAX ? " · le trombone en ajoute d'autres" : "") + "</p>" : "");
     }
-    function msPjRetirer(i) { const pj = MS.pjs[i]; if (pj && pj.apercu) URL.revokeObjectURL(pj.apercu); MS.pjs.splice(i, 1); msPjListe(); }
-    function msPjVider() { MS.pjs.forEach((pj) => pj.apercu && URL.revokeObjectURL(pj.apercu)); MS.pjs = []; msPjListe(); $("#sd-msFile").value = ""; }
+    function msPjRetirer(i) { const pj = MS.pjs[i]; if (pj && pj.local) URL.revokeObjectURL(pj.local); MS.pjs.splice(i, 1); msPjListe(); }
+    function msPjVider() { MS.pjs.forEach((pj) => pj.local && URL.revokeObjectURL(pj.local)); MS.pjs = []; msPjListe(); $("#sd-msFile").value = ""; }
     async function msPrendreUn(file) {
       const ext = (file.name.split(".").pop() || "").toLowerCase(); let pj = null;
       if (/^image\//.test(file.type) || /^(jpe?g|png|webp|heic|heif)$/.test(ext)) {
@@ -2998,7 +3119,7 @@ function init(root) {
         pj = { blob: file, type, nom: file.name, ext };
       }
       if (pj.blob.size > 10485760) { toast(file.name + " : trop lourd (10 Mo au plus)"); return null; }
-      pj.taille = pj.blob.size; if (pj.w) pj.apercu = URL.createObjectURL(pj.blob); return pj;
+      pj.taille = pj.blob.size; pj.local = URL.createObjectURL(pj.blob); return pj;
     }
     async function msPrendre(files) {
       let l = [...(files || [])]; if (!l.length) return;
@@ -3019,62 +3140,84 @@ function init(root) {
     window.addEventListener("drop", (e) => { if (msAvecFichier(e) && !$('.tm-pane[data-pane="msg"]').hidden && !e.target.closest(".ms-fil")) { e.preventDefault(); toast("Dépose le fichier dans la conversation"); } });
     msTa.addEventListener("paste", (e) => { const f = (e.clipboardData && e.clipboardData.files) || []; if (f.length) { e.preventDefault(); msPrendre(f); } });
     $("#sd-msPj").addEventListener("click", (e) => { const x = e.target.closest("[data-pjx]"); if (x) msPjRetirer(+x.dataset.pjx); });
-    async function msEnvoyerFichier(canal, pj) {
-      const path = canal + "/" + Date.now() + "-" + Math.random().toString(36).slice(2, 8) + "." + pj.ext, t = await DB.token();
-      const r = await fetch(SB_URL + "/storage/v1/object/messages/" + path, { method: "POST", headers: { apikey: SB_KEY, Authorization: "Bearer " + t, "Content-Type": pj.type, "x-upsert": "false" }, body: pj.blob });
-      if (!r.ok) { const j = await r.json().catch(() => ({})); throw new Error(j.message || "Envoi du fichier impossible"); }
-      const f = { path, nom: pj.nom.slice(0, 120), type: pj.type, taille: pj.taille }; if (pj.w) { f.w = pj.w; f.h = pj.h; } return f;
+    // Envoi du fichier avec la progression (pourcentage affiché sous le message)
+    function msEnvoyerFichier(canal, pj, prog) {
+      return new Promise(async (ok, ko) => {
+        const path = canal + "/" + Date.now() + "-" + Math.random().toString(36).slice(2, 8) + "." + pj.ext; let t = null;
+        try { t = await DB.token(); } catch (e) { ko(new Error("session expirée")); return; }
+        const x = new XMLHttpRequest(); x.open("POST", SB_URL + "/storage/v1/object/messages/" + path);
+        x.setRequestHeader("apikey", SB_KEY); x.setRequestHeader("Authorization", "Bearer " + t); x.setRequestHeader("Content-Type", pj.type); x.setRequestHeader("x-upsert", "false");
+        x.timeout = 120000;
+        x.upload.onprogress = (e) => { if (e.lengthComputable && prog) prog(Math.round((e.loaded / e.total) * 100)); };
+        x.onload = () => { if (x.status >= 200 && x.status < 300) { const f = { path, nom: pj.nom.slice(0, 120), type: pj.type, taille: pj.taille }; if (pj.w) { f.w = pj.w; f.h = pj.h; } if (pj.duree) f.duree = pj.duree; ok(f); } else { let m = ""; try { m = JSON.parse(x.responseText).message; } catch (e) {} ko(new Error(m || "envoi refusé (" + x.status + ")")); } };
+        x.onerror = () => ko(new Error("pas de connexion")); x.ontimeout = () => ko(new Error("connexion trop lente"));
+        x.send(pj.blob);
+      });
     }
-    // Messages vocaux : appuie sur le micro, parle, puis « Envoyer le vocal » (3 min au plus). Le fichier part comme une pièce jointe.
-    $("#sd-msList").addEventListener("pause", () => { if (MS.rendreApres) setTimeout(msRender, 50); }, true);
-    $("#sd-msList").addEventListener("ended", () => { if (MS.rendreApres) setTimeout(msRender, 50); }, true);
+    // File d'envoi : chaque message s'affiche tout de suite (« Envoi… »), part dans l'ordre, et peut être renvoyé s'il échoue
+    let msCleN = 0;
+    function msMettreEnFile(canal, texte, pj, mentions) {
+      const f = { cle: me.id.slice(0, 8) + "-" + Date.now().toString(36) + "-" + (++msCleN), canal, texte, pj, mentions: mentions && mentions.length ? mentions : null, etat: "attente", pct: null, le: new Date().toISOString(), fichier: null };
+      MS.file.push(f); MS.repere.le = f.le; MS.attente = 0; MS.forceBas = true; msRender(); msTraiter(); return f;
+    }
+    async function msTraiter() {
+      if (MS.traite) return; MS.traite = true;
+      try {
+        for (;;) {
+          const f = MS.file.find((y) => y.etat === "attente"); if (!f) break;
+          f.etat = "envoi"; f.err = ""; msRender();
+          try {
+            if (f.pj && !f.fichier) { f.pct = 0; f.fichier = await msEnvoyerFichier(f.canal, f.pj, (p) => { f.pct = p; const st = document.querySelector('#sd-msList [data-cle="' + f.cle + '"] .ms-st'); if (st && st.lastChild) st.lastChild.textContent = "Envoi " + p + " %"; }); }
+            const body = { canal: f.canal, texte: f.texte || (f.fichier ? f.fichier.nom : ""), cle: f.cle }; if (f.mentions) body.mentions = f.mentions; if (f.fichier) body.fichier = f.fichier;
+            let r; try { r = await DB.q("messages", { method: "POST", body, prefer: "return=representation" }); }
+            catch (e) { if (e.status) throw e; const v = await DB.q("messages?select=*&cle=eq." + encodeURIComponent(f.cle)).catch(() => null); if (v && v[0]) r = v; else throw e; } // réponse perdue : le message est peut-être déjà enregistré
+            if (r && r[0]) { if (!msAjout(r[0])) { const i = MS.file.indexOf(f); if (i >= 0) MS.file.splice(i, 1); } msRender(); }
+          } catch (e) {
+            f.etat = "echec"; f.err = navigator.onLine === false ? "pas de connexion" : String((e && e.message) || "réessaie").slice(0, 60); msRender();
+          }
+        }
+      } finally { MS.traite = false; }
+    }
+    // Messages vocaux : appuie sur le micro, parle, puis « Envoyer le vocal » (3 min au plus). Le vocal s'affiche tout de suite chez toi et part en arrière-plan.
     const REC = { mr: null, flux: null, morceaux: [], debut: 0, tic: null, envoyer: false };
-    function recArret(envoyer) { if (!REC.mr) return; REC.envoyer = envoyer; try { REC.mr.stop(); } catch (x) {} }
+    function recArret(envoyer) { if (!REC.mr) return; REC.envoyer = envoyer; try { if (REC.mr.state !== "inactive") REC.mr.stop(); else recNettoyer(); } catch (x) { recNettoyer(); } }
     function recNettoyer() { clearInterval(REC.tic); if (REC.flux) REC.flux.getTracks().forEach((t) => t.stop()); REC.mr = null; REC.flux = null; REC.morceaux = []; $("#sd-msRec").hidden = true; $("#sd-msMic").classList.remove("on"); }
     $("#sd-msMic").addEventListener("click", async () => {
       if (REC.mr) { recArret(true); return; }
       if (!navigator.mediaDevices || !window.MediaRecorder) { toast("Les vocaux ne marchent pas sur ce navigateur : utilise Chrome (Android) ou Safari (iPhone)"); return; }
-      if (!MS.cur || MS.envoi) return;
-      try { REC.flux = await navigator.mediaDevices.getUserMedia({ audio: true }); } catch (x) { toast("Micro refusé : autorise le micro pour autosodaf.com dans les réglages du navigateur"); return; }
-      const type = ["audio/webm;codecs=opus", "audio/mp4", "audio/ogg;codecs=opus", "audio/webm"].find((t) => MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t));
-      try { REC.mr = new MediaRecorder(REC.flux, type ? { mimeType: type, audioBitsPerSecond: 32000 } : undefined); } catch (x) { recNettoyer(); toast("Enregistrement impossible sur ce téléphone"); return; }
-      REC.morceaux = []; REC.envoyer = false; REC.debut = Date.now(); const canal = MS.cur;
-      REC.mr.ondataavailable = (e) => { if (e.data && e.data.size) REC.morceaux.push(e.data); };
-      REC.mr.onstop = async () => {
-        const duree = (Date.now() - REC.debut) / 1000, mime = ((REC.mr && REC.mr.mimeType) || type || "audio/webm").split(";")[0], blob = new Blob(REC.morceaux, { type: mime }), go = REC.envoyer;
+      if (!MS.cur) return;
+      if (MS.lect && MS.lect.etat === "joue") AUD.pause();
+      // Voix claire : réduction du bruit et de l'écho, volume réglé automatiquement
+      try { REC.flux = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true, channelCount: 1 } }); } catch (x) { toast("Micro refusé : autorise le micro pour autosodaf.com dans les réglages du navigateur"); return; }
+      // Format lisible partout quand le téléphone sait le faire (AAC, comme les vocaux WhatsApp sur iPhone), sinon Opus
+      const ok = (t) => { try { return MediaRecorder.isTypeSupported(t); } catch (e) { return false; } };
+      const type = ["audio/mp4;codecs=mp4a.40.2", "audio/webm;codecs=opus", "audio/mp4", "audio/ogg;codecs=opus", "audio/webm"].find(ok);
+      try { REC.mr = new MediaRecorder(REC.flux, type ? { mimeType: type, audioBitsPerSecond: /mp4/.test(type) ? 64000 : 48000 } : undefined); } catch (x) { recNettoyer(); toast("Enregistrement impossible sur ce téléphone"); return; }
+      REC.morceaux = []; REC.envoyer = false; REC.debut = Date.now(); const canal = MS.cur, mr = REC.mr;
+      mr.ondataavailable = (e) => { if (e.data && e.data.size) REC.morceaux.push(e.data); };
+      mr.onstop = () => {
+        const duree = (Date.now() - REC.debut) / 1000, mime = (mr.mimeType || type || "audio/webm").split(";")[0], blob = new Blob(REC.morceaux, { type: mime }), go = REC.envoyer;
         recNettoyer();
         if (!go) return; if (duree < 1 || !blob.size) { toast("Vocal trop court"); return; }
         const ext = mime === "audio/mp4" ? "m4a" : mime === "audio/ogg" ? "ogg" : "webm", h = new Date();
-        const pj = { blob, type: mime, ext, taille: blob.size, nom: "vocal-" + String(h.getHours()).padStart(2, "0") + "h" + String(h.getMinutes()).padStart(2, "0") + "." + ext };
-        MS.envoi = true; const btn = $("#sd-msSend"); btn.disabled = true; btn.classList.add("wait");
-        try { const f = await msEnvoyerFichier(canal, pj); f.duree = Math.round(duree); const r = await run(() => DB.q("messages", { method: "POST", body: { canal, texte: f.nom, fichier: f }, prefer: "return=representation" })); if (r && r[0]) { msAjout(r[0]); MS.forceBas = true; msRender(); } }
-        catch (x) { toast("Vocal non envoyé : " + (x.message || "réessaie")); }
-        MS.envoi = false; btn.disabled = false; btn.classList.remove("wait");
+        const pj = { blob, type: mime, ext, taille: blob.size, duree: Math.max(1, Math.round(duree)), local: URL.createObjectURL(blob), nom: "vocal-" + String(h.getHours()).padStart(2, "0") + "h" + String(h.getMinutes()).padStart(2, "0") + "." + ext };
+        const f = msMettreEnFile(canal, "", pj, null); MS.blobs["local:" + f.cle] = pj.local;
       };
-      REC.mr.start(1000); $("#sd-msMic").classList.add("on"); $("#sd-msRec").hidden = false; $("#sd-msRecT").textContent = "0:00";
+      mr.start(1000); $("#sd-msMic").classList.add("on"); $("#sd-msRec").hidden = false; $("#sd-msRecT").textContent = "0:00";
       REC.tic = setInterval(() => { const n = (Date.now() - REC.debut) / 1000; $("#sd-msRecT").textContent = msDuree(n); if (n >= 180) recArret(true); }, 250);
     });
     $("#sd-msRecX").addEventListener("click", () => recArret(false));
     $("#sd-msRecOk").addEventListener("click", () => recArret(true));
-    $("#sd-msForm").addEventListener("submit", async (e) => {
-      e.preventDefault(); const t = msTa.value.trim(), canal = MS.cur, pjs = MS.pjs.slice(); if ((!t && !pjs.length) || MS.envoi || !canal) return;
+    $("#sd-msForm").addEventListener("submit", (e) => {
+      e.preventDefault(); const t = msTa.value.trim(), canal = MS.cur, pjs = MS.pjs.slice(); if ((!t && !pjs.length) || !canal) return;
       const k = MS.canaux.find((c) => c.id === canal), mentions = k ? msMembres(k).filter((p) => p.id !== me.id && new RegExp("(^|[\\s(])@" + msPrenom(p).replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "(?![\\wÀ-ÿ])", "i").test(t)).map((p) => p.id) : [];
-      MS.envoi = true; const btn = $("#sd-msSend"); btn.disabled = true; btn.classList.add("wait");
-      const fin = () => { MS.envoi = false; btn.disabled = false; btn.classList.remove("wait"); btn.removeAttribute("data-n"); };
-      const poster = async (body) => { const r = await run(() => DB.q("messages", { method: "POST", body, prefer: "return=representation" })); if (r && r[0]) { MS.repere.le = r[0].le; MS.attente = 0; msAjout(r[0]); MS.forceBas = true; msRender(); return true; } return false; };
-      if (!pjs.length) { if (await poster(Object.assign({ canal, texte: t }, mentions.length ? { mentions } : {}))) { msTa.value = ""; msGrow(); } fin(); return; }
-      let texteParti = false;
-      for (let i = 0; i < pjs.length; i++) {
-        const pj = pjs[i]; if (pjs.length > 1) btn.dataset.n = i + 1 + "/" + pjs.length;
-        let fichier; try { fichier = await msEnvoyerFichier(canal, pj); } catch (x) { toast(pj.nom + " : " + (x.message || "envoi impossible") + ". Les fichiers restants sont gardés."); break; }
-        const body = { canal, texte: !texteParti && t ? t : fichier.nom, fichier }; if (!texteParti && mentions.length) body.mentions = mentions;
-        if (!(await poster(body))) break;
-        if (!texteParti && t) { msTa.value = ""; msGrow(); } texteParti = true;
-        if (pj.apercu) URL.revokeObjectURL(pj.apercu); MS.pjs.splice(MS.pjs.indexOf(pj), 1); msPjListe();
-      }
-      if (!MS.pjs.length) $("#sd-msFile").value = "";
-      fin();
+      // Tout part dans la file : la zone de saisie se vide tout de suite, on peut continuer à écrire
+      msTa.value = ""; msGrow(); MS.pjs = []; msPjListe(); $("#sd-msFile").value = ""; msSugEl.hidden = true;
+      if (!pjs.length) { msMettreEnFile(canal, t, null, mentions); return; }
+      pjs.forEach((pj, i) => msMettreEnFile(canal, i === 0 ? t : "", pj, i === 0 ? mentions : null));
     });
+    // Ne pas quitter l'application avec un message pas encore parti
+    window.addEventListener("beforeunload", (e) => { if (MS.file.some((f) => f.etat !== "echec")) { e.preventDefault(); e.returnValue = ""; } });
     // Notifications : activer, tester, désactiver (par téléphone)
     const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
     const b64u = (t) => { const b = atob((t + "=".repeat((4 - (t.length % 4)) % 4)).replace(/-/g, "+").replace(/_/g, "/")); return Uint8Array.from(b, (c) => c.charCodeAt(0)); };
@@ -3127,7 +3270,7 @@ function init(root) {
       if (!APP_V || majVue || navigator.onLine === false) return;
       let t = ""; try { t = await (await fetch(location.pathname + "?maj=" + Date.now(), { cache: "no-store" })).text(); } catch (e) { return; }
       const m = t.match(/app\.js\?v=(\d+)/); if (!m || m[1] === APP_V) return;
-      const occupe = (msTa && msTa.value.trim()) || MS.pjs.length || document.querySelector(".tm-pane:not([hidden]) form input:focus, .tm-pane:not([hidden]) form textarea:focus");
+      const occupe = (msTa && msTa.value.trim()) || MS.pjs.length || MS.file.length || REC.mr || document.querySelector(".tm-pane:not([hidden]) form input:focus, .tm-pane:not([hidden]) form textarea:focus");
       if (retour && !occupe) { location.reload(); return; }
       majVue = true; const d = document.createElement("div"); d.className = "maj-bar"; d.innerHTML = "<span>Nouvelle version de l'espace équipe</span><button type=\"button\" class=\"btn btn-sm btn-green\">Mettre à jour</button>";
       d.querySelector("button").addEventListener("click", () => location.reload()); document.body.appendChild(d);
@@ -4650,6 +4793,33 @@ html:has(#sodaf-root.app-mode),body:has(#sodaf-root.app-mode){background:#ECEFEE
 .tm-auj>summary em{font-style:normal;font-weight:700;font-size:.85rem;color:#8A6500;white-space:nowrap}
 .tm-auj>div{padding:14px}.tm-auj .tm-mon{margin:0}.tm-auj .tm-mon>.card{box-shadow:none;border:1px solid var(--line)}
 html.ms-plein,html.ms-plein body{overflow:hidden}
+.ms-aud{display:flex;align-items:center;gap:10px;min-width:250px;max-width:100%;padding:2px 2px 2px 0}
+.ms-play{all:unset;cursor:pointer;flex-shrink:0;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:#8C96A0;color:#fff;position:relative;transition:background .15s}
+.ms-play:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+.ms-aud .ms-play>.i-pause,.ms-aud .ms-play>.i-load{display:none!important}
+.ms-aud.joue .ms-play>.i-play,.ms-aud.charge .ms-play>.i-play{display:none!important}.ms-aud.joue .ms-play>.i-pause{display:block!important}
+.ms-aud.charge .ms-play>.i-load{display:block!important;width:20px;height:20px;border-radius:50%;border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;animation:msrot .8s linear infinite}
+@keyframes msrot{to{transform:rotate(360deg)}}
+.ms-aud.neuf .ms-play{background:var(--green);box-shadow:0 0 0 4px rgba(14,122,79,.16)}
+.ms-aud.joue .ms-play,.ms-aud.pause .ms-play,.ms-aud.charge .ms-play{background:var(--asph)}
+.ms-m.moi .ms-play{background:#3E7A61}.ms-m.moi .ms-aud.joue .ms-play,.ms-m.moi .ms-aud.pause .ms-play{background:var(--asph)}
+.ms-aw{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+.ms-prog{position:relative;height:6px;border-radius:999px;background:#D5DBE0;cursor:pointer;touch-action:none;margin:8px 0 0}
+.ms-prog::before{content:"";position:absolute;inset:-12px 0}
+.ms-prog i{position:absolute;left:0;top:0;bottom:0;border-radius:999px;background:#8C96A0}
+.ms-aud.neuf .ms-prog i,.ms-aud.neuf .ms-prog b{background:var(--green)}.ms-aud.joue .ms-prog i,.ms-aud.pause .ms-prog i{background:var(--asph)}
+.ms-prog b{position:absolute;top:50%;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:#8C96A0;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.ms-aud.joue .ms-prog b,.ms-aud.pause .ms-prog b{background:var(--asph)}
+.ms-prog:focus-visible{outline:2px solid var(--green);outline-offset:6px}
+.ms-ainf{display:flex;align-items:center;gap:8px;font-size:.78rem;color:var(--muted)}
+.ms-atm{font-variant-numeric:tabular-nums}
+.ms-pt{font-weight:800;color:var(--green);font-size:.72rem;text-transform:uppercase;letter-spacing:.04em}
+.ms-vit{all:unset;cursor:pointer;margin-left:auto;font-weight:800;font-size:.74rem;color:var(--asph);background:rgba(0,0,0,.07);border-radius:999px;padding:.25em .7em}.ms-vit:focus-visible{outline:2px solid var(--green)}
+.ms-ecq{font-size:.74rem;color:var(--muted)}.ms-ecq.ok{color:#1F5FA8;font-weight:600}
+.ms-st{display:flex;align-items:center;gap:6px;justify-content:flex-end;font-size:.74rem;color:var(--muted);margin-top:4px}
+.ms-st.err{color:#C0262F;font-weight:600;flex-wrap:wrap}.ms-st .linkbtn{font-size:.76rem}
+.ms-spin{width:11px;height:11px;border-radius:50%;border:2px solid #C5CCD2;border-top-color:var(--green);animation:msrot .8s linear infinite}
+.ms-m.envoi .ms-b{opacity:.85}.ms-m.echec .ms-b{border-color:#E4434D;background:#FFF5F5;opacity:1}
 .ms-neuf{display:flex;align-items:center;gap:10px;margin:16px 0 6px!important;color:#C0262F}
 .ms-neuf::before,.ms-neuf::after{content:"";flex:1;height:2px;background:#E4434D;border-radius:2px}
 .ms-neuf span{font:800 .74rem/1 var(--f-ui);letter-spacing:.06em;text-transform:uppercase;background:#FDE8EA;border:1.5px solid #E4434D;border-radius:999px;padding:.4em .9em;white-space:nowrap}
@@ -4663,8 +4833,7 @@ html.ms-plein,html.ms-plein body{overflow:hidden}
 .ms-rec[hidden]{display:none}.ms-rec b{font-variant-numeric:tabular-nums;font-size:1.05rem}.ms-rec span{flex:1;font-size:.86rem;color:#5B6670;min-width:120px}
 .ms-recdot{width:12px;height:12px;border-radius:50%;background:#D7263D;animation:recb 1s infinite}
 @keyframes recb{50%{opacity:.25}}
-.ms-aud{display:flex;flex-direction:column;gap:2px;min-width:240px;max-width:100%}.ms-aud audio{width:100%;height:40px}.ms-aud small{font-size:.74rem;color:var(--muted)}
-@media (max-width:760px){.ms-mic,.ms-clip{width:40px}.ms-aud{min-width:220px}}
+@media (max-width:760px){.ms-mic,.ms-clip{width:40px}.ms-aud{min-width:215px}}
 .ms-vue{position:fixed;inset:0;z-index:95;background:rgba(10,12,15,.94);display:flex;flex-direction:column}
 .ms-vue[hidden]{display:none}
 .ms-vbar{display:flex;align-items:center;gap:12px;padding:10px 14px;padding-top:max(10px,env(safe-area-inset-top));color:#fff}
