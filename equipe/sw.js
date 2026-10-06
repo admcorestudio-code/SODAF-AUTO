@@ -11,3 +11,22 @@ self.addEventListener("fetch", (e) => {
     '<button onclick="location.reload()" style="margin-top:12px;font:600 1rem system-ui;padding:.8em 1.4em;border:0;border-radius:999px;background:#F2B100">Réessayer</button></div></body></html>',
     { headers: { "Content-Type": "text/html; charset=utf-8" } })));
 });
+
+// Notifications de l'équipe (messages, nouvelles pré-inscriptions, paiements Mixx) envoyées par la base
+self.addEventListener("push", (e) => {
+  let d = {};
+  try { d = e.data ? e.data.json() : {}; } catch (x) { d = { title: "SODAF Équipe", body: e.data ? e.data.text() : "" }; }
+  e.waitUntil(self.registration.showNotification(d.title || "SODAF Équipe", {
+    body: d.body || "", icon: "/equipe/icon-192.png", tag: d.tag || undefined, renotify: !!d.tag,
+    data: { url: d.url || "/equipe/" },
+  }));
+});
+self.addEventListener("notificationclick", (e) => {
+  e.notification.close();
+  const url = new URL((e.notification.data && e.notification.data.url) || "/equipe/", self.location.origin).href;
+  e.waitUntil(self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((list) => {
+    const w = list.find((c) => c.url.includes("/equipe/"));
+    if (w) { w.postMessage({ sodafOuvrir: url }); return w.focus(); }
+    return self.clients.openWindow(url);
+  }));
+});

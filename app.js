@@ -1705,6 +1705,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <button role="tab" data-t="dir" aria-selected="false" hidden><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></i><b>Direction</b><small>Chiffres du mois, à surveiller</small></button>
 <button role="tab" data-t="sec" aria-selected="true"><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 3v2h6V3M9 10h6M9 14h6M9 18h3"/></svg></i><b>Secrétariat</b><small>Inscriptions, paiements, réservations</small></button>
 <button role="tab" data-t="mon" aria-selected="false"><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/><path d="M12 14.5V21M9.6 11.2 3.5 9.5M14.4 11.2l6.1-1.7"/></svg></i><b>Moniteur</b><small>Code en salle, conduite</small></button>
+<button role="tab" data-t="msg" aria-selected="false"><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 10.5h7M8.5 14h4.5"/></svg></i><b>Messages</b><small>Canaux de l'équipe</small><em class="tm-badge" id="sd-msBadge" hidden></em></button>
 <button role="tab" data-t="docs" aria-selected="false"><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></i><b>Documents</b><small>Carte, cachet, QR, affiches</small></button>
 </div>
 <div class="tm-pane" data-pane="sec" role="tabpanel">
@@ -1832,6 +1833,11 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="card soft"><p class="eyebrow">Après chaque cours de code</p><ol class="teamsteps"><li>Dans <b>Cours de code</b>, choisis le thème traité.</li><li>Coche les élèves présents (c'est enregistré tout de suite).</li><li>Touche <b>Cours fait</b>.</li></ol></div>
 <div class="card soft"><p class="eyebrow">Séances de conduite</p><ol class="teamsteps"><li>Le matin, regarde <b>Mes séances d'aujourd'hui</b>.</li><li>Avant de partir : vérification de la voiture (Outils → check-list du matin).</li><li>Après la séance : <b>Fait</b> ou <b>Absent</b>, et une courte note sur les progrès.</li><li>Avec l'élève, réserve sa prochaine séance dans <b>Réserver une séance</b>.</li></ol></div>
 </div></div>
+<div class="tm-pane" data-pane="msg" role="tabpanel" hidden>
+<p class="tm-role">Les échanges de l'équipe, rangés par canal. Écris le numéro d'un élève (par exemple SO12) : il devient un lien vers sa fiche.</p>
+<div class="ms-notif" id="sd-msNotif"></div>
+<div class="ms-wrap card"><nav class="ms-canaux" id="sd-msCanaux" aria-label="Canaux"></nav><section class="ms-fil"><header class="ms-head" id="sd-msHead"></header><div class="ms-list" id="sd-msList" aria-live="polite"><p class="ms-vide">Chargement…</p></div><form class="ms-form" id="sd-msForm" novalidate><textarea id="sd-msTxt" rows="1" maxlength="2000" placeholder="Écrire un message…" aria-label="Message"></textarea><button class="btn btn-green" type="submit" aria-label="Envoyer"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button></form></section></div>
+</div>
 <div class="tm-pane" data-pane="docs" role="tabpanel" hidden>
 <p class="tm-role">Supports de communication et documents officiels SODAF, à télécharger ou à envoyer à l'imprimeur.</p>
 <div class="entdocs"><div class="tm-sub"><div><p class="eyebrow">Réservé à l'équipe</p><h3>Documents de l'entreprise</h3></div><p>Supports de communication SODAF à télécharger ou à envoyer à l'imprimeur. Slogan officiel : « L'art de conduire, la force de réussir. »</p></div>
@@ -2718,7 +2724,7 @@ function init(root) {
       if (t === "mon") { const slot = $("#sd-mnPlanSlot"); if (cdSec.parentNode !== slot) slot.appendChild(cdSec); cdSec.hidden = false; (eleves.length ? Promise.resolve() : loadEleves(true)).then(() => loadDay()); }
       else if (cdSec.parentNode !== cdHome.p) { cdHome.p.insertBefore(cdSec, cdHome.n); const on = $('#sd-secNav button[aria-selected="true"]'); cdSec.hidden = !on || on.dataset.s !== "conduite"; }
     };
-    const pick = (t) => { tabs.forEach((b) => b.setAttribute("aria-selected", b.dataset.t === t)); panes.forEach((p) => (p.hidden = p.dataset.pane !== t)); try { S.set("tmTab", t); } catch (e) {} placePlanning(t); if (t === "mon") loadMon(); if (t === "dir") loadDir(); };
+    const pick = (t) => { tabs.forEach((b) => b.setAttribute("aria-selected", b.dataset.t === t)); panes.forEach((p) => (p.hidden = p.dataset.pane !== t)); try { S.set("tmTab", t); } catch (e) {} placePlanning(t); if (t === "mon") loadMon(); if (t === "dir") loadDir(); if (t === "msg") { MS.forceBas = true; msRender(); msNotifBox(); if (!isWide()) setTimeout(() => $(".ms-wrap").scrollIntoView({ block: "start" }), 60); } };
     tabs.forEach((b) => b.addEventListener("click", () => pick(b.dataset.t)));
     const subs = $$("#sd-secNav button[data-s]"), secs = $$(".tm-sec");
     const LOAD = { eleves: () => loadEleves(), conduite: () => loadDay(), paiements: () => loadPay(), devoirs: () => loadDev() };
@@ -2753,12 +2759,109 @@ function init(root) {
       try { await DB.changePassword(v); m.textContent = "✓ Mot de passe changé."; $("#sd-tmPw1").value = ""; } catch (ex) { m.textContent = "Erreur : " + ex.message; }
     });
 
+    // ---- Messages de l'équipe (canaux) et notifications sur téléphone
+    // La base envoie les notifications (fonction « notifier ») ; ici : lire, écrire, compter les non-lus, activer les notifications.
+    const VAPID_PUB = "BOMPgiFqajAv-Mqb1SXD7WOGWJVEK_sDJQGULUCSgV5eAm10bOq7WctPkE51LqGgFHqe4S2y2COGmt0DWbWMv8o";
+    const MS = { canaux: [], cur: null, msgs: {}, lu: {}, profs: {}, dernier: null, pret: false, envoi: false, total: 0, forceBas: false };
+    const msRole = { admin: "Direction", secretariat: "Secrétariat", moniteur: "Moniteur" };
+    const msOpen = () => !$('.tm-pane[data-pane="msg"]').hidden && !document.hidden;
+    async function msInit() {
+      const [c, l, p, m] = await Promise.all([run(() => DB.q("canaux?select=*&order=ordre")), run(() => DB.q("lectures?select=*")), run(() => DB.q("profils?select=id,nom,role")), run(() => DB.q("messages?select=*&order=le.desc&limit=400"))]);
+      if (!c || !c.length) return;
+      MS.canaux = c; (l || []).forEach((x) => (MS.lu[x.canal] = x.lu_le)); (p || []).forEach((x) => (MS.profs[x.id] = x));
+      MS.msgs = {}; c.forEach((k) => (MS.msgs[k.id] = []));
+      (m || []).reverse().forEach(msAjout);
+      const sv = S.get("msCanal", null); MS.cur = MS.msgs[MS.cur] ? MS.cur : MS.msgs[sv] ? sv : c[0].id;
+      MS.pret = true; msBadge(); msRender(); msNotifBox();
+    }
+    function msAjout(x) { const a = MS.msgs[x.canal]; if (!a || a.some((y) => y.id === x.id)) return false; a.push(x); a.sort((u, v) => (u.le < v.le ? -1 : 1)); if (!MS.dernier || x.le > MS.dernier) MS.dernier = x.le; return true; }
+    const msNonLus = (k) => (MS.msgs[k] || []).filter((x) => x.auteur !== me.id && (!MS.lu[k] || x.le > MS.lu[k])).length;
+    function msBadge() { const n = MS.canaux.reduce((t, k) => t + msNonLus(k.id), 0), b = $("#sd-msBadge"); MS.total = n; if (b) { b.textContent = n > 99 ? "99+" : n; b.hidden = !n; } }
+    async function msLu(k) { const t = new Date().toISOString(); MS.lu[k] = t; msBadge(); msChans(); try { await DB.q("lectures?on_conflict=profil,canal", { method: "POST", body: { canal: k, lu_le: t }, prefer: "resolution=merge-duplicates,return=minimal" }); } catch (e) {} }
+    const msJour = (d) => { const x = new Date(d), n = new Date(), h = new Date(n.getFullYear(), n.getMonth(), n.getDate() - 1); return x.toDateString() === n.toDateString() ? "Aujourd'hui" : x.toDateString() === h.toDateString() ? "Hier" : x.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" }).replace(/^./, (c) => c.toUpperCase()); };
+    const msHeure = (d) => new Date(d).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+    const msTexte = (t) => esc(t).replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>').replace(/\b[Ss][Oo] ?(\d{1,6})\b/g, (m, id) => (eleves.some((x) => x.id === +id) ? '<button type="button" class="ms-el" data-goel="' + id + '">SO' + id + "</button>" : m)).replace(/\n/g, "<br>");
+    function msChans() { const el = $("#sd-msCanaux"); if (el) el.innerHTML = MS.canaux.map((k) => { const n = msNonLus(k.id); return '<button type="button" class="ms-ch' + (k.id === MS.cur ? " on" : "") + '" data-ch="' + esc(k.id) + '"><b># ' + esc(k.nom) + "</b>" + (n ? "<em>" + n + "</em>" : "") + "<small>" + esc(k.description || "") + "</small></button>"; }).join(""); }
+    function msRender() {
+      if (!MS.pret) return; msChans();
+      const k = MS.canaux.find((c) => c.id === MS.cur) || MS.canaux[0], list = MS.msgs[k.id] || [];
+      $("#sd-msHead").innerHTML = "<b># " + esc(k.nom) + "</b><span>" + esc(k.description || "") + " · " + (k.roles ? "visible par : " + k.roles.map((r) => msRole[r] || r).join(", ") : "toute l'équipe") + "</span>";
+      let jour = "", html = "";
+      list.forEach((x, i) => {
+        const j = msJour(x.le), p = MS.profs[x.auteur] || { nom: "Équipe", role: "" }, moi = x.auteur === me.id, pv = list[i - 1];
+        if (j !== jour) { jour = j; html += '<p class="ms-day"><span>' + esc(j) + "</span></p>"; }
+        const suite = pv && pv.auteur === x.auteur && msJour(pv.le) === j && new Date(x.le) - new Date(pv.le) < 5 * 60000;
+        html += '<div class="ms-m' + (moi ? " moi" : "") + (suite ? " suite" : "") + '">' + (suite ? "" : '<p class="ms-who"><i class="ms-av r-' + esc(p.role) + '">' + esc((p.nom || "?").trim()[0]) + "</i><b>" + esc(moi ? "Moi" : (p.nom || "").split(" ")[0]) + "</b><small>" + esc(msRole[p.role] || "") + " · " + msHeure(x.le) + "</small></p>") + '<div class="ms-b">' + msTexte(x.texte) + (suite ? '<small class="ms-t">' + msHeure(x.le) + "</small>" : "") + "</div></div>";
+      });
+      const box = $("#sd-msList"), bas = box.scrollHeight - box.scrollTop - box.clientHeight < 80;
+      box.innerHTML = html || '<p class="ms-vide">Aucun message dans ce canal pour l\'instant. Écris le premier !</p>';
+      if (bas || MS.forceBas) { box.scrollTop = box.scrollHeight; MS.forceBas = false; }
+      if (msOpen() && msNonLus(k.id)) msLu(k.id);
+    }
+    let msTick = 0;
+    async function msPoll() { // toutes les 5 s quand l'onglet Messages est ouvert, toutes les 20 s sinon
+      if (!me || !MS.pret || document.hidden) return;
+      msTick++; if (!msOpen() && msTick % 4) return;
+      const depuis = MS.dernier ? new Date(new Date(MS.dernier).getTime() - 10000).toISOString() : null;
+      let r = null; try { r = await DB.q("messages?select=*&order=le.asc&limit=200" + (depuis ? "&le=gt." + encodeURIComponent(depuis) : "")); } catch (e) { return; }
+      const neuf = (r || []).filter(msAjout); if (!neuf.length) return;
+      msBadge(); msRender();
+      const autres = neuf.filter((x) => x.auteur !== me.id);
+      if (autres.length && !msOpen()) { const x = autres[autres.length - 1], p = MS.profs[x.auteur]; toast((p ? p.nom.split(" ")[0] : "Équipe") + " : " + x.texte.slice(0, 70)); }
+    }
+    setInterval(msPoll, 5000);
+    function goEleve(id) { const x = eleves.find((y) => y.id === id); if (!x) { toast("Élève introuvable"); return; } pick("sec"); sub("eleves"); pcStage = etapeOf(x); S.set("pcStage", pcStage); pcSel = id; $("#sd-pcQ").value = ""; renderList(); $("#sd-pc").scrollIntoView({ block: "start" }); }
+    function msOuvrir(c, el) { if (el) { goEleve(el); return; } if (c && MS.msgs[c]) { MS.cur = c; S.set("msCanal", c); } pick("msg"); }
+    if ("serviceWorker" in navigator) navigator.serviceWorker.addEventListener("message", (e) => { const u = e.data && e.data.sodafOuvrir; if (!u || !me) return; try { const q = new URL(u).searchParams; msOuvrir(q.get("canal"), +q.get("eleve") || 0); } catch (x) {} });
+    $("#sd-msCanaux").addEventListener("click", (e) => { const b = e.target.closest("[data-ch]"); if (!b) return; MS.cur = b.dataset.ch; S.set("msCanal", MS.cur); MS.forceBas = true; msRender(); $("#sd-msTxt").focus(); });
+    $("#sd-msList").addEventListener("click", (e) => { const b = e.target.closest("[data-goel]"); if (b) goEleve(+b.dataset.goel); });
+    const msTa = $("#sd-msTxt"), msGrow = () => { msTa.style.height = "auto"; msTa.style.height = Math.min(msTa.scrollHeight, 150) + "px"; };
+    msTa.addEventListener("input", msGrow);
+    msTa.addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey && !matchMedia("(pointer: coarse)").matches) { e.preventDefault(); $("#sd-msForm").requestSubmit(); } });
+    $("#sd-msForm").addEventListener("submit", async (e) => {
+      e.preventDefault(); const t = msTa.value.trim(); if (!t || MS.envoi || !MS.cur) return;
+      MS.envoi = true; const r = await run(() => DB.q("messages", { method: "POST", body: { canal: MS.cur, texte: t }, prefer: "return=representation" })); MS.envoi = false;
+      if (r && r[0]) { msTa.value = ""; msGrow(); msAjout(r[0]); MS.forceBas = true; msRender(); }
+    });
+    // Notifications : activer, tester, désactiver (par téléphone)
+    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    const b64u = (t) => { const b = atob((t + "=".repeat((4 - (t.length % 4)) % 4)).replace(/-/g, "+").replace(/_/g, "/")); return Uint8Array.from(b, (c) => c.charCodeAt(0)); };
+    const msQuoi = () => "messages de l'équipe" + (me && me.role !== "moniteur" ? ", nouvelles pré-inscriptions et paiements Mixx" : "");
+    async function msSave(sub) { const j = sub.toJSON(); try { await DB.q("push_abonnements?on_conflict=endpoint", { method: "POST", body: { endpoint: j.endpoint, p256dh: j.keys.p256dh, auth: j.keys.auth, appareil: navigator.userAgent.slice(0, 200) }, prefer: "return=minimal,resolution=ignore-duplicates" }); } catch (e) {} }
+    async function msNotifBox() {
+      const el = $("#sd-msNotif"); if (!el || !me) return;
+      const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+      if (!("serviceWorker" in navigator) || !("PushManager" in window) || !("Notification" in window)) {
+        el.className = "ms-notif off"; el.innerHTML = isIOS && !standalone ? "<b>Notifications sur iPhone</b><span>Ajoute d'abord l'espace équipe à l'écran d'accueil : bouton Partager, puis « Sur l'écran d'accueil ». Ouvre-le ensuite depuis la nouvelle icône SODAF et reviens ici.</span>" : "<b>Notifications indisponibles sur ce navigateur</b><span>Sur Android, utilise Chrome. Sur iPhone, ouvre l'espace équipe depuis son icône sur l'écran d'accueil.</span>"; return; }
+      if (Notification.permission === "denied") { el.className = "ms-notif off"; el.innerHTML = "<b>Notifications bloquées</b><span>Autorise les notifications pour autosodaf.com dans les réglages du navigateur, puis recharge la page.</span>"; return; }
+      let sub = null; try { const reg = await navigator.serviceWorker.ready; sub = await reg.pushManager.getSubscription(); } catch (e) {}
+      if (sub && Notification.permission === "granted") { el.className = "ms-notif on"; el.innerHTML = '<b title="' + esc("Tu es prévenu des " + msQuoi() + ", même application fermée.") + '">✓ Notifications activées sur ce téléphone</b><div class="ms-na"><button type="button" class="linkbtn" data-push="test">Tester</button><button type="button" class="linkbtn" data-push="off">Désactiver</button></div>'; msSave(sub); return; }
+      el.className = "ms-notif"; el.innerHTML = "<b>Recevoir les notifications sur ce téléphone</b><span>Pour être prévenu des " + msQuoi() + ', même quand l\'application est fermée.</span><div class="ms-na"><button type="button" class="btn btn-green btn-sm" data-push="on">Activer les notifications</button></div>';
+    }
+    $("#sd-msNotif").addEventListener("click", async (e) => {
+      const b = e.target.closest("[data-push]"); if (!b) return; const a = b.dataset.push;
+      if (a === "on") {
+        b.disabled = true;
+        try {
+          if ((await Notification.requestPermission()) !== "granted") { toast("Notifications refusées"); msNotifBox(); return; }
+          const reg = await navigator.serviceWorker.ready, sub = (await reg.pushManager.getSubscription()) || (await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64u(VAPID_PUB) }));
+          await msSave(sub); toast("Notifications activées : une notification d'essai arrive");
+          try { await DB.q("rpc/push_test", { method: "POST", body: {} }); } catch (x) {}
+        } catch (x) { toast("Activation impossible sur ce navigateur"); }
+        msNotifBox();
+      } else if (a === "test") { await run(() => DB.q("rpc/push_test", { method: "POST", body: {} }), "Notification d'essai envoyée"); }
+      else if (a === "off") {
+        try { const reg = await navigator.serviceWorker.ready, sub = await reg.pushManager.getSubscription(); if (sub) { try { await DB.q("push_abonnements?endpoint=eq." + encodeURIComponent(sub.endpoint), { method: "DELETE", prefer: "return=minimal" }); } catch (x) {} await sub.unsubscribe(); } } catch (x) {}
+        toast("Notifications désactivées sur ce téléphone"); msNotifBox();
+      }
+    });
+
     async function start() {
       const s = DB.session; if (!s) { show(false); return; }
       const rows = await run(() => DB.q("profils?select=nom,role&id=eq." + s.user.id));
       if (!rows) return;
       if (!rows.length) { await DB.logout(); show(false); $("#sd-teamErr").textContent = "Ce compte n'est pas autorisé dans l'espace équipe."; $("#sd-teamErr").hidden = false; return; }
-      me = rows[0];
+      me = Object.assign({ id: s.user.id }, rows[0]);
       const rg = await run(() => DB.q("reglages?select=*")); if (rg) rg.forEach((r) => (CFG[r.cle] = r.valeur));
       // Visio Google Meet : salle fixe de l'équipe si elle est enregistrée (réglage visio_lien), sinon nouvelle réunion
       if (/^https:\/\/meet\.google\.com\//.test(CFG.visio_lien || "")) { $("#sd-tmVisio").href = CFG.visio_lien; $("#sd-tmVisio").title = "Rejoindre la visio de l'équipe"; const iv = $("#sd-tmVisioWa"); iv.href = "https://wa.me/?text=" + encodeURIComponent("Visio SODAF : on se retrouve ici maintenant\n" + CFG.visio_lien); iv.hidden = false; }
@@ -2771,6 +2874,8 @@ function init(root) {
       let t0 = S.get("tmTab", me.role === "admin" ? "dir" : me.role === "moniteur" ? "mon" : "sec"); if (t0 === "dir" && me.role !== "admin") t0 = "sec";
       pick(t0);
       sub("eleves");
+      await msInit();
+      { const q = new URLSearchParams(location.search), c = q.get("canal"), el = +q.get("eleve") || 0; if (c || el) { history.replaceState(null, "", location.pathname + location.hash); msOuvrir(c, el); } }
     }
 
     // ---- Parcours élèves : Accueil → Appels → En formation → Archivés
@@ -3652,7 +3757,7 @@ function init(root) {
         autoPlace();
         if (nouveaux.length) toast(nouveaux.length > 1 ? nouveaux.length + " nouvelles pré-inscriptions" : "Nouvelle pré-inscription : " + nouveaux[0].nom);
         else if (payes.length) toast(payes[0].web.mode === "mixx" ? "Paiement Mixx à vérifier : " + payes[0].nom : payes[0].nom + " a finalisé son inscription (paiera à l'agence)");
-        const nb = +($("#sd-cntNew").textContent || 0);
+        const nb = +($("#sd-cntNew").textContent || 0) + (MS.total || 0);
         document.title = (nb ? "(" + nb + ") " : "") + (window.SODAF_APP ? "SODAF Équipe" : document.title.replace(/^\(\d+\) /, ""));
       } catch (e) {}
       polling = false;
@@ -4172,6 +4277,39 @@ html:has(#sodaf-root.app-mode),body:has(#sodaf-root.app-mode){background:#ECEFEE
 .mc-quick a{font-size:.84rem;font-weight:600;color:var(--ink)!important;text-decoration:none!important;background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:.3em .8em}
 .mc-quick a:hover{border-color:var(--ink)}
 @media (prefers-reduced-motion:reduce){.mc-cta{transition:none}}
+
+/* Messages de l'équipe */
+#sd-tmTabs button{position:relative}
+.tm-badge{position:absolute;top:8px;right:10px;font-style:normal;background:#D7263D;color:#fff;font:800 .72rem/1 var(--f-ui);border-radius:999px;padding:.32em .5em;min-width:1.6em;text-align:center}
+.ms-notif{display:grid;gap:4px;border-radius:14px;padding:12px 16px;margin-bottom:14px;background:#FFF6D6;border-left:5px solid #E0A400}
+.ms-notif.on{background:var(--green-soft);border-left-color:var(--green)}.ms-notif.off{background:var(--soft);border-left-color:#9AA3AB}
+.ms-notif:empty{display:none}.ms-notif b{font-weight:700}.ms-notif span{font-size:.9rem;color:#3D444D}.ms-na{display:flex;gap:16px;align-items:center;margin-top:6px;flex-wrap:wrap}
+.ms-wrap{display:grid;grid-template-columns:250px 1fr;padding:0!important;overflow:hidden}
+.ms-canaux{background:var(--asph);padding:10px;display:flex;flex-direction:column;gap:4px}
+.ms-ch{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:1fr auto;gap:2px 8px;padding:10px 12px;border-radius:10px}
+.ms-ch b{color:#fff;font-weight:600;font-size:.95rem}.ms-ch small{grid-column:1/-1;font-size:.76rem;color:#8D96A0;line-height:1.3}
+.ms-ch em{font-style:normal;background:var(--yellow);color:var(--asph);font-weight:800;font-size:.75rem;border-radius:999px;padding:.12em .55em;align-self:center}
+.ms-ch:hover{background:rgba(255,255,255,.06)}.ms-ch.on{background:rgba(255,255,255,.12)}.ms-ch.on b{color:var(--yellow)}.ms-ch:focus-visible{outline:2px solid var(--yellow)}
+.ms-fil{display:flex;flex-direction:column;min-width:0}
+.ms-head{padding:12px 16px;border-bottom:1px solid var(--line)}.ms-head b{display:block;font-family:var(--f-display);font-size:1.35rem;line-height:1.1}.ms-head span{font-size:.84rem;color:var(--muted)}
+.ms-list{flex:1;overflow:auto;padding:8px 16px 14px;height:56vh;min-height:300px;background:#F6F7F7}
+.ms-day{text-align:center;margin:14px 0 4px!important}.ms-day span{font-size:.76rem;font-weight:700;color:var(--muted);background:#fff;border:1px solid var(--line);border-radius:999px;padding:.2em .8em}
+.ms-m{margin-top:12px;max-width:78%}.ms-m.suite{margin-top:3px}.ms-m.moi{margin-left:auto}
+.ms-who{display:flex;align-items:center;gap:8px;margin:0 0 4px!important}.ms-m.moi .ms-who{flex-direction:row-reverse}
+.ms-av{font-style:normal;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:#5B6B7D;color:#fff;font-weight:700;font-size:.8rem;flex-shrink:0}
+.ms-av.r-admin{background:var(--asph)}.ms-av.r-secretariat{background:var(--green)}.ms-av.r-moniteur{background:var(--blue)}
+.ms-who b{font-size:.88rem}.ms-who small{font-size:.76rem;color:var(--muted)}
+.ms-b{background:#fff;border:1px solid var(--line);border-radius:4px 14px 14px 14px;padding:8px 12px;font-size:.95rem;line-height:1.45;overflow-wrap:anywhere}
+.ms-m.moi .ms-b{background:#DFF3E8;border-color:#BFE3D2;border-radius:14px 4px 14px 14px}
+.ms-t{display:block;text-align:right;font-size:.7rem;color:var(--muted);margin-top:2px}
+.ms-el{all:unset;cursor:pointer;font-weight:700;color:var(--blue);border-bottom:1.5px solid currentColor}.ms-el:focus-visible{outline:2px solid var(--yellow)}
+.ms-vide{color:var(--muted);text-align:center;margin-top:60px!important}
+.ms-form{display:flex;gap:8px;align-items:flex-end;padding:10px 12px;border-top:1px solid var(--line);background:#fff}
+.ms-form textarea{flex:1;resize:none;min-height:46px;max-height:150px;border:1.5px solid var(--line);border-radius:12px;padding:11px 12px;font:inherit;line-height:1.35;margin:0}
+.ms-form textarea:focus{border-color:var(--green);outline:none}
+.ms-form .btn{height:46px;width:50px;padding:0;display:grid;place-items:center;border-radius:12px;flex-shrink:0}
+.ms-notif.on{display:flex;justify-content:space-between;align-items:center;gap:8px 16px;flex-wrap:wrap;padding:9px 14px}.ms-notif.on .ms-na{margin:0}
+@media (max-width:760px){.ms-wrap{grid-template-columns:1fr}.ms-canaux{flex-direction:row;overflow-x:auto;padding:8px}.ms-ch{min-width:max-content}.ms-ch small{display:none}.ms-head span{display:none}.ms-list{height:calc(100dvh - 270px);min-height:260px}.ms-m{max-width:88%}.tm-pane[data-pane="msg"]>.tm-role{display:none}}
 `;
   const st = document.createElement("style"); st.textContent = CSS + CSS_REFONTE + 'html,body{margin:0;background:#15191E}#sodaf-root{min-height:100vh;display:flex;flex-direction:column}#sodaf-root>#app{flex:1;display:flex;flex-direction:column;background:#fff}#sodaf-root main{flex:1}'; document.head.appendChild(st);
   if (!document.querySelector("link[rel=icon]")) { const fi = document.createElement("link"); fi.rel = "icon"; fi.type = "image/svg+xml"; fi.href = FAVICON; document.head.appendChild(fi); }
