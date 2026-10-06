@@ -2894,7 +2894,7 @@ function init(root) {
       const id = x.id || "", k = f.path || "local:" + x.cle, l = MS.lect, enCours = l && l.cle === k, nonEcoute = !moi && x.id && !msEcoute(x.id, me.id);
       const d = f.duree || 0, t = enCours ? l.t : 0, pct = d ? Math.min(100, (t / d) * 100) : 0;
       let ecoute = "";
-      if (moi && x.id) { const k2 = MS.canaux.find((c) => c.id === x.canal), qui = k2 ? msMembres(k2).filter((p) => p.id !== me.id && msEcoute(x.id, p.id)).map(msPrenom) : []; ecoute = '<small class="ms-ecq' + (qui.length ? " ok" : "") + '">' + (qui.length ? "Écouté par " + esc(qui.join(", ")) : "Pas encore écouté") + "</small>"; }
+      if (moi && x.id) { const k2 = MS.canaux.find((c) => c.id === x.canal), qui = k2 ? msMembres(k2).filter((p) => p.id !== me.id && msEcoute(x.id, p.id)).map(msPrenom).filter((n, i, a) => a.indexOf(n) === i) : []; ecoute = '<small class="ms-ecq' + (qui.length ? " ok" : "") + '">' + (qui.length ? "Écouté par " + esc(qui.join(", ")) : "Pas encore écouté") + "</small>"; }
       return '<div class="ms-aud' + (nonEcoute ? " neuf" : "") + (enCours ? " " + l.etat : "") + '" data-aud="' + esc(k) + '" data-id="' + id + '" data-d="' + d + '"><button type="button" class="ms-play" aria-label="' + (enCours && l.etat === "joue" ? "Pause" : "Écouter le vocal") + '">' + IC_PLAY + '</button><div class="ms-aw"><div class="ms-prog" role="slider" aria-label="Avancer dans le vocal" aria-valuemin="0" aria-valuemax="' + d + '" aria-valuenow="' + Math.round(t) + '" tabindex="0"><i style="width:' + pct + '%"></i><b style="left:' + pct + '%"></b></div><div class="ms-ainf"><span class="ms-atm">' + (enCours ? msDuree(t) + " / " : "") + msDuree(d) + "</span>" + (nonEcoute ? '<span class="ms-pt">Nouveau</span>' : "") + '<button type="button" class="ms-vit" aria-label="Vitesse de lecture">' + String(MS.vitesse).replace(".", ",") + "×</button></div>" + ecoute + "</div></div>";
     }
     function msBulle(x, moi) {
@@ -3094,7 +3094,7 @@ function init(root) {
     function msSugMaj() {
       const k = MS.canaux.find((c) => c.id === MS.cur), av = msTa.value.slice(0, msTa.selectionStart), m = av.match(/(^|\s)@([A-Za-zÀ-ÿ'-]*)$/);
       if (!k || !m) { msSugEl.hidden = true; MS.sug = []; return; }
-      const q = msPlat(m[2]); MS.sug = msMembres(k).filter((p) => p.id !== me.id && msPlat(msPrenom(p)).startsWith(q));
+      const q = msPlat(m[2]), vus = new Set(); MS.sug = msMembres(k).filter((p) => p.id !== me.id && msPlat(msPrenom(p)).startsWith(q) && !vus.has(msPlat(msPrenom(p))) && vus.add(msPlat(msPrenom(p))));
       if (!MS.sug.length) { msSugEl.hidden = true; return; }
       MS.sugI = Math.min(MS.sugI, MS.sug.length - 1);
       msSugEl.innerHTML = MS.sug.map((p, i) => '<button type="button" role="option" class="ms-so' + (i === MS.sugI ? " on" : "") + '" aria-selected="' + (i === MS.sugI) + '" data-so="' + i + '"><i class="ms-av r-' + esc(p.role) + '">' + esc(msPrenom(p)[0]) + "</i><b>@" + esc(msPrenom(p)) + "</b><small>" + esc(msRole[p.role] || "") + "</small></button>").join("");
@@ -3349,14 +3349,15 @@ function init(root) {
     // Direction : comptes (désactiver / réactiver) et dernières connexions
     async function loadSec() {
       if (!me || me.role !== "admin" || !$("#sd-drComptes")) return;
-      const [pr, cx] = await Promise.all([DB.q("profils?select=id,nom,role,actif").catch(() => null), DB.q("connexions?select=*&order=le.desc&limit=40").catch(() => null)]);
+      const [pr, ml, cx] = await Promise.all([DB.q("profils?select=id,nom,role,actif").catch(() => null), DB.q("rpc/comptes_emails", { method: "POST", body: {} }).catch(() => []), DB.q("connexions?select=*&order=le.desc&limit=40").catch(() => null)]);
       if (!pr) return;
       const R = { admin: "Direction", secretariat: "Secrétariat", moniteur: "Moniteur" }, quand = (d) => { const x = new Date(d), j = msJour(d); return (j === "Aujourd'hui" ? "aujourd'hui" : j === "Hier" ? "hier" : x.toLocaleDateString("fr-FR", { day: "numeric", month: "short" })) + " à " + x.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }); };
-      const der = {}; (cx || []).forEach((c) => { if (!der[c.profil]) der[c.profil] = c; });
+      const der = {}, mail = {}; (cx || []).forEach((c) => { if (!der[c.profil]) der[c.profil] = c; }); (ml || []).forEach((x) => (mail[x.id] = x.email));
+      const alias = (id) => { const m = (mail[id] || "").match(/\+([^@]+)@/); return m ? " (" + m[1] + ")" : ""; };
       const lieu = (c) => (c.pays ? (c.ville ? c.ville + ", " : "") + c.pays : ""), loin = (c) => c.pays && c.pays !== "Togo";
       pr.sort((a, b) => (b.actif !== false) - (a.actif !== false) || ["admin", "secretariat", "moniteur"].indexOf(a.role) - ["admin", "secretariat", "moniteur"].indexOf(b.role));
-      $("#sd-drComptes").innerHTML = pr.map((p) => { const on = p.actif !== false, c = der[p.id]; return '<div class="sc-row' + (on ? "" : " off") + '"><div class="sc-who"><b>' + esc(p.nom) + "</b><small>" + esc(R[p.role] || p.role) + (p.id === me.id ? " · toi" : "") + "</small></div><div class=\"sc-last\">" + (c ? "Dernière connexion " + esc(quand(c.le)) + "<small>" + esc(c.description || "") + (lieu(c) ? " · " + esc(lieu(c)) : "") + "</small>" : "<small>Aucune connexion notée depuis l'activation du journal</small>") + '</div><div class="sc-act"><em class="sc-st">' + (on ? "Actif" : "Désactivé") + "</em>" + (p.id === me.id ? "" : '<button type="button" class="btn btn-sm ' + (on ? "btn-line sc-off" : "btn-green") + '" data-cpt="' + esc(p.id) + '" data-on="' + (on ? 0 : 1) + '">' + (on ? "Désactiver" : "Réactiver") + "</button>") + "</div></div>"; }).join("");
-      $("#sd-drCx").innerHTML = (cx || []).length ? cx.slice(0, 15).map((c) => { const p = pr.find((x) => x.id === c.profil) || { nom: "Compte", role: "" }; return '<div class="tm-row sc-cx' + (c.nouvel ? " neuf" : "") + '"><div class="tm-time">' + esc(quand(c.le)) + '</div><div class="tm-main"><b>' + esc(msPrenom(p)) + " · " + esc(R[p.role] || "") + (c.nouvel ? ' <em class="sc-new">Nouvel appareil</em>' : "") + (loin(c) ? ' <em class="sc-new sc-loin">Hors du Togo</em>' : "") + "</b><span>" + esc(c.description || "Appareil") + (lieu(c) ? " · <strong>" + esc(lieu(c)) + "</strong>" + (c.operateur ? " (" + esc(c.operateur) + ")" : "") : c.ip ? " · lieu en cours de recherche" : "") + "</span></div></div>"; }).join("") : '<p class="tm-empty">Les connexions apparaîtront ici à partir de maintenant.</p>';
+      $("#sd-drComptes").innerHTML = pr.map((p) => { const on = p.actif !== false, c = der[p.id]; return '<div class="sc-row' + (on ? "" : " off") + '"><div class="sc-who"><b>' + esc(p.nom) + "</b><small>" + esc(R[p.role] || p.role) + (p.id === me.id ? " · toi" : "") + (mail[p.id] ? "<br><span class=\"sc-mail\">" + esc(mail[p.id]) + "</span>" : "") + "</small></div><div class=\"sc-last\">" + (c ? "Dernière connexion " + esc(quand(c.le)) + "<small>" + esc(c.description || "") + (lieu(c) ? " · " + esc(lieu(c)) : "") + "</small>" : "<small>Aucune connexion notée depuis l'activation du journal</small>") + '</div><div class="sc-act"><em class="sc-st">' + (on ? "Actif" : "Désactivé") + "</em>" + (p.id === me.id ? "" : '<button type="button" class="btn btn-sm ' + (on ? "btn-line sc-off" : "btn-green") + '" data-cpt="' + esc(p.id) + '" data-on="' + (on ? 0 : 1) + '">' + (on ? "Désactiver" : "Réactiver") + "</button>") + "</div></div>"; }).join("");
+      $("#sd-drCx").innerHTML = (cx || []).length ? cx.slice(0, 15).map((c) => { const p = pr.find((x) => x.id === c.profil) || { nom: "Compte", role: "" }; return '<div class="tm-row sc-cx' + (c.nouvel ? " neuf" : "") + '"><div class="tm-time">' + esc(quand(c.le)) + '</div><div class="tm-main"><b>' + esc(msPrenom(p) + alias(p.id)) + " · " + esc(R[p.role] || "") + (c.nouvel ? ' <em class="sc-new">Nouvel appareil</em>' : "") + (loin(c) ? ' <em class="sc-new sc-loin">Hors du Togo</em>' : "") + "</b><span>" + esc(c.description || "Appareil") + (lieu(c) ? " · <strong>" + esc(lieu(c)) + "</strong>" + (c.operateur ? " (" + esc(c.operateur) + ")" : "") : c.ip ? " · lieu en cours de recherche" : "") + "</span></div></div>"; }).join("") : '<p class="tm-empty">Les connexions apparaîtront ici à partir de maintenant.</p>';
     }
     async function start() {
       const s = DB.session; if (!s) { show(false); return; }
@@ -4891,6 +4892,7 @@ background:radial-gradient(circle at 35% 30%,#fff 0%,#F1F7F4 55%,#D5E7DE 100%);b
 .tm-auj>summary em{font-style:normal;font-weight:700;font-size:.85rem;color:#8A6500;white-space:nowrap}
 .tm-auj>div{padding:14px}.tm-auj .tm-mon{margin:0}.tm-auj .tm-mon>.card{box-shadow:none;border:1px solid var(--line)}
 html.ms-plein,html.ms-plein body{overflow:hidden}
+.sc-mail{font-size:.76rem;color:#1F5FA8;word-break:break-all}
 .ms-vimg img{user-select:none;-webkit-user-drag:none;max-width:100%!important;max-height:calc(100dvh - 96px)!important;width:auto;height:auto}
 #sodaf-root .ms-vdl,.ms-vdl{color:#fff!important}
 .ms-vnav{all:unset;cursor:pointer;position:absolute;top:50%;margin-top:-26px;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:rgba(0,0,0,.45);color:#fff;z-index:2}
