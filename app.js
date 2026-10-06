@@ -5063,6 +5063,7 @@ background:radial-gradient(circle at 35% 30%,#fff 0%,#F1F7F4 55%,#D5E7DE 100%);b
 .tm-auj>summary em{font-style:normal;font-weight:700;font-size:.85rem;color:#8A6500;white-space:nowrap}
 .tm-auj>div{padding:14px}.tm-auj .tm-mon{margin:0}.tm-auj .tm-mon>.card{box-shadow:none;border:1px solid var(--line)}
 html.ms-plein,html.ms-plein body{overflow:hidden}
+html{scrollbar-gutter:stable} /* place de la barre de défilement toujours réservée : rien ne bouge en changeant d'onglet */
 .sc-mail{font-size:.76rem;color:#1F5FA8;word-break:break-all}
 .ms-vimg img{user-select:none;-webkit-user-drag:none;max-width:100%!important;max-height:calc(100dvh - 96px)!important;width:auto;height:auto}
 #sodaf-root .ms-vdl,.ms-vdl{color:#fff!important}
