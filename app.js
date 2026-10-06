@@ -2843,7 +2843,7 @@ function init(root) {
     const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
     const b64u = (t) => { const b = atob((t + "=".repeat((4 - (t.length % 4)) % 4)).replace(/-/g, "+").replace(/_/g, "/")); return Uint8Array.from(b, (c) => c.charCodeAt(0)); };
     const msQuoi = () => "messages de l'équipe" + (me && me.role !== "moniteur" ? ", nouvelles pré-inscriptions et paiements Mixx" : "");
-    async function msSave(sub) { const j = sub.toJSON(); try { await DB.q("push_abonnements?on_conflict=endpoint", { method: "POST", body: { endpoint: j.endpoint, p256dh: j.keys.p256dh, auth: j.keys.auth, appareil: navigator.userAgent.slice(0, 200) }, prefer: "return=minimal,resolution=ignore-duplicates" }); } catch (e) {} }
+    async function msSave(sub) { const j = sub.toJSON(); try { await DB.q("rpc/push_enregistrer", { method: "POST", body: { p_endpoint: j.endpoint, p_p256dh: j.keys.p256dh, p_auth: j.keys.auth, p_appareil: navigator.userAgent.slice(0, 200) } }); } catch (e) {} } // rattache ce téléphone au compte connecté
     async function msNotifBox() {
       const el = $("#sd-msNotif"); if (!el || !me) return;
       const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
@@ -2874,9 +2874,9 @@ function init(root) {
 
     async function start() {
       const s = DB.session; if (!s) { show(false); return; }
-      const rows = await run(() => DB.q("profils?select=nom,role&id=eq." + s.user.id));
+      const rows = await run(() => DB.q("profils?select=nom,role,actif&id=eq." + s.user.id));
       if (!rows) return;
-      if (!rows.length) { await DB.logout(); show(false); $("#sd-teamErr").textContent = "Ce compte n'est pas autorisé dans l'espace équipe."; $("#sd-teamErr").hidden = false; return; }
+      if (!rows.length || rows[0].actif === false) { await DB.logout(); show(false); $("#sd-teamErr").textContent = rows.length ? "Ce compte a été désactivé par la direction." : "Ce compte n'est pas autorisé dans l'espace équipe."; $("#sd-teamErr").hidden = false; return; }
       me = Object.assign({ id: s.user.id }, rows[0]);
       const rg = await run(() => DB.q("reglages?select=*")); if (rg) rg.forEach((r) => (CFG[r.cle] = r.valeur));
       // Visio Google Meet : salle fixe de l'équipe si elle est enregistrée (réglage visio_lien), sinon nouvelle réunion

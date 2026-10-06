@@ -45,7 +45,7 @@ Deno.serve(async (req) => {
     note = { title: "Notifications SODAF activées", body: "Tu recevras ici les messages de l'équipe et les nouvelles inscriptions.", url: "/equipe/?canal=general", tag: "test" };
   } else return json({ erreur: "type inconnu" }, 400);
 
-  const abos = await sql`select s.id, s.endpoint, s.p256dh, s.auth, s.profil, pr.role from public.push_abonnements s join public.profils pr on pr.id = s.profil`;
+  const abos = await sql`select s.id, s.endpoint, s.p256dh, s.auth, s.profil, pr.role from public.push_abonnements s join public.profils pr on pr.id = s.profil where pr.actif`; // comptes désactivés : plus de notifications
   const cibles = abos.filter((a) => (seulement ? a.profil === seulement : (!roles || roles.includes(a.role)) && a.profil !== exclure));
   webpush.setVapidDetails(cfg.vapid_sujet, cfg.vapid_public, cfg.vapid_private);
   const corps = JSON.stringify(note);
