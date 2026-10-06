@@ -1804,10 +1804,16 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="card"><p class="eyebrow">À surveiller</p><h3 class="tm-h3">Ce qui attend une action</h3><div id="sd-drWatch" class="tm-list"></div></div>
 <div class="card"><p class="eyebrow">Activité</p><h3 class="tm-h3">Derniers mouvements</h3><div id="sd-drFeed" class="tm-list"></div></div>
 </div>
+<div class="card gr-card" id="sd-gr" style="margin-top:16px" hidden><p class="eyebrow">Gérance</p><h3 class="tm-h3" id="sd-grTitre">Gérante et direction</h3><p class="tm-note" id="sd-grIntro" style="margin:0 0 10px!important"></p>
+<div class="gr-tabs" role="tablist"><button type="button" role="tab" data-gr="demandes" aria-selected="true">Demandes d'accord<em class="gr-badge" id="sd-grBDem" hidden></em></button><button type="button" role="tab" data-gr="decisions" aria-selected="false">Décisions<em class="gr-badge" id="sd-grBDec" hidden></em></button><button type="button" role="tab" data-gr="rapports" aria-selected="false">Rapport de la semaine<em class="gr-badge" id="sd-grBRap" hidden></em></button></div>
+<div class="gr-pane" data-grp="demandes"><form id="sd-grDemForm" class="gr-form" hidden novalidate><div class="row2"><div class="field"><label for="sd-grDemType">Pour quoi ?</label><select id="sd-grDemType"><option>Remise</option><option>Annulation de reçu</option><option>Report de paiement</option><option>Dépense</option><option>Autre</option></select></div><div class="field"><label for="sd-grDemMt">Montant (F, si besoin)</label><input id="sd-grDemMt" inputmode="numeric" autocomplete="off" placeholder="ex. 5 000"></div></div><div class="field"><label for="sd-grDemEl">Élève concerné (si besoin)</label><select id="sd-grDemEl"><option value="">Aucun</option></select></div><div class="field"><label for="sd-grDemTx">Explique en quelques mots</label><textarea id="sd-grDemTx" rows="2" maxlength="600" placeholder="ex. Deux frères inscrits ensemble, je propose 5 000 F de remise au second."></textarea></div><button type="submit" class="btn btn-sm btn-green">Envoyer à la direction</button></form><div id="sd-grDemList" class="gr-list"></div></div>
+<div class="gr-pane" data-grp="decisions" hidden><form id="sd-grDecForm" class="gr-form" hidden novalidate><div class="row2"><div class="field"><label for="sd-grDecCat">Sujet</label><select id="sd-grDecCat"><option>Élèves</option><option>Argent</option><option>Planning</option><option>Équipe</option><option>Autre</option></select></div><div class="field gr-grow"><label for="sd-grDecTx">Ce que j'ai décidé</label><textarea id="sd-grDecTx" rows="2" maxlength="600" placeholder="ex. Séance de samedi 7 h 30 déplacée à 8 h 45, le moniteur est prévenu."></textarea></div></div><button type="submit" class="btn btn-sm btn-green">Noter la décision</button></form><div id="sd-grDecList" class="gr-list"></div></div>
+<div class="gr-pane" data-grp="rapports" hidden><div id="sd-grRapNew" hidden><p class="gr-sem" id="sd-grRapSem"></p><div class="tm-stats tm-dr" id="sd-grRapChiffres"></div><div class="field"><label for="sd-grRapTx">Mes remarques pour la direction</label><textarea id="sd-grRapTx" rows="4" maxlength="3000" placeholder="Ce qui s'est bien passé, les problèmes, ce qu'il faudrait changer, ce dont j'ai besoin."></textarea></div><button type="button" class="btn btn-sm btn-green" id="sd-grRapSend">Envoyer le rapport</button></div><div id="sd-grRapList" class="gr-list"></div></div>
+</div>
 <div class="card" style="margin-top:16px"><p class="eyebrow">Examen</p><h3 class="tm-h3">Dossiers d'examen et résultats</h3><div id="sd-drExam" class="tm-stats tm-dr tm-drex"></div></div>
 <div class="card" style="margin-top:16px"><p class="eyebrow">Ce mois-ci</p><h3 class="tm-h3">D'où viennent les nouveaux clients</h3><div id="sd-drSrc" class="tm-src"></div></div>
 <div class="card" style="margin-top:16px"><p class="eyebrow">6 derniers mois</p><h3 class="tm-h3">Inscriptions et encaissements</h3><div id="sd-drMonths" class="tm-months"></div></div>
-<div class="card" style="margin-top:16px" id="sd-drSec"><p class="eyebrow">Sécurité</p><h3 class="tm-h3">Comptes de l'équipe</h3><p class="tm-note" style="margin:0 0 10px!important">Un compte désactivé ne voit plus rien, tout de suite, sur tous ses appareils. Son historique (reçus, messages) est gardé. Tu reçois une notification quand un compte se connecte depuis un appareil jamais vu, avec le pays et la ville (approximatifs, d'après l'adresse internet) ; chaque appareil se déconnecte seul après 8 heures sans activité.</p><div id="sd-drComptes" class="sc-list"></div><div class="sc-add"><button type="button" class="btn btn-sm btn-line" id="sd-cptAddBtn">Ajouter un compte</button><form id="sd-cptAdd" class="sc-form" hidden novalidate><div class="row2"><div class="field"><label for="sd-cptAddRole">Rôle</label><select id="sd-cptAddRole"><option value="secretariat">Secrétariat</option><option value="moniteur">Moniteur</option><option value="admin">Direction</option></select></div><div class="field"><label for="sd-cptAddMail">Prénom ou adresse</label><input id="sd-cptAddMail" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="ex. awa"><small class="sc-apercu" data-for="sd-cptAddMail"></small></div></div><div class="field"><label for="sd-cptAddPw">Mot de passe (6 caractères au moins)</label><input id="sd-cptAddPw" type="password" autocomplete="new-password"></div><div class="sc-fbtn"><button type="submit" class="btn btn-sm btn-green">Créer le compte</button><button type="button" class="btn btn-sm btn-line" data-annul="add">Annuler</button></div></form></div><p class="tm-note sc-aide">Pour changer de personne sur un compte : <b>Modifier</b>, tape son prénom et un nouveau mot de passe. Le compte garde tout son historique, l'ancien mot de passe ne marche plus et ses autres appareils sont déconnectés. Les comptes ne se suppriment pas : on change l'adresse, ou on désactive.</p><h4 class="sc-h">Dernières connexions</h4><div id="sd-drCx" class="tm-list"></div></div>
+<div class="card" style="margin-top:16px" id="sd-drSec"><p class="eyebrow">Sécurité</p><h3 class="tm-h3">Comptes de l'équipe</h3><p class="tm-note" style="margin:0 0 10px!important">Un compte désactivé ne voit plus rien, tout de suite, sur tous ses appareils. Son historique (reçus, messages) est gardé. Tu reçois une notification quand un compte se connecte depuis un appareil jamais vu, avec le pays et la ville (approximatifs, d'après l'adresse internet) ; chaque appareil se déconnecte seul après 8 heures sans activité.</p><div id="sd-drComptes" class="sc-list"></div><div class="sc-add"><button type="button" class="btn btn-sm btn-line" id="sd-cptAddBtn">Ajouter un compte</button><form id="sd-cptAdd" class="sc-form" hidden novalidate><div class="row2"><div class="field"><label for="sd-cptAddRole">Rôle</label><select id="sd-cptAddRole"><option value="secretariat">Secrétariat</option><option value="moniteur">Moniteur</option><option value="gerant">Gérante</option><option value="admin">Direction</option></select></div><div class="field"><label for="sd-cptAddMail">Prénom ou adresse</label><input id="sd-cptAddMail" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="ex. awa"><small class="sc-apercu" data-for="sd-cptAddMail"></small></div></div><div class="field"><label for="sd-cptAddPw">Mot de passe (6 caractères au moins)</label><input id="sd-cptAddPw" type="password" autocomplete="new-password"></div><div class="sc-fbtn"><button type="submit" class="btn btn-sm btn-green">Créer le compte</button><button type="button" class="btn btn-sm btn-line" data-annul="add">Annuler</button></div></form></div><p class="tm-note sc-aide">Pour changer de personne sur un compte : <b>Modifier</b>, tape son prénom et un nouveau mot de passe. Le compte garde tout son historique, l'ancien mot de passe ne marche plus et ses autres appareils sont déconnectés. Les comptes ne se suppriment pas : on change l'adresse, ou on désactive.</p><h4 class="sc-h">Dernières connexions</h4><div id="sd-drCx" class="tm-list"></div></div>
 </div>
 <div class="tm-pane" data-pane="mon" role="tabpanel" hidden>
 <p class="tm-role">Cours de code en salle, séances de conduite et progression des élèves.</p>
@@ -2804,7 +2810,7 @@ function init(root) {
     // La base envoie les notifications (fonction « notifier ») ; ici : lire, écrire, compter les non-lus, activer les notifications.
     const VAPID_PUB = "BOMPgiFqajAv-Mqb1SXD7WOGWJVEK_sDJQGULUCSgV5eAm10bOq7WctPkE51LqGgFHqe4S2y2COGmt0DWbWMv8o";
     const MS = { canaux: [], cur: null, msgs: {}, lu: {}, profs: {}, dernier: null, pret: false, total: 0, forceBas: false, urls: {}, blobs: {}, pjs: [], repere: {}, arrivees: 0, attente: 0, sug: [], sugI: 0, file: [], traite: false, ec: {}, vitesse: 1, lect: null };
-    const msRole = { admin: "Direction", secretariat: "Secrétariat", moniteur: "Moniteur" };
+    const msRole = { admin: "Direction", gerant: "Gérante", secretariat: "Secrétariat", moniteur: "Moniteur" };
     const msLarge = () => matchMedia("(min-width: 761px)").matches;
     // Dates : la base (API) et le temps réel n'écrivent pas l'heure de la même façon ; on ramène tout au même format pour trier et comparer
     const msLe = (s) => { if (!s) return s; let t = String(s).replace(" ", "T").replace(/(\.\d{3})\d+/, "$1"); if (/[+-]\d\d$/.test(t)) t += ":00"; const d = new Date(t); return isNaN(d) ? String(s) : d.toISOString(); };
@@ -2910,7 +2916,7 @@ function init(root) {
     function msQui(k) {
       const mb = msMembres(k).map((p) => msPrenom(p) === msRole[p.role] ? msRole[p.role] : msPrenom(p) + " (" + (msRole[p.role] || "") + ")");
       if (!k.roles) return "Toute l'équipe";
-      if (k.id === "planning") { if (me.role === "admin") return "Privé entre le secrétariat et le moniteur · tu peux lire (supervision)"; return "Privé · " + msMembres(k).filter((p) => p.role !== "admin").map((p) => msPrenom(p) + " (" + (msRole[p.role] || "") + ")").join(" et ") + " · la direction peut lire"; }
+      if (k.id === "planning") { if (me.role === "admin" || me.role === "gerant") return "Privé entre le secrétariat et le moniteur · tu peux lire (supervision)"; return "Privé · " + msMembres(k).filter((p) => p.role !== "admin" && p.role !== "gerant").map((p) => msPrenom(p) + " (" + (msRole[p.role] || "") + ")").join(" et ") + " · la direction peut lire"; }
       return "Privé · lu seulement par : " + (mb.join(" et ") || k.roles.map((r) => msRole[r] || r).join(" et "));
     }
     function msChans() {
@@ -3095,7 +3101,7 @@ function init(root) {
     window.addEventListener("online", () => { if (!me || !MS.pret) return; RT.essais = 0; if (!RT.ws) rtConnecter(); msPoll(true); MS.file.forEach((f) => { if (f.etat === "echec") f.etat = "attente"; }); msTraiter(); });
     function goEleve(id) { const x = eleves.find((y) => y.id === id); if (!x) { toast("Élève introuvable"); return; } if (me && me.role === "moniteur") { ficheCourte(x); return; } msVoirFil(false); pick("sec"); sub("eleves"); pcStage = etapeOf(x); S.set("pcStage", pcStage); pcSel = id; $("#sd-pcQ").value = ""; renderList(); $("#sd-pc").scrollIntoView({ block: "start" }); }
     function msOuvrir(c, el) { if (el) { goEleve(el); return; } if (c && MS.msgs[c]) { MS.cur = c; S.set("msCanal", c); } pick("msg"); if (c) { msVoirFil(true); MS.forceBas = true; msRender(); } }
-    if ("serviceWorker" in navigator) navigator.serviceWorker.addEventListener("message", (e) => { const u = e.data && e.data.sodafOuvrir; if (!u || !me) return; try { const q = new URL(u).searchParams; msOuvrir(q.get("canal"), +q.get("eleve") || 0); } catch (x) {} });
+    if ("serviceWorker" in navigator) navigator.serviceWorker.addEventListener("message", (e) => { const u = e.data && e.data.sodafOuvrir; if (!u || !me) return; try { const q = new URL(u).searchParams; if (q.get("gerance") && DIR()) { pick("dir"); grOnglet(q.get("gerance")); setTimeout(() => $("#sd-gr").scrollIntoView({ block: "start" }), 300); return; } msOuvrir(q.get("canal"), +q.get("eleve") || 0); } catch (x) {} });
     $("#sd-msCanaux").addEventListener("click", (e) => { const b = e.target.closest("[data-ch]"); if (!b) return; if (MS.cur !== b.dataset.ch) { msPjVider(); recArret(false); } MS.cur = b.dataset.ch; S.set("msCanal", MS.cur); MS.forceBas = true; msVoirFil(true); msRender(); if (msLarge()) $("#sd-msTxt").focus(); });
     $("#sd-msList").addEventListener("scroll", () => { if (!msBasTic) msBasTic = requestAnimationFrame(() => { msBasTic = 0; msBasBtn(); }); }, { passive: true });
     $("#sd-msBas").addEventListener("click", () => { const box = $("#sd-msList"); MS.attente = 0; box.scrollTo({ top: box.scrollHeight, behavior: "smooth" }); });
@@ -3381,11 +3387,11 @@ function init(root) {
       if (!me || me.role !== "admin" || !$("#sd-drComptes")) return;
       const [pr, ml, cx] = await Promise.all([DB.q("profils?select=id,nom,role,actif").catch(() => null), DB.q("rpc/comptes_emails", { method: "POST", body: {} }).catch(() => []), DB.q("connexions?select=*&order=le.desc&limit=40").catch(() => null)]);
       if (!pr) return;
-      const R = { admin: "Direction", secretariat: "Secrétariat", moniteur: "Moniteur" }, quand = (d) => { const x = new Date(d), j = msJour(d); return (j === "Aujourd'hui" ? "aujourd'hui" : j === "Hier" ? "hier" : x.toLocaleDateString("fr-FR", { day: "numeric", month: "short" })) + " à " + x.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }); };
+      const R = { admin: "Direction", gerant: "Gérante", secretariat: "Secrétariat", moniteur: "Moniteur" }, quand = (d) => { const x = new Date(d), j = msJour(d); return (j === "Aujourd'hui" ? "aujourd'hui" : j === "Hier" ? "hier" : x.toLocaleDateString("fr-FR", { day: "numeric", month: "short" })) + " à " + x.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }); };
       const der = {}, mail = {}; (cx || []).forEach((c) => { if (!der[c.profil]) der[c.profil] = c; }); (ml || []).forEach((x) => (mail[x.id] = x.email));
-      const alias = (id) => { const m = (mail[id] || "").match(/\+([^@]+)@/); return m && !/^(secretariat|moniteur|direction|admin)$/i.test(m[1]) ? " (" + m[1] + ")" : ""; }; // alias du rôle lui-même : rien à ajouter
+      const alias = (id) => { const m = (mail[id] || "").match(/\+([^@]+)@/); return m && !/^(secretariat|moniteur|direction|admin|gerante?)$/i.test(m[1]) ? " (" + m[1] + ")" : ""; }; // alias du rôle lui-même : rien à ajouter
       const lieu = (c) => (c.pays ? (c.ville ? c.ville + ", " : "") + c.pays : ""), loin = (c) => c.pays && c.pays !== "Togo";
-      pr.sort((a, b) => (b.actif !== false) - (a.actif !== false) || ["admin", "secretariat", "moniteur"].indexOf(a.role) - ["admin", "secretariat", "moniteur"].indexOf(b.role));
+      pr.sort((a, b) => (b.actif !== false) - (a.actif !== false) || ["admin", "gerant", "secretariat", "moniteur"].indexOf(a.role) - ["admin", "gerant", "secretariat", "moniteur"].indexOf(b.role));
       $("#sd-drComptes").innerHTML = pr.map((p) => { const on = p.actif !== false, c = der[p.id]; return '<div class="sc-row' + (on ? "" : " off") + '"><div class="sc-who"><b>' + esc(p.nom) + "</b><small>" + esc(R[p.role] || p.role) + (p.id === me.id ? " · toi" : "") + (mail[p.id] ? "<br><span class=\"sc-mail\">" + esc(mail[p.id]) + "</span>" : "") + "</small></div><div class=\"sc-last\">" + (c ? "Dernière connexion " + esc(quand(c.le)) + "<small>" + esc(c.description || "") + (lieu(c) ? " · " + esc(lieu(c)) : "") + "</small>" : "<small>Aucune connexion notée depuis l'activation du journal</small>") + '</div><div class="sc-act"><em class="sc-st">' + (on ? "Actif" : "Désactivé") + "</em>" + (on ? '<button type="button" class="btn btn-sm btn-line" data-edit="' + esc(p.id) + '">Modifier</button>' : "") + (p.id === me.id ? "" : '<button type="button" class="btn btn-sm ' + (on ? "btn-line sc-off" : "btn-green") + '" data-cpt="' + esc(p.id) + '" data-on="' + (on ? 0 : 1) + '">' + (on ? "Désactiver" : "Réactiver") + "</button>") + '</div><form class="sc-form sc-edit" data-id="' + esc(p.id) + '" hidden novalidate><div class="row2"><div class="field"><label for="sd-cm-' + esc(p.id) + '">Prénom ou adresse</label><input id="sd-cm-' + esc(p.id) + '" data-k="mail" autocomplete="off" autocapitalize="off" spellcheck="false" value="' + esc(mail[p.id] || "") + '"><small class="sc-apercu" data-for="sd-cm-' + esc(p.id) + '"></small></div><div class="field"><label for="sd-cp-' + esc(p.id) + '">Nouveau mot de passe</label><input id="sd-cp-' + esc(p.id) + '" data-k="pw" type="password" autocomplete="new-password" placeholder="Vide = on garde l\'actuel"></div></div><div class="sc-fbtn"><button type="submit" class="btn btn-sm btn-green">Enregistrer</button><button type="button" class="btn btn-sm btn-line" data-annul="1">Annuler</button></div></form></div>'; }).join("");
       SEC.mailDir = mail[me.id] || "";
       $("#sd-drCx").innerHTML = (cx || []).length ? cx.slice(0, 15).map((c) => { const p = pr.find((x) => x.id === c.profil) || { nom: "Compte", role: "" }; return '<div class="tm-row sc-cx' + (c.nouvel ? " neuf" : "") + '"><div class="tm-time">' + esc(quand(c.le)) + '</div><div class="tm-main"><b>' + esc(msPrenom(p) + alias(p.id)) + " · " + esc(R[p.role] || "") + (c.nouvel ? ' <em class="sc-new">Nouvel appareil</em>' : "") + (loin(c) ? ' <em class="sc-new sc-loin">Hors du Togo</em>' : "") + "</b><span>" + esc(c.description || "Appareil") + (lieu(c) ? " · <strong>" + esc(lieu(c)) + "</strong>" + (c.operateur ? " (" + esc(c.operateur) + ")" : "") : c.ip ? " · lieu en cours de recherche" : "") + "</span></div></div>"; }).join("") : '<p class="tm-empty">Les connexions apparaîtront ici à partir de maintenant.</p>';
@@ -3403,17 +3409,21 @@ function init(root) {
       // Visio Google Meet : salle fixe de l'équipe si elle est enregistrée (réglage visio_lien), sinon nouvelle réunion
       if (/^https:\/\/meet\.google\.com\//.test(CFG.visio_lien || "")) { $("#sd-tmVisio").href = CFG.visio_lien; $("#sd-tmVisio").title = "Rejoindre la visio de l'équipe"; const iv = $("#sd-tmVisioWa"); iv.href = "https://wa.me/?text=" + encodeURIComponent("Visio SODAF : on se retrouve ici maintenant\n" + CFG.visio_lien); iv.hidden = false; }
       $("#sd-tmHello").textContent = "Bonjour " + me.nom.split(" ")[0];
-      $("#sd-tmRole").textContent = { admin: "Direction", secretariat: "Secrétariat", moniteur: "Moniteur" }[me.role] + " · Espace équipe SODAF";
+      $("#sd-tmRole").textContent = { admin: "Direction", gerant: "Gérante", secretariat: "Secrétariat", moniteur: "Moniteur" }[me.role] + " · Espace équipe SODAF";
       show(true);
-      const dirTab = $('#sd-tmTabs [data-t="dir"]'); dirTab.hidden = me.role !== "admin";
+      const dirTab = $('#sd-tmTabs [data-t="dir"]'); dirTab.hidden = !DIR(); // direction et gérante
+      dirTab.querySelector("b").textContent = me.role === "gerant" ? "Gérance" : "Direction"; dirTab.querySelector("small").textContent = me.role === "gerant" ? "Chiffres, demandes, rapport" : "Chiffres du mois, à surveiller";
+      { const sec = $("#sd-drSec"); if (sec) sec.hidden = me.role !== "admin"; } // comptes et sécurité : direction seulement
+      { const rl = $('.tm-pane[data-pane="dir"] .tm-role'); if (rl) rl.textContent = me.role === "gerant" ? "Vue d'ensemble de l'auto-école, mise à jour à chaque ouverture. Visible par la direction et toi." : "Vue d'ensemble de l'auto-école, mise à jour à chaque ouverture. Visible par la direction et la gérante."; }
       $('#sd-tmTabs [data-t="sec"]').hidden = me.role === "moniteur"; // le moniteur a son espace : cours, conduite, réservations, messages
       { const pb = $('#sd-secNav [data-s="paiements"]'); if (pb) pb.hidden = me.role === "moniteur"; } // reçus : direction et secrétariat seulement (règle aussi dans la base)
       if (me.role === "secretariat") secAujourdhui();
       await loadEleves(true);
-      let t0 = S.get("tmTab", me.role === "admin" ? "dir" : me.role === "moniteur" ? "mon" : "sec"); if (t0 === "dir" && me.role !== "admin") t0 = "sec";
+      let t0 = S.get("tmTab", DIR() ? "dir" : me.role === "moniteur" ? "mon" : "sec"); if (t0 === "dir" && !DIR()) t0 = "sec";
       pick(t0);
       sub("eleves");
       await msInit();
+      { const g = new URLSearchParams(location.search).get("gerance"); if (g && DIR()) { history.replaceState(null, "", location.pathname + location.hash); pick("dir"); grOnglet(g); setTimeout(() => $("#sd-gr").scrollIntoView({ block: "start" }), 300); } }
       { const q = new URLSearchParams(location.search), c = q.get("canal"), el = +q.get("eleve") || 0; if (c || el) { history.replaceState(null, "", location.pathname + location.hash); msOuvrir(c, el); } }
     }
 
@@ -4100,10 +4110,104 @@ function init(root) {
     $("#sd-dvWeek").addEventListener("change", loadDev);
     $("#sd-dvCopy").addEventListener("click", async () => { try { await navigator.clipboard.writeText($("#sd-dvMsg").value); toast("Message copié"); } catch (e) { $("#sd-dvMsg").select(); document.execCommand("copy"); toast("Message copié"); } });
 
+    // ---- Gérance : demandes d'accord, journal des décisions, rapport de la semaine (tables demandes, decisions, rapports ; migration 0038)
+    // La gérante écrit, la direction répond. Rien ne se supprime.
+    function DIR() { return !!me && (me.role === "admin" || me.role === "gerant"); }
+    const GR = { dem: [], dec: [], rap: [], ong: "demandes" };
+    const grQuand = (d) => { const x = new Date(d), j = msJour(d); return (j === "Aujourd'hui" ? "aujourd'hui" : j === "Hier" ? "hier" : "le " + x.toLocaleDateString("fr-FR", { day: "numeric", month: "short" })) + " à " + x.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }); };
+    const grLundi = (d) => { const x = new Date(d); x.setHours(12, 0, 0, 0); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return iso(x); };
+    const grSemTxt = (l) => { const a = dOf(l), b = new Date(a); b.setDate(a.getDate() + 6); return "du " + a.toLocaleDateString("fr-FR", { day: "numeric", month: "long" }) + " au " + b.toLocaleDateString("fr-FR", { day: "numeric", month: "long" }); };
+    function grOnglet(k) {
+      if (!["demandes", "decisions", "rapports"].includes(k)) k = "demandes"; GR.ong = k;
+      $$("#sd-gr [data-gr]").forEach((b) => b.setAttribute("aria-selected", b.dataset.gr === k)); $$("#sd-gr [data-grp]").forEach((p) => (p.hidden = p.dataset.grp !== k));
+      if (k === "rapports" && me && me.role === "admin") GR.rap.filter((r) => !r.lu_le).forEach((r) => DB.q("rpc/rapport_lu", { method: "POST", body: { p_id: r.id } }).then(() => { r.lu_le = new Date().toISOString(); grBadges(); }).catch(() => {}));
+    }
+    function grBadges() {
+      const adm = me && me.role === "admin", b = (id, n) => { const e = $(id); e.textContent = n; e.hidden = !n; };
+      b("#sd-grBDem", adm ? GR.dem.filter((d) => d.statut === "attente").length : GR.dem.filter((d) => d.statut !== "attente" && d.repondu_le && !grVu("dem", d.id)).length);
+      b("#sd-grBDec", adm ? GR.dec.filter((d) => !d.avis).length : GR.dec.filter((d) => d.avis === "revoir" && !grVu("dec", d.id)).length);
+      b("#sd-grBRap", adm ? GR.rap.filter((r) => !r.lu_le).length : grSemaineAFaire() ? 1 : 0);
+    }
+    const grVu = (k, id) => { try { return (JSON.parse(localStorage.getItem("sodaf.gr." + k) || "[]")).includes(id); } catch (e) { return true; } };
+    const grMarquer = (k, ids) => { try { const v = new Set(JSON.parse(localStorage.getItem("sodaf.gr." + k) || "[]")); ids.forEach((i) => v.add(i)); localStorage.setItem("sodaf.gr." + k, JSON.stringify([...v].slice(-300))); } catch (e) {} };
+    // Semaine du rapport : la semaine en cours ; le lundi, la semaine passée si son rapport n'est pas encore envoyé
+    const grSemaineAFaire = () => { const auj = new Date(), l = grLundi(auj); if (auj.getDay() === 1) { const p = new Date(dOf(l)); p.setDate(p.getDate() - 7); const lp = iso(p); if (!GR.rap.some((r) => r.semaine === lp)) return lp; } return GR.rap.some((r) => r.semaine === l) ? null : l; };
+    async function grCharger() {
+      const box = $("#sd-gr"); if (!box || !DIR()) return; box.hidden = false;
+      const g = me.role === "gerant";
+      $("#sd-grIntro").textContent = g ? "Demande l'accord de la direction pour ce qui dépasse tes limites, note les décisions que tu prends, et envoie ton rapport chaque fin de semaine (rappel le dimanche à 18 h)." : "La gérante te demande ton accord, note ses décisions et t'envoie son rapport chaque semaine. Tu reçois une notification à chaque fois.";
+      $("#sd-grDemForm").hidden = !g; $("#sd-grDecForm").hidden = !g;
+      const [dm, dc, rp] = await Promise.all([DB.q("demandes?select=*&order=le.desc&limit=60").catch(() => null), DB.q("decisions?select=*&order=le.desc&limit=60").catch(() => null), DB.q("rapports?select=*&order=semaine.desc&limit=20").catch(() => null)]);
+      if (!dm && !dc && !rp) { $("#sd-grDemList").innerHTML = '<p class="tm-empty">La gérance n\'est pas encore activée dans la base.</p>'; return; }
+      GR.dem = dm || []; GR.dec = dc || []; GR.rap = rp || [];
+      if (g) { const sel = $("#sd-grDemEl"), v = sel.value; sel.innerHTML = '<option value="">Aucun</option>' + eleves.filter((x) => x.statut !== "Abandon").slice().sort((a, b) => a.nom.localeCompare(b.nom, "fr")).map((x) => '<option value="' + x.id + '">' + esc(x.nom) + " (SO" + x.id + ")</option>").join(""); sel.value = v; }
+      grDemRender(); grDecRender(); await grRapRender(); grBadges(); grOnglet(GR.ong);
+    }
+    function grDemRender() {
+      const adm = me.role === "admin", ST = { attente: ["att", "En attente"], accordee: ["oui", "Accordé"], refusee: ["non", "Refusé"] };
+      $("#sd-grDemList").innerHTML = GR.dem.length ? GR.dem.map((d) => { const st = ST[d.statut] || ST.attente, el = d.eleve_id ? eleves.find((x) => x.id === d.eleve_id) : null;
+        return '<div class="gr-it ' + st[0] + '"><div class="gr-hd"><b>' + esc(d.type) + (d.montant ? " · " + F(d.montant) : "") + (el ? " · " + esc(el.nom) : "") + '</b><em class="gr-st ' + st[0] + '">' + st[1] + "</em></div><small>Demandé " + esc(grQuand(d.le)) + "</small><p>" + esc(d.texte) + "</p>" +
+          (d.statut !== "attente" ? '<div class="gr-rep">' + (d.statut === "accordee" ? "Accordé" : "Refusé") + " " + esc(grQuand(d.repondu_le)) + (d.reponse ? " : " + esc(d.reponse) : "") + "</div>" : adm ? '<div class="gr-act" data-dem="' + d.id + '"><input type="text" maxlength="300" placeholder="Un mot pour la gérante (facultatif)" aria-label="Réponse à la gérante"><button type="button" class="btn btn-sm btn-green" data-ok="1">Accorder</button><button type="button" class="btn btn-sm btn-line" data-ok="0">Refuser</button></div>' : "") + "</div>"; }).join("")
+        : '<p class="tm-empty">' + (adm ? "Aucune demande pour l'instant." : "Aucune demande envoyée.") + "</p>";
+    }
+    function grDecRender() {
+      const adm = me.role === "admin";
+      $("#sd-grDecList").innerHTML = GR.dec.length ? GR.dec.map((d) => { const st = !d.avis ? ["neu", adm ? "À lire" : "Envoyée"] : d.avis === "ok" ? ["oui", "D'accord"] : ["non", "À revoir"];
+        return '<div class="gr-it' + (d.avis === "revoir" ? " non" : d.avis === "ok" ? " oui" : adm ? " att" : "") + '"><div class="gr-hd"><b>' + esc(d.categorie) + '</b><em class="gr-st ' + st[0] + '">' + st[1] + "</em></div><small>" + esc(grQuand(d.le)) + "</small><p>" + esc(d.texte) + "</p>" +
+          (d.avis ? (d.avis_note ? '<div class="gr-rep">Direction : ' + esc(d.avis_note) + "</div>" : "") : adm ? '<div class="gr-act" data-dec="' + d.id + '"><input type="text" maxlength="300" placeholder="Un mot pour la gérante (facultatif)" aria-label="Avis pour la gérante"><button type="button" class="btn btn-sm btn-green" data-avis="ok">D\'accord</button><button type="button" class="btn btn-sm btn-line" data-avis="revoir">À revoir</button></div>' : "") + "</div>"; }).join("")
+        : '<p class="tm-empty">' + (adm ? "Aucune décision notée pour l'instant." : "Aucune décision notée.") + "</p>";
+    }
+    // Chiffres de la semaine, calculés depuis la base au moment du rapport
+    async function grChiffres(l) {
+      const a = dOf(l), b = new Date(a); b.setDate(a.getDate() + 6); const fin = iso(b), finTs = iso(new Date(b.getTime() + 864e5));
+      const [pay, cr, el] = await Promise.all([DB.q("paiements?select=montant,annule,motif&jour=gte." + l + "&jour=lte." + fin).catch(() => []), DB.q("creneaux_conduite?select=statut,eleve_id&jour=gte." + l + "&jour=lte." + fin).catch(() => []), DB.q("eleves?select=id,cree_le,statut,archive_le,examen_date&or=(cree_le.gte." + l + ",archive_le.gte." + l + ",examen_date.gte." + l + ")").catch(() => [])]);
+      const ok = pay.filter((p) => !p.annule), dans = (d) => d && d >= l && d < finTs;
+      return { encaisse: ok.reduce((n, p) => n + (p.montant || 0), 0), recus: ok.length, recus_annules: pay.filter((p) => p.annule).length, inscriptions: ok.filter((p) => /^Droit d'inscription/.test(p.motif || "")).length,
+        contacts: el.filter((x) => dans(x.cree_le)).length, conduite_faites: cr.filter((c) => c.statut === "Fait").length, absences: cr.filter((c) => c.statut === "Absent").length,
+        abandons: el.filter((x) => x.statut === "Abandon" && dans(x.archive_le)).length, permis: el.filter((x) => x.statut === "Permis obtenu" && dans(x.examen_date)).length };
+    }
+    const GR_CH = [["encaisse", "Encaissé", (v) => F(v)], ["recus", "Reçus faits"], ["inscriptions", "Inscriptions"], ["contacts", "Nouveaux contacts"], ["conduite_faites", "Séances de conduite faites"], ["absences", "Absences en conduite"], ["permis", "Permis obtenus"], ["abandons", "Dossiers archivés"], ["recus_annules", "Reçus annulés"]];
+    const grChHtml = (c, tuiles) => GR_CH.filter((k) => c[k[0]] != null).map((k) => tuiles ? "<div><span>" + k[1] + "</span><b>" + (k[2] ? k[2](c[k[0]]) : c[k[0]]) + "</b></div>" : "<span>" + k[1] + "<b>" + (k[2] ? k[2](c[k[0]]) : c[k[0]]) + "</b></span>").join("");
+    async function grRapRender() {
+      const g = me.role === "gerant", l = g ? grSemaineAFaire() : null;
+      $("#sd-grRapNew").hidden = !l;
+      if (l) { GR.semaine = l; $("#sd-grRapSem").textContent = "Semaine " + grSemTxt(l); GR.ch = await grChiffres(l); $("#sd-grRapChiffres").innerHTML = grChHtml(GR.ch, true); try { const t = localStorage.getItem("sodaf.gr.brouillon." + l); if (t && !$("#sd-grRapTx").value) $("#sd-grRapTx").value = t; } catch (e) {} }
+      $("#sd-grRapList").innerHTML = GR.rap.length ? GR.rap.map((r) => '<div class="gr-it' + (!g && !r.lu_le ? " att" : "") + '"><div class="gr-hd"><b>Semaine ' + esc(grSemTxt(r.semaine)) + '</b><em class="gr-st ' + (r.lu_le ? "oui" : "neu") + '">' + (r.lu_le ? "Lu par la direction" : g ? "Envoyé" : "Nouveau") + "</em></div><small>Envoyé " + esc(grQuand(r.envoye_le)) + '</small><div class="gr-ch">' + grChHtml(r.chiffres || {}, false) + "</div>" + (r.texte ? "<p>" + esc(r.texte) + "</p>" : "") + "</div>").join("")
+        : '<p class="tm-empty">' + (g ? "Aucun rapport envoyé pour l'instant." : "Aucun rapport reçu pour l'instant.") + "</p>";
+    }
+    $("#sd-gr").addEventListener("click", async (e) => {
+      const t = e.target.closest("[data-gr]"); if (t) { grOnglet(t.dataset.gr); if (me.role === "gerant") { if (t.dataset.gr === "demandes") grMarquer("dem", GR.dem.filter((d) => d.statut !== "attente").map((d) => d.id)); if (t.dataset.gr === "decisions") grMarquer("dec", GR.dec.filter((d) => d.avis).map((d) => d.id)); grBadges(); } return; }
+      const ok = e.target.closest("[data-ok]"), av = e.target.closest("[data-avis]");
+      if (ok) { const bx = ok.closest("[data-dem]"); bx.querySelectorAll("button").forEach((b) => (b.disabled = true)); const r = await run(() => DB.q("rpc/demande_repondre", { method: "POST", body: { p_id: +bx.dataset.dem, p_accord: ok.dataset.ok === "1", p_note: bx.querySelector("input").value.trim() || null } }).then(() => true), ok.dataset.ok === "1" ? "Accordé : la gérante est prévenue" : "Refusé : la gérante est prévenue"); if (r) grCharger(); else bx.querySelectorAll("button").forEach((b) => (b.disabled = false)); }
+      if (av) { const bx = av.closest("[data-dec]"); bx.querySelectorAll("button").forEach((b) => (b.disabled = true)); const r = await run(() => DB.q("rpc/decision_avis", { method: "POST", body: { p_id: +bx.dataset.dec, p_avis: av.dataset.avis, p_note: bx.querySelector("input").value.trim() || null } }).then(() => true), av.dataset.avis === "ok" ? "Noté : d'accord" : "Noté : à revoir, la gérante est prévenue"); if (r) grCharger(); else bx.querySelectorAll("button").forEach((b) => (b.disabled = false)); }
+    });
+    $("#sd-grDemForm").addEventListener("submit", async (e) => {
+      e.preventDefault(); const tx = $("#sd-grDemTx").value.trim(), mt = +($("#sd-grDemMt").value.replace(/\D/g, "")) || null, el = +$("#sd-grDemEl").value || null;
+      if (tx.length < 3) { toast("Explique ta demande en quelques mots", true); $("#sd-grDemTx").focus(); return; }
+      const b = e.target.querySelector("[type=submit]"); b.disabled = true;
+      const r = await run(() => DB.q("demandes", { method: "POST", body: { type: $("#sd-grDemType").value, montant: mt, eleve_id: el, texte: tx }, prefer: "return=minimal" }).then(() => true), "Demande envoyée à la direction");
+      b.disabled = false; if (r) { e.target.reset(); grCharger(); }
+    });
+    $("#sd-grDecForm").addEventListener("submit", async (e) => {
+      e.preventDefault(); const tx = $("#sd-grDecTx").value.trim();
+      if (tx.length < 3) { toast("Écris la décision en quelques mots", true); $("#sd-grDecTx").focus(); return; }
+      const b = e.target.querySelector("[type=submit]"); b.disabled = true;
+      const r = await run(() => DB.q("decisions", { method: "POST", body: { categorie: $("#sd-grDecCat").value, texte: tx }, prefer: "return=minimal" }).then(() => true), "Décision notée, la direction est prévenue");
+      b.disabled = false; if (r) { e.target.reset(); grOnglet("decisions"); grCharger(); }
+    });
+    $("#sd-grRapTx").addEventListener("input", () => { try { if (GR.semaine) localStorage.setItem("sodaf.gr.brouillon." + GR.semaine, $("#sd-grRapTx").value); } catch (e) {} }); // brouillon gardé sur ce téléphone
+    $("#sd-grRapSend").addEventListener("click", async () => {
+      const b = $("#sd-grRapSend"); if (!GR.semaine) return; b.disabled = true;
+      const ch = await grChiffres(GR.semaine);
+      const r = await run(() => DB.q("rapports", { method: "POST", body: { semaine: GR.semaine, chiffres: ch, texte: $("#sd-grRapTx").value.trim() }, prefer: "return=minimal" }).then(() => true), "Rapport envoyé à la direction");
+      b.disabled = false; if (r) { try { localStorage.removeItem("sodaf.gr.brouillon." + GR.semaine); } catch (e) {} $("#sd-grRapTx").value = ""; grCharger(); }
+    });
+
     // ---- Direction
     async function loadDir() {
-      if (!me || me.role !== "admin") return;
-      loadSec();
+      if (!me || !DIR()) return;
+      if (me.role === "admin") loadSec();
+      grCharger();
       const now = new Date(), m0 = new Date(now.getFullYear(), now.getMonth(), 1), m6 = new Date(now.getFullYear(), now.getMonth() - 5, 1), mPrev = new Date(now.getFullYear(), now.getMonth() - 1, 1);
       const mEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0), today = iso(now);
       const lun = new Date(now); lun.setDate(now.getDate() - ((now.getDay() + 6) % 7)); const dim = new Date(lun); dim.setDate(lun.getDate() + 6);
@@ -4940,6 +5044,32 @@ html.ms-plein,html.ms-plein body{overflow:hidden}
 .sc-row.off .sc-st{background:#E5E8EB;color:#5B6670}
 .btn.sc-conf{background:#D7263D!important;border-color:#D7263D!important;color:#fff!important}
 .sc-h{margin:18px 0 6px;font-size:1rem}
+.gr-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 12px}
+.gr-tabs button{all:unset;cursor:pointer;font-weight:700;font-size:.88rem;padding:.45em .9em;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--ink);display:inline-flex;align-items:center;gap:6px}
+.gr-tabs button[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.gr-tabs button:focus-visible{outline:2px solid var(--yellow);outline-offset:2px}
+.gr-badge{font-style:normal;font-size:.72rem;font-weight:800;min-width:1.5em;text-align:center;border-radius:999px;padding:.1em .45em;background:#D7263D;color:#fff}
+.gr-badge[hidden],.gr-pane[hidden],.gr-form[hidden]{display:none}
+.gr-form{border:1px solid var(--line);border-radius:12px;padding:12px;margin:0 0 12px}
+.gr-form .field{margin-bottom:8px}
+.gr-list{display:grid;gap:8px}
+.gr-it{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fff}
+.gr-it.att{border-color:#E8A317;box-shadow:inset 3px 0 0 #E8A317}
+.gr-it.non{box-shadow:inset 3px 0 0 #D7263D}.gr-it.oui{box-shadow:inset 3px 0 0 var(--green)}
+.gr-hd{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline}
+.gr-hd b{font-size:.95rem}.gr-hd small{color:var(--muted);font-size:.8rem}
+.gr-it p{margin:4px 0 0;font-size:.92rem;white-space:pre-wrap}
+.gr-rep{margin-top:6px;font-size:.86rem;color:#3D444D;background:var(--soft);border-radius:8px;padding:6px 9px}
+.gr-st{font-style:normal;font-weight:700;font-size:.74rem;border-radius:999px;padding:.2em .65em;white-space:nowrap}
+.gr-st.att{background:#FFF4D6;color:#8A5A00}.gr-st.oui{background:var(--green-soft);color:var(--green)}.gr-st.non{background:#FDE7EA;color:#B3132B}.gr-st.neu{background:#E9EDF1;color:#3D444D}
+.gr-act{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.gr-act input{flex:1 1 180px;min-width:0;font:inherit;font-size:.9rem;padding:.45em .7em;border:1px solid var(--line);border-radius:10px}
+.gr-sem{font-weight:700;margin:0 0 8px}
+.gr-ch{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px;margin-top:8px}
+.gr-ch span{background:var(--soft);border-radius:8px;padding:6px 9px;font-size:.84rem}.gr-ch b{display:block;font-size:1rem}
+.gr-grow{flex:1}
+#sd-grRapChiffres{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))!important;gap:8px!important}
+@media (max-width:600px){#sd-grRapChiffres{grid-template-columns:repeat(2,minmax(0,1fr))!important}#sd-grRapChiffres div{padding:8px 10px!important}#sd-grRapChiffres b{font-size:1.1rem!important}}
 .sc-form{grid-column:1/-1;border-top:1px dashed var(--line);padding-top:10px;margin-top:4px}
 .sc-form[hidden]{display:none}
 .sc-form .field{margin-bottom:8px}
