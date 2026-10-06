@@ -19,14 +19,17 @@ Deno.serve(async (req) => {
   try { p = await req.json(); } catch { return json({ erreur: "requête illisible" }, 400); }
 
   let roles: string[] | null = null, exclure: string | null = null, seulement: string | null = null;
+  let mentionnes: string[] = [], auteurPrenom = "", canalNom = "";
   let note: { title: string; body: string; url: string; tag: string } | null = null;
 
   if (p.type === "message") {
-    const [m] = await sql`select m.texte, m.canal, m.auteur, c.nom as canal_nom, c.roles, pr.nom as auteur_nom, pr.role as auteur_role
+    const [m] = await sql`select m.texte, m.canal, m.auteur, m.mentions, m.fichier, c.nom as canal_nom, c.roles, pr.nom as auteur_nom, pr.role as auteur_role
                             from public.messages m join public.canaux c on c.id = m.canal join public.profils pr on pr.id = m.auteur where m.id = ${p.id ?? 0}`;
     if (!m) return json({ envoyes: 0, raison: "message introuvable" });
-    roles = m.roles; exclure = m.auteur;
-    note = { title: prenom(m.auteur_nom) + " (" + (ROLE[m.auteur_role] || "Équipe") + ") · " + m.canal_nom, body: m.texte.length > 180 ? m.texte.slice(0, 177) + "…" : m.texte, url: "/equipe/?canal=" + m.canal, tag: "canal-" + m.canal };
+    roles = m.roles; exclure = m.auteur; mentionnes = m.mentions || [];
+    const corpsTexte = (m.fichier ? (String(m.fichier.type || "").startsWith("image/") ? "📷 Photo" : "📎 " + (m.fichier.nom || "Fichier")) + (m.texte && m.texte !== m.fichier.nom ? " · " : "") : "") + (m.texte && (!m.fichier || m.texte !== m.fichier.nom) ? m.texte : "");
+    note = { title: prenom(m.auteur_nom) + " (" + (ROLE[m.auteur_role] || "Équipe") + ") · " + m.canal_nom, body: corpsTexte.length > 180 ? corpsTexte.slice(0, 177) + "…" : corpsTexte, url: "/equipe/?canal=" + m.canal, tag: "canal-" + m.canal };
+    auteurPrenom = prenom(m.auteur_nom); canalNom = m.canal_nom;
   } else if (p.type === "preinscription") {
     const [e] = await sql`select id, nom, formation, source from public.eleves where id = ${p.id ?? 0}`;
     if (!e || e.source !== "site") return json({ envoyes: 0, raison: "pas une pré-inscription du site" });
@@ -49,10 +52,11 @@ Deno.serve(async (req) => {
   const cibles = abos.filter((a) => (seulement ? a.profil === seulement : (!roles || roles.includes(a.role)) && a.profil !== exclure));
   webpush.setVapidDetails(cfg.vapid_sujet, cfg.vapid_public, cfg.vapid_private);
   const corps = JSON.stringify(note);
+  const corpsMention = note && mentionnes.length ? JSON.stringify({ ...note, title: auteurPrenom + " t'a mentionné · " + canalNom }) : corps; // @mention : titre dédié
   let envoyes = 0, echecs = 0, retires = 0;
   await Promise.all(cibles.map(async (a) => {
     try {
-      await webpush.sendNotification({ endpoint: a.endpoint, keys: { p256dh: a.p256dh, auth: a.auth } }, corps, { TTL: 86400, urgency: "high" });
+      await webpush.sendNotification({ endpoint: a.endpoint, keys: { p256dh: a.p256dh, auth: a.auth } }, mentionnes.includes(a.profil) ? corpsMention : corps, { TTL: 86400, urgency: "high" });
       envoyes++;
     } catch (e) {
       const code = (e as { statusCode?: number }).statusCode;

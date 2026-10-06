@@ -1830,14 +1830,14 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 </div>
 <div class="tm-sub"><div><p class="eyebrow">Mode d'emploi</p><h3>Les gestes du moniteur</h3></div></div>
 <div class="grid g2 tm-guides">
-<div class="card soft"><p class="eyebrow">Après chaque cours de code</p><ol class="teamsteps"><li>Dans <b>Cours de code</b>, choisis le thème traité.</li><li>Coche les élèves présents (c'est enregistré tout de suite).</li><li>Touche <b>Cours fait</b>.</li></ol></div>
+<div class="card soft"><p class="eyebrow">Après chaque cours de code</p><ol class="teamsteps"><li>Au début du cours, ouvre <b>Cours de code</b> : le programme du jour s'affiche.</li><li>Fais l'appel : coche les élèves présents.</li><li>Touche <b>Valider les présences</b> : le cours compte comme fait.</li></ol></div>
 <div class="card soft"><p class="eyebrow">Séances de conduite</p><ol class="teamsteps"><li>Le matin, regarde <b>Mes séances d'aujourd'hui</b>.</li><li>Avant de partir : vérification de la voiture (Outils → check-list du matin).</li><li>Après la séance : <b>Fait</b> ou <b>Absent</b>, et une courte note sur les progrès.</li><li>Avec l'élève, réserve sa prochaine séance dans <b>Réserver une séance</b>.</li></ol></div>
 </div></div>
 <div class="mf-ov" id="sd-mfOv" hidden><div class="mf-box" id="sd-mfBox" role="dialog" aria-modal="true" aria-label="Fiche de l'élève"></div></div>
 <div class="tm-pane" data-pane="msg" role="tabpanel" hidden>
-<p class="tm-role">Les échanges de l'équipe, rangés par canal. Écris le numéro d'un élève (par exemple SO12) : il devient un lien vers sa fiche.</p>
+<p class="tm-role">Les échanges de l'équipe. Le cadenas indique une conversation privée : seules les personnes nommées en haut de la conversation la lisent. Écris @ pour prévenir quelqu'un, SO12 pour ouvrir la fiche d'un élève, et le trombone pour joindre une photo ou un document.</p>
 <div class="ms-notif" id="sd-msNotif"></div>
-<div class="ms-wrap card"><nav class="ms-canaux" id="sd-msCanaux" aria-label="Canaux"></nav><section class="ms-fil"><header class="ms-head" id="sd-msHead"></header><div class="ms-list" id="sd-msList" aria-live="polite"><p class="ms-vide">Chargement…</p></div><form class="ms-form" id="sd-msForm" novalidate><textarea id="sd-msTxt" rows="1" maxlength="2000" placeholder="Écrire un message…" aria-label="Message"></textarea><button class="btn btn-green" type="submit" aria-label="Envoyer"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button></form></section></div>
+<div class="ms-wrap card" id="sd-msWrap"><nav class="ms-canaux" id="sd-msCanaux" aria-label="Conversations"></nav><section class="ms-fil"><header class="ms-head"><button type="button" class="ms-back" id="sd-msBack" aria-label="Retour aux conversations"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button><div class="ms-hd" id="sd-msHead"></div></header><div class="ms-list" id="sd-msList" aria-live="polite"><p class="ms-vide">Chargement…</p></div><div class="ms-sug" id="sd-msSug" role="listbox" aria-label="Mentionner" hidden></div><div class="ms-pj" id="sd-msPj" hidden></div><form class="ms-form" id="sd-msForm" novalidate><label class="ms-clip" title="Joindre une photo ou un fichier" aria-label="Joindre une photo ou un fichier"><input type="file" id="sd-msFile" accept="image/*,.pdf,.txt,.doc,.docx,.xls,.xlsx"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.4 11.1l-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a2 2 0 0 1-2.8-2.8l8.5-8.5"/></svg></label><textarea id="sd-msTxt" rows="1" maxlength="2000" placeholder="Message… (@ pour mentionner)" aria-label="Message"></textarea><button class="btn btn-green" id="sd-msSend" type="submit" aria-label="Envoyer"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button></form></section></div>
 </div>
 <div class="tm-pane" data-pane="docs" role="tabpanel" hidden>
 <p class="tm-role">Supports de communication et documents officiels SODAF, à télécharger ou à envoyer à l'imprimeur.</p>
@@ -2725,7 +2725,7 @@ function init(root) {
       if (t === "mon") { const slot = $("#sd-mnPlanSlot"); if (cdSec.parentNode !== slot) slot.appendChild(cdSec); cdSec.hidden = false; (eleves.length ? Promise.resolve() : loadEleves(true)).then(() => loadDay()); }
       else if (cdSec.parentNode !== cdHome.p) { cdHome.p.insertBefore(cdSec, cdHome.n); const on = $('#sd-secNav button[aria-selected="true"]'); cdSec.hidden = !on || on.dataset.s !== "conduite"; }
     };
-    const pick = (t) => { if (t === "sec" && me && me.role === "moniteur") t = "mon"; tabs.forEach((b) => b.setAttribute("aria-selected", b.dataset.t === t)); panes.forEach((p) => (p.hidden = p.dataset.pane !== t)); try { S.set("tmTab", t); } catch (e) {} placePlanning(t); if (t === "mon") loadMon(); if (t === "dir") loadDir(); if (t === "msg") { MS.forceBas = true; msRender(); msNotifBox(); if (!isWide()) setTimeout(() => $(".ms-wrap").scrollIntoView({ block: "start" }), 60); } };
+    const pick = (t) => { if (t === "sec" && me && me.role === "moniteur") t = "mon"; if (t === "mon" && me && me.role === "secretariat") t = "sec"; tabs.forEach((b) => b.setAttribute("aria-selected", b.dataset.t === t)); panes.forEach((p) => (p.hidden = p.dataset.pane !== t)); try { S.set("tmTab", t); } catch (e) {} placePlanning(t); if (t === "mon" || (t === "sec" && $("#sd-secAuj"))) loadMon(); if (t === "dir") loadDir(); msVoirFil(false); if (t === "msg") { MS.forceBas = true; msRender(); msNotifBox(); if (!isWide()) setTimeout(() => $(".ms-wrap").scrollIntoView({ block: "start" }), 60); } };
     tabs.forEach((b) => b.addEventListener("click", () => pick(b.dataset.t)));
     const subs = $$("#sd-secNav button[data-s]"), secs = $$(".tm-sec");
     const LOAD = { eleves: () => loadEleves(), conduite: () => loadDay(), paiements: () => loadPay(), devoirs: () => loadDev() };
@@ -2778,11 +2778,20 @@ function init(root) {
     // ---- Messages de l'équipe (canaux) et notifications sur téléphone
     // La base envoie les notifications (fonction « notifier ») ; ici : lire, écrire, compter les non-lus, activer les notifications.
     const VAPID_PUB = "BOMPgiFqajAv-Mqb1SXD7WOGWJVEK_sDJQGULUCSgV5eAm10bOq7WctPkE51LqGgFHqe4S2y2COGmt0DWbWMv8o";
-    const MS = { canaux: [], cur: null, msgs: {}, lu: {}, profs: {}, dernier: null, pret: false, envoi: false, total: 0, forceBas: false };
+    const MS = { canaux: [], cur: null, msgs: {}, lu: {}, profs: {}, dernier: null, pret: false, envoi: false, total: 0, forceBas: false, urls: {}, pj: null, sug: [], sugI: 0 };
     const msRole = { admin: "Direction", secretariat: "Secrétariat", moniteur: "Moniteur" };
-    const msOpen = () => !$('.tm-pane[data-pane="msg"]').hidden && !document.hidden;
+    const msLarge = () => matchMedia("(min-width: 761px)").matches;
+    // Téléphone : liste des conversations d'abord, puis la conversation en plein écran (bouton retour ou geste retour du téléphone)
+    function msVoirFil(on) {
+      const w = document.getElementById("sd-msWrap"); if (!w) return;
+      const avant = w.classList.contains("voir-fil"); w.classList.toggle("voir-fil", !!on); document.documentElement.classList.toggle("ms-plein", !!on && !msLarge());
+      if (on && !avant && !msLarge()) { try { history.pushState({ sdMsFil: 1 }, ""); } catch (e) {} }
+    }
+    window.addEventListener("popstate", () => { const w = document.getElementById("sd-msWrap"); if (w && w.classList.contains("voir-fil")) msVoirFil(false); });
+    const msFilVu = () => msLarge() || $("#sd-msWrap").classList.contains("voir-fil");
+    const msOpen = () => !$('.tm-pane[data-pane="msg"]').hidden && !document.hidden && msFilVu();
     async function msInit() {
-      const [c, l, p, m] = await Promise.all([run(() => DB.q("canaux?select=*&order=ordre")), run(() => DB.q("lectures?select=*")), run(() => DB.q("profils?select=id,nom,role")), run(() => DB.q("messages?select=*&order=le.desc&limit=400"))]);
+      const [c, l, p, m] = await Promise.all([run(() => DB.q("canaux?select=*&order=ordre")), run(() => DB.q("lectures?select=*")), run(() => DB.q("profils?select=id,nom,role,actif")), run(() => DB.q("messages?select=*&order=le.desc&limit=400"))]);
       if (!c || !c.length) return;
       MS.canaux = c; (l || []).forEach((x) => (MS.lu[x.canal] = x.lu_le)); (p || []).forEach((x) => (MS.profs[x.id] = x));
       MS.msgs = {}; c.forEach((k) => (MS.msgs[k.id] = []));
@@ -2796,23 +2805,77 @@ function init(root) {
     async function msLu(k) { const t = new Date().toISOString(); MS.lu[k] = t; msBadge(); msChans(); try { await DB.q("lectures?on_conflict=profil,canal", { method: "POST", body: { canal: k, lu_le: t }, prefer: "resolution=merge-duplicates,return=minimal" }); } catch (e) {} }
     const msJour = (d) => { const x = new Date(d), n = new Date(), h = new Date(n.getFullYear(), n.getMonth(), n.getDate() - 1); return x.toDateString() === n.toDateString() ? "Aujourd'hui" : x.toDateString() === h.toDateString() ? "Hier" : x.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" }).replace(/^./, (c) => c.toUpperCase()); };
     const msHeure = (d) => new Date(d).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
-    const msTexte = (t) => esc(t).replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>').replace(/\b[Ss][Oo] ?(\d{1,6})\b/g, (m, id) => (eleves.some((x) => x.id === +id) ? '<button type="button" class="ms-el" data-goel="' + id + '">SO' + id + "</button>" : m)).replace(/\n/g, "<br>");
-    function msChans() { const el = $("#sd-msCanaux"); if (el) el.innerHTML = MS.canaux.map((k) => { const n = msNonLus(k.id); return '<button type="button" class="ms-ch' + (k.id === MS.cur ? " on" : "") + '" data-ch="' + esc(k.id) + '"><b># ' + esc(k.nom) + "</b>" + (n ? "<em>" + n + "</em>" : "") + "<small>" + esc(k.description || "") + "</small></button>"; }).join(""); }
+    const msQuand = (d) => { const j = msJour(d); return j === "Aujourd'hui" ? msHeure(d) : j === "Hier" ? "Hier" : new Date(d).toLocaleDateString("fr-FR", { day: "numeric", month: "short" }); };
+    const msPrenom = (p) => ((p && p.nom) || "Équipe").trim().split(/\s+/)[0];
+    const msPlat = (t) => (t || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+    // Membres d'une conversation : comptes actifs dont le rôle y a accès
+    const msMembres = (k) => Object.values(MS.profs).filter((p) => p.actif !== false && (!k.roles || k.roles.includes(p.role)));
+    const msTaille = (n) => (n >= 1048576 ? (n / 1048576).toFixed(1).replace(".", ",") + " Mo" : Math.max(1, Math.round(n / 1024)) + " Ko");
+    const msEstImg = (f) => f && /^image\//.test(f.type || "");
+    function msTexte(t, x) {
+      const noms = Object.values(MS.profs).filter((p) => p.actif !== false).map(msPrenom), moiNom = msPlat(msPrenom(MS.profs[me.id]));
+      return esc(t).replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>')
+        .replace(/\b[Ss][Oo] ?(\d{1,6})\b/g, (m, id) => (eleves.some((y) => y.id === +id) ? '<button type="button" class="ms-el" data-goel="' + id + '">SO' + id + "</button>" : m))
+        .replace(/(^|[\s(])@([A-Za-zÀ-ÿ][\wÀ-ÿ'-]*)/g, (m, av, n) => (noms.some((y) => msPlat(y) === msPlat(n)) ? av + '<span class="ms-at' + (msPlat(n) === moiNom ? " moi" : "") + '">@' + n + "</span>" : m))
+        .replace(/\n/g, "<br>");
+    }
+    const msApercu = (x) => { if (!x) return "Aucun message"; const p = MS.profs[x.auteur], f = x.fichier, t = f ? (msEstImg(f) ? "📷 Photo" : "📎 " + (f.nom || "Fichier")) + (x.texte && x.texte !== f.nom ? " · " + x.texte : "") : x.texte; return (x.auteur === me.id ? "Toi" : msPrenom(p)) + " : " + t.replace(/\s+/g, " "); };
+    const IC_LOCK = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+    // Qui lit la conversation (affiché en haut) : la règle de confidentialité doit se voir
+    function msQui(k) {
+      const mb = msMembres(k).map((p) => msPrenom(p) === msRole[p.role] ? msRole[p.role] : msPrenom(p) + " (" + (msRole[p.role] || "") + ")");
+      if (!k.roles) return "Toute l'équipe";
+      if (k.id === "planning") { if (me.role === "admin") return "Privé entre le secrétariat et le moniteur · tu peux lire (supervision)"; return "Privé · " + msMembres(k).filter((p) => p.role !== "admin").map((p) => msPrenom(p) + " (" + (msRole[p.role] || "") + ")").join(" et ") + " · la direction peut lire"; }
+      return "Privé · lu seulement par : " + (mb.join(" et ") || k.roles.map((r) => msRole[r] || r).join(" et "));
+    }
+    function msChans() {
+      const el = $("#sd-msCanaux"); if (!el) return;
+      const ligne = (k) => { const n = msNonLus(k.id), l = MS.msgs[k.id] || [], d = l[l.length - 1]; return '<button type="button" class="ms-ch' + (k.id === MS.cur ? " on" : "") + (n ? " nl" : "") + '" data-ch="' + esc(k.id) + '"><i class="ms-ic' + (k.prive ? " pv" : "") + '">' + (k.prive ? IC_LOCK : "#") + "</i><b>" + esc(k.nom) + "</b><time>" + (d ? esc(msQuand(d.le)) : "") + "</time><small>" + esc(msApercu(d)) + "</small>" + (n ? "<em>" + n + "</em>" : "") + "</button>"; };
+      const pub = MS.canaux.filter((k) => !k.prive), pv = MS.canaux.filter((k) => k.prive);
+      el.innerHTML = (pub.length ? '<p class="ms-sec">Canaux</p>' + pub.map(ligne).join("") : "") + (pv.length ? '<p class="ms-sec">Messages privés</p>' + pv.map(ligne).join("") : "");
+    }
+    function msBulle(x) {
+      const f = x.fichier; let h = "";
+      if (f && f.path) {
+        if (msEstImg(f)) h += '<button type="button" class="ms-img" data-pj="' + esc(f.path) + '" aria-label="Agrandir la photo"><img alt="' + esc(f.nom || "Photo") + '" data-sp="' + esc(f.path) + '"' + (f.w && f.h ? ' style="aspect-ratio:' + (+f.w) + "/" + (+f.h) + '"' : "") + "></button>";
+        else h += '<button type="button" class="ms-file" data-pj="' + esc(f.path) + '"><i>' + esc(((f.nom || "").split(".").pop() || "doc").slice(0, 4).toUpperCase()) + "</i><span><b>" + esc(f.nom || "Fichier") + "</b><small>" + (f.taille ? msTaille(f.taille) + " · " : "") + "ouvrir</small></span></button>";
+      }
+      if (x.texte && (!f || x.texte !== f.nom)) h += '<div class="ms-tx">' + msTexte(x.texte, x) + "</div>";
+      return h;
+    }
     function msRender() {
       if (!MS.pret) return; msChans();
       const k = MS.canaux.find((c) => c.id === MS.cur) || MS.canaux[0], list = MS.msgs[k.id] || [];
-      $("#sd-msHead").innerHTML = "<b># " + esc(k.nom) + "</b><span>" + esc(k.description || "") + " · " + (k.roles ? "visible par : " + k.roles.map((r) => msRole[r] || r).join(", ") : "toute l'équipe") + "</span>";
+      $("#sd-msHead").innerHTML = '<b><i class="ms-ic' + (k.prive ? " pv" : "") + '">' + (k.prive ? IC_LOCK : "#") + "</i>" + esc(k.nom) + "</b><span>" + esc(msQui(k)) + "</span>";
       let jour = "", html = "";
       list.forEach((x, i) => {
-        const j = msJour(x.le), p = MS.profs[x.auteur] || { nom: "Équipe", role: "" }, moi = x.auteur === me.id, pv = list[i - 1];
+        const j = msJour(x.le), p = MS.profs[x.auteur] || { nom: "Équipe", role: "" }, moi = x.auteur === me.id, pv = list[i - 1], pourMoi = !moi && (x.mentions || []).includes(me.id);
         if (j !== jour) { jour = j; html += '<p class="ms-day"><span>' + esc(j) + "</span></p>"; }
         const suite = pv && pv.auteur === x.auteur && msJour(pv.le) === j && new Date(x.le) - new Date(pv.le) < 5 * 60000;
-        html += '<div class="ms-m' + (moi ? " moi" : "") + (suite ? " suite" : "") + '">' + (suite ? "" : '<p class="ms-who"><i class="ms-av r-' + esc(p.role) + '">' + esc((p.nom || "?").trim()[0]) + "</i><b>" + esc(moi ? "Moi" : (p.nom || "").split(" ")[0]) + "</b><small>" + esc(msRole[p.role] || "") + " · " + msHeure(x.le) + "</small></p>") + '<div class="ms-b">' + msTexte(x.texte) + (suite ? '<small class="ms-t">' + msHeure(x.le) + "</small>" : "") + "</div></div>";
+        html += '<div class="ms-m' + (moi ? " moi" : "") + (suite ? " suite" : "") + (pourMoi ? " pourmoi" : "") + '">' + (suite ? "" : '<p class="ms-who"><i class="ms-av r-' + esc(p.role) + '">' + esc((p.nom || "?").trim()[0]) + "</i><b>" + esc(moi ? "Moi" : msPrenom(p)) + "</b><small>" + esc(msRole[p.role] || "") + " · " + msHeure(x.le) + "</small></p>") + '<div class="ms-b' + (x.fichier && msEstImg(x.fichier) && x.texte === x.fichier.nom ? " seule" : "") + '">' + msBulle(x) + (suite ? '<small class="ms-t">' + msHeure(x.le) + "</small>" : "") + "</div></div>";
       });
       const box = $("#sd-msList"), bas = box.scrollHeight - box.scrollTop - box.clientHeight < 80;
-      box.innerHTML = html || '<p class="ms-vide">Aucun message dans ce canal pour l\'instant. Écris le premier !</p>';
+      box.innerHTML = html || '<p class="ms-vide">Aucun message ici pour l\'instant. Écris le premier !</p>';
       if (bas || MS.forceBas) { box.scrollTop = box.scrollHeight; MS.forceBas = false; }
+      msSigner();
       if (msOpen() && msNonLus(k.id)) msLu(k.id);
+    }
+    // Fichiers : stockage privé, liens temporaires (1 h) demandés à la base pour ceux qui ont le droit de lire la conversation
+    async function msSigne(paths) {
+      const now = Date.now(), manque = paths.filter((x) => !MS.urls[x] || MS.urls[x].exp < now + 300000);
+      if (manque.length) {
+        try {
+          const t = await DB.token(), r = await fetch(SB_URL + "/storage/v1/object/sign/messages", { method: "POST", headers: { apikey: SB_KEY, Authorization: "Bearer " + t, "Content-Type": "application/json" }, body: JSON.stringify({ expiresIn: 3600, paths: manque }) });
+          if (r.ok) (await r.json()).forEach((y) => { if (y.signedURL) MS.urls[y.path] = { u: SB_URL + "/storage/v1" + y.signedURL, exp: now + 3500000 }; });
+        } catch (e) {}
+      }
+      return paths.map((x) => (MS.urls[x] ? MS.urls[x].u : null));
+    }
+    async function msSigner() {
+      const imgs = [...document.querySelectorAll("#sd-msList img[data-sp]:not([src])")]; if (!imgs.length) return;
+      const u = await msSigne([...new Set(imgs.map((i) => i.dataset.sp))]), m = {}; [...new Set(imgs.map((i) => i.dataset.sp))].forEach((x, i) => (m[x] = u[i]));
+      const box = $("#sd-msList"), bas = box.scrollHeight - box.scrollTop - box.clientHeight < 80;
+      imgs.forEach((i) => { if (m[i.dataset.sp]) { i.src = m[i.dataset.sp]; i.addEventListener("load", () => { if (bas) box.scrollTop = box.scrollHeight; }, { once: true }); } });
     }
     let msTick = 0;
     async function msPoll() { // toutes les 5 s quand l'onglet Messages est ouvert, toutes les 20 s sinon
@@ -2823,21 +2886,96 @@ function init(root) {
       const neuf = (r || []).filter(msAjout); if (!neuf.length) return;
       msBadge(); msRender();
       const autres = neuf.filter((x) => x.auteur !== me.id);
-      if (autres.length && !msOpen()) { const x = autres[autres.length - 1], p = MS.profs[x.auteur]; toast((p ? p.nom.split(" ")[0] : "Équipe") + " : " + x.texte.slice(0, 70)); }
+      if (autres.length && !msOpen()) { const x = autres[autres.length - 1], p = MS.profs[x.auteur]; toast(((x.mentions || []).includes(me.id) ? msPrenom(p) + " t'a mentionné : " : msPrenom(p) + " : ") + msApercu(x).replace(/^[^:]+ : /, "").slice(0, 70)); }
     }
     setInterval(msPoll, 5000);
-    function goEleve(id) { const x = eleves.find((y) => y.id === id); if (!x) { toast("Élève introuvable"); return; } if (me && me.role === "moniteur") { ficheCourte(x); return; } pick("sec"); sub("eleves"); pcStage = etapeOf(x); S.set("pcStage", pcStage); pcSel = id; $("#sd-pcQ").value = ""; renderList(); $("#sd-pc").scrollIntoView({ block: "start" }); }
-    function msOuvrir(c, el) { if (el) { goEleve(el); return; } if (c && MS.msgs[c]) { MS.cur = c; S.set("msCanal", c); } pick("msg"); }
+    function goEleve(id) { const x = eleves.find((y) => y.id === id); if (!x) { toast("Élève introuvable"); return; } if (me && me.role === "moniteur") { ficheCourte(x); return; } msVoirFil(false); pick("sec"); sub("eleves"); pcStage = etapeOf(x); S.set("pcStage", pcStage); pcSel = id; $("#sd-pcQ").value = ""; renderList(); $("#sd-pc").scrollIntoView({ block: "start" }); }
+    function msOuvrir(c, el) { if (el) { goEleve(el); return; } if (c && MS.msgs[c]) { MS.cur = c; S.set("msCanal", c); } pick("msg"); if (c) { msVoirFil(true); MS.forceBas = true; msRender(); } }
     if ("serviceWorker" in navigator) navigator.serviceWorker.addEventListener("message", (e) => { const u = e.data && e.data.sodafOuvrir; if (!u || !me) return; try { const q = new URL(u).searchParams; msOuvrir(q.get("canal"), +q.get("eleve") || 0); } catch (x) {} });
-    $("#sd-msCanaux").addEventListener("click", (e) => { const b = e.target.closest("[data-ch]"); if (!b) return; MS.cur = b.dataset.ch; S.set("msCanal", MS.cur); MS.forceBas = true; msRender(); $("#sd-msTxt").focus(); });
-    $("#sd-msList").addEventListener("click", (e) => { const b = e.target.closest("[data-goel]"); if (b) goEleve(+b.dataset.goel); });
+    $("#sd-msCanaux").addEventListener("click", (e) => { const b = e.target.closest("[data-ch]"); if (!b) return; if (MS.cur !== b.dataset.ch) msPjVider(); MS.cur = b.dataset.ch; S.set("msCanal", MS.cur); MS.forceBas = true; msVoirFil(true); msRender(); if (msLarge()) $("#sd-msTxt").focus(); });
+    $("#sd-msBack").addEventListener("click", () => { if (history.state && history.state.sdMsFil) history.back(); else msVoirFil(false); });
+    $("#sd-msList").addEventListener("click", async (e) => {
+      const b = e.target.closest("[data-goel]"); if (b) { goEleve(+b.dataset.goel); return; }
+      const f = e.target.closest("[data-pj]"); if (!f) return;
+      const w = window.open("", "_blank"); const [u] = await msSigne([f.dataset.pj]);
+      if (!u) { if (w) w.close(); toast("Fichier indisponible"); return; }
+      if (w) w.location = u; else location.href = u;
+    });
     const msTa = $("#sd-msTxt"), msGrow = () => { msTa.style.height = "auto"; msTa.style.height = Math.min(msTa.scrollHeight, 150) + "px"; };
-    msTa.addEventListener("input", msGrow);
-    msTa.addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey && !matchMedia("(pointer: coarse)").matches) { e.preventDefault(); $("#sd-msForm").requestSubmit(); } });
+    // @mentions : propositions parmi les membres de la conversation
+    const msSugEl = $("#sd-msSug");
+    function msSugMaj() {
+      const k = MS.canaux.find((c) => c.id === MS.cur), av = msTa.value.slice(0, msTa.selectionStart), m = av.match(/(^|\s)@([A-Za-zÀ-ÿ'-]*)$/);
+      if (!k || !m) { msSugEl.hidden = true; MS.sug = []; return; }
+      const q = msPlat(m[2]); MS.sug = msMembres(k).filter((p) => p.id !== me.id && msPlat(msPrenom(p)).startsWith(q));
+      if (!MS.sug.length) { msSugEl.hidden = true; return; }
+      MS.sugI = Math.min(MS.sugI, MS.sug.length - 1);
+      msSugEl.innerHTML = MS.sug.map((p, i) => '<button type="button" role="option" class="ms-so' + (i === MS.sugI ? " on" : "") + '" aria-selected="' + (i === MS.sugI) + '" data-so="' + i + '"><i class="ms-av r-' + esc(p.role) + '">' + esc(msPrenom(p)[0]) + "</i><b>@" + esc(msPrenom(p)) + "</b><small>" + esc(msRole[p.role] || "") + "</small></button>").join("");
+      msSugEl.hidden = false;
+    }
+    function msSugPrendre(i) {
+      const p = MS.sug[i]; if (!p) return; const pos = msTa.selectionStart, av = msTa.value.slice(0, pos).replace(/@([A-Za-zÀ-ÿ'-]*)$/, "@" + msPrenom(p) + " ");
+      msTa.value = av + msTa.value.slice(pos); msTa.setSelectionRange(av.length, av.length); msSugEl.hidden = true; MS.sug = []; msTa.focus(); msGrow();
+    }
+    msSugEl.addEventListener("mousedown", (e) => e.preventDefault());
+    msSugEl.addEventListener("click", (e) => { const b = e.target.closest("[data-so]"); if (b) msSugPrendre(+b.dataset.so); });
+    msTa.addEventListener("input", () => { msGrow(); MS.sugI = 0; msSugMaj(); });
+    msTa.addEventListener("click", msSugMaj);
+    msTa.addEventListener("blur", () => setTimeout(() => (msSugEl.hidden = true), 150));
+    msTa.addEventListener("keydown", (e) => {
+      if (!msSugEl.hidden && MS.sug.length) {
+        if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); MS.sugI = (MS.sugI + (e.key === "ArrowDown" ? 1 : MS.sug.length - 1)) % MS.sug.length; msSugMaj(); return; }
+        if (e.key === "Enter" || e.key === "Tab") { e.preventDefault(); msSugPrendre(MS.sugI); return; }
+        if (e.key === "Escape") { msSugEl.hidden = true; return; }
+      }
+      if (e.key === "Enter" && !e.shiftKey && !matchMedia("(pointer: coarse)").matches) { e.preventDefault(); $("#sd-msForm").requestSubmit(); }
+    });
+    // Pièce jointe : photo réduite (1600 px, JPEG) avant l'envoi, autres fichiers tels quels (10 Mo au plus)
+    const MS_TYPES = ["image/jpeg", "image/png", "image/webp", "application/pdf", "text/plain", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"];
+    const MS_EXT = { pdf: "application/pdf", txt: "text/plain", doc: "application/msword", docx: MS_TYPES[6], xls: "application/vnd.ms-excel", xlsx: MS_TYPES[8] };
+    function msReduire(file) {
+      return new Promise((ok) => {
+        const u = URL.createObjectURL(file), im = new Image();
+        im.onload = () => { const r = Math.min(1, 1600 / Math.max(im.naturalWidth, im.naturalHeight)), w = Math.round(im.naturalWidth * r), h = Math.round(im.naturalHeight * r), c = document.createElement("canvas"); c.width = w; c.height = h; const g = c.getContext("2d"); g.fillStyle = "#fff"; g.fillRect(0, 0, w, h); g.drawImage(im, 0, 0, w, h); URL.revokeObjectURL(u); c.toBlob((b) => ok(b ? { blob: b, type: "image/jpeg", w, h } : null), "image/jpeg", 0.8); };
+        im.onerror = () => { URL.revokeObjectURL(u); ok(null); };
+        im.src = u;
+      });
+    }
+    function msPjVider() { if (MS.pj && MS.pj.apercu) URL.revokeObjectURL(MS.pj.apercu); MS.pj = null; const el = $("#sd-msPj"); el.hidden = true; el.innerHTML = ""; $("#sd-msFile").value = ""; }
+    $("#sd-msFile").addEventListener("change", async (e) => {
+      const file = e.target.files && e.target.files[0]; if (!file) return; msPjVider();
+      const ext = (file.name.split(".").pop() || "").toLowerCase(); let pj = null;
+      if (/^image\//.test(file.type) || /^(jpe?g|png|webp|heic|heif)$/.test(ext)) {
+        const r = await msReduire(file); if (!r) { toast("Photo illisible : essaie en JPEG ou PNG"); return; }
+        pj = { blob: r.blob, type: r.type, nom: file.name.replace(/\.[^.]+$/, "") + ".jpg", ext: "jpg", w: r.w, h: r.h };
+      } else {
+        const type = MS_TYPES.includes(file.type) ? file.type : MS_EXT[ext];
+        if (!type) { toast("Format non accepté : photo, PDF, Word, Excel ou texte"); return; }
+        pj = { blob: file, type, nom: file.name, ext };
+      }
+      if (pj.blob.size > 10485760) { toast("Fichier trop lourd (10 Mo au plus)"); return; }
+      pj.taille = pj.blob.size; MS.pj = pj;
+      if (pj.w) pj.apercu = URL.createObjectURL(pj.blob);
+      const el = $("#sd-msPj"); el.innerHTML = (pj.apercu ? '<img src="' + pj.apercu + '" alt="">' : '<i class="ms-fic">' + esc(pj.ext.slice(0, 4).toUpperCase()) + "</i>") + "<span><b>" + esc(pj.nom) + "</b><small>" + msTaille(pj.taille) + " · ajoute un message si tu veux, puis Envoyer</small></span>" + '<button type="button" class="ms-pjx" aria-label="Retirer la pièce jointe">×</button>';
+      el.hidden = false; msTa.focus();
+    });
+    $("#sd-msPj").addEventListener("click", (e) => { if (e.target.closest(".ms-pjx")) msPjVider(); });
+    async function msEnvoyerFichier(canal, pj) {
+      const path = canal + "/" + Date.now() + "-" + Math.random().toString(36).slice(2, 8) + "." + pj.ext, t = await DB.token();
+      const r = await fetch(SB_URL + "/storage/v1/object/messages/" + path, { method: "POST", headers: { apikey: SB_KEY, Authorization: "Bearer " + t, "Content-Type": pj.type, "x-upsert": "false" }, body: pj.blob });
+      if (!r.ok) { const j = await r.json().catch(() => ({})); throw new Error(j.message || "Envoi du fichier impossible"); }
+      const f = { path, nom: pj.nom.slice(0, 120), type: pj.type, taille: pj.taille }; if (pj.w) { f.w = pj.w; f.h = pj.h; } return f;
+    }
     $("#sd-msForm").addEventListener("submit", async (e) => {
-      e.preventDefault(); const t = msTa.value.trim(); if (!t || MS.envoi || !MS.cur) return;
-      MS.envoi = true; const r = await run(() => DB.q("messages", { method: "POST", body: { canal: MS.cur, texte: t }, prefer: "return=representation" })); MS.envoi = false;
-      if (r && r[0]) { msTa.value = ""; msGrow(); msAjout(r[0]); MS.forceBas = true; msRender(); }
+      e.preventDefault(); const t = msTa.value.trim(), pj = MS.pj; if ((!t && !pj) || MS.envoi || !MS.cur) return;
+      const k = MS.canaux.find((c) => c.id === MS.cur), mentions = k ? msMembres(k).filter((p) => p.id !== me.id && new RegExp("(^|[\\s(])@" + msPrenom(p).replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "(?![\\wÀ-ÿ])", "i").test(t)).map((p) => p.id) : [];
+      MS.envoi = true; const btn = $("#sd-msSend"); btn.disabled = true; btn.classList.add("wait");
+      let fichier = null;
+      if (pj) { try { fichier = await msEnvoyerFichier(MS.cur, pj); } catch (x) { toast(x.message || "Envoi du fichier impossible"); MS.envoi = false; btn.disabled = false; btn.classList.remove("wait"); return; } }
+      const body = { canal: MS.cur, texte: t || fichier.nom }; if (mentions.length) body.mentions = mentions; if (fichier) body.fichier = fichier;
+      const r = await run(() => DB.q("messages", { method: "POST", body, prefer: "return=representation" }));
+      MS.envoi = false; btn.disabled = false; btn.classList.remove("wait");
+      if (r && r[0]) { msTa.value = ""; msGrow(); msPjVider(); msAjout(r[0]); MS.forceBas = true; msRender(); }
     });
     // Notifications : activer, tester, désactiver (par téléphone)
     const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
@@ -2872,6 +3010,17 @@ function init(root) {
       }
     });
 
+    // Secrétariat : pas d'onglet Moniteur. Les cours de code et les séances de conduite du jour sont en bas de sa page (dépliable), avec l'appel si le moniteur ne l'a pas fait.
+    function secAujourdhui() {
+      if ($("#sd-secAuj")) return;
+      $('#sd-tmTabs [data-t="mon"]').hidden = true;
+      const d = document.createElement("details"); d.className = "card tm-auj"; d.id = "sd-secAuj"; d.open = S.get("secAuj", "1") === "1";
+      d.innerHTML = '<summary><span><b>Aujourd\'hui</b><small id="sd-secAujSum">Cours de code et séances de conduite du jour</small></span><em>Voir / replier</em></summary><div id="sd-secAujSlot"></div>';
+      $('.tm-pane[data-pane="sec"]').appendChild(d);
+      const g = $('.tm-pane[data-pane="mon"] .tm-mon'); if (g) $("#sd-secAujSlot").appendChild(g);
+      const h = $("#sd-mcDrive .tm-h3"); if (h) h.textContent = "Séances de conduite d'aujourd'hui";
+      d.addEventListener("toggle", () => { S.set("secAuj", d.open ? "1" : "0"); if (d.open) loadMon(); });
+    }
     async function start() {
       const s = DB.session; if (!s) { show(false); return; }
       const rows = await run(() => DB.q("profils?select=nom,role,actif&id=eq." + s.user.id));
@@ -2887,6 +3036,7 @@ function init(root) {
       const dirTab = $('#sd-tmTabs [data-t="dir"]'); dirTab.hidden = me.role !== "admin";
       $('#sd-tmTabs [data-t="sec"]').hidden = me.role === "moniteur"; // le moniteur a son espace : cours, conduite, réservations, messages
       { const pb = $('#sd-secNav [data-s="paiements"]'); if (pb) pb.hidden = me.role === "moniteur"; } // reçus : direction et secrétariat seulement (règle aussi dans la base)
+      if (me.role === "secretariat") secAujourdhui();
       await loadEleves(true);
       let t0 = S.get("tmTab", me.role === "admin" ? "dir" : me.role === "moniteur" ? "mon" : "sec"); if (t0 === "dir" && me.role !== "admin") t0 = "sec";
       pick(t0);
@@ -3726,13 +3876,15 @@ function init(root) {
         }
       }
       const c = await run(() => DB.q("creneaux_conduite?select=*&jour=eq." + today + "&eleve_id=not.is.null"));
+      if ($("#sd-secAujSum") && s0 && c) { const nc = s0.filter((x) => x.jour === today && (!x.groupe || eleves.some((y) => y.groupe_code === x.groupe && enCode(y) && !susp(y) && cycleOk(y)))), af = nc.filter((x) => x.statut !== "Fait").length, rs = c.filter((x) => x.statut === "Réservé").length; $("#sd-secAujSum").textContent = (nc.length ? nc.length + " cours de code" + (af ? " (" + af + " appel" + (af > 1 ? "s" : "") + " à faire)" : " · appel fait") : "Pas de cours de code") + " · " + (c.length ? c.length + " séance" + (c.length > 1 ? "s" : "") + " de conduite" + (rs ? " (" + rs + " à venir)" : "") : "pas de conduite"); }
       if (c) {
         c.sort((a, b) => hmin(a.heure) - hmin(b.heure));
-        $("#sd-mcList").innerHTML = c.length ? c.map((x) => { const el = eleves.find((y) => y.id === x.eleve_id) || { nom: "Élève", quota: null }; const num = el.quota ? (el.faits || 0) + (x.statut === "Fait" ? 0 : 1) : 0, ea = el.quota ? Math.max(1, el.quota - 2) : 0, aEval = el.quota && !el.evaluation && (el.faits || 0) >= ea && x.statut === "Fait"; return '<div class="tm-row" data-id="' + x.id + '"><div class="tm-time">' + esc(x.heure) + '</div><div class="tm-main"><b>' + esc(el.nom) + (el.quota ? ' <em class="se-num' + (num >= ea ? " hot" : "") + '">Séance ' + Math.min(num, el.quota) + "/" + el.quota + (num === ea && !el.evaluation ? " · évaluation" : num >= el.quota ? " · dernière" : "") + "</em>" : "") + "</b><span>" + esc(x.statut) + (el.evaluation ? " · " + (el.evaluation === "pret" ? "jugé prêt pour l'examen" : "séances en plus conseillées") : "") + '</span>' + contactEl(el) + (aEval ? '<div class="se-mev"><span>Évaluation : est-il prêt pour l\'examen ?</span><button class="btn btn-green btn-sm" type="button" data-mev="pret" data-el="' + el.id + '">Prêt pour l\'examen</button><button class="btn btn-line btn-sm" type="button" data-mev="plus" data-el="' + el.id + '">Il lui faut des séances en plus</button></div>' : "") + '<input data-note placeholder="Note sur les progrès" value="' + esc(x.note || "") + '"></div><div class="tm-acts"><button class="btn btn-green btn-sm" type="button" data-set="Fait">Fait</button><button class="btn btn-line btn-sm" type="button" data-set="Absent">Absent</button></div></div>'; }).join("") : '<p class="tm-empty">Aucune séance réservée aujourd\'hui.</p>';
+        $("#sd-mcList").innerHTML = c.length ? c.map((x) => { const el = eleves.find((y) => y.id === x.eleve_id) || { nom: "Élève", quota: null }; const num = el.quota ? (el.faits || 0) + (x.statut === "Fait" ? 0 : 1) : 0, ea = el.quota ? Math.max(1, el.quota - 2) : 0, aEval = el.quota && !el.evaluation && (el.faits || 0) >= ea && x.statut === "Fait"; return '<div class="tm-row" data-id="' + x.id + '"><div class="tm-time">' + esc(x.heure) + '</div><div class="tm-main"><b>' + (el.id ? '<button type="button" class="ms-el" data-goel="' + el.id + '">' + esc(el.nom) + "</button>" : esc(el.nom)) + (el.quota ? ' <em class="se-num' + (num >= ea ? " hot" : "") + '">Séance ' + Math.min(num, el.quota) + "/" + el.quota + (num === ea && !el.evaluation ? " · évaluation" : num >= el.quota ? " · dernière" : "") + "</em>" : "") + "</b><span>" + esc(x.statut) + (el.evaluation ? " · " + (el.evaluation === "pret" ? "jugé prêt pour l'examen" : "séances en plus conseillées") : "") + '</span>' + contactEl(el) + (aEval ? '<div class="se-mev"><span>Évaluation : est-il prêt pour l\'examen ?</span><button class="btn btn-green btn-sm" type="button" data-mev="pret" data-el="' + el.id + '">Prêt pour l\'examen</button><button class="btn btn-line btn-sm" type="button" data-mev="plus" data-el="' + el.id + '">Il lui faut des séances en plus</button></div>' : "") + '<input data-note placeholder="Note sur les progrès" value="' + esc(x.note || "") + '"></div><div class="tm-acts"><button class="btn btn-green btn-sm" type="button" data-set="Fait">Fait</button><button class="btn btn-line btn-sm" type="button" data-set="Absent">Absent</button></div></div>'; }).join("") : '<p class="tm-empty">Aucune séance réservée aujourd\'hui.</p>';
       }
     }
     $("#sd-mcCode").addEventListener("click", (e) => { const b = e.target.closest("[data-mses]"); if (b) { monIdx = +b.dataset.mses; loadMon(); } });
     $("#sd-mcList").addEventListener("click", async (e) => {
+      const ge = e.target.closest("[data-goel]"); if (ge) { goEleve(+ge.dataset.goel); return; }
       const ev = e.target.closest("[data-mev]");
       if (ev) { const el = eleves.find((y) => y.id === +ev.dataset.el); if (el) { const v = ev.dataset.mev; await run(() => DB.q("eleves?id=eq." + el.id, { method: "PATCH", body: { evaluation: v, evaluation_le: new Date().toISOString() }, prefer: "return=minimal" }), v === "pret" ? "Noté : prêt pour l'examen" : "Noté : séances en plus conseillées"); await addSuivi(el, "Note", v === "pret" ? "Évaluation (moniteur) : prêt pour l'examen" : "Évaluation (moniteur) : séances en plus conseillées"); await loadEleves(true); loadMon(); } return; }
       const b = e.target.closest("[data-set]"); if (!b) return; const row = b.closest("[data-id]");
@@ -4301,32 +4453,88 @@ html:has(#sodaf-root.app-mode),body:has(#sodaf-root.app-mode){background:#ECEFEE
 .ms-notif{display:grid;gap:4px;border-radius:14px;padding:12px 16px;margin-bottom:14px;background:#FFF6D6;border-left:5px solid #E0A400}
 .ms-notif.on{background:var(--green-soft);border-left-color:var(--green)}.ms-notif.off{background:var(--soft);border-left-color:#9AA3AB}
 .ms-notif:empty{display:none}.ms-notif b{font-weight:700}.ms-notif span{font-size:.9rem;color:#3D444D}.ms-na{display:flex;gap:16px;align-items:center;margin-top:6px;flex-wrap:wrap}
-.ms-wrap{display:grid;grid-template-columns:250px 1fr;padding:0!important;overflow:hidden}
-.ms-canaux{background:var(--asph);padding:10px;display:flex;flex-direction:column;gap:4px}
-.ms-ch{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:1fr auto;gap:2px 8px;padding:10px 12px;border-radius:10px}
-.ms-ch b{color:#fff;font-weight:600;font-size:.95rem}.ms-ch small{grid-column:1/-1;font-size:.76rem;color:#8D96A0;line-height:1.3}
-.ms-ch em{font-style:normal;background:var(--yellow);color:var(--asph);font-weight:800;font-size:.75rem;border-radius:999px;padding:.12em .55em;align-self:center}
-.ms-ch:hover{background:rgba(255,255,255,.06)}.ms-ch.on{background:rgba(255,255,255,.12)}.ms-ch.on b{color:var(--yellow)}.ms-ch:focus-visible{outline:2px solid var(--yellow)}
-.ms-fil{display:flex;flex-direction:column;min-width:0}
-.ms-head{padding:12px 16px;border-bottom:1px solid var(--line)}.ms-head b{display:block;font-family:var(--f-display);font-size:1.35rem;line-height:1.1}.ms-head span{font-size:.84rem;color:var(--muted)}
-.ms-list{flex:1;overflow:auto;padding:8px 16px 14px;height:56vh;min-height:300px;background:#F6F7F7}
-.ms-day{text-align:center;margin:14px 0 4px!important}.ms-day span{font-size:.76rem;font-weight:700;color:var(--muted);background:#fff;border:1px solid var(--line);border-radius:999px;padding:.2em .8em}
-.ms-m{margin-top:12px;max-width:78%}.ms-m.suite{margin-top:3px}.ms-m.moi{margin-left:auto}
+.ms-wrap{display:grid;grid-template-columns:300px 1fr;padding:0!important;overflow:hidden;border:1px solid var(--line)}
+.ms-canaux{background:var(--asph);padding:10px 8px 14px;display:flex;flex-direction:column;gap:2px;overflow:auto;max-height:calc(56vh + 140px)}
+.ms-sec{margin:12px 10px 4px!important;font:700 .7rem/1 var(--f-ui);letter-spacing:.09em;text-transform:uppercase;color:#7F8994}
+.ms-sec:first-child{margin-top:4px!important}
+.ms-ch{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:30px 1fr auto;grid-template-rows:auto auto;column-gap:10px;row-gap:1px;align-items:center;padding:9px 10px;border-radius:10px}
+.ms-ch .ms-ic{grid-row:1/3}
+.ms-ch b{color:#E8ECEF;font-weight:600;font-size:.93rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ms-ch time{font-size:.72rem;color:#7F8994;justify-self:end}
+.ms-ch small{grid-column:2/3;font-size:.8rem;color:#98A2AC;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.35}
+.ms-ch em{grid-column:3;grid-row:2;justify-self:end;font-style:normal;background:var(--yellow);color:var(--asph);font-weight:800;font-size:.72rem;border-radius:999px;padding:.15em .55em;min-width:1.5em;text-align:center}
+.ms-ch.nl b{color:#fff;font-weight:800}.ms-ch.nl small{color:#D5DBE0}.ms-ch.nl time{color:var(--yellow)}
+.ms-ch:hover{background:rgba(255,255,255,.06)}.ms-ch.on{background:rgba(255,255,255,.13)}.ms-ch.on b{color:var(--yellow)}.ms-ch:focus-visible{outline:2px solid var(--yellow)}
+.ms-ic{font-style:normal;display:grid;place-items:center;width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,.1);color:#C9D1D8;font-weight:800;font-size:1rem}
+.ms-ic.pv{background:rgba(255,204,0,.16);color:var(--yellow)}
+.ms-fil{display:flex;flex-direction:column;min-width:0;position:relative;background:#fff}
+.ms-head{display:flex;align-items:center;gap:6px;padding:10px 16px;border-bottom:1px solid var(--line);background:#fff}
+.ms-back{all:unset;cursor:pointer;display:none;place-items:center;width:38px;height:38px;border-radius:10px;margin-left:-8px;color:var(--asph)}.ms-back:focus-visible{outline:2px solid var(--green)}
+.ms-hd{min-width:0}
+.ms-hd b{display:flex;align-items:center;gap:8px;font-family:var(--f-display);font-size:1.25rem;line-height:1.15}
+.ms-hd b .ms-ic{width:26px;height:26px;font-size:.9rem;background:var(--soft);color:var(--asph)}.ms-hd b .ms-ic.pv{background:#FFF1BF;color:#8A6500}
+.ms-hd span{display:block;font-size:.82rem;color:var(--muted);margin-top:2px}
+.ms-list{flex:1;overflow:auto;padding:8px 16px 14px;height:56vh;min-height:300px;background:#F4F5F6}
+.ms-day{text-align:center;margin:14px 0 4px!important}.ms-day span{font-size:.74rem;font-weight:700;color:var(--muted);background:#fff;border:1px solid var(--line);border-radius:999px;padding:.2em .8em}
+.ms-m{margin-top:12px;max-width:76%}.ms-m.suite{margin-top:3px}.ms-m.moi{margin-left:auto}
 .ms-who{display:flex;align-items:center;gap:8px;margin:0 0 4px!important}.ms-m.moi .ms-who{flex-direction:row-reverse}
 .ms-av{font-style:normal;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:#5B6B7D;color:#fff;font-weight:700;font-size:.8rem;flex-shrink:0}
 .ms-av.r-admin{background:var(--asph)}.ms-av.r-secretariat{background:var(--green)}.ms-av.r-moniteur{background:var(--blue)}
 .ms-who b{font-size:.88rem}.ms-who small{font-size:.76rem;color:var(--muted)}
-.ms-b{background:#fff;border:1px solid var(--line);border-radius:4px 14px 14px 14px;padding:8px 12px;font-size:.95rem;line-height:1.45;overflow-wrap:anywhere}
+.ms-b{background:#fff;border:1px solid var(--line);border-radius:4px 14px 14px 14px;padding:8px 12px;font-size:.95rem;line-height:1.45;overflow-wrap:anywhere;box-shadow:0 1px 1px rgba(0,0,0,.03)}
 .ms-m.moi .ms-b{background:#DFF3E8;border-color:#BFE3D2;border-radius:14px 4px 14px 14px}
+.ms-m.pourmoi .ms-b{border-left:4px solid #E0A400;background:#FFFBEA}
+.ms-b.seule{padding:4px}
+.ms-b{width:fit-content;max-width:100%;box-sizing:border-box}.ms-m.moi .ms-b{margin-left:auto}
 .ms-t{display:block;text-align:right;font-size:.7rem;color:var(--muted);margin-top:2px}
+.ms-at{font-weight:700;color:#1F5FA8;background:#E6EFFA;border-radius:5px;padding:0 .2em}.ms-at.moi{color:#6B4E00;background:#FFE58A}
 .ms-el{all:unset;cursor:pointer;font-weight:700;color:var(--blue);border-bottom:1.5px solid currentColor}.ms-el:focus-visible{outline:2px solid var(--yellow)}
+.ms-img{all:unset;cursor:zoom-in;display:block;border-radius:10px;overflow:hidden;background:#E3E6E8;max-width:100%}
+.ms-img img{display:block;width:280px;max-width:100%;max-height:320px;object-fit:cover;min-height:80px}
+.ms-b .ms-img+.ms-tx,.ms-b .ms-file+.ms-tx{margin-top:6px}
+.ms-file{all:unset;cursor:pointer;box-sizing:border-box;display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;background:var(--soft);border:1px solid var(--line);max-width:100%}
+.ms-file i,.ms-fic{font-style:normal;display:grid;place-items:center;width:38px;height:44px;border-radius:7px;background:#D7263D;color:#fff;font:800 .68rem/1 var(--f-ui);flex-shrink:0}
+.ms-file span{min-width:0}.ms-file b{display:block;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ms-file small{font-size:.76rem;color:var(--muted)}
+.ms-file:hover{border-color:var(--green)}.ms-file:focus-visible,.ms-img:focus-visible{outline:2px solid var(--green)}
 .ms-vide{color:var(--muted);text-align:center;margin-top:60px!important}
+.ms-sug{position:absolute;left:58px;right:70px;bottom:70px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.14);padding:4px;z-index:5;max-height:220px;overflow:auto}
+.ms-so{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:10px;width:100%;padding:8px 10px;border-radius:8px}
+.ms-so small{color:var(--muted);font-size:.8rem;margin-left:auto}.ms-so.on,.ms-so:hover{background:var(--green-soft)}
+.ms-pj{display:flex;align-items:center;gap:10px;padding:8px 12px;border-top:1px solid var(--line);background:#FAFBFB}
+.ms-pj img{width:48px;height:48px;object-fit:cover;border-radius:8px}.ms-pj span{flex:1;min-width:0}
+.ms-pj b{display:block;font-size:.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ms-pj small{font-size:.76rem;color:var(--muted)}
+.ms-pjx{all:unset;cursor:pointer;width:34px;height:34px;display:grid;place-items:center;border-radius:50%;font-size:1.4rem;color:var(--muted)}.ms-pjx:hover{background:var(--soft);color:#D7263D}
 .ms-form{display:flex;gap:8px;align-items:flex-end;padding:10px 12px;border-top:1px solid var(--line);background:#fff}
+.ms-clip{cursor:pointer;display:grid;place-items:center;width:44px;height:46px;border-radius:12px;color:#5B6670;flex-shrink:0;position:relative}
+.ms-clip:hover{background:var(--soft);color:var(--asph)}.ms-clip:focus-within{outline:2px solid var(--green)}
+.ms-clip input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer}
 .ms-form textarea{flex:1;resize:none;min-height:46px;max-height:150px;border:1.5px solid var(--line);border-radius:12px;padding:11px 12px;font:inherit;line-height:1.35;margin:0}
 .ms-form textarea:focus{border-color:var(--green);outline:none}
 .ms-form .btn{height:46px;width:50px;padding:0;display:grid;place-items:center;border-radius:12px;flex-shrink:0}
+.ms-form .btn.wait{opacity:.55;cursor:progress}
 .ms-notif.on{display:flex;justify-content:space-between;align-items:center;gap:8px 16px;flex-wrap:wrap;padding:9px 14px}.ms-notif.on .ms-na{margin:0}
-@media (max-width:760px){.ms-wrap{grid-template-columns:1fr}.ms-canaux{flex-direction:row;overflow-x:auto;padding:8px}.ms-ch{min-width:max-content}.ms-ch small{display:none}.ms-head span{display:none}.ms-list{height:calc(100dvh - 270px);min-height:260px}.ms-m{max-width:88%}.tm-pane[data-pane="msg"]>.tm-role{display:none}}
+@media (max-width:760px){
+.ms-wrap{grid-template-columns:1fr}
+.ms-canaux{max-height:none;padding:8px 6px 12px}.ms-ch{padding:12px 10px}.ms-ch b{font-size:1rem}
+.ms-fil{display:none}
+.ms-wrap.voir-fil{position:fixed;inset:0;z-index:70;border:0;border-radius:0;margin:0}
+.ms-wrap.voir-fil .ms-canaux{display:none}
+.ms-wrap.voir-fil .ms-fil{display:flex;height:100dvh}
+.ms-back{display:grid}
+.ms-head{padding:8px 12px;padding-top:max(8px,env(safe-area-inset-top))}
+.ms-list{height:auto;min-height:0;padding:8px 10px 12px}
+.ms-form{padding-bottom:max(10px,env(safe-area-inset-bottom))}
+.ms-m{max-width:88%}.ms-img img{width:240px}
+.ms-sug{left:10px;right:10px}
+.tm-pane[data-pane="msg"]>.tm-role{display:none}
+}
+.tm-auj{margin-top:18px;padding:0!important;overflow:hidden}
+.tm-auj>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;background:#FFF7DC;border-left:5px solid var(--yellow)}
+.tm-auj>summary::-webkit-details-marker{display:none}
+.tm-auj>summary b{display:block;font-family:var(--f-display);font-size:1.3rem}.tm-auj>summary small{font-size:.86rem;color:#3D444D}
+.tm-auj>summary em{font-style:normal;font-weight:700;font-size:.85rem;color:#8A6500;white-space:nowrap}
+.tm-auj>div{padding:14px}.tm-auj .tm-mon{margin:0}.tm-auj .tm-mon>.card{box-shadow:none;border:1px solid var(--line)}
+html.ms-plein,html.ms-plein body{overflow:hidden}
 
 /* Contacts élève (moniteur) et fiche courte */
 .ct-btns{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 2px}
