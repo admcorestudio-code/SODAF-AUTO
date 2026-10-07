@@ -1027,6 +1027,30 @@ label.ex-doc input{position:absolute;left:14px;top:12px;width:20px;height:20px;a
 .tm-row.st-fait{border-left-color:var(--green);background:var(--green-soft)}
 .tm-row.st-absent{border-left-color:var(--red);background:var(--red-soft)}
 .tm-row.st-annule{border-left-color:#8A9099;opacity:.7}
+.tm-row.st-absentsansprevenir{border-left-color:#7A1020;background:#FBE3E6}
+.cd-eqs{margin:0 0 14px}
+.eq-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.eq-card{border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;background:#fff;display:flex;flex-direction:column;gap:6px}
+.eq-h b{display:block;font:700 1.05rem var(--f-display)}.eq-h span{font-size:.8rem;color:var(--muted)}
+.eq-m{display:flex;flex-direction:column;gap:4px}
+.eq-p{display:flex;align-items:center;gap:0;border:0;background:var(--soft);border-radius:9px;padding:5px 8px;text-align:left;cursor:pointer;font:inherit}
+.eq-p:hover{background:#EEF1F3}.eq-p span{font-size:.88rem;font-weight:600;line-height:1.2}.eq-p small{display:block;font-weight:400;color:var(--muted);font-size:.76rem}
+.eq-free{margin:2px 0 0!important;font-size:.82rem;font-weight:600;color:var(--green)}.eq-full{margin:2px 0 0!important;font-size:.82rem;font-weight:600;color:var(--muted)}
+.cd-bloc{border:1.5px solid var(--line);border-radius:14px;padding:10px;background:#F7F8F9;display:flex;flex-direction:column;gap:6px}
+.cd-bloc .tm-row{border-width:1px 1px 1px 5px}
+.cd-bh{display:flex;align-items:baseline;gap:6px 12px;flex-wrap:wrap;padding:2px 4px 4px}
+.cd-bh b{font:700 1.08rem var(--f-mono)}.cd-bh span{flex:1;font-size:.86rem;color:#3D444D}.cd-bh em{font-style:normal;font-weight:700;font-size:.82rem;background:#fff;border:1px solid var(--line);border-radius:999px;padding:1px 9px}
+.cd-mer{background:#FFF8E6;border-color:#F0D58A}
+.mc-rang{display:block;font:700 1.25rem/1 var(--f-display)}.tm-time small{display:block;font:500 .7rem var(--f-body);color:var(--muted)}
+.mc-tip{margin:2px 4px 0!important;font-size:.8rem;color:var(--muted)}
+#sodaf-root .mc-perdu{border-color:#E7B4BB;color:#7A1020}
+.pc-eq{margin-top:8px}
+.pc-eqon{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;justify-content:space-between;background:#EAF5EF;border:1px solid #BFE0CD;border-radius:12px;padding:10px 12px}
+.pc-eqon span{display:block;font-size:.76rem;text-transform:uppercase;letter-spacing:.06em;color:#2F5D46;font-weight:700}.pc-eqon b{display:block;font:700 1.02rem var(--f-display)}.pc-eqon small{color:#3D444D;font-size:.84rem}
+.pc-eqbtn{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pc-eqform{display:flex;flex-direction:column;gap:6px;background:var(--soft);border-radius:12px;padding:10px 12px}
+.pc-eqform label{font-weight:700;font-size:.92rem}.pc-eqform small{color:var(--muted);font-size:.82rem}
+.pc-eqrow{display:flex;gap:8px;flex-wrap:wrap}.pc-eqrow select{flex:1;min-width:200px;font:.95rem var(--f-body);padding:.55em .7em;border:1.5px solid var(--line);border-radius:10px;background:#fff}
 @media (max-width:600px){.tm-row{padding:10px 12px}.tm-acts{width:100%}.tm-subnav button{padding:.6em .6em;font-size:.92rem}}
 .devlist-h{font:700 1rem var(--f-display);margin:0 0 12px!important;color:var(--muted)}
 .devform{max-width:520px;margin:0 auto}
@@ -1294,8 +1318,8 @@ const HTML = `
 </div>
 
 <div class="wrap"><div class="pricebar">
-<div class="pb-item"><span>Permis B dès</span><b>35 000 F</b></div>
-<div class="pb-item"><span>Formation complète · 12 séances</span><b>55 000 F</b></div>
+<div class="pb-item"><span>Formation complète · 6 semaines</span><b>55 000 F</b></div>
+<div class="pb-item"><span>Tarif étudiant</span><b>30 000 F</b></div>
 <div class="pb-item"><span>Paiement</span><b>En 2 tranches</b></div>
 <a class="btn btn-green" href="#formations">Voir tous les tarifs</a>
 </div></div>
@@ -1336,7 +1360,7 @@ const HTML = `
 
 <div class="wrap sec"><div class="sec-head"><div><p class="eyebrow">Bon à savoir</p><h2>Les papiers du conducteur</h2></div><p>Ce qu'il faut pour l'examen, ce qu'il faut avoir à bord, et quoi faire après un accrochage.</p></div>
 <div class="grid g3">
-<div class="card doc"><div class="file">ID</div><div><span class="tag">Examen</span><h3 style="margin-top:8px">Pour l'examen, en fin de formation</h3><ul style="color:var(--muted);padding-left:1.1em;margin:8px 0"><li>Acte de naissance</li><li>Photocopie de la carte d'identité</li><li>2 photos d'identité, format passeport</li></ul><p style="font-size:.88rem">À l'inscription : le droit d'inscription de 5&nbsp;000&nbsp;F. À la fin de la formation : ces papiers et le dépôt de 30&nbsp;000&nbsp;F pour l'examen d'État. SODAF dépose ton dossier ; tu reçois ensuite un message officiel avec la date de ton examen, à passer à SOTOPLA.</p></div></div>
+<div class="card doc"><div class="file">ID</div><div><span class="tag">Examen</span><h3 style="margin-top:8px">Pour l'examen, en fin de formation</h3><ul style="color:var(--muted);padding-left:1.1em;margin:8px 0"><li>Acte de naissance</li><li>Photocopie de la carte d'identité</li><li>2 photos d'identité, format passeport</li></ul><p style="font-size:.88rem">À l'inscription : le droit d'inscription de 5&nbsp;000&nbsp;F (3&nbsp;000&nbsp;F pour les étudiants). À la fin de la formation : ces papiers et le dépôt de 30&nbsp;000&nbsp;F pour l'examen d'État. SODAF dépose ton dossier ; tu reçois ensuite un message officiel avec la date de ton examen, à passer à SOTOPLA.</p></div></div>
 <div class="card doc"><div class="file">CG</div><div><span class="tag">Au volant</span><h3 style="margin-top:8px">Documents de bord</h3><p>Carte grise, assurance, permis, pièce d'identité.</p><div class="acts"><a class="btn btn-line btn-sm" href="#cours-tableau">Voir le chapitre</a></div></div></div>
 <div class="card doc"><div class="file">CA</div><div><span class="tag">Accident</span><h3 style="margin-top:8px">Constat amiable</h3><p>Remplis-le sur place, ne signe que ce qui est exact, garde ton exemplaire.</p><div class="acts"><a class="btn btn-line btn-sm" href="#cours-secourisme">En savoir plus</a></div></div></div>
 </div>
@@ -1345,56 +1369,56 @@ const HTML = `
 </section>
 
 <section class="page" data-page="formations" hidden>
-${HEAD("Formations", "Nos formations et tarifs", "Chaque formule comprend le code de la route, l'entretien mécanique et le secourisme. Prix en francs CFA. Droit d'inscription : 5 000 F, payé une fois.")}
+${HEAD("Formations", "Nos formations et tarifs", "Chaque formule comprend le code de la route, l'entretien mécanique et le secourisme. Prix en francs CFA. Droit d'inscription : 5 000 F (3 000 F pour les étudiants), payé une fois.")}
 <div class="wrap sec">
-<div class="sec-head"><div><p class="eyebrow">Permis B · voiture</p><h2>Choisis ta formule</h2></div><p>Les trois formules suivent le même programme. Seuls le rythme et le nombre de séances de conduite changent.</p></div>
+<div class="sec-head"><div><p class="eyebrow">Permis B · voiture</p><h2>Choisis ta formule</h2></div><p>Même programme de code pour tous, en 6 semaines. La conduite se fait en équipe de 4 : chacun conduit à son tour, les autres observent.</p></div>
 <div class="grid g3">
-<div class="card offer star"><span class="tag y">Recommandée</span><h3>Formation complète</h3><div class="cat">55 000 F</div><p>Sur 3 mois. Pour apprendre à conduire en partant de zéro.</p><ul><li>12 séances de conduite d'1 h</li><li>Code de la route, théorie et pratique</li><li>Entretien mécanique et secourisme</li></ul><div class="price"><b>+ 5 000 F d'inscription</b><a class="btn btn-green btn-sm" href="#inscription" data-cat="Permis B">Choisir</a></div></div>
-<div class="card offer"><span class="tag">Plus rapide</span><h3>Formation accélérée</h3><div class="cat">75 000 F</div><p>En 2 mois, ou <b>80 000 F</b> en 1 mois. Même contenu, planning plus serré.</p><ul><li>12 séances de conduite d'1 h</li><li>Code de la route, théorie et pratique</li><li>Entretien mécanique et secourisme</li></ul><div class="price"><b>+ 5 000 F d'inscription</b><a class="btn btn-line btn-sm" href="#inscription" data-cat="Permis B">Choisir</a></div></div>
-<div class="card offer"><span class="tag">Déjà conducteur</span><h3>Formule courte</h3><div class="cat">35 000 F</div><p>Sur 3 mois. Pour ceux qui savent déjà tenir un volant.</p><ul><li>6 séances de conduite d'1 h</li><li>Code de la route, théorie et pratique</li><li>Entretien mécanique et secourisme</li></ul><div class="price"><b>+ 5 000 F d'inscription</b><a class="btn btn-line btn-sm" href="#inscription" data-cat="Permis B">Choisir</a></div></div>
+<div class="card offer star"><span class="tag y">Recommandée</span><h3>Formation complète</h3><div class="cat">55 000 F</div><p>En 6 semaines. Pour apprendre à conduire en partant de zéro.</p><ul><li>12 blocs de conduite de 2 h, en équipe de 4</li><li>12 cours de code en salle, 2 par semaine</li><li>Évaluation au 10e bloc, mécanique et secourisme</li></ul><div class="price"><b>+ 5 000 F d'inscription</b><a class="btn btn-green btn-sm" href="#inscription" data-cat="Permis B">Choisir</a></div></div>
+<div class="card offer"><span class="tag">Étudiants · 18 ans et plus</span><h3>Tarif étudiant</h3><div class="cat">30 000 F</div><p>La formation complète à prix étudiant. Places limitées : un étudiant par équipe de conduite.</p><ul><li>Même programme que la formation complète</li><li>Carte d'étudiant de l'année et carte d'identité</li><li>Parrainé par un ami ? Il reçoit 2 000 F</li></ul><div class="price"><b>+ 3 000 F d'inscription</b><a class="btn btn-line btn-sm" href="#inscription" data-cat="Tarif étudiant">Choisir</a></div></div>
+<div class="card offer"><span class="tag">Déjà conducteur</span><h3>Formule courte</h3><div class="cat">35 000 F</div><p>En 6 semaines. Pour ceux qui savent déjà tenir un volant.</p><ul><li>6 blocs de conduite de 2 h, en équipe de 4</li><li>12 cours de code en salle, 2 par semaine</li><li>Entretien mécanique et secourisme</li></ul><div class="price"><b>+ 5 000 F d'inscription</b><a class="btn btn-line btn-sm" href="#inscription" data-cat="Permis B">Choisir</a></div></div>
 </div>
 <div class="card alacarte" style="margin-top:18px"><p class="eyebrow">À la carte</p>
 <div class="acrow"><div><b>Formation théorique seule</b><span> · code, mécanique et secourisme, sans conduite</span></div><strong>25 000 F</strong></div>
-<div class="acrow"><div><b>Séance de conduite supplémentaire</b><span> · 1 h, à ajouter à n'importe quelle formule</span></div><strong>5 000 F</strong></div>
+<div class="acrow"><div><b>Séance de conduite en plus</b><span> · un bloc de 2 h en équipe, le mercredi à 15 h 45</span></div><strong>5 000 F</strong></div>
+<div class="acrow"><div><b>Dépôt pour l'examen d'État</b><span> · à la fin de la formation, en plus du prix de la formule</span></div><strong>30 000 F</strong></div>
 </div>
 <p style="margin-top:14px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px"><a class="btn btn-line btn-sm" href="/fiche-renseignement-sodaf.pdf" download>Télécharger la fiche des tarifs (PDF)</a><span style="color:var(--muted);font-size:.92rem">Une page A4, à imprimer ou à partager.</span></p>
 </div>
 <div class="wrap sec">
-<div class="sec-head"><div><p class="eyebrow">Autres formations</p><h2>Moto, remise à niveau, entreprises</h2></div><p>Moto et remise à niveau à prix fixe. Entreprises : sur devis selon le nombre de chauffeurs.</p></div>
+<div class="sec-head"><div><p class="eyebrow">Autres formations</p><h2>Remise à niveau, entreprises, parrainage</h2></div><p>Remise à niveau à prix fixe. Entreprises : sur devis selon le nombre de chauffeurs. Parrainage : ouvert à tous.</p></div>
 <div class="grid g3">
-<div class="card offer"><span class="tag">Deux-roues</span><h3>Permis A · moto</h3><div class="cat">30 000 F</div><p>Pour circuler en règle et en sécurité, pour toi ou ton activité.</p><ul><li>Code de la route complet</li><li>Environ 6 séances de moto d'1 h</li><li>Maîtrise à basse vitesse, puis circulation</li></ul><div class="price"><b>+ 5 000 F d'inscription</b><a class="btn btn-line btn-sm" href="#inscription" data-cat="Permis A">Choisir</a></div></div>
-<div class="card offer"><span class="tag">Déjà titulaire</span><h3>Remise à niveau</h3><div class="cat">20 000 F</div><p>Tu as ton permis mais tu n'as pas conduit depuis longtemps ? On te remet en confiance.</p><ul><li>4 séances d'1 h, évaluation comprise</li><li>Leçons ciblées : ville, nuit, route</li><li>Rappel des règles du code</li></ul><div class="price"><b>Séance en plus : 5 000 F</b><a class="btn btn-line btn-sm" href="#inscription" data-cat="Remise à niveau">Choisir</a></div></div>
+<div class="card offer"><span class="tag">Déjà titulaire</span><h3>Remise à niveau</h3><div class="cat">25 000 F</div><p>Tu as ton permis mais tu n'as pas conduit depuis longtemps ? On te remet en confiance.</p><ul><li>4 blocs de conduite de 2 h, évaluation comprise</li><li>Leçons ciblées : ville, route, circulation dense</li><li>Rappel des règles du code</li></ul><div class="price"><b>Séance en plus : 5 000 F</b><a class="btn btn-line btn-sm" href="#inscription" data-cat="Remise à niveau">Choisir</a></div></div>
 <div class="card offer"><span class="tag">Sociétés, ONG</span><h3>Formation entreprise</h3><p>Pour former vos chauffeurs, selon vos horaires.</p><ul><li>Conduite préventive</li><li>Vérification du véhicule chaque matin</li><li>Secourisme routier et constat amiable</li></ul><div class="price"><b>Sur devis</b><a class="btn btn-line btn-sm" href="#inscription" data-cat="Formation entreprise">Demander un devis</a></div></div>
+<div class="card offer"><span class="tag">Pour tout le monde</span><h3>Parrainage</h3><div class="cat">2 000 F</div><p>Pour chaque personne que tu amènes et qui s'inscrit chez SODAF, étudiant ou pas.</p><ul><li>Ton filleul donne ton n° client (SO…) à l'inscription</li><li>Tu reçois 2 000 F par Mixx by Yas ou Moov Money, dès qu'il a son reçu</li><li>2 filleuls : priorité sur les horaires · 3 : t-shirt SODAF · 5 : une séance offerte</li></ul><div class="price"><b>Sans limite de filleuls</b><a class="btn btn-line btn-sm" href="#inscription">Inscrire un proche</a></div></div>
 </div>
-<div class="card alacarte" style="margin-top:18px"><p class="eyebrow">Pack</p><div class="acrow"><div><b>Pack A + B · moto et voiture</b><span> · formation complète voiture + permis moto, au lieu de 85 000 F séparément</span></div><strong>80 000 F</strong></div><p style="margin:10px 0 0;font-size:.92rem;color:var(--muted)">En plus, à la fin de la formation : le dépôt de 30&nbsp;000&nbsp;F pour l'examen d'État. <a href="#inscription" data-cat="Pack A + B" data-msg="Je suis intéressé par le Pack A + B (moto et voiture).">Demander le pack</a></p></div>
 </div>
 <div class="wrap sec">
 <div class="sec-head"><div><p class="eyebrow">Ta semaine à SODAF</p><h2>Comment se passe la formation</h2></div><p>Tu révises sur le site quand tu veux. En salle, le moniteur explique, corrige et t'entraîne pour l'examen.</p></div>
 <div class="grid g3">
 <div class="card"><p class="eyebrow">Code en salle · groupes de 6</p><h3 style="margin-top:10px">2 cours par semaine</h3>
 <div class="wk"><b>Après-midi</b><span>14 h 30 – 15 h 30 · lundi et jeudi, ou mardi et vendredi</span></div>
-<div class="wk"><b>Matin</b><span>11 h – 12 h · lundi et jeudi</span></div>
+<div class="wk"><b>Matin</b><span>11 h – 12 h · lundi et jeudi, ou mardi et vendredi, ou mercredi et samedi</span></div>
 <div class="wk"><b>Mercredi 14 h 30</b><span>Rattrapage et examen blanc, tous groupes</span></div>
 <p style="margin-top:12px;font-size:.92rem;color:var(--muted)">Un thème par cours, 12 cours en 6 semaines : tu peux commencer n'importe quelle semaine.</p></div>
-<div class="card"><p class="eyebrow">Conduite · 1 h, sur rendez-vous</p><h3 style="margin-top:10px">Choisis ton créneau</h3>
-<div class="wk"><b>Lun – ven matin</b><span>6 h 30 · 7 h 30 · 8 h 45 · 9 h 45</span></div>
-<div class="wk"><b>Lun – ven soir</b><span>15 h 45 · 16 h 45</span></div>
-<div class="wk"><b>Samedi</b><span>6 h 30 à 11 h 45</span></div>
-<p style="margin-top:12px;font-size:.92rem;color:var(--muted)">Tu travailles ? Les créneaux de 6 h 30, de 16 h 45 et du samedi sont faits pour toi.</p></div>
+<div class="card"><p class="eyebrow">Conduite · en équipe de 4</p><h3 style="margin-top:10px">Ton équipe, 2 fois par semaine</h3>
+<div class="wk"><b>Lundi et jeudi</b><span>6 h 30 · 8 h 45 · 15 h 45</span></div>
+<div class="wk"><b>Mardi et vendredi</b><span>6 h 30 · 8 h 45 · 15 h 45</span></div>
+<div class="wk"><b>Mercredi et samedi</b><span>6 h 30 · 8 h 45</span></div>
+<p style="margin-top:12px;font-size:.92rem;color:var(--muted)">Chaque bloc dure 2 h. Chacun conduit environ 25 minutes par bloc, les autres observent et le moniteur commente. Tu gardes ton équipe et tes horaires jusqu'à la fin. Tu travailles ? Prends 6 h 30 ou 15 h 45.</p></div>
 <div class="card"><p class="eyebrow">Ton parcours</p><h3 style="margin-top:10px">Étape par étape</h3>
-<ol class="steps-ol"><li><b>Semaines 1 et 2 :</b> le code d'abord, signalisation et priorités.</li><li><b>Dès la semaine 3 :</b> une séance de conduite par semaine, le code continue.</li><li><b>En 6 semaines</b>, tu vois tous les chapitres en salle (12 cours). Un cours manqué : mercredi 14 h 30 ou sur le site.</li><li><b>Avant l'examen :</b> examens blancs du mercredi.</li></ol></div>
+<ol class="steps-ol"><li><b>Dès ton inscription :</b> ton groupe de code, 2 cours par semaine.</li><li><b>Dès ta formation soldée :</b> ton équipe de conduite, 2 blocs de 2 h par semaine.</li><li><b>En 6 semaines :</b> 12 cours de code et 12 blocs de conduite. Au 10e bloc, le moniteur t'évalue.</li><li><b>Un cours ou un bloc manqué :</b> rattrapage le mercredi après-midi.</li></ol></div>
 </div>
 <div class="card prog-pub" id="sd-progPub" style="margin-top:18px"></div>
 </div>
 <div class="wrap sec"><div class="grid g3">
 <div class="card soft"><p class="eyebrow">Paiement</p><h3 style="margin-top:10px">En 2 tranches</h3><p style="margin-top:8px">La moitié à l'inscription, le reste dans les 2 semaines (avant ta première séance de conduite). Un reçu pour chaque paiement.</p><div class="pills"><span>Espèces</span><span>Mixx by Yas (T-Money)</span></div></div>
 <div class="card soft"><p class="eyebrow">Dossier à fournir</p><h3 style="margin-top:10px">Pour l'examen, en fin de formation</h3><ul style="margin:8px 0 0;padding-left:1.1em;color:var(--muted)"><li>Acte de naissance</li><li>Photocopie de la carte d'identité</li><li>2 photos d'identité, format passeport</li></ul><p style="margin-top:10px;font-size:.92rem"><b>Examen d'État</b> : dépôt de 30&nbsp;000&nbsp;F pour l'inscription à l'examen final, à régler à la fin de la formation, en plus du prix de la formation. SODAF dépose ton dossier ; l'État t'envoie ensuite un message avec la date de ton examen, à passer à SOTOPLA.</p></div>
-<div class="card soft"><p class="eyebrow">Bon à savoir</p><h3 style="margin-top:10px">Des règles claires</h3><ul style="margin:8px 0 0;padding-left:1.1em;color:var(--muted)"><li>Le droit d'inscription n'est pas remboursable.</li><li>Une séance non faite peut être reportée pendant 6 mois.</li><li>Conduite, sur rendez-vous : du lundi au vendredi de 6 h 30 à 10 h 45 et de 15 h 45 à 17 h 45, le samedi de 6 h 30 à 11 h 45.</li><li>Secrétariat : du lundi au vendredi de 8 h à 12 h 30 et de 14 h 30 à 18 h, le samedi de 8 h à 12 h.</li></ul></div>
+<div class="card soft"><p class="eyebrow">Bon à savoir</p><h3 style="margin-top:10px">Des règles claires</h3><ul style="margin:8px 0 0;padding-left:1.1em;color:var(--muted)"><li>Le droit d'inscription n'est pas remboursable.</li><li>Absence à un bloc de conduite prévenue la veille : rattrapage gratuit le mercredi. Sans prévenir : le bloc est perdu.</li><li>Conduite en équipe : du lundi au samedi de 6 h 30 à 10 h 45, et de 15 h 45 à 17 h 45 en semaine.</li><li>Secrétariat : du lundi au vendredi de 8 h à 12 h 30 et de 14 h 30 à 18 h, le samedi de 8 h à 12 h.</li></ul></div>
 </div></div>
 <div class="wrap sec" id="formations-docs" style="padding-top:0"><div class="sec-head"><div><p class="eyebrow">À télécharger</p><h2>Fiche et planning</h2></div><p>À imprimer, à garder sur ton téléphone ou à envoyer à un proche.</p></div>
 <div class="card doc doc-cover"><img class="cover" src="/apercu-fiche.jpg" alt="Aperçu de la fiche de renseignement SODAF" width="120" height="170" loading="lazy"><div><span class="tag">PDF · 1 page A4</span><h3 style="margin-top:8px">Fiche de renseignement</h3><p>Toutes les formules et leurs prix, le dossier à fournir et les règles de l'auto-école. À imprimer ou à envoyer à un proche.</p>
 <div class="acts"><a class="btn btn-green btn-sm" href="/fiche-renseignement-sodaf.pdf" download>Télécharger le PDF</a><a class="btn btn-line btn-sm" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent("La fiche de l'auto-école SODAF (formations et tarifs) : https://autosodaf.com/fiche-renseignement-sodaf.pdf")}">Partager sur WhatsApp</a></div></div></div>
-<div class="card doc doc-cover" style="margin-top:18px"><img class="cover" src="/apercu-planning.jpg" alt="Aperçu du planning de la semaine SODAF" width="120" height="85" loading="lazy" style="align-self:start"><div><span class="tag">PDF · A4 paysage</span><h3 style="margin-top:8px">Planning de la semaine</h3><p>Les heures du code en salle, les créneaux de conduite et l'examen blanc du samedi. Garde-le sur ton téléphone.</p>
+<div class="card doc doc-cover" style="margin-top:18px"><img class="cover" src="/apercu-planning.jpg" alt="Aperçu du planning de la semaine SODAF" width="120" height="85" loading="lazy" style="align-self:start"><div><span class="tag">PDF · A4 paysage</span><h3 style="margin-top:8px">Planning de la semaine</h3><p>Les 8 équipes de conduite, les groupes de code et les rattrapages du mercredi. Garde-le sur ton téléphone.</p>
 <div class="acts"><a class="btn btn-green btn-sm" href="/planning-semaine-sodaf.pdf" download>Télécharger le PDF</a><a class="btn btn-line btn-sm" href="#formations">Voir en ligne</a></div></div></div>
 </div>
 </section>
@@ -1750,7 +1774,8 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <fieldset class="ins-step"><legend><i>1</i>Le client</legend>
 <div class="row2"><div class="field"><label for="sd-insN">Nom</label><input id="sd-insN" autocomplete="off" placeholder="ex. AGBEKO"></div><div class="field"><label for="sd-insP">Prénoms</label><input id="sd-insP" autocomplete="off" placeholder="ex. Yao Koffi"></div></div>
 <div class="row2"><div class="field"><label for="sd-insT">Téléphone (WhatsApp)</label><div class="tel"><span>+228</span><input id="sd-insT" inputmode="numeric" maxlength="11" placeholder="90 00 00 00"></div></div><div class="field"><label for="sd-insQ">Quartier</label><input id="sd-insQ" autocomplete="off" placeholder="ex. Bè, Agoè, Tokoin"></div></div>
-<div class="row2"><div class="field"><label for="sd-insFo">Formation qui l'intéresse</label><select id="sd-insFo"><option>Permis B</option><option>Permis A</option><option>Pack A + B</option><option>Remise à niveau</option><option>Formation entreprise</option></select></div><div class="field"><label for="sd-insSrc">Comment il nous a connus</label><select id="sd-insSrc"><option value="">— Choisir —</option><option value="agence">Venu à l'agence (passage, enseigne)</option><option value="appel">Appel téléphonique</option><option value="whatsapp">WhatsApp</option><option value="bouche">Bouche-à-oreille (ami, famille, ancien élève)</option><option value="reseaux">Facebook / TikTok / Instagram</option><option value="affiche">Affiche, flyer, QR code</option><option value="entreprise">Entreprise (chauffeur envoyé)</option><option value="autre">Autre</option></select></div></div>
+<div class="row2"><div class="field"><label for="sd-insFo">Formation qui l'intéresse</label><select id="sd-insFo"><option>Permis B</option><option>Tarif étudiant</option><option>Gagnant du tirage</option><option>Remise à niveau</option><option>Formation entreprise</option></select></div><div class="field"><label for="sd-insSrc">Comment il nous a connus</label><select id="sd-insSrc"><option value="">— Choisir —</option><option value="agence">Venu à l'agence (passage, enseigne)</option><option value="appel">Appel téléphonique</option><option value="whatsapp">WhatsApp</option><option value="parrainage">Parrainage (code parrain)</option><option value="bouche">Bouche-à-oreille (ami, famille, ancien élève)</option><option value="reseaux">Facebook / TikTok / Instagram</option><option value="affiche">Affiche, flyer, QR code</option><option value="entreprise">Entreprise (chauffeur envoyé)</option><option value="autre">Autre</option></select></div></div>
+<div class="field"><label for="sd-insPar">Code parrain (facultatif)</label><input id="sd-insPar" maxlength="40" autocomplete="off" placeholder="N° client SO… ou téléphone du parrain"></div>
 </fieldset>
 <div class="ins-ft"><p class="ins-sum">Il recevra sur WhatsApp le lien pour finaliser son inscription lui-même : choix de la formule, puis paiement à l'agence ou par Mixx.</p><span class="tm-err" id="sd-insErr"></span><button class="btn btn-green" type="submit" id="sd-insGo">Enregistrer</button></div>
 <div class="ins-done" id="sd-insDone" hidden></div>
@@ -1764,9 +1789,9 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <p class="eyebrow" style="margin:0 0 4px">Nouveau client</p>
 <div class="row2"><div class="field"><label for="sd-elN">Nom</label><input id="sd-elN" autocomplete="off" placeholder="ex. AGBEKO"></div><div class="field"><label for="sd-elP">Prénoms</label><input id="sd-elP" autocomplete="off" placeholder="ex. Yao Koffi"></div></div>
 <div class="field"><label for="sd-elT">Téléphone</label><div class="tel"><span>+228</span><input id="sd-elT" inputmode="numeric" maxlength="11" placeholder="90 00 00 00"></div></div>
-<div class="field"><label for="sd-elQ">Quartier</label><input id="sd-elQ" autocomplete="off" placeholder="ex. Bè, Agoè, Tokoin"></div>
-<div class="field"><label for="sd-elSrc">Comment il nous a connus</label><select id="sd-elSrc"><option value="">— Choisir —</option><option value="agence">Venu à l'agence (passage, enseigne)</option><option value="appel">Appel téléphonique</option><option value="whatsapp">WhatsApp</option><option value="bouche">Bouche-à-oreille (ami, famille, ancien élève)</option><option value="reseaux">Facebook / TikTok / Instagram</option><option value="affiche">Affiche, flyer, QR code</option><option value="entreprise">Entreprise (chauffeur envoyé)</option><option value="autre">Autre</option></select></div>
-<div class="field"><label for="sd-elFo">Formation</label><select id="sd-elFo"><option>Permis B</option><option>Permis A</option><option>Pack A + B</option><option>Remise à niveau</option><option>Formation entreprise</option></select></div>
+<div class="field"><label for="sd-elQ">Quartier</label><input id="sd-elQ" autocomplete="off" placeholder="ex. Bè, Agoè, Tokoin"></div><div class="field"><label for="sd-elPar">Code parrain (facultatif)</label><input id="sd-elPar" maxlength="40" autocomplete="off" placeholder="SO… ou téléphone du parrain"></div>
+<div class="field"><label for="sd-elSrc">Comment il nous a connus</label><select id="sd-elSrc"><option value="">— Choisir —</option><option value="agence">Venu à l'agence (passage, enseigne)</option><option value="appel">Appel téléphonique</option><option value="whatsapp">WhatsApp</option><option value="parrainage">Parrainage (code parrain)</option><option value="bouche">Bouche-à-oreille (ami, famille, ancien élève)</option><option value="reseaux">Facebook / TikTok / Instagram</option><option value="affiche">Affiche, flyer, QR code</option><option value="entreprise">Entreprise (chauffeur envoyé)</option><option value="autre">Autre</option></select></div>
+<div class="field"><label for="sd-elFo">Formation</label><select id="sd-elFo"><option>Permis B</option><option>Tarif étudiant</option><option>Gagnant du tirage</option><option>Remise à niveau</option><option>Formation entreprise</option></select></div>
 <div class="field"><label for="sd-elSt">Étape</label><select id="sd-elSt"><option value="Inscrit">Il paie maintenant (reçu)</option><option value="Contacté">Renseigné, à rappeler</option></select></div>
 <div class="tm-formact"><button class="btn btn-green btn-sm" type="submit">Enregistrer</button><button class="linkbtn" type="button" id="sd-elCancel">Annuler</button><span class="tm-err" id="sd-elErr"></span></div>
 </form>
@@ -1776,6 +1801,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 </div>
 </section>
 <section class="tm-sec" data-s="conduite" hidden>
+<details class="card tm-prog cd-eqs" id="sd-eqBox" hidden><summary><span><b>Les équipes de conduite</b><small id="sd-eqSum">4 élèves par équipe, 2 blocs de 2 h par semaine</small></span><em>Voir / replier</em></summary><div id="sd-eqList" class="eq-grid"></div><p class="tm-note" style="margin:10px 0 0!important">Pour placer un élève : ouvre sa fiche (onglet Élèves), bloc « Conduite », puis « Placer dans une équipe ». Ses blocs sont réservés d'un coup, 2 par semaine.</p></details>
 <div class="tm-bar tm-day-nav"><button class="btn btn-line btn-sm" type="button" id="sd-cdPrev">‹ Veille</button><b id="sd-cdDay"></b><button class="btn btn-line btn-sm" type="button" id="sd-cdNext">Lendemain ›</button><button class="linkbtn" type="button" id="sd-cdToday">Aujourd'hui</button></div>
 <div id="sd-cdClosed" class="tm-closed" hidden></div>
 <form id="sd-cdCloseForm" class="card tm-form" hidden novalidate><div class="field"><label for="sd-cdWhy">Pourquoi ce jour est fermé ?</label><input id="sd-cdWhy" maxlength="60" placeholder="Ex. Jour férié, Tabaski, panne de voiture, moniteur malade"></div><p class="tm-note" style="margin:0 0 12px!important">Toutes les séances de conduite et le cours de code de ce jour passent en « Annulé ». Les élèves déjà réservés s'affichent ensuite avec un bouton WhatsApp pour les prévenir.</p><div class="tm-formact"><button class="btn btn-green btn-sm" type="submit">Fermer ce jour</button><button class="linkbtn" type="button" id="sd-cdCloseCancel">Annuler</button></div></form>
@@ -1791,13 +1817,13 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="rcbox" id="equipe-recu"><div class="tm-sub"><div><p class="eyebrow">Après chaque paiement</p><h3>Faire un reçu</h3></div><p>Remplis après chaque paiement : le reçu PDF est créé aux couleurs SODAF avec le cachet, enregistré dans la base, et tu l'envoies à l'élève sur WhatsApp.</p></div>
 <form class="card rcform" id="sd-rcForm" novalidate>
 <input type="hidden" id="sd-rcEid" name="eleve_id"><div class="row2"><div class="field"><label for="sd-rcName">Nom et prénom de l'élève</label><input id="sd-rcName" name="eleve" list="sd-rcEleves" autocomplete="off" placeholder="Tape ou choisis un élève"><datalist id="sd-rcEleves"></datalist></div><div class="field"><label for="sd-rcTel">Téléphone / WhatsApp (facultatif)</label><div class="tel"><span>+228</span><input id="sd-rcTel" name="tel" inputmode="numeric" maxlength="11" placeholder="90 00 00 00"></div></div></div>
-<div class="field"><label for="sd-rcF">1. Quelle formation a-t-il choisie ?</label><select id="sd-rcF" name="formation"><option data-p="55000">Formation complète (permis B)</option><option data-p="75000">Formation accélérée 2 mois (permis B)</option><option data-p="80000">Formation accélérée 1 mois (permis B)</option><option data-p="35000">Formule courte (permis B)</option><option data-p="25000">Formation théorique seule</option><option data-p="30000">Permis A (moto)</option><option data-p="80000">Pack A + B (moto et voiture)</option><option data-p="20000">Remise à niveau</option><option data-p="0">Formation entreprise (sur devis)</option><option data-p="0">Hors formation (séance ou frais)</option></select></div>
+<div class="field"><label for="sd-rcF">1. Quelle formation a-t-il choisie ?</label><select id="sd-rcF" name="formation"><option data-p="55000">Formation complète (permis B)</option><option data-p="35000">Formule courte (permis B)</option><option data-p="30000" data-i="3000">Formation complète, tarif étudiant (permis B)</option><option data-p="15000" data-i="0">Formation complète, gagnant du tirage (permis B)</option><option data-p="25000">Remise à niveau</option><option data-p="25000">Formation théorique seule</option><option data-p="0">Formation entreprise (sur devis)</option><option data-p="0">Hors formation (séance ou frais)</option></select></div>
 <fieldset class="field rcmotifs" id="sd-rcMotifs"><legend>2. Qu'est-ce qu'il paie aujourd'hui ?</legend>
-<label class="rcm" data-k="ins-half"><input type="radio" name="motif" value="ins-half" checked><span><b>Il s'inscrit et paie la moitié</b><small>Droit d'inscription (5&nbsp;000&nbsp;F) + 1re moitié de la formation</small></span><em data-amt></em></label>
-<label class="rcm" data-k="ins-full"><input type="radio" name="motif" value="ins-full"><span><b>Il s'inscrit et paie tout</b><small>Droit d'inscription (5&nbsp;000&nbsp;F) + toute la formation</small></span><em data-amt></em></label>
+<label class="rcm" data-k="ins-half"><input type="radio" name="motif" value="ins-half" checked><span><b>Il s'inscrit et paie la moitié</b><small data-ins="1re moitié de la formation">Droit d'inscription (5&nbsp;000&nbsp;F) + 1re moitié de la formation</small></span><em data-amt></em></label>
+<label class="rcm" data-k="ins-full"><input type="radio" name="motif" value="ins-full"><span><b>Il s'inscrit et paie tout</b><small data-ins="toute la formation">Droit d'inscription (5&nbsp;000&nbsp;F) + toute la formation</small></span><em data-amt></em></label>
 <label class="rcm" data-k="rest"><input type="radio" name="motif" value="rest"><span><b>Il paie le reste</b><small>2e moitié de la formation, avant sa 1re séance de conduite</small></span><em data-amt></em></label>
 <label class="rcm" data-k="examen"><input type="radio" name="motif" value="examen"><span><b>Le dépôt pour l'examen d'État</b><small>Inscription à l'examen final, 30&nbsp;000&nbsp;F</small></span><em data-amt></em></label>
-<label class="rcm" data-k="seance"><input type="radio" name="motif" value="seance"><span><b>Une séance de conduite en plus</b><small>1 h, 5&nbsp;000&nbsp;F la séance</small></span><em data-amt></em></label>
+<label class="rcm" data-k="seance"><input type="radio" name="motif" value="seance"><span><b>Une séance de conduite en plus</b><small>Un bloc de 2 h en équipe, le mercredi à 15 h 45 · 5&nbsp;000&nbsp;F</small></span><em data-amt></em></label>
 <label class="rcm" data-k="autre"><input type="radio" name="motif" value="autre"><span><b>Autre paiement</b><small>Tu écris toi-même le motif et le montant</small></span><em></em></label>
 <input id="sd-rcOther" placeholder="Motif, ex. Droit d'inscription seul, 2 séances en plus…" hidden>
 </fieldset>
@@ -1826,17 +1852,18 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="tm-sub"><div><p class="eyebrow">Mode d'emploi</p><h3>Les gestes du secrétariat</h3></div></div>
 <div class="grid g2 tm-guides">
 <div class="card soft"><p class="eyebrow">Le parcours d'un élève</p><ol class="teamsteps"><li><b>Accueil</b> : <b>Envoyer l'accueil</b> (WhatsApp). Le dossier passe tout seul en zone d'appel.</li><li><b>Appels</b> : appelle avec le script. Pas de réponse : choisis quand rappeler. À 4 tentatives : relance WhatsApp ou <b>Injoignable</b>.</li><li>Il est intéressé : <b>Envoyer le lien d'inscription</b> (en haut). Le dossier passe tout seul en paiement en attente.</li><li><b>Paiement en attente</b> : Mixx à vérifier sur le téléphone de l'agence, ou paiement à l'agence. Sans nouvelles : relance tous les 5 jours (4 au maximum).</li><li><b>Formation payée ? Faire le reçu</b> : le reçu s'ouvre déjà rempli, envoie-le. L'élève passe <b>En formation</b> et reçoit tout seul une place dans un groupe de code (6 places). Touche <b>Envoyer ses horaires</b>. Groupes complets : il passe en liste d'attente et il est placé tout seul dès qu'une place se libère (pour aller plus vite, ouvre un groupe dans « Gérer les groupes »).</li><li><b>Solde</b> : à payer dans les 2 semaines après l'inscription (c'est écrit sur son reçu). À 7 jours, il passe dans « Rappel de paiement » (en rouge, tout en haut) : le bouton du rappel s'active ce jour-là, envoie-le ; l'élève retourne ensuite dans son groupe. À 14 jours sans paiement, sa place au code est suspendue toute seule jusqu'au règlement.</li><li>Formation terminée : <b>Passer à l'examen</b>, message des papiers. Dossier complet + 30 000 F : reçu.</li><li><b>Dépôt d'examen</b> : coche le lot, imprime le bordereau, fais-le signer, puis <b>Lot déposé</b>. Au résultat : <b>Permis obtenu</b> ou <b>À repasser</b> (archivé « Permis échoué »).</li></ol></div>
-<div class="card soft"><p class="eyebrow">Réserver une séance de conduite</p><ol class="teamsteps"><li>Seuls les élèves dont la formation est soldée peuvent être réservés : les autres sont grisés. S'il doit encore payer : fiche de l'élève → <b>Rappel du solde</b>.</li><li><b>Planning conduite</b> : choisis le jour, puis l'élève sur un créneau libre.</li><li>Le choix est enregistré tout de suite. Touche <b>Prévenir l'élève</b> : le message WhatsApp avec le jour et l'heure est prêt. La veille, touche <b>Rappel</b>.</li></ol></div>
+<div class="card soft"><p class="eyebrow">Placer un élève en conduite (équipes de 4)</p><ol class="teamsteps"><li>Seuls les élèves dont la formation est soldée peuvent être placés. S'il doit encore payer : fiche de l'élève → <b>Rappel du solde</b>.</li><li>Fiche de l'élève → bloc <b>Conduite</b> → choisis l'équipe (jours et heure qui l'arrangent) → <b>Placer</b>. Tous ses blocs sont réservés d'un coup, 2 par semaine. Tarif étudiant : un seul étudiant par équipe.</li><li>Touche <b>Envoyer ses horaires</b> : le message WhatsApp avec son équipe et son 1er bloc est prêt. La veille d'un bloc, le <b>Rappel</b> est dans le planning.</li><li>Absence prévenue la veille : dans le planning, mets « Absent », puis place-le sur le <b>mercredi 15 h 45</b> (rattrapage). Les places libres du mercredi s'ouvrent aux séances en plus (5 000 F) à partir du mardi 18 h.</li></ol></div>
 <div class="card soft"><p class="eyebrow">Fin de semaine : résultats des devoirs</p><ol class="teamsteps"><li>Onglet <b>Devoirs</b> : le message de la semaine (les 2 devoirs) est déjà écrit.</li><li>Touche <b>Ouvrir WhatsApp avec le message</b> et choisis le groupe.</li></ol></div>
-<div class="card soft"><p class="eyebrow">Règles</p><ol class="teamsteps"><li>On ne supprime rien : une séance annulée passe en <b>Annulé</b>, un dossier qui s'arrête va dans <b>Archivés</b> avec son motif, un reçu faux se fait <b>Annuler</b> (avec la raison) puis on refait le bon.</li><li>Erreur de nom ou de numéro : <b>Modifier</b> sur la fiche de l'élève.</li><li>Jour férié ou fermeture : <b>Planning conduite</b> → le jour → « Fermer ce jour », puis <b>Prévenir</b> chaque élève.</li><li>Les créneaux du mois suivant se créent tout seuls le 24.</li></ol></div>
+<div class="card soft"><p class="eyebrow">Règles</p><ol class="teamsteps"><li>On ne supprime rien : une séance annulée passe en <b>Annulé</b>, un dossier qui s'arrête va dans <b>Archivés</b> avec son motif, un reçu faux se fait <b>Annuler</b> (avec la raison) puis on refait le bon.</li><li>Erreur de nom ou de numéro : <b>Modifier</b> sur la fiche de l'élève.</li><li>Jour férié ou fermeture : <b>Planning conduite</b> → le jour → « Fermer ce jour », puis <b>Prévenir</b> chaque élève.</li><li>Les blocs du mois suivant se créent tout seuls le 24, et les élèves déjà placés y reçoivent leurs blocs restants.</li></ol></div>
 </div></div>
 <div class="tm-pane" data-pane="ger" role="tabpanel" hidden>
 <p class="tm-role" id="sd-grRole"></p>
 <div class="card gr-card" id="sd-gr" hidden><p class="eyebrow">Gérance</p><h3 class="tm-h3" id="sd-grTitre">Gérante et direction</h3><p class="tm-note" id="sd-grIntro" style="margin:0 0 10px!important"></p>
-<div class="gr-tabs" role="tablist"><button type="button" role="tab" data-gr="demandes" aria-selected="true">Demandes d'accord<em class="gr-badge" id="sd-grBDem" hidden></em></button><button type="button" role="tab" data-gr="decisions" aria-selected="false">Décisions<em class="gr-badge" id="sd-grBDec" hidden></em></button><button type="button" role="tab" data-gr="rapports" aria-selected="false">Rapport de la semaine<em class="gr-badge" id="sd-grBRap" hidden></em></button><button type="button" role="tab" data-gr="tirage" aria-selected="false">Tirage au sort<em class="gr-badge" id="sd-grBTir" hidden></em></button></div>
+<div class="gr-tabs" role="tablist"><button type="button" role="tab" data-gr="demandes" aria-selected="true">Demandes d'accord<em class="gr-badge" id="sd-grBDem" hidden></em></button><button type="button" role="tab" data-gr="decisions" aria-selected="false">Décisions<em class="gr-badge" id="sd-grBDec" hidden></em></button><button type="button" role="tab" data-gr="rapports" aria-selected="false">Rapport de la semaine<em class="gr-badge" id="sd-grBRap" hidden></em></button><button type="button" role="tab" data-gr="tirage" aria-selected="false">Tirage au sort<em class="gr-badge" id="sd-grBTir" hidden></em></button><button type="button" role="tab" data-gr="parrainage" aria-selected="false">Parrainage<em class="gr-badge" id="sd-grBPar" hidden></em></button></div>
 <div class="gr-pane" data-grp="demandes"><form id="sd-grDemForm" class="gr-form" hidden novalidate><div class="row2"><div class="field"><label for="sd-grDemType">Pour quoi ?</label><select id="sd-grDemType"><option>Remise</option><option>Annulation de reçu</option><option>Report de paiement</option><option>Dépense</option><option>Autre</option></select></div><div class="field"><label for="sd-grDemMt">Montant (F, si besoin)</label><input id="sd-grDemMt" inputmode="numeric" autocomplete="off" placeholder="ex. 5 000"></div></div><div class="field gr-elf"><label for="sd-grDemElQ">Élève concerné (si besoin)</label><div class="gr-elbox"><input id="sd-grDemElQ" type="search" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Tape un nom ou un numéro (SO12)" role="combobox" aria-expanded="false" aria-controls="sd-grDemElL" aria-autocomplete="list"><input type="hidden" id="sd-grDemEl" value=""><div class="gr-elsel" id="sd-grDemElSel" hidden></div><div class="gr-ell" id="sd-grDemElL" role="listbox" hidden></div></div></div><div class="field"><label for="sd-grDemTx">Explique en quelques mots</label><textarea id="sd-grDemTx" rows="2" maxlength="600" placeholder="ex. Deux frères inscrits ensemble, je propose 5 000 F de remise au second."></textarea></div><button type="submit" class="btn btn-sm btn-green">Envoyer à la direction</button></form><div id="sd-grDemList" class="gr-list"></div></div>
 <div class="gr-pane" data-grp="decisions" hidden><form id="sd-grDecForm" class="gr-form" hidden novalidate><div class="row2"><div class="field"><label for="sd-grDecCat">Sujet</label><select id="sd-grDecCat"><option>Élèves</option><option>Argent</option><option>Planning</option><option>Équipe</option><option>Autre</option></select></div><div class="field gr-grow"><label for="sd-grDecTx">Ce que j'ai décidé</label><textarea id="sd-grDecTx" rows="2" maxlength="600" placeholder="ex. Séance de samedi 7 h 30 déplacée à 8 h 45, le moniteur est prévenu."></textarea></div></div><button type="submit" class="btn btn-sm btn-green">Noter la décision</button></form><div id="sd-grDecList" class="gr-list"></div></div>
 <div class="gr-pane" data-grp="rapports" hidden><div id="sd-grRapNew" hidden><p class="gr-sem" id="sd-grRapSem"></p><div class="tm-stats tm-dr" id="sd-grRapChiffres"></div><div class="field"><label for="sd-grRapTx">Mes remarques pour la direction</label><textarea id="sd-grRapTx" rows="4" maxlength="3000" placeholder="Ce qui s'est bien passé, les problèmes, ce qu'il faudrait changer, ce dont j'ai besoin."></textarea></div><button type="button" class="btn btn-sm btn-green" id="sd-grRapSend">Envoyer le rapport</button></div><div id="sd-grRapList" class="gr-list"></div></div>
+<div class="gr-pane" data-grp="parrainage" hidden><p class="gr-sem">2 000 F par filleul inscrit, à envoyer au parrain par Mixx by Yas ou Moov Money après le reçu d'inscription du filleul. La commission apparaît ici toute seule.</p><div id="sd-paList"></div><div class="sec-mini"><h4 class="gr-h4">Meilleurs parrains</h4><p class="tm-note" style="margin:0 0 8px!important">2 filleuls : priorité sur les horaires · 3 : t-shirt · 5 : une séance offerte · 10 : karting à 3 et ambassadeur du mois (à confirmer) · meilleur de l'année : formation offerte à un proche.</p><div id="sd-paTop"></div></div></div>
 <div class="gr-pane" data-grp="tirage" hidden><div class="tr-hd"><div class="field"><label for="sd-trCamp">Tirage du mois</label><select id="sd-trCamp"></select></div><div class="tr-stats" id="sd-trStats"></div></div>
 <div class="tr-act"><button type="button" class="btn tir-btn" id="sd-trGo">Tirer un gagnant</button><button type="button" class="btn btn-line btn-sm" id="sd-trScreen">Grand écran pour la vidéo</button></div>
 <div id="sd-trWin" class="tr-wins"></div>
@@ -1892,7 +1919,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="card entdoc"><img src="/entreprise/cachet-sodaf-bleu.png" alt="Cachet SODAF" loading="lazy" class="sq"><div><b>Cachet SODAF</b><span>Rond, 40 mm. Le PDF noir est pour le graveur qui fabrique le tampon ; la version bleue sert aux reçus et documents numériques.</span><div class="acts"><a class="btn btn-green btn-sm" href="/entreprise/cachet-sodaf-40mm-graveur.pdf" download>PDF graveur</a><a class="btn btn-line btn-sm" href="/entreprise/cachet-sodaf-noir-1200px.png" download>Noir PNG</a><a class="btn btn-line btn-sm" href="/entreprise/cachet-sodaf-bleu.png" download>Bleu PNG</a></div></div></div>
 <div class="card entdoc"><img src="/entreprise/apercu-couverture.jpg" alt="Couverture WhatsApp Business SODAF" loading="lazy"><div><b>Couverture WhatsApp Business</b><span>Image décorative 16:9 sans texte, à mettre derrière la photo de profil.</span><div class="acts"><a class="btn btn-green btn-sm" href="/entreprise/couverture-whatsapp-sodaf.png" download>Image (PNG)</a></div></div></div>
 <div class="card entdoc"><img src="/couverture-manuel.jpg" alt="Couverture du manuel de l'élève SODAF" loading="lazy" class="tall"><div><b>Manuel de l'élève conducteur</b><span>Manuel officiel SODAF, 34 pages : code de la route, secourisme, mécanique. À envoyer aux élèves sur WhatsApp ou à imprimer.</span><div class="acts"><a class="btn btn-green btn-sm" href="/entreprise/manuel-eleve-sodaf.pdf" download>PDF</a><a class="btn btn-line btn-sm" href="/entreprise/manuel-eleve-sodaf.pdf" target="_blank" rel="noopener">Ouvrir</a></div></div></div><div class="card entdoc"><img src="/entreprise/apercu-logo.jpg" alt="Logo SODAF" loading="lazy"><div><b>Logo SODAF</b><span>En noir, blanc et vert. PNG à fond transparent pour WhatsApp, Word et les réseaux ; SVG pour l'imprimeur (s'agrandit sans perte). Le kit contient aussi le grand S seul et la version « Powered by ADM Core ».</span><div class="acts"><a class="btn btn-green btn-sm" href="/entreprise/kit-logo-sodaf.zip" download>Tout le kit (.zip)</a><a class="btn btn-line btn-sm" href="/entreprise/logo/sodaf-nom-noir.png" download>PNG noir</a><a class="btn btn-line btn-sm" href="/entreprise/logo/sodaf-nom-blanc.png" download>PNG blanc</a><a class="btn btn-line btn-sm" href="/entreprise/logo/sodaf-nom-noir.svg" download>SVG</a></div></div></div><div class="card entdoc"><img src="/entreprise/apercu-icones.jpg" alt="Icônes SODAF" loading="lazy"><div><b>Icônes</b><span>Icône d'application et de profil (512 px), version ronde pour Android, icône iPhone et favicon du site. Idéal pour la photo de profil WhatsApp Business et Facebook.</span><div class="acts"><a class="btn btn-green btn-sm" href="/entreprise/logo/sodaf-icone-app-512.png" download>Icône 512 px</a><a class="btn btn-line btn-sm" href="/entreprise/logo/sodaf-icone-app-ronde-512.png" download>Ronde</a><a class="btn btn-line btn-sm" href="/entreprise/logo/sodaf-favicon.ico" download>Favicon</a></div></div></div><div class="card entdoc"><img src="/apercu-fiche.jpg" alt="Fiche de renseignement" loading="lazy" class="tall"><div><b>Fiche de renseignement</b><span>Formations, tarifs, dossier à fournir. Aussi visible par le public dans Documents.</span><div class="acts"><a class="btn btn-green btn-sm" href="/fiche-renseignement-sodaf.pdf" download>PDF</a></div></div></div>
-<div class="card entdoc"><img src="/apercu-planning.jpg" alt="Planning de la semaine" loading="lazy"><div><b>Planning mural</b><span>Code en salle, créneaux de conduite et examen blanc. A4 paysage à afficher.</span><div class="acts"><a class="btn btn-green btn-sm" href="/planning-semaine-sodaf.pdf" download>PDF</a></div></div></div>
+<div class="card entdoc"><img src="/apercu-planning.jpg" alt="Planning de la semaine" loading="lazy"><div><b>Planning mural</b><span>Équipes de conduite, groupes de code et rattrapages du mercredi. A4 paysage à afficher.</span><div class="acts"><a class="btn btn-green btn-sm" href="/planning-semaine-sodaf.pdf" download>PDF</a></div></div></div>
 </div></div>
 </div>
 </div>
@@ -2019,7 +2046,7 @@ ${HEAD("Pré-inscription", "Rejoins SODAF", "Envoie ta demande en une minute : e
 <div class="pi-hd"><div><p class="eyebrow">Pré-inscription en ligne</p><h3>Tes coordonnées</h3></div><ul class="pi-tags"><li>1 minute</li><li>Gratuit</li><li>Sans engagement</li></ul></div>
 <div class="row2"><div class="field"><label for="sd-fName">Nom</label><input id="sd-fName" autocomplete="family-name" maxlength="60" placeholder="Ex. AGBEKO"></div><div class="field"><label for="sd-fFirst">Prénoms</label><input id="sd-fFirst" autocomplete="given-name" maxlength="80" placeholder="Ex. Kossi Mawuli"></div></div>
 <div class="row2"><div class="field"><label for="sd-fPhone">Téléphone / WhatsApp</label><div class="tel"><span>+228</span><input id="sd-fPhone" inputmode="numeric" maxlength="11" autocomplete="tel-national" placeholder="90 00 00 00"></div></div><div class="field"><label for="sd-fCity">Quartier</label><input id="sd-fCity" maxlength="80" placeholder="Ex. Bè, Adidogomé"></div></div>
-<div class="field"><label for="sd-fCat">Formation</label><select id="sd-fCat"><option value="Permis B">Permis B (voiture)</option><option value="Permis A">Permis A (moto)</option><option value="Remise à niveau">Remise à niveau (déjà titulaire du permis)</option><option value="Pack A + B">Pack A + B (moto et voiture)</option><option value="Formation entreprise">Formation entreprise (chauffeurs)</option></select></div>
+<div class="row2"><div class="field"><label for="sd-fCat">Formation</label><select id="sd-fCat"><option value="Permis B">Permis B (voiture)</option><option value="Tarif étudiant">Permis B, tarif étudiant (18 ans et plus)</option><option value="Remise à niveau">Remise à niveau (déjà titulaire du permis)</option><option value="Formation entreprise">Formation entreprise (chauffeurs)</option></select></div><div class="field"><label for="sd-fPar">Code parrain <small>(facultatif)</small></label><input id="sd-fPar" maxlength="40" autocomplete="off" placeholder="N° client SO… ou son téléphone"></div></div>
 <div class="field"><label for="sd-fMsg">Message (facultatif)</label><textarea id="sd-fMsg" placeholder="Une question, une contrainte d'horaire…"></textarea></div>
 <p id="sd-fErr" class="pi-err" hidden>Indique ton nom, tes prénoms et ton numéro à 8 chiffres (après le +228).</p>
 <button class="btn btn-green pi-go" type="submit" id="sd-send">Envoyer ma pré-inscription</button>
@@ -2560,12 +2587,13 @@ function init(root) {
     const F = { f: $("#sd-rcForm select[name=formation]"), amt: $("#sd-rcAmt"), rest: $("#sd-rcRest"), restBox: $("#sd-rcRestBox"), other: $("#sd-rcOther") };
     const fmt = (n) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, "\u202F") + "\u00A0F";
     const price = () => +(F.f.selectedOptions[0].dataset.p || 0);
+    const insFee = () => { const v = F.f.selectedOptions[0].dataset.i; return v === undefined ? 5000 : +v; };
     const mk = () => (form.querySelector("input[name=motif]:checked") || {}).value || "autre";
     const MOTIF = { "ins-half": "Droit d'inscription + 1re moitié de la formation", "ins-full": "Droit d'inscription + formation complète", rest: "2e moitié de la formation (solde)", seance: "Séance de conduite supplémentaire", examen: "Dépôt pour l'inscription à l'examen d'État" };
     const motifText = () => mk() === "autre" ? (F.other.value.trim() || "Autre paiement") : MOTIF[mk()];
     function calc(k, p) {
-      if (k === "ins-half") return p ? [5000 + p / 2, p / 2] : null;
-      if (k === "ins-full") return p ? [5000 + p, 0] : null;
+      if (k === "ins-half") return p ? [insFee() + p / 2, p / 2] : null;
+      if (k === "ins-full") return p ? [insFee() + p, 0] : null;
       if (k === "rest") return p ? [p / 2, 0] : null;
       if (k === "seance") return [5000, ""];
       if (k === "examen") return [30000, ""];
@@ -2573,6 +2601,7 @@ function init(root) {
     }
     function suggest() {
       const p = price();
+      form.querySelectorAll("[data-ins]").forEach((sm) => { const fi = insFee(); sm.textContent = (fi ? "Droit d'inscription (" + fmt(fi) + ")" : "Inscription offerte") + " + " + sm.dataset.ins; });
       form.querySelectorAll(".rcm").forEach((l) => {
         const k = l.dataset.k, c = calc(k, p), em = l.querySelector("[data-amt]");
         const off = c === null; l.hidden = off;
@@ -2702,7 +2731,7 @@ function init(root) {
         '<div class="rc-amt"><span>Montant reçu</span><b>' + fmt(d.montant) + "</b><em>" + escR(lettres(d.montant)) + " francs CFA</em></div>" +
         '<div class="rc-grid"><div><span>Mode de paiement</span><b>' + escR(d.mode) + "</b></div><div><span>Reste à payer</span><b>" + (ex ? "Soldé ✓" : d.reste === "" ? "—" : d.reste > 0 ? fmt(d.reste) : "Formation soldée ✓") + "</b></div></div>" +
         (d.note ? '<p class="rc-note">' + escR(d.note) + "</p>" : "") +
-        '<div class="rc-cond"><b>Bon à savoir</b>' + (ex ? "Ce dépôt couvre l\'inscription à l\'examen d\'État. SODAF dépose ton dossier ; l\'État t\'envoie ensuite par message la date de ton examen, à passer à SOTOPLA. Le jour de l\'examen : ta carte d\'identité originale. Garde ce reçu jusqu\'au résultat." : "Le droit d\'inscription n\'est pas remboursable. Une séance de conduite non faite peut être reportée pendant 6 mois. Garde ce reçu jusqu\'à la fin de ta formation.") + "</div>" +
+        '<div class="rc-cond"><b>Bon à savoir</b>' + (ex ? "Ce dépôt couvre l\'inscription à l\'examen d\'État. SODAF dépose ton dossier ; l\'État t\'envoie ensuite par message la date de ton examen, à passer à SOTOPLA. Le jour de l\'examen : ta carte d\'identité originale. Garde ce reçu jusqu\'au résultat." : "Le droit d\'inscription n\'est pas remboursable. Absence à un bloc de conduite prévenue la veille : rattrapage gratuit le mercredi ; sans prévenir, le bloc est perdu. Garde ce reçu jusqu\'à la fin de ta formation.") + "</div>" +
         '<div class="rc-sign"><div><span>Pour SODAF Auto-École</span><b>' + "Le secrétariat" + '</b><small>Reçu électronique enregistré au secrétariat sous le n° ' + escR(d.no) + ".</small></div><img src=\"/entreprise/cachet-sodaf-bleu.png\" alt=\"\"></div>" +
         "</div>" +
         '<div class="rc-foot"><span>412 Avenue Akei, Tokoin Tamé, Lomé · +228 72 54 41 66 · autosodaf.com</span><b>L\'art de conduire, la force de réussir.</b></div>' +
@@ -2736,7 +2765,7 @@ function init(root) {
       function soldeOk() {
         const i = (window.TEAM_INFO && window.TEAM_INFO(+($("#sd-rcEid").value || 0))) || { code: true };
         const code = !i.code ? "" : i.fini ? "\n• *Code* : ton cycle en salle est terminé ; tu peux toujours venir au rattrapage et examen blanc du *mercredi à 14 h 30*, et réviser sur autosodaf.com." : i.susp ? (i.groupe ? "\n• *Code* : ta place au cours de code en salle est *rétablie*, " + i.groupe + "." : "\n• *Code* : tu retrouves une place au cours de code en salle ; nous t'envoyons tes horaires.") : "\n• *Code* : tu continues les cours de code en salle" + (i.groupe ? " avec ton groupe, " + i.groupe : "") + ".";
-        return "\n\n*TA FORMATION EST SOLDÉE*" + code + "\n• *Conduite* : tu peux maintenant *commencer tes séances de conduite*" + (i.quota ? " (" + i.quota + " séances d'une heure prévues dans ta formule)" : "") + ".\n• Pour réserver ta première séance, réponds simplement à ce message ou passe à l'agence : nous choisissons ensemble le créneau qui t'arrange (en semaine de 6 h 30 à 10 h 45 et de 15 h 45 à 17 h 45, le samedi matin).";
+        return "\n\n*TA FORMATION EST SOLDÉE*" + code + "\n• *Conduite* : tu peux maintenant *commencer tes séances de conduite*" + (i.quota ? " (" + i.quota + " blocs de 2 h prévus dans ta formule)" : "") + ".\n• La conduite se fait en *équipe de 4*, 2 blocs de 2 h par semaine, toujours aux mêmes horaires. Nous te plaçons dans une équipe et t'envoyons tes horaires ici. Une préférence (6 h 30, 8 h 45 ou 15 h 45) ? Réponds à ce message.";
       }
       const mkEx = (lk) => "Bonjour " + eleve.split(" ")[0] + ",\n\nNous avons bien reçu ton *dossier d'examen complet* et ton dépôt. Merci !\n\n*TON REÇU*\n• N° : " + no + "\n• Montant : " + sp(montant) + "\n• Motif : " + d.motif + "\n• Soldé ✓\n\nVoir et télécharger ton reçu :\n" + lk + "\n\n*LA SUITE*\n• SODAF dépose ton dossier auprès de l'État.\n• Tu recevras ensuite un *message officiel* avec la date de ton examen, à passer à *SOTOPLA*.\n• Le jour de l'examen : ta carte d'identité originale et 30 minutes d'avance.\n\nUne question ? Écris-nous ici sur WhatsApp, ou appelle le *+228 72 54 41 66*.\n\nToute l'équipe SODAF te souhaite bonne chance !\n*L'équipe SODAF · L'art de conduire, la force de réussir.*";
       const msg = isEx ? mkEx(link) : mkMsg(link);
@@ -2810,7 +2839,7 @@ function init(root) {
   async function submitInscription(payload, waText) {
     $("#sd-fail").hidden = true;
     sendBtn.disabled = true; sendBtn.textContent = "Envoi en cours…";
-    const ok = await DB.add("eleves", { nom: payload.nom, nom_famille: payload.nom_famille || null, prenoms: payload.prenoms || null, telephone: "+228" + payload.telephone.replace(/\D/g, "").slice(-8), formation: payload.formation, quartier: payload.quartier || null, message: payload.message || null, source: "site" });
+    const ok = await DB.add("eleves", { nom: payload.nom, nom_famille: payload.nom_famille || null, prenoms: payload.prenoms || null, telephone: "+228" + payload.telephone.replace(/\D/g, "").slice(-8), formation: payload.formation, quartier: payload.quartier || null, message: payload.message || null, source: "site", ...(payload.parrain ? { parrain: payload.parrain } : {}) });
     sendBtn.disabled = false; sendBtn.textContent = "Envoyer ma pré-inscription";
     $("#sd-waFail").href = WA + "?text=" + encodeURIComponent(waText);
     if (!ok) { $("#sd-fail").hidden = false; return; }
@@ -2833,8 +2862,8 @@ function init(root) {
     const okForm = nf.length >= 2 && pr.length >= 2 && digits.length === 8;
     $("#sd-fErr").hidden = okForm;
     if (!okForm) return;
-    lastPayload = { nom: name, nom_famille: nf, prenoms: pr, telephone: phone, formation: $("#sd-fCat").value, quartier: $("#sd-fCity").value.trim(), message: $("#sd-fMsg").value.trim(), source: "Site web" };
-    const waText = "Bonjour SODAF, je souhaite m'inscrire.\nNom : " + name + "\nTéléphone : " + phone + "\nFormation : " + lastPayload.formation + "\nQuartier : " + (lastPayload.quartier || "—") + (lastPayload.message ? "\nMessage : " + lastPayload.message : "");
+    lastPayload = { nom: name, nom_famille: nf, prenoms: pr, telephone: phone, formation: $("#sd-fCat").value, quartier: $("#sd-fCity").value.trim(), message: $("#sd-fMsg").value.trim(), parrain: $("#sd-fPar").value.trim(), source: "Site web" };
+    const waText = "Bonjour SODAF, je souhaite m'inscrire.\nNom : " + name + "\nTéléphone : " + phone + "\nFormation : " + lastPayload.formation + "\nQuartier : " + (lastPayload.quartier || "—") + (lastPayload.parrain ? "\nCode parrain : " + lastPayload.parrain : "") + (lastPayload.message ? "\nMessage : " + lastPayload.message : "");
     submitInscription(lastPayload, waText);
   });
   $("#sd-retry").addEventListener("click", () => form.requestSubmit());
@@ -3587,7 +3616,28 @@ function init(root) {
     const etapeOf = (x) => (x.statut === "Permis obtenu" ? "archives" : ["Inscrit", "En formation"].includes(x.statut) && x.examen_etape ? "examen" : x.statut === "Contacté" && x.dossier_envoye_le ? "dossier" : Object.keys(ETAPES).find((k) => ETAPES[k].includes(x.statut)) || "accueil");
     const CFG = {};
     // ---- Groupes de code (salle de 6 places) : A lun+jeu, B mar+ven à 14 h 30 ; C, D le matin (fermés au départ) ; mercredi = rattrapage commun
-    let GROUPES = [], gMan = false, monIdx = 0;
+    let GROUPES = [], gMan = false, monIdx = 0, EQUIPES = [];
+    // ---- Conduite en équipe de 4 (blocs de 2 h)
+    const PLAGE = { "6 h 30": "6 h 30 – 8 h 30", "8 h 45": "8 h 45 – 10 h 45", "15 h 45": "15 h 45 – 17 h 45" };
+    const plage = (h) => PLAGE[h] || h;
+    const JNOM = ["", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"];
+    const eqOf = (id) => EQUIPES.find((q) => q.id === id) || null;
+    const eqJours = (q) => q.jours.map((j) => JNOM[j]).join(" et ");
+    const eqLabel = (q) => q.nom + " · " + eqJours(q) + ", " + plage(q.heure);
+    const loadEquipes = async () => { const q = await DB.q("equipes_conduite?select=*&order=ordre").catch(() => null); if (q) EQUIPES = q; return EQUIPES; };
+    const eqFutur = () => DB.q("creneaux_conduite?select=id,jour,heure,equipe,place,eleve_id,statut&bloc=eq.equipe&jour=gt." + iso(new Date()) + "&order=jour.asc&limit=3000").catch(() => []);
+    // Mercredi 15 h 45 : rattrapages seulement jusqu'au mardi 18 h (heure de Lomé)
+    const merLibre = (jour) => Date.now() >= new Date(jour + "T18:00:00+00:00").getTime() - 864e5;
+    // Ordre de passage au volant : il tourne d'un bloc à l'autre
+    const passage = (jour, n) => n ? Math.floor((Date.UTC(+jour.slice(0, 4), +jour.slice(5, 7) - 1, +jour.slice(8, 10)) - Date.UTC(2026, 9, 5)) / 864e5) % n : 0;
+    // État des équipes : élèves à venir et première place libre
+    const eqEtat = (rows) => EQUIPES.map((q) => {
+      const rs = rows.filter((c) => c.equipe === q.id), mem = {};
+      rs.forEach((c) => { if (c.eleve_id && c.statut === "Réservé") { const m = mem[c.eleve_id] || (mem[c.eleve_id] = { id: c.eleve_id, n: 0, de: c.jour, a: c.jour, place: c.place }); m.n++; m.a = c.jour; } });
+      const libres = rs.filter((c) => c.statut === "Libre" && !c.eleve_id), lib = libres.length ? libres[0].jour : null;
+      const auj = new Set(rs.filter((c) => c.jour === (rs[0] && rs[0].jour) && c.statut === "Libre" && !c.eleve_id).map((c) => c.place)).size;
+      return { q, membres: Object.values(mem).sort((a, b) => a.place - b.place), libre: lib, placesDispo: auj };
+    });
     const sansCode = (x) => /Remise à niveau|entreprise/i.test(x.formation || "");
     const enCode = (x) => etapeOf(x) === "formation" && !sansCode(x);
     const occ = (gid) => eleves.filter((x) => x.groupe_code === gid && enCode(x) && !susp(x) && (!x.groupe_depuis || Date.now() - new Date(x.groupe_depuis) < 42 * 864e5)).length;
@@ -3600,15 +3650,16 @@ function init(root) {
     const gPlein = () => { const a = GROUPES.filter((g) => g.actif); return !a.length || a.every((g) => occ(g.id) >= g.places); };
     const hCode = () => { const m = GROUPES.filter((g) => g.actif && parseInt(g.heure, 10) < 12); return "deux fois par semaine, l'après-midi à 14 h 30" + (m.length ? " ou le matin à " + gHeure(m[0]) : ""); };
     // ---- Séances de conduite par formule (calculées depuis les reçus, comme dans la base)
-    const quotaF = (f) => !f ? null : /remise/i.test(f) ? 4 : /pack/i.test(f) ? 18 : /courte/i.test(f) ? 6 : /moto|^permis a/i.test(f) ? 6 : /théorique/i.test(f) ? 0 : /complète|accélérée/i.test(f) ? 12 : null;
+    const quotaF = (f) => !f ? null : /remise/i.test(f) ? 4 : /pack/i.test(f) ? 18 : /courte/i.test(f) ? 6 : /moto|^permis a/i.test(f) ? 6 : /théorique/i.test(f) ? 0 : /tirage/i.test(f) ? 13 : /complète|accélérée/i.test(f) ? 12 : null;
     const attach = (r, pr, cr) => {
       const SL = {}, INS = {}, INSD = {}, PLUS = {}, FA = {}, RE = {}, td = iso(new Date());
       (pr || []).forEach((p) => { if (p.reste !== null && p.reste !== undefined) SL[p.eleve_id] = p.reste; if (/^Droit d'inscription/.test(p.motif || "")) { INS[p.eleve_id] = p.formation; INSD[p.eleve_id] = p.cree_le; } if (p.motif === "Séance de conduite supplémentaire") PLUS[p.eleve_id] = (PLUS[p.eleve_id] || 0) + Math.max(1, Math.round((p.montant || 5000) / 5000)); });
-      (cr || []).forEach((c) => { if (c.statut === "Fait") FA[c.eleve_id] = (FA[c.eleve_id] || 0) + 1; else if (c.statut === "Réservé" && c.jour >= td) RE[c.eleve_id] = (RE[c.eleve_id] || 0) + 1; });
-      r.forEach((x) => { x.solde = x.id in SL ? SL[x.id] : null; x.formule = INS[x.id] || null; const q = quotaF(INS[x.id]); x.quota = q === null ? null : q + (PLUS[x.id] || 0); x.plus = PLUS[x.id] || 0; x.faits = FA[x.id] || 0; x.resa = RE[x.id] || 0; x.ins_le = INSD[x.id] || null; });
+      const PE = {}, AB = {};
+      (cr || []).forEach((c) => { if (c.statut === "Fait") FA[c.eleve_id] = (FA[c.eleve_id] || 0) + 1; else if (c.statut === "Réservé" && c.jour >= td) RE[c.eleve_id] = (RE[c.eleve_id] || 0) + 1; else if (c.statut === "Absent sans prévenir") PE[c.eleve_id] = (PE[c.eleve_id] || 0) + 1; else if (c.statut === "Absent") AB[c.eleve_id] = (AB[c.eleve_id] || 0) + 1; });
+      r.forEach((x) => { x.solde = x.id in SL ? SL[x.id] : null; x.formule = INS[x.id] || null; const q = quotaF(INS[x.id]); x.quota = q === null ? null : q + (PLUS[x.id] || 0); x.plus = PLUS[x.id] || 0; x.faits = FA[x.id] || 0; x.resa = RE[x.id] || 0; x.perdus = PE[x.id] || 0; x.absents = AB[x.id] || 0; x.ins_le = INSD[x.id] || null; });
     };
     const PAY_Q = "paiements?select=eleve_id,reste,cree_le,motif,formation,montant&annule=is.false&eleve_id=not.is.null&order=cree_le.asc&limit=10000";
-    const CR_Q = "creneaux_conduite?select=eleve_id,statut,jour&eleve_id=not.is.null&statut=in.(Fait,Réservé)&limit=20000";
+    const CR_Q = "creneaux_conduite?select=eleve_id,statut,jour&eleve_id=not.is.null&statut=in." + encodeURIComponent('(Fait,Réservé,Absent,"Absent sans prévenir")') + "&limit=20000";
     const evalAt = (x) => (x.quota ? Math.max(1, x.quota - 2) : null);
     const seEtat = (x) => x.evaluation === "pret" ? "pret" : x.quota === null ? "cours" : x.evaluation === "plus" || x.faits >= x.quota ? "fin" : x.faits >= evalAt(x) ? "eval" : "cours";
     // Solde : à payer dans les 2 semaines après l'inscription (règle écrite sur le reçu). Un rappel à J+7 ; à J+14, place au code suspendue jusqu'au paiement
@@ -3622,7 +3673,7 @@ function init(root) {
       if (se === "rappel" || (se === "susp" && !annonce(x))) return '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-a="relSolde" href="https://wa.me/228' + waNum(x.telephone) + "?text=" + encodeURIComponent(msgSolde(x, se === "susp" ? 2 : 1)) + '">' + (se === "susp" ? "Prévenir de la suspension ↗" : "Envoyer le rappel ↗") + "</a>";
       return '<button class="btn btn-line btn-sm" type="button" disabled>' + (se === "susp" ? "Suspension annoncée ✓" : (x.solde_rappels || 0) ? "Rappel envoyé ✓" : "Rappel le " + dFr(rapLe(x)).replace(/\.$/, "")) + "</button>";
     };
-    const plein = (x) => x.quota !== null && x.faits + x.resa >= x.quota;
+    const plein = (x) => x.quota !== null && x.faits + x.resa + (x.perdus || 0) >= x.quota;
     const cycleOk = (x) => !x.groupe_depuis || Date.now() - new Date(x.groupe_depuis) < 42 * 864e5;
     const msgPlus = (x) => "Bonjour " + prenom(x) + ",\n\nTu as fait les *" + x.faits + " séances de conduite* prévues dans ta formule. Ton moniteur te conseille quelques séances de plus avant l'examen, pour que tu sois vraiment à l'aise le jour J.\n\n*SÉANCE EN PLUS* : 5 000 F l'heure (tu choisis combien)." + (CFG.mixx_numero ? "\n\nTu peux payer à l'agence ou par *Mixx by Yas* au " + CFG.mixx_numero + (CFG.mixx_nom ? " (" + CFG.mixx_nom + ")" : "") + ", motif *" + CODE(x) + " SEANCE*, puis nous envoyer la capture du SMS ici." : "\n\nTu peux payer à l'agence aux heures de bureau.") + "\n\nDès le paiement, nous réservons tes séances." + SIGN;
     // Prochain cours d'un groupe (date + cours du programme)
@@ -3630,11 +3681,12 @@ function init(root) {
     const msgGroupe = (x) => { const g = gOf(x.groupe_code), pc = prochainCours(g); return "Bonjour " + prenom(x) + ",\n\nVoici tes horaires de *cours de code en salle* chez SODAF Auto-École.\n\n*TON GROUPE : " + g.nom.toUpperCase() + "*\n• " + gJours(g).replace(/^./, (c) => c.toUpperCase()) + " : " + g.heure + "\n• Mercredi 14 h 30 : rattrapage et examen blanc (si tu as manqué un cours, ou pour t'entraîner)" +
       (pc ? "\n\n*TON PROCHAIN COURS*\n" + pc.d.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" }).replace(/^./, (c) => c.toUpperCase()) + " à " + gHeure(g) + " : cours " + pc.b.n + " sur 12, *" + pc.b.t + "*." : "") +
       "\n\n*LE PROGRAMME*\n12 cours en 6 semaines, puis il recommence : tu peux commencer n'importe quelle semaine, en 6 semaines tu vois tout. Après chaque cours, fais le *devoir du cours* sur autosodaf.com/#devoirs (10 questions, ton résultat part au moniteur).\n\nLa salle compte 6 places : merci d'arriver à l'heure. Tu peux aussi réviser à tout moment sur autosodaf.com (cours, quiz et devoir de la semaine).\n\nUn empêchement ? Préviens-nous en répondant à ce message." + SIGN; };
-    const PRIXM = { "Permis B": "55 000 F la formation complète (formule courte 35 000 F, accélérée 75 000 F en 2 mois ou 80 000 F en 1 mois)", "Permis A": "30 000 F", "Pack A + B": "80 000 F", "Remise à niveau": "20 000 F", "Formation entreprise": "sur devis, selon le nombre de chauffeurs" };
+    const PRIXM = { "Permis B": "55 000 F la formation complète en 6 semaines (formule courte : 35 000 F)", "Tarif étudiant": "30 000 F la formation complète, tarif étudiant (carte d'étudiant de l'année et carte d'identité à présenter)", "Gagnant du tirage": "15 000 F la formation complète, lot du tirage au sort étudiant", "Remise à niveau": "25 000 F (4 blocs de conduite de 2 h)", "Formation entreprise": "sur devis, selon le nombre de chauffeurs", "Permis A": "30 000 F", "Pack A + B": "80 000 F" };
+    const INSM = { "Tarif étudiant": "3 000 F", "Gagnant du tirage": "offert" };
     const jours = (d) => Math.floor((Date.now() - new Date(d)) / 864e5);
     const dosAge = (x) => { const b = x.web && x.web.le > (x.dossier_envoye_le || "") ? x.web.le : x.dossier_envoye_le; return jours(x.dossier_relance_le && x.dossier_relance_le > b ? x.dossier_relance_le : b); };
     const agence = (x) => x.web && x.web.mode === "agence";
-    const msgDossier = (x) => "Bonjour " + prenom(x) + " 😊\n\nComme promis, voici ton dossier d'inscription SODAF Auto-École.\n\n*TON DOSSIER*\n• N° Client : " + CODE(x) + "\n• Formation : " + (x.formation || "à préciser") + "\n• Prix : " + (PRIXM[x.formation] || "voir autosodaf.com") + "\n• Droit d'inscription : 5 000 F\n\n✍️ *Finalise ton inscription en ligne (2 minutes) :*\n" + inscLink(x) + "\nTu choisis ta formule, puis tu paies à l'agence ou par Mixx by Yas. Tu reçois ensuite ton reçu officiel sur WhatsApp.\n\n📍 412 Avenue Akei, Tokoin Tamé (en face de la caisse)\n\nDes questions ? Réponds simplement à ce message.\nL'équipe SODAF · L'art de conduire, la force de réussir.";
+    const msgDossier = (x) => "Bonjour " + prenom(x) + " 😊\n\nComme promis, voici ton dossier d'inscription SODAF Auto-École.\n\n*TON DOSSIER*\n• N° Client : " + CODE(x) + "\n• Formation : " + (x.formation || "à préciser") + "\n• Prix : " + (PRIXM[x.formation] || "voir autosodaf.com") + "\n• Droit d'inscription : " + (INSM[x.formation] || "5 000 F") + "\n\n✍️ *Finalise ton inscription en ligne (2 minutes) :*\n" + inscLink(x) + "\nTu choisis ta formule, puis tu paies à l'agence ou par Mixx by Yas. Tu reçois ensuite ton reçu officiel sur WhatsApp.\n\n📍 412 Avenue Akei, Tokoin Tamé (en face de la caisse)\n\nDes questions ? Réponds simplement à ce message.\nL'équipe SODAF · L'art de conduire, la force de réussir.";
     const newJeton = () => { const a = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789", r = new Uint32Array(10); crypto.getRandomValues(r); return [...r].map((n) => a[n % a.length]).join(""); };
     const jetonOf = (x) => x.jeton || (x._jeton = x._jeton || newJeton());
     const inscLink = (x) => "https://autosodaf.com/#inscrire-" + x.id + "-" + jetonOf(x);
@@ -3645,7 +3697,7 @@ function init(root) {
       if (k === 3) return "Bonjour " + prenom(x) + ",\n\nNous n'avons pas eu de nouvelles de ta part concernant ton inscription chez *SODAF Auto-École*.\n\nSi tu as besoin de plus de temps ou si tu as changé d'avis, dis-le-nous simplement : aucun souci.\n\nPour t'inscrire :\n" + L + S;
       return "Bonjour " + prenom(x) + ",\n\nSans nouvelles de ta part, nous mettons ton dossier d'inscription (N° Client : " + CODE(x) + ") en pause.\n\nIl reste disponible : le jour où tu veux commencer, réponds simplement à ce message ou appelle-nous au *+228 72 54 41 66*, et nous le réactivons tout de suite.\n\nMerci et à bientôt !" + S; };
     const CODE = (x) => "SO" + x.id;
-    const SRC = { site: "Site web", agence: "Venu à l'agence", bureau: "Venu à l'agence", appel: "Appel téléphonique", whatsapp: "WhatsApp", bouche: "Bouche-à-oreille", reseaux: "Facebook / TikTok", affiche: "Affiche, flyer, QR", entreprise: "Entreprise", autre: "Autre" };
+    const SRC = { parrainage: "Parrainage", site: "Site web", agence: "Venu à l'agence", bureau: "Venu à l'agence", appel: "Appel téléphonique", whatsapp: "WhatsApp", bouche: "Bouche-à-oreille", reseaux: "Facebook / TikTok", affiche: "Affiche, flyer, QR", entreprise: "Entreprise", autre: "Autre" };
     const srcOf = (x) => (x.source === "site" ? SRC.site : SRC[x.provenance] || SRC.agence);
     const prenom = (x) => (x.nom || "").trim().split(/\s+/)[0];
     const msgAccueil = (x) => "Bonjour " + prenom(x) + ",\n\nIci le secrétariat de SODAF Auto-École. Nous avons bien reçu ta pré-inscription, merci !\n\n*TON DOSSIER*\n• N° Client : " + CODE(x) + "\n• Formation : " + (x.formation || "à préciser") + "\n\nNous allons t'appeler très bientôt pour répondre à tes questions et préparer ton inscription.\nGarde ton téléphone près de toi.\n\nÀ très vite !\n*L'équipe SODAF · L'art de conduire, la force de réussir.*\nautosodaf.com";
@@ -3666,14 +3718,17 @@ function init(root) {
     const exLine = (x) => x.examen_etape === "pret" ? (x.examen_lien_le ? "message envoyé " + ago(x.examen_lien_le) + " · dossier à apporter" : "message à envoyer") : x.examen_etape === "complet" ? "dossier reçu · à déposer" + (x.examen_passages ? " · " + (x.examen_passages + 1) + "e passage" : "") : "déposé le " + dFr(x.examen_depose_le) + " · résultat à noter";
     const SIGN = "\n\n*L'équipe SODAF · L'art de conduire, la force de réussir.*";
     const jourLong = (j) => longDay(j).replace(/^./, (c) => c.toUpperCase());
-    const msgSeance = (el, c) => "Bonjour " + prenom(el) + ",\n\nTa séance de conduite est *confirmée*.\n\n*TA SÉANCE*\n• Date : " + jourLong(c.jour) + "\n• Heure : " + c.heure + " (durée 1 h)\n• Départ : SODAF, 412 Avenue Akei, Tokoin Tamé (en face de la caisse)\n• N° Client : " + CODE(el) + "\n\nMerci d'être là *10 minutes avant l'heure*, en chaussures fermées.\n\nUn empêchement ? Préviens-nous au moins la veille en répondant à ce message : nous déplacerons ta séance." + SIGN;
-    const msgRappelSeance = (el, c) => "Bonjour " + prenom(el) + ",\n\nPetit rappel : ta séance de conduite est *demain, " + longDay(c.jour) + " à " + c.heure + "*.\n\nDépart : SODAF, 412 Avenue Akei, Tokoin Tamé (en face de la caisse). Merci d'être là 10 minutes avant l'heure.\n\nUn empêchement ? Réponds vite à ce message." + SIGN;
+    const msgSeance = (el, c) => "Bonjour " + prenom(el) + ",\n\nTa séance de conduite est *confirmée*.\n\n*TA SÉANCE*\n• Date : " + jourLong(c.jour) + "\n• Heure : " + plage(c.heure) + (c.bloc ? " (bloc de 2 h, en équipe de 4)" : "") + "\n• Départ : SODAF, 412 Avenue Akei, Tokoin Tamé (en face de la caisse)\n• N° Client : " + CODE(el) + "\n\nMerci d'être là *10 minutes avant l'heure*, en chaussures fermées.\n\nUn empêchement ? Préviens-nous au moins la veille en répondant à ce message : nous déplacerons ta séance." + SIGN;
+    const msgEquipe = (el, q, blocs) => { const pr = blocs[0], der = blocs[blocs.length - 1];
+      return "Bonjour " + prenom(el) + ",\n\nTa formation est soldée : tu as maintenant ta place en *conduite*.\n\n*TON ÉQUIPE : " + q.nom.toUpperCase() + "*\n• " + eqJours(q).replace(/^./, (c) => c.toUpperCase()) + ", " + plage(q.heure) + "\n• 4 élèves dans la voiture : chacun conduit environ 25 minutes, les autres observent et le moniteur commente.\n\n*TES BLOCS DE CONDUITE*" +
+        (pr ? "\n• 1er bloc : " + jourLong(pr.jour) + " à " + pr.heure + "\n• " + blocs.length + " blocs réservés, 2 par semaine, jusqu'au " + longDay(der.jour) : "") + "\n• Au 10e bloc, le moniteur t'évalue pour l'examen.\n\n*À SAVOIR*\n• Départ : SODAF, 412 Avenue Akei, Tokoin Tamé (en face de la caisse). Arrive 10 minutes avant, en chaussures fermées.\n• Un empêchement ? Préviens-nous *la veille* en répondant à ce message : tu rattrapes gratuitement le mercredi à 15 h 45. Sans prévenir, le bloc est perdu.\n\n*PARRAINAGE*\nTon code parrain : *" + CODE(el) + "*. Chaque personne qui s'inscrit avec ton code te rapporte *2 000 F* (Mixx by Yas ou Moov Money)." + SIGN; };
+    const msgRappelSeance = (el, c) => "Bonjour " + prenom(el) + ",\n\nPetit rappel : ta séance de conduite est *demain, " + longDay(c.jour) + " à " + c.heure + "*" + (c.bloc ? " (bloc de 2 h avec ton équipe)" : "") + ".\n\nDépart : SODAF, 412 Avenue Akei, Tokoin Tamé (en face de la caisse). Merci d'être là 10 minutes avant l'heure.\n\nUn empêchement ? Réponds vite à ce message." + SIGN;
     const msgExamen = (x) => "Bonjour " + prenom(x) + ",\n\nFélicitations, ta formation chez *SODAF Auto-École* est terminée ! Pour la suite, nous devons faire le *dépôt de ton dossier d'examen* auprès de l'État.\n\n*À APPORTER À L'AGENCE*\n• Photocopie de ta carte d'identité\n• Ton acte de naissance\n• 2 photos d'identité (format passeport)\n• Le dépôt pour l'examen : 30 000 F\n\nLe dossier est accepté *uniquement complet* : apporte tout en une seule fois.\n\nN° Client : " + CODE(x) + exMixx(x) + "\n\n" + AGENCE + "\n\nÀ très vite !" + SIGN;
     const msgBravo = (x) => "Félicitations " + prenom(x) + " !\n\nToute l'équipe de *SODAF Auto-École* est fière de toi : tu as obtenu ton *permis de conduire*.\n\nUn dernier conseil : sur la route, la prudence reste ta meilleure alliée.\n\nSi tu es content(e) de ta formation, parle de SODAF autour de toi : ta famille et tes amis seront bien accueillis." + SIGN + "\nautosodaf.com";
     const say = (t) => '<p class="sc-say">« ' + t + " »</p>";
     const tip = (t) => '<p class="sc-tip">' + t + "</p>";
     // Nom de la formation tel qu'on le dit au téléphone (pas le nom administratif)
-    const ORAL = { "Permis B": "le permis voiture", "Permis A": "le permis moto", "Pack A + B": "le permis moto et voiture", "Remise à niveau": "la remise à niveau", "Formation entreprise": "la formation de vos chauffeurs" };
+    const ORAL = { "Permis B": "le permis voiture", "Tarif étudiant": "le permis voiture au tarif étudiant", "Gagnant du tirage": "ta formation du tirage au sort", "Permis A": "le permis moto", "Pack A + B": "le permis moto et voiture", "Remise à niveau": "la remise à niveau", "Formation entreprise": "la formation de vos chauffeurs" };
     const script = (x) => {
       const exam = /Permis|Pack/.test(x.formation || ""), f = ORAL[x.formation] || "le permis";
       return '<ol class="sc">' +
@@ -3738,6 +3793,7 @@ function init(root) {
     async function loadEleves(silent) {
       const [r, wb, pr, gr, cr] = await Promise.all([run(() => DB.q("eleves?select=*&order=cree_le.desc&limit=2000")), run(() => DB.q("inscriptions_web?select=*&order=le.desc&limit=2000")), run(() => DB.q(PAY_Q)), run(() => DB.q("groupes_code?select=*&order=ordre")), run(() => DB.q(CR_Q))]);
       if (!r) return; if (gr) GROUPES = gr;
+      await loadEquipes();
       const W = {}; (wb || []).forEach((w) => { if (!W[w.eleve_id]) W[w.eleve_id] = w; });
       attach(r, pr, cr);
       r.forEach((x) => { x.web = W[x.id] && W[x.id].statut === "Nouveau" ? W[x.id] : null; });
@@ -3929,7 +3985,7 @@ function init(root) {
       const head = '<button type="button" class="linkbtn pc-back" data-a="back">← Retour à la liste</button><div class="pc-head"><div class="pc-who">' + phAvatar(x, "ph-lg") + '<div><label class="linkbtn pc-phbtn">' + (x.photo ? "Changer la photo" : "Prendre la photo") + '<input type="file" accept="image/*" capture="environment" data-a="photo" class="insc-file"></label></div></div><div><p class="eyebrow">' + { accueil: "Accueil", appels: "Appels", dossier: "Paiement en attente", formation: "En formation", examen: "Dépôt d'examen", archives: x.statut === "Permis obtenu" ? "Permis obtenu" : "Archivé" }[st] + '</p><h3>' + esc(x.nom) + ' <span>| ' + CODE(x) + "</span></h3></div>" +
         ({ accueil: "", appels: n ? '<a class="btn btn-green btn-sm" target="_blank" rel="noopener" data-a="sendDossier" href="' + wa(msgDossier(x)) + '">Envoyer le lien d\'inscription ↗</a>' : "", dossier: '<button class="btn btn-green btn-sm" type="button" data-a="enroll">' + (x.web && x.web.mode === "mixx" ? "Mixx vérifié ? Faire le reçu" : "Formation payée ? Faire le reçu") + "</button>", formation: "", examen: x.examen_etape === "pret" && n ? (x.examen_lien_le ? '<a class="btn btn-line btn-sm" target="_blank" rel="noopener" data-a="sendExam" href="' + wa(msgExamen(x)) + '">Renvoyer le message ↗</a>' : '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-a="sendExam" href="' + wa(msgExamen(x)) + '">Envoyer le message sur WhatsApp ↗</a>') : "", archives: x.statut === "Permis obtenu" ? "" : x.examen_resultat === "echoue" ? '<button class="btn btn-blue btn-sm" type="button" data-a="reExam">Ressortir : nouveau dépôt d\'examen</button>' : '<button class="btn btn-blue btn-sm" type="button" data-a="revive">Ressortir : remettre en appel</button>' }[st]) + "</div>";
       const info = '<div class="pc-info"><div><span>N° client</span><b>' + CODE(x) + '</b></div><div><span>Téléphone</span><b>' + (n ? '<a href="tel:+228' + n + '">+228 ' + n.replace(/(\d{2})(?=\d)/g, "$1 ") + "</a>" : "—") + '</b></div><div><span>Formation</span><b>' + esc(x.formation || "—") + '</b></div><div><span>Quartier</span><b>' + esc(x.quartier || "—") + "</b></div>" +
-        (["accueil", "appels", "dossier"].includes(st) ? (x.creneau_prefere ? '<div><span>Préfère</span><b>' + esc(x.creneau_prefere) + "</b></div>" : "") + (x.paiement_prefere ? '<div><span>Paiement souhaité</span><b>' + esc(x.paiement_prefere) + "</b></div>" : "") : "") + '<div><span>Arrivé</span><b>' + new Date(x.cree_le).toLocaleDateString("fr-FR") + " · " + esc(srcOf(x)) + "</b></div>" +
+        (["accueil", "appels", "dossier"].includes(st) ? (x.creneau_prefere ? '<div><span>Préfère</span><b>' + esc(x.creneau_prefere) + "</b></div>" : "") + (x.paiement_prefere ? '<div><span>Paiement souhaité</span><b>' + esc(x.paiement_prefere) + "</b></div>" : "") : "") + '<div><span>Arrivé</span><b>' + new Date(x.cree_le).toLocaleDateString("fr-FR") + " · " + esc(srcOf(x)) + "</b></div>" + (x.parrain ? '<div><span>Parrain</span><b>' + (x.parrain_id ? '<button type="button" class="ms-el" data-goel="' + x.parrain_id + '">' + esc((eleves.find((y) => y.id === x.parrain_id) || { nom: "SO" + x.parrain_id }).nom) + "</button>" : esc(x.parrain_tel ? x.parrain_tel.replace("+228", "+228 ") : x.parrain)) + "</b></div>" : "") + ((k) => k ? '<div><span>Ses filleuls</span><b>' + k + " · code " + CODE(x) + "</b></div>" : "")(eleves.filter((y) => y.parrain_id === x.id).length) +
         (st === "archives" ? '<div><span>Statut</span><b>' + esc(x.statut === "Abandon" ? "Archivé" + (x.archive_motif ? " · " + x.archive_motif : x.examen_resultat === "echoue" ? " · Permis échoué" : "") : x.statut) + "</b></div>" : "") +
         (x.message ? '<div class="wide"><span>Son message</span><b>« ' + esc(x.message) + " »</b></div>" : "") + (x.notes ? '<div class="wide"><span>Note interne</span><b>' + esc(x.notes) + "</b></div>" : "") +
         (st === "formation" ? '<div><span>Payé</span><b id="sd-pcPaid">…</b></div><div><span>Reste à payer</span><b id="sd-pcRest">…</b></div><div class="wide pc-paylist" id="sd-pcPay"></div>' : "") + "</div>";
@@ -4029,11 +4085,40 @@ function init(root) {
         const rs = $("#sd-pcRest"); rs.textContent = !ok.length ? "—" : last && last.reste > 0 ? F(last.reste) : "Soldé ✓"; rs.classList.toggle("pc-due", !!(last && last.reste > 0));
         $("#sd-pcPay").innerHTML = ok.length ? "<span>Reçus</span>" + ok.slice(0, 5).map((p) => '<div class="pc-line"><span>' + dOf(p.jour).toLocaleDateString("fr-FR") + "</span><b>" + F(p.montant) + "</b><em>" + esc(p.motif) + "</em>" + (window.__sodafRcLink ? '<a target="_blank" rel="noopener" href="' + window.__sodafRcLink(p) + '">reçu</a>' : "") + "</div>").join("") : '<span>Reçus</span><b style="font-weight:500;color:var(--muted)">Aucun paiement enregistré. Touche « Faire un reçu ».</b>';
         const c = cd || [], fait = c.filter((s) => s.statut === "Fait").length, abs = c.filter((s) => s.statut === "Absent").length, next = c.filter((s) => s.statut === "Réservé" && s.jour >= iso(new Date())).sort((a, b) => (a.jour < b.jour ? -1 : 1))[0];
-        $("#sd-pcDrive").innerHTML = '<div class="pc-mini"><div><span>Séances faites</span><b>' + fait + '</b></div><div><span>Absences</span><b>' + abs + '</b></div><div><span>Prochaine</span><b>' + (next ? longDay(next.jour) + " · " + esc(next.heure) : "—") + "</b></div></div>";
+        $("#sd-pcDrive").innerHTML = '<div class="pc-mini"><div><span>Blocs faits</span><b>' + fait + (x.quota ? " / " + x.quota : "") + '</b></div><div><span>Absences</span><b>' + abs + (x.perdus ? " · " + x.perdus + " perdu" + (x.perdus > 1 ? "s" : "") : "") + '</b></div><div><span>Prochain</span><b>' + (next ? longDay(next.jour) + " · " + esc(next.heure) : "—") + '</b></div></div><div id="sd-pcEq" class="pc-eq"></div>';
+        pcEquipe(x);
       }
     }
+    async function pcEquipe(x) {
+      const box = $("#sd-pcEq"); if (!box) return;
+      if (!EQUIPES.length) await loadEquipes();
+      if (!EQUIPES.length) { box.innerHTML = ""; return; }
+      const rows = await eqFutur(); if (pcSel !== x.id) return;
+      const mine = rows.filter((c) => c.eleve_id === x.id && c.statut === "Réservé"), q = x.equipe ? eqOf(x.equipe) : null;
+      if (q) {
+        const n = waNum(x.telephone), msg = n && mine.length ? "https://wa.me/228" + n + "?text=" + encodeURIComponent(msgEquipe(x, q, mine)) : "";
+        box.innerHTML = '<div class="pc-eqon"><div><span>Équipe de conduite</span><b>' + esc(eqLabel(q)) + "</b><small>Place " + x.equipe_place + " · " + mine.length + " bloc" + (mine.length > 1 ? "s" : "") + " à venir" + (mine.length ? ", jusqu'au " + dOf(mine[mine.length - 1].jour).toLocaleDateString("fr-FR", { day: "numeric", month: "long" }) : "") + '</small></div><div class="pc-eqbtn">' + (msg ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" href="' + msg + '">Envoyer ses horaires ↗</a>' : "") + '<button class="btn btn-line btn-sm" type="button" data-eqchg>Changer d\'équipe</button><button class="linkbtn" type="button" data-eqout>Retirer de l\'équipe</button></div></div>';
+        return;
+      }
+      if (doit(x) || x.solde === null || x.solde === undefined) { box.innerHTML = '<p class="tm-note" style="margin:8px 0 0!important">Placement en équipe de conduite après le solde de la formation.</p>'; return; }
+      if (x.quota === 0) { box.innerHTML = ""; return; }
+      eqForm(x, rows, box);
+    }
+    function eqForm(x, rows, box) {
+      const et = eqEtat(rows), dfr = (d) => dOf(d).toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
+      const opts = et.map((e) => { const libre = e.membres.filter((m) => m.id !== x.id).length < e.q.places; return '<option value="' + e.q.id + '"' + (e.libre ? "" : " disabled") + ">" + esc(e.q.nom + " · " + eqJours(e.q) + " · " + plage(e.q.heure)) + (e.libre ? (libre ? " · place libre dès le " : " · prochaine place le ") + dfr(e.libre) : " · complète") + "</option>"; }).join("");
+      box.innerHTML = '<div class="pc-eqform"><label for="sd-eqSel">Placer dans une équipe de conduite</label><div class="pc-eqrow"><select id="sd-eqSel">' + opts + '</select><button class="btn btn-green btn-sm" type="button" data-eqgo>Placer</button></div><small>Ses ' + (x.quota || 12) + " blocs sont réservés d'un coup, 2 par semaine, à partir de la place libre la plus proche." + (/étudiant/i.test(x.formule || "") ? " Tarif étudiant : un seul étudiant par équipe." : "") + "</small></div>";
+      const first = et.find((e) => e.libre && e.membres.length < e.q.places) || et.find((e) => e.libre); if (first) $("#sd-eqSel").value = first.q.id;
+    }
     $("#sd-pcDetail").addEventListener("click", async (e) => {
+      const gp = e.target.closest("[data-goel]"); if (gp) { goEleve(+gp.dataset.goel); return; }
       const x = eleves.find((y) => y.id === pcSel); if (!x) return;
+      if (e.target.closest("[data-eqchg]")) { const box = $("#sd-pcEq"); eqForm(x, await eqFutur(), box); box.insertAdjacentHTML("beforeend", '<p class="tm-note" style="margin:6px 0 0!important">Ses blocs à venir dans l\'équipe actuelle seront rendus.</p>'); return; }
+      const eo = e.target.closest("[data-eqout]");
+      if (eo) { confirmBtn(eo, async () => { const n = await run(() => DB.q("rpc/equipe_retirer", { method: "POST", body: { p_eleve: x.id } }), "Retiré de l'équipe : blocs à venir rendus"); if (n !== null && n !== undefined) { await loadEleves(true); renderList(); } }); return; }
+      const eg = e.target.closest("[data-eqgo]");
+      if (eg) { const q = +$("#sd-eqSel").value; eg.disabled = true; const r = await run(() => DB.q("rpc/equipe_placer", { method: "POST", body: { p_eleve: x.id, p_equipe: q } })); eg.disabled = false;
+        if (r) { toast("Placé : " + (eqOf(q) || {}).nom + ", " + r.blocs + " blocs réservés"); await loadEleves(true); renderList(); } return; }
       const evb = e.target.closest("[data-ev]");
       if (evb) { const v = evb.dataset.ev; if (await patchEl(x, { evaluation: v, evaluation_le: new Date().toISOString() }, v === "pret" ? "Noté : prêt pour l'examen" : "Noté : séances en plus conseillées", ["Note", v === "pret" ? "Évaluation : prêt pour l'examen" : "Évaluation : séances en plus conseillées"])) renderList(true); return; }
       const a = e.target.closest("[data-a]"), ar = e.target.closest("[data-arch]"), rp = e.target.closest("[data-rappel]");
@@ -4097,6 +4182,7 @@ function init(root) {
       const f = document.createElement("form"); f.className = "tm-edit pc-block"; f.noValidate = true;
       f.innerHTML = '<div class="row3"><div class="field"><label>Nom et prénom</label><input name="nom" value="' + esc(x.nom) + '"></div><div class="field"><label>Téléphone</label><div class="tel"><span>+228</span><input name="tel" inputmode="numeric" maxlength="11" value="' + esc(waNum(x.telephone).replace(/(\d{2})(?=\d)/g, "$1 ")) + '"></div></div><div class="field"><label>Formation</label><select name="formation">' + fo.map((t) => "<option" + (t === x.formation ? " selected" : "") + ">" + esc(t) + "</option>").join("") + '</select></div></div>' +
         '<div class="row2e"><div class="field"><label>Quartier</label><input name="quartier" maxlength="80" value="' + esc(x.quartier || "") + '"></div><div class="field"><label>Note interne (visible par l\'équipe seulement)</label><input name="notes" maxlength="300" value="' + esc(x.notes || "") + '"></div></div>' +
+        '<div class="row2e"><div class="field"><label>Code parrain (SO… ou téléphone)</label><input name="parrain" maxlength="40" value="' + esc(x.parrain || "") + '"></div><div></div></div>' +
         '<div class="tm-formact"><button class="btn btn-green btn-sm" type="submit">Enregistrer</button><button class="linkbtn" type="button" data-x>Fermer</button><span class="tm-err"></span></div>';
       box.querySelector(".pc-info").after(f); f.querySelector("input").focus();
       f.querySelector("[data-x]").addEventListener("click", () => f.remove());
@@ -4105,6 +4191,7 @@ function init(root) {
         const nom = f.nom.value.trim().replace(/\s+/g, " "), tel = f.tel.value.replace(/\D/g, ""), er = f.querySelector(".tm-err");
         if (nom.length < 3 || (tel && tel.length !== 8)) { er.textContent = "Nom (3 lettres min.) et numéro à 8 chiffres."; return; }
         const body = { nom, telephone: tel ? "+228" + tel : null, formation: f.formation.value, quartier: f.quartier.value.trim() || null, notes: f.notes.value.trim() || null };
+        if ((f.parrain.value.trim() || null) !== (x.parrain || null)) body.parrain = f.parrain.value.trim() || null;
         if (nom !== x.nom) { body.nom_famille = null; body.prenoms = null; }
         if (await patchEl(x, body, "Fiche élève enregistrée")) { fillEleveSelect(); renderList(); }
       });
@@ -4126,6 +4213,7 @@ function init(root) {
       if (!src) { err.textContent = "Choisis comment il nous a connus."; return; }
       err.textContent = ""; $("#sd-insGo").disabled = true;
       const body = { nom, nom_famille: nf, prenoms: pr, telephone: "+228" + tel, quartier: q || null, formation: $("#sd-insFo").value, source: "bureau", provenance: src, statut: "Contacté", accueil_le: new Date().toISOString(), jeton: newJeton() };
+      if ($("#sd-insPar").value.trim()) body.parrain = $("#sd-insPar").value.trim();
       const r = await run(() => DB.q("eleves", { method: "POST", body, prefer: "return=representation" }), "Client enregistré");
       $("#sd-insGo").disabled = false;
       if (!r || !Array.isArray(r) || !r[0]) return;
@@ -4150,7 +4238,7 @@ function init(root) {
       if (!src) { err.textContent = "Choisis comment il nous a connus."; return; }
       err.textContent = "";
       const paie = statut === "Inscrit", now = new Date().toISOString();
-      const r = await run(() => DB.q("eleves", { method: "POST", body: Object.assign({ nom, nom_famille: nf, prenoms: pr, telephone: "+228" + tel, quartier: q || null, formation: $("#sd-elFo").value, source: "bureau", provenance: src, statut: "Contacté" }, paie ? { dossier_envoye_le: now, accueil_le: now } : {}), prefer: "return=representation" }), paie ? "Client ajouté : fais son reçu" : "Client ajouté");
+      const r = await run(() => DB.q("eleves", { method: "POST", body: Object.assign({ nom, nom_famille: nf, prenoms: pr, telephone: "+228" + tel, quartier: q || null, formation: $("#sd-elFo").value, source: "bureau", provenance: src, statut: "Contacté" }, $("#sd-elPar").value.trim() ? { parrain: $("#sd-elPar").value.trim() } : {}, paie ? { dossier_envoye_le: now, accueil_le: now } : {}), prefer: "return=representation" }), paie ? "Client ajouté : fais son reçu" : "Client ajouté");
       if (r) { $("#sd-elAdd").reset(); $("#sd-elAdd").hidden = true; pcStage = paie ? "dossier" : "appels"; S.set("pcStage", pcStage); pcSel = null; await loadEleves();
         const nx = paie && Array.isArray(r) && r[0] ? eleves.find((y) => y.id === r[0].id) : null;
         if (nx && window.__sodafRcFill) { sub("paiements"); window.__sodafRcFill(nx, null); } }
@@ -4161,7 +4249,7 @@ function init(root) {
     }
 
     // ---- Planning conduite
-    const CST = ["Libre", "Réservé", "Fait", "Absent", "Annulé"];
+    const CST = ["Libre", "Réservé", "Fait", "Absent", "Absent sans prévenir", "Annulé"];
     async function loadDay() {
       $("#sd-cdDay").textContent = longDay(cdDay).replace(/^./, (c) => c.toUpperCase()) + (cdDay === iso(new Date()) ? " (aujourd'hui)" : "");
       const [r, fe] = await Promise.all([run(() => DB.q("creneaux_conduite?select=*&jour=eq." + cdDay)), run(() => DB.q("jours_feries?select=*&jour=eq." + cdDay))]);
@@ -4173,13 +4261,35 @@ function init(root) {
       r.sort((a, b) => hmin(a.heure) - hmin(b.heure));
       const actifs = eleves.filter((x) => ["Inscrit", "En formation"].includes(x.statut)).sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
       const tomorrow = iso(new Date(Date.now() + 864e5));
-      $("#sd-cdList").innerHTML = r.length ? r.map((c) => {
+      const rowHtml = (c) => {
         const el = eleves.find((x) => x.id === c.eleve_id), n = el ? waNum(el.telephone) : "";
         const conf = el && n && c.statut === "Réservé" ? "https://wa.me/228" + n + "?text=" + encodeURIComponent(msgSeance(el, c)) : "";
         const rap = el && n && c.statut === "Réservé" && c.jour === tomorrow ? "https://wa.me/228" + n + "?text=" + encodeURIComponent(msgRappelSeance(el, c)) : "";
-        return '<div class="tm-row st-' + c.statut.normalize("NFD").replace(/[^a-z]/gi, "").toLowerCase() + '" data-id="' + c.id + '"><div class="tm-time">' + esc(c.heure) + '</div><div class="tm-main"><select data-el aria-label="Élève"><option value="">— Créneau libre —</option>' + actifs.map((x) => '<option value="' + x.id + '"' + (x.id === c.eleve_id ? " selected" : doit(x) || plein(x) ? " disabled" : "") + ">" + esc(x.nom) + (x.id !== c.eleve_id ? (doit(x) ? " · solde non payé" : plein(x) ? " · séances terminées (" + x.quota + ")" : x.quota !== null ? " · " + (x.faits + x.resa) + "/" + x.quota : "") : "") + "</option>").join("") + (el && !actifs.includes(el) ? '<option value="' + el.id + '" selected>' + esc(el.nom) + "</option>" : "") + '</select>' + (c.note ? "<small>" + esc(c.note) + "</small>" : "") + '</div><div class="tm-acts"><select data-cs aria-label="Statut">' + CST.map((t) => "<option" + (t === c.statut ? " selected" : "") + ">" + t + "</option>").join("") + "</select>" + (conf ? (c.confirme_le ? '<span class="cd-done">✓ Élève prévenu</span><a class="linkbtn" target="_blank" rel="noopener" data-cf="confirme_le" href="' + conf + '">Renvoyer</a>' : '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-cf="confirme_le" href="' + conf + '">Prévenir l\'élève ↗</a>') : "") + (rap ? (c.rappel_le ? '<span class="cd-done">✓ Rappel envoyé</span>' : '<a class="btn btn-yellow btn-sm" target="_blank" rel="noopener" data-cf="rappel_le" href="' + rap + '">Rappel de la veille ↗</a>') : "") + "</div></div>";
-      }).join("") : '<p class="tm-empty">Pas de créneau ce jour-là (dimanche ou jour férié).</p>';
+        return '<div class="tm-row st-' + c.statut.normalize("NFD").replace(/[^a-z]/gi, "").toLowerCase() + '" data-id="' + c.id + '"><div class="tm-time">' + esc(c.heure) + '</div><div class="tm-main"><select data-el aria-label="Élève"><option value="">' + (c.bloc ? "— Place libre —" : "— Créneau libre —") + '</option>' + actifs.map((x) => '<option value="' + x.id + '"' + (x.id === c.eleve_id ? " selected" : doit(x) || plein(x) || (c.bloc === "mercredi" && !merLibre(c.jour) && !x.absents) ? " disabled" : "") + ">" + esc(x.nom) + (x.id !== c.eleve_id ? (doit(x) ? " · solde non payé" : plein(x) ? " · blocs terminés (" + x.quota + ")" : c.bloc === "mercredi" && !merLibre(c.jour) && !x.absents ? " · pas d'absence à rattraper" : x.quota !== null ? " · " + (x.faits + x.resa) + "/" + x.quota : "") : "") + "</option>").join("") + (el && !actifs.includes(el) ? '<option value="' + el.id + '" selected>' + esc(el.nom) + "</option>" : "") + '</select>' + (c.note ? "<small>" + esc(c.note) + "</small>" : "") + '</div><div class="tm-acts"><select data-cs aria-label="Statut">' + CST.map((t) => "<option" + (t === c.statut ? " selected" : "") + ">" + t + "</option>").join("") + "</select>" + (conf ? (c.confirme_le ? '<span class="cd-done">✓ Élève prévenu</span><a class="linkbtn" target="_blank" rel="noopener" data-cf="confirme_le" href="' + conf + '">Renvoyer</a>' : '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-cf="confirme_le" href="' + conf + '">Prévenir l\'élève ↗</a>') : "") + (rap ? (c.rappel_le ? '<span class="cd-done">✓ Rappel envoyé</span>' : '<a class="btn btn-yellow btn-sm" target="_blank" rel="noopener" data-cf="rappel_le" href="' + rap + '">Rappel de la veille ↗</a>') : "") + "</div></div>";
+      };
+      const vis = r.filter((c) => !(c.statut === "Annulé" && /^Réorganisation/.test(c.note || ""))), grp = [];
+      vis.forEach((c) => { const k = c.bloc ? c.heure + "|" + c.bloc : "x" + c.id; let g = grp.find((y) => y.k === k); if (!g) grp.push((g = { k, h: c.heure, bloc: c.bloc, eq: c.equipe, rows: [] })); g.rows.push(c); });
+      grp.sort((x, y) => hmin(x.h) - hmin(y.h)); grp.forEach((g) => g.rows.sort((x, y) => (x.place || 0) - (y.place || 0)));
+      $("#sd-cdList").innerHTML = grp.length ? grp.map((g) => {
+        if (!g.bloc) return rowHtml(g.rows[0]);
+        const q = eqOf(g.eq), pris = g.rows.filter((c) => c.eleve_id && c.statut !== "Annulé").length;
+        const sous = g.bloc === "mercredi" ? "Rattrapage et séances en plus · " + (merLibre(g.rows[0].jour) ? "places libres ouvertes aux séances en plus (5 000 F)" : "réservé aux rattrapages jusqu'au mardi 18 h") : q ? q.nom + " · " + eqJours(q) : "Équipe";
+        return '<div class="cd-bloc' + (g.bloc === "mercredi" ? " cd-mer" : "") + '"><div class="cd-bh"><b>' + esc(plage(g.h)) + "</b><span>" + esc(sous) + "</span><em>" + pris + "/" + g.rows.length + "</em></div>" + g.rows.map(rowHtml).join("") + "</div>";
+      }).join("") : '<p class="tm-empty">Pas de conduite ce jour-là (dimanche ou jour férié).</p>';
+      eqOverview();
     }
+    async function eqOverview() {
+      const box = $("#sd-eqList"); if (!box) return;
+      if (!EQUIPES.length) await loadEquipes();
+      if (!EQUIPES.length) { $("#sd-eqBox").hidden = true; return; }
+      $("#sd-eqBox").hidden = false;
+      const et = eqEtat(await eqFutur()), dfr = (d) => dOf(d).toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
+      $("#sd-eqSum").textContent = et.reduce((a, e) => a + e.membres.length, 0) + " élèves placés · " + et.filter((e) => e.membres.length < e.q.places).length + " équipes avec une place";
+      box.innerHTML = et.map((e) => '<div class="eq-card"><div class="eq-h"><b>' + esc(e.q.nom) + "</b><span>" + esc(eqJours(e.q)) + " · " + esc(plage(e.q.heure)) + '</span></div><div class="eq-m">' +
+        e.membres.map((m) => { const el = eleves.find((y) => y.id === m.id) || { nom: "Élève " + m.id }; return '<button type="button" class="eq-p" data-goel="' + m.id + '">' + (el.id ? phAvatar(el, "ph-sm") : "") + "<span>" + esc(el.nom) + "<small>" + m.n + " bloc" + (m.n > 1 ? "s" : "") + " · fin " + dfr(m.a) + "</small></span></button>"; }).join("") +
+        (e.membres.length < e.q.places ? '<p class="eq-free">' + (e.q.places - e.membres.length) + " place" + (e.q.places - e.membres.length > 1 ? "s" : "") + " libre" + (e.q.places - e.membres.length > 1 ? "s" : "") + (e.libre ? " dès le " + dfr(e.libre) : "") + "</p>" : e.libre ? '<p class="eq-free">Prochaine place le ' + dfr(e.libre) + "</p>" : '<p class="eq-full">Complète</p>') + "</div></div>").join("");
+    }
+    $("#sd-eqList") && $("#sd-eqList").addEventListener("click", (e) => { const b = e.target.closest("[data-goel]"); if (b) goEleve(+b.dataset.goel); });
     $("#sd-cdList").addEventListener("change", async (e) => {
       const row = e.target.closest("[data-id]"); if (!row) return; const id = row.dataset.id;
       let body;
@@ -4296,7 +4406,7 @@ function init(root) {
     const grLundi = (d) => { const x = new Date(d); x.setHours(12, 0, 0, 0); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return iso(x); };
     const grSemTxt = (l) => { const a = dOf(l), b = new Date(a); b.setDate(a.getDate() + 6); return "du " + a.toLocaleDateString("fr-FR", { day: "numeric", month: "long" }) + " au " + b.toLocaleDateString("fr-FR", { day: "numeric", month: "long" }); };
     function grOnglet(k) {
-      if (!["demandes", "decisions", "rapports", "tirage"].includes(k)) k = "demandes"; GR.ong = k;
+      if (!["demandes", "decisions", "rapports", "tirage", "parrainage"].includes(k)) k = "demandes"; GR.ong = k;
       $$("#sd-gr [data-gr]").forEach((b) => b.setAttribute("aria-selected", b.dataset.gr === k)); $$("#sd-gr [data-grp]").forEach((p) => (p.hidden = p.dataset.grp !== k));
       if (k === "rapports" && me && me.role === "admin") GR.rap.filter((r) => !r.lu_le).forEach((r) => DB.q("rpc/rapport_lu", { method: "POST", body: { p_id: r.id } }).then(() => { r.lu_le = new Date().toISOString(); grBadges(); }).catch(() => {}));
     }
@@ -4306,7 +4416,8 @@ function init(root) {
       b("#sd-grBDec", adm ? GR.dec.filter((d) => !d.avis).length : GR.dec.filter((d) => d.avis === "revoir" && !grVu("dec", d.id)).length);
       b("#sd-grBRap", adm ? GR.rap.filter((r) => !r.lu_le).length : grSemaineAFaire() ? 1 : 0);
       b("#sd-grBTir", (GR.tir || []).filter((x) => x.statut === "gagnant").length);
-      b("#sd-grTabBadge", ["#sd-grBDem", "#sd-grBDec", "#sd-grBRap", "#sd-grBTir"].reduce((n, id) => n + (+$(id).textContent || 0), 0));
+      b("#sd-grBPar", (GR.com || []).filter((x) => x.statut === "a_payer").length);
+      b("#sd-grTabBadge", ["#sd-grBDem", "#sd-grBDec", "#sd-grBRap", "#sd-grBTir", "#sd-grBPar"].reduce((n, id) => n + (+$(id).textContent || 0), 0));
     }
     const grVu = (k, id) => { try { return (JSON.parse(localStorage.getItem("sodaf.gr." + k) || "[]")).includes(id); } catch (e) { return true; } };
     const grMarquer = (k, ids) => { try { const v = new Set(JSON.parse(localStorage.getItem("sodaf.gr." + k) || "[]")); ids.forEach((i) => v.add(i)); localStorage.setItem("sodaf.gr." + k, JSON.stringify([...v].slice(-300))); } catch (e) {} };
@@ -4320,8 +4431,30 @@ function init(root) {
       const [dm, dc, rp] = await Promise.all([DB.q("demandes?select=*&order=le.desc&limit=60").catch(() => null), DB.q("decisions?select=*&order=le.desc&limit=60").catch(() => null), DB.q("rapports?select=*&order=semaine.desc&limit=20").catch(() => null)]);
       if (!dm && !dc && !rp) { $("#sd-grDemList").innerHTML = '<p class="tm-empty">La gérance n\'est pas encore activée dans la base.</p>'; return; }
       GR.dem = dm || []; GR.dec = dc || []; GR.rap = rp || [];
-      grDemRender(); grDecRender(); await grRapRender(); await trCharger(); grBadges(); grOnglet(GR.ong);
+      grDemRender(); grDecRender(); await grRapRender(); await trCharger(); await paCharger(); grBadges(); grOnglet(GR.ong);
     }
+    // ---- Parrainage : commissions à payer (table commissions, migration 0042)
+    const PALIERS = [[10, "karting à 3 et ambassadeur du mois (à confirmer)"], [5, "une séance offerte"], [3, "un t-shirt SODAF"], [2, "priorité sur les horaires"]];
+    async function paCharger() {
+      const r = await DB.q("commissions?select=*&order=cree_le.desc&limit=500").catch(() => null);
+      const box = $("#sd-paList"); if (!box) return;
+      if (!r) { box.innerHTML = '<p class="tm-empty">Le parrainage n\'est pas encore activé dans la base.</p>'; GR.com = []; return; }
+      GR.com = r; const nom = (id) => (eleves.find((y) => y.id === id) || { nom: "SO" + id }).nom;
+      const ap = r.filter((c) => c.statut === "a_payer"), pay = r.filter((c) => c.statut === "payee");
+      const ligne = (c) => { const pn = c.parrain_id ? nom(c.parrain_id) : "Parrain", tel = (c.parrain_tel || "").replace("+228", ""), msg = "Bonjour " + pn.split(" ")[0] + ",\n\nMerci ! " + nom(c.filleul_id) + " s'est inscrit(e) chez SODAF Auto-École avec ton code parrain. Nous venons de t'envoyer *2 000 F*.\n\nContinue : chaque nouvelle personne inscrite avec ton code te rapporte 2 000 F." + "\n\nSODAF Auto-École";
+        return '<div class="tm-row pa-row' + (c.statut === "payee" ? " st-fait" : c.statut === "annulee" ? " st-annule" : "") + '" data-com="' + c.id + '"><div class="tm-main"><b>' + (c.parrain_id ? '<button type="button" class="ms-el" data-goel="' + c.parrain_id + '">' + esc(pn) + "</button>" : esc(c.parrain_tel || "Parrain inconnu")) + ' <em class="pa-mt">2 000 F</em></b><span>' + (tel ? "+228 " + tel.replace(/(\d{2})(?=\d)/g, "$1 ") + " · " : "") + "filleul : " + esc(nom(c.filleul_id)) + " · inscrit le " + new Date(c.cree_le).toLocaleDateString("fr-FR") + "</span>" + (c.statut === "payee" ? "<small>Payée le " + new Date(c.paye_le).toLocaleDateString("fr-FR") + " · " + esc(c.mode || "") + (c.reference ? " · réf. " + esc(c.reference) : "") + "</small>" : c.statut === "annulee" ? "<small>Annulée : " + esc(c.note || "") + "</small>" : "") + "</div>" +
+          (c.statut === "a_payer" ? '<div class="tm-acts pa-acts"><select data-pamode aria-label="Moyen"><option>Mixx by Yas</option><option>Moov Money</option><option>Espèces</option></select><input data-paref maxlength="60" placeholder="Référence (SMS)"><button class="btn btn-green btn-sm" type="button" data-pago>Payée</button>' + (tel ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" href="https://wa.me/228' + tel + "?text=" + encodeURIComponent(msg) + '">Prévenir ↗</a>' : "") + "</div>" : "") + "</div>"; };
+      box.innerHTML = (ap.length ? '<h4 class="gr-h4">À payer (' + ap.length + " · " + F(ap.length * 2000) + ")</h4>" + ap.map(ligne).join("") : '<p class="tm-empty">Aucune commission à payer.</p>') + (pay.length || r.some((c) => c.statut === "annulee") ? '<details class="pa-old"><summary>Déjà payées (' + pay.length + " · " + F(pay.reduce((a, c) => a + c.montant, 0)) + ")</summary>" + r.filter((c) => c.statut !== "a_payer").map(ligne).join("") + "</details>" : "");
+      const T = {}; r.filter((c) => c.statut !== "annulee").forEach((c) => { const k = c.parrain_id ? "e" + c.parrain_id : c.parrain_tel; const t = T[k] || (T[k] = { id: c.parrain_id, tel: c.parrain_tel, n: 0 }); t.n++; });
+      const top = Object.values(T).sort((a, b) => b.n - a.n).slice(0, 10);
+      $("#sd-paTop").innerHTML = top.length ? top.map((t) => { const pl = PALIERS.find((p) => t.n >= p[0]); return '<div class="pa-top"><b>' + esc(t.id ? nom(t.id) : t.tel) + "</b><span>" + t.n + " filleul" + (t.n > 1 ? "s" : "") + (pl ? " · a gagné : " + pl[1] : "") + "</span></div>"; }).join("") : '<p class="tm-empty">Pas encore de parrain.</p>';
+    }
+    $("#sd-paList") && $("#sd-paList").addEventListener("click", async (e) => {
+      const g = e.target.closest("[data-goel]"); if (g) { goEleve(+g.dataset.goel); return; }
+      const b = e.target.closest("[data-pago]"); if (!b) return; const row = b.closest("[data-com]");
+      b.disabled = true; const ok = await run(() => DB.q("rpc/commission_payer", { method: "POST", body: { p_id: +row.dataset.com, p_mode: row.querySelector("[data-pamode]").value, p_reference: row.querySelector("[data-paref]").value.trim() } }), "Commission notée comme payée"); b.disabled = false;
+      if (ok !== null) { await paCharger(); grBadges(); }
+    });
     function grDemRender() {
       const adm = me.role === "admin", ST = { attente: ["att", "En attente"], accordee: ["oui", "Accordé"], refusee: ["non", "Refusé"] };
       $("#sd-grDemList").innerHTML = GR.dem.length ? GR.dem.map((d) => { const st = ST[d.statut] || ST.attente, el = d.eleve_id ? eleves.find((x) => x.id === d.eleve_id) : null;
@@ -4602,7 +4735,16 @@ function init(root) {
       if ($("#sd-secAujSum") && s0 && c) { const nc = s0.filter((x) => x.jour === today && (!x.groupe || eleves.some((y) => y.groupe_code === x.groupe && enCode(y) && !susp(y) && cycleOk(y)))), af = nc.filter((x) => x.statut !== "Fait").length, rs = c.filter((x) => x.statut === "Réservé").length; $("#sd-secAujSum").textContent = (nc.length ? nc.length + " cours de code" + (af ? " (" + af + " appel" + (af > 1 ? "s" : "") + " à faire)" : " · appel fait") : "Pas de cours de code") + " · " + (c.length ? c.length + " séance" + (c.length > 1 ? "s" : "") + " de conduite" + (rs ? " (" + rs + " à venir)" : "") : "pas de conduite"); }
       if (c) {
         c.sort((a, b) => hmin(a.heure) - hmin(b.heure));
-        $("#sd-mcList").innerHTML = c.length ? c.map((x) => { const el = eleves.find((y) => y.id === x.eleve_id) || { nom: "Élève", quota: null }; const num = el.quota ? (el.faits || 0) + (x.statut === "Fait" ? 0 : 1) : 0, ea = el.quota ? Math.max(1, el.quota - 2) : 0, aEval = el.quota && !el.evaluation && (el.faits || 0) >= ea && x.statut === "Fait"; return '<div class="tm-row" data-id="' + x.id + '"><div class="tm-time">' + esc(x.heure) + '</div>' + (el.id ? phAvatar(el, "ph-md") : "") + '<div class="tm-main"><b>' + (el.id ? '<button type="button" class="ms-el" data-goel="' + el.id + '">' + esc(el.nom) + "</button>" : esc(el.nom)) + (el.quota ? ' <em class="se-num' + (num >= ea ? " hot" : "") + '">Séance ' + Math.min(num, el.quota) + "/" + el.quota + (num === ea && !el.evaluation ? " · évaluation" : num >= el.quota ? " · dernière" : "") + "</em>" : "") + "</b><span>" + esc(x.statut) + (el.evaluation ? " · " + (el.evaluation === "pret" ? "jugé prêt pour l'examen" : "séances en plus conseillées") : "") + '</span>' + contactEl(el) + (aEval ? '<div class="se-mev"><span>Évaluation : est-il prêt pour l\'examen ?</span><button class="btn btn-green btn-sm" type="button" data-mev="pret" data-el="' + el.id + '">Prêt pour l\'examen</button><button class="btn btn-line btn-sm" type="button" data-mev="plus" data-el="' + el.id + '">Il lui faut des séances en plus</button></div>' : "") + '<input data-note placeholder="Note sur les progrès" value="' + esc(x.note || "") + '"></div><div class="tm-acts"><button class="btn btn-green btn-sm" type="button" data-set="Fait">Fait</button><button class="btn btn-line btn-sm" type="button" data-set="Absent">Absent</button></div></div>'; }).join("") : '<p class="tm-empty">Aucune séance réservée aujourd\'hui.</p>';
+        const mRow = (x) => { const el = eleves.find((y) => y.id === x.eleve_id) || { nom: "Élève", quota: null }; const num = el.quota ? (el.faits || 0) + (el.perdus || 0) + (x.statut === "Fait" ? 0 : 1) : 0, ea = el.quota ? Math.max(1, el.quota - 2) : 0, aEval = el.quota && !el.evaluation && (el.faits || 0) >= ea && x.statut === "Fait"; return '<div class="tm-row" data-id="' + x.id + '"><div class="tm-time">' + (x.rang ? '<b class="mc-rang">' + x.rang + (x.rang === 1 ? "er" : "e") + "</b><small>au volant</small>" : esc(x.heure)) + '</div>' + (el.id ? phAvatar(el, "ph-md") : "") + '<div class="tm-main"><b>' + (el.id ? '<button type="button" class="ms-el" data-goel="' + el.id + '">' + esc(el.nom) + "</button>" : esc(el.nom)) + (el.quota ? ' <em class="se-num' + (num >= ea ? " hot" : "") + '">Bloc ' + Math.min(num, el.quota) + "/" + el.quota + (num === ea && !el.evaluation ? " · évaluation" : num >= el.quota ? " · dernière" : "") + "</em>" : "") + "</b><span>" + esc(x.statut) + (el.evaluation ? " · " + (el.evaluation === "pret" ? "jugé prêt pour l'examen" : "séances en plus conseillées") : "") + '</span>' + contactEl(el) + (aEval ? '<div class="se-mev"><span>Évaluation : est-il prêt pour l\'examen ?</span><button class="btn btn-green btn-sm" type="button" data-mev="pret" data-el="' + el.id + '">Prêt pour l\'examen</button><button class="btn btn-line btn-sm" type="button" data-mev="plus" data-el="' + el.id + '">Il lui faut des séances en plus</button></div>' : "") + '<input data-note placeholder="Note sur les progrès" value="' + esc(x.note || "") + '"></div><div class="tm-acts"><button class="btn btn-green btn-sm" type="button" data-set="Fait">Fait</button><button class="btn btn-line btn-sm" type="button" data-set="Absent">Absent, a prévenu</button><button class="btn btn-line btn-sm mc-perdu" type="button" data-set="Absent sans prévenir">Absent sans prévenir</button></div></div>'; };
+        const mg = []; c.forEach((x) => { const k = x.bloc ? x.heure + "|" + x.bloc : "x" + x.id; let g = mg.find((y) => y.k === k); if (!g) mg.push((g = { k, h: x.heure, bloc: x.bloc, eq: x.equipe, rows: [] })); g.rows.push(x); });
+        mg.sort((p, q) => hmin(p.h) - hmin(q.h));
+        $("#sd-mcList").innerHTML = mg.length ? mg.map((g) => {
+          if (!g.bloc) return mRow(g.rows[0]);
+          g.rows.sort((p, q) => (p.place || 0) - (q.place || 0)); const n = g.rows.length, k = passage(g.rows[0].jour, n), ord = g.rows.slice(k).concat(g.rows.slice(0, k));
+          ord.forEach((x, i) => { x.rang = i + 1; });
+          const q = eqOf(g.eq), fini = ord.filter((x) => x.statut !== "Réservé").length;
+          return '<div class="cd-bloc mc-bloc' + (g.bloc === "mercredi" ? " cd-mer" : "") + '"><div class="cd-bh"><b>' + esc(plage(g.h)) + "</b><span>" + esc(g.bloc === "mercredi" ? "Rattrapage et séances en plus" : q ? q.nom : "Équipe") + " · " + n + " élève" + (n > 1 ? "s" : "") + " · ordre de passage</span><em>" + fini + "/" + n + "</em></div>" + ord.map(mRow).join("") + '<p class="mc-tip">10 min de préparation, environ 25 min au volant chacun, 10 min de bilan. L\'ordre change à chaque bloc.</p></div>';
+        }).join("") : '<p class="tm-empty">Aucune séance réservée aujourd\'hui.</p>';
       }
     }
     $("#sd-mcCode").addEventListener("click", (e) => { const b = e.target.closest("[data-mses]"); if (b) { monIdx = +b.dataset.mses; loadMon(); } });
@@ -4815,10 +4957,10 @@ function init(root) {
 
   // ---------- Page publique : finaliser son inscription (lien personnel envoyé par le secrétariat) ----------
   const INSC_FORMULES = {
-    "Permis B": [["Formation complète (permis B)", 55000, "Sur 3 mois · 12 séances de conduite d'1 h"], ["Formation accélérée 2 mois (permis B)", 75000, "12 séances, planning plus serré"], ["Formation accélérée 1 mois (permis B)", 80000, "12 séances en 1 mois"], ["Formule courte (permis B)", 35000, "Tu sais déjà tenir un volant · 6 séances"]],
-    "Permis A": [["Permis A (moto)", 30000, "Code complet et environ 6 séances de moto"]],
-    "Pack A + B": [["Pack A + B (moto et voiture)", 80000, "Formation complète voiture + permis moto"]],
-    "Remise à niveau": [["Remise à niveau", 20000, "4 séances d'1 h, évaluation comprise"]],
+    "Permis B": [["Formation complète (permis B)", 55000, "6 semaines · 12 blocs de conduite de 2 h en équipe de 4", 5000], ["Formule courte (permis B)", 35000, "Tu sais déjà tenir un volant · 6 blocs de conduite", 5000]],
+    "Tarif étudiant": [["Formation complète, tarif étudiant (permis B)", 30000, "Étudiant 18 ans et plus · carte d'étudiant et carte d'identité à présenter", 3000]],
+    "Gagnant du tirage": [["Formation complète, gagnant du tirage (permis B)", 15000, "Ton lot du tirage au sort · inscription offerte", 0]],
+    "Remise à niveau": [["Remise à niveau", 25000, "4 blocs de conduite de 2 h, évaluation comprise", 5000]],
   };
   const MAPS = "https://www.google.com/maps/search/?api=1&query=6.168785%2C1.225462";
   const fmtF = (n) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " F";
@@ -4844,7 +4986,7 @@ function init(root) {
     try { if (!d) { d = inscDecode(str); if (!d.i || !d.j) throw 0; } } catch (e) { box.innerHTML = '<div class="card insc-msg"><h3>Ce lien est incomplet</h3><p>Demande au secrétariat SODAF de te le renvoyer sur WhatsApp : +228 72 54 41 66.</p><a class="btn btn-wa" href="' + WA + '" target="_blank" rel="noopener">Écrire au secrétariat</a></div>' + inscFindUs(0, 0); return; }
     const forms = INSC_FORMULES[d.f], done = S.get("insc" + d.i, null);
     if (!forms) { box.innerHTML = '<div class="card insc-msg"><h3>Bonjour ' + escI(d.p) + '</h3><p>Pour ta formation (' + escI(d.f || "à préciser") + '), le secrétariat prépare un devis avec toi. Écris-nous sur WhatsApp ou passe à l\'agence.</p><a class="btn btn-wa" href="' + WA + '" target="_blank" rel="noopener">Écrire au secrétariat</a></div>' + inscFindUs(0, d.i); return; }
-    const exam = /Permis|Pack/.test(d.f), mixxOk = !!d.m;
+    const exam = /Permis|Pack|étudiant|tirage/i.test(d.f), mixxOk = !!d.m;
     const show = (res) => {
       box.innerHTML = res.mode === "agence"
         ? '<div class="okbox insc-okbox"><div class="ok-top"><span class="okcheck" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div><p class="ok-kicker">Inscription enregistrée</p><b class="ok-title">Nous t\'attendons à l\'agence</b></div></div><div class="ok-body"><p class="ok-lead">Merci ' + escI(d.p) + '. Viens au bureau avec ton paiement en espèces : tu repars avec ton reçu officiel.</p><div class="insc-sumrow insc-okamt"><span>À apporter</span><b>' + fmtF(res.a) + '</b></div><button class="linkbtn" type="button" id="sd-inRedo">Modifier mon inscription</button></div></div>' + inscFindUs(0, 0)
@@ -4875,11 +5017,11 @@ function init(root) {
       (exam ? '<p class="insc-note">À la fin de ta formation : <b>30&nbsp;000&nbsp;F</b> pour l\'inscription à l\'examen d\'État et tes papiers (carte d\'identité, acte de naissance, 2 photos). SODAF dépose ton dossier ; l\'État t\'envoie ensuite la date et le lieu par message.</p>' : "") +
       '<p class="insc-err" id="sd-inErr" hidden></p><button class="btn btn-green insc-go" type="submit" id="sd-inGo">Valider mon inscription</button></form>';
     const form = $("#sd-inForm");
-    const val = () => { const f = forms[+form.querySelector("[name=inF]:checked").value], p = form.querySelector("[name=inP]:checked").value; return { f, p, a: 5000 + (p === "total" ? f[1] : f[1] / 2) }; };
+    const val = () => { const f = forms[+form.querySelector("[name=inF]:checked").value], p = form.querySelector("[name=inP]:checked").value; return { f, p, ins: f[3] === undefined ? 5000 : f[3], a: (f[3] === undefined ? 5000 : f[3]) + (p === "total" ? f[1] : f[1] / 2) }; };
     const upd = () => {
       const v = val();
-      form.querySelector('[data-p="moitie"]').textContent = fmtF(5000 + v.f[1] / 2); form.querySelector('[data-p="total"]').textContent = fmtF(5000 + v.f[1]);
-      $("#sd-inSum").innerHTML = '<span class="insc-sumrow"><span>À payer maintenant</span><b>' + fmtF(v.a) + "</b></span><span>Droit d'inscription 5&nbsp;000&nbsp;F + " + (v.p === "total" ? "toute la formation" : "la moitié de la formation") + "</span>" + (v.p === "moitie" ? '<span class="insc-reste">Reste à payer avant la 1re séance de conduite : <b>' + fmtF(v.f[1] / 2) + "</b></span>" : '<span class="insc-reste">Formation soldée : plus rien à payer ensuite</span>');
+      form.querySelector('[data-p="moitie"]').textContent = fmtF(v.ins + v.f[1] / 2); form.querySelector('[data-p="total"]').textContent = fmtF(v.ins + v.f[1]);
+      $("#sd-inSum").innerHTML = '<span class="insc-sumrow"><span>À payer maintenant</span><b>' + fmtF(v.a) + "</b></span><span>" + (v.ins ? "Droit d'inscription " + fmtF(v.ins).replace(/ /g, "&nbsp;") : "Inscription offerte") + " + " + (v.p === "total" ? "toute la formation" : "la moitié de la formation") + "</span>" + (v.p === "moitie" ? '<span class="insc-reste">Reste à payer avant la 1re séance de conduite : <b>' + fmtF(v.f[1] / 2) + "</b></span>" : '<span class="insc-reste">Formation soldée : plus rien à payer ensuite</span>');
       $("#sd-inAmt").textContent = fmtF(v.a);
       form.querySelectorAll(".rcm").forEach((l) => l.classList.toggle("on", l.querySelector("input").checked));
       $("#sd-inMixx").hidden = form.querySelector("[name=inM]:checked").value !== "mixx";
@@ -5727,6 +5869,13 @@ html{scrollbar-gutter:stable}
 .btn.sc-conf{background:#D7263D!important;border-color:#D7263D!important;color:#fff!important}
 .sc-h{margin:18px 0 6px;font-size:1rem}
 .gr-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 12px}
+.gr-h4{font:700 1rem var(--f-display);margin:12px 0 8px}
+.pa-row{margin-bottom:8px}.pa-mt{font-style:normal;font-size:.78rem;font-weight:700;background:#FFF1C2;color:#6B4E00;border-radius:999px;padding:1px 8px;margin-left:6px}
+.pa-row .tm-main span{display:block;font-size:.86rem;color:#3D444D}.pa-row .tm-main small{display:block;font-size:.8rem;color:var(--muted)}
+.pa-acts{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.pa-acts select,.pa-acts input{font:.9rem var(--f-body);padding:.45em .6em;border:1.5px solid var(--line);border-radius:9px;background:#fff}.pa-acts input{width:150px}
+.pa-old{margin-top:10px}.pa-old summary{cursor:pointer;font-weight:600;color:var(--muted);margin-bottom:8px}
+.pa-top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:8px 0;border-top:1px solid var(--line)}.pa-top span{color:#3D444D;font-size:.88rem}
+.sec-mini{margin-top:14px}
 .gr-tabs button{all:unset;cursor:pointer;font-weight:700;font-size:.88rem;padding:.45em .9em;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--ink);display:inline-flex;align-items:center;gap:6px}
 .gr-tabs button[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
 .gr-tabs button:focus-visible{outline:2px solid var(--yellow);outline-offset:2px}
