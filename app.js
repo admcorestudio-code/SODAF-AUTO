@@ -1949,19 +1949,32 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="cz-chip"><span class="cz-cv">Priorité</span><b>Tes horaires</b><small>Tu choisis ton équipe de conduite</small></div>
 </div>
 
-<div class="cz-play" id="tirage-jouer">
+</div>
+
+<div class="cz-road" id="tirage-jouer">
+<div class="cz-zebra" aria-hidden="true"></div>
+<div class="wrap cz-play">
 <div class="tir-formcol">
 <form class="tir-form cz-form" id="sd-tirForm" novalidate>
-<div class="tir-fh"><p class="cz-k2">Participation gratuite</p><h2>Je tente ma chance</h2><p id="sd-tirFormSub">Une seule participation par numéro et par mois.</p></div>
+<div class="tir-fh cz-fh"><div><p class="cz-k">Participation gratuite</p><h2>Je tente ma chance</h2><p id="sd-tirFormSub">Une seule participation par numéro et par mois.</p></div><div class="cz-sign" aria-hidden="true"><b>15 000</b><span>F</span></div></div>
+<div class="cz-st"><span class="cz-km" aria-hidden="true">1</span><div class="cz-stb"><p class="cz-stt">Qui es-tu ?</p>
 <div class="row2"><div class="field"><label for="sd-tirNom">Nom</label><input id="sd-tirNom" autocomplete="family-name" maxlength="60" placeholder="Ex. AGBEKO"></div><div class="field"><label for="sd-tirPre">Prénoms</label><input id="sd-tirPre" autocomplete="given-name" maxlength="80" placeholder="Ex. Kossi"></div></div>
+</div></div>
+<div class="cz-st"><span class="cz-km" aria-hidden="true">2</span><div class="cz-stb"><p class="cz-stt">Où te joindre ?</p>
 <div class="row2"><div class="field"><label for="sd-tirTel">Numéro WhatsApp</label><div class="tel"><span>+228</span><input id="sd-tirTel" inputmode="numeric" maxlength="11" autocomplete="tel-national" placeholder="90 00 00 00"></div></div><div class="field"><label for="sd-tirUniv">Université ou école</label><input id="sd-tirUniv" list="sd-tirUnivL" maxlength="80" placeholder="Ex. Université de Lomé"><datalist id="sd-tirUnivL"><option value="Université de Lomé"><option value="Université de Kara"><option value="UCAO-UUT"><option value="ESGIS"><option value="IAI-Togo"><option value="ESA"><option value="IPNET Institute of Technology"><option value="Autre école"></datalist></div></div>
+</div></div>
+<div class="cz-st"><span class="cz-km" aria-hidden="true">3</span><div class="cz-stb"><p class="cz-stt">Ta carte d'étudiant</p>
 <div class="field"><span class="tir-lab">Photo de ta carte d'étudiant</span>
 <label class="tir-card" for="sd-tirCarte" id="sd-tirCardBox"><span class="tir-cardph" id="sd-tirCardPh"><svg viewBox="0 0 48 32" width="64" height="44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="44" height="28" rx="4"/><circle cx="15" cy="14" r="5"/><path d="M8 25c1.6-3.4 4.2-5 7-5s5.4 1.6 7 5M28 11h12M28 17h12M28 23h7"/></svg></span><span class="tir-cardtx"><b id="sd-tirCardBtn">Prendre la photo</b><small>Carte de l'année en cours, nom bien lisible. Seule l'équipe SODAF la voit.</small></span></label>
 <input type="file" id="sd-tirCarte" accept="image/*" capture="environment" class="insc-file"></div>
+</div></div>
+<div class="cz-st cz-stl"><span class="cz-km cz-kmf" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div class="cz-stb"><p class="cz-stt">Tu valides</p>
 <label class="tir-check"><input type="checkbox" id="sd-tirOk1"><span>Je suis étudiant(e) et j'ai <b>18 ans ou plus</b>.</span></label>
 <label class="tir-check"><input type="checkbox" id="sd-tirOk2"><span>J'accepte le règlement du tirage et que SODAF me contacte sur WhatsApp.</span></label>
 <p class="tir-err" id="sd-tirErr" hidden></p>
 <button class="btn cz-btn tir-go" type="submit" id="sd-tirGo">Valider ma participation</button>
+<p class="cz-fnote">Gratuit, sans obligation d'inscription. Tes informations ne sont jamais publiées.</p>
+</div></div>
 </form>
 <div class="tir-done" id="sd-tirDone" hidden></div>
 <div class="tir-closed" id="sd-tirClosed" hidden></div>
@@ -1969,9 +1982,13 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <aside class="cz-side">
 <ol class="cz-steps"><li><b>Tu t'inscris ici</b><span>Une minute, avec la photo de ta carte d'étudiant.</span></li><li><b>Tirage en direct le <span class="sd-tirDay">1er</span></b><span>Sur TikTok à 18 h. L'ordinateur tire 2 gagnants au hasard.</span></li><li><b>Tu passes à l'agence</b><span>Sous 48 h, avec ta carte d'étudiant et ta carte d'identité.</span></li></ol>
 <div class="cz-alt"><b>Pas le temps d'attendre ?</b><p>Le tarif étudiant : formation complète à <b>30 000 F</b>, inscription à 3 000 F, sans tirage. Places limitées chaque mois.</p><a class="btn btn-line btn-sm" href="#inscription">Je me pré-inscris</a></div>
-<div class="cz-alt"><b>Parrainage : 2 000 F pour toi</b><p>Pour chaque personne que tu amènes et qui s'inscrit chez SODAF, étudiant ou pas.</p></div>
+<div class="cz-alt cz-altg"><b>Parrainage : 2 000 F pour toi</b><p>Pour chaque personne que tu amènes et qui s'inscrit chez SODAF, étudiant ou pas.</p></div>
 </aside>
 </div>
+<div class="cz-lane" aria-hidden="true"></div>
+</div>
+
+<div class="wrap sec cz-body cz-after">
 
 <div class="cz-sh"><p class="cz-k2">Questions</p><h2>Ce qu'on nous demande</h2></div>
 <div class="tir-faq">
@@ -4920,18 +4937,20 @@ function init(root) {
     clearInterval(TIR.t); tirHorloge(); TIR.t = setInterval(() => { if ($('section.page[data-page="tirage"]').hidden) { clearInterval(TIR.t); return; } tirHorloge(); }, 1000);
     try { const r = await DB.q("rpc/tirage_infos", { method: "POST", body: {}, anon: true }); TIR.infos = r; $("#sd-tirN").textContent = r && r.participants != null ? r.participants : "—"; if (r && r.ouvert === false) tirFerme(); } catch (e) { $("#sd-tirN").textContent = "—"; }
     if (!tirOuvert()) tirFerme();
-    const deja = S.get("tirTicket", null); if (deja && deja.c === (TIR.infos && TIR.infos.campagne)) tirTicket(deja.n, true);
+    const deja = S.get("tirTicket", null); if (deja && deja.c === (TIR.infos && TIR.infos.campagne)) tirTicket(deja.n, true, deja.qui);
   }
   function tirFerme() {
     const c = tirCampagne(); $("#sd-tirForm").hidden = true; const box = $("#sd-tirClosed"); box.hidden = false;
     box.innerHTML = '<p class="cz-k2">Inscriptions fermées</p><h2>Tirage le 1er ' + TMOIS[c.m] + '</h2><p>Les inscriptions pour le tirage suivant rouvrent le 2 du mois. Reviens tenter ta chance.</p>';
   }
-  function tirTicket(n, deja) {
+  function tirTicket(n, deja, qui) {
+    TIR.dl = { n, qui: qui || null };
     const c = tirCampagne(), num = String(n).padStart(4, "0"), url = location.origin + "/#tirage";
     const msg = "Jackpot étudiant SODAF : le permis à 15 000 F au lieu de 60 000 F. 2 gagnants tirés au sort en direct sur TikTok le 1er " + TMOIS[c.m] + " à 18 h. C'est gratuit, inscris-toi ici : " + url;
     $("#sd-tirForm").hidden = true; const box = $("#sd-tirDone"); box.hidden = false;
     box.innerHTML = '<div class="tir-myticket"><div class="mt-l"><p class="cz-k">Ton ticket</p><b>N° ' + num + '</b><span>Tirage le 1er ' + TMOIS[c.m] + ' à 18 h, en direct sur TikTok</span></div><div class="mt-r"><span>' + (deja ? "Tu es déjà inscrit ce mois-ci" : "Participation enregistrée") + '</span><b>Bonne chance</b></div></div>' +
       '<p class="tir-donep">Suis le live sur TikTok le jour du tirage. On t\'appelle et on t\'écrit aussi sur WhatsApp si tu gagnes. Plus tes amis jouent, plus on parle de SODAF dans ton université : partage le tirage.</p>' +
+      '<div class="tir-dl"><button class="btn cz-btn" type="button" data-tirdl><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>Télécharger mon ticket</button><small>Garde-le dans ta galerie : il sert de preuve le jour du tirage.</small></div>' +
       '<div class="tir-share"><a class="btn btn-wa" target="_blank" rel="noopener" href="https://wa.me/?text=' + encodeURIComponent(msg) + '">Partager sur WhatsApp</a><button class="btn btn-line" type="button" data-copy="' + escHtml(url) + '">Copier le lien</button></div>';
   }
   $("#sd-tirCarte").addEventListener("change", async (e) => {
@@ -4949,10 +4968,52 @@ function init(root) {
     try {
       const path = await photoEnvoyer(camp + "/" + Date.now() + "-" + Math.random().toString(36).slice(2, 10) + ".jpg", TIR.blob, null, "tirage");
       const r = await DB.q("rpc/tirage_participer", { method: "POST", body: { p_nom: nom, p_prenoms: pre, p_telephone: tel, p_universite: uni, p_photo: path }, anon: true });
-      S.set("tirTicket", { c: r.campagne, n: r.numero }); tirTicket(r.numero, r.deja);
+      const qui = { nom: nom.toUpperCase(), pre, uni }; S.set("tirTicket", { c: r.campagne, n: r.numero, qui }); tirTicket(r.numero, r.deja, qui);
       const n = $("#sd-tirN"); if (!r.deja && /^\d+$/.test(n.textContent)) n.textContent = +n.textContent + 1;
     } catch (x) { er.textContent = navigator.onLine === false ? "Pas de connexion internet. Réessaie quand tu as du réseau." : (x && x.message && !/^Erreur \d/.test(x.message) ? x.message : "L'envoi n'a pas marché. Vérifie ta connexion et réessaie."); er.hidden = false; }
     btn.disabled = false; btn.textContent = "Valider ma participation";
+  });
+  async function tirImage(n, qui) {
+    const W = 1080, H = 1350, cv = document.createElement("canvas"); cv.width = W; cv.height = H; const x = cv.getContext("2d");
+    try { await Promise.all(["800 40px Outfit", "700 40px Outfit", "600 40px Figtree", "500 40px Figtree"].map((f) => document.fonts.load(f))); } catch (_) {}
+    const F = (w, px, fam) => w + " " + px + "px " + (fam || "Outfit") + ",system-ui,sans-serif";
+    const T = (t, X, Y, font, col, al, sp) => { x.font = font; x.fillStyle = col; x.textAlign = al || "left"; try { x.letterSpacing = (sp || 0) + "px"; } catch (_) {} x.fillText(t, X, Y); try { x.letterSpacing = "0px"; } catch (_) {} };
+    const RR = (X, Y, w, h, r) => { x.beginPath(); x.moveTo(X + r, Y); x.arcTo(X + w, Y, X + w, Y + h, r); x.arcTo(X + w, Y + h, X, Y + h, r); x.arcTo(X, Y + h, X, Y, r); x.arcTo(X, Y, X + w, Y, r); x.closePath(); };
+    let g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, "#161B20"); g.addColorStop(1, "#0B0E10"); x.fillStyle = g; x.fillRect(0, 0, W, H);
+    g = x.createRadialGradient(W, 0, 0, W, 0, 900); g.addColorStop(0, "rgba(246,194,50,.18)"); g.addColorStop(1, "rgba(246,194,50,0)"); x.fillStyle = g; x.fillRect(0, 0, W, H);
+    x.fillStyle = "#F2F2EE"; for (let i = 0; i < W; i += 90) x.fillRect(i, 0, 52, 34);
+    x.fillStyle = "#F2B705"; for (let i = -20; i < W; i += 120) x.fillRect(i, 1236, 72, 10);
+    try { const im = new Image(); im.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(LOGO("#ffffff", "word").replace("<svg ", '<svg width="330" height="80" ')); await im.decode(); x.drawImage(im, (W - 330) / 2, 78, 330, 80); } catch (_) { T("SODAF", W / 2, 140, F(800, 72), "#fff", "center", 6); }
+    T("AUTO-ÉCOLE · LOMÉ", W / 2, 200, F(700, 26), "#AEB6BF", "center", 8);
+    const cx = 90, cy = 250, cw = 900, ch = 900, cut = 720;
+    x.save(); x.shadowColor = "rgba(0,0,0,.6)"; x.shadowBlur = 60; x.shadowOffsetY = 24; RR(cx, cy, cw, ch, 36); x.fillStyle = "#1C232A"; x.fill(); x.restore();
+    x.save(); RR(cx, cy, cw, ch, 36); x.clip(); x.fillStyle = "#F2B705"; x.fillRect(cx, cy, cw, 14); x.restore();
+    x.fillStyle = "#0F1316"; x.beginPath(); x.arc(cx, cut, 34, 0, 7); x.arc(cx + cw, cut, 34, 0, 7); x.fill();
+    x.strokeStyle = "#3A444E"; x.lineWidth = 4; x.setLineDash([18, 14]); x.beginPath(); x.moveTo(cx + 60, cut); x.lineTo(cx + cw - 60, cut); x.stroke(); x.setLineDash([]);
+    T("JACKPOT ÉTUDIANT · TON TICKET", cx + 70, cy + 100, F(800, 30), "#F2B705", "left", 6);
+    T("N° " + String(n).padStart(4, "0"), cx + 62, cy + 300, F(800, 190), "#FFFFFF", "left", -2);
+    const nm = qui ? (qui.pre + " " + qui.nom).trim() : ""; if (nm) { x.font = F(700, 56); let t = nm; while (x.measureText(t).width > 760 && t.length > 4) t = t.slice(0, -2); T(t === nm ? nm : t + "…", cx + 70, cy + 390, F(700, 56), "#FFFFFF"); }
+    if (qui && qui.uni) T(qui.uni.slice(0, 44), cx + 70, cy + 446, F(500, 36, "Figtree"), "#AEB6BF");
+    const c = tirCampagne();
+    T("TIRAGE AU SORT", cx + 70, cut + 82, F(800, 28), "#8E99A4", "left", 6);
+    T("1er " + TMOIS[c.m] + " " + c.y, cx + 70, cut + 156, F(800, 58), "#FFFFFF");
+    T("à 18 h, en direct sur TikTok", cx + 70, cut + 222, F(700, 40), "#F2B705");
+    x.fillStyle = "#FF2D55"; x.beginPath(); x.arc(cx + 82, cut + 276, 11, 0, 7); x.fill(); T("Le live commence à 17 h", cx + 106, cut + 288, F(500, 32, "Figtree"), "#C9D0D6");
+    T("Participation enregistrée · gratuite", cx + 70, cut + 362, F(600, 28, "Figtree"), "#6F7A85");
+    const sx = cx + cw - 140, sy = cut + 236; x.fillStyle = "#fff"; x.beginPath(); x.arc(sx, sy, 92, 0, 7); x.fill(); x.strokeStyle = "#D7263D"; x.lineWidth = 20; x.beginPath(); x.arc(sx, sy, 76, 0, 7); x.stroke();
+    T("15 000", sx, sy + 4, F(800, 34), "#111", "center", -1); T("F", sx, sy + 38, F(800, 22), "#111", "center");
+    T("2 gagnants chaque mois · ton permis à 15 000 F", W / 2, 1210, F(600, 30, "Figtree"), "#C9D0D6", "center");
+    T("autosodaf.com/#tirage", W / 2, 1300, F(700, 32), "#FFFFFF", "center", 1);
+    return await new Promise((ok) => cv.toBlob(ok, "image/png"));
+  }
+  root.addEventListener("click", async (e) => {
+    const b = e.target.closest("[data-tirdl]"); if (!b || !TIR.dl) return; const lab = b.innerHTML; b.disabled = true;
+    try {
+      const blob = await tirImage(TIR.dl.n, TIR.dl.qui), name = "ticket-sodaf-" + String(TIR.dl.n).padStart(4, "0") + ".png", url = URL.createObjectURL(blob);
+      const a = document.createElement("a"); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 60000);
+      b.innerHTML = "Ticket téléchargé"; setTimeout(() => { b.innerHTML = lab; }, 2500);
+    } catch (_) { b.innerHTML = lab; const sm = b.parentNode.querySelector("small"); if (sm) sm.textContent = "Le ticket n'a pas pu être créé sur ce téléphone. Fais une capture d'écran de cette page."; }
+    b.disabled = false;
   });
   root.addEventListener("click", (e) => { const a = e.target.closest("[data-tirgo]"); if (!a) return; e.preventDefault(); const t = $("#tirage-jouer"); if (t) t.scrollIntoView({ behavior: "smooth", block: "start" }); });
 
@@ -5387,17 +5448,62 @@ html{scrollbar-gutter:stable}
 #sodaf-root .cz-cv{display:grid;place-items:center;width:92px;height:92px;padding:0 18px;text-align:center;border-radius:50%;font:700 .92rem/1 var(--f-display);white-space:nowrap;color:#1A1408;background:radial-gradient(circle,#FFF6D6 0 60%,transparent 61%),repeating-conic-gradient(#F6C232 0 15deg,#C9940F 15deg 30deg);box-shadow:0 0 0 3px #fff,0 0 0 4px #E6D6A0,0 10px 20px -10px rgba(0,0,0,.4)}
 #sodaf-root .cz-c1 .cz-cv{background:radial-gradient(circle,#0B3326 0 60%,transparent 61%),repeating-conic-gradient(#F6C232 0 15deg,#0B3326 15deg 30deg);color:#F6C232;width:104px;height:104px;font-size:1rem}
 #sodaf-root .cz-chip b{font:700 1.1rem/1.1 var(--f-display)}#sodaf-root .cz-chip small{color:#5B6570;font-size:.84rem}
-#sodaf-root .cz-play{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:20px;margin-top:36px;scroll-margin-top:90px;align-items:start}
-#sodaf-root .cz .tir-form,#sodaf-root .cz .tir-done,#sodaf-root .cz .tir-closed{border:1.5px solid #D9C27A;border-radius:22px;box-shadow:0 0 0 5px #FFF8E1,0 24px 50px -30px rgba(26,20,8,.45);padding:26px}
+#sodaf-root .cz-play{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:22px;align-items:start}
 #sodaf-root .cz-side{display:grid;gap:12px}
-#sodaf-root .cz-steps{list-style:none;margin:0;padding:18px;counter-reset:cs;display:grid;gap:14px;border-radius:18px;background:#0D1110;color:#E9ECEF}
+#sodaf-root .cz-steps{list-style:none;margin:0;padding:20px;counter-reset:cs;display:grid;gap:16px;border-radius:18px;background:#1A2026;border:1px solid #2C353E;color:#E9ECEF}
 #sodaf-root .cz-steps li{counter-increment:cs;display:grid;grid-template-columns:40px 1fr;column-gap:12px}
 #sodaf-root .cz-steps li::before{content:counter(cs);grid-row:span 2;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font:700 1.2rem var(--f-display);color:#1A1408;background:linear-gradient(180deg,#FFE38A,#C9940F)}
 #sodaf-root .cz-steps b{font:700 1.05rem var(--f-display);color:#fff}#sodaf-root .cz-steps b span{font:inherit}#sodaf-root .cz-steps li>span{font-size:.86rem;color:#AEB6BF}
-#sodaf-root .cz-alt{border-radius:16px;padding:16px;background:#fff;border:1px solid #DDE1E5;display:grid;gap:6px;justify-items:start}
+#sodaf-root .cz-alt{border-radius:16px;padding:18px;background:#fff;border:0;display:grid;gap:6px;justify-items:start}
 #sodaf-root .cz-alt b{font:700 1.1rem var(--f-display)}#sodaf-root .cz-alt p{margin:0;color:#5B6570;font-size:.9rem}#sodaf-root .cz-alt p b{font:inherit;font-weight:700;color:#14181D}
 #sodaf-root .cz .tir-myticket{background:linear-gradient(180deg,#1A1408,#0E0B05);border:1.5px solid #B8860B}
 #sodaf-root .cz .mt-l b{color:#F6C232}#sodaf-root .cz .mt-r{background:#0B3326}
+/* Tirage : formulaire sur la route (fond asphalte, passage piéton, bornes, ligne jaune) */
+#sodaf-root .cz-road{position:relative;margin-top:44px;padding:58px 0 64px;scroll-margin-top:70px;color:#E9ECEF;background:radial-gradient(rgba(255,255,255,.035) 1px,transparent 1.5px) 0 0/7px 7px,radial-gradient(900px 420px at 100% 0,rgba(246,194,50,.10),transparent 60%),linear-gradient(180deg,#14181C,#0E1114)}
+#sodaf-root .cz-zebra{position:absolute;left:0;right:0;top:0;height:22px;background:repeating-linear-gradient(90deg,#F2F2EE 0 34px,transparent 34px 62px);opacity:.92}
+#sodaf-root .cz-lane{position:absolute;left:0;right:0;bottom:22px;height:5px;background:repeating-linear-gradient(90deg,#F2B705 0 46px,transparent 46px 78px)}
+#sodaf-root .cz-after{padding-top:44px}
+#sodaf-root .cz .tir-form,#sodaf-root .cz .tir-done,#sodaf-root .cz .tir-closed{position:relative;background:#1A2026;border:1px solid #2C353E;border-top:4px solid #F2B705;border-radius:20px;padding:28px;box-shadow:0 30px 60px -30px rgba(0,0,0,.8);color:#E9ECEF}
+#sodaf-root .cz-fh{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:22px;padding-bottom:20px;border-bottom:1px dashed #36404A}
+#sodaf-root .cz-fh h2{margin:6px 0 0;color:#fff}#sodaf-root .cz .cz-fh p:not(.cz-k){margin:8px 0 0;color:#AEB6BF;font-size:.92rem}
+#sodaf-root .cz .cz-fh p.cz-k{color:#F2B705;margin:0}
+#sodaf-root .cz-sign{flex:none;width:86px;height:86px;border-radius:50%;background:#fff;box-shadow:inset 0 0 0 9px #D7263D,0 0 0 2px #fff,0 10px 24px -8px rgba(0,0,0,.6);display:grid;place-content:center;text-align:center;color:#111;transform:rotate(-6deg)}
+#sodaf-root .cz-sign b{font:700 1.08rem/1 var(--f-display);letter-spacing:-.02em}#sodaf-root .cz-sign span{font:800 .7rem/1.2 var(--f-ui)}
+#sodaf-root .cz-st{position:relative;display:grid;grid-template-columns:32px minmax(0,1fr);column-gap:16px;padding-bottom:10px}
+#sodaf-root .cz-st::before{content:"";position:absolute;left:14.5px;top:44px;bottom:2px;width:3px;background:repeating-linear-gradient(180deg,#F2B705 0 10px,transparent 10px 18px)}
+#sodaf-root .cz-stl::before{display:none}
+#sodaf-root .cz-km{width:32px;height:40px;border-radius:16px 16px 4px 4px;background:linear-gradient(180deg,#D7263D 0 40%,#fff 40%);display:grid;align-content:end;justify-items:center;padding-bottom:3px;font:700 1rem/1 var(--f-display);color:#111;box-shadow:0 4px 10px -4px rgba(0,0,0,.7)}
+#sodaf-root .cz-kmf{background:#F2B705;border-radius:50%;width:32px;height:32px;align-content:center;padding:0;margin-top:2px}
+#sodaf-root .cz-stt{margin:8px 0 12px;font:800 .78rem/1.2 var(--f-ui);letter-spacing:.13em;text-transform:uppercase;color:#F2B705}
+#sodaf-root .cz-form .field label,#sodaf-root .cz-form .tir-lab{color:#D5DBE1;font-weight:600;font-size:.9rem}
+#sodaf-root .cz-form .field input{background:#0F1316;border:1.5px solid #343E48;color:#fff;border-radius:12px;padding:.78em .9em}
+#sodaf-root .cz-form .field input::placeholder{color:#66717C}
+#sodaf-root .cz-form .field input:focus{border-color:#F2B705;box-shadow:0 0 0 3px rgba(242,183,5,.22)}
+#sodaf-root .cz-form .tel{background:#0F1316;border:1.5px solid #343E48;border-radius:12px}
+#sodaf-root .cz-form .tel:focus-within{border-color:#F2B705;box-shadow:0 0 0 3px rgba(242,183,5,.22)}
+#sodaf-root .cz-form .tel span{background:#222A32;color:#F2B705;border-right:1px solid #343E48}
+#sodaf-root .cz-form .tel input{border:0;box-shadow:none}
+#sodaf-root .cz-form .tir-card{background:#0F1316;border:1.5px dashed #4A5560;border-radius:14px;color:#E9ECEF}
+#sodaf-root .cz-form .tir-card:hover{border-color:#F2B705}
+#sodaf-root .cz-form .tir-card.on{border-style:solid;border-color:#2BB673;background:rgba(11,110,79,.16)}
+#sodaf-root .cz-form .tir-cardph{background:#1F262D;border-color:#343E48;color:#F2B705}
+#sodaf-root .cz-form .tir-cardtx b{color:#fff}#sodaf-root .cz-form .tir-cardtx small{color:#9AA5B0}
+#sodaf-root .cz-form .tir-check{color:#D5DBE1;margin-top:0;margin-bottom:12px}#sodaf-root .cz-form .tir-check b{color:#fff}
+#sodaf-root .cz-form .tir-check input{appearance:none;-webkit-appearance:none;width:22px;height:22px;margin:1px 0 0;border:2px solid #56616C;border-radius:6px;background:#0F1316;display:grid;place-items:center;cursor:pointer;transition:background .15s,border-color .15s}
+#sodaf-root .cz-form .tir-check input::after{content:"";width:6px;height:11px;border:solid #111;border-width:0 3px 3px 0;transform:rotate(45deg) translate(-1px,-1px);opacity:0}
+#sodaf-root .cz-form .tir-check input:checked{background:#F2B705;border-color:#F2B705}#sodaf-root .cz-form .tir-check input:checked::after{opacity:1}
+#sodaf-root .cz-form .tir-check input:focus-visible{outline:3px solid rgba(242,183,5,.45);outline-offset:2px}
+#sodaf-root .cz-form .tir-err{margin:4px 0 0;padding:10px 12px;border-radius:10px;background:rgba(215,38,61,.14);border-left:4px solid #FF4D5E;color:#FFB3BA}
+#sodaf-root .cz-form .tir-go{margin-top:14px}
+#sodaf-root .cz-fnote{margin:10px 0 0;text-align:center;font-size:.8rem;color:#8E99A4}
+#sodaf-root .cz .tir-donep{color:#C9D0D6}
+#sodaf-root .cz .tir-done .btn-line{background:transparent;color:#fff;border-color:rgba(255,255,255,.35)}#sodaf-root .cz .tir-done .btn-line:hover{border-color:#fff}
+#sodaf-root .cz .tir-closed h2{color:#fff}#sodaf-root .cz .tir-closed p:not(.cz-k2){color:#AEB6BF}#sodaf-root .cz .tir-closed .cz-k2{color:#F2B705}
+#sodaf-root .cz-altg{background:#F2B705}#sodaf-root .cz-altg p{color:#3A2E05}
+#sodaf-root .cz-steps li::before{box-shadow:0 0 0 3px #1A2026,0 0 0 4px #F2B705}
+@media (max-width:600px){#sodaf-root .cz-road{padding:46px 0 56px}#sodaf-root .cz-zebra{height:16px;background-size:auto}#sodaf-root .cz .tir-form,#sodaf-root .cz .tir-done,#sodaf-root .cz .tir-closed{padding:22px 16px}#sodaf-root .cz-st{grid-template-columns:26px minmax(0,1fr);column-gap:12px}#sodaf-root .cz-km{width:26px;height:34px;font-size:.88rem}#sodaf-root .cz-kmf{width:26px;height:26px}#sodaf-root .cz-st::before{left:11.5px;top:38px}#sodaf-root .cz-sign{width:68px;height:68px;box-shadow:inset 0 0 0 7px #D7263D,0 0 0 2px #fff,0 10px 24px -8px rgba(0,0,0,.6)}#sodaf-root .cz-sign b{font-size:.86rem}}
+#sodaf-root .tir-dl{display:grid;justify-items:center;gap:8px;margin-top:18px;text-align:center}#sodaf-root .tir-dl .cz-btn{width:100%;justify-content:center;gap:10px}#sodaf-root .tir-dl small{color:#9AA5B0;font-size:.84rem}
+#sodaf-root .cz-alt{color:#14181D}#sodaf-root .cz-altg b{color:#1A1408}
 @media (max-width:980px){#sodaf-root .cz-chips{grid-template-columns:repeat(3,minmax(0,1fr))}#sodaf-root .cz-play{grid-template-columns:1fr}}
 @media (max-width:600px){#sodaf-root .cz-hero{padding:30px 0 40px}#sodaf-root .cz-machine{padding:16px 10px 12px;border-radius:20px}#sodaf-root .cz-reels{gap:5px}#sodaf-root .cz-board{grid-template-columns:1fr 1fr}#sodaf-root .cz-clock{grid-column:1/-1}#sodaf-root .cz .tir-cd div{min-width:0;flex:1}#sodaf-root .cz-chips{grid-template-columns:repeat(2,minmax(0,1fr))}#sodaf-root .cz-c1{grid-column:1/-1}#sodaf-root .cz .tir-form,#sodaf-root .cz .tir-done,#sodaf-root .cz .tir-closed{padding:20px 16px}#sodaf-root .cz-btn{width:100%;justify-content:center}}
 @media (prefers-reduced-motion:reduce){#sodaf-root .cz-bulbs,#sodaf-root .cz-btn::after,#sodaf-root .cz-dot{animation:none}}
