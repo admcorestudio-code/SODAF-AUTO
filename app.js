@@ -456,6 +456,12 @@ article.ch p+p{margin-top:10px}
 .fslogan{margin-top:14px!important;font:700 1.05rem/1.3 var(--f-display);color:var(--yellow)}
 .entgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
 .entdoc{display:flex;flex-direction:column;gap:14px}
+.vidbox{display:flex;flex-direction:column;align-items:flex-start;gap:10px;margin:8px 0 18px}
+.vidplay{position:relative;display:block;width:270px;max-width:100%;aspect-ratio:9/16;border:0;padding:0;border-radius:18px;overflow:hidden;cursor:pointer;background:#0E1114;box-shadow:0 14px 30px -18px rgba(0,0,0,.6)}
+.vidplay img{display:block;width:100%;height:100%;object-fit:cover}
+.vp-btn{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);display:inline-flex;align-items:center;gap:8px;white-space:nowrap;background:#F2B705;color:#15191E;font:700 .95rem var(--f-ui);border-radius:999px;padding:.6em 1.1em;box-shadow:0 6px 18px -6px rgba(0,0,0,.6)}
+.vidplay:focus-visible{outline:3px solid #F2B705;outline-offset:3px}
+.vidbox video{display:block;width:270px;max-width:100%;aspect-ratio:9/16;border-radius:18px;background:#0E1114}
 .entdoc img{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:10px;background:#15191E;border:1px solid var(--line)}
 .entdoc img.tall{object-fit:contain;background:var(--soft)}
 .entdoc img.sq{object-fit:contain;background:#fff}
@@ -1511,6 +1517,9 @@ ${HEAD("Manuel officiel SODAF", "Les cours", "Tout ce qui est enseigné en salle
 <h4>Cas complexes</h4>
 <p><b>Intersection encombrée</b> : interdit de s'engager si tu risques d'y rester bloqué, même au vert. Sur un quadrillage jaune, l'arrêt est interdit.</p>
 <p><b>Panonceau schéma</b> : le trait épais montre la route prioritaire, les traits fins les routes avec Stop ou Cédez le passage.</p>
+<h4>En vidéo : qui passe en premier ?</h4>
+<p>Quatre carrefours en une minute : priorité à droite, stop, cédez le passage, rond-point. La vidéo ne se charge que si tu appuies (1 Mo).</p>
+<div class="vidbox"><button type="button" class="vidplay" data-vid="/videos/priorites-sodaf.mp4" data-poster="/videos/priorites-poster.jpg" aria-label="Voir la vidéo : qui passe en premier ?"><img src="/videos/priorites-poster.jpg" alt="" loading="lazy" width="270" height="480"><span class="vp-btn"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>Voir la vidéo · 1 min</span></button><a class="linkbtn" href="/videos/priorites-sodaf.mp4" download>Télécharger la vidéo</a></div>
 <h4>Entraîne-toi : qui passe en premier ?</h4>
 <p>Regarde chaque carrefour vu du dessus, réfléchis, puis ouvre la réponse.</p>
 <div class="sits">${SIT_CARDS(["droite", "trois", "stop", "cedez", "prioritaire", "gauche", "giratoire", "accident"])}</div>
@@ -2831,6 +2840,7 @@ function init(root) {
   $("#sd-ckReset").addEventListener("click", () => { ck.v = []; S.set("check", ck); syncCk(); });
   syncCk();
 
+  document.addEventListener("click", (e) => { const b = e.target.closest("[data-vid]"); if (!b) return; const v = document.createElement("video"); v.src = b.dataset.vid; v.poster = b.dataset.poster || ""; v.controls = true; v.autoplay = true; v.playsInline = true; v.setAttribute("playsinline", ""); b.replaceWith(v); const p = v.play(); if (p && p.catch) p.catch(() => {}); });
   $$("[data-cat]").forEach((a) => a.addEventListener("click", () => { $("#sd-fCat").value = a.dataset.cat; if (a.dataset.msg) $("#sd-fMsg").value = a.dataset.msg; }));
   const telIn = $("#sd-fPhone");
   const telDigits = () => { let d = telIn.value.replace(/\D/g, ""); if (d.length > 8 && d.startsWith("228")) d = d.slice(3); return d.slice(0, 8); };
