@@ -24,7 +24,7 @@ self.addEventListener("fetch", (e) => {
   const r = e.request, u = new URL(r.url);
   if (r.method !== "GET") return;
   if (u.origin === location.origin) {
-    if (u.pathname.startsWith("/equipe/") || u.pathname.startsWith("/videos/") || u.pathname === "/sw.js") return;
+    if (u.pathname.startsWith("/equipe/") || u.pathname.startsWith("/videos/") || u.pathname.startsWith("/doc-img/") || u.pathname === "/sw.js") return;
     // Pages et script : d'abord internet (toujours la dernière version), sinon la copie gardée
     if (r.mode === "navigate" || u.pathname === "/app.js") {
       e.respondWith((async () => {
