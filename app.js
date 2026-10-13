@@ -459,6 +459,14 @@ article.ch p+p{margin-top:10px}
 .fslogan{margin-top:14px!important;font:700 1.05rem/1.3 var(--f-display);color:var(--yellow)}
 .entgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
 .entdoc{display:flex;flex-direction:column;gap:14px}
+.soc-addr{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:22px;padding:18px;border-left:4px solid var(--green)}
+@media(max-width:760px){.soc-addr{grid-template-columns:1fr}}
+.soc-addr .eyebrow{margin:0 0 4px}
+.soc-l{margin-top:8px!important;font-size:1.02rem;line-height:1.5}
+.soc-meta{display:flex;flex-direction:column;gap:2px;margin-top:10px!important;font-size:.9rem;color:var(--muted)}
+.soc-addr .acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.soc-map{border-radius:14px;overflow:hidden;background:var(--soft);min-height:240px}
+.soc-map iframe{display:block;width:100%;height:100%;min-height:240px;border:0}
 .vidbox{display:flex;flex-direction:column;align-items:flex-start;gap:10px;margin:8px 0 18px}
 .vidplay{position:relative;display:block;width:270px;max-width:100%;aspect-ratio:9/16;border:0;padding:0;border-radius:18px;overflow:hidden;cursor:pointer;background:#0E1114;box-shadow:0 14px 30px -18px rgba(0,0,0,.6)}
 .vidplay img{display:block;width:100%;height:100%;object-fit:cover}
@@ -1996,6 +2004,12 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="card entdoc"><img src="/entreprise/apercu-affiche-tirage.jpg" alt="Affiche du tirage au sort étudiant" loading="lazy" class="tall"><div><b>Affiche du tirage au sort</b><span>Jackpot étudiant, avec le QR code vers autosodaf.com/#tirage. A4 à imprimer (agrandissable en A3), statut WhatsApp et publication.</span><div class="acts"><a class="btn btn-green btn-sm" href="/entreprise/affiche-tirage-a4.pdf" download>A4 à imprimer</a><a class="btn btn-line btn-sm" href="/entreprise/affiche-tirage-statut.jpg" download>Statut WhatsApp</a><a class="btn btn-line btn-sm" href="/entreprise/affiche-tirage-publication.jpg" download>Publication</a></div></div></div>
 <div class="card entdoc"><img src="/entreprise/apercu-memos.jpg" alt="Mémo du secrétariat" loading="lazy" class="tall"><div><b>Mémos de l'équipe</b><span>Une page A4 par rôle, avec les boutons de l'outil étape par étape. À imprimer et à garder à côté de soi.</span><div class="acts"><a class="btn btn-green btn-sm" href="/entreprise/memos-equipe-sodaf.pdf" download>Les 3 mémos</a><a class="btn btn-line btn-sm" href="/entreprise/memo-secretariat-sodaf.pdf" download>Secrétariat</a><a class="btn btn-line btn-sm" href="/entreprise/memo-gerante-sodaf.pdf" download>Gérante</a><a class="btn btn-line btn-sm" href="/entreprise/memo-moniteur-sodaf.pdf" download>Moniteur</a></div></div></div>
 </div></div>
+<!-- Adresse de l'entreprise : TOUJOURS en dernier dans Documents (consigne du propriétaire, 13 oct. 2026). Les nouveaux documents s'ajoutent au-dessus, dans .entgrid. -->
+<div class="card soc-addr" id="sd-socAddr"><div class="soc-txt"><p class="eyebrow">Adresse de l'entreprise</p><h3>SODAF Auto-École</h3>
+<p class="soc-l"><b>412 Avenue Akei, Tokoin Tamé</b><br>En face de la caisse<br>Lomé, Togo</p>
+<p class="soc-meta"><span>GPS : 6.168785, 1.225462</span><span>Tél. et WhatsApp : +228 72 54 41 66</span><span>Lun – ven 8 h – 12 h 30 et 14 h 30 – 18 h · Sam 8 h – 12 h</span></p>
+<div class="acts"><a class="btn btn-green btn-sm" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=6.168785%2C1.225462">Itinéraire Google Maps</a><a class="btn btn-wa btn-sm" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent("SODAF Auto-École\n412 Avenue Akei, Tokoin Tamé (en face de la caisse), Lomé, Togo\nTél. : +228 72 54 41 66\nItinéraire : https://www.google.com/maps/search/?api=1&query=6.168785%2C1.225462")}">Envoyer l'adresse sur WhatsApp</a><button class="btn btn-line btn-sm" type="button" data-copyaddr>Copier l'adresse</button></div></div>
+<div class="soc-map"><iframe title="Carte : SODAF Auto-École, Tokoin Tamé, Lomé" src="about:blank" data-src="https://www.google.com/maps?q=6.168785,1.225462&z=17&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div></div>
 </div>
 </div>
 </div>
@@ -4763,6 +4777,14 @@ function init(root) {
       $("#sd-drMonths").innerHTML = months.map((x) => '<div class="tm-mo"><div class="tm-bar-v"><i style="height:' + Math.max(2, Math.round((x.enc / maxE) * 100)) + '%"></i></div><b>' + (x.enc ? Math.round(x.enc / 1000) + " k" : "0") + '</b><span>' + x.l + "</span><small>" + x.ins + " inscr.</small></div>").join("");
     }
     $("#sd-drReload").addEventListener("click", loadDir);
+
+    // ---- Adresse de l'entreprise (bas de Documents) : copier, et carte chargée seulement quand on la voit
+    { const box = $("#sd-socAddr");
+      if (box) {
+        box.addEventListener("click", async (e) => { if (!e.target.closest("[data-copyaddr]")) return; const t = "SODAF Auto-École, 412 Avenue Akei, Tokoin Tamé (en face de la caisse), Lomé, Togo · GPS 6.168785, 1.225462 · +228 72 54 41 66"; try { await navigator.clipboard.writeText(t); toast("Adresse copiée"); } catch (er) { toast(t); } });
+        const fr = box.querySelector("iframe[data-src]"), go = () => { if (fr.dataset.src) { fr.src = fr.dataset.src; delete fr.dataset.src; } };
+        if ("IntersectionObserver" in window) { const io = new IntersectionObserver((en) => { if (en.some((x) => x.isIntersecting)) { go(); io.disconnect(); } }); io.observe(box); } else go();
+      } }
 
     // ---- Installer l'application (page /equipe/)
     if (window.SODAF_APP) {
