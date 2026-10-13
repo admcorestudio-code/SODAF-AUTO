@@ -2691,6 +2691,7 @@ function init(root) {
         const mr = form.querySelector('input[name=motif][value="' + o.motif + '"]'); if (mr && !mr.closest(".rcm").hidden) { mr.checked = true; suggest(); }
         const md = form.querySelector('input[name=mode][value="' + o.mode + '"]'); if (md) md.checked = true;
         if (o.note) $("#sd-rcNote").value = o.note;
+        if (o.montant) F.amt.value = o.montant;
       }
       $("#equipe-recu").scrollIntoView({ block: "start" });
     };
@@ -3726,7 +3727,8 @@ function init(root) {
     const dLong = (d) => (d ? dOnly(d).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" }) : "");
     const ITI = "https://www.google.com/maps/search/?api=1&query=6.168785%2C1.225462";
     const AGENCE = "*OÙ NOUS TROUVER*\n412 Avenue Akei, Tokoin Tamé (en face de la caisse)\nLun – ven : 8 h – 12 h 30 et 14 h 30 – 18 h · Sam : 8 h – 12 h\nItinéraire : " + ITI;
-    const exMixx = (x) => (CFG.mixx_numero ? "\n\nTu peux aussi payer les 35 000 F par *Mixx by Yas* au " + CFG.mixx_numero + (CFG.mixx_nom ? " (" + CFG.mixx_nom + ")" : "") + ", motif *" + CODE(x) + " EXAMEN*, puis nous envoyer la capture du SMS ici." : "");
+    const EXDU = (x) => 35000 - (+x.examen_remise || 0); // dépôt d'examen à payer, remise déduite (max 5 000 F, migration 0043)
+    const exMixx = (x) => (CFG.mixx_numero ? "\n\nTu peux aussi payer les " + F(EXDU(x)) + " par *Mixx by Yas* au " + CFG.mixx_numero + (CFG.mixx_nom ? " (" + CFG.mixx_nom + ")" : "") + ", motif *" + CODE(x) + " EXAMEN*, puis nous envoyer la capture du SMS ici." : "");
     const exLine = (x) => x.examen_etape === "pret" ? (x.examen_lien_le ? "message envoyé " + ago(x.examen_lien_le) + " · dossier à apporter" : "message à envoyer") : x.examen_etape === "complet" ? "dossier reçu · à déposer" + (x.examen_passages ? " · " + (x.examen_passages + 1) + "e passage" : "") : "déposé le " + dFr(x.examen_depose_le) + " · résultat à noter";
     const SIGN = "\n\n*L'équipe SODAF · L'art de conduire, la force de réussir.*";
     const jourLong = (j) => longDay(j).replace(/^./, (c) => c.toUpperCase());
@@ -3735,7 +3737,7 @@ function init(root) {
       return "Bonjour " + prenom(el) + ",\n\nTa formation est soldée : tu as maintenant ta place en *conduite*.\n\n*TON ÉQUIPE : " + q.nom.toUpperCase() + "*\n• " + eqJours(q).replace(/^./, (c) => c.toUpperCase()) + ", " + plage(q.heure) + "\n• 4 élèves dans la voiture : chacun conduit environ 25 minutes, les autres observent et le moniteur commente.\n\n*TES BLOCS DE CONDUITE*" +
         (pr ? "\n• 1er bloc : " + jourLong(pr.jour) + " à " + pr.heure + "\n• " + blocs.length + " blocs réservés, 2 par semaine, jusqu'au " + longDay(der.jour) : "") + "\n• Au 10e bloc, le moniteur t'évalue pour l'examen.\n\n*À SAVOIR*\n• Départ : SODAF, 412 Avenue Akei, Tokoin Tamé (en face de la caisse). Arrive 10 minutes avant, en chaussures fermées.\n• Un empêchement ? Préviens-nous *la veille* en répondant à ce message : tu rattrapes gratuitement le mercredi à 15 h 45. Sans prévenir, le bloc est perdu.\n\n*PARRAINAGE*\nTon code parrain : *" + CODE(el) + "*. Chaque personne qui s'inscrit avec ton code te rapporte *2 000 F* (Mixx by Yas ou Moov Money)." + SIGN; };
     const msgRappelSeance = (el, c) => "Bonjour " + prenom(el) + ",\n\nPetit rappel : ta séance de conduite est *demain, " + longDay(c.jour) + " à " + c.heure + "*" + (c.bloc ? " (bloc de 2 h avec ton équipe)" : "") + ".\n\nDépart : SODAF, 412 Avenue Akei, Tokoin Tamé (en face de la caisse). Merci d'être là 10 minutes avant l'heure.\n\nUn empêchement ? Réponds vite à ce message." + SIGN;
-    const msgExamen = (x) => "Bonjour " + prenom(x) + ",\n\nFélicitations, ta formation chez *SODAF Auto-École* est terminée ! Pour la suite, nous devons faire le *dépôt de ton dossier d'examen* auprès de l'État.\n\n*À APPORTER À L'AGENCE*\n• Photocopie de ta carte d'identité\n• Ton acte de naissance\n• 2 photos d'identité (format passeport)\n• Le dépôt pour l'examen : 35 000 F\n\nLe dossier est accepté *uniquement complet* : apporte tout en une seule fois.\n\nN° Client : " + CODE(x) + exMixx(x) + "\n\n" + AGENCE + "\n\nÀ très vite !" + SIGN;
+    const msgExamen = (x) => "Bonjour " + prenom(x) + ",\n\nFélicitations, ta formation chez *SODAF Auto-École* est terminée ! Pour la suite, nous devons faire le *dépôt de ton dossier d'examen* auprès de l'État.\n\n*À APPORTER À L'AGENCE*\n• Photocopie de ta carte d'identité\n• Ton acte de naissance\n• 2 photos d'identité (format passeport)\n• Le dépôt pour l'examen : " + F(EXDU(x)) + (x.examen_remise ? " (remise de " + F(x.examen_remise) + " déjà déduite)" : "") + "\n\nLe dossier est accepté *uniquement complet* : apporte tout en une seule fois.\n\nN° Client : " + CODE(x) + exMixx(x) + "\n\n" + AGENCE + "\n\nÀ très vite !" + SIGN;
     const msgBravo = (x) => "Félicitations " + prenom(x) + " !\n\nToute l'équipe de *SODAF Auto-École* est fière de toi : tu as obtenu ton *permis de conduire*.\n\nUn dernier conseil : sur la route, la prudence reste ta meilleure alliée.\n\nSi tu es content(e) de ta formation, parle de SODAF autour de toi : ta famille et tes amis seront bien accueillis." + SIGN + "\nautosodaf.com";
     const say = (t) => '<p class="sc-say">« ' + t + " »</p>";
     const tip = (t) => '<p class="sc-tip">' + t + "</p>";
@@ -3776,7 +3778,7 @@ function init(root) {
         await patchEl(x, body, "Solde payé : formation soldée" + (body.groupe_code === null ? " · son groupe est complet : placé à la première place libre" : ""));
       } else if (dt.motif === "examen" && x.examen_etape === "pret") {
         const le = new Date().toISOString(), docs = {}; PX.forEach((p) => (docs[p[0]] = { main: true, le }));
-        await patchEl(x, { examen_paye: true, examen_docs: docs, examen_etape: "complet" }, "Reçu enregistré : dossier d'examen complet", ["Étape", "Examen : Dossier complet reçu (papiers + 35 000 F)"]);
+        await patchEl(x, { examen_paye: true, examen_docs: docs, examen_etape: "complet" }, "Reçu enregistré : dossier d'examen complet", ["Étape", "Examen : Dossier complet reçu (papiers + " + F(EXDU(x)) + ")"]);
       }
       await loadEleves(true); // en arrière-plan : l'écran du reçu reste ouvert pour l'envoyer
     });
@@ -4069,9 +4071,14 @@ function init(root) {
         const recuLe = (x.examen_docs || {}).cni ? (x.examen_docs.cni.le || "") : "";
         let act = "";
         if (E === "pret") act = '<div class="pc-block"><div class="pc-bh"><b>Réception du dossier</b>' + (x.examen_lien_le ? '<span class="pc-ok">✓ Message envoyé ' + ago(x.examen_lien_le) + "</span>" : '<span class="tm-note" style="margin:0!important">Message à envoyer (bouton en haut)</span>') + '</div><p class="tm-note" style="margin:0 0 8px!important">Le dossier n\'est accepté que <b>complet</b>. Vérifie que tout est là :</p>' +
-          '<ul class="ex-check"><li>Photocopie de la carte d\'identité</li><li>Acte de naissance</li><li>2 photos d\'identité (format passeport)</li><li>Dépôt pour l\'examen : 35 000 F</li></ul>' +
+          '<ul class="ex-check"><li>Photocopie de la carte d\'identité</li><li>Acte de naissance</li><li>2 photos d\'identité (format passeport)</li><li>Dépôt pour l\'examen : ' + F(EXDU(x)) + (x.examen_remise ? ' <span class="tm-note" style="margin:0!important">(remise ' + F(x.examen_remise) + " · " + esc(x.examen_remise_motif || "") + ")</span>" : "") + '</li></ul>' +
           '<p class="tm-note" style="margin:0 0 10px!important">S\'il manque quelque chose, l\'élève repart avec son dossier et revient quand tout est prêt.</p>' +
-          '<div class="tm-formact"><button class="btn btn-green btn-sm" type="button" data-a="exRecu">Dossier complet reçu : faire le reçu de 35 000 F</button></div></div>';
+          '<div class="tm-formact"><button class="btn btn-green btn-sm" type="button" data-a="exRecu">Dossier complet reçu : faire le reçu de ' + F(EXDU(x)) + '</button></div></div>' +
+          (DIR() && !x.examen_paye ? '<div class="pc-block"><div class="pc-bh"><b>Remise sur l\'examen</b>' + (x.examen_remise ? '<span class="pc-ok">' + F(x.examen_remise) + " accordée</span>" : '<span class="tm-note" style="margin:0!important">5 000 F maximum</span>') + '</div>' +
+            '<p class="tm-note" style="margin:0 0 8px!important">Seulement sur le dépôt de l\'examen (35 000 F), jamais sur la formation. Elle s\'écrit toute seule dans le journal des décisions. Accorde-la <b>avant</b> d\'envoyer le message à l\'élève, pour qu\'il voie le bon montant.</p>' +
+            '<div class="row2"><div class="field"><label for="sd-exRemMt">Montant</label><select id="sd-exRemMt">' + [1000, 2000, 3000, 4000, 5000].map((v) => '<option value="' + v + '"' + (v === (+x.examen_remise || 0) ? " selected" : "") + ">" + F(v) + " (dépôt " + F(35000 - v) + ")</option>").join("") + '</select></div>' +
+            '<div class="field"><label for="sd-exRemMo">Motif</label><select id="sd-exRemMo">' + ["Parrainage", "Famille ou proche", "Difficulté de paiement", "Geste commercial", "Fidélité (2e permis)"].map((v) => "<option" + (v === x.examen_remise_motif ? " selected" : "") + ">" + v + "</option>").join("") + "</select></div></div>" +
+            '<div class="tm-formact"><button class="btn btn-line btn-sm" type="button" data-a="exRem">' + (x.examen_remise ? "Changer la remise" : "Accorder la remise") + "</button>" + (x.examen_remise ? '<button class="linkbtn" type="button" data-a="exRemOff">Retirer la remise</button>' : "") + "</div></div>" : "");
         if (E === "complet") act = '<div class="pc-block"><div class="pc-bh"><b>Dossier reçu</b>' + (recuLe ? '<span class="pc-ok">✓ le ' + dFr(recuLe) + "</span>" : "") + '</div><p class="tm-note" style="margin:0!important">Le reçu envoyé à l\'élève lui explique la suite (dépôt, message officiel, examen à SOTOPLA). Le dépôt se fait en lot : barre noire en haut de la liste, « Imprimer le bordereau » puis « Lot déposé ».</p></div>';
         if (E === "depose" || E === "convoque") act = '<div class="pc-block ex-big"><div class="pc-bh"><b>Dossier déposé</b></div><p class="ex-when">' + dLong(x.examen_depose_le) + '</p><p class="tm-note" style="margin:0!important">L\'État envoie la date de l\'examen directement à l\'élève (examen à SOTOPLA). Il ne reste qu\'à noter le résultat.</p></div>' +
           '<div class="pc-block"><div class="pc-bh"><b>Résultat de l\'examen</b></div><div class="tm-formact"><button class="btn btn-green btn-sm" type="button" data-a="exPass">Permis obtenu</button><button class="btn btn-line btn-sm" type="button" data-a="exFail">À repasser</button></div><p class="tm-note" style="margin:8px 0 0!important">« À repasser » range le dossier dans les archives « Permis échoué ». Le jour où l\'élève veut repasser, « Ressortir » relance directement un nouveau dépôt d\'examen.</p></div>';
@@ -4171,8 +4178,15 @@ function init(root) {
       else if (k === "toExam") { confirmBtn(a, async () => { const sd = await run(() => soldeFrais(x.id)); if (!sd) return; x.solde = sd.s; if (doit(x)) { toast("Formation pas encore soldée : pas de passage à l'examen", true); renderList(true); return; } if (await patchEl(x, { examen_etape: "pret", examen_pret_le: new Date().toISOString(), examen_lien_le: null, examen_relance_le: null, examen_bordereau_le: null, examen_date: null, examen_lieu: null, jeton: jetonOf(x) }, "Étape examen : envoie le message à l'élève", ["Étape", "Formation terminée : examen"])) { pcStage = "examen"; S.set("pcStage", pcStage); renderList(); } }); }
       else if (k === "sendExam") { const m = $("#sd-exMsg"); if (m) a.href = "https://wa.me/228" + waNum(x.telephone) + "?text=" + encodeURIComponent(m.value); await patchEl(x, { examen_lien_le: new Date().toISOString(), jeton: jetonOf(x) }, "Message noté comme envoyé", ["Étape", "Examen : Message de fin de formation envoyé"]); renderList(); }
       else if (k === "exRecu") {
-        toast("Fais le reçu de 35 000 F : le dossier passera « à déposer » dès que le reçu sera enregistré");
-        if (window.__sodafRcFill) { sub("paiements"); window.__sodafRcFill(x, { formation: x.formation, motif: "examen", mode: "Espèces", note: "Dépôt examen d'État · dossier complet reçu" }); }
+        toast("Fais le reçu de " + F(EXDU(x)) + " : le dossier passera « à déposer » dès que le reçu sera enregistré");
+        if (window.__sodafRcFill) { sub("paiements"); window.__sodafRcFill(x, { formation: x.formation, motif: "examen", mode: "Espèces", note: "Dépôt examen d'État · dossier complet reçu" + (x.examen_remise ? " · remise " + F(x.examen_remise) + " (" + (x.examen_remise_motif || "") + ")" : ""), montant: EXDU(x) }); }
+      }
+      else if (k === "exRem" || k === "exRemOff") {
+        const mt = k === "exRemOff" ? 0 : +$("#sd-exRemMt").value, mo = k === "exRemOff" ? null : $("#sd-exRemMo").value;
+        a.disabled = true;
+        const ok = await run(() => DB.q("rpc/examen_remise_accorder", { method: "POST", body: { p_eleve: x.id, p_montant: mt, p_motif: mo } }).then(() => true), mt ? "Remise de " + F(mt) + " accordée : dépôt " + F(35000 - mt) + " (noté dans le journal)" : "Remise retirée : dépôt 35 000 F");
+        a.disabled = false;
+        if (ok) { Object.assign(x, { examen_remise: mt, examen_remise_motif: mo }); await loadEleves(true); }
       }
       else if (k === "exDepose") { const d = $("#sd-exDep").value || iso(new Date()); if (await patchEl(x, { examen_etape: "depose", examen_depose_le: d }, "Dossier déposé le " + dFr(d), ["Étape", "Examen : Dossier déposé le " + d])) renderList(); }
       else if (k === "exPass") { confirmBtn(a, async () => { if (await patchEl(x, { statut: "Permis obtenu", examen_resultat: "obtenu", examen_date: iso(new Date()) }, "Bravo ! Permis obtenu", ["Étape", "Examen : Permis obtenu"])) { pcStage = "archives"; S.set("pcStage", pcStage); pcSel = x.id; renderList(); } }); }
@@ -4774,7 +4788,7 @@ function init(root) {
     window.TEAM_INFO = (id) => { const x = eleves.find((y) => y.id === id); if (!x) return null; const g = !sansCode(x) && x.groupe_code && gOf(x.groupe_code), sp = susp(x);
       return { code: !sansCode(x), susp: sp, fini: !!g && !cycleOk(x), groupe: g && cycleOk(x) && (!sp || occ(g.id) < g.places) ? g.nom + " (" + gJours(g) + ", " + g.heure + ")" : null, quota: x.quota }; }; window.TEAM_RELOAD_PAY = () => { if (!$('.tm-sec[data-s="paiements"]').hidden) loadPay(); };
     // ---- Mise à jour automatique : nouvelles pré-inscriptions, inscriptions en ligne… sans recharger la page
-    const sig = (x) => x ? JSON.stringify([x.statut, x.nom, x.telephone, x.formation, x.quartier, x.accueil_le, x.appels, x.rappel, x.dossier_envoye_le, x.dossier_relance_le, x.dossier_relances, x.archive_motif, x.archive_le, x.notes, x.dossier, x.web && x.web.id, x.solde, x.examen_etape, x.examen_lien_le, x.examen_paye, x.examen_bordereau_le, x.examen_depose_le, x.examen_resultat, x.examen_passages, x.quota, x.faits, x.resa, x.evaluation, x.groupe_code, x.groupe_depuis, x.groupe_msg_le, x.solde_rappels, x.ins_le]) : "";
+    const sig = (x) => x ? JSON.stringify([x.statut, x.nom, x.telephone, x.formation, x.quartier, x.accueil_le, x.appels, x.rappel, x.dossier_envoye_le, x.dossier_relance_le, x.dossier_relances, x.archive_motif, x.archive_le, x.notes, x.dossier, x.web && x.web.id, x.solde, x.examen_etape, x.examen_lien_le, x.examen_paye, x.examen_remise, x.examen_remise_motif, x.examen_bordereau_le, x.examen_depose_le, x.examen_resultat, x.examen_passages, x.quota, x.faits, x.resa, x.evaluation, x.groupe_code, x.groupe_depuis, x.groupe_msg_le, x.solde_rappels, x.ins_le]) : "";
     let polling = false;
     async function poll() {
       if (!me || polling || document.hidden || !DB.session) return;
