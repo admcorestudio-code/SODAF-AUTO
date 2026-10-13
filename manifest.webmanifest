@@ -1,0 +1,22 @@
+{
+  "name": "SODAF Auto-École · Révision du code",
+  "short_name": "SODAF",
+  "description": "Le code de la route SODAF sur ton téléphone : cours, panneaux, quiz corrigés et devoir de la semaine.",
+  "id": "/?app=eleve",
+  "start_url": "/?app=eleve#appli",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "lang": "fr",
+  "background_color": "#FFFFFF",
+  "theme_color": "#0B6E4F",
+  "icons": [
+    { "src": "/icon-eleve-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-eleve-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-eleve-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Le quiz", "url": "/?app=eleve#quiz", "icons": [{ "src": "/icon-eleve-192.png", "sizes": "192x192" }] },
+    { "name": "Les panneaux", "url": "/?app=eleve#panneaux", "icons": [{ "src": "/icon-eleve-192.png", "sizes": "192x192" }] }
+  ]
+}

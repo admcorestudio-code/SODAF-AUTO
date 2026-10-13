@@ -40,6 +40,9 @@ const DB = {
 };
 
 const WA = "https://wa.me/22872544166";
+// Application élève installée (icône sur l'écran d'accueil) : seulement ce qui sert à apprendre, sans la vitrine (inscription, prix, tirage)
+const ELEVE = !window.SODAF_APP && (/[?&]app=eleve\b/.test(location.search) || (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || navigator.standalone === true);
+if (ELEVE) document.documentElement.classList.add("mode-eleve");
 // Photo d'élève : recadrée au centre en carré, 1080 px, réduite par paliers (image nette), JPEG de bonne qualité (≈ 150 à 300 Ko)
 async function photoCompresse(file, cote = 1080, carre = true) {
   const url = URL.createObjectURL(file);
@@ -1200,6 +1203,49 @@ footer.site .logo small{color:rgba(255,255,255,.5)}
 .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:.7em 1.2em;border-radius:999px;font-weight:600;font-size:.92rem;z-index:99}
 #sodaf-root .wa-float{position:fixed;right:16px;bottom:16px;z-index:60;background:#1FA855;color:#fff;border-radius:999px;padding:.7em 1.05em;font-weight:700;text-decoration:none;box-shadow:0 10px 24px -10px rgba(0,0,0,.45);display:flex;gap:8px;align-items:center;font-size:.9rem}
 #sodaf-root .wa-float svg{display:block;width:20px;height:20px}
+
+/* ---- Application élève (installée) ---- */
+.ap-install{display:flex;align-items:center;gap:14px;background:var(--ink);color:#fff;border-radius:16px;padding:14px 16px;margin:16px auto 0;max-width:760px;position:relative}
+.ap-install b{display:block;font:700 1.05rem var(--f-display);color:#fff}
+.ap-install span{display:block;font-size:.92rem;color:#C9CED4;line-height:1.45}
+.ap-install>div:nth-child(2){flex:1;min-width:0}
+.ap-install .tm-install-ico{width:46px;height:46px;border-radius:12px;background:var(--green);display:grid;place-items:center;flex-shrink:0;padding:6px}
+.ap-install .tm-install-ico svg{height:34px;width:auto}
+.ap-install-x{position:absolute;top:4px;right:8px;background:none;border:0;color:#C9CED4;font-size:1.3rem;cursor:pointer;padding:4px 8px}
+.ap-wrap{max-width:760px;margin:0 auto;padding:18px 16px 28px}
+.ap-hi{background:var(--ink);color:#fff;border-radius:20px;padding:20px 20px 18px;position:relative;overflow:hidden}
+.ap-hi .eyebrow{color:var(--yellow)!important;margin:0 0 4px}
+.ap-hi h1{color:#fff!important;font-size:1.7rem!important}
+.ap-hi p{color:#C9CED4;margin-top:6px!important;font-size:.95rem}
+.ap-prog{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ap-prog div{background:rgba(255,255,255,.08);border-radius:14px;padding:10px 12px}
+.ap-prog small{display:block;font-size:.78rem;color:#C9CED4;text-transform:uppercase;letter-spacing:.06em}
+.ap-prog b{font:700 1.35rem var(--f-display);color:#fff}
+.ap-prog i{display:block;height:6px;background:rgba(255,255,255,.15);border-radius:999px;margin-top:6px;overflow:hidden}
+.ap-prog i em{display:block;height:100%;background:var(--yellow);border-radius:999px}
+.ap-next{display:flex;align-items:center;gap:12px;margin-top:14px;background:var(--green-soft);border:1px solid #CFE6DA;border-radius:16px;padding:14px 16px;text-decoration:none;color:var(--ink)!important}
+.ap-next span{flex:1;min-width:0}
+.ap-next small{display:block;font-size:.8rem;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.ap-next b{font:700 1.08rem var(--f-display)}
+.ap-next em{font-style:normal;font-size:1.4rem;color:var(--green)}
+.ap-tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.ap-tile{display:flex;flex-direction:column;gap:4px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;text-decoration:none;color:var(--ink)!important;min-height:108px}
+.ap-tile i{font-style:normal;width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font-size:1.25rem;background:var(--soft)}
+.ap-tile b{font:700 1.05rem var(--f-display);margin-top:4px}
+.ap-tile span{font-size:.86rem;color:var(--muted);line-height:1.35}
+.ap-contact{margin-top:16px;border:1px solid var(--line);border-radius:16px;padding:14px 16px}
+.ap-contact h3{font-size:1.02rem!important}
+.ap-contact p{font-size:.9rem;color:var(--muted);margin-top:2px!important}
+.ap-contact .acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.appbar{display:none}
+html.mode-eleve #sodaf-root .appbar{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:60;background:#fff;border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+html.mode-eleve #sodaf-root .appbar a{display:flex;flex-direction:column;align-items:center;gap:1px;font:600 .72rem var(--f-body);color:var(--muted)!important;text-decoration:none;padding:4px 0}
+html.mode-eleve #sodaf-root .appbar a i{font-style:normal;font-size:1.25rem;line-height:1.2}
+html.mode-eleve #sodaf-root .appbar a.on{color:var(--green)!important}
+html.mode-eleve #sodaf-root{padding-bottom:calc(70px + env(safe-area-inset-bottom))}
+html.mode-eleve #sodaf-root header.top nav.main,html.mode-eleve #sodaf-root header.top .burger,html.mode-eleve #sodaf-root header.top .btn,html.mode-eleve #sodaf-root footer.site,html.mode-eleve #sodaf-root .pat-lane{display:none!important}
+html.mode-eleve #sodaf-root .wa-float{display:none!important}
+html.mode-eleve #sodaf-root a[href="#formations"],html.mode-eleve #sodaf-root a[href="#inscription"],html.mode-eleve #sodaf-root a[href^="#tirage"],html.mode-eleve #sodaf-root a[href^="#inscrire"],html.mode-eleve #sodaf-root .ap-install{display:none!important}
 `;
 
 const SIGN_TRI = (inner) => `<svg viewBox="0 0 64 64"><polygon points="32,6 60,56 4,56" fill="#fff" stroke="#C8372D" stroke-width="6" stroke-linejoin="round"/>${inner}</svg>`;
@@ -1305,6 +1351,24 @@ const HTML = `
 <a class="btn btn-green btn-sm" href="/equipe/" target="sodaf-equipe">Espace équipe</a>
 </div></header>
 <main>
+<div class="wrap"><div class="ap-install" id="sd-apInstall" hidden><div class="tm-install-ico">${LOGO("#FFFFFF", "mono")}</div><div><b>Installe l'application SODAF</b><span id="sd-apInstallTxt">Les cours et les quiz sur ton écran d'accueil, même sans connexion. Gratuit.</span></div><button class="btn btn-yellow btn-sm" type="button" id="sd-apInstallBtn">Installer</button><button class="ap-install-x" type="button" id="sd-apInstallX" aria-label="Masquer">×</button></div></div>
+
+<section class="page" data-page="appli" hidden>
+<div class="ap-wrap">
+<div class="ap-hi"><p class="eyebrow">SODAF · Révision</p><h1>Prêt pour le code ?</h1><p>Lis un chapitre, puis entraîne-toi avec le quiz. Objectif examen : 35 bonnes réponses sur 40.</p>
+<div class="ap-prog"><div><small>Cours lus</small><b id="sd-apLus">0 / 0</b><i><em id="sd-apLusBar" style="width:0%"></em></i></div><div><small>Meilleur quiz</small><b id="sd-apQuiz">—</b><i><em id="sd-apQuizBar" style="width:0%"></em></i></div></div></div>
+<a class="ap-next" id="sd-apNext" href="#cours"><span><small id="sd-apNextK">Commencer</small><b id="sd-apNextT">Le premier chapitre</b></span><em aria-hidden="true">→</em></a>
+<div class="ap-tiles">
+<a class="ap-tile" href="#cours"><i aria-hidden="true">📘</i><b>Les cours</b><span>Le manuel SODAF, chapitre par chapitre</span></a>
+<a class="ap-tile" href="#panneaux"><i aria-hidden="true">⚠️</i><b>Les panneaux</b><span>Tous les panneaux, avec leur sens</span></a>
+<a class="ap-tile" href="#quiz"><i aria-hidden="true">✅</i><b>Le quiz</b><span>Séries corrigées, comme à l'examen</span></a>
+<a class="ap-tile" href="#devoirs"><i aria-hidden="true">📝</i><b>Le devoir</b><span>Le devoir de la semaine, envoyé au moniteur</span></a>
+<a class="ap-tile" href="#cours-priorites"><i aria-hidden="true">🎬</i><b>Vidéo</b><span>Qui passe en premier ? (1 min)</span></a>
+<a class="ap-tile" href="#outils"><i aria-hidden="true">🧰</i><b>Les outils</b><span>Distance de freinage, vérifications</span></a>
+</div>
+<div class="ap-contact"><h3>Une question sur le code ou tes séances ?</h3><p>Le secrétariat répond en semaine de 8 h à 18 h, le samedi matin.</p><div class="acts"><a class="btn btn-wa btn-sm" target="_blank" rel="noopener" href="${WA}">Écrire sur WhatsApp</a><a class="btn btn-line btn-sm" href="tel:+22872544166">Appeler</a><a class="btn btn-line btn-sm" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=6.168785%2C1.225462">Itinéraire</a></div></div>
+</div>
+</section>
 
 <section class="page" data-page="accueil">
 <div class="hero">
@@ -2090,6 +2154,7 @@ ${HEAD("Pré-inscription", "Rejoins SODAF", "Envoie ta demande en une minute : e
 </div></div>
 </section>
 </main>
+<nav class="appbar" id="sd-appbar" aria-label="Application SODAF"><a href="#appli" data-ab="appli"><i aria-hidden="true">🏠</i>Accueil</a><a href="#cours" data-ab="cours"><i aria-hidden="true">📘</i>Cours</a><a href="#panneaux" data-ab="panneaux"><i aria-hidden="true">⚠️</i>Panneaux</a><a href="#quiz" data-ab="quiz"><i aria-hidden="true">✅</i>Quiz</a><a href="#devoirs" data-ab="devoirs"><i aria-hidden="true">📝</i>Devoir</a></nav>
 
 <div class="pat-lane" aria-hidden="true"></div>
 <footer class="site"><div class="wrap"><div class="cols">
@@ -5185,11 +5250,39 @@ function init(root) {
   });
   root.addEventListener("click", (e) => { const a = e.target.closest("[data-tirgo]"); if (!a) return; e.preventDefault(); const t = $("#tirage-jouer"); if (t) t.scrollIntoView({ behavior: "smooth", block: "start" }); });
 
+  // ---- Application élève : tableau de bord + bouton « Installer » (site public)
+  function apFill() {
+    const rd = S.get("read", []), all = $$("article.ch"), n = all.length, lus = all.filter((c) => rd.includes(c.id)).length;
+    $("#sd-apLus").textContent = lus + " / " + n; $("#sd-apLusBar").style.width = (n ? Math.round(lus * 100 / n) : 0) + "%";
+    const q = S.get("quiz", { best: null, count: 0 });
+    $("#sd-apQuiz").textContent = q.best === null ? "—" : q.best + " %"; $("#sd-apQuizBar").style.width = (q.best || 0) + "%";
+    const nx = all.find((c) => !rd.includes(c.id)), a = $("#sd-apNext");
+    if (!n) return;
+    if (nx) { a.href = "#" + nx.id; $("#sd-apNextK").textContent = lus ? "Continuer" : "Commencer"; $("#sd-apNextT").textContent = nx.dataset.title; }
+    else { a.href = "#quiz"; $("#sd-apNextK").textContent = "Tous les cours sont lus"; $("#sd-apNextT").textContent = q.best !== null && q.best >= 88 ? "Garde le niveau : une série de quiz" : "Place au quiz : vise 88 %"; }
+  }
+  const apBox = $("#sd-apInstall");
+  const apIos = /iphone|ipad|ipod/i.test(navigator.userAgent) && !/CriOS|FxiOS/i.test(navigator.userAgent);
+  const apOk = () => !ELEVE && !window.SODAF_APP && S.get("installEleveLater", 0) < Date.now() && (apIos || !!window.__bip);
+  function apShow(p) { if (apBox) apBox.hidden = !(apOk() && ["cours", "panneaux", "quiz", "devoirs"].includes(p)); }
+  if (apBox) {
+    if (apIos) { $("#sd-apInstallTxt").innerHTML = "Dans Safari : touche <b>Partager</b> (le carré avec une flèche) puis <b>Sur l'écran d'accueil</b>. Le code et les quiz, sans publicité."; $("#sd-apInstallBtn").hidden = true; }
+    document.addEventListener("sodaf-bip", () => apShow((location.hash || "#accueil").slice(1).split("-")[0]));
+    $("#sd-apInstallBtn").addEventListener("click", async () => { const e = window.__bip; if (!e) { $("#sd-apInstallTxt").textContent = "Ouvre le menu ⋮ du navigateur puis « Installer l'application » ou « Ajouter à l'écran d'accueil »."; return; } e.prompt(); try { await e.userChoice; } catch (er) {} window.__bip = null; apBox.hidden = true; });
+    $("#sd-apInstallX").addEventListener("click", () => { apBox.hidden = true; S.set("installEleveLater", Date.now() + 14 * 864e5); });
+    window.addEventListener("appinstalled", () => { apBox.hidden = true; toast("Application installée : ouvre-la depuis ton écran d'accueil"); });
+  }
+
   function route() {
     const APP = !!window.SODAF_APP;
     if (!APP && (location.hash === "#documents" || location.hash.startsWith("#equipe"))) { location.replace("/equipe/" + (location.hash.startsWith("#equipe-") ? location.hash : "")); return; }
-    const h = (location.hash || (APP ? "#equipe" : "#accueil")).slice(1);
-    let p = h.split("-")[0]; if (!pages.includes(p)) p = APP ? "equipe" : "accueil";
+    const h = (location.hash || (APP ? "#equipe" : ELEVE ? "#appli" : "#accueil")).slice(1);
+    let p = h.split("-")[0]; if (!pages.includes(p)) p = APP ? "equipe" : ELEVE ? "appli" : "accueil";
+    if (!APP && !ELEVE && p === "appli") p = "accueil";
+    if (ELEVE && ["accueil", "formations", "inscription", "inscrire", "tirage", "classe"].includes(p)) { if (p === "inscrire" || p === "tirage" || p === "inscription") { window.open("/#" + h, "_blank"); } history.replaceState(null, "", "#appli"); p = "appli"; }
+    if (p === "appli") apFill();
+    $$("#sd-appbar [data-ab]").forEach((a) => a.classList.toggle("on", a.dataset.ab === p));
+    apShow(p);
     if (APP && !["equipe", "classe", "recu"].includes(p)) { if (location.hash && location.hash !== "#accueil") window.open("/" + location.hash, "_blank"); history.replaceState(null, "", "#equipe"); p = "equipe"; }
     if (p === "recu") rcPublic(h.slice(5));
     if (p === "inscrire") inscPage(h.slice(9));

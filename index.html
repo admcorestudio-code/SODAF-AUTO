@@ -19,8 +19,16 @@
 <meta name="twitter:image" content="https://autosodaf.com/og-sodaf.jpg">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" type="image/png" sizes="192x192" href="/logo-sodaf-192.png">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon-eleve.png">
 <meta name="theme-color" content="#14171C">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="SODAF">
+<script>
+window.addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); window.__bip = e; document.dispatchEvent(new Event("sodaf-bip")); });
+if ("serviceWorker" in navigator) window.addEventListener("load", function () { navigator.serviceWorker.register("/sw.js", { scope: "/" }).catch(function () {}); });
+</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "DrivingSchool", "name": "SODAF Auto-École",
   "slogan": "L'art de conduire, la force de réussir.", "url": "https://autosodaf.com/", "logo": "https://autosodaf.com/logo-sodaf-512.png", "image": "https://autosodaf.com/og-sodaf.jpg", "telephone": "+228 72 54 41 66", "description": "Auto-école à Lomé : permis B, permis A (moto), remise à niveau et formation de chauffeurs. Cours de code en ligne gratuits.", "address": {"@type": "PostalAddress", "streetAddress": "412 Avenue Akei, Tokoin Tamé (en face de la caisse)", "addressLocality": "Lomé", "addressCountry": "TG"}, "geo": {"@type": "GeoCoordinates", "latitude": 6.168785, "longitude": 1.225462}, "hasMap": "https://www.google.com/maps/search/?api=1&query=6.168785%2C1.225462", "areaServed": "Lomé", "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "08:00", "closes": "12:30"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "14:30", "closes": "18:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "08:00", "closes": "12:00"}], "priceRange": "20 000 – 80 000 FCFA", "currenciesAccepted": "XOF", "paymentAccepted": "Espèces, Mixx by Yas (T-Money)"}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,6 +37,6 @@
 <body>
 <div id="sodaf-root"><div id="app"></div></div>
 <noscript><h1>SODAF Auto-École, Lomé</h1><p>Permis B dès 35 000 F, permis A (moto) 30 000 F, remise à niveau 20 000 F. Cours de code de la route en ligne. 412 Avenue Akei, Tokoin Tamé, Lomé (en face de la caisse). Tél. et WhatsApp : +228 72 54 41 66.</p></noscript>
-<script src="/app.js?v=131"></script>
+<script src="/app.js?v=132"></script>
 </body>
 </html>
