@@ -3706,11 +3706,24 @@ function init(root) {
       const m = t.match(/app\.js\?v=(\d+)/); if (!m || m[1] === APP_V) return;
       const occupe = (msTa && msTa.value.trim()) || MS.pjs.length || MS.file.length || REC.mr || document.querySelector(".tm-pane:not([hidden]) form input:focus, .tm-pane:not([hidden]) form textarea:focus");
       if (retour && !occupe) { location.reload(); return; }
-      majVue = true; const d = document.createElement("div"); d.className = "maj-bar"; d.innerHTML = "<span>Nouvelle version de l'espace équipe</span><button type=\"button\" class=\"btn btn-sm btn-green\">Mettre à jour</button>";
-      d.querySelector("button").addEventListener("click", () => location.reload()); document.body.appendChild(d);
+      majVue = true; majMontrer();
+    }
+    // Fenêtre de mise à jour : couvre l'écran, on ne peut pas continuer sans mettre à jour.
+    // Seule exception : un message, un vocal ou un formulaire en cours → « Finir d'abord » donne 2 minutes, puis la fenêtre revient.
+    function majMontrer() {
+      if (document.getElementById("sd-maj")) return;
+      const occupe = (msTa && msTa.value.trim()) || MS.pjs.length || MS.file.length || REC.mr || document.querySelector(".tm-pane:not([hidden]) form input:focus, .tm-pane:not([hidden]) form textarea:focus, .tm-pane:not([hidden]) textarea:focus");
+      const d = document.createElement("div"); d.id = "sd-maj"; d.className = "maj-ov"; d.setAttribute("role", "alertdialog"); d.setAttribute("aria-modal", "true"); d.setAttribute("aria-labelledby", "sd-majT");
+      d.innerHTML = '<div class="maj-card"><div class="maj-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg></div>' +
+        '<h2 id="sd-majT">Mise à jour disponible</h2><p>L\'espace équipe a été amélioré. Mets à jour maintenant pour continuer à travailler avec la bonne version.</p>' +
+        '<button type="button" class="maj-go">Mettre à jour maintenant</button>' +
+        (occupe ? '<button type="button" class="maj-later">Finir ce que j\'écris (2 min)</button><small>Ton texte en cours sera perdu si tu mets à jour tout de suite.</small>' : "<small>Cela prend quelques secondes. Rien de ce qui est enregistré n'est perdu.</small>") + "</div>";
+      d.querySelector(".maj-go").addEventListener("click", (e) => { e.currentTarget.textContent = "Mise à jour…"; e.currentTarget.disabled = true; location.reload(); });
+      const l = d.querySelector(".maj-later"); if (l) l.addEventListener("click", () => { d.remove(); setTimeout(majMontrer, 120000); });
+      document.body.appendChild(d); d.querySelector(".maj-go").focus();
     }
     document.addEventListener("visibilitychange", () => { if (!document.hidden) majVerifier(true); });
-    setInterval(() => { if (!document.hidden) majVerifier(false); }, 300000);
+    setInterval(() => { if (!document.hidden) majVerifier(false); }, 120000);
     // ---- Sécurité de l'espace équipe
     // 1. Déconnexion automatique après 3 jours sans activité (choix de la direction, 6 oct.) (même téléphone oublié ouvert). 2. Compte désactivé par la direction : sortie immédiate.
     // 3. Journal des connexions : chaque appareil est reconnu ; une connexion depuis un appareil jamais vu prévient la direction et la personne.
@@ -6262,6 +6275,18 @@ html{scrollbar-gutter:stable}
 .ms-vx{all:unset;cursor:pointer;width:42px;height:42px;display:grid;place-items:center;font-size:2rem;color:#fff;border-radius:50%}.ms-vx:focus-visible{outline:2px solid var(--yellow)}
 .ms-vimg{flex:1;min-height:0;display:grid;place-items:center;position:relative;overflow:hidden;touch-action:pan-y;padding:8px 8px max(16px,env(safe-area-inset-bottom))}
 .ms-vimg img{max-width:100%;max-height:100%;object-fit:contain;border-radius:6px}
+.maj-ov{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:20px;background:rgba(10,13,17,.72);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);animation:majIn .2s ease}
+@keyframes majIn{from{opacity:0}to{opacity:1}}
+.maj-ov,.maj-ov *{box-sizing:border-box}
+.maj-card{width:100%;max-width:420px;background:#fff;color:#14171C;border-radius:22px;padding:26px 22px 20px;text-align:center;box-shadow:0 30px 60px -20px rgba(0,0,0,.6);border-top:6px solid #F2B100;font-family:"Figtree",system-ui,sans-serif}
+.maj-ic{width:62px;height:62px;margin:0 auto 12px;border-radius:18px;display:grid;place-items:center;color:#14171C;background:linear-gradient(180deg,#FFD24D 0%,#F2B100 100%);box-shadow:0 4px 0 #B47F00,inset 0 1px 0 rgba(255,255,255,.6)}
+.maj-card h2{margin:0;font:800 1.45rem "Outfit","Figtree",system-ui,sans-serif;letter-spacing:-.02em;color:#14171C}
+.maj-card p{margin:8px 0 18px;font-size:1rem;line-height:1.5;color:#3D444D}
+.maj-go{display:block;width:100%;padding:16px 18px;border-radius:16px;cursor:pointer;color:#fff;font:800 1.12rem "Outfit","Figtree",system-ui,sans-serif;background:linear-gradient(180deg,#16936A 0%,#0E7A55 48%,#0A6345 100%);border:1px solid #06402D;box-shadow:0 5px 0 #054030,0 14px 26px -10px rgba(6,64,45,.75),inset 0 1px 0 rgba(255,255,255,.35);text-shadow:0 1px 1px rgba(0,0,0,.25)}
+.maj-go:active{transform:translateY(4px);box-shadow:0 1px 0 #054030}
+.maj-go:disabled{opacity:.8;cursor:wait}
+.maj-later{display:block;margin:14px auto 0;background:none;border:0;color:#3D444D;font:600 .92rem "Figtree",system-ui,sans-serif;text-decoration:underline;cursor:pointer}
+.maj-card small{display:block;margin-top:10px;font-size:.82rem;color:#5D6570;line-height:1.4}
 .maj-bar{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:98;display:flex;gap:14px;align-items:center;background:var(--asph);color:#fff;padding:10px 12px 10px 18px;border-radius:999px;box-shadow:0 12px 30px -10px rgba(0,0,0,.5);font-weight:600;font-size:.92rem;max-width:calc(100% - 32px)}
 .ms-fil.drop::after{content:"Dépose le fichier ici pour l'envoyer";position:absolute;inset:8px;z-index:6;display:grid;place-items:center;border:3px dashed var(--green);border-radius:14px;background:rgba(223,243,232,.92);color:var(--green);font:700 1.15rem/1.3 var(--f-ui);pointer-events:none}
 
