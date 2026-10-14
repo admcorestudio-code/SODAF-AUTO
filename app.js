@@ -913,11 +913,14 @@ label.ex-doc input{position:absolute;left:14px;top:12px;width:20px;height:20px;a
 #sodaf-root [data-ko]{padding:.85em 1.1em;font-size:1rem}
 #sodaf-root [data-rappel=""][aria-pressed="true"]{background:var(--green);color:#fff}
 #sodaf-root [data-ko][aria-pressed="true"]{outline:3px solid var(--ink);outline-offset:2px}
-#sodaf-root [data-rv]{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:700 1rem var(--f-body);padding:.85em 1.1em;border-radius:12px;border:2px solid #000;color:#fff;background:#14171C;box-shadow:0 2px 0 #000;cursor:pointer;line-height:1.25;text-align:left}
-#sodaf-root [data-rv] small{display:block;font-weight:600;font-size:.78rem;opacity:.8}
-#sodaf-root [data-rv]:hover{background:#2A2F36}
+#sodaf-root [data-rv]{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:8px;font:700 1rem var(--f-body);padding:.85em 1.1em;border-radius:14px;color:#fff;cursor:pointer;line-height:1.25;text-align:left;
+background:linear-gradient(180deg,#16936A 0%,#0E7A55 48%,#0A6345 100%);border:1px solid #06402D;
+box-shadow:0 4px 0 #054030,0 10px 20px -10px rgba(6,64,45,.7),inset 0 1px 0 rgba(255,255,255,.35);transition:transform .12s ease,box-shadow .12s ease,filter .12s ease}
+#sodaf-root [data-rv] small{display:block;font-weight:600;font-size:.78rem;color:#D8F0E6}
+#sodaf-root [data-rv]:hover{filter:brightness(1.06)}
+#sodaf-root [data-rv]:active{transform:translateY(3px);box-shadow:0 1px 0 #054030,inset 0 1px 0 rgba(255,255,255,.25)}
 #sodaf-root [data-rv][aria-pressed="true"]{outline:3px solid var(--yellow);outline-offset:2px}
-.pc-rv{border-left:5px solid #14171C!important}
+.pc-rv{border-left:5px solid #0E7A55!important}
 .pc-sep{position:relative;margin:26px 0 16px;padding-top:16px;border-top:5px solid #14171C;text-align:left}
 .pc-sep-t{display:inline-block;font:800 .82rem var(--f-display);letter-spacing:.08em;text-transform:uppercase;color:#fff;background:#14171C;padding:6px 12px;border-radius:0 0 10px 10px;position:absolute;top:-5px;left:0}
 .pc-sep-d{display:block;margin-top:22px;font-size:.88rem;color:var(--muted);line-height:1.4}
@@ -4205,7 +4208,7 @@ function init(root) {
           '<div class="pc-triesrow"><span class="pc-lab">Tentatives sans réponse</span><div class="pc-tries">' + [1, 2, 3, 4].map((i) => '<i class="' + (i <= t ? "on" : "") + '">' + i + "X" + (i === 4 ? " · injoignable" : "") + "</i>").join("") + "</div>" +
           (t < 4 ? "<small>Chaque « pas de réponse » envoie une relance WhatsApp, 4 au maximum. La 4e classe le dossier « Injoignable » : il pourra être ressorti s'il répond.</small>" : "") + "</div>" +
           (t >= 4 ? '<div class="pc-alert"><b>Injoignable : 4 appels sans réponse.</b> Envoie la dernière relance : le dossier est classé tout seul.<div class="tm-formact">' + fin + "</div></div>" : "") + "</div>" +
-          '<div class="pc-block pc-range"><div class="pc-bh"><b>Ranger le dossier</b><span class="tm-note" style="margin:0!important">Deux touches pour confirmer</span></div><div class="pc-rgrid"><button class="btn btn-line btn-sm" type="button" data-arch="Plus tard"><b>Plus tard</b><small>Pas avant plusieurs semaines : archivé, à ressortir</small></button><button class="btn btn-sm pc-prune" type="button" data-arch="Rétractation"><b>Rétractation</b><small>Ne veut plus s\'inscrire</small></button><button class="btn btn-sm pc-red" type="button" data-arch="Faux numéro"><b>Faux numéro</b><small>Coordonnées erronées</small></button></div></div>';
+          '<div class="pc-block pc-range"><div class="pc-bh"><b>Ranger le dossier</b><span class="tm-note" style="margin:0!important">Deux touches pour confirmer</span></div><div class="pc-rgrid"><button class="btn btn-line btn-sm" type="button" data-arch="Plus tard"><b>Plus tard</b><small>Pas avant plusieurs semaines : archivé, à ressortir</small></button><button class="btn btn-sm pc-dark" type="button" data-arch="Rétractation"><b>Rétractation</b><small>Ne veut plus s\'inscrire</small></button><button class="btn btn-sm pc-red" type="button" data-arch="Faux numéro"><b>Faux numéro</b><small>Coordonnées erronées</small></button></div></div>';
       } else if (st === "dossier") {
         const age = jours(x.dossier_envoye_le), late = dosAge(x) >= 5;
         const w = x.web;
