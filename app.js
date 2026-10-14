@@ -913,6 +913,7 @@ label.ex-doc input{position:absolute;left:14px;top:12px;width:20px;height:20px;a
 #sodaf-root [data-ko]{padding:.85em 1.1em;font-size:1rem}
 #sodaf-root [data-rappel=""][aria-pressed="true"]{background:var(--green);color:#fff}
 #sodaf-root [data-ko][aria-pressed="true"]{outline:3px solid var(--ink);outline-offset:2px}
+#sodaf-root [data-ko].armed{outline:4px solid var(--ink);outline-offset:3px}
 #sodaf-root [data-rv]{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:8px;font:700 1rem var(--f-body);padding:.85em 1.1em;border-radius:14px;color:#fff;cursor:pointer;line-height:1.25;text-align:left;
 background:linear-gradient(180deg,#0E7A55 0%,#0B6E4F 100%);border:1px solid #06402D;
 box-shadow:0 4px 0 #054030,0 10px 20px -10px rgba(6,64,45,.7),inset 0 1px 0 rgba(255,255,255,.18);transition:transform .12s ease,box-shadow .12s ease,filter .12s ease}
@@ -4214,7 +4215,7 @@ function init(root) {
             '<div class="pc-steps">' + ['matin', 'apres-midi'].map((k) => '<button type="button" data-rv="' + k + '" aria-pressed="' + (t === 0 && x.rappel === k) + '">' + (k === "matin" ? ICS.matin : ICS.am) + '<span>' + (k === "matin" ? "Le rappeler le matin" : "Le rappeler l\'après‑midi") + "<small>à sa demande</small></span></button>").join("") + "</div></div>" +
                     '<div class="pc-sep" role="separator"><span class="pc-sep-t">Il n\'a pas répondu, ou ça ne va pas</span><span class="pc-sep-d">En dessous : les appels sans réponse (relance WhatsApp) et le rangement du dossier.</span></div>' +
                     '<div class="pc-block"><div class="pc-bh"><b>Historique d\'appels</b></div>' +
-                    (t < 3 ? '<div class="pc-ko"><p class="pc-lab">Pas de réponse ? Choisis quand rappeler : la relance WhatsApp part avec</p>' +
+                    (t < 3 ? '<div class="pc-ko"><p class="pc-lab">Pas de réponse ? Choisis quand rappeler, puis touche encore pour confirmer : la relance WhatsApp part avec</p>' +
             '<input class="pc-konote" id="sd-pcCallNote" placeholder="Note sur l\'appel (non obligatoire)" maxlength="300">' +
             '<div class="pc-steps">' + kb("matin", ICS.matin, "Rappeler le matin") + kb("apres-midi", ICS.am, "Rappeler l'après‑midi") + "</div></div>" : t === 3 ? '<div class="pc-ko"><p class="pc-lab">4e appel sans réponse ?</p>' + fin + "</div>" : "") +
           '<div class="pc-triesrow"><span class="pc-lab">Tentatives sans réponse</span><div class="pc-tries">' + [1, 2, 3, 4].map((i) => '<i class="' + (i <= t ? "on" : "") + '">' + i + "X" + (i === 4 ? " · injoignable" : "") + "</i>").join("") + "</div>" +
@@ -4331,6 +4332,13 @@ function init(root) {
       const a = e.target.closest("[data-a]"), ar = e.target.closest("[data-arch]"), rp = e.target.closest("[data-rappel]");
       if (ar) { confirmBtn(ar, () => archive(x, ar.dataset.arch)); return; }
       const ko = e.target.closest("[data-ko]");
+      if (ko && !ko.dataset.armed) { // pas de réponse : deux touches (la 1re demande confirmation, la 2e envoie la relance)
+        e.preventDefault(); ko.dataset.armed = 1; ko.classList.add("armed");
+        const sp = ko.querySelector("span"), avant = sp.innerHTML;
+        sp.innerHTML = "Confirmer ?<small>touche encore pour " + (ko.tagName === "A" ? "envoyer la relance" : "valider") + "</small>";
+        setTimeout(() => { if (ko.isConnected && ko.dataset.armed) { delete ko.dataset.armed; ko.classList.remove("armed"); sp.innerHTML = avant; } }, 5000);
+        return;
+      }
       if (ko) { const v = ko.dataset.ko, nb = Math.min((x.appels || 0) + 1, 20), note = ($("#sd-pcCallNote") || {}).value; const order = $$("#sd-pcList .pc-item").map((b) => +b.dataset.id); if (await patchEl(x, { appels: nb, rappel: v, dernier_appel_le: new Date().toISOString() }, "Pas de réponse (" + nb + "X) · " + (v === "matin" ? "à rappeler le matin" : "à rappeler l'après-midi"), ["Appel sans réponse", [v === "matin" ? "Rappel le matin" : "Rappel l'après-midi", (note || "").trim()].filter(Boolean).join(" · ")])) { const rest = order.slice(order.indexOf(x.id) + 1).concat(order.slice(0, order.indexOf(x.id))).map((id) => eleves.find((y) => y.id === id)).filter((y) => y && etapeOf(y) === "appels"); const nx = rest.find((y) => !calledToday(y)) || null; pcSel = nx ? nx.id : null; renderList(); } return; }
       if (rp) { const v = rp.dataset.rappel || null; if (await patchEl(x, { rappel: v }, "Enregistré")) renderList(); return; }
       const rv = e.target.closest("[data-rv]");
