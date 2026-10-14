@@ -3894,7 +3894,7 @@ function init(root) {
         "<li><b>Saluer</b>" + say("Bonjour, ici SODAF Auto-École. Je vous appelle suite à votre pré-inscription pour " + esc(f) + ". Vous avez une petite minute ?") +
           tip("Pas disponible : « Pas de souci, je vous rappelle plutôt le matin ou l'après-midi ? » puis choisis quand rappeler.") + "</li>" +
         "<li><b>L'essentiel</b>" + say(x.formation === "Remise à niveau" ? "On reprend la conduite avec vous, à votre rythme, avec un moniteur, jusqu'à ce que vous soyez à l'aise au volant." : "Chez nous, vous apprenez le code en salle et aussi sur notre site, puis la conduite avec un moniteur. On vous accompagne jusqu'à l'examen.") + "</li>" +
-        "<li><b>Conclure</b>" + say("Je vous envoie tout sur WhatsApp : les tarifs, comment s'inscrire et notre adresse. Vous regardez tranquillement, et vous me dites. Vous avez une question ?") +
+        "<li><b>Conclure</b>" + say("Je vous envoie tout de suite sur WhatsApp les prix, notre adresse et le lien pour vous inscrire. L'inscription se fait en deux minutes, depuis votre téléphone. Et si vous avez une question, n'hésitez pas : écrivez-nous ou appelez-nous. À très vite chez SODAF !") +
           tip("Intéressé ou il veut réfléchir : touche « Envoyer le lien d'inscription » (en haut). Pas intéressé : « Plus tard » ou « Rétractation ».") + "</li></ol>" +
         '<details class="pc-more"><summary>S\'il pose une question</summary>' +
         tip("<b>Le prix :</b> on n'en parle pas au téléphone. « Tout est dans le message WhatsApp que je vous envoie juste après, avec les différentes formules. »") +
