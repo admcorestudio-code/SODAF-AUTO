@@ -1041,7 +1041,7 @@ box-shadow:0 5px 0 #054030,0 14px 26px -10px rgba(6,64,45,.75),inset 0 1px 0 rgb
 .pc-triesrow small{flex-basis:100%;font-size:.8rem;color:var(--muted)}
 .pc-tries{display:flex;flex-wrap:wrap;gap:6px}
 .pc-tries i{font-style:normal;font:600 .82rem var(--f-body);padding:.3em .65em;border-radius:999px;border:1.5px solid var(--line);color:var(--muted)}
-.pc-tries i.on{background:var(--red-soft);border-color:var(--red);color:var(--red)}
+.pc-tries i.on{background:#14171C;border-color:#14171C;color:#fff;font-weight:700}
 .pc-alert{margin-top:12px;background:var(--red-soft);border:1.5px solid var(--red);border-radius:10px;padding:12px 14px;font-size:.94rem}
 .pc-script{font-size:1rem;line-height:1.6}
 .sc{list-style:none;counter-reset:sc;margin:0;padding:0;display:flex;flex-direction:column;gap:14px}
