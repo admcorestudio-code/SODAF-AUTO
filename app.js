@@ -913,6 +913,11 @@ label.ex-doc input{position:absolute;left:14px;top:12px;width:20px;height:20px;a
 #sodaf-root [data-ko]{padding:.85em 1.1em;font-size:1rem}
 #sodaf-root [data-rappel=""][aria-pressed="true"]{background:var(--green);color:#fff}
 #sodaf-root [data-ko][aria-pressed="true"]{outline:3px solid var(--ink);outline-offset:2px}
+#sodaf-root [data-rv]{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:700 1rem var(--f-body);padding:.85em 1.1em;border-radius:12px;border:2px solid var(--green);color:var(--green);background:var(--green-soft);cursor:pointer;line-height:1.25;text-align:left}
+#sodaf-root [data-rv] small{display:block;font-weight:600;font-size:.78rem;opacity:.8}
+#sodaf-root [data-rv]:hover{background:#D6ECE2}
+#sodaf-root [data-rv][aria-pressed="true"]{background:var(--green);color:#fff}
+.pc-rv .pc-konote{margin-bottom:8px}
 .pc-callnow{padding-bottom:14px;margin-bottom:14px;border-bottom:2px solid var(--ink)}
 .tm-newins{margin:6px 6px 10px auto;align-self:center}
 #sodaf-root .tm-newins{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:10px;padding:7px 18px 7px 7px;border-radius:999px;border:2px solid var(--yellow);background:linear-gradient(135deg,#0E2A4E 0%,#1A4A85 100%);color:#fff;cursor:pointer;font:inherit;box-shadow:0 0 0 4px rgba(242,177,0,.18),0 8px 20px rgba(14,42,78,.35),inset 0 1px 0 rgba(255,255,255,.18);transition:transform .15s ease,box-shadow .15s ease}
@@ -4170,6 +4175,9 @@ function init(root) {
         const fin = '<a class="btn pc-final" target="_blank" rel="noopener" data-a="relFinal" href="' + (n ? wa(msgAppelRel(x, 4)) : "#") + '">Pas de réponse : dernière relance (4/4) et classer le dossier' + (n ? " ↗" : "") + "</a>";
         const rb = (k, ic, label) => '<button type="button" data-rappel="' + k + '" aria-pressed="' + ((x.rappel || "") === k) + '">' + ic + "<span>" + label + "</span></button>";
         body = '<div class="pc-block"><div class="pc-bh"><b>Script d\'appel</b><span class="tm-note" style="margin:0!important">' + esc(x.formation || "") + '</span></div><div class="pc-script">' + script(x) + "</div></div>" +
+                    '<div class="pc-block pc-rv"><div class="pc-bh"><b>Il a répondu, mais veut qu\'on le rappelle ?</b></div><p class="pc-lab">Aucun message ne part, et ce n\'est pas compté comme « sans réponse ».</p>' +
+            '<input class="pc-konote" id="sd-pcRvNote" placeholder="Ce qu\'il a dit (non obligatoire)" maxlength="300">' +
+            '<div class="pc-steps">' + ['matin', 'apres-midi'].map((k) => '<button type="button" data-rv="' + k + '" aria-pressed="' + (t === 0 && x.rappel === k) + '">' + (k === "matin" ? ICS.matin : ICS.am) + '<span>' + (k === "matin" ? "Le rappeler le matin" : "Le rappeler l\'après‑midi") + "<small>à sa demande</small></span></button>").join("") + "</div></div>" +
                     '<div class="pc-block"><div class="pc-bh"><b>Historique d\'appels</b></div>' +
                     (t < 3 ? '<div class="pc-ko"><p class="pc-lab">Pas de réponse ? Choisis quand rappeler : la relance WhatsApp part avec</p>' +
             '<input class="pc-konote" id="sd-pcCallNote" placeholder="Note sur l\'appel (non obligatoire)" maxlength="300">' +
@@ -4177,7 +4185,7 @@ function init(root) {
           '<div class="pc-triesrow"><span class="pc-lab">Tentatives sans réponse</span><div class="pc-tries">' + [1, 2, 3, 4].map((i) => '<i class="' + (i <= t ? "on" : "") + '">' + i + "X" + (i === 4 ? " · injoignable" : "") + "</i>").join("") + "</div>" +
           (t < 4 ? "<small>Chaque « pas de réponse » envoie une relance WhatsApp, 4 au maximum. La 4e classe le dossier « Injoignable » : il pourra être ressorti s'il répond.</small>" : "") + "</div>" +
           (t >= 4 ? '<div class="pc-alert"><b>Injoignable : 4 appels sans réponse.</b> Envoie la dernière relance : le dossier est classé tout seul.<div class="tm-formact">' + fin + "</div></div>" : "") + "</div>" +
-          '<div class="pc-block pc-range"><div class="pc-bh"><b>Ranger le dossier</b><span class="tm-note" style="margin:0!important">Deux touches pour confirmer</span></div><div class="pc-rgrid"><button class="btn btn-line btn-sm" type="button" data-arch="Plus tard"><b>Plus tard</b><small>Potentiel, à recontacter</small></button><button class="btn btn-sm pc-dark" type="button" data-arch="Rétractation"><b>Rétractation</b><small>Ne veut plus s\'inscrire</small></button><button class="btn btn-sm pc-red" type="button" data-arch="Faux numéro"><b>Faux numéro</b><small>Coordonnées erronées</small></button></div></div>';
+          '<div class="pc-block pc-range"><div class="pc-bh"><b>Ranger le dossier</b><span class="tm-note" style="margin:0!important">Deux touches pour confirmer</span></div><div class="pc-rgrid"><button class="btn btn-line btn-sm" type="button" data-arch="Plus tard"><b>Plus tard</b><small>Pas avant plusieurs semaines : archivé, à ressortir</small></button><button class="btn btn-sm pc-dark" type="button" data-arch="Rétractation"><b>Rétractation</b><small>Ne veut plus s\'inscrire</small></button><button class="btn btn-sm pc-red" type="button" data-arch="Faux numéro"><b>Faux numéro</b><small>Coordonnées erronées</small></button></div></div>';
       } else if (st === "dossier") {
         const age = jours(x.dossier_envoye_le), late = dosAge(x) >= 5;
         const w = x.web;
@@ -4290,6 +4298,12 @@ function init(root) {
       const ko = e.target.closest("[data-ko]");
       if (ko) { const v = ko.dataset.ko, nb = Math.min((x.appels || 0) + 1, 20), note = ($("#sd-pcCallNote") || {}).value; const order = $$("#sd-pcList .pc-item").map((b) => +b.dataset.id); if (await patchEl(x, { appels: nb, rappel: v, dernier_appel_le: new Date().toISOString() }, "Pas de réponse (" + nb + "X) · " + (v === "matin" ? "à rappeler le matin" : "à rappeler l'après-midi"), ["Appel sans réponse", [v === "matin" ? "Rappel le matin" : "Rappel l'après-midi", (note || "").trim()].filter(Boolean).join(" · ")])) { const rest = order.slice(order.indexOf(x.id) + 1).concat(order.slice(0, order.indexOf(x.id))).map((id) => eleves.find((y) => y.id === id)).filter((y) => y && etapeOf(y) === "appels"); const nx = rest.find((y) => !calledToday(y)) || null; pcSel = nx ? nx.id : null; renderList(); } return; }
       if (rp) { const v = rp.dataset.rappel || null; if (await patchEl(x, { rappel: v }, "Enregistré")) renderList(); return; }
+      const rv = e.target.closest("[data-rv]");
+      if (rv) { // il a décroché et demande qu'on le rappelle : pas de relance WhatsApp, pas compté comme « sans réponse »
+        const v = rv.dataset.rv, note = (($("#sd-pcRvNote") || {}).value || "").trim(), quand = v === "matin" ? "le matin" : "l'après-midi";
+        if (await patchEl(x, { rappel: v, dernier_appel_le: new Date().toISOString() }, "Noté : à rappeler " + quand + " (à sa demande)", ["Appel réussi", ["Il demande qu'on le rappelle " + quand, note].filter(Boolean).join(" · ")])) { pcSel = null; renderList(); }
+        return;
+      }
       if (!a) return;
       const k = a.dataset.a;
       if (k === "back") { pcSel = null; renderList(); $("#sd-pc").scrollIntoView({ block: "start" }); }
