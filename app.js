@@ -913,20 +913,24 @@ label.ex-doc input{position:absolute;left:14px;top:12px;width:20px;height:20px;a
 #sodaf-root [data-ko]{padding:.85em 1.1em;font-size:1rem}
 #sodaf-root [data-rappel=""][aria-pressed="true"]{background:var(--green);color:#fff}
 #sodaf-root [data-ko][aria-pressed="true"]{outline:3px solid var(--ink);outline-offset:2px}
-#sodaf-root [data-rv]{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:700 1rem var(--f-body);padding:.85em 1.1em;border-radius:12px;border:2px solid #7A1F57;color:#fff;background:#9B2C6E;box-shadow:0 2px 0 #6B1A4C;cursor:pointer;line-height:1.25;text-align:left}
-#sodaf-root [data-rv] small{display:block;font-weight:600;font-size:.78rem;opacity:.85}
-#sodaf-root [data-rv]:hover{background:#86245F}
-#sodaf-root [data-rv][aria-pressed="true"]{outline:3px solid var(--ink);outline-offset:2px}
-.pc-rv{border-left:5px solid #9B2C6E!important}
-#sodaf-root .pc-cta{display:flex;align-items:center;gap:14px;width:100%;margin:0 0 14px;padding:16px 18px;border-radius:16px;background:#1FA855;color:#fff!important;text-decoration:none;box-shadow:0 3px 0 #13803F,0 10px 22px -12px rgba(0,0,0,.45);border:2px solid #13803F}
-#sodaf-root .pc-cta:hover{background:#1A9A4D}
-#sodaf-root .pc-cta:active{transform:translateY(2px);box-shadow:0 1px 0 #13803F}
-#sodaf-root .pc-cta>span:nth-child(2){flex:1;min-width:0}
-#sodaf-root .pc-cta b{display:block;font:800 1.12rem var(--f-display);line-height:1.2;color:#fff}
-#sodaf-root .pc-cta small{display:block;font-size:.86rem;opacity:.92;margin-top:3px;line-height:1.35}
-#sodaf-root .pc-cta em{font-style:normal;font-size:1.3rem;font-weight:800}
+#sodaf-root [data-rv]{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:700 1rem var(--f-body);padding:.85em 1.1em;border-radius:12px;border:2px solid #000;color:#fff;background:#14171C;box-shadow:0 2px 0 #000;cursor:pointer;line-height:1.25;text-align:left}
+#sodaf-root [data-rv] small{display:block;font-weight:600;font-size:.78rem;opacity:.8}
+#sodaf-root [data-rv]:hover{background:#2A2F36}
+#sodaf-root [data-rv][aria-pressed="true"]{outline:3px solid var(--yellow);outline-offset:2px}
+.pc-rv{border-left:5px solid #14171C!important}
+#sodaf-root .pc-cta{position:relative;overflow:hidden;display:flex;align-items:center;gap:14px;width:100%;margin:2px 0 18px;padding:16px 18px 16px 14px;border-radius:18px;text-decoration:none;color:#fff!important;
+background:linear-gradient(180deg,#16936A 0%,#0E7A55 48%,#0A6345 100%);border:1px solid #06402D;
+box-shadow:0 5px 0 #054030,0 14px 26px -10px rgba(6,64,45,.75),inset 0 1px 0 rgba(255,255,255,.35),inset 0 -2px 0 rgba(0,0,0,.18);transition:transform .12s ease,box-shadow .12s ease,filter .12s ease}
+#sodaf-root .pc-cta::before{content:"";position:absolute;left:0;right:0;top:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,0));pointer-events:none}
+#sodaf-root .pc-cta:hover{filter:brightness(1.06)}
+#sodaf-root .pc-cta:active{transform:translateY(4px);box-shadow:0 1px 0 #054030,0 6px 14px -8px rgba(6,64,45,.7),inset 0 1px 0 rgba(255,255,255,.25)}
+#sodaf-root .pc-cta>span:nth-child(2){flex:1;min-width:0;position:relative}
+#sodaf-root .pc-cta b{display:block;font:800 1.14rem var(--f-display);line-height:1.2;color:#fff;letter-spacing:-.01em;text-shadow:0 1px 1px rgba(0,0,0,.25)}
+#sodaf-root .pc-cta small{display:block;font-size:.86rem;color:#D8F0E6;margin-top:4px;line-height:1.35}
+#sodaf-root .pc-cta em{position:relative;font-style:normal;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:rgba(0,0,0,.18);font-size:1.05rem;font-weight:800;flex-shrink:0}
+.pc-cta-ic{position:relative;width:50px;height:50px;border-radius:14px;display:grid;place-items:center;flex-shrink:0;color:#14171C;background:linear-gradient(180deg,#FFD24D 0%,#F2B100 100%);box-shadow:0 3px 0 #B47F00,inset 0 1px 0 rgba(255,255,255,.6)}
 #sodaf-root .nobr{white-space:nowrap}
-.pc-cta-ic{width:46px;height:46px;border-radius:12px;background:rgba(255,255,255,.18);display:grid;place-items:center;flex-shrink:0}
+
 .pc-rv .pc-konote{margin-bottom:8px}
 .pc-callnow{padding-bottom:14px;margin-bottom:14px;border-bottom:2px solid var(--ink)}
 .tm-newins{margin:6px 6px 10px auto;align-self:center}
@@ -1050,6 +1054,7 @@ label.ex-doc input{position:absolute;left:14px;top:12px;width:20px;height:20px;a
 .pc-red{background:var(--red);color:#fff}
 #sodaf-root .sc,#sodaf-root .sc li{list-style:none}
 .pc-dark{background:var(--ink);color:#fff}
+#sodaf-root .pc-prune{background:#9B2C6E;color:#fff;border:0}#sodaf-root .pc-prune:hover{background:#86245F}
 .btn.armed{outline:3px solid var(--yellow);outline-offset:2px}
 .pc-mini{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-bottom:8px}
 .pc-mini div{background:var(--soft);border-radius:10px;padding:8px 12px;display:flex;flex-direction:column}
@@ -4184,7 +4189,7 @@ function init(root) {
         const kb = (k, ic, label) => n ? '<a target="_blank" rel="noopener" data-ko="' + k + '" aria-pressed="' + (t > 0 && x.rappel === k) + '" href="' + wa(msgAppelRel(x, t + 1, k)) + '">' + ic + "<span>" + label + "<small>relance " + (t + 1) + "/4 sur WhatsApp</small></span></a>" : '<button type="button" data-ko="' + k + '" aria-pressed="' + (t > 0 && x.rappel === k) + '">' + ic + "<span>" + label + "</span></button>";
         const fin = '<a class="btn pc-final" target="_blank" rel="noopener" data-a="relFinal" href="' + (n ? wa(msgAppelRel(x, 4)) : "#") + '">Pas de réponse : dernière relance (4/4) et classer le dossier' + (n ? " ↗" : "") + "</a>";
         const rb = (k, ic, label) => '<button type="button" data-rappel="' + k + '" aria-pressed="' + ((x.rappel || "") === k) + '">' + ic + "<span>" + label + "</span></button>";
-        body = (n ? '<a class="pc-cta" target="_blank" rel="noopener" data-a="sendDossier" href="' + wa(msgDossier(x)) + '"><span class="pc-cta-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg></span><span><b>Il est intéressé : envoyer le lien d\'inscription</b><small>Par WhatsApp, avec son lien personnel pour s\'inscrire en 2 minutes</small></span><em aria-hidden="true">↗</em></a>' : '<div class="pc-alert">Pas de numéro WhatsApp valable : corrige la fiche pour pouvoir envoyer le lien d\'inscription.</div>') +
+        body = (n ? '<a class="pc-cta" target="_blank" rel="noopener" data-a="sendDossier" href="' + wa(msgDossier(x)) + '"><span class="pc-cta-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg></span><span><b>Il est intéressé : envoyer le lien d\'inscription</b><small>Par WhatsApp : il s\'inscrit en 2 minutes</small></span><em aria-hidden="true">↗</em></a>' : '<div class="pc-alert">Pas de numéro WhatsApp valable : corrige la fiche pour pouvoir envoyer le lien d\'inscription.</div>') +
           '<div class="pc-block"><div class="pc-bh"><b>Script d\'appel</b><span class="tm-note" style="margin:0!important">' + esc(x.formation || "") + '</span></div><div class="pc-script">' + script(x) + "</div></div>" +
                     '<div class="pc-block pc-rv"><div class="pc-bh"><b>Il a répondu, mais veut qu\'on le rappelle ?</b></div><p class="pc-lab">Aucun message ne part, et ce n\'est pas compté comme « sans réponse ».</p>' +
             '<input class="pc-konote" id="sd-pcRvNote" placeholder="Ce qu\'il a dit (non obligatoire)" maxlength="300">' +
@@ -4196,7 +4201,7 @@ function init(root) {
           '<div class="pc-triesrow"><span class="pc-lab">Tentatives sans réponse</span><div class="pc-tries">' + [1, 2, 3, 4].map((i) => '<i class="' + (i <= t ? "on" : "") + '">' + i + "X" + (i === 4 ? " · injoignable" : "") + "</i>").join("") + "</div>" +
           (t < 4 ? "<small>Chaque « pas de réponse » envoie une relance WhatsApp, 4 au maximum. La 4e classe le dossier « Injoignable » : il pourra être ressorti s'il répond.</small>" : "") + "</div>" +
           (t >= 4 ? '<div class="pc-alert"><b>Injoignable : 4 appels sans réponse.</b> Envoie la dernière relance : le dossier est classé tout seul.<div class="tm-formact">' + fin + "</div></div>" : "") + "</div>" +
-          '<div class="pc-block pc-range"><div class="pc-bh"><b>Ranger le dossier</b><span class="tm-note" style="margin:0!important">Deux touches pour confirmer</span></div><div class="pc-rgrid"><button class="btn btn-line btn-sm" type="button" data-arch="Plus tard"><b>Plus tard</b><small>Pas avant plusieurs semaines : archivé, à ressortir</small></button><button class="btn btn-sm pc-dark" type="button" data-arch="Rétractation"><b>Rétractation</b><small>Ne veut plus s\'inscrire</small></button><button class="btn btn-sm pc-red" type="button" data-arch="Faux numéro"><b>Faux numéro</b><small>Coordonnées erronées</small></button></div></div>';
+          '<div class="pc-block pc-range"><div class="pc-bh"><b>Ranger le dossier</b><span class="tm-note" style="margin:0!important">Deux touches pour confirmer</span></div><div class="pc-rgrid"><button class="btn btn-line btn-sm" type="button" data-arch="Plus tard"><b>Plus tard</b><small>Pas avant plusieurs semaines : archivé, à ressortir</small></button><button class="btn btn-sm pc-prune" type="button" data-arch="Rétractation"><b>Rétractation</b><small>Ne veut plus s\'inscrire</small></button><button class="btn btn-sm pc-red" type="button" data-arch="Faux numéro"><b>Faux numéro</b><small>Coordonnées erronées</small></button></div></div>';
       } else if (st === "dossier") {
         const age = jours(x.dossier_envoye_le), late = dosAge(x) >= 5;
         const w = x.web;
