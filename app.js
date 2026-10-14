@@ -918,6 +918,9 @@ label.ex-doc input{position:absolute;left:14px;top:12px;width:20px;height:20px;a
 #sodaf-root [data-rv]:hover{background:#2A2F36}
 #sodaf-root [data-rv][aria-pressed="true"]{outline:3px solid var(--yellow);outline-offset:2px}
 .pc-rv{border-left:5px solid #14171C!important}
+.pc-sep{position:relative;margin:26px 0 16px;padding-top:16px;border-top:5px solid #14171C;text-align:left}
+.pc-sep-t{display:inline-block;font:800 .82rem var(--f-display);letter-spacing:.08em;text-transform:uppercase;color:#fff;background:#14171C;padding:6px 12px;border-radius:0 0 10px 10px;position:absolute;top:-5px;left:0}
+.pc-sep-d{display:block;margin-top:22px;font-size:.88rem;color:var(--muted);line-height:1.4}
 #sodaf-root .pc-cta{position:relative;overflow:hidden;display:flex;align-items:center;gap:14px;width:100%;margin:2px 0 18px;padding:16px 18px 16px 14px;border-radius:18px;text-decoration:none;color:#fff!important;
 background:linear-gradient(180deg,#16936A 0%,#0E7A55 48%,#0A6345 100%);border:1px solid #06402D;
 box-shadow:0 5px 0 #054030,0 14px 26px -10px rgba(6,64,45,.75),inset 0 1px 0 rgba(255,255,255,.35),inset 0 -2px 0 rgba(0,0,0,.18);transition:transform .12s ease,box-shadow .12s ease,filter .12s ease}
@@ -4194,6 +4197,7 @@ function init(root) {
                     '<div class="pc-block pc-rv"><div class="pc-bh"><b>Il a répondu, mais veut qu\'on le rappelle ?</b></div><p class="pc-lab">Aucun message ne part, et ce n\'est pas compté comme « sans réponse ».</p>' +
             '<input class="pc-konote" id="sd-pcRvNote" placeholder="Ce qu\'il a dit (non obligatoire)" maxlength="300">' +
             '<div class="pc-steps">' + ['matin', 'apres-midi'].map((k) => '<button type="button" data-rv="' + k + '" aria-pressed="' + (t === 0 && x.rappel === k) + '">' + (k === "matin" ? ICS.matin : ICS.am) + '<span>' + (k === "matin" ? "Le rappeler le matin" : "Le rappeler l\'après‑midi") + "<small>à sa demande</small></span></button>").join("") + "</div></div>" +
+                    '<div class="pc-sep" role="separator"><span class="pc-sep-t">Il n\'a pas répondu, ou ça ne va pas</span><span class="pc-sep-d">En dessous : les appels sans réponse (relance WhatsApp) et le rangement du dossier.</span></div>' +
                     '<div class="pc-block"><div class="pc-bh"><b>Historique d\'appels</b></div>' +
                     (t < 3 ? '<div class="pc-ko"><p class="pc-lab">Pas de réponse ? Choisis quand rappeler : la relance WhatsApp part avec</p>' +
             '<input class="pc-konote" id="sd-pcCallNote" placeholder="Note sur l\'appel (non obligatoire)" maxlength="300">' +
