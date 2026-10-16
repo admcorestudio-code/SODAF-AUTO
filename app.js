@@ -1981,7 +1981,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <p class="tm-role" id="sd-grRole"></p>
 <div class="card gr-card" id="sd-gr" hidden><p class="eyebrow">Gérance</p><h3 class="tm-h3" id="sd-grTitre">Gérante et direction</h3><p class="tm-note" id="sd-grIntro" style="margin:0 0 10px!important"></p>
 <div class="gr-tabs" role="tablist"><button type="button" role="tab" data-gr="demandes" aria-selected="true">Dépenses<em class="gr-badge" id="sd-grBDem" hidden></em></button><button type="button" role="tab" data-gr="rapports" aria-selected="false">Rapport de la semaine<em class="gr-badge" id="sd-grBRap" hidden></em></button><button type="button" role="tab" data-gr="tirage" aria-selected="false">Tirage au sort<em class="gr-badge" id="sd-grBTir" hidden></em></button><button type="button" role="tab" data-gr="parrainage" aria-selected="false">Parrainage<em class="gr-badge" id="sd-grBPar" hidden></em></button></div>
-<div class="gr-pane" data-grp="demandes"><div class="crb" id="sd-crb"></div><h4 class="gr-h4 crb-h">Autre dépense</h4><form id="sd-grDemForm" class="gr-form" hidden novalidate><input type="hidden" id="sd-grDemNat" value="Autre"><p class="crb-plus" id="sd-grDemPlus" hidden>Essence en plus du budget <button type="button" class="linkbtn" id="sd-grDemPlusX">Annuler</button></p><div class="row2"><select id="sd-grDemType" hidden><option>Dépense</option></select><div class="field"><label for="sd-grDemMt">Montant (F)</label><input id="sd-grDemMt" inputmode="numeric" autocomplete="off" placeholder="ex. 15 000"></div><div class="field" id="sd-grDemDevF"><label for="sd-grDemDev">Devis (photo ou PDF)</label><input id="sd-grDemDev" type="file" accept="image/*,application/pdf"></div></div><div class="field gr-elf" hidden><label for="sd-grDemElQ">Élève concerné (si besoin)</label><div class="gr-elbox"><input id="sd-grDemElQ" type="search" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Tape un nom ou un numéro (SO12)" role="combobox" aria-expanded="false" aria-controls="sd-grDemElL" aria-autocomplete="list"><input type="hidden" id="sd-grDemEl" value=""><div class="gr-elsel" id="sd-grDemElSel" hidden></div><div class="gr-ell" id="sd-grDemElL" role="listbox" hidden></div></div></div><div class="field crb-rz" id="sd-grDemRz" hidden><label>Pourquoi ? (touche une ou plusieurs raisons)</label><div class="crb-chips"><button type="button" aria-pressed="false" data-rz="Rattrapages en plus">Rattrapages en plus</button><button type="button" aria-pressed="false" data-rz="Séances en plus">Séances en plus</button><button type="button" aria-pressed="false" data-rz="Chercher le gagnant du tirage">Chercher le gagnant du tirage</button><button type="button" aria-pressed="false" data-rz="Prix de l&#39;essence en hausse">Prix de l&#39;essence en hausse</button><button type="button" aria-pressed="false" data-rz="Route bloquée ou détour">Route bloquée ou détour</button><button type="button" aria-pressed="false" data-rz="Trajet au garage">Trajet au garage</button></div></div><div class="field"><label for="sd-grDemTx" id="sd-grDemTxL">Pour quoi ?</label><textarea id="sd-grDemTx" rows="2" maxlength="600" placeholder="ex. Changer les plaquettes de frein"></textarea></div><button type="submit" class="btn btn-sm btn-green">Demander l'accord</button></form><div id="sd-grDemList" class="gr-list"></div></div>
+<div class="gr-pane" data-grp="demandes"><div id="sd-depRecep"></div><div class="crb" id="sd-crb"></div><div id="sd-grDemForm"></div><div hidden><div class="field gr-elf" hidden><label for="sd-grDemElQ">Élève concerné (si besoin)</label><div class="gr-elbox"><input id="sd-grDemElQ" type="search" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Tape un nom ou un numéro (SO12)" role="combobox" aria-expanded="false" aria-controls="sd-grDemElL" aria-autocomplete="list"><input type="hidden" id="sd-grDemEl" value=""><div class="gr-elsel" id="sd-grDemElSel" hidden></div><div class="gr-ell" id="sd-grDemElL" role="listbox" hidden></div></div></div></div><h4 class="gr-h4 crb-h">Historique</h4><div id="sd-grDemList" class="gr-list"></div></div>
 <div class="gr-pane" data-grp="decisions" hidden style="display:none"><form id="sd-grDecForm" class="gr-form" hidden novalidate><div class="row2"><div class="field"><label for="sd-grDecCat">Sujet</label><select id="sd-grDecCat"><option>Élèves</option><option>Argent</option><option>Planning</option><option>Équipe</option><option>Autre</option></select></div><div class="field gr-grow"><label for="sd-grDecTx">Ce que j'ai décidé</label><textarea id="sd-grDecTx" rows="2" maxlength="600" placeholder="ex. Séance de samedi 7 h 30 déplacée à 8 h 45, le moniteur est prévenu."></textarea></div></div><button type="submit" class="btn btn-sm btn-green">Noter la décision</button></form><div id="sd-grDecList" class="gr-list"></div></div>
 <div class="gr-pane" data-grp="rapports" hidden><div id="sd-grAFaire" class="gr-afaire" hidden></div><div id="sd-grRapNew" hidden><div class="gr-semban" id="sd-grRapSem"></div><div class="tm-stats tm-dr" id="sd-grRapChiffres"></div><div class="field"><label for="sd-grRapTx">Mes remarques pour la direction</label><textarea id="sd-grRapTx" rows="4" maxlength="3000" placeholder="Ce qui s'est bien passé, les problèmes, ce qu'il faudrait changer, ce dont j'ai besoin."></textarea></div><button type="button" class="btn btn-sm btn-green" id="sd-grRapSend">Envoyer le rapport</button><p class="gr-rapnote" id="sd-grRapNote"></p></div><div id="sd-grCal" class="gr-cal" aria-label="Calendrier des rapports"></div><h4 class="gr-h4 gr-arch-h">Anciens rapports</h4><div id="sd-grRapList" class="gr-list"></div></div>
 <div class="gr-pane" data-grp="parrainage" hidden><p class="gr-sem">2 000 F par filleul inscrit, à envoyer au parrain par Mixx by Yas ou Moov Money après le reçu d'inscription du filleul. La commission apparaît ici toute seule.</p><div id="sd-paList"></div><div class="sec-mini"><h4 class="gr-h4">Meilleurs parrains</h4><p class="tm-note" style="margin:0 0 8px!important">2 filleuls : priorité sur les horaires · 3 : t-shirt · 5 : une séance offerte · 10 : karting à 3 et ambassadeur du mois (à confirmer) · meilleur de l'année : formation offerte à un proche.</p><div id="sd-paTop"></div></div></div>
@@ -3694,6 +3694,7 @@ function init(root) {
       d.innerHTML = '<summary><span><b>Aujourd\'hui</b><small id="sd-secAujSum">Cours de code et séances de conduite du jour</small></span><em>Voir / replier</em></summary><div id="sd-secAujSlot"></div>';
       $('.tm-pane[data-pane="sec"]').appendChild(d);
       const g = $('.tm-pane[data-pane="mon"] .tm-mon'); if (g) $("#sd-secAujSlot").appendChild(g);
+      const cb = $("#sd-crbMon"); if (cb) $("#sd-secAujSlot").appendChild(cb);
       const h = $("#sd-mcDrive .tm-h3"); if (h) h.textContent = "Séances de conduite d'aujourd'hui";
       d.addEventListener("toggle", () => { S.set("secAuj", d.open ? "1" : "0"); if (d.open) loadMon(); });
     }
@@ -4654,9 +4655,10 @@ function init(root) {
       $$('#sd-gr [data-gr="tirage"], #sd-gr [data-gr="parrainage"]').forEach((t) => (t.hidden = me.role === "admin"));
       if (me.role === "admin" && ["tirage", "parrainage"].includes(GR.ong)) GR.ong = "rapports";
       $("#sd-grDemForm").hidden = !g; $("#sd-grDecForm").hidden = !g;
+      if (g && !$("#sd-grDemForm").dataset.pret) { $("#sd-grDemForm").dataset.pret = 1; $("#sd-grDemForm").innerHTML = depFormHtml(true); depFormBind($("#sd-grDemForm"), () => { $("#sd-grDemForm").dataset.pret = ""; grCharger(); }); }
       const [dm, dc, rp] = await Promise.all([DB.q("demandes?select=*&order=le.desc&limit=60").catch(() => null), DB.q("decisions?select=*&order=le.desc&limit=60").catch(() => null), DB.q("rapports?select=*&order=semaine.desc&limit=20").catch(() => null)]);
       if (!dm && !dc && !rp) { $("#sd-grDemList").innerHTML = '<p class="tm-empty">La gérance n\'est pas encore activée dans la base.</p>'; return; }
-      GR.dem = dm || []; GR.dec = dc || []; GR.rap = rp || [];
+      GR.dem = dm || []; GR.dec = dc || []; GR.rap = rp || []; if (!GR.prof) { const pr = await DB.q("profils?select=id,role").catch(() => []); GR.prof = {}; (pr || []).forEach((x) => (GR.prof[x.id] = x.role)); }
       grDemRender(); await crbCharger(); await grRapRender(); await trCharger(); await paCharger(); grBadges(); grOnglet(GR.ong);
     }
     // ---- Parrainage : commissions à payer (table commissions, migration 0042)
@@ -4675,10 +4677,10 @@ function init(root) {
       const top = Object.values(T).sort((a, b) => b.n - a.n).slice(0, 10);
       $("#sd-paTop").innerHTML = top.length ? top.map((t) => { const pl = PALIERS.find((p) => t.n >= p[0]); return '<div class="pa-top"><b>' + esc(t.id ? nom(t.id) : t.tel) + "</b><span>" + t.n + " filleul" + (t.n > 1 ? "s" : "") + (pl ? " · a gagné : " + pl[1] : "") + "</span></div>"; }).join("") : '<p class="tm-empty">Pas encore de parrain.</p>';
     }
-    $("#sd-gr") && $("#sd-gr").addEventListener("change", async (e) => {
-      const inp = e.target.closest("[data-fac]"); if (!inp || !inp.files[0]) return; const lab = inp.closest("label"); lab.classList.add("is-busy");
-      try { const path = await depEnvoyer(inp.files[0], "factures"); const r = await run(() => DB.q("rpc/depense_facture", { method: "POST", body: { p_id: +inp.dataset.fac, p_chemin: path } }).then(() => true), "Facture ajoutée"); if (r) grCharger(); }
-      catch (er) { toast("La facture n'a pas pu être envoyée", true); } finally { lab.classList.remove("is-busy"); }
+    $("#sd-gr") && $("#sd-gr").addEventListener("pj", async (e) => {
+      const w = e.target.closest("[data-fac]"); if (!w) return; const pj = e.target.closest(".pj"); if (!pj || !pj._file) return; w.classList.add("is-busy");
+      try { const path = await depEnvoyer(pj._file, "factures"); const r = await run(() => DB.q("rpc/depense_facture", { method: "POST", body: { p_id: +w.dataset.fac, p_chemin: path } }).then(() => true), "Facture ajoutée"); if (r) grCharger(); }
+      catch (er) { toast("La facture n'a pas pu être envoyée", true); } finally { w.classList.remove("is-busy"); }
     });
     $("#sd-paList") && $("#sd-paList").addEventListener("click", async (e) => {
       const g = e.target.closest("[data-goel]"); if (g) { goEleve(+g.dataset.goel); return; }
@@ -4687,13 +4689,18 @@ function init(root) {
       if (ok !== null) { await paCharger(); grBadges(); }
     });
     function grDemRender() {
-      const adm = me.role === "admin", g = me.role === "gerant", ST = { attente: ["att", "En attente"], accordee: ["oui", "Accordé"], refusee: ["non", "Refusé"] };
-      $("#sd-grDemList").innerHTML = GR.dem.length ? GR.dem.map((d) => { const st = ST[d.statut] || ST.attente, carb = d.nature === "Carburant";
-        const pieces = (d.devis ? '<button type="button" class="linkbtn" data-dep="' + esc(d.devis) + '">Voir le devis</button>' : "") + (d.facture ? '<button type="button" class="linkbtn" data-dep="' + esc(d.facture) + '">Voir la facture</button>' : "") +
-          (d.statut === "accordee" && !d.facture && !carb ? (g ? '<label class="btn btn-line btn-sm dep-fac">Ajouter la facture<input type="file" accept="image/*,application/pdf" data-fac="' + d.id + '" hidden></label>' : '<span class="dep-att">Facture pas encore ajoutée</span>') : "");
-        return '<div class="gr-it ' + st[0] + '"><div class="gr-hd"><b>' + (carb ? "Essence en plus" : "Dépense") + (d.montant ? " · " + F(d.montant) : "") + '</b><em class="gr-st ' + st[0] + '">' + st[1] + "</em></div><small>Demandé " + esc(grQuand(d.le)) + "</small><p>" + esc(d.texte) + "</p>" + (pieces ? '<div class="dep-pcs">' + pieces + "</div>" : "") +
-          (d.statut !== "attente" ? '<div class="gr-rep">' + (d.statut === "accordee" ? "Accordé" : "Refusé") + " " + esc(grQuand(d.repondu_le)) + (d.reponse ? " : " + esc(d.reponse) : "") + "</div>" : adm ? '<div class="gr-act" data-dem="' + d.id + '"><input type="text" maxlength="300" placeholder="Un mot (non obligatoire)" aria-label="Réponse à la gérante"><button type="button" class="btn btn-sm btn-green" data-ok="1">Accorder</button><button type="button" class="btn btn-sm btn-line" data-ok="0">Refuser</button></div>' : "") + "</div>"; }).join("")
-        : '<p class="tm-empty">Aucune dépense demandée.</p>';
+      const adm = me.role === "admin", g = me.role === "gerant", qui = (d) => ROLE_NOM[GR.prof && GR.prof[d.auteur]] || "Équipe";
+      const recep = g ? GR.dem.filter((d) => d.etape === "equipe" && d.statut === "attente") : [], hist = GR.dem.filter((d) => !recep.includes(d));
+      const pieces = (d) => (d.devis ? '<button type="button" class="linkbtn" data-dep="' + esc(d.devis) + '">Voir le devis</button>' : "") + (d.facture ? '<button type="button" class="linkbtn" data-dep="' + esc(d.facture) + '">Voir la facture</button>' : "") +
+        (d.statut === "accordee" && !d.facture && d.nature !== "Carburant" ? (g ? '<div class="dep-facw" data-fac="' + d.id + '"><span class="dep-att">Ajoute la facture :</span>' + pjHtml(true) + "</div>" : '<span class="dep-att">Facture pas encore ajoutée</span>') : "");
+      const tete = (d, st) => '<div class="gr-hd"><b>' + (d.nature === "Carburant" ? "Essence en plus" : "Dépense") + (d.montant ? " · " + F(d.montant) : "") + '</b><em class="gr-st ' + st[0] + '">' + st[1] + "</em></div><small>" + qui(d) + " · " + esc(grQuand(d.le)) + (d.transmis_le && qui(d) !== "Gérante" ? " · transmis par la gérante" : "") + "</small><p>" + esc(d.texte) + "</p>";
+      const box = $("#sd-depRecep");
+      if (box) box.innerHTML = recep.length ? '<div class="dep-recep"><h4 class="gr-h4">Demandes de l\'équipe (' + recep.length + ")</h4>" + recep.map((d) => '<div class="gr-it att">' + tete(d, ["att", "À traiter"]) + (d.devis ? '<div class="dep-pcs">' + pieces(d) + "</div>" : "") + '<div class="gr-act" data-rec="' + d.id + '"><input type="text" maxlength="300" placeholder="Un mot (si tu refuses)" aria-label="Réponse"><button type="button" class="btn btn-sm btn-green" data-tr="1">Transférer à la direction</button><button type="button" class="btn btn-sm btn-line" data-tr="0">Refuser</button></div></div>').join("") + "</div>" : "";
+      const ST = { attente: ["att", "En attente"], accordee: ["oui", "Accordé"], refusee: ["non", "Refusé"] };
+      $("#sd-grDemList").innerHTML = hist.length ? hist.map((d) => { const st = d.statut === "attente" && g && d.etape === "direction" ? ["att", "Chez la direction"] : ST[d.statut] || ST.attente, p = pieces(d);
+        return '<div class="gr-it ' + st[0] + '">' + tete(d, st) + (p ? '<div class="dep-pcs">' + p + "</div>" : "") +
+          (d.statut !== "attente" ? '<div class="gr-rep">' + (d.statut === "accordee" ? "Accordé" : "Refusé") + " " + esc(grQuand(d.repondu_le)) + (d.reponse ? " : " + esc(d.reponse) : "") + "</div>" : adm ? '<div class="gr-act" data-dem="' + d.id + '"><input type="text" maxlength="300" placeholder="Un mot (non obligatoire)" aria-label="Réponse"><button type="button" class="btn btn-sm btn-green" data-ok="1">Accorder</button><button type="button" class="btn btn-sm btn-line" data-ok="0">Refuser</button></div>' : "") + "</div>"; }).join("")
+        : '<p class="tm-empty">Aucune dépense pour l\'instant.</p>';
     }
     function grDecRender() {
       const adm = me.role === "admin";
@@ -4832,6 +4839,7 @@ function init(root) {
       const t = e.target.closest("[data-gr]"); if (t) { grOnglet(t.dataset.gr); if (me.role === "gerant") { if (t.dataset.gr === "demandes") grMarquer("dem", GR.dem.filter((d) => d.statut !== "attente").map((d) => d.id)); if (t.dataset.gr === "decisions") grMarquer("dec", GR.dec.filter((d) => d.avis).map((d) => d.id)); grBadges(); } return; }
       const ge = e.target.closest("#sd-grDecList [data-goel]"); if (ge) { goEleve(+ge.dataset.goel); return; }
       const dp = e.target.closest("[data-dep]"); if (dp) { depOuvrir(dp.dataset.dep); return; }
+      const tr = e.target.closest("[data-tr]"); if (tr) { const bx = tr.closest("[data-rec]"); bx.querySelectorAll("button").forEach((b) => (b.disabled = true)); const ok = tr.dataset.tr === "1"; const r = await run(() => DB.q(ok ? "rpc/demande_transmettre" : "rpc/demande_refuser", { method: "POST", body: ok ? { p_id: +bx.dataset.rec } : { p_id: +bx.dataset.rec, p_note: bx.querySelector("input").value.trim() || null } }).then(() => true), ok ? "Transféré à la direction" : "Refusé"); if (r) grCharger(); else bx.querySelectorAll("button").forEach((b) => (b.disabled = false)); return; }
       const ok = e.target.closest("[data-ok]"), av = e.target.closest("[data-avis]");
       if (ok) { const bx = ok.closest("[data-dem]"); bx.querySelectorAll("button").forEach((b) => (b.disabled = true)); const r = await run(() => DB.q("rpc/demande_repondre", { method: "POST", body: { p_id: +bx.dataset.dem, p_accord: ok.dataset.ok === "1", p_note: bx.querySelector("input").value.trim() || null } }).then(() => true), ok.dataset.ok === "1" ? "Accordé : la gérante est prévenue" : "Refusé : la gérante est prévenue"); if (r) grCharger(); else bx.querySelectorAll("button").forEach((b) => (b.disabled = false)); }
       if (av) { const bx = av.closest("[data-dec]"); bx.querySelectorAll("button").forEach((b) => (b.disabled = true)); const r = await run(() => DB.q("rpc/decision_avis", { method: "POST", body: { p_id: +bx.dataset.dec, p_avis: av.dataset.avis, p_note: bx.querySelector("input").value.trim() || null } }).then(() => true), av.dataset.avis === "ok" ? "Noté : d'accord" : "Noté : à revoir, la gérante est prévenue"); if (r) grCharger(); else bx.querySelectorAll("button").forEach((b) => (b.disabled = false)); }
@@ -4857,18 +4865,13 @@ function init(root) {
     $("#sd-grDemElL").addEventListener("click", (e) => { const b = e.target.closest("[data-el]"); if (b) grElChoisir(+b.dataset.el); });
     $("#sd-grDemElSel").addEventListener("click", (e) => { if (e.target.closest("button")) { grElChoisir(0); $("#sd-grDemElQ").focus(); } });
     document.addEventListener("click", (e) => { if (!e.target.closest(".gr-elbox")) grElFermer(); });
-    $("#sd-grDemForm").addEventListener("submit", async (e) => {
-      e.preventDefault(); const nat = $("#sd-grDemNat").value, rz = nat === "Carburant" ? $$("#sd-grDemRz [data-rz][aria-pressed=true]").map((b) => b.dataset.rz) : [], t0 = $("#sd-grDemTx").value.trim(), tx = rz.length ? rz.join(" · ") + (t0 ? " : " + t0 : "") : t0, mt = +($("#sd-grDemMt").value.replace(/\D/g, "")) || null, f = $("#sd-grDemDev").files[0];
-      if (!mt) { toast("Écris le montant", true); $("#sd-grDemMt").focus(); return; }
-      if (nat !== "Carburant" && !f) { toast("Ajoute le devis", true); return; }
-      if (tx.length < 3) { toast(nat === "Carburant" ? "Choisis une raison" : "Écris pour quoi", true); $("#sd-grDemTx").focus(); return; }
-      const b = e.target.querySelector("[type=submit]"); b.disabled = true; b.textContent = "Envoi…";
-      let devis = null;
-      if (nat !== "Carburant") { try { devis = await depEnvoyer(f, "devis"); } catch (er) { toast("Le devis n'a pas pu être envoyé", true); b.disabled = false; b.textContent = "Demander l'accord"; return; } }
-      const r = await run(() => DB.q("demandes", { method: "POST", body: { type: "Dépense", nature: nat, montant: mt, texte: tx, devis }, prefer: "return=minimal" }).then(() => true), "Demande envoyée");
-      b.disabled = false; b.textContent = "Demander l'accord"; if (r) { e.target.reset(); depNature("Autre"); grCharger(); }
-    });
-    // ---- Dépenses : pièces (devis, factures, photos du compteur) dans l'espace privé « depenses »
+    // ---- Dépenses (16 oct.) : l'équipe (secrétariat, moniteur) ajoute les pleins et demande à la gérante ;
+    //      la gérante transfère à la direction ou refuse ; ses propres demandes vont directement à la direction.
+    const DEP_RZ = ["Rattrapages en plus", "Séances en plus", "Chercher le gagnant du tirage", "Prix de l'essence en hausse", "Route bloquée ou détour", "Trajet au garage"];
+    const ROLE_NOM = { admin: "Direction", gerant: "Gérante", secretariat: "Secrétariat", moniteur: "Moniteur" };
+    // Champ pièce jointe : « Prendre une photo » ou « Choisir un fichier »
+    const pjHtml = (pdf) => '<div class="pj"><label class="btn btn-line btn-sm">Prendre une photo<input type="file" accept="image/*" capture="environment" hidden></label><label class="btn btn-line btn-sm">Choisir ' + (pdf ? "un fichier" : "une image") + '<input type="file" accept="image/*' + (pdf ? ",application/pdf" : "") + '" hidden></label><span class="pj-nom">Aucun fichier</span></div>';
+    document.addEventListener("change", (e) => { const i = e.target.closest && e.target.closest(".pj input[type=file]"); if (!i) return; const pj = i.closest(".pj"); pj._file = i.files[0] || null; pj.querySelector(".pj-nom").textContent = pj._file ? pj._file.name : "Aucun fichier"; pj.classList.toggle("ok", !!pj._file); pj.dispatchEvent(new CustomEvent("pj", { bubbles: true })); });
     async function depEnvoyer(file, dossier) {
       const img = /^image\//.test(file.type); if (!img && file.type !== "application/pdf") throw new Error("type");
       const blob = img ? await photoCompresse(file, 1600, false) : file; if (blob.size > 10485760) throw new Error("taille");
@@ -4881,32 +4884,62 @@ function init(root) {
       try { const r = await fetch(SB_URL + "/storage/v1/object/sign/depenses/" + path, { method: "POST", headers: { apikey: SB_KEY, Authorization: "Bearer " + (await DB.token()), "Content-Type": "application/json" }, body: JSON.stringify({ expiresIn: 3600 }) }); const j = await r.json(); if (!j.signedURL) throw 0; const u = SB_URL + "/storage/v1" + j.signedURL; if (w) w.location = u; else location.href = u; }
       catch (er) { if (w) w.close(); toast("Fichier introuvable", true); }
     }
-    function depNature(n) { $("#sd-grDemNat").value = n; $("#sd-grDemRz").hidden = n !== "Carburant"; $("#sd-grDemTxL").textContent = n === "Carburant" ? "Précise (si besoin)" : "Pour quoi ?"; $$("#sd-grDemRz [data-rz]").forEach((b) => b.setAttribute("aria-pressed", "false")); $("#sd-grDemPlus").hidden = n !== "Carburant"; $("#sd-grDemDevF").hidden = n === "Carburant"; $("#sd-grDemTx").placeholder = n === "Carburant" ? "ex. Beaucoup de rattrapages cette semaine" : "ex. Changer les plaquettes de frein"; }
-    $("#sd-grDemPlusX").addEventListener("click", () => depNature("Autre"));
-    $("#sd-grDemRz").addEventListener("click", (e) => { const b = e.target.closest("[data-rz]"); if (b) b.setAttribute("aria-pressed", b.getAttribute("aria-pressed") !== "true"); });
-    // ---- Carburant : budget de la semaine (2 000 F par bloc prévu, plafond 35 000 F), pleins avec photo du compteur
+    // Formulaire de demande (même formulaire pour la gérante et pour l'équipe)
+    function depFormHtml(g) {
+      return '<form class="dep-form" novalidate><h4 class="gr-h4">Demander une dépense</h4><div class="dep-kind" role="radiogroup"><button type="button" role="radio" data-kind="Carburant" aria-checked="true">Essence en plus</button><button type="button" role="radio" data-kind="Autre" aria-checked="false">Autre dépense</button></div>' +
+        '<div class="field"><label>Montant (F)</label><input class="dep-mt" inputmode="numeric" autocomplete="off" placeholder="ex. 10 000"></div>' +
+        '<div class="field dep-rzf"><label>Pourquoi ? (touche une ou plusieurs raisons)</label><div class="crb-chips">' + DEP_RZ.map((r) => '<button type="button" aria-pressed="false" data-rz="' + esc(r) + '">' + esc(r) + "</button>").join("") + "</div></div>" +
+        '<div class="field dep-devf" hidden><label>Devis (obligatoire)</label>' + pjHtml(true) + "</div>" +
+        '<div class="field"><label class="dep-txl">Précise (si besoin)</label><textarea class="dep-tx" rows="2" maxlength="500"></textarea></div>' +
+        '<button type="submit" class="btn btn-sm btn-green">' + (g ? "Envoyer à la direction" : "Envoyer à la gérante") + "</button></form>";
+    }
+    function depFormBind(root, apres) {
+      const f = root.querySelector(".dep-form"); if (!f) return;
+      const kind = (k) => { f.querySelectorAll("[data-kind]").forEach((b) => b.setAttribute("aria-checked", b.dataset.kind === k)); f.querySelector(".dep-rzf").hidden = k !== "Carburant"; f.querySelector(".dep-devf").hidden = k === "Carburant"; f.querySelector(".dep-txl").textContent = k === "Carburant" ? "Précise (si besoin)" : "Pour quoi ?"; f.querySelector(".dep-tx").placeholder = k === "Carburant" ? "" : "ex. Changer les plaquettes de frein"; };
+      f.addEventListener("click", (e) => { const k = e.target.closest("[data-kind]"); if (k) kind(k.dataset.kind); const z = e.target.closest("[data-rz]"); if (z) z.setAttribute("aria-pressed", z.getAttribute("aria-pressed") !== "true"); });
+      f.addEventListener("submit", async (e) => {
+        e.preventDefault(); const nat = f.querySelector('[data-kind][aria-checked="true"]').dataset.kind, mt = +(f.querySelector(".dep-mt").value.replace(/\D/g, "")) || null;
+        const rz = nat === "Carburant" ? [...f.querySelectorAll("[data-rz][aria-pressed=true]")].map((b) => b.dataset.rz) : [], t0 = f.querySelector(".dep-tx").value.trim(), tx = rz.length ? rz.join(" · ") + (t0 ? " : " + t0 : "") : t0, pj = f.querySelector(".dep-devf .pj");
+        if (!mt) { toast("Écris le montant", true); f.querySelector(".dep-mt").focus(); return; }
+        if (nat !== "Carburant" && !pj._file) { toast("Ajoute le devis", true); return; }
+        if (tx.length < 3) { toast(nat === "Carburant" ? "Choisis une raison" : "Écris pour quoi", true); return; }
+        const b = f.querySelector("[type=submit]"), lab = b.textContent; b.disabled = true; b.textContent = "Envoi…";
+        let devis = null;
+        if (nat !== "Carburant") { try { devis = await depEnvoyer(pj._file, "devis"); } catch (er) { toast("Le devis n'a pas pu être envoyé", true); b.disabled = false; b.textContent = lab; return; } }
+        const r = await run(() => DB.q("demandes", { method: "POST", body: { type: "Dépense", nature: nat, montant: mt, texte: tx, devis }, prefer: "return=minimal" }).then(() => true), "Demande envoyée");
+        b.disabled = false; b.textContent = lab; if (r) apres();
+      });
+    }
+    // Carte carburant : budget de la semaine (2 000 F par bloc prévu, plafond 35 000 F), pleins (montant, compteur, photo)
     async function crbCharger(sel = "#sd-crb") {
-      const box = $(sel); if (!box) return; const mon = sel === "#sd-crbMon", g = me.role === "gerant" && !mon, l = grLundi(new Date()); box.hidden = false;
+      const box = $(sel); if (!box) return; const l = grLundi(new Date()), adm = me.role === "admin", voitPhotos = ["admin", "gerant"].includes(me.role); box.hidden = false;
       const [bu, pl] = await Promise.all([DB.q("rpc/carburant_budget", { method: "POST", body: { p_lundi: l } }).catch(() => null), DB.q("carburant?select=*&jour=gte." + l + "&order=le.desc").catch(() => null)]);
       if (!bu || !pl) { box.innerHTML = '<p class="tm-empty">Le budget carburant n\'est pas encore activé dans la base.</p>'; return; }
-      GR.crb = bu; const pct = bu.budget + bu.en_plus ? Math.min(100, Math.round((bu.depense / (bu.budget + bu.en_plus)) * 100)) : 0, over = bu.reste <= 0 && bu.depense > 0;
-      box.innerHTML = '<div class="crb-hd"><div><span class="crb-k">' + (mon ? "Carburant de la voiture · semaine " : "Carburant · semaine ") + grNumSem(l) + '</span><b class="crb-big">' + F(bu.depense) + ' <small>/ ' + F(bu.budget + bu.en_plus) + "</small></b><span class=\"crb-s\">" + bu.blocs + " bloc" + (bu.blocs > 1 ? "s" : "") + " × 2 000 F" + (bu.budget >= 35000 ? " (plafond 35 000 F)" : "") + (bu.en_plus ? " + " + F(bu.en_plus) + " accordés en plus" : "") + '</span></div><div class="crb-reste' + (over ? " crb-ko" : "") + '"><span>Reste</span><b>' + F(Math.max(0, bu.reste)) + "</b></div></div>" +
+      GR.crb = bu; const tot = bu.budget + bu.en_plus, pct = tot ? Math.min(100, Math.round((bu.depense / tot) * 100)) : 0, over = bu.reste <= 0 && bu.depense > 0;
+      box.innerHTML = '<div class="crb-hd"><div><span class="crb-k">Carburant · semaine ' + grNumSem(l) + '</span><b class="crb-big">' + F(bu.depense) + ' <small>/ ' + F(tot) + "</small></b><span class=\"crb-s\">" + bu.blocs + " bloc" + (bu.blocs > 1 ? "s" : "") + " × 2 000 F" + (bu.budget >= 35000 ? " (plafond 35 000 F)" : "") + (bu.en_plus ? " + " + F(bu.en_plus) + " accordés en plus" : "") + '</span></div><div class="crb-reste' + (over ? " crb-ko" : "") + '"><span>Reste</span><b>' + F(Math.max(0, bu.reste)) + "</b></div></div>" +
         '<div class="crb-bar"><i style="width:' + pct + '%"' + (pct >= 90 ? ' class="crb-hot"' : "") + "></i></div>" +
-        (g ? '<div class="tm-formact"><button class="btn btn-line btn-sm" type="button" id="sd-crbPlus">Demander de l\'essence en plus</button></div>' : "") +
-        (mon ? '<p class="crb-s" style="margin:0 0 8px">À chaque plein : le montant, le compteur et sa photo.</p><form class="crb-form" id="sd-crbForm" novalidate><div class="crb-row"><div class="field"><label for="sd-crbMt">Montant (F)</label><input id="sd-crbMt" inputmode="numeric" autocomplete="off" placeholder="ex. 10 000"></div><div class="field"><label for="sd-crbKm">Compteur (km)</label><input id="sd-crbKm" inputmode="numeric" autocomplete="off" placeholder="ex. 184 350"></div></div><div class="field"><label for="sd-crbPh">Photo du compteur</label><input id="sd-crbPh" type="file" accept="image/*" capture="environment"></div><label class="crb-chk"><input type="checkbox" id="sd-crbFull"> Plein complet</label><div class="tm-formact"><button class="btn btn-green btn-sm" type="submit">Ajouter le plein</button></div></form>' : "") +
-        (pl.length ? '<div class="crb-list">' + pl.map((c) => '<div class="crb-it"><span>' + dOf(c.jour).toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" }) + "</span><b>" + F(c.montant) + "</b><span>" + (c.km ? milliers(c.km) + " km" : "—") + (c.plein_complet ? " · plein complet" : "") + "</span>" + (mon ? "<span></span>" : '<button type="button" class="linkbtn" data-dep="' + esc(c.photo) + '">Photo</button>') + "</div>").join("") + "</div>" : '<p class="crb-vide">Aucun plein cette semaine.</p>');
-      const pb = box.querySelector("#sd-crbPlus"); if (pb) pb.addEventListener("click", () => { depNature("Carburant"); $("#sd-grDemForm").scrollIntoView({ behavior: "smooth", block: "start" }); $("#sd-grDemMt").focus(); });
-      const f = box.querySelector("#sd-crbForm"); if (!f) return;
+        (!adm ? '<details class="crb-add"><summary>Ajouter un plein</summary><form class="crb-form" novalidate><div class="crb-row"><div class="field"><label>Montant (F)</label><input class="crb-mt" inputmode="numeric" autocomplete="off" placeholder="ex. 10 000"></div><div class="field"><label>Compteur (km)</label><input class="crb-km" inputmode="numeric" autocomplete="off" placeholder="ex. 184 350"></div></div><div class="field"><label>Photo du compteur</label>' + pjHtml(false) + '</div><label class="crb-chk"><input type="checkbox" class="crb-full"> Plein complet</label><button class="btn btn-green btn-sm" type="submit">Ajouter le plein</button></form></details>' : "") +
+        (pl.length ? '<div class="crb-list">' + pl.map((c) => '<div class="crb-it"><span>' + dOf(c.jour).toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" }) + "</span><b>" + F(c.montant) + "</b><span>" + (c.km ? milliers(c.km) + " km" : "—") + (c.plein_complet ? " · plein complet" : "") + "</span>" + (voitPhotos ? '<button type="button" class="linkbtn" data-dep="' + esc(c.photo) + '">Photo</button>' : "<span></span>") + "</div>").join("") + "</div>" : '<p class="crb-vide">Aucun plein cette semaine.</p>');
+      const f = box.querySelector(".crb-form"); if (!f) return;
       f.addEventListener("submit", async (e) => {
-        e.preventDefault(); const mt = +($("#sd-crbMt").value.replace(/\D/g, "")) || 0, km = +($("#sd-crbKm").value.replace(/\D/g, "")) || null, ph = $("#sd-crbPh").files[0];
-        if (mt < 500) { toast("Écris le montant", true); $("#sd-crbMt").focus(); return; }
-        if (!ph) { toast("Prends la photo du compteur", true); return; }
-        if (mt > GR.crb.reste) { toast("Budget dépassé : reste " + F(Math.max(0, GR.crb.reste)) + ". Préviens la gérante.", true); return; }
+        e.preventDefault(); const mt = +(f.querySelector(".crb-mt").value.replace(/\D/g, "")) || 0, km = +(f.querySelector(".crb-km").value.replace(/\D/g, "")) || null, pj = f.querySelector(".pj");
+        if (mt < 500) { toast("Écris le montant", true); return; }
+        if (!pj._file) { toast("Ajoute la photo du compteur", true); return; }
+        if (mt > GR.crb.reste) { toast("Budget dépassé : reste " + F(Math.max(0, GR.crb.reste)) + ". Demande de l'essence en plus.", true); return; }
         const b = f.querySelector("[type=submit]"); b.disabled = true; b.textContent = "Envoi…";
-        let photo; try { photo = await depEnvoyer(ph, "compteur"); } catch (er) { toast("La photo n'a pas pu être envoyée", true); b.disabled = false; b.textContent = "Ajouter le plein"; return; }
-        const r = await run(() => DB.q("carburant", { method: "POST", body: { montant: mt, km, photo, plein_complet: $("#sd-crbFull").checked }, prefer: "return=minimal" }).then(() => true), "Plein ajouté");
+        let photo; try { photo = await depEnvoyer(pj._file, "compteur"); } catch (er) { toast("La photo n'a pas pu être envoyée", true); b.disabled = false; b.textContent = "Ajouter le plein"; return; }
+        const r = await run(() => DB.q("carburant", { method: "POST", body: { montant: mt, km, photo, plein_complet: f.querySelector(".crb-full").checked }, prefer: "return=minimal" }).then(() => true), "Plein ajouté");
         b.disabled = false; b.textContent = "Ajouter le plein"; if (r) crbCharger(sel);
       });
+    }
+    // Équipe (secrétariat, moniteur) : carburant + demande à la gérante + mes demandes
+    async function depEquipe() {
+      const box = $("#sd-crbMon"); if (!box) return; box.hidden = false;
+      if (!box.dataset.pret) { box.dataset.pret = 1; box.innerHTML = '<div id="sd-crbEq"></div><div class="dep-eqf">' + depFormHtml(false) + '</div><div class="dep-mes" id="sd-depMes"></div>'; depFormBind(box, () => { box.dataset.pret = ""; depEquipe(); }); }
+      await crbCharger("#sd-crbEq");
+      const mes = await DB.q("demandes?select=*&auteur=eq." + me.id + "&order=le.desc&limit=10").catch(() => null); if (!mes) return;
+      $("#sd-depMes").innerHTML = mes.length ? '<h4 class="gr-h4">Mes demandes</h4>' + mes.map((d) => { const st = d.statut === "accordee" ? ["oui", "Accordé"] : d.statut === "refusee" ? ["non", "Refusé"] : d.etape === "direction" ? ["att", "Chez la direction"] : ["att", "Chez la gérante"];
+        return '<div class="gr-it ' + st[0] + '"><div class="gr-hd"><b>' + (d.nature === "Carburant" ? "Essence en plus" : "Dépense") + " · " + F(d.montant || 0) + '</b><em class="gr-st ' + st[0] + '">' + st[1] + "</em></div><small>" + esc(grQuand(d.le)) + "</small><p>" + esc(d.texte) + "</p>" + (d.reponse ? '<div class="gr-rep">' + esc(d.reponse) + "</div>" : "") + "</div>"; }).join("") : "";
     }
 
     $("#sd-grDecForm").addEventListener("submit", async (e) => {
@@ -5042,7 +5075,7 @@ function init(root) {
     let appelEdit = null; // séance dont on modifie l'appel déjà validé
     async function loadMon() {
       if (!me) return;
-      if (me.role === "moniteur") crbCharger("#sd-crbMon");
+      if (["moniteur", "secretariat"].includes(me.role)) depEquipe();
       const today = iso(new Date());
       const s0 = await run(() => DB.q("seances_code?select=*&jour=gte." + today + "&statut=neq.Annulé&order=jour&limit=12"));
       if (s0) {
@@ -6332,6 +6365,13 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 .crb-list{display:grid;gap:4px;margin-top:10px;border-top:1px solid var(--line);padding-top:8px}.crb-it{display:grid;grid-template-columns:auto auto 1fr auto;gap:10px;align-items:center;font-size:.88rem}.crb-it span:first-child{color:var(--muted)}
 .crb-vide{font-size:.86rem;color:var(--muted);margin:6px 0 0}
 .crb-chips{display:flex;flex-wrap:wrap;gap:6px}.crb-chips button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:.45em .9em;font:600 .86rem var(--f-ui);cursor:pointer;color:var(--ink)}.crb-chips button[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:#fff}
+.pj{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.pj label{cursor:pointer}.pj-nom{font-size:.84rem;color:var(--muted)}.pj.ok .pj-nom{color:var(--green);font-weight:600}
+.dep-kind{display:flex;gap:6px;margin:0 0 10px}.dep-kind button{flex:1;border:1px solid var(--line);background:#fff;border-radius:12px;padding:.6em;font:700 .9rem var(--f-ui);cursor:pointer;color:var(--ink)}.dep-kind button[aria-checked=true]{background:var(--ink);border-color:var(--ink);color:#fff}
+.dep-form{border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin:0 0 16px;background:#fff}.dep-form .gr-h4{margin-top:0}
+.crb-add{margin-top:6px}.crb-add>summary{cursor:pointer;font-weight:700;color:var(--green);list-style:none;padding:6px 0}.crb-add>summary::-webkit-details-marker{display:none}.crb-add>summary::before{content:"+ "}.crb-add[open]>summary::before{content:"– "}
+.dep-recep{border:2px solid var(--yellow);background:#FFFBEE;border-radius:16px;padding:12px 14px;margin:0 0 16px}.dep-recep .gr-h4{margin-top:0}
+.dep-facw{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.dep-facw.is-busy{opacity:.6;pointer-events:none}
+.crb-mon .dep-eqf{margin-top:14px}.crb-mon .dep-form{padding:0;border:0;margin:0}
 .crb-h{margin-top:4px}.crb-plus{font-weight:700;color:#8A5A00;background:#FFF4D6;border-radius:10px;padding:6px 10px;margin:0 0 8px}
 .dep-pcs{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:6px}.dep-fac{cursor:pointer}.dep-fac.is-busy{opacity:.6;pointer-events:none}.dep-att{font-size:.82rem;color:#8A5A00}
 .gr-it.gr-flash{box-shadow:0 0 0 3px var(--yellow);transition:box-shadow .3s}

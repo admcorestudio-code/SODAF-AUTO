@@ -1,7 +1,7 @@
 // SODAF · Fonction « notifier » : envoie les notifications sur les téléphones de l'équipe.
 // Appelée uniquement par la base (déclencheurs de la migration 0028) avec un secret partagé.
 // Types : message (canal), preinscription (formulaire du site), inscription (finalisée en ligne), connexion (lieu + alerte nouvel appareil), test (bouton « Tester »), geotest (contrôle du lieu),
-// gérance : demande, demande_reponse, decision, decision_avis, rapport, rapport_rappel (dimanche 18 h).
+// gérance : demande, demande_equipe (équipe → gérante), demande_reponse, decision, decision_avis, rapport, rapport_rappel (dimanche 18 h).
 // Les clés VAPID et le secret sont lus dans prive.config_push : rien de secret dans ce fichier.
 import webpush from "npm:web-push@3.6.7";
 import postgres from "npm:postgres@3.4.5";
@@ -78,12 +78,19 @@ Deno.serve(async (req) => {
     if (!d) return json({ envoyes: 0, raison: "demande introuvable" });
     roles = ["admin"];
     const corps = (d.montant ? milliers(d.montant) + " F · " : "") + (d.eleve ? d.eleve + " · " : "") + d.texte;
-    note = { title: "Demande d'accord · " + d.type, body: corps.length > 180 ? corps.slice(0, 177) + "…" : corps, url: "/equipe/?gerance=demandes", tag: "dem-" + p.id };
+    note = { title: "Dépense à accorder", body: corps.length > 180 ? corps.slice(0, 177) + "…" : corps, url: "/equipe/?gerance=demandes", tag: "dem-" + p.id };
+  } else if (p.type === "demande_equipe") {
+    const [d] = await sql`select d.montant, d.nature, d.texte, pr.role from public.demandes d left join public.profils pr on pr.id = d.auteur where d.id = ${p.id ?? 0}`;
+    if (!d) return json({ envoyes: 0, raison: "demande introuvable" });
+    roles = ["gerant"];
+    const qui = d.role === "moniteur" ? "Moniteur" : d.role === "secretariat" ? "Secrétariat" : "Équipe";
+    const corps = (d.montant ? milliers(d.montant) + " F · " : "") + d.texte;
+    note = { title: qui + " · " + (d.nature === "Carburant" ? "Essence en plus" : "Dépense"), body: corps.length > 180 ? corps.slice(0, 177) + "…" : corps, url: "/equipe/?gerance=demandes", tag: "dem-" + p.id };
   } else if (p.type === "demande_reponse") {
     const [d] = await sql`select type, statut, reponse, auteur from public.demandes where id = ${p.id ?? 0}`;
     if (!d) return json({ envoyes: 0, raison: "demande introuvable" });
     seulement = d.auteur;
-    note = { title: (d.statut === "accordee" ? "Accordé · " : "Refusé · ") + d.type, body: d.reponse || (d.statut === "accordee" ? "La direction a donné son accord." : "La direction n'a pas donné son accord."), url: "/equipe/?gerance=demandes", tag: "dem-" + p.id };
+    note = { title: (d.statut === "accordee" ? "Accordé · " : "Refusé · ") + d.type, body: d.reponse || (d.statut === "accordee" ? "C'est accordé." : "Ce n'est pas accordé."), url: "/equipe/", tag: "dem-" + p.id };
   } else if (p.type === "decision") {
     const [d] = await sql`select categorie, texte from public.decisions where id = ${p.id ?? 0}`;
     if (!d) return json({ envoyes: 0, raison: "décision introuvable" });
