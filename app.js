@@ -4181,7 +4181,7 @@ function init(root) {
       if (!x) { box.innerHTML = '<div class="pc-none"><b>Choisis un dossier dans la liste</b><span>Sa fiche, les messages prêts et les actions s\'affichent ici.</span></div>'; return; }
       const st = etapeOf(x), n = waNum(x.telephone), wa = (t) => "https://wa.me/228" + n + "?text=" + encodeURIComponent(t);
       const head = '<button type="button" class="linkbtn pc-back" data-a="back">← Retour à la liste</button><div class="pc-head"><div class="pc-who">' + phAvatar(x, "ph-lg") + '<div><label class="linkbtn pc-phbtn">' + (x.photo ? "Changer la photo" : "Prendre la photo") + '<input type="file" accept="image/*" capture="environment" data-a="photo" class="insc-file"></label></div></div><div><p class="eyebrow">' + { accueil: "Accueil", appels: "Appels", dossier: "Paiement en attente", formation: "En formation", examen: "Dépôt d'examen", archives: x.statut === "Permis obtenu" ? "Permis obtenu" : "Archivé" }[st] + '</p><h3>' + esc(x.nom) + ' <span>| ' + CODE(x) + "</span></h3></div>" +
-        ({ accueil: "", appels: "", dossier: '<button class="btn btn-green btn-sm" type="button" data-a="enroll">' + (x.web && x.web.mode === "mixx" ? "Mixx vérifié ? Faire le reçu" : "Formation payée ? Faire le reçu") + "</button>", formation: "", examen: x.examen_etape === "pret" && n ? (x.examen_lien_le ? '<a class="btn btn-line btn-sm" target="_blank" rel="noopener" data-a="sendExam" href="' + wa(msgExamen(x)) + '">Renvoyer le message ↗</a>' : '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-a="sendExam" href="' + wa(msgExamen(x)) + '">Envoyer le message sur WhatsApp ↗</a>') : "", archives: x.statut === "Permis obtenu" ? "" : x.examen_resultat === "echoue" ? '<button class="btn btn-blue btn-sm" type="button" data-a="reExam">Ressortir : nouveau dépôt d\'examen</button>' : '<button class="btn btn-blue btn-sm" type="button" data-a="revive">Ressortir : remettre en appel</button>' }[st]) + "</div>";
+        '<div class="pc-hr">' + ({ accueil: "", appels: "", dossier: '<button class="btn btn-green btn-sm" type="button" data-a="enroll">' + (x.web && x.web.mode === "mixx" ? "Mixx vérifié ? Faire le reçu" : "Formation payée ? Faire le reçu") + "</button>", formation: "", examen: x.examen_etape === "pret" && n ? (x.examen_lien_le ? '<a class="btn btn-line btn-sm" target="_blank" rel="noopener" data-a="sendExam" href="' + wa(msgExamen(x)) + '">Renvoyer le message ↗</a>' : '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-a="sendExam" href="' + wa(msgExamen(x)) + '">Envoyer le message sur WhatsApp ↗</a>') : "", archives: x.statut === "Permis obtenu" ? "" : x.examen_resultat === "echoue" ? '<button class="btn btn-blue btn-sm" type="button" data-a="reExam">Ressortir : nouveau dépôt d\'examen</button>' : '<button class="btn btn-blue btn-sm" type="button" data-a="revive">Ressortir : remettre en appel</button>' }[st] || "") + (me && me.role === "gerant" ? '<button class="btn btn-line btn-sm pc-decbtn" type="button" data-a="decOpen">Noter une décision</button>' : "") + "</div></div>";
       const info = '<div class="pc-info"><div><span>N° client</span><b>' + CODE(x) + '</b></div><div><span>Téléphone</span><b>' + (n ? '<a href="tel:+228' + n + '">+228 ' + n.replace(/(\d{2})(?=\d)/g, "$1 ") + "</a>" : "—") + '</b></div><div><span>Formation</span><b>' + esc(x.formation || "—") + '</b></div><div><span>Quartier</span><b>' + esc(x.quartier || "—") + "</b></div>" +
         (["accueil", "appels", "dossier"].includes(st) ? (x.creneau_prefere ? '<div><span>Préfère</span><b>' + esc(x.creneau_prefere) + "</b></div>" : "") + (x.paiement_prefere ? '<div><span>Paiement souhaité</span><b>' + esc(x.paiement_prefere) + "</b></div>" : "") : "") + '<div><span>Arrivé</span><b>' + new Date(x.cree_le).toLocaleDateString("fr-FR") + " · " + esc(srcOf(x)) + "</b></div>" + (x.parrain ? '<div><span>Parrain</span><b>' + (x.parrain_id ? '<button type="button" class="ms-el" data-goel="' + x.parrain_id + '">' + esc((eleves.find((y) => y.id === x.parrain_id) || { nom: "SO" + x.parrain_id }).nom) + "</button>" : esc(x.parrain_tel ? x.parrain_tel.replace("+228", "+228 ") : x.parrain)) + "</b></div>" : "") + ((k) => k ? '<div><span>Ses filleuls</span><b>' + k + " · code " + CODE(x) + "</b></div>" : "")(eleves.filter((y) => y.parrain_id === x.id).length) +
         (st === "archives" ? '<div><span>Statut</span><b>' + esc(x.statut === "Abandon" ? "Archivé" + (x.archive_motif ? " · " + x.archive_motif : x.examen_resultat === "echoue" ? " · Permis échoué" : "") : x.statut) + "</b></div>" : "") +
@@ -4282,11 +4282,12 @@ function init(root) {
       const pieces = ""; // Pièces du dossier d'examen : gérées plus tard (fin de formation)
       const arch = ""; // le rangement (Plus tard, Rétractation, Faux numéro) n'existe que dans la zone d'appel
       const suivi = '<div class="pc-edit"><button class="linkbtn" type="button" data-a="edit">Modifier la fiche</button></div>'; // l'historique reste enregistré dans la base (table suivi), sans l'afficher
-      const decN = me && me.role === "gerant" ? '<details class="pc-block pc-dec" id="sd-pcDec"><summary class="pc-bh"><b>Noter une décision</b></summary>' +
-        '<textarea id="sd-pcDecTx" rows="2" maxlength="500" placeholder="Ex. : séance déplacée à jeudi"></textarea>' +
+      const decN = me && me.role === "gerant" ? '<div class="pc-block pc-dec" id="sd-pcDec" hidden><div class="pc-bh"><b>Noter une décision</b><button type="button" class="linkbtn" data-a="decOpen">Fermer</button></div>' +
+        '<div class="pc-dec-cats">' + ["Solde reporté au ", "Rattrapage offert : ", "Changé de groupe : ", "Séance offerte : ", "Autre"].map((t) => '<button type="button" data-a="decChip" data-t="' + (t === "Autre" ? "" : t) + '">' + t.replace(/( au | : )$/, "").trim() + "</button>").join("") + "</div>" +
+        '<textarea id="sd-pcDecTx" rows="2" maxlength="500" placeholder="Choisis ci-dessus ou écris"></textarea>' +
         '<div class="tm-formact"><button type="button" class="btn btn-green btn-sm" data-a="decNoter">Noter</button></div>' +
-        '<p class="pc-dec-hint">Annuler un reçu ou faire une dépense ? <button type="button" class="linkbtn" data-a="decAccord">Demande l\'accord</button></p></details>' : "";
-      box.innerHTML = head + info + body + pieces + arch + decN + suivi;
+        '<p class="pc-dec-hint">Annuler un reçu ou faire une dépense ? <button type="button" class="linkbtn" data-a="decAccord">Demande l\'accord</button></p></div>' : "";
+      box.innerHTML = head + decN + info + body + pieces + arch + suivi;
       const id = x.id;
       if (st === "formation" && !sansCode(x)) fillCours(x);
       if (st === "formation") {
@@ -4380,13 +4381,15 @@ function init(root) {
       else if (k === "revive") { if (await patchEl(x, { statut: "Contacté", archive_motif: null, archive_le: null, appels: 0, rappel: null, dossier_envoye_le: null, dossier_relance_le: null, dossier_relances: 0 }, "Dossier remis en appel", ["Étape", "Ressorti des archives"])) nextAfter(x); }
       else if (k === "note") { const v = $("#sd-pcNote").value.trim(); if (!v) return; await addSuivi(x, "Note", v); toast("Note ajoutée"); renderDetail(); }
       else if (k === "edit") editForm(x);
+      else if (k === "decOpen") { const d = $("#sd-pcDec"); if (d) { d.hidden = !d.hidden; if (!d.hidden) $("#sd-pcDecTx").focus(); } }
+      else if (k === "decChip") { const t = $("#sd-pcDecTx"); t.value = a.dataset.t; t.focus(); t.setSelectionRange(t.value.length, t.value.length); }
       else if (k === "decNoter") {
         const tx = ($("#sd-pcDecTx").value || "").trim(), cat = "Élèves";
         if (tx.length < 3) { toast("Écris ta décision", true); $("#sd-pcDecTx").focus(); return; }
         a.disabled = true;
         const r = await run(() => DB.q("decisions", { method: "POST", body: { categorie: cat, texte: (CODE(x) + " · " + x.nom + " : " + tx).slice(0, 600) }, prefer: "return=minimal" }).then(() => true), "Décision notée");
         a.disabled = false;
-        if (r) { await addSuivi(x, "Note", "Décision de la gérante : " + tx); $("#sd-pcDecTx").value = ""; $("#sd-pcDec").open = false; if (typeof grCharger === "function") grCharger(); }
+        if (r) { await addSuivi(x, "Note", "Décision de la gérante : " + tx); $("#sd-pcDecTx").value = ""; $("#sd-pcDec").hidden = true; if (typeof grCharger === "function") grCharger(); }
       }
       else if (k === "decAccord") { pick("ger"); grOnglet("demandes"); grElChoisir(x.id); const f = $("#sd-grDemForm"); f && f.scrollIntoView({ behavior: "smooth", block: "start" }); }
       else if (k === "finForm") { confirmBtn(a, async () => { if (await patchEl(x, { statut: "Abandon", archive_motif: "Formation terminée", archive_le: new Date().toISOString(), rappel: null }, "Formation terminée : dossier archivé", ["Étape", "Formation terminée (sans examen)"])) nextAfter(x); }); }
@@ -6282,7 +6285,9 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 .gr-sts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
 .gr-miss{border-color:#F3B8C1;background:#FFF8F9}.gr-miss .btn{margin-top:8px}
 .gr-afaire[hidden]{display:none}.gc-today.gc-env i{background:var(--green);color:#fff;border:2px dashed #fff}
-.pc-dec>summary{cursor:pointer;list-style:none}.pc-dec>summary::-webkit-details-marker{display:none}.pc-dec>summary b::before{content:"+";display:inline-grid;place-items:center;width:20px;height:20px;border-radius:6px;background:var(--ink);color:#fff;margin-right:8px;font-size:.9rem}.pc-dec[open]>summary b::before{content:"–"}
+.pc-hr{display:flex;flex-direction:column;align-items:flex-end;gap:8px}.pc-hr:empty{display:none}.pc-decbtn{white-space:nowrap}
+.pc-dec{border:2px solid var(--yellow);background:#FFFBEE}
+@media(max-width:600px){.pc-head{flex-wrap:wrap!important}.pc-hr{width:100%;flex-direction:row;flex-wrap:wrap;align-items:center}}
 .pc-dec textarea{width:100%;font:inherit;font-size:.95rem;padding:.6em .75em;border:1px solid var(--line);border-radius:10px;margin-top:8px;box-sizing:border-box}
 .pc-dec-cats{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.pc-dec-cats button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:.4em .95em;font:600 .86rem var(--f-ui);cursor:pointer;color:var(--ink)}.pc-dec-cats button[aria-checked=true]{background:var(--ink);border-color:var(--ink);color:#fff}
 .pc-dec-hint{font-size:.85rem;color:var(--muted);margin:10px 0 0}
