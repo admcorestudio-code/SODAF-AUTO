@@ -4886,22 +4886,24 @@ function init(root) {
     }
     // Formulaire de demande (même formulaire pour la gérante et pour l'équipe)
     function depFormHtml(g) {
-      return '<form class="dep-form" novalidate><h4 class="gr-h4">Demander une dépense</h4><div class="dep-kind" role="radiogroup"><button type="button" role="radio" data-kind="Carburant" aria-checked="true">Essence en plus</button><button type="button" role="radio" data-kind="Autre" aria-checked="false">Autre dépense</button></div>' +
+      const mon = me.role === "moniteur", titre = g ? "Proposer un achat" : mon ? "Demander une dépense" : "Demander une dépense pour l'agence";
+      return '<form class="dep-form" novalidate><h4 class="gr-h4">' + titre + '</h4><div class="dep-kind" role="radiogroup"' + (mon ? "" : " hidden") + '><button type="button" role="radio" data-kind="Carburant" aria-checked="' + mon + '">Essence en plus</button><button type="button" role="radio" data-kind="Autre" aria-checked="' + !mon + '">Autre dépense</button></div>' +
         '<div class="field"><label>Montant (F)</label><input class="dep-mt" inputmode="numeric" autocomplete="off" placeholder="ex. 10 000"></div>' +
-        '<div class="field dep-rzf"><label>Pourquoi ? (touche une ou plusieurs raisons)</label><div class="crb-chips">' + DEP_RZ.map((r) => '<button type="button" aria-pressed="false" data-rz="' + esc(r) + '">' + esc(r) + "</button>").join("") + "</div></div>" +
-        '<div class="field dep-devf" hidden><label>Devis (obligatoire)</label>' + pjHtml(true) + "</div>" +
-        '<div class="field"><label class="dep-txl">Précise (si besoin)</label><textarea class="dep-tx" rows="2" maxlength="500"></textarea></div>' +
+        '<div class="field dep-rzf"' + (mon ? "" : " hidden") + '><label>Pourquoi ? (touche une ou plusieurs raisons)</label><div class="crb-chips">' + DEP_RZ.map((r) => '<button type="button" aria-pressed="false" data-rz="' + esc(r) + '">' + esc(r) + "</button>").join("") + "</div></div>" +
+        '<div class="field dep-devf"' + (mon ? " hidden" : "") + '><label>' + (g ? "Photo ou devis" : "Devis (obligatoire)") + "</label>" + pjHtml(true) + "</div>" +
+        '<div class="field"><label class="dep-txl">' + (mon ? "Précise (si besoin)" : "Pour quoi ?") + '</label><textarea class="dep-tx" rows="2" maxlength="500" placeholder="' + (mon ? "" : g ? "ex. Un tableau blanc pour la salle de code" : "ex. Ramettes de papier pour les reçus") + '"></textarea></div>' +
         '<button type="submit" class="btn btn-sm btn-green">' + (g ? "Envoyer à la direction" : "Envoyer à la gérante") + "</button></form>";
     }
     function depFormBind(root, apres) {
       const f = root.querySelector(".dep-form"); if (!f) return;
-      const kind = (k) => { f.querySelectorAll("[data-kind]").forEach((b) => b.setAttribute("aria-checked", b.dataset.kind === k)); f.querySelector(".dep-rzf").hidden = k !== "Carburant"; f.querySelector(".dep-devf").hidden = k === "Carburant"; f.querySelector(".dep-txl").textContent = k === "Carburant" ? "Précise (si besoin)" : "Pour quoi ?"; f.querySelector(".dep-tx").placeholder = k === "Carburant" ? "" : "ex. Changer les plaquettes de frein"; };
+      const kind = (k) => { f.querySelectorAll("[data-kind]").forEach((b) => b.setAttribute("aria-checked", b.dataset.kind === k)); f.querySelector(".dep-rzf").hidden = k !== "Carburant"; f.querySelector(".dep-devf").hidden = k === "Carburant"; f.querySelector(".dep-txl").textContent = k === "Carburant" ? "Précise (si besoin)" : "Pour quoi ?"; if (me.role === "moniteur") f.querySelector(".dep-tx").placeholder = k === "Carburant" ? "" : "ex. Changer les plaquettes de frein"; };
+      if (me.role !== "moniteur") kind("Autre");
       f.addEventListener("click", (e) => { const k = e.target.closest("[data-kind]"); if (k) kind(k.dataset.kind); const z = e.target.closest("[data-rz]"); if (z) z.setAttribute("aria-pressed", z.getAttribute("aria-pressed") !== "true"); });
       f.addEventListener("submit", async (e) => {
         e.preventDefault(); const nat = f.querySelector('[data-kind][aria-checked="true"]').dataset.kind, mt = +(f.querySelector(".dep-mt").value.replace(/\D/g, "")) || null;
         const rz = nat === "Carburant" ? [...f.querySelectorAll("[data-rz][aria-pressed=true]")].map((b) => b.dataset.rz) : [], t0 = f.querySelector(".dep-tx").value.trim(), tx = rz.length ? rz.join(" · ") + (t0 ? " : " + t0 : "") : t0, pj = f.querySelector(".dep-devf .pj");
         if (!mt) { toast("Écris le montant", true); f.querySelector(".dep-mt").focus(); return; }
-        if (nat !== "Carburant" && !pj._file) { toast("Ajoute le devis", true); return; }
+        if (nat !== "Carburant" && !pj._file) { toast(me.role === "gerant" ? "Ajoute une photo ou le devis" : "Ajoute le devis", true); return; }
         if (tx.length < 3) { toast(nat === "Carburant" ? "Choisis une raison" : "Écris pour quoi", true); return; }
         const b = f.querySelector("[type=submit]"), lab = b.textContent; b.disabled = true; b.textContent = "Envoi…";
         let devis = null;
@@ -4918,7 +4920,7 @@ function init(root) {
       GR.crb = bu; const tot = bu.budget + bu.en_plus, pct = tot ? Math.min(100, Math.round((bu.depense / tot) * 100)) : 0, over = bu.reste <= 0 && bu.depense > 0;
       box.innerHTML = '<div class="crb-hd"><div><span class="crb-k">Carburant · semaine ' + grNumSem(l) + '</span><b class="crb-big">' + F(bu.depense) + ' <small>/ ' + F(tot) + "</small></b><span class=\"crb-s\">" + bu.blocs + " bloc" + (bu.blocs > 1 ? "s" : "") + " × 2 000 F" + (bu.budget >= 35000 ? " (plafond 35 000 F)" : "") + (bu.en_plus ? " + " + F(bu.en_plus) + " accordés en plus" : "") + '</span></div><div class="crb-reste' + (over ? " crb-ko" : "") + '"><span>Reste</span><b>' + F(Math.max(0, bu.reste)) + "</b></div></div>" +
         '<div class="crb-bar"><i style="width:' + pct + '%"' + (pct >= 90 ? ' class="crb-hot"' : "") + "></i></div>" +
-        (!adm ? '<details class="crb-add"><summary>Ajouter un plein</summary><form class="crb-form" novalidate><div class="crb-row"><div class="field"><label>Montant (F)</label><input class="crb-mt" inputmode="numeric" autocomplete="off" placeholder="ex. 10 000"></div><div class="field"><label>Compteur (km)</label><input class="crb-km" inputmode="numeric" autocomplete="off" placeholder="ex. 184 350"></div></div><div class="field"><label>Photo du compteur</label>' + pjHtml(false) + '</div><label class="crb-chk"><input type="checkbox" class="crb-full"> Plein complet</label><button class="btn btn-green btn-sm" type="submit">Ajouter le plein</button></form></details>' : "") +
+        (me.role === "moniteur" ? '<details class="crb-add" open><summary>Ajouter un plein</summary><form class="crb-form" novalidate><div class="crb-row"><div class="field"><label>Montant (F)</label><input class="crb-mt" inputmode="numeric" autocomplete="off" placeholder="ex. 10 000"></div><div class="field"><label>Compteur (km)</label><input class="crb-km" inputmode="numeric" autocomplete="off" placeholder="ex. 184 350"></div></div><div class="field"><label>Photo du compteur</label>' + pjHtml(false) + '</div><label class="crb-chk"><input type="checkbox" class="crb-full"> Plein complet</label><button class="btn btn-green btn-sm" type="submit">Ajouter le plein</button></form></details>' : "") +
         (pl.length ? '<div class="crb-list">' + pl.map((c) => '<div class="crb-it"><span>' + dOf(c.jour).toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" }) + "</span><b>" + F(c.montant) + "</b><span>" + (c.km ? milliers(c.km) + " km" : "—") + (c.plein_complet ? " · plein complet" : "") + "</span>" + (voitPhotos ? '<button type="button" class="linkbtn" data-dep="' + esc(c.photo) + '">Photo</button>' : "<span></span>") + "</div>").join("") + "</div>" : '<p class="crb-vide">Aucun plein cette semaine.</p>');
       const f = box.querySelector(".crb-form"); if (!f) return;
       f.addEventListener("submit", async (e) => {
@@ -4932,14 +4934,20 @@ function init(root) {
         b.disabled = false; b.textContent = "Ajouter le plein"; if (r) crbCharger(sel);
       });
     }
+    $("#sd-crbMon") && $("#sd-crbMon").addEventListener("pj", async (e) => {
+      const w = e.target.closest("[data-fac]"); if (!w) return; const pj = e.target.closest(".pj"); if (!pj || !pj._file) return; w.classList.add("is-busy");
+      try { const path = await depEnvoyer(pj._file, "factures"); const r = await run(() => DB.q("rpc/depense_facture", { method: "POST", body: { p_id: +w.dataset.fac, p_chemin: path } }).then(() => true), "Facture ajoutée"); if (r) depEquipe(); }
+      catch (er) { toast("La facture n'a pas pu être envoyée", true); } finally { w.classList.remove("is-busy"); }
+    });
     // Équipe (secrétariat, moniteur) : carburant + demande à la gérante + mes demandes
     async function depEquipe() {
       const box = $("#sd-crbMon"); if (!box) return; box.hidden = false;
       if (!box.dataset.pret) { box.dataset.pret = 1; box.innerHTML = '<div id="sd-crbEq"></div><div class="dep-eqf">' + depFormHtml(false) + '</div><div class="dep-mes" id="sd-depMes"></div>'; depFormBind(box, () => { box.dataset.pret = ""; depEquipe(); }); }
-      await crbCharger("#sd-crbEq");
+      if (me.role === "moniteur") await crbCharger("#sd-crbEq"); else $("#sd-crbEq").hidden = true;
       const mes = await DB.q("demandes?select=*&auteur=eq." + me.id + "&order=le.desc&limit=10").catch(() => null); if (!mes) return;
       $("#sd-depMes").innerHTML = mes.length ? '<h4 class="gr-h4">Mes demandes</h4>' + mes.map((d) => { const st = d.statut === "accordee" ? ["oui", "Accordé"] : d.statut === "refusee" ? ["non", "Refusé"] : d.etape === "direction" ? ["att", "Chez la direction"] : ["att", "Chez la gérante"];
-        return '<div class="gr-it ' + st[0] + '"><div class="gr-hd"><b>' + (d.nature === "Carburant" ? "Essence en plus" : "Dépense") + " · " + F(d.montant || 0) + '</b><em class="gr-st ' + st[0] + '">' + st[1] + "</em></div><small>" + esc(grQuand(d.le)) + "</small><p>" + esc(d.texte) + "</p>" + (d.reponse ? '<div class="gr-rep">' + esc(d.reponse) + "</div>" : "") + "</div>"; }).join("") : "";
+        return '<div class="gr-it ' + st[0] + '"><div class="gr-hd"><b>' + (d.nature === "Carburant" ? "Essence en plus" : "Dépense") + " · " + F(d.montant || 0) + '</b><em class="gr-st ' + st[0] + '">' + st[1] + "</em></div><small>" + esc(grQuand(d.le)) + "</small><p>" + esc(d.texte) + "</p>" + (d.reponse ? '<div class="gr-rep">' + esc(d.reponse) + "</div>" : "") +
+          (d.statut === "accordee" && d.nature !== "Carburant" ? (d.facture ? '<small class="dep-ok">Facture ajoutée</small>' : '<div class="dep-facw" data-fac="' + d.id + '"><span class="dep-att">Après l\'achat, ajoute la facture :</span>' + pjHtml(true) + "</div>") : "") + "</div>"; }).join("") : "";
     }
 
     $("#sd-grDecForm").addEventListener("submit", async (e) => {
@@ -6366,11 +6374,11 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 .crb-vide{font-size:.86rem;color:var(--muted);margin:6px 0 0}
 .crb-chips{display:flex;flex-wrap:wrap;gap:6px}.crb-chips button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:.45em .9em;font:600 .86rem var(--f-ui);cursor:pointer;color:var(--ink)}.crb-chips button[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:#fff}
 .pj{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.pj label{cursor:pointer}.pj-nom{font-size:.84rem;color:var(--muted)}.pj.ok .pj-nom{color:var(--green);font-weight:600}
-.dep-kind{display:flex;gap:6px;margin:0 0 10px}.dep-kind button{flex:1;border:1px solid var(--line);background:#fff;border-radius:12px;padding:.6em;font:700 .9rem var(--f-ui);cursor:pointer;color:var(--ink)}.dep-kind button[aria-checked=true]{background:var(--ink);border-color:var(--ink);color:#fff}
+.dep-kind[hidden]{display:none}.dep-kind{display:flex;gap:6px;margin:0 0 10px}.dep-kind button{flex:1;border:1px solid var(--line);background:#fff;border-radius:12px;padding:.6em;font:700 .9rem var(--f-ui);cursor:pointer;color:var(--ink)}.dep-kind button[aria-checked=true]{background:var(--ink);border-color:var(--ink);color:#fff}
 .dep-form{border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin:0 0 16px;background:#fff}.dep-form .gr-h4{margin-top:0}
 .crb-add{margin-top:6px}.crb-add>summary{cursor:pointer;font-weight:700;color:var(--green);list-style:none;padding:6px 0}.crb-add>summary::-webkit-details-marker{display:none}.crb-add>summary::before{content:"+ "}.crb-add[open]>summary::before{content:"– "}
 .dep-recep{border:2px solid var(--yellow);background:#FFFBEE;border-radius:16px;padding:12px 14px;margin:0 0 16px}.dep-recep .gr-h4{margin-top:0}
-.dep-facw{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.dep-facw.is-busy{opacity:.6;pointer-events:none}
+.dep-ok{color:var(--green);font-weight:600}.dep-facw{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.dep-facw.is-busy{opacity:.6;pointer-events:none}
 .crb-mon .dep-eqf{margin-top:14px}.crb-mon .dep-form{padding:0;border:0;margin:0}
 .crb-h{margin-top:4px}.crb-plus{font-weight:700;color:#8A5A00;background:#FFF4D6;border-radius:10px;padding:6px 10px;margin:0 0 8px}
 .dep-pcs{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:6px}.dep-fac{cursor:pointer}.dep-fac.is-busy{opacity:.6;pointer-events:none}.dep-att{font-size:.82rem;color:#8A5A00}

@@ -2,7 +2,8 @@
 -- Le secrétariat et le moniteur ajoutent les pleins et font leurs demandes de dépense (essence en plus, devis).
 -- Leurs demandes arrivent chez la GÉRANTE (« Demandes de l'équipe ») : elle les transfère à la direction ou les refuse.
 -- Les demandes de la gérante vont directement à la direction. La direction ne voit que ce qui lui est transmis.
--- (Reprend aussi 0049 : pleins et budget carburant ouverts au moniteur et au secrétariat.)
+-- Seul le MONITEUR ajoute les pleins (il est dans la voiture). Celui qui a demandé ajoute la facture (la gérante aussi).
+-- (Remplace 0049.)
 
 -- 1. Étape de la demande
 alter table public.demandes
@@ -83,13 +84,13 @@ begin
   return new;
 end $$;
 
--- 3. Pleins de carburant : toute l'équipe sauf la direction peut en ajouter (la direction peut aussi)
+-- 3. Pleins de carburant : seul le moniteur en ajoute (la direction peut corriger) ; tout le monde voit le budget
 drop policy if exists "carburant : lire" on public.carburant;
 create policy "carburant : lire" on public.carburant for select to authenticated
   using (prive.a_role(array['admin', 'gerant', 'secretariat', 'moniteur']));
 drop policy if exists "carburant : ajouter" on public.carburant;
 create policy "carburant : ajouter" on public.carburant for insert to authenticated
-  with check (prive.a_role(array['admin', 'gerant', 'secretariat', 'moniteur']) and auteur = auth.uid());
+  with check (prive.a_role(array['admin', 'moniteur']) and auteur = auth.uid());
 
 create or replace function public.carburant_budget(p_lundi date)
 returns jsonb language sql stable security definer set search_path = '' as $$
@@ -120,9 +121,20 @@ begin
   return new;
 end $$;
 
--- 4. Pièces : le secrétariat et le moniteur envoient la photo du compteur et les devis (sans lire les autres pièces)
+-- 4. Facture : celui qui a demandé l'ajoute (la gérante et la direction aussi)
+create or replace function public.depense_facture(p_id bigint, p_chemin text)
+returns void language plpgsql security definer set search_path = '' as $$
+begin
+  if coalesce(p_chemin, '') = '' then raise exception 'Fichier manquant'; end if;
+  update public.demandes set facture = p_chemin, facture_le = now()
+   where id = p_id and statut = 'accordee' and type = 'Dépense'
+     and (auteur = auth.uid() or prive.a_role(array['admin', 'gerant']));
+  if not found then raise exception 'Dépense introuvable ou pas encore accordée'; end if;
+end $$;
+
+-- 5. Pièces : le secrétariat et le moniteur envoient photo du compteur, devis et factures (sans lire les autres pièces)
 drop policy if exists "dépenses : photo du compteur (moniteur)" on storage.objects;
 drop policy if exists "dépenses : pièces de l'équipe" on storage.objects;
 create policy "dépenses : pièces de l'équipe" on storage.objects for insert to authenticated
-  with check (bucket_id = 'depenses' and (storage.foldername(name))[1] in ('compteur', 'devis')
+  with check (bucket_id = 'depenses' and (storage.foldername(name))[1] in ('compteur', 'devis', 'factures')
               and prive.a_role(array['secretariat', 'moniteur']));
