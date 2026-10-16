@@ -1983,7 +1983,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="gr-tabs" role="tablist"><button type="button" role="tab" data-gr="demandes" aria-selected="true">Demandes d'accord<em class="gr-badge" id="sd-grBDem" hidden></em></button><button type="button" role="tab" data-gr="decisions" aria-selected="false">Décisions<em class="gr-badge" id="sd-grBDec" hidden></em></button><button type="button" role="tab" data-gr="rapports" aria-selected="false">Rapport de la semaine<em class="gr-badge" id="sd-grBRap" hidden></em></button><button type="button" role="tab" data-gr="tirage" aria-selected="false">Tirage au sort<em class="gr-badge" id="sd-grBTir" hidden></em></button><button type="button" role="tab" data-gr="parrainage" aria-selected="false">Parrainage<em class="gr-badge" id="sd-grBPar" hidden></em></button></div>
 <div class="gr-pane" data-grp="demandes"><form id="sd-grDemForm" class="gr-form" hidden novalidate><div class="row2"><div class="field"><label for="sd-grDemType">Pour quoi ?</label><select id="sd-grDemType"><option>Remise</option><option>Annulation de reçu</option><option>Report de paiement</option><option>Dépense</option><option>Autre</option></select></div><div class="field"><label for="sd-grDemMt">Montant (F, si besoin)</label><input id="sd-grDemMt" inputmode="numeric" autocomplete="off" placeholder="ex. 5 000"></div></div><div class="field gr-elf"><label for="sd-grDemElQ">Élève concerné (si besoin)</label><div class="gr-elbox"><input id="sd-grDemElQ" type="search" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Tape un nom ou un numéro (SO12)" role="combobox" aria-expanded="false" aria-controls="sd-grDemElL" aria-autocomplete="list"><input type="hidden" id="sd-grDemEl" value=""><div class="gr-elsel" id="sd-grDemElSel" hidden></div><div class="gr-ell" id="sd-grDemElL" role="listbox" hidden></div></div></div><div class="field"><label for="sd-grDemTx">Explique en quelques mots</label><textarea id="sd-grDemTx" rows="2" maxlength="600" placeholder="ex. Deux frères inscrits ensemble, je propose 5 000 F de remise au second."></textarea></div><button type="submit" class="btn btn-sm btn-green">Envoyer à la direction</button></form><div id="sd-grDemList" class="gr-list"></div></div>
 <div class="gr-pane" data-grp="decisions" hidden><form id="sd-grDecForm" class="gr-form" hidden novalidate><div class="row2"><div class="field"><label for="sd-grDecCat">Sujet</label><select id="sd-grDecCat"><option>Élèves</option><option>Argent</option><option>Planning</option><option>Équipe</option><option>Autre</option></select></div><div class="field gr-grow"><label for="sd-grDecTx">Ce que j'ai décidé</label><textarea id="sd-grDecTx" rows="2" maxlength="600" placeholder="ex. Séance de samedi 7 h 30 déplacée à 8 h 45, le moniteur est prévenu."></textarea></div></div><button type="submit" class="btn btn-sm btn-green">Noter la décision</button></form><div id="sd-grDecList" class="gr-list"></div></div>
-<div class="gr-pane" data-grp="rapports" hidden><div id="sd-grRapNew" hidden><div class="gr-semban" id="sd-grRapSem"></div><div class="tm-stats tm-dr" id="sd-grRapChiffres"></div><div class="field"><label for="sd-grRapTx">Mes remarques pour la direction</label><textarea id="sd-grRapTx" rows="4" maxlength="3000" placeholder="Ce qui s'est bien passé, les problèmes, ce qu'il faudrait changer, ce dont j'ai besoin."></textarea></div><button type="button" class="btn btn-sm btn-green" id="sd-grRapSend">Envoyer le rapport</button></div><div id="sd-grCal" class="gr-cal" aria-label="Calendrier des rapports"></div><div id="sd-grRapList" class="gr-list"></div></div>
+<div class="gr-pane" data-grp="rapports" hidden><div id="sd-grAFaire" class="gr-afaire" hidden></div><div id="sd-grRapNew" hidden><div class="gr-semban" id="sd-grRapSem"></div><div class="tm-stats tm-dr" id="sd-grRapChiffres"></div><div class="field"><label for="sd-grRapTx">Mes remarques pour la direction</label><textarea id="sd-grRapTx" rows="4" maxlength="3000" placeholder="Ce qui s'est bien passé, les problèmes, ce qu'il faudrait changer, ce dont j'ai besoin."></textarea></div><button type="button" class="btn btn-sm btn-green" id="sd-grRapSend">Envoyer le rapport</button><p class="gr-rapnote" id="sd-grRapNote"></p></div><div id="sd-grCal" class="gr-cal" aria-label="Calendrier des rapports"></div><h4 class="gr-h4 gr-arch-h">Archives des rapports</h4><div id="sd-grRapList" class="gr-list"></div></div>
 <div class="gr-pane" data-grp="parrainage" hidden><p class="gr-sem">2 000 F par filleul inscrit, à envoyer au parrain par Mixx by Yas ou Moov Money après le reçu d'inscription du filleul. La commission apparaît ici toute seule.</p><div id="sd-paList"></div><div class="sec-mini"><h4 class="gr-h4">Meilleurs parrains</h4><p class="tm-note" style="margin:0 0 8px!important">2 filleuls : priorité sur les horaires · 3 : t-shirt · 5 : une séance offerte · 10 : karting à 3 et ambassadeur du mois (à confirmer) · meilleur de l'année : formation offerte à un proche.</p><div id="sd-paTop"></div></div></div>
 <div class="gr-pane" data-grp="tirage" hidden><div class="tr-hd"><div class="field"><label for="sd-trCamp">Tirage du mois</label><select id="sd-trCamp"></select></div><div class="tr-stats" id="sd-trStats"></div></div>
 <div class="tr-act"><button type="button" class="btn tir-btn" id="sd-trGo">Tirer un gagnant</button><button type="button" class="btn btn-line btn-sm" id="sd-trScreen">Grand écran pour la vidéo</button></div>
@@ -4642,7 +4642,7 @@ function init(root) {
       const adm = me && me.role === "admin", b = (id, n) => { const e = $(id); e.textContent = n; e.hidden = !n; };
       b("#sd-grBDem", adm ? GR.dem.filter((d) => d.statut === "attente").length : GR.dem.filter((d) => d.statut !== "attente" && d.repondu_le && !grVu("dem", d.id)).length);
       b("#sd-grBDec", adm ? GR.dec.filter((d) => !d.avis).length : GR.dec.filter((d) => d.avis === "revoir" && !grVu("dec", d.id)).length);
-      b("#sd-grBRap", adm ? GR.rap.filter((r) => !r.lu_le).length : grSemaineAFaire() ? 1 : 0);
+      b("#sd-grBRap", adm ? GR.rap.filter((r) => !r.lu_le).length : grAEnvoyer());
       b("#sd-grBTir", (GR.tir || []).filter((x) => x.statut === "gagnant").length);
       b("#sd-grBPar", (GR.com || []).filter((x) => x.statut === "a_payer").length);
       b("#sd-grTabBadge", ["#sd-grBDem", "#sd-grBDec", "#sd-grBRap", "#sd-grBTir", "#sd-grBPar"].reduce((n, id) => n + (+$(id).textContent || 0), 0));
@@ -4650,7 +4650,15 @@ function init(root) {
     const grVu = (k, id) => { try { return (JSON.parse(localStorage.getItem("sodaf.gr." + k) || "[]")).includes(id); } catch (e) { return true; } };
     const grMarquer = (k, ids) => { try { const v = new Set(JSON.parse(localStorage.getItem("sodaf.gr." + k) || "[]")); ids.forEach((i) => v.add(i)); localStorage.setItem("sodaf.gr." + k, JSON.stringify([...v].slice(-300))); } catch (e) {} };
     // Semaine du rapport : la semaine en cours ; le lundi, la semaine passée si son rapport n'est pas encore envoyé
-    const grSemaineAFaire = () => { const auj = new Date(), l = grLundi(auj); if (auj.getDay() === 1) { const p = new Date(dOf(l)); p.setDate(p.getDate() - 7); const lp = iso(p); if (!GR.rap.some((r) => r.semaine === lp)) return lp; } return GR.rap.some((r) => r.semaine === l) ? null : l; };
+    // Règle (16 oct.) : le rapport d'une semaine s'envoie le week-end (samedi et dimanche) ; une semaine oubliée reste à envoyer, à tout moment, depuis les archives
+    const RAP_DEBUT = "2026-10-12"; // première semaine suivie
+    const grLuPlus = (l, n) => { const d = dOf(l); d.setDate(d.getDate() + n); return iso(d); };
+    const grEnvoye = (l) => GR.rap.some((r) => r.semaine === l);
+    const grOuvert = (l) => iso(new Date()) >= grLuPlus(l, 5); // à partir du samedi
+    const grSemaines = () => { const out = [], fin = grLundi(new Date()); for (let l = RAP_DEBUT; l <= fin; l = grLuPlus(l, 7)) out.push(l); return out; };
+    const grRetards = () => { const cur = grLundi(new Date()); return grSemaines().filter((l) => l < cur && !grEnvoye(l)); };
+    const grSemaineAFaire = () => { const cur = grLundi(new Date()); if (GR.choix && !grEnvoye(GR.choix) && GR.choix <= cur && GR.choix >= RAP_DEBUT) return GR.choix; const r = grRetards(); return r.length ? r[0] : grEnvoye(cur) ? null : cur; };
+    const grAEnvoyer = () => grRetards().length + (grOuvert(grLundi(new Date())) && !grEnvoye(grLundi(new Date())) ? 1 : 0);
     async function grCharger() {
       const box = $("#sd-gr"); if (!box || !DIR()) return; box.hidden = false;
       const g = me.role === "gerant";
@@ -4709,48 +4717,73 @@ function init(root) {
     const GR_CH = [["encaisse", "Encaissé", (v) => F(v)], ["recus", "Reçus faits"], ["inscriptions", "Inscriptions"], ["contacts", "Nouveaux contacts"], ["conduite_faites", "Séances de conduite faites"], ["absences", "Absences en conduite"], ["permis", "Permis obtenus"], ["abandons", "Dossiers archivés"], ["recus_annules", "Reçus annulés"]];
     const grChHtml = (c, tuiles) => GR_CH.filter((k) => c[k[0]] != null).map((k) => tuiles ? "<div><span>" + k[1] + "</span><b>" + (k[2] ? k[2](c[k[0]]) : c[k[0]]) + "</b></div>" : "<span>" + k[1] + "<b>" + (k[2] ? k[2](c[k[0]]) : c[k[0]]) + "</b></span>").join("");
     async function grRapRender() {
-      const g = me.role === "gerant", l = g ? grSemaineAFaire() : null;
-      $("#sd-grRapNew").hidden = !l;
-      if (l) { GR.semaine = l; $("#sd-grRapSem").innerHTML = grSemBan(l); GR.ch = await grChiffres(l); $("#sd-grRapChiffres").innerHTML = grChHtml(GR.ch, true); try { const t = localStorage.getItem("sodaf.gr.brouillon." + l); if (t && !$("#sd-grRapTx").value) $("#sd-grRapTx").value = t; } catch (e) {} }
-      $("#sd-grRapList").innerHTML = GR.rap.length ? GR.rap.map((r) => '<div class="gr-it' + (!g && !r.lu_le ? " att" : "") + '" data-sem="' + r.semaine + '"><div class="gr-hd"><b>Semaine ' + esc(grSemTxt(r.semaine)) + '</b><em class="gr-st ' + (r.lu_le ? "oui" : "neu") + '">' + (r.lu_le ? "Lu par la direction" : g ? "Envoyé" : "Nouveau") + "</em></div><small>Envoyé " + esc(grQuand(r.envoye_le)) + '</small><div class="gr-ch">' + grChHtml(r.chiffres || {}, false) + "</div>" + (r.texte ? "<p>" + esc(r.texte) + "</p>" : "") + "</div>").join("")
+      const g = me.role === "gerant", l = g ? grSemaineAFaire() : null, cur = grLundi(new Date());
+      $("#sd-grRapNew").hidden = !l; GR.semaine = l;
+      // Choix de la semaine quand il y a des rapports en retard
+      const af = g ? [...grRetards(), ...(!grEnvoye(cur) ? [cur] : [])] : [];
+      $("#sd-grAFaire").hidden = af.length < 2;
+      $("#sd-grAFaire").innerHTML = af.length < 2 ? "" : '<span class="gr-af-t">' + (af.length - (af.includes(cur) ? 1 : 0)) + " rapport" + (af.length - (af.includes(cur) ? 1 : 0) > 1 ? "s" : "") + " en retard. Choisis la semaine :</span>" + af.map((w) => '<button type="button" class="gr-af' + (w === l ? " on" : "") + (w < cur ? " late" : "") + '" data-pick="' + w + '">' + grSemCourt(w) + (w < cur ? " · en retard" : " · cette semaine") + "</button>").join("");
+      if (l) {
+        $("#sd-grRapSem").innerHTML = grSemBan(l);
+        const neuve = GR.vue !== l; GR.vue = l;
+        if (neuve) { $("#sd-grRapChiffres").innerHTML = '<p class="tm-empty">Calcul des chiffres…</p>'; $("#sd-grRapTx").value = ""; try { const t = localStorage.getItem("sodaf.gr.brouillon." + l); if (t) $("#sd-grRapTx").value = t; } catch (e) {} }
+        GR.ch = await grChiffres(l); if (GR.semaine !== l) return; $("#sd-grRapChiffres").innerHTML = grChHtml(GR.ch, true);
+        const ouv = grOuvert(l), sam = dOf(grLuPlus(l, 5)), dim = dOf(grLuPlus(l, 6)), btn = $("#sd-grRapSend");
+        btn.disabled = !ouv; btn.textContent = ouv ? (l < cur ? "Envoyer ce rapport en retard" : "Envoyer le rapport") : "Envoi possible samedi " + sam.getDate() + " et dimanche " + dim.getDate();
+        $("#sd-grRapNote").textContent = ouv ? (l < cur ? "Les chiffres sont ceux de la semaine " + grSemTxt(l) + ". La direction verra qu'il est arrivé en retard." : "Le bouton reste ouvert jusqu'à dimanche soir.") : "Tu peux déjà écrire tes remarques pendant la semaine : elles restent gardées sur ce téléphone jusqu'à l'envoi.";
+      }
+      const sem = grSemaines().slice().reverse().filter((w) => w !== cur || grEnvoye(w)), byS = {}; GR.rap.forEach((r) => (byS[r.semaine] = r));
+      GR.rap.filter((r) => r.semaine < RAP_DEBUT || r.semaine > cur).forEach((r) => sem.includes(r.semaine) || sem.push(r.semaine)); sem.sort().reverse();
+      $("#sd-grRapList").innerHTML = sem.length ? sem.map((w) => { const r = byS[w];
+        if (!r) return '<div class="gr-it gr-miss" data-sem="' + w + '"><div class="gr-hd"><b>Semaine ' + esc(grSemTxt(w)) + '</b><em class="gr-st non">' + (g ? "Pas envoyé" : "Pas reçu") + "</em></div>" + (g ? '<button type="button" class="btn btn-sm btn-green" data-pick="' + w + '">Faire ce rapport</button>' : "<small>La gérante ne l'a pas encore envoyé.</small>") + "</div>";
+        const tard = r.envoye_le && new Date(r.envoye_le) >= new Date(grLuPlus(w, 7) + "T00:00:00Z");
+        return '<details class="gr-it gr-arch' + (!g && !r.lu_le ? " att" : "") + '" data-sem="' + w + '"' + (!g && !r.lu_le ? " open" : "") + '><summary class="gr-hd"><b>Semaine ' + esc(grSemTxt(w)) + '</b><span class="gr-sts">' + (tard ? '<em class="gr-st att">Envoyé en retard</em>' : "") + '<em class="gr-st ' + (r.lu_le ? "oui" : "neu") + '">' + (r.lu_le ? "Lu par la direction" : g ? "Envoyé" : "Nouveau") + "</em></span></summary><small>Envoyé " + esc(grQuand(r.envoye_le)) + '</small><div class="gr-ch">' + grChHtml(r.chiffres || {}, false) + "</div>" + (r.texte ? "<p>" + esc(r.texte) + "</p>" : "") + "</details>"; }).join("")
         : '<p class="tm-empty">' + (g ? "Aucun rapport envoyé pour l'instant." : "Aucun rapport reçu pour l'instant.") + "</p>";
       grCalRender();
     }
+    const grSemCourt = (l) => { const a = dOf(l), b = dOf(grLuPlus(l, 6)); return a.getDate() + (a.getMonth() !== b.getMonth() ? " " + a.toLocaleDateString("fr-FR", { month: "short" }) : "") + "–" + b.getDate() + " " + b.toLocaleDateString("fr-FR", { month: "short" }); };
+    const grChoisir = (w) => { GR.choix = w; GR.calM = 0; grRapRender(); grBadges(); const n = $("#sd-grRapNew"); n && n.scrollIntoView({ behavior: "smooth", block: "start" }); };
+    $("#sd-grAFaire") && $("#sd-grAFaire").addEventListener("click", (e) => { const b = e.target.closest("[data-pick]"); if (b) grChoisir(b.dataset.pick); });
+    $("#sd-grRapList") && $("#sd-grRapList").addEventListener("click", (e) => { const b = e.target.closest("[data-pick]"); if (b) grChoisir(b.dataset.pick); });
     // Bandeau de la semaine du rapport : grandes dates, numéro de semaine, échéance du dimanche 18 h
     const grNumSem = (l) => { const d = dOf(l); d.setDate(d.getDate() + 3); const j1 = new Date(d.getFullYear(), 0, 4, 12); return 1 + Math.round(((d - j1) / 864e5 - 3 + (j1.getDay() + 6) % 7) / 7); };
     function grSemBan(l) {
-      const a = dOf(l), b = new Date(a); b.setDate(a.getDate() + 6);
+      const a = dOf(l), b = dOf(grLuPlus(l, 6)), sam = dOf(grLuPlus(l, 5)), cur = grLundi(new Date()), late = l < cur;
       const mo = (d) => d.toLocaleDateString("fr-FR", { month: "long" }), dates = a.getMonth() === b.getMonth() ? a.getDate() + " au " + b.getDate() + " " + mo(b) : a.getDate() + " " + mo(a) + " au " + b.getDate() + " " + mo(b);
-      const auj = dOf(iso(new Date())), j = Math.round((b - auj) / 864e5);
-      const quand = j < 0 ? ["gsb-late", "En retard", "à envoyer aujourd'hui"] : j === 0 ? ["gsb-now", "C'est aujourd'hui", "à envoyer avant 18 h"] : ["", "À envoyer le", "avant 18 h · " + (j === 1 ? "demain" : "dans " + j + " jours")];
-      return '<div class="gsb-l"><span class="gsb-k">Rapport de la semaine ' + grNumSem(l) + '</span><b class="gsb-d">Du ' + dates + '</b><span class="gsb-s">lundi ' + a.getDate() + " → dimanche " + b.getDate() + " " + b.getFullYear() + '</span></div><div class="gsb-r ' + quand[0] + '"><span class="gsb-k">' + quand[1] + "</span><b>" + (j < 0 ? "Maintenant" : "Dimanche " + b.getDate()) + "</b><span>" + quand[2] + "</span></div>";
+      const j = Math.round((sam - dOf(iso(new Date()))) / 864e5);
+      const q = late ? ["gsb-late", "En retard", "À envoyer maintenant", "le bouton est ouvert"] : grOuvert(l) ? ["gsb-now", "C'est le moment", "Envoie ton rapport", "ouvert jusqu'à dimanche soir"] : ["", "Envoi ouvert le week-end", "Sam. " + sam.getDate() + " et dim. " + b.getDate(), "le bouton s'ouvre " + (j === 1 ? "demain" : "dans " + j + " jours")];
+      return '<div class="gsb-l"><span class="gsb-k">' + (late ? "Rapport en retard · " : "Rapport de la ") + "semaine " + grNumSem(l) + '</span><b class="gsb-d">Du ' + dates + '</b><span class="gsb-s">lundi ' + a.getDate() + " → dimanche " + b.getDate() + " " + b.getFullYear() + '</span></div><div class="gsb-r ' + q[0] + '"><span class="gsb-k">' + q[1] + "</span><b>" + q[2] + "</b><span>" + q[3] + "</span></div>";
     }
     // Calendrier sous le rapport : semaine du rapport en jaune, aujourd'hui en vert, semaines déjà envoyées en vert clair
     function grCalRender() {
       const box = $("#sd-grCal"); if (!box) return;
-      const today = iso(new Date()), sem = GR.semaine && !$("#sd-grRapNew").hidden ? GR.semaine : grLundi(new Date());
+      const g = me.role === "gerant", today = iso(new Date()), cur = grLundi(new Date()), sem = GR.semaine || cur;
       const base = dOf(sem); if (GR.calM == null) GR.calM = 0;
       const m = new Date(base.getFullYear(), base.getMonth() + GR.calM, 1, 12), mois = m.getMonth();
-      const env = new Set(GR.rap.map((r) => r.semaine));
+      const env = new Set(GR.rap.map((r) => r.semaine)), miss = new Set(grRetards());
       const debut = new Date(m); debut.setDate(1 - ((m.getDay() + 6) % 7));
       let cells = "";
       for (let i = 0; i < 42; i++) {
-        const d = new Date(debut); d.setDate(debut.getDate() + i); const k = iso(d), lu = grLundi(d), dim = d.getDay() === 0;
+        const d = new Date(debut); d.setDate(debut.getDate() + i); const k = iso(d), lu = grLundi(d), we = d.getDay() === 0 || d.getDay() === 6;
         if (i === 35 && d.getMonth() !== mois) break;
-        const c = ["gc-d"]; if (d.getMonth() !== mois) c.push("gc-out");
-        if (lu === sem) c.push(dim ? "gc-env" : "gc-wk"); else if (env.has(lu)) c.push("gc-sent");
-        if (k === today) c.push("gc-today");
-        if (dim) c.push("gc-sun");
-        const t = (k === today ? "Aujourd'hui · " : "") + (lu === sem ? (dim ? "jour d'envoi du rapport" : "semaine du rapport") : env.has(lu) ? "rapport envoyé" : "");
-        cells += '<span class="' + c.join(" ") + '"' + (t ? ' title="' + t + '"' : "") + (env.has(lu) && lu !== sem ? ' data-gosem="' + lu + '"' : "") + "><i>" + d.getDate() + "</i>" + (lu === sem && dim ? "<em>18 h</em>" : "") + "</span>";
+        const c = ["gc-d"]; let t = "", data = "";
+        if (d.getMonth() !== mois) c.push("gc-out");
+        if (lu === sem) { c.push(we ? "gc-env" : "gc-wk"); t = we ? "jour d'envoi du rapport" : "semaine du rapport"; }
+        else if (env.has(lu)) { c.push("gc-sent"); t = "rapport envoyé"; data = ' data-gosem="' + lu + '"'; }
+        else if (miss.has(lu)) { c.push("gc-miss"); t = "rapport pas envoyé"; data = g ? ' data-pick="' + lu + '"' : ' data-gosem="' + lu + '"'; }
+        if (d.getDay() === 6 && lu === sem) c.push("gc-sat");
+        if (k === today) { c.push("gc-today"); t = "Aujourd'hui" + (t ? " · " + t : ""); }
+        if (d.getDay() === 0) c.push("gc-sun");
+        cells += '<span class="' + c.join(" ") + '"' + (t ? ' title="' + t + '"' : "") + data + "><i>" + d.getDate() + "</i>" + (lu === sem && we ? "<em>envoi</em>" : "") + "</span>";
       }
       const tit = m.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
       box.innerHTML = '<div class="gc-hd"><button type="button" class="gc-nav" data-calm="-1" aria-label="Mois précédent">‹</button><b>' + tit.charAt(0).toUpperCase() + tit.slice(1) + '</b><button type="button" class="gc-nav" data-calm="1" aria-label="Mois suivant">›</button>' + (GR.calM ? '<button type="button" class="gc-back" data-calm="0">Revenir</button>' : "") + '</div><div class="gc-grid">' + ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"].map((x) => '<span class="gc-w">' + x + "</span>").join("") + cells +
-        '</div><div class="gc-leg"><span><i class="gc-k gc-k-wk"></i>Semaine du rapport</span><span><i class="gc-k gc-k-env"></i>Dimanche : envoi avant 18 h</span><span><i class="gc-k gc-k-today"></i>Aujourd\'hui</span>' + (GR.rap.length ? '<span><i class="gc-k gc-k-sent"></i>Rapport déjà envoyé</span>' : "") + "</div>";
+        '</div><div class="gc-leg"><span><i class="gc-k gc-k-wk"></i>' + (g && GR.semaine && GR.semaine < cur ? "Semaine du rapport en retard" : "Semaine du rapport") + '</span><span><i class="gc-k gc-k-env"></i>Samedi et dimanche : envoi</span><span><i class="gc-k gc-k-today"></i>Aujourd\'hui</span><span><i class="gc-k gc-k-sent"></i>Rapport envoyé</span>' + (miss.size ? '<span><i class="gc-k gc-k-miss"></i>Rapport pas envoyé</span>' : "") + "</div>";
     }
     $("#sd-grCal") && $("#sd-grCal").addEventListener("click", (e) => {
       const n = e.target.closest("[data-calm]"); if (n) { GR.calM = n.dataset.calm === "0" ? 0 : (GR.calM || 0) + +n.dataset.calm; grCalRender(); return; }
-      const s = e.target.closest("[data-gosem]"); if (s) { const it = document.querySelector('#sd-grRapList [data-sem="' + s.dataset.gosem + '"]'); if (it) { it.scrollIntoView({ behavior: "smooth", block: "center" }); it.classList.add("gr-flash"); setTimeout(() => it.classList.remove("gr-flash"), 1600); } }
+      const p = e.target.closest("[data-pick]"); if (p) { grChoisir(p.dataset.pick); return; }
+      const s = e.target.closest("[data-gosem]"); if (s) { const it = document.querySelector('#sd-grRapList [data-sem="' + s.dataset.gosem + '"]'); if (it) { if (it.tagName === "DETAILS") it.open = true; it.scrollIntoView({ behavior: "smooth", block: "center" }); it.classList.add("gr-flash"); setTimeout(() => it.classList.remove("gr-flash"), 1600); } }
     });
     // ---- Tirage au sort (direction et gérante) : 2 gagnants validés par mois
     const trCampActuelle = () => { const d = new Date(), m = (d.getUTCMonth() + 1) % 12, y = d.getUTCMonth() === 11 ? d.getUTCFullYear() + 1 : d.getUTCFullYear(); return y + "-" + String(m + 1).padStart(2, "0"); };
@@ -4842,10 +4875,10 @@ function init(root) {
     });
     $("#sd-grRapTx").addEventListener("input", () => { try { if (GR.semaine) localStorage.setItem("sodaf.gr.brouillon." + GR.semaine, $("#sd-grRapTx").value); } catch (e) {} }); // brouillon gardé sur ce téléphone
     $("#sd-grRapSend").addEventListener("click", async () => {
-      const b = $("#sd-grRapSend"); if (!GR.semaine) return; b.disabled = true;
+      const b = $("#sd-grRapSend"); if (!GR.semaine) return; if (!grOuvert(GR.semaine)) { toast("Le rapport s'envoie le samedi ou le dimanche."); return; } b.disabled = true;
       const ch = await grChiffres(GR.semaine);
       const r = await run(() => DB.q("rapports", { method: "POST", body: { semaine: GR.semaine, chiffres: ch, texte: $("#sd-grRapTx").value.trim() }, prefer: "return=minimal" }).then(() => true), "Rapport envoyé à la direction");
-      b.disabled = false; if (r) { try { localStorage.removeItem("sodaf.gr.brouillon." + GR.semaine); } catch (e) {} $("#sd-grRapTx").value = ""; grCharger(); }
+      b.disabled = false; if (r) { try { localStorage.removeItem("sodaf.gr.brouillon." + GR.semaine); } catch (e) {} $("#sd-grRapTx").value = ""; GR.choix = null; GR.vue = null; grCharger(); }
     });
 
     // ---- Direction
@@ -6218,11 +6251,24 @@ html{scrollbar-gutter:stable}
 .gc-out{color:#B5BBC2}.gc-sun:not(.gc-wk):not(.gc-env){color:var(--muted)}
 .gc-wk{background:#FFE7A3;font-weight:700}
 .gc-d.gc-wk:nth-child(7n+1){border-radius:10px 0 0 10px}
-.gc-env{background:linear-gradient(90deg,#FFE7A3 0 50%,transparent 50%)}.gc-env i{background:#fff;border:2px dashed var(--yellow);font-weight:700}
+.gc-env{background:linear-gradient(90deg,#FFE7A3 0 50%,transparent 50%)}
 .gc-sent{background:var(--green-soft);cursor:pointer}.gc-sent i{color:var(--green)}
 .gc-today i{background:var(--green);color:#fff!important;font-weight:800;box-shadow:0 0 0 3px #fff,0 0 0 5px var(--green)}
 .gc-leg{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:12px;font-size:.8rem;color:var(--muted)}.gc-leg span{display:flex;align-items:center;gap:6px}
 .gc-k{width:14px;height:14px;border-radius:4px;display:inline-block}.gc-k-wk{background:#FFE7A3}.gc-k-env{border:2px dashed var(--yellow)}.gc-k-today{background:var(--green);border-radius:50%}.gc-k-sent{background:var(--green-soft);border:1px solid #B9DCCB}
+.gc-miss{background:#FDE7EA;cursor:pointer}.gc-miss i{color:#B3132B;font-weight:700}.gc-k-miss{background:#FDE7EA;border:1px solid #F3B8C1}
+.gc-env i{background:#fff;border:2px dashed var(--yellow);font-weight:700}.gc-sat{background:#FFE7A3}
+.gr-afaire{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px;padding:10px 12px;border-radius:12px;background:#FDE7EA}
+.gr-af-t{font-weight:700;color:#B3132B;font-size:.9rem;width:100%}
+.gr-af{border:1px solid var(--line);background:#fff;border-radius:999px;padding:.4em .9em;font:600 .85rem var(--f-ui);cursor:pointer;color:var(--ink)}.gr-af.late{border-color:#F3B8C1;color:#B3132B}.gr-af.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.gr-rapnote{font-size:.84rem;color:var(--muted);margin:6px 0 0}
+#sd-grRapSend:disabled{background:#E3E6EA;color:#5D6570;border-color:#E3E6EA;cursor:not-allowed;opacity:1}
+.gr-arch-h{margin-top:22px}
+details.gr-arch>summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:8px;align-items:center}details.gr-arch>summary::-webkit-details-marker{display:none}
+details.gr-arch>summary b::before{content:"›";display:inline-block;margin-right:8px;transition:transform .2s;color:var(--muted)}details.gr-arch[open]>summary b::before{transform:rotate(90deg)}
+.gr-sts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.gr-miss{border-color:#F3B8C1;background:#FFF8F9}.gr-miss .btn{margin-top:8px}
+.gr-afaire[hidden]{display:none}.gc-today.gc-env i{background:var(--green);color:#fff;border:2px dashed #fff}
 .gr-it.gr-flash{box-shadow:0 0 0 3px var(--yellow);transition:box-shadow .3s}
 .gr-ch{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px;margin-top:8px}
 .gr-ch span{background:var(--soft);border-radius:8px;padding:6px 9px;font-size:.84rem}.gr-ch b{display:block;font-size:1rem}
