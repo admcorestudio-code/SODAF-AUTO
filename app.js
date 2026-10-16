@@ -1983,7 +1983,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="gr-tabs" role="tablist"><button type="button" role="tab" data-gr="demandes" aria-selected="true">Demandes d'accord<em class="gr-badge" id="sd-grBDem" hidden></em></button><button type="button" role="tab" data-gr="decisions" aria-selected="false">Décisions<em class="gr-badge" id="sd-grBDec" hidden></em></button><button type="button" role="tab" data-gr="rapports" aria-selected="false">Rapport de la semaine<em class="gr-badge" id="sd-grBRap" hidden></em></button><button type="button" role="tab" data-gr="tirage" aria-selected="false">Tirage au sort<em class="gr-badge" id="sd-grBTir" hidden></em></button><button type="button" role="tab" data-gr="parrainage" aria-selected="false">Parrainage<em class="gr-badge" id="sd-grBPar" hidden></em></button></div>
 <div class="gr-pane" data-grp="demandes"><form id="sd-grDemForm" class="gr-form" hidden novalidate><div class="row2"><div class="field"><label for="sd-grDemType">Pour quoi ?</label><select id="sd-grDemType"><option>Remise</option><option>Annulation de reçu</option><option>Report de paiement</option><option>Dépense</option><option>Autre</option></select></div><div class="field"><label for="sd-grDemMt">Montant (F, si besoin)</label><input id="sd-grDemMt" inputmode="numeric" autocomplete="off" placeholder="ex. 5 000"></div></div><div class="field gr-elf"><label for="sd-grDemElQ">Élève concerné (si besoin)</label><div class="gr-elbox"><input id="sd-grDemElQ" type="search" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Tape un nom ou un numéro (SO12)" role="combobox" aria-expanded="false" aria-controls="sd-grDemElL" aria-autocomplete="list"><input type="hidden" id="sd-grDemEl" value=""><div class="gr-elsel" id="sd-grDemElSel" hidden></div><div class="gr-ell" id="sd-grDemElL" role="listbox" hidden></div></div></div><div class="field"><label for="sd-grDemTx">Explique en quelques mots</label><textarea id="sd-grDemTx" rows="2" maxlength="600" placeholder="ex. Deux frères inscrits ensemble, je propose 5 000 F de remise au second."></textarea></div><button type="submit" class="btn btn-sm btn-green">Envoyer à la direction</button></form><div id="sd-grDemList" class="gr-list"></div></div>
 <div class="gr-pane" data-grp="decisions" hidden><form id="sd-grDecForm" class="gr-form" hidden novalidate><div class="row2"><div class="field"><label for="sd-grDecCat">Sujet</label><select id="sd-grDecCat"><option>Élèves</option><option>Argent</option><option>Planning</option><option>Équipe</option><option>Autre</option></select></div><div class="field gr-grow"><label for="sd-grDecTx">Ce que j'ai décidé</label><textarea id="sd-grDecTx" rows="2" maxlength="600" placeholder="ex. Séance de samedi 7 h 30 déplacée à 8 h 45, le moniteur est prévenu."></textarea></div></div><button type="submit" class="btn btn-sm btn-green">Noter la décision</button></form><div id="sd-grDecList" class="gr-list"></div></div>
-<div class="gr-pane" data-grp="rapports" hidden><div id="sd-grAFaire" class="gr-afaire" hidden></div><div id="sd-grRapNew" hidden><div class="gr-semban" id="sd-grRapSem"></div><div class="tm-stats tm-dr" id="sd-grRapChiffres"></div><div class="field"><label for="sd-grRapTx">Mes remarques pour la direction</label><textarea id="sd-grRapTx" rows="4" maxlength="3000" placeholder="Ce qui s'est bien passé, les problèmes, ce qu'il faudrait changer, ce dont j'ai besoin."></textarea></div><button type="button" class="btn btn-sm btn-green" id="sd-grRapSend">Envoyer le rapport</button><p class="gr-rapnote" id="sd-grRapNote"></p></div><div id="sd-grCal" class="gr-cal" aria-label="Calendrier des rapports"></div><h4 class="gr-h4 gr-arch-h">Archives des rapports</h4><div id="sd-grRapList" class="gr-list"></div></div>
+<div class="gr-pane" data-grp="rapports" hidden><div id="sd-grAFaire" class="gr-afaire" hidden></div><div id="sd-grRapNew" hidden><div class="gr-semban" id="sd-grRapSem"></div><div class="tm-stats tm-dr" id="sd-grRapChiffres"></div><div class="field"><label for="sd-grRapTx">Mes remarques pour la direction</label><textarea id="sd-grRapTx" rows="4" maxlength="3000" placeholder="Ce qui s'est bien passé, les problèmes, ce qu'il faudrait changer, ce dont j'ai besoin."></textarea></div><button type="button" class="btn btn-sm btn-green" id="sd-grRapSend">Envoyer le rapport</button><p class="gr-rapnote" id="sd-grRapNote"></p></div><div id="sd-grCal" class="gr-cal" aria-label="Calendrier des rapports"></div><h4 class="gr-h4 gr-arch-h">Anciens rapports</h4><div id="sd-grRapList" class="gr-list"></div></div>
 <div class="gr-pane" data-grp="parrainage" hidden><p class="gr-sem">2 000 F par filleul inscrit, à envoyer au parrain par Mixx by Yas ou Moov Money après le reçu d'inscription du filleul. La commission apparaît ici toute seule.</p><div id="sd-paList"></div><div class="sec-mini"><h4 class="gr-h4">Meilleurs parrains</h4><p class="tm-note" style="margin:0 0 8px!important">2 filleuls : priorité sur les horaires · 3 : t-shirt · 5 : une séance offerte · 10 : karting à 3 et ambassadeur du mois (à confirmer) · meilleur de l'année : formation offerte à un proche.</p><div id="sd-paTop"></div></div></div>
 <div class="gr-pane" data-grp="tirage" hidden><div class="tr-hd"><div class="field"><label for="sd-trCamp">Tirage du mois</label><select id="sd-trCamp"></select></div><div class="tr-stats" id="sd-trStats"></div></div>
 <div class="tr-act"><button type="button" class="btn tir-btn" id="sd-trGo">Tirer un gagnant</button><button type="button" class="btn btn-line btn-sm" id="sd-trScreen">Grand écran pour la vidéo</button></div>
@@ -4282,12 +4282,10 @@ function init(root) {
       const pieces = ""; // Pièces du dossier d'examen : gérées plus tard (fin de formation)
       const arch = ""; // le rangement (Plus tard, Rétractation, Faux numéro) n'existe que dans la zone d'appel
       const suivi = '<div class="pc-edit"><button class="linkbtn" type="button" data-a="edit">Modifier la fiche</button></div>'; // l'historique reste enregistré dans la base (table suivi), sans l'afficher
-      const decN = me && me.role === "gerant" ? '<details class="pc-block pc-dec" id="sd-pcDec"><summary class="pc-bh"><b>Noter une décision pour cet élève</b><span class="tm-note" style="margin:0!important">la direction est prévenue</span></summary>' +
-        '<p class="pc-lab">Tu as décidé quelque chose seule pour ' + esc(x.nom.split(" ")[0]) + ' (séance déplacée, report de paiement de quelques jours, changement de groupe…) ? Écris-le en une phrase.</p>' +
-        '<div class="pc-dec-cats" role="radiogroup" aria-label="Sujet">' + [["Élèves", "Élève"], ["Planning", "Planning"], ["Argent", "Argent"], ["Autre", "Autre"]].map((c, i) => '<button type="button" role="radio" data-deccat="' + c[0] + '" aria-checked="' + (i === 0) + '">' + c[1] + "</button>").join("") + "</div>" +
-        '<div class="pc-alert pc-dec-arg" id="sd-pcDecArg" hidden><b>Argent :</b> tu peux décider seule un <b>report de paiement de moins d\'une semaine</b>. La <b>remise sur l\'examen</b> se fait dans son bloc (elle se note toute seule). <b>Annulation de reçu, dépense, report de plus d\'une semaine</b> : demande d\'abord l\'accord de la direction.<div class="tm-formact"><button type="button" class="btn btn-line btn-sm" data-a="decAccord">Faire une demande d\'accord</button></div></div>' +
-        '<textarea id="sd-pcDecTx" rows="2" maxlength="500" placeholder="Ex. : séance de mardi déplacée à jeudi, sa mère était malade."></textarea>' +
-        '<div class="tm-formact"><button type="button" class="btn btn-green btn-sm" data-a="decNoter">Noter la décision</button></div></details>' : "";
+      const decN = me && me.role === "gerant" ? '<details class="pc-block pc-dec" id="sd-pcDec"><summary class="pc-bh"><b>Noter une décision</b></summary>' +
+        '<textarea id="sd-pcDecTx" rows="2" maxlength="500" placeholder="Ex. : séance déplacée à jeudi"></textarea>' +
+        '<div class="tm-formact"><button type="button" class="btn btn-green btn-sm" data-a="decNoter">Noter</button></div>' +
+        '<p class="pc-dec-hint">Annuler un reçu ou faire une dépense ? <button type="button" class="linkbtn" data-a="decAccord">Demande l\'accord</button></p></details>' : "";
       box.innerHTML = head + info + body + pieces + arch + decN + suivi;
       const id = x.id;
       if (st === "formation" && !sansCode(x)) fillCours(x);
@@ -4383,12 +4381,12 @@ function init(root) {
       else if (k === "note") { const v = $("#sd-pcNote").value.trim(); if (!v) return; await addSuivi(x, "Note", v); toast("Note ajoutée"); renderDetail(); }
       else if (k === "edit") editForm(x);
       else if (k === "decNoter") {
-        const tx = ($("#sd-pcDecTx").value || "").trim(), cat = ($("#sd-pcDec [data-deccat][aria-checked=true]") || {}).dataset?.deccat || "Élèves";
-        if (tx.length < 3) { toast("Écris ta décision en une phrase", true); $("#sd-pcDecTx").focus(); return; }
+        const tx = ($("#sd-pcDecTx").value || "").trim(), cat = "Élèves";
+        if (tx.length < 3) { toast("Écris ta décision", true); $("#sd-pcDecTx").focus(); return; }
         a.disabled = true;
-        const r = await run(() => DB.q("decisions", { method: "POST", body: { categorie: cat, texte: (CODE(x) + " · " + x.nom + " : " + tx).slice(0, 600) }, prefer: "return=minimal" }).then(() => true), "Décision notée, la direction est prévenue");
+        const r = await run(() => DB.q("decisions", { method: "POST", body: { categorie: cat, texte: (CODE(x) + " · " + x.nom + " : " + tx).slice(0, 600) }, prefer: "return=minimal" }).then(() => true), "Décision notée");
         a.disabled = false;
-        if (r) { await addSuivi(x, "Note", "Décision de la gérante (" + cat + ") : " + tx); $("#sd-pcDecTx").value = ""; $("#sd-pcDec").open = false; if (typeof grCharger === "function") grCharger(); }
+        if (r) { await addSuivi(x, "Note", "Décision de la gérante : " + tx); $("#sd-pcDecTx").value = ""; $("#sd-pcDec").open = false; if (typeof grCharger === "function") grCharger(); }
       }
       else if (k === "decAccord") { pick("ger"); grOnglet("demandes"); grElChoisir(x.id); const f = $("#sd-grDemForm"); f && f.scrollIntoView({ behavior: "smooth", block: "start" }); }
       else if (k === "finForm") { confirmBtn(a, async () => { if (await patchEl(x, { statut: "Abandon", archive_motif: "Formation terminée", archive_le: new Date().toISOString(), rappel: null }, "Formation terminée : dossier archivé", ["Étape", "Formation terminée (sans examen)"])) nextAfter(x); }); }
@@ -4409,11 +4407,6 @@ function init(root) {
       else if (k === "exPass") { confirmBtn(a, async () => { if (await patchEl(x, { statut: "Permis obtenu", examen_resultat: "obtenu", examen_date: iso(new Date()) }, "Bravo ! Permis obtenu", ["Étape", "Examen : Permis obtenu"])) { pcStage = "archives"; S.set("pcStage", pcStage); pcSel = x.id; renderList(); } }); }
       else if (k === "exFail") { confirmBtn(a, async () => { if (await patchEl(x, { statut: "Abandon", archive_motif: null, archive_le: new Date().toISOString(), examen_resultat: "echoue", examen_etape: null, examen_passages: Math.min((x.examen_passages || 0) + 1, 10), examen_date: null, examen_lieu: null, examen_depose_le: null, examen_lien_le: null, examen_relance_le: null, examen_bordereau_le: null, examen_paye: false, examen_docs: {} }, "Archivé : permis échoué. Ressors-le quand il veut repasser.", ["Étape", "Examen : échoué (archivé)"])) { pcSel = null; renderList(); } }); }
       else if (k === "exBack") { confirmBtn(a, async () => { if (await patchEl(x, { examen_etape: null }, "Revenu en formation", ["Étape", "Revenu en formation"])) { pcStage = "formation"; S.set("pcStage", pcStage); renderList(); } }); }
-    });
-    $("#sd-pcDetail").addEventListener("click", (e) => {
-      const c = e.target.closest("[data-deccat]"); if (!c) return;
-      c.parentNode.querySelectorAll("[data-deccat]").forEach((b) => b.setAttribute("aria-checked", b === c));
-      const ar = $("#sd-pcDecArg"); if (ar) ar.hidden = c.dataset.deccat !== "Argent";
     });
     $("#sd-pcDetail").addEventListener("change", async (e) => {
       const x = eleves.find((y) => y.id === pcSel); if (!x) return;
@@ -4742,22 +4735,22 @@ function init(root) {
       // Choix de la semaine quand il y a des rapports en retard
       const af = g ? [...grRetards(), ...(!grEnvoye(cur) ? [cur] : [])] : [];
       $("#sd-grAFaire").hidden = af.length < 2;
-      $("#sd-grAFaire").innerHTML = af.length < 2 ? "" : '<span class="gr-af-t">' + (af.length - (af.includes(cur) ? 1 : 0)) + " rapport" + (af.length - (af.includes(cur) ? 1 : 0) > 1 ? "s" : "") + " en retard. Choisis la semaine :</span>" + af.map((w) => '<button type="button" class="gr-af' + (w === l ? " on" : "") + (w < cur ? " late" : "") + '" data-pick="' + w + '">' + grSemCourt(w) + (w < cur ? " · en retard" : " · cette semaine") + "</button>").join("");
+      $("#sd-grAFaire").innerHTML = af.length < 2 ? "" : '<span class="gr-af-t">Rapports à envoyer :</span>' + af.map((w) => '<button type="button" class="gr-af' + (w === l ? " on" : "") + (w < cur ? " late" : "") + '" data-pick="' + w + '">' + grSemCourt(w) + "</button>").join("");
       if (l) {
         $("#sd-grRapSem").innerHTML = grSemBan(l);
         const neuve = GR.vue !== l; GR.vue = l;
         if (neuve) { $("#sd-grRapChiffres").innerHTML = '<p class="tm-empty">Calcul des chiffres…</p>'; $("#sd-grRapTx").value = ""; try { const t = localStorage.getItem("sodaf.gr.brouillon." + l); if (t) $("#sd-grRapTx").value = t; } catch (e) {} }
         GR.ch = await grChiffres(l); if (GR.semaine !== l) return; $("#sd-grRapChiffres").innerHTML = grChHtml(GR.ch, true);
         const ouv = grOuvert(l), sam = dOf(grLuPlus(l, 5)), dim = dOf(grLuPlus(l, 6)), btn = $("#sd-grRapSend");
-        btn.disabled = !ouv; btn.textContent = ouv ? (l < cur ? "Envoyer ce rapport en retard" : "Envoyer le rapport") : "Envoi possible samedi " + sam.getDate() + " et dimanche " + dim.getDate();
-        $("#sd-grRapNote").textContent = ouv ? (l < cur ? "Les chiffres sont ceux de la semaine " + grSemTxt(l) + ". La direction verra qu'il est arrivé en retard." : "Le bouton reste ouvert jusqu'à dimanche soir.") : "Tu peux déjà écrire tes remarques pendant la semaine : elles restent gardées sur ce téléphone jusqu'à l'envoi.";
+        btn.disabled = !ouv; btn.textContent = ouv ? "Envoyer le rapport" : "Envoi samedi ou dimanche";
+        $("#sd-grRapNote").textContent = ouv ? "" : "Tu peux déjà écrire tes remarques.";
       }
       const sem = grSemaines().slice().reverse().filter((w) => w !== cur || grEnvoye(w)), byS = {}; GR.rap.forEach((r) => (byS[r.semaine] = r));
       GR.rap.filter((r) => r.semaine < RAP_DEBUT || r.semaine > cur).forEach((r) => sem.includes(r.semaine) || sem.push(r.semaine)); sem.sort().reverse();
       $("#sd-grRapList").innerHTML = sem.length ? sem.map((w) => { const r = byS[w];
-        if (!r) return '<div class="gr-it gr-miss" data-sem="' + w + '"><div class="gr-hd"><b>Semaine ' + esc(grSemTxt(w)) + '</b><em class="gr-st non">' + (g ? "Pas envoyé" : "Pas reçu") + "</em></div>" + (g ? '<button type="button" class="btn btn-sm btn-green" data-pick="' + w + '">Faire ce rapport</button>' : "<small>La gérante ne l'a pas encore envoyé.</small>") + "</div>";
+        if (!r) return '<div class="gr-it gr-miss" data-sem="' + w + '"><div class="gr-hd"><b>Semaine ' + esc(grSemTxt(w)) + '</b><em class="gr-st non">' + (g ? "Pas envoyé" : "Pas reçu") + "</em></div>" + (g ? '<button type="button" class="btn btn-sm btn-green" data-pick="' + w + '">Envoyer</button>' : "") + "</div>";
         const tard = r.envoye_le && new Date(r.envoye_le) >= new Date(grLuPlus(w, 7) + "T00:00:00Z");
-        return '<details class="gr-it gr-arch' + (!g && !r.lu_le ? " att" : "") + '" data-sem="' + w + '"' + (!g && !r.lu_le ? " open" : "") + '><summary class="gr-hd"><b>Semaine ' + esc(grSemTxt(w)) + '</b><span class="gr-sts">' + (tard ? '<em class="gr-st att">Envoyé en retard</em>' : "") + '<em class="gr-st ' + (r.lu_le ? "oui" : "neu") + '">' + (r.lu_le ? "Lu par la direction" : g ? "Envoyé" : "Nouveau") + "</em></span></summary><small>Envoyé " + esc(grQuand(r.envoye_le)) + '</small><div class="gr-ch">' + grChHtml(r.chiffres || {}, false) + "</div>" + (r.texte ? "<p>" + esc(r.texte) + "</p>" : "") + "</details>"; }).join("")
+        return '<details class="gr-it gr-arch' + (!g && !r.lu_le ? " att" : "") + '" data-sem="' + w + '"' + (!g && !r.lu_le ? " open" : "") + '><summary class="gr-hd"><b>Semaine ' + esc(grSemTxt(w)) + '</b><span class="gr-sts">' + (tard ? '<em class="gr-st att">En retard</em>' : "") + '<em class="gr-st ' + (r.lu_le ? "oui" : "neu") + '">' + (r.lu_le ? "Lu" : g ? "Envoyé" : "Nouveau") + "</em></span></summary><small>Envoyé " + esc(grQuand(r.envoye_le)) + '</small><div class="gr-ch">' + grChHtml(r.chiffres || {}, false) + "</div>" + (r.texte ? "<p>" + esc(r.texte) + "</p>" : "") + "</details>"; }).join("")
         : '<p class="tm-empty">' + (g ? "Aucun rapport envoyé pour l'instant." : "Aucun rapport reçu pour l'instant.") + "</p>";
       grCalRender();
     }
@@ -4768,11 +4761,10 @@ function init(root) {
     // Bandeau de la semaine du rapport : grandes dates, numéro de semaine, échéance du dimanche 18 h
     const grNumSem = (l) => { const d = dOf(l); d.setDate(d.getDate() + 3); const j1 = new Date(d.getFullYear(), 0, 4, 12); return 1 + Math.round(((d - j1) / 864e5 - 3 + (j1.getDay() + 6) % 7) / 7); };
     function grSemBan(l) {
-      const a = dOf(l), b = dOf(grLuPlus(l, 6)), sam = dOf(grLuPlus(l, 5)), cur = grLundi(new Date()), late = l < cur;
-      const mo = (d) => d.toLocaleDateString("fr-FR", { month: "long" }), dates = a.getMonth() === b.getMonth() ? a.getDate() + " au " + b.getDate() + " " + mo(b) : a.getDate() + " " + mo(a) + " au " + b.getDate() + " " + mo(b);
-      const j = Math.round((sam - dOf(iso(new Date()))) / 864e5);
-      const q = late ? ["gsb-late", "En retard", "À envoyer maintenant", "le bouton est ouvert"] : grOuvert(l) ? ["gsb-now", "C'est le moment", "Envoie ton rapport", "ouvert jusqu'à dimanche soir"] : ["", "Envoi ouvert le week-end", "Sam. " + sam.getDate() + " et dim. " + b.getDate(), "le bouton s'ouvre " + (j === 1 ? "demain" : "dans " + j + " jours")];
-      return '<div class="gsb-l"><span class="gsb-k">' + (late ? "Rapport en retard · " : "Rapport de la ") + "semaine " + grNumSem(l) + '</span><b class="gsb-d">Du ' + dates + '</b><span class="gsb-s">lundi ' + a.getDate() + " → dimanche " + b.getDate() + " " + b.getFullYear() + '</span></div><div class="gsb-r ' + q[0] + '"><span class="gsb-k">' + q[1] + "</span><b>" + q[2] + "</b><span>" + q[3] + "</span></div>";
+      const a = dOf(l), b = dOf(grLuPlus(l, 6)), sam = dOf(grLuPlus(l, 5)), late = l < grLundi(new Date());
+      const mo = (d) => d.toLocaleDateString("fr-FR", { month: "long" }), dates = a.getMonth() === b.getMonth() ? a.getDate() + " – " + b.getDate() + " " + mo(b) : a.getDate() + " " + mo(a) + " – " + b.getDate() + " " + mo(b);
+      const q = late ? ["gsb-late", "En retard", "Envoie-le maintenant"] : grOuvert(l) ? ["gsb-now", "Aujourd'hui", "Envoie ton rapport"] : ["", "Envoi", "Samedi " + sam.getDate() + " ou dimanche " + b.getDate()];
+      return '<div class="gsb-l"><span class="gsb-k">Semaine ' + grNumSem(l) + '</span><b class="gsb-d">' + dates + '</b></div><div class="gsb-r ' + q[0] + '"><span class="gsb-k">' + q[1] + "</span><b>" + q[2] + "</b></div>";
     }
     // Calendrier sous le rapport : semaine du rapport en jaune, aujourd'hui en vert, semaines déjà envoyées en vert clair
     function grCalRender() {
@@ -4798,7 +4790,7 @@ function init(root) {
       }
       const tit = m.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
       box.innerHTML = '<div class="gc-hd"><button type="button" class="gc-nav" data-calm="-1" aria-label="Mois précédent">‹</button><b>' + tit.charAt(0).toUpperCase() + tit.slice(1) + '</b><button type="button" class="gc-nav" data-calm="1" aria-label="Mois suivant">›</button>' + (GR.calM ? '<button type="button" class="gc-back" data-calm="0">Revenir</button>' : "") + '</div><div class="gc-grid">' + ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"].map((x) => '<span class="gc-w">' + x + "</span>").join("") + cells +
-        '</div><div class="gc-leg"><span><i class="gc-k gc-k-wk"></i>' + (g && GR.semaine && GR.semaine < cur ? "Semaine du rapport en retard" : "Semaine du rapport") + '</span><span><i class="gc-k gc-k-env"></i>Samedi et dimanche : envoi</span><span><i class="gc-k gc-k-today"></i>Aujourd\'hui</span><span><i class="gc-k gc-k-sent"></i>Rapport envoyé</span>' + (miss.size ? '<span><i class="gc-k gc-k-miss"></i>Rapport pas envoyé</span>' : "") + "</div>";
+        '</div><div class="gc-leg"><span><i class="gc-k gc-k-wk"></i>La semaine</span><span><i class="gc-k gc-k-env"></i>Jours d\'envoi</span><span><i class="gc-k gc-k-today"></i>Aujourd\'hui</span><span><i class="gc-k gc-k-sent"></i>Envoyé</span>' + (miss.size ? '<span><i class="gc-k gc-k-miss"></i>Pas envoyé</span>' : "") + "</div>";
     }
     $("#sd-grCal") && $("#sd-grCal").addEventListener("click", (e) => {
       const n = e.target.closest("[data-calm]"); if (n) { GR.calM = n.dataset.calm === "0" ? 0 : (GR.calM || 0) + +n.dataset.calm; grCalRender(); return; }
@@ -6293,7 +6285,7 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 .pc-dec>summary{cursor:pointer;list-style:none}.pc-dec>summary::-webkit-details-marker{display:none}.pc-dec>summary b::before{content:"+";display:inline-grid;place-items:center;width:20px;height:20px;border-radius:6px;background:var(--ink);color:#fff;margin-right:8px;font-size:.9rem}.pc-dec[open]>summary b::before{content:"–"}
 .pc-dec textarea{width:100%;font:inherit;font-size:.95rem;padding:.6em .75em;border:1px solid var(--line);border-radius:10px;margin-top:8px;box-sizing:border-box}
 .pc-dec-cats{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.pc-dec-cats button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:.4em .95em;font:600 .86rem var(--f-ui);cursor:pointer;color:var(--ink)}.pc-dec-cats button[aria-checked=true]{background:var(--ink);border-color:var(--ink);color:#fff}
-.pc-dec-arg{margin:6px 0 0;font-size:.88rem}
+.pc-dec-hint{font-size:.85rem;color:var(--muted);margin:10px 0 0}
 .gr-it.gr-flash{box-shadow:0 0 0 3px var(--yellow);transition:box-shadow .3s}
 .gr-ch{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px;margin-top:8px}
 .gr-ch span{background:var(--soft);border-radius:8px;padding:6px 9px;font-size:.84rem}.gr-ch b{display:block;font-size:1rem}
