@@ -4282,7 +4282,13 @@ function init(root) {
       const pieces = ""; // Pièces du dossier d'examen : gérées plus tard (fin de formation)
       const arch = ""; // le rangement (Plus tard, Rétractation, Faux numéro) n'existe que dans la zone d'appel
       const suivi = '<div class="pc-edit"><button class="linkbtn" type="button" data-a="edit">Modifier la fiche</button></div>'; // l'historique reste enregistré dans la base (table suivi), sans l'afficher
-      box.innerHTML = head + info + body + pieces + arch + suivi;
+      const decN = me && me.role === "gerant" ? '<details class="pc-block pc-dec" id="sd-pcDec"><summary class="pc-bh"><b>Noter une décision pour cet élève</b><span class="tm-note" style="margin:0!important">la direction est prévenue</span></summary>' +
+        '<p class="pc-lab">Tu as décidé quelque chose seule pour ' + esc(x.nom.split(" ")[0]) + ' (séance déplacée, report de paiement de quelques jours, changement de groupe…) ? Écris-le en une phrase.</p>' +
+        '<div class="pc-dec-cats" role="radiogroup" aria-label="Sujet">' + [["Élèves", "Élève"], ["Planning", "Planning"], ["Argent", "Argent"], ["Autre", "Autre"]].map((c, i) => '<button type="button" role="radio" data-deccat="' + c[0] + '" aria-checked="' + (i === 0) + '">' + c[1] + "</button>").join("") + "</div>" +
+        '<div class="pc-alert pc-dec-arg" id="sd-pcDecArg" hidden><b>Argent :</b> tu peux décider seule un <b>report de paiement de moins d\'une semaine</b>. La <b>remise sur l\'examen</b> se fait dans son bloc (elle se note toute seule). <b>Annulation de reçu, dépense, report de plus d\'une semaine</b> : demande d\'abord l\'accord de la direction.<div class="tm-formact"><button type="button" class="btn btn-line btn-sm" data-a="decAccord">Faire une demande d\'accord</button></div></div>' +
+        '<textarea id="sd-pcDecTx" rows="2" maxlength="500" placeholder="Ex. : séance de mardi déplacée à jeudi, sa mère était malade."></textarea>' +
+        '<div class="tm-formact"><button type="button" class="btn btn-green btn-sm" data-a="decNoter">Noter la décision</button></div></details>' : "";
+      box.innerHTML = head + info + body + pieces + arch + decN + suivi;
       const id = x.id;
       if (st === "formation" && !sansCode(x)) fillCours(x);
       if (st === "formation") {
@@ -4376,6 +4382,15 @@ function init(root) {
       else if (k === "revive") { if (await patchEl(x, { statut: "Contacté", archive_motif: null, archive_le: null, appels: 0, rappel: null, dossier_envoye_le: null, dossier_relance_le: null, dossier_relances: 0 }, "Dossier remis en appel", ["Étape", "Ressorti des archives"])) nextAfter(x); }
       else if (k === "note") { const v = $("#sd-pcNote").value.trim(); if (!v) return; await addSuivi(x, "Note", v); toast("Note ajoutée"); renderDetail(); }
       else if (k === "edit") editForm(x);
+      else if (k === "decNoter") {
+        const tx = ($("#sd-pcDecTx").value || "").trim(), cat = ($("#sd-pcDec [data-deccat][aria-checked=true]") || {}).dataset?.deccat || "Élèves";
+        if (tx.length < 3) { toast("Écris ta décision en une phrase", true); $("#sd-pcDecTx").focus(); return; }
+        a.disabled = true;
+        const r = await run(() => DB.q("decisions", { method: "POST", body: { categorie: cat, texte: (CODE(x) + " · " + x.nom + " : " + tx).slice(0, 600) }, prefer: "return=minimal" }).then(() => true), "Décision notée, la direction est prévenue");
+        a.disabled = false;
+        if (r) { await addSuivi(x, "Note", "Décision de la gérante (" + cat + ") : " + tx); $("#sd-pcDecTx").value = ""; $("#sd-pcDec").open = false; if (typeof grCharger === "function") grCharger(); }
+      }
+      else if (k === "decAccord") { pick("ger"); grOnglet("demandes"); grElChoisir(x.id); const f = $("#sd-grDemForm"); f && f.scrollIntoView({ behavior: "smooth", block: "start" }); }
       else if (k === "finForm") { confirmBtn(a, async () => { if (await patchEl(x, { statut: "Abandon", archive_motif: "Formation terminée", archive_le: new Date().toISOString(), rappel: null }, "Formation terminée : dossier archivé", ["Étape", "Formation terminée (sans examen)"])) nextAfter(x); }); }
       else if (k === "toExam") { confirmBtn(a, async () => { const sd = await run(() => soldeFrais(x.id)); if (!sd) return; x.solde = sd.s; if (doit(x)) { toast("Formation pas encore soldée : pas de passage à l'examen", true); renderList(true); return; } if (await patchEl(x, { examen_etape: "pret", examen_pret_le: new Date().toISOString(), examen_lien_le: null, examen_relance_le: null, examen_bordereau_le: null, examen_date: null, examen_lieu: null, jeton: jetonOf(x) }, "Étape examen : envoie le message à l'élève", ["Étape", "Formation terminée : examen"])) { pcStage = "examen"; S.set("pcStage", pcStage); renderList(); } }); }
       else if (k === "sendExam") { const m = $("#sd-exMsg"); if (m) a.href = "https://wa.me/228" + waNum(x.telephone) + "?text=" + encodeURIComponent(m.value); await patchEl(x, { examen_lien_le: new Date().toISOString(), jeton: jetonOf(x) }, "Message noté comme envoyé", ["Étape", "Examen : Message de fin de formation envoyé"]); renderList(); }
@@ -4394,6 +4409,11 @@ function init(root) {
       else if (k === "exPass") { confirmBtn(a, async () => { if (await patchEl(x, { statut: "Permis obtenu", examen_resultat: "obtenu", examen_date: iso(new Date()) }, "Bravo ! Permis obtenu", ["Étape", "Examen : Permis obtenu"])) { pcStage = "archives"; S.set("pcStage", pcStage); pcSel = x.id; renderList(); } }); }
       else if (k === "exFail") { confirmBtn(a, async () => { if (await patchEl(x, { statut: "Abandon", archive_motif: null, archive_le: new Date().toISOString(), examen_resultat: "echoue", examen_etape: null, examen_passages: Math.min((x.examen_passages || 0) + 1, 10), examen_date: null, examen_lieu: null, examen_depose_le: null, examen_lien_le: null, examen_relance_le: null, examen_bordereau_le: null, examen_paye: false, examen_docs: {} }, "Archivé : permis échoué. Ressors-le quand il veut repasser.", ["Étape", "Examen : échoué (archivé)"])) { pcSel = null; renderList(); } }); }
       else if (k === "exBack") { confirmBtn(a, async () => { if (await patchEl(x, { examen_etape: null }, "Revenu en formation", ["Étape", "Revenu en formation"])) { pcStage = "formation"; S.set("pcStage", pcStage); renderList(); } }); }
+    });
+    $("#sd-pcDetail").addEventListener("click", (e) => {
+      const c = e.target.closest("[data-deccat]"); if (!c) return;
+      c.parentNode.querySelectorAll("[data-deccat]").forEach((b) => b.setAttribute("aria-checked", b === c));
+      const ar = $("#sd-pcDecArg"); if (ar) ar.hidden = c.dataset.deccat !== "Argent";
     });
     $("#sd-pcDetail").addEventListener("change", async (e) => {
       const x = eleves.find((y) => y.id === pcSel); if (!x) return;
@@ -4701,7 +4721,7 @@ function init(root) {
     function grDecRender() {
       const adm = me.role === "admin";
       $("#sd-grDecList").innerHTML = GR.dec.length ? GR.dec.map((d) => { const st = !d.avis ? ["neu", adm ? "À lire" : "Envoyée"] : d.avis === "ok" ? ["oui", "D'accord"] : ["non", "À revoir"];
-        return '<div class="gr-it' + (d.avis === "revoir" ? " non" : d.avis === "ok" ? " oui" : adm ? " att" : "") + '"><div class="gr-hd"><b>' + esc(d.categorie) + '</b><em class="gr-st ' + st[0] + '">' + st[1] + "</em></div><small>" + esc(grQuand(d.le)) + "</small><p>" + esc(d.texte) + "</p>" +
+        return '<div class="gr-it' + (d.avis === "revoir" ? " non" : d.avis === "ok" ? " oui" : adm ? " att" : "") + '"><div class="gr-hd"><b>' + esc(d.categorie) + '</b><em class="gr-st ' + st[0] + '">' + st[1] + "</em></div><small>" + esc(grQuand(d.le)) + "</small><p>" + esc(d.texte).replace(/^SO(\d+) · ([^:]+) :/, (m, id, nm) => eleves.some((y) => y.id === +id) ? '<button type="button" class="ms-el" data-goel="' + id + '">' + nm + "</button> :" : m) + "</p>" +
           (d.avis ? (d.avis_note ? '<div class="gr-rep">Direction : ' + esc(d.avis_note) + "</div>" : "") : adm ? '<div class="gr-act" data-dec="' + d.id + '"><input type="text" maxlength="300" placeholder="Un mot pour la gérante (non obligatoire)" aria-label="Avis pour la gérante"><button type="button" class="btn btn-sm btn-green" data-avis="ok">D\'accord</button><button type="button" class="btn btn-sm btn-line" data-avis="revoir">À revoir</button></div>' : "") + "</div>"; }).join("")
         : '<p class="tm-empty">' + (adm ? "Aucune décision notée pour l'instant." : "Aucune décision notée.") + "</p>";
     }
@@ -4834,6 +4854,7 @@ function init(root) {
     });
     $("#sd-gr").addEventListener("click", async (e) => {
       const t = e.target.closest("[data-gr]"); if (t) { grOnglet(t.dataset.gr); if (me.role === "gerant") { if (t.dataset.gr === "demandes") grMarquer("dem", GR.dem.filter((d) => d.statut !== "attente").map((d) => d.id)); if (t.dataset.gr === "decisions") grMarquer("dec", GR.dec.filter((d) => d.avis).map((d) => d.id)); grBadges(); } return; }
+      const ge = e.target.closest("#sd-grDecList [data-goel]"); if (ge) { goEleve(+ge.dataset.goel); return; }
       const ok = e.target.closest("[data-ok]"), av = e.target.closest("[data-avis]");
       if (ok) { const bx = ok.closest("[data-dem]"); bx.querySelectorAll("button").forEach((b) => (b.disabled = true)); const r = await run(() => DB.q("rpc/demande_repondre", { method: "POST", body: { p_id: +bx.dataset.dem, p_accord: ok.dataset.ok === "1", p_note: bx.querySelector("input").value.trim() || null } }).then(() => true), ok.dataset.ok === "1" ? "Accordé : la gérante est prévenue" : "Refusé : la gérante est prévenue"); if (r) grCharger(); else bx.querySelectorAll("button").forEach((b) => (b.disabled = false)); }
       if (av) { const bx = av.closest("[data-dec]"); bx.querySelectorAll("button").forEach((b) => (b.disabled = true)); const r = await run(() => DB.q("rpc/decision_avis", { method: "POST", body: { p_id: +bx.dataset.dec, p_avis: av.dataset.avis, p_note: bx.querySelector("input").value.trim() || null } }).then(() => true), av.dataset.avis === "ok" ? "Noté : d'accord" : "Noté : à revoir, la gérante est prévenue"); if (r) grCharger(); else bx.querySelectorAll("button").forEach((b) => (b.disabled = false)); }
@@ -6269,6 +6290,10 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 .gr-sts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
 .gr-miss{border-color:#F3B8C1;background:#FFF8F9}.gr-miss .btn{margin-top:8px}
 .gr-afaire[hidden]{display:none}.gc-today.gc-env i{background:var(--green);color:#fff;border:2px dashed #fff}
+.pc-dec>summary{cursor:pointer;list-style:none}.pc-dec>summary::-webkit-details-marker{display:none}.pc-dec>summary b::before{content:"+";display:inline-grid;place-items:center;width:20px;height:20px;border-radius:6px;background:var(--ink);color:#fff;margin-right:8px;font-size:.9rem}.pc-dec[open]>summary b::before{content:"–"}
+.pc-dec textarea{width:100%;font:inherit;font-size:.95rem;padding:.6em .75em;border:1px solid var(--line);border-radius:10px;margin-top:8px;box-sizing:border-box}
+.pc-dec-cats{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.pc-dec-cats button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:.4em .95em;font:600 .86rem var(--f-ui);cursor:pointer;color:var(--ink)}.pc-dec-cats button[aria-checked=true]{background:var(--ink);border-color:var(--ink);color:#fff}
+.pc-dec-arg{margin:6px 0 0;font-size:.88rem}
 .gr-it.gr-flash{box-shadow:0 0 0 3px var(--yellow);transition:box-shadow .3s}
 .gr-ch{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px;margin-top:8px}
 .gr-ch span{background:var(--soft);border-radius:8px;padding:6px 9px;font-size:.84rem}.gr-ch b{display:block;font-size:1rem}
