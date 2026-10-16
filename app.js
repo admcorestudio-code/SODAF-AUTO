@@ -4688,18 +4688,26 @@ function init(root) {
       b.disabled = true; const ok = await run(() => DB.q("rpc/commission_payer", { method: "POST", body: { p_id: +row.dataset.com, p_mode: row.querySelector("[data-pamode]").value, p_reference: row.querySelector("[data-paref]").value.trim() } }), "Commission notée comme payée"); b.disabled = false;
       if (ok !== null) { await paCharger(); grBadges(); }
     });
+    // Carte d'une demande de dépense : même présentation partout (réception, historique, mes demandes)
+    function depCarte(d, o) {
+      const role = (GR.prof && GR.prof[d.auteur]) || (d.auteur === me.id ? me.role : ""), st = o.st;
+      const pcs = (d.devis ? '<button type="button" class="btn btn-line btn-sm dq-pc" data-dep="' + esc(d.devis) + '">Voir le devis</button>' : "") + (d.facture ? '<button type="button" class="btn btn-line btn-sm dq-pc" data-dep="' + esc(d.facture) + '">Voir la facture</button>' : "");
+      return '<article class="dq dq-' + st[0] + '"><header class="dq-top"><span class="dq-role dq-r-' + (role || "x") + '">' + (ROLE_NOM[role] || "Équipe") + '</span><span class="dq-kind">' + (d.nature === "Carburant" ? "Essence en plus" : "Dépense") + '</span><span class="dq-when">' + esc(grQuand(d.le)) + "</span></header>" +
+        '<div class="dq-mid"><b class="dq-mt">' + F(d.montant || 0) + '</b><em class="dq-st">' + st[1] + "</em></div>" +
+        '<p class="dq-tx">' + esc(String(d.texte || "").replace(/^\[TEST\]\s*/, "")) + (/^\[TEST\]/.test(d.texte || "") ? ' <span class="dq-test">TEST</span>' : "") + "</p>" +
+        (d.transmis_le && role !== "gerant" && o.vue !== "equipe" ? '<p class="dq-note">Transmis par la gérante</p>' : "") +
+        (pcs ? '<div class="dq-pcs">' + pcs + "</div>" : "") +
+        (d.reponse ? '<p class="dq-rep">« ' + esc(d.reponse) + " »</p>" : "") + (o.extra || "") + "</article>";
+    }
     function grDemRender() {
-      const adm = me.role === "admin", g = me.role === "gerant", qui = (d) => ROLE_NOM[GR.prof && GR.prof[d.auteur]] || "Équipe";
+      const adm = me.role === "admin", g = me.role === "gerant";
       const recep = g ? GR.dem.filter((d) => d.etape === "equipe" && d.statut === "attente") : [], hist = GR.dem.filter((d) => !recep.includes(d));
-      const pieces = (d) => (d.devis ? '<button type="button" class="linkbtn" data-dep="' + esc(d.devis) + '">Voir le devis</button>' : "") + (d.facture ? '<button type="button" class="linkbtn" data-dep="' + esc(d.facture) + '">Voir la facture</button>' : "") +
-        (d.statut === "accordee" && !d.facture && d.nature !== "Carburant" ? (g ? '<div class="dep-facw" data-fac="' + d.id + '"><span class="dep-att">Ajoute la facture :</span>' + pjHtml(true) + "</div>" : '<span class="dep-att">Facture pas encore ajoutée</span>') : "");
-      const tete = (d, st) => '<div class="gr-hd"><b>' + (d.nature === "Carburant" ? "Essence en plus" : "Dépense") + (d.montant ? " · " + F(d.montant) : "") + '</b><em class="gr-st ' + st[0] + '">' + st[1] + "</em></div><small>" + qui(d) + " · " + esc(grQuand(d.le)) + (d.transmis_le && qui(d) !== "Gérante" ? " · transmis par la gérante" : "") + "</small><p>" + esc(d.texte) + "</p>";
+      const fac = (d) => d.statut === "accordee" && !d.facture && d.nature !== "Carburant" ? (g ? '<div class="dq-fac dep-facw" data-fac="' + d.id + '"><b>Après l\'achat, ajoute la facture</b>' + pjHtml(true) + "</div>" : '<p class="dq-note">Facture pas encore ajoutée</p>') : "";
       const box = $("#sd-depRecep");
-      if (box) box.innerHTML = recep.length ? '<div class="dep-recep"><h4 class="gr-h4">Demandes de l\'équipe (' + recep.length + ")</h4>" + recep.map((d) => '<div class="gr-it att">' + tete(d, ["att", "À traiter"]) + (d.devis ? '<div class="dep-pcs">' + pieces(d) + "</div>" : "") + '<div class="gr-act" data-rec="' + d.id + '"><input type="text" maxlength="300" placeholder="Un mot (si tu refuses)" aria-label="Réponse"><button type="button" class="btn btn-sm btn-green" data-tr="1">Transférer à la direction</button><button type="button" class="btn btn-sm btn-line" data-tr="0">Refuser</button></div></div>').join("") + "</div>" : "";
+      if (box) box.innerHTML = recep.length ? '<section class="dep-recep"><h4 class="gr-h4">Demandes de l\'équipe <span class="dq-count">' + recep.length + "</span></h4>" + recep.map((d) => depCarte(d, { st: ["att", "À traiter"], extra: '<div class="dq-act" data-rec="' + d.id + '"><input type="text" maxlength="300" placeholder="Un mot si tu refuses (facultatif)" aria-label="Réponse"><div class="dq-btns"><button type="button" class="btn btn-green" data-tr="1">Transférer à la direction</button><button type="button" class="btn dq-no" data-tr="0">Refuser</button></div></div>' })).join("") + "</section>" : "";
       const ST = { attente: ["att", "En attente"], accordee: ["oui", "Accordé"], refusee: ["non", "Refusé"] };
-      $("#sd-grDemList").innerHTML = hist.length ? hist.map((d) => { const st = d.statut === "attente" && g && d.etape === "direction" ? ["att", "Chez la direction"] : ST[d.statut] || ST.attente, p = pieces(d);
-        return '<div class="gr-it ' + st[0] + '">' + tete(d, st) + (p ? '<div class="dep-pcs">' + p + "</div>" : "") +
-          (d.statut !== "attente" ? '<div class="gr-rep">' + (d.statut === "accordee" ? "Accordé" : "Refusé") + " " + esc(grQuand(d.repondu_le)) + (d.reponse ? " : " + esc(d.reponse) : "") + "</div>" : adm ? '<div class="gr-act" data-dem="' + d.id + '"><input type="text" maxlength="300" placeholder="Un mot (non obligatoire)" aria-label="Réponse"><button type="button" class="btn btn-sm btn-green" data-ok="1">Accorder</button><button type="button" class="btn btn-sm btn-line" data-ok="0">Refuser</button></div>' : "") + "</div>"; }).join("")
+      $("#sd-grDemList").innerHTML = hist.length ? hist.map((d) => { const st = d.statut === "attente" ? (g && d.etape === "direction" ? ["att", "Chez la direction"] : adm ? ["att", "À accorder"] : ST.attente) : ST[d.statut];
+        return depCarte(d, { st, extra: fac(d) + (d.statut === "attente" && adm ? '<div class="dq-act" data-dem="' + d.id + '"><input type="text" maxlength="300" placeholder="Un mot (facultatif)" aria-label="Réponse"><div class="dq-btns"><button type="button" class="btn btn-green" data-ok="1">Accorder</button><button type="button" class="btn dq-no" data-ok="0">Refuser</button></div></div>' : "") }); }).join("")
         : '<p class="tm-empty">Aucune dépense pour l\'instant.</p>';
     }
     function grDecRender() {
@@ -4946,8 +4954,7 @@ function init(root) {
       if (me.role === "moniteur") await crbCharger("#sd-crbEq"); else $("#sd-crbEq").hidden = true;
       const mes = await DB.q("demandes?select=*&auteur=eq." + me.id + "&order=le.desc&limit=10").catch(() => null); if (!mes) return;
       $("#sd-depMes").innerHTML = mes.length ? '<h4 class="gr-h4">Mes demandes</h4>' + mes.map((d) => { const st = d.statut === "accordee" ? ["oui", "Accordé"] : d.statut === "refusee" ? ["non", "Refusé"] : d.etape === "direction" ? ["att", "Chez la direction"] : ["att", "Chez la gérante"];
-        return '<div class="gr-it ' + st[0] + '"><div class="gr-hd"><b>' + (d.nature === "Carburant" ? "Essence en plus" : "Dépense") + " · " + F(d.montant || 0) + '</b><em class="gr-st ' + st[0] + '">' + st[1] + "</em></div><small>" + esc(grQuand(d.le)) + "</small><p>" + esc(d.texte) + "</p>" + (d.reponse ? '<div class="gr-rep">' + esc(d.reponse) + "</div>" : "") +
-          (d.statut === "accordee" && d.nature !== "Carburant" ? (d.facture ? '<small class="dep-ok">Facture ajoutée</small>' : '<div class="dep-facw" data-fac="' + d.id + '"><span class="dep-att">Après l\'achat, ajoute la facture :</span>' + pjHtml(true) + "</div>") : "") + "</div>"; }).join("") : "";
+        return depCarte(d, { st, vue: "equipe", extra: d.statut === "accordee" && d.nature !== "Carburant" && !d.facture ? '<div class="dq-fac dep-facw" data-fac="' + d.id + '"><b>Après l\'achat, ajoute la facture</b>' + pjHtml(true) + "</div>" : "" }); }).join("") : "";
     }
 
     $("#sd-grDecForm").addEventListener("submit", async (e) => {
@@ -6378,6 +6385,23 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 .dep-form{border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin:0 0 16px;background:#fff}.dep-form .gr-h4{margin-top:0}
 .crb-add{margin-top:6px}.crb-add>summary{cursor:pointer;font-weight:700;color:var(--green);list-style:none;padding:6px 0}.crb-add>summary::-webkit-details-marker{display:none}.crb-add>summary::before{content:"+ "}.crb-add[open]>summary::before{content:"– "}
 .dep-recep{border:2px solid var(--yellow);background:#FFFBEE;border-radius:16px;padding:12px 14px;margin:0 0 16px}.dep-recep .gr-h4{margin-top:0}
+.dq{background:#fff;border:1px solid var(--line);border-left:6px solid var(--line);border-radius:14px;padding:12px 14px;margin:0 0 10px}
+.dq-att{border-left-color:var(--yellow)}.dq-oui{border-left-color:var(--green)}.dq-non{border-left-color:#C8372D}
+.dq-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.dq-when{margin-left:auto;font-size:.8rem;color:var(--muted)}
+.dq-role{font:700 .74rem var(--f-ui);text-transform:uppercase;letter-spacing:.04em;border-radius:6px;padding:.25em .6em;background:#E9EDF1;color:#3D444D}
+.dq-r-moniteur{background:#FFF1C2;color:#7A5200}.dq-r-secretariat{background:#E3EEFB;color:#1A4A85}.dq-r-gerant{background:#EDE6F7;color:#5B3A8C}.dq-r-admin{background:#E8F3EE;color:#0B6E4F}
+.dq-kind{font-weight:700;font-size:.9rem}
+.dq-mid{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:8px 0 2px}
+.dq-mt{font:800 1.6rem/1.1 var(--f-display)}
+.dq-st{font-style:normal;font:700 .8rem var(--f-ui);border-radius:999px;padding:.35em .85em;white-space:nowrap;background:#FFF4D6;color:#8A5A00}.dq-oui .dq-st{background:var(--green-soft);color:var(--green)}.dq-non .dq-st{background:#FDE7EA;color:#B3132B}
+.dq-tx{margin:4px 0 0;font-size:.95rem}.dq-test{font:700 .68rem var(--f-ui);background:#14171C;color:#fff;border-radius:4px;padding:.1em .4em;vertical-align:middle}
+.dq-note{margin:6px 0 0;font-size:.84rem;color:var(--muted)}.dq-rep{margin:8px 0 0;font-size:.9rem;background:var(--soft);border-radius:8px;padding:6px 10px}
+.dq-pcs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.dq-fac{margin-top:10px;background:#FFFBEE;border:1px dashed var(--yellow);border-radius:10px;padding:10px}.dq-fac b{display:block;font-size:.88rem;margin-bottom:6px}
+.dq-act{margin-top:12px;display:grid;gap:8px}.dq-act input{font:inherit;font-size:.92rem;padding:.55em .75em;border:1px solid var(--line);border-radius:10px;width:100%;box-sizing:border-box}
+.dq-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}.dq-btns .btn{width:100%;justify-content:center;padding:.7em 1em}
+.dq-no{background:#fff;color:#B3132B;border:1.5px solid #E7B4BB}
+.dq-count{display:inline-grid;place-items:center;min-width:22px;height:22px;border-radius:99px;background:#C8372D;color:#fff;font-size:.78rem;margin-left:6px;vertical-align:middle}
 .dep-ok{color:var(--green);font-weight:600}.dep-facw{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.dep-facw.is-busy{opacity:.6;pointer-events:none}
 .crb-mon .dep-eqf{margin-top:14px}.crb-mon .dep-form{padding:0;border:0;margin:0}
 .crb-h{margin-top:4px}.crb-plus{font-weight:700;color:#8A5A00;background:#FFF4D6;border-radius:10px;padding:6px 10px;margin:0 0 8px}
