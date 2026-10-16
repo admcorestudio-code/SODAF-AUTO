@@ -1981,7 +1981,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <p class="tm-role" id="sd-grRole"></p>
 <div class="card gr-card" id="sd-gr" hidden><p class="eyebrow">Gérance</p><h3 class="tm-h3" id="sd-grTitre">Gérante et direction</h3><p class="tm-note" id="sd-grIntro" style="margin:0 0 10px!important"></p>
 <div class="gr-tabs" role="tablist"><button type="button" role="tab" data-gr="demandes" aria-selected="true">Dépenses<em class="gr-badge" id="sd-grBDem" hidden></em></button><button type="button" role="tab" data-gr="rapports" aria-selected="false">Rapport de la semaine<em class="gr-badge" id="sd-grBRap" hidden></em></button><button type="button" role="tab" data-gr="tirage" aria-selected="false">Tirage au sort<em class="gr-badge" id="sd-grBTir" hidden></em></button><button type="button" role="tab" data-gr="parrainage" aria-selected="false">Parrainage<em class="gr-badge" id="sd-grBPar" hidden></em></button></div>
-<div class="gr-pane" data-grp="demandes"><form id="sd-grDemForm" class="gr-form" hidden novalidate><div class="row2"><select id="sd-grDemType" hidden><option>Dépense</option></select><div class="field"><label for="sd-grDemMt">Montant (F)</label><input id="sd-grDemMt" inputmode="numeric" autocomplete="off" placeholder="ex. 5 000"></div></div><div class="field gr-elf" hidden><label for="sd-grDemElQ">Élève concerné (si besoin)</label><div class="gr-elbox"><input id="sd-grDemElQ" type="search" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Tape un nom ou un numéro (SO12)" role="combobox" aria-expanded="false" aria-controls="sd-grDemElL" aria-autocomplete="list"><input type="hidden" id="sd-grDemEl" value=""><div class="gr-elsel" id="sd-grDemElSel" hidden></div><div class="gr-ell" id="sd-grDemElL" role="listbox" hidden></div></div></div><div class="field"><label for="sd-grDemTx">Pour quoi ?</label><textarea id="sd-grDemTx" rows="2" maxlength="600" placeholder="ex. Plein de carburant de la voiture"></textarea></div><button type="submit" class="btn btn-sm btn-green">Demander l'accord</button></form><div id="sd-grDemList" class="gr-list"></div></div>
+<div class="gr-pane" data-grp="demandes"><div class="crb" id="sd-crb"></div><h4 class="gr-h4 crb-h">Autre dépense</h4><form id="sd-grDemForm" class="gr-form" hidden novalidate><input type="hidden" id="sd-grDemNat" value="Autre"><p class="crb-plus" id="sd-grDemPlus" hidden>Essence en plus du budget <button type="button" class="linkbtn" id="sd-grDemPlusX">Annuler</button></p><div class="row2"><select id="sd-grDemType" hidden><option>Dépense</option></select><div class="field"><label for="sd-grDemMt">Montant (F)</label><input id="sd-grDemMt" inputmode="numeric" autocomplete="off" placeholder="ex. 15 000"></div><div class="field" id="sd-grDemDevF"><label for="sd-grDemDev">Devis (photo ou PDF)</label><input id="sd-grDemDev" type="file" accept="image/*,application/pdf"></div></div><div class="field gr-elf" hidden><label for="sd-grDemElQ">Élève concerné (si besoin)</label><div class="gr-elbox"><input id="sd-grDemElQ" type="search" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Tape un nom ou un numéro (SO12)" role="combobox" aria-expanded="false" aria-controls="sd-grDemElL" aria-autocomplete="list"><input type="hidden" id="sd-grDemEl" value=""><div class="gr-elsel" id="sd-grDemElSel" hidden></div><div class="gr-ell" id="sd-grDemElL" role="listbox" hidden></div></div></div><div class="field"><label for="sd-grDemTx">Pour quoi ?</label><textarea id="sd-grDemTx" rows="2" maxlength="600" placeholder="ex. Changer les plaquettes de frein"></textarea></div><button type="submit" class="btn btn-sm btn-green">Demander l'accord</button></form><div id="sd-grDemList" class="gr-list"></div></div>
 <div class="gr-pane" data-grp="decisions" hidden style="display:none"><form id="sd-grDecForm" class="gr-form" hidden novalidate><div class="row2"><div class="field"><label for="sd-grDecCat">Sujet</label><select id="sd-grDecCat"><option>Élèves</option><option>Argent</option><option>Planning</option><option>Équipe</option><option>Autre</option></select></div><div class="field gr-grow"><label for="sd-grDecTx">Ce que j'ai décidé</label><textarea id="sd-grDecTx" rows="2" maxlength="600" placeholder="ex. Séance de samedi 7 h 30 déplacée à 8 h 45, le moniteur est prévenu."></textarea></div></div><button type="submit" class="btn btn-sm btn-green">Noter la décision</button></form><div id="sd-grDecList" class="gr-list"></div></div>
 <div class="gr-pane" data-grp="rapports" hidden><div id="sd-grAFaire" class="gr-afaire" hidden></div><div id="sd-grRapNew" hidden><div class="gr-semban" id="sd-grRapSem"></div><div class="tm-stats tm-dr" id="sd-grRapChiffres"></div><div class="field"><label for="sd-grRapTx">Mes remarques pour la direction</label><textarea id="sd-grRapTx" rows="4" maxlength="3000" placeholder="Ce qui s'est bien passé, les problèmes, ce qu'il faudrait changer, ce dont j'ai besoin."></textarea></div><button type="button" class="btn btn-sm btn-green" id="sd-grRapSend">Envoyer le rapport</button><p class="gr-rapnote" id="sd-grRapNote"></p></div><div id="sd-grCal" class="gr-cal" aria-label="Calendrier des rapports"></div><h4 class="gr-h4 gr-arch-h">Anciens rapports</h4><div id="sd-grRapList" class="gr-list"></div></div>
 <div class="gr-pane" data-grp="parrainage" hidden><p class="gr-sem">2 000 F par filleul inscrit, à envoyer au parrain par Mixx by Yas ou Moov Money après le reçu d'inscription du filleul. La commission apparaît ici toute seule.</p><div id="sd-paList"></div><div class="sec-mini"><h4 class="gr-h4">Meilleurs parrains</h4><p class="tm-note" style="margin:0 0 8px!important">2 filleuls : priorité sur les horaires · 3 : t-shirt · 5 : une séance offerte · 10 : karting à 3 et ambassadeur du mois (à confirmer) · meilleur de l'année : formation offerte à un proche.</p><div id="sd-paTop"></div></div></div>
@@ -4656,7 +4656,7 @@ function init(root) {
       const [dm, dc, rp] = await Promise.all([DB.q("demandes?select=*&order=le.desc&limit=60").catch(() => null), DB.q("decisions?select=*&order=le.desc&limit=60").catch(() => null), DB.q("rapports?select=*&order=semaine.desc&limit=20").catch(() => null)]);
       if (!dm && !dc && !rp) { $("#sd-grDemList").innerHTML = '<p class="tm-empty">La gérance n\'est pas encore activée dans la base.</p>'; return; }
       GR.dem = dm || []; GR.dec = dc || []; GR.rap = rp || [];
-      grDemRender(); await grRapRender(); await trCharger(); await paCharger(); grBadges(); grOnglet(GR.ong);
+      grDemRender(); await crbCharger(); await grRapRender(); await trCharger(); await paCharger(); grBadges(); grOnglet(GR.ong);
     }
     // ---- Parrainage : commissions à payer (table commissions, migration 0042)
     const PALIERS = [[10, "karting à 3 et ambassadeur du mois (à confirmer)"], [5, "une séance offerte"], [3, "un t-shirt SODAF"], [2, "priorité sur les horaires"]];
@@ -4674,6 +4674,11 @@ function init(root) {
       const top = Object.values(T).sort((a, b) => b.n - a.n).slice(0, 10);
       $("#sd-paTop").innerHTML = top.length ? top.map((t) => { const pl = PALIERS.find((p) => t.n >= p[0]); return '<div class="pa-top"><b>' + esc(t.id ? nom(t.id) : t.tel) + "</b><span>" + t.n + " filleul" + (t.n > 1 ? "s" : "") + (pl ? " · a gagné : " + pl[1] : "") + "</span></div>"; }).join("") : '<p class="tm-empty">Pas encore de parrain.</p>';
     }
+    $("#sd-gr") && $("#sd-gr").addEventListener("change", async (e) => {
+      const inp = e.target.closest("[data-fac]"); if (!inp || !inp.files[0]) return; const lab = inp.closest("label"); lab.classList.add("is-busy");
+      try { const path = await depEnvoyer(inp.files[0], "factures"); const r = await run(() => DB.q("rpc/depense_facture", { method: "POST", body: { p_id: +inp.dataset.fac, p_chemin: path } }).then(() => true), "Facture ajoutée"); if (r) grCharger(); }
+      catch (er) { toast("La facture n'a pas pu être envoyée", true); } finally { lab.classList.remove("is-busy"); }
+    });
     $("#sd-paList") && $("#sd-paList").addEventListener("click", async (e) => {
       const g = e.target.closest("[data-goel]"); if (g) { goEleve(+g.dataset.goel); return; }
       const b = e.target.closest("[data-pago]"); if (!b) return; const row = b.closest("[data-com]");
@@ -4681,11 +4686,13 @@ function init(root) {
       if (ok !== null) { await paCharger(); grBadges(); }
     });
     function grDemRender() {
-      const adm = me.role === "admin", ST = { attente: ["att", "En attente"], accordee: ["oui", "Accordé"], refusee: ["non", "Refusé"] };
-      $("#sd-grDemList").innerHTML = GR.dem.length ? GR.dem.map((d) => { const st = ST[d.statut] || ST.attente, el = d.eleve_id ? eleves.find((x) => x.id === d.eleve_id) : null;
-        return '<div class="gr-it ' + st[0] + '"><div class="gr-hd"><b>' + esc(d.type) + (d.montant ? " · " + F(d.montant) : "") + (el ? " · " + esc(el.nom) : "") + '</b><em class="gr-st ' + st[0] + '">' + st[1] + "</em></div><small>Demandé " + esc(grQuand(d.le)) + "</small><p>" + esc(d.texte) + "</p>" +
-          (d.statut !== "attente" ? '<div class="gr-rep">' + (d.statut === "accordee" ? "Accordé" : "Refusé") + " " + esc(grQuand(d.repondu_le)) + (d.reponse ? " : " + esc(d.reponse) : "") + "</div>" : adm ? '<div class="gr-act" data-dem="' + d.id + '"><input type="text" maxlength="300" placeholder="Un mot pour la gérante (non obligatoire)" aria-label="Réponse à la gérante"><button type="button" class="btn btn-sm btn-green" data-ok="1">Accorder</button><button type="button" class="btn btn-sm btn-line" data-ok="0">Refuser</button></div>' : "") + "</div>"; }).join("")
-        : '<p class="tm-empty">' + (adm ? "Aucune dépense demandée." : "Aucune dépense demandée.") + "</p>";
+      const adm = me.role === "admin", g = me.role === "gerant", ST = { attente: ["att", "En attente"], accordee: ["oui", "Accordé"], refusee: ["non", "Refusé"] };
+      $("#sd-grDemList").innerHTML = GR.dem.length ? GR.dem.map((d) => { const st = ST[d.statut] || ST.attente, carb = d.nature === "Carburant";
+        const pieces = (d.devis ? '<button type="button" class="linkbtn" data-dep="' + esc(d.devis) + '">Voir le devis</button>' : "") + (d.facture ? '<button type="button" class="linkbtn" data-dep="' + esc(d.facture) + '">Voir la facture</button>' : "") +
+          (d.statut === "accordee" && !d.facture && !carb ? (g ? '<label class="btn btn-line btn-sm dep-fac">Ajouter la facture<input type="file" accept="image/*,application/pdf" data-fac="' + d.id + '" hidden></label>' : '<span class="dep-att">Facture pas encore ajoutée</span>') : "");
+        return '<div class="gr-it ' + st[0] + '"><div class="gr-hd"><b>' + (carb ? "Essence en plus" : "Dépense") + (d.montant ? " · " + F(d.montant) : "") + '</b><em class="gr-st ' + st[0] + '">' + st[1] + "</em></div><small>Demandé " + esc(grQuand(d.le)) + "</small><p>" + esc(d.texte) + "</p>" + (pieces ? '<div class="dep-pcs">' + pieces + "</div>" : "") +
+          (d.statut !== "attente" ? '<div class="gr-rep">' + (d.statut === "accordee" ? "Accordé" : "Refusé") + " " + esc(grQuand(d.repondu_le)) + (d.reponse ? " : " + esc(d.reponse) : "") + "</div>" : adm ? '<div class="gr-act" data-dem="' + d.id + '"><input type="text" maxlength="300" placeholder="Un mot (non obligatoire)" aria-label="Réponse à la gérante"><button type="button" class="btn btn-sm btn-green" data-ok="1">Accorder</button><button type="button" class="btn btn-sm btn-line" data-ok="0">Refuser</button></div>' : "") + "</div>"; }).join("")
+        : '<p class="tm-empty">Aucune dépense demandée.</p>';
     }
     function grDecRender() {
       const adm = me.role === "admin";
@@ -4697,13 +4704,13 @@ function init(root) {
     // Chiffres de la semaine, calculés depuis la base au moment du rapport
     async function grChiffres(l) {
       const a = dOf(l), b = new Date(a); b.setDate(a.getDate() + 6); const fin = iso(b), finTs = iso(new Date(b.getTime() + 864e5));
-      const [pay, cr, el, dep] = await Promise.all([DB.q("paiements?select=montant,annule,motif&jour=gte." + l + "&jour=lte." + fin).catch(() => []), DB.q("creneaux_conduite?select=statut,eleve_id&jour=gte." + l + "&jour=lte." + fin).catch(() => []), DB.q("eleves?select=id,cree_le,statut,archive_le,examen_date&or=(cree_le.gte." + l + ",archive_le.gte." + l + ",examen_date.gte." + l + ")").catch(() => []), DB.q("demandes?select=montant&type=eq.D%C3%A9pense&statut=eq.accordee&le=gte." + l + "&le=lt." + finTs).catch(() => [])]);
+      const [pay, cr, el, dep, crb] = await Promise.all([DB.q("paiements?select=montant,annule,motif&jour=gte." + l + "&jour=lte." + fin).catch(() => []), DB.q("creneaux_conduite?select=statut,eleve_id,jour,heure&jour=gte." + l + "&jour=lte." + fin).catch(() => []), DB.q("eleves?select=id,cree_le,statut,archive_le,examen_date&or=(cree_le.gte." + l + ",archive_le.gte." + l + ",examen_date.gte." + l + ")").catch(() => []), DB.q("demandes?select=montant,nature&type=eq.D%C3%A9pense&statut=eq.accordee&le=gte." + l + "&le=lt." + finTs).catch(() => []), DB.q("carburant?select=montant,km&jour=gte." + l + "&jour=lte." + fin).catch(() => [])]);
       const ok = pay.filter((p) => !p.annule), dans = (d) => d && d >= l && d < finTs;
       return { encaisse: ok.reduce((n, p) => n + (p.montant || 0), 0), recus: ok.length, recus_annules: pay.filter((p) => p.annule).length, inscriptions: ok.filter((p) => /^Droit d'inscription/.test(p.motif || "")).length,
         contacts: el.filter((x) => dans(x.cree_le)).length, conduite_faites: cr.filter((c) => c.statut === "Fait").length, absences: cr.filter((c) => c.statut === "Absent").length,
-        abandons: el.filter((x) => x.statut === "Abandon" && dans(x.archive_le)).length, permis: el.filter((x) => x.statut === "Permis obtenu" && dans(x.examen_date)).length, depenses: (dep || []).reduce((n, d) => n + (d.montant || 0), 0) };
+        abandons: el.filter((x) => x.statut === "Abandon" && dans(x.archive_le)).length, permis: el.filter((x) => x.statut === "Permis obtenu" && dans(x.examen_date)).length, depenses: (dep || []).filter((d) => d.nature !== "Carburant").reduce((n, d) => n + (d.montant || 0), 0), carburant: (crb || []).reduce((n, c) => n + (c.montant || 0), 0), km: ((k) => k.length > 1 ? Math.max(...k) - Math.min(...k) : null)((crb || []).map((c) => c.km).filter((v) => v)), blocs: new Set(cr.filter((c) => c.eleve_id && ["Réservé", "Fait", "Absent"].includes(c.statut)).map((c) => c.jour + c.heure)).size };
     }
-    const GR_CH = [["encaisse", "Encaissé", (v) => F(v)], ["recus", "Reçus faits"], ["inscriptions", "Inscriptions"], ["contacts", "Nouveaux contacts"], ["conduite_faites", "Séances de conduite faites"], ["absences", "Absences en conduite"], ["permis", "Permis obtenus"], ["abandons", "Dossiers archivés"], ["recus_annules", "Reçus annulés"], ["depenses", "Dépenses accordées", (v) => F(v)]];
+    const GR_CH = [["encaisse", "Encaissé", (v) => F(v)], ["recus", "Reçus faits"], ["inscriptions", "Inscriptions"], ["contacts", "Nouveaux contacts"], ["conduite_faites", "Séances de conduite faites"], ["absences", "Absences en conduite"], ["permis", "Permis obtenus"], ["abandons", "Dossiers archivés"], ["recus_annules", "Reçus annulés"], ["depenses", "Dépenses accordées", (v) => F(v)], ["carburant", "Carburant", (v) => F(v)], ["km", "Kilomètres parcourus", (v) => milliers(v) + " km"], ["blocs", "Blocs de conduite"]];
     const grChHtml = (c, tuiles) => GR_CH.filter((k) => c[k[0]] != null).map((k) => tuiles ? "<div><span>" + k[1] + "</span><b>" + (k[2] ? k[2](c[k[0]]) : c[k[0]]) + "</b></div>" : "<span>" + k[1] + "<b>" + (k[2] ? k[2](c[k[0]]) : c[k[0]]) + "</b></span>").join("");
     async function grRapRender() {
       const g = me.role === "gerant", l = g ? grSemaineAFaire() : null, cur = grLundi(new Date());
@@ -4823,6 +4830,7 @@ function init(root) {
     $("#sd-gr").addEventListener("click", async (e) => {
       const t = e.target.closest("[data-gr]"); if (t) { grOnglet(t.dataset.gr); if (me.role === "gerant") { if (t.dataset.gr === "demandes") grMarquer("dem", GR.dem.filter((d) => d.statut !== "attente").map((d) => d.id)); if (t.dataset.gr === "decisions") grMarquer("dec", GR.dec.filter((d) => d.avis).map((d) => d.id)); grBadges(); } return; }
       const ge = e.target.closest("#sd-grDecList [data-goel]"); if (ge) { goEleve(+ge.dataset.goel); return; }
+      const dp = e.target.closest("[data-dep]"); if (dp) { depOuvrir(dp.dataset.dep); return; }
       const ok = e.target.closest("[data-ok]"), av = e.target.closest("[data-avis]");
       if (ok) { const bx = ok.closest("[data-dem]"); bx.querySelectorAll("button").forEach((b) => (b.disabled = true)); const r = await run(() => DB.q("rpc/demande_repondre", { method: "POST", body: { p_id: +bx.dataset.dem, p_accord: ok.dataset.ok === "1", p_note: bx.querySelector("input").value.trim() || null } }).then(() => true), ok.dataset.ok === "1" ? "Accordé : la gérante est prévenue" : "Refusé : la gérante est prévenue"); if (r) grCharger(); else bx.querySelectorAll("button").forEach((b) => (b.disabled = false)); }
       if (av) { const bx = av.closest("[data-dec]"); bx.querySelectorAll("button").forEach((b) => (b.disabled = true)); const r = await run(() => DB.q("rpc/decision_avis", { method: "POST", body: { p_id: +bx.dataset.dec, p_avis: av.dataset.avis, p_note: bx.querySelector("input").value.trim() || null } }).then(() => true), av.dataset.avis === "ok" ? "Noté : d'accord" : "Noté : à revoir, la gérante est prévenue"); if (r) grCharger(); else bx.querySelectorAll("button").forEach((b) => (b.disabled = false)); }
@@ -4849,13 +4857,55 @@ function init(root) {
     $("#sd-grDemElSel").addEventListener("click", (e) => { if (e.target.closest("button")) { grElChoisir(0); $("#sd-grDemElQ").focus(); } });
     document.addEventListener("click", (e) => { if (!e.target.closest(".gr-elbox")) grElFermer(); });
     $("#sd-grDemForm").addEventListener("submit", async (e) => {
-      e.preventDefault(); const tx = $("#sd-grDemTx").value.trim(), mt = +($("#sd-grDemMt").value.replace(/\D/g, "")) || null, el = +$("#sd-grDemEl").value || null;
+      e.preventDefault(); const tx = $("#sd-grDemTx").value.trim(), mt = +($("#sd-grDemMt").value.replace(/\D/g, "")) || null, nat = $("#sd-grDemNat").value, f = $("#sd-grDemDev").files[0];
       if (!mt) { toast("Écris le montant", true); $("#sd-grDemMt").focus(); return; }
+      if (nat !== "Carburant" && !f) { toast("Ajoute le devis", true); return; }
       if (tx.length < 3) { toast("Écris pour quoi", true); $("#sd-grDemTx").focus(); return; }
-      const b = e.target.querySelector("[type=submit]"); b.disabled = true;
-      const r = await run(() => DB.q("demandes", { method: "POST", body: { type: $("#sd-grDemType").value, montant: mt, eleve_id: el, texte: tx }, prefer: "return=minimal" }).then(() => true), "Demande envoyée");
-      b.disabled = false; if (r) { e.target.reset(); grElChoisir(0); grCharger(); }
+      const b = e.target.querySelector("[type=submit]"); b.disabled = true; b.textContent = "Envoi…";
+      let devis = null;
+      if (nat !== "Carburant") { try { devis = await depEnvoyer(f, "devis"); } catch (er) { toast("Le devis n'a pas pu être envoyé", true); b.disabled = false; b.textContent = "Demander l'accord"; return; } }
+      const r = await run(() => DB.q("demandes", { method: "POST", body: { type: "Dépense", nature: nat, montant: mt, texte: tx, devis }, prefer: "return=minimal" }).then(() => true), "Demande envoyée");
+      b.disabled = false; b.textContent = "Demander l'accord"; if (r) { e.target.reset(); depNature("Autre"); grCharger(); }
     });
+    // ---- Dépenses : pièces (devis, factures, photos du compteur) dans l'espace privé « depenses »
+    async function depEnvoyer(file, dossier) {
+      const img = /^image\//.test(file.type); if (!img && file.type !== "application/pdf") throw new Error("type");
+      const blob = img ? await photoCompresse(file, 1600, false) : file; if (blob.size > 10485760) throw new Error("taille");
+      const path = dossier + "/" + Date.now() + "-" + Math.random().toString(36).slice(2, 7) + (img ? ".jpg" : ".pdf");
+      const r = await fetch(SB_URL + "/storage/v1/object/depenses/" + path, { method: "POST", headers: { apikey: SB_KEY, Authorization: "Bearer " + (await DB.token()), "Content-Type": img ? "image/jpeg" : "application/pdf", "x-upsert": "false" }, body: blob });
+      if (!r.ok) throw new Error("envoi"); return path;
+    }
+    async function depOuvrir(path) {
+      const w = window.open("", "_blank");
+      try { const r = await fetch(SB_URL + "/storage/v1/object/sign/depenses/" + path, { method: "POST", headers: { apikey: SB_KEY, Authorization: "Bearer " + (await DB.token()), "Content-Type": "application/json" }, body: JSON.stringify({ expiresIn: 3600 }) }); const j = await r.json(); if (!j.signedURL) throw 0; const u = SB_URL + "/storage/v1" + j.signedURL; if (w) w.location = u; else location.href = u; }
+      catch (er) { if (w) w.close(); toast("Fichier introuvable", true); }
+    }
+    function depNature(n) { $("#sd-grDemNat").value = n; $("#sd-grDemPlus").hidden = n !== "Carburant"; $("#sd-grDemDevF").hidden = n === "Carburant"; $("#sd-grDemTx").placeholder = n === "Carburant" ? "ex. Beaucoup de rattrapages cette semaine" : "ex. Changer les plaquettes de frein"; }
+    $("#sd-grDemPlusX").addEventListener("click", () => depNature("Autre"));
+    // ---- Carburant : budget de la semaine (2 000 F par bloc prévu, plafond 35 000 F), pleins avec photo du compteur
+    async function crbCharger() {
+      const box = $("#sd-crb"); if (!box) return; const g = me.role === "gerant", l = grLundi(new Date());
+      const [bu, pl] = await Promise.all([DB.q("rpc/carburant_budget", { method: "POST", body: { p_lundi: l } }).catch(() => null), DB.q("carburant?select=*&jour=gte." + l + "&order=le.desc").catch(() => null)]);
+      if (!bu || !pl) { box.innerHTML = '<p class="tm-empty">Le budget carburant n\'est pas encore activé dans la base.</p>'; return; }
+      GR.crb = bu; const pct = bu.budget + bu.en_plus ? Math.min(100, Math.round((bu.depense / (bu.budget + bu.en_plus)) * 100)) : 0, over = bu.reste <= 0 && bu.depense > 0;
+      box.innerHTML = '<div class="crb-hd"><div><span class="crb-k">Carburant · semaine ' + grNumSem(l) + '</span><b class="crb-big">' + F(bu.depense) + ' <small>/ ' + F(bu.budget + bu.en_plus) + "</small></b><span class=\"crb-s\">" + bu.blocs + " bloc" + (bu.blocs > 1 ? "s" : "") + " × 2 000 F" + (bu.budget >= 35000 ? " (plafond 35 000 F)" : "") + (bu.en_plus ? " + " + F(bu.en_plus) + " accordés en plus" : "") + '</span></div><div class="crb-reste' + (over ? " crb-ko" : "") + '"><span>Reste</span><b>' + F(Math.max(0, bu.reste)) + "</b></div></div>" +
+        '<div class="crb-bar"><i style="width:' + pct + '%"' + (pct >= 90 ? ' class="crb-hot"' : "") + "></i></div>" +
+        (g ? '<form class="crb-form" id="sd-crbForm" novalidate><div class="crb-row"><div class="field"><label for="sd-crbMt">Montant (F)</label><input id="sd-crbMt" inputmode="numeric" autocomplete="off" placeholder="ex. 10 000"></div><div class="field"><label for="sd-crbKm">Compteur (km)</label><input id="sd-crbKm" inputmode="numeric" autocomplete="off" placeholder="ex. 184 350"></div></div><div class="field"><label for="sd-crbPh">Photo du compteur</label><input id="sd-crbPh" type="file" accept="image/*" capture="environment"></div><label class="crb-chk"><input type="checkbox" id="sd-crbFull"> Plein complet</label><div class="tm-formact"><button class="btn btn-green btn-sm" type="submit">Ajouter le plein</button><button class="linkbtn" type="button" id="sd-crbPlus">Besoin de plus ? Demander l\'accord</button></div></form>' : "") +
+        (pl.length ? '<div class="crb-list">' + pl.map((c) => '<div class="crb-it"><span>' + dOf(c.jour).toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" }) + "</span><b>" + F(c.montant) + "</b><span>" + (c.km ? milliers(c.km) + " km" : "—") + (c.plein_complet ? " · plein complet" : "") + '</span><button type="button" class="linkbtn" data-dep="' + esc(c.photo) + '">Photo</button></div>').join("") + "</div>" : '<p class="crb-vide">Aucun plein cette semaine.</p>');
+      const f = $("#sd-crbForm"); if (!f) return;
+      $("#sd-crbPlus").addEventListener("click", () => { depNature("Carburant"); $("#sd-grDemForm").scrollIntoView({ behavior: "smooth", block: "start" }); $("#sd-grDemMt").focus(); });
+      f.addEventListener("submit", async (e) => {
+        e.preventDefault(); const mt = +($("#sd-crbMt").value.replace(/\D/g, "")) || 0, km = +($("#sd-crbKm").value.replace(/\D/g, "")) || null, ph = $("#sd-crbPh").files[0];
+        if (mt < 500) { toast("Écris le montant", true); $("#sd-crbMt").focus(); return; }
+        if (!ph) { toast("Prends la photo du compteur", true); return; }
+        if (mt > GR.crb.reste) { toast("Budget dépassé : reste " + F(Math.max(0, GR.crb.reste)) + ". Demande l'accord.", true); return; }
+        const b = f.querySelector("[type=submit]"); b.disabled = true; b.textContent = "Envoi…";
+        let photo; try { photo = await depEnvoyer(ph, "compteur"); } catch (er) { toast("La photo n'a pas pu être envoyée", true); b.disabled = false; b.textContent = "Ajouter le plein"; return; }
+        const r = await run(() => DB.q("carburant", { method: "POST", body: { montant: mt, km, photo, plein_complet: $("#sd-crbFull").checked }, prefer: "return=minimal" }).then(() => true), "Plein ajouté");
+        b.disabled = false; b.textContent = "Ajouter le plein"; if (r) crbCharger();
+      });
+    }
+
     $("#sd-grDecForm").addEventListener("submit", async (e) => {
       e.preventDefault(); const tx = $("#sd-grDecTx").value.trim();
       if (tx.length < 3) { toast("Écris la décision en quelques mots", true); $("#sd-grDecTx").focus(); return; }
@@ -6265,6 +6315,20 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 .pc-dec textarea{width:100%;font:inherit;font-size:.95rem;padding:.6em .75em;border:1px solid var(--line);border-radius:10px;margin-top:8px;box-sizing:border-box}
 .pc-dec-cats{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.pc-dec-cats button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:.4em .95em;font:600 .86rem var(--f-ui);cursor:pointer;color:var(--ink)}.pc-dec-cats button[aria-checked=true]{background:var(--ink);border-color:var(--ink);color:#fff}
 .pc-dec-hint{font-size:.85rem;color:var(--muted);margin:10px 0 0}
+.crb{border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin:0 0 16px;background:#fff}
+.crb-hd{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.crb-k{display:block;font:700 .74rem var(--f-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.crb-big{display:block;font:800 1.7rem var(--f-display);margin:2px 0}.crb-big small{font-size:1rem;color:var(--muted);font-weight:600}
+.crb-s{font-size:.84rem;color:var(--muted)}
+.crb-reste{background:var(--green-soft);border-radius:12px;padding:8px 14px;text-align:right}.crb-reste span{display:block;font-size:.78rem;color:var(--muted)}.crb-reste b{font:800 1.25rem var(--f-display);color:var(--green)}
+.crb-reste.crb-ko{background:#FDE7EA}.crb-reste.crb-ko b{color:#B3132B}
+.crb-bar{height:10px;border-radius:99px;background:var(--soft);margin:12px 0;overflow:hidden}.crb-bar i{display:block;height:100%;background:var(--green);border-radius:99px}.crb-bar i.crb-hot{background:var(--yellow)}
+.crb-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.crb-form .field{margin:0 0 8px}
+.crb-chk{display:flex;gap:8px;align-items:center;font-size:.9rem;margin:2px 0 6px}
+.crb-list{display:grid;gap:4px;margin-top:10px;border-top:1px solid var(--line);padding-top:8px}.crb-it{display:grid;grid-template-columns:auto auto 1fr auto;gap:10px;align-items:center;font-size:.88rem}.crb-it span:first-child{color:var(--muted)}
+.crb-vide{font-size:.86rem;color:var(--muted);margin:6px 0 0}
+.crb-h{margin-top:4px}.crb-plus{font-weight:700;color:#8A5A00;background:#FFF4D6;border-radius:10px;padding:6px 10px;margin:0 0 8px}
+.dep-pcs{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:6px}.dep-fac{cursor:pointer}.dep-fac.is-busy{opacity:.6;pointer-events:none}.dep-att{font-size:.82rem;color:#8A5A00}
 .gr-it.gr-flash{box-shadow:0 0 0 3px var(--yellow);transition:box-shadow .3s}
 .gr-ch{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px;margin-top:8px}
 .gr-ch span{background:var(--soft);border-radius:8px;padding:6px 9px;font-size:.84rem}.gr-ch b{display:block;font-size:1rem}
