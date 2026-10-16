@@ -2013,6 +2013,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="card" id="sd-mcCode"><p class="eyebrow">Cours de code</p><h3 class="tm-h3" id="sd-mcTitle">Chargement…</h3><div id="sd-mcBody"></div></div>
 <div class="card" id="sd-mcDrive"><p class="eyebrow">Conduite</p><h3 class="tm-h3">Mes séances d'aujourd'hui</h3><div id="sd-mcList" class="tm-list"></div></div>
 </div>
+<div class="card crb crb-mon" id="sd-crbMon" style="margin-top:16px" hidden></div>
 <div class="card tm-mnplan" id="sd-mnPlan" style="margin-top:16px"><p class="eyebrow">Planning conduite</p><h3 class="tm-h3">Les blocs des équipes</h3><p class="tm-note" style="margin:0 0 12px!important">Chaque élève a son équipe et ses blocs, réservés d'un coup par le secrétariat. Ici tu vois les blocs de n'importe quel jour. Un élève absent se place sur le mercredi 15 h 45 (rattrapage gratuit).</p><div id="sd-mnPlanSlot"></div></div>
 <div class="teamgrid" style="margin-top:16px">
 <a class="card teamtile hl" href="#classe"><b>Mode classe</b><span>Projette les leçons, le devoir, le quiz, les panneaux et les carrefours en salle.</span><em>Lancer la projection →</em></a>
@@ -4883,26 +4884,27 @@ function init(root) {
     function depNature(n) { $("#sd-grDemNat").value = n; $("#sd-grDemPlus").hidden = n !== "Carburant"; $("#sd-grDemDevF").hidden = n === "Carburant"; $("#sd-grDemTx").placeholder = n === "Carburant" ? "ex. Beaucoup de rattrapages cette semaine" : "ex. Changer les plaquettes de frein"; }
     $("#sd-grDemPlusX").addEventListener("click", () => depNature("Autre"));
     // ---- Carburant : budget de la semaine (2 000 F par bloc prévu, plafond 35 000 F), pleins avec photo du compteur
-    async function crbCharger() {
-      const box = $("#sd-crb"); if (!box) return; const g = me.role === "gerant", l = grLundi(new Date());
+    async function crbCharger(sel = "#sd-crb") {
+      const box = $(sel); if (!box) return; const mon = sel === "#sd-crbMon", g = me.role === "gerant" && !mon, l = grLundi(new Date()); box.hidden = false;
       const [bu, pl] = await Promise.all([DB.q("rpc/carburant_budget", { method: "POST", body: { p_lundi: l } }).catch(() => null), DB.q("carburant?select=*&jour=gte." + l + "&order=le.desc").catch(() => null)]);
       if (!bu || !pl) { box.innerHTML = '<p class="tm-empty">Le budget carburant n\'est pas encore activé dans la base.</p>'; return; }
       GR.crb = bu; const pct = bu.budget + bu.en_plus ? Math.min(100, Math.round((bu.depense / (bu.budget + bu.en_plus)) * 100)) : 0, over = bu.reste <= 0 && bu.depense > 0;
-      box.innerHTML = '<div class="crb-hd"><div><span class="crb-k">Carburant · semaine ' + grNumSem(l) + '</span><b class="crb-big">' + F(bu.depense) + ' <small>/ ' + F(bu.budget + bu.en_plus) + "</small></b><span class=\"crb-s\">" + bu.blocs + " bloc" + (bu.blocs > 1 ? "s" : "") + " × 2 000 F" + (bu.budget >= 35000 ? " (plafond 35 000 F)" : "") + (bu.en_plus ? " + " + F(bu.en_plus) + " accordés en plus" : "") + '</span></div><div class="crb-reste' + (over ? " crb-ko" : "") + '"><span>Reste</span><b>' + F(Math.max(0, bu.reste)) + "</b></div></div>" +
+      box.innerHTML = '<div class="crb-hd"><div><span class="crb-k">' + (mon ? "Carburant de la voiture · semaine " : "Carburant · semaine ") + grNumSem(l) + '</span><b class="crb-big">' + F(bu.depense) + ' <small>/ ' + F(bu.budget + bu.en_plus) + "</small></b><span class=\"crb-s\">" + bu.blocs + " bloc" + (bu.blocs > 1 ? "s" : "") + " × 2 000 F" + (bu.budget >= 35000 ? " (plafond 35 000 F)" : "") + (bu.en_plus ? " + " + F(bu.en_plus) + " accordés en plus" : "") + '</span></div><div class="crb-reste' + (over ? " crb-ko" : "") + '"><span>Reste</span><b>' + F(Math.max(0, bu.reste)) + "</b></div></div>" +
         '<div class="crb-bar"><i style="width:' + pct + '%"' + (pct >= 90 ? ' class="crb-hot"' : "") + "></i></div>" +
-        (g ? '<form class="crb-form" id="sd-crbForm" novalidate><div class="crb-row"><div class="field"><label for="sd-crbMt">Montant (F)</label><input id="sd-crbMt" inputmode="numeric" autocomplete="off" placeholder="ex. 10 000"></div><div class="field"><label for="sd-crbKm">Compteur (km)</label><input id="sd-crbKm" inputmode="numeric" autocomplete="off" placeholder="ex. 184 350"></div></div><div class="field"><label for="sd-crbPh">Photo du compteur</label><input id="sd-crbPh" type="file" accept="image/*" capture="environment"></div><label class="crb-chk"><input type="checkbox" id="sd-crbFull"> Plein complet</label><div class="tm-formact"><button class="btn btn-green btn-sm" type="submit">Ajouter le plein</button><button class="linkbtn" type="button" id="sd-crbPlus">Besoin de plus ? Demander l\'accord</button></div></form>' : "") +
-        (pl.length ? '<div class="crb-list">' + pl.map((c) => '<div class="crb-it"><span>' + dOf(c.jour).toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" }) + "</span><b>" + F(c.montant) + "</b><span>" + (c.km ? milliers(c.km) + " km" : "—") + (c.plein_complet ? " · plein complet" : "") + '</span><button type="button" class="linkbtn" data-dep="' + esc(c.photo) + '">Photo</button></div>').join("") + "</div>" : '<p class="crb-vide">Aucun plein cette semaine.</p>');
-      const f = $("#sd-crbForm"); if (!f) return;
-      $("#sd-crbPlus").addEventListener("click", () => { depNature("Carburant"); $("#sd-grDemForm").scrollIntoView({ behavior: "smooth", block: "start" }); $("#sd-grDemMt").focus(); });
+        (g ? '<div class="tm-formact"><button class="btn btn-line btn-sm" type="button" id="sd-crbPlus">Demander de l\'essence en plus</button></div>' : "") +
+        (mon ? '<p class="crb-s" style="margin:0 0 8px">À chaque plein : le montant, le compteur et sa photo.</p><form class="crb-form" id="sd-crbForm" novalidate><div class="crb-row"><div class="field"><label for="sd-crbMt">Montant (F)</label><input id="sd-crbMt" inputmode="numeric" autocomplete="off" placeholder="ex. 10 000"></div><div class="field"><label for="sd-crbKm">Compteur (km)</label><input id="sd-crbKm" inputmode="numeric" autocomplete="off" placeholder="ex. 184 350"></div></div><div class="field"><label for="sd-crbPh">Photo du compteur</label><input id="sd-crbPh" type="file" accept="image/*" capture="environment"></div><label class="crb-chk"><input type="checkbox" id="sd-crbFull"> Plein complet</label><div class="tm-formact"><button class="btn btn-green btn-sm" type="submit">Ajouter le plein</button></div></form>' : "") +
+        (pl.length ? '<div class="crb-list">' + pl.map((c) => '<div class="crb-it"><span>' + dOf(c.jour).toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" }) + "</span><b>" + F(c.montant) + "</b><span>" + (c.km ? milliers(c.km) + " km" : "—") + (c.plein_complet ? " · plein complet" : "") + "</span>" + (mon ? "<span></span>" : '<button type="button" class="linkbtn" data-dep="' + esc(c.photo) + '">Photo</button>') + "</div>").join("") + "</div>" : '<p class="crb-vide">Aucun plein cette semaine.</p>');
+      const pb = box.querySelector("#sd-crbPlus"); if (pb) pb.addEventListener("click", () => { depNature("Carburant"); $("#sd-grDemForm").scrollIntoView({ behavior: "smooth", block: "start" }); $("#sd-grDemMt").focus(); });
+      const f = box.querySelector("#sd-crbForm"); if (!f) return;
       f.addEventListener("submit", async (e) => {
         e.preventDefault(); const mt = +($("#sd-crbMt").value.replace(/\D/g, "")) || 0, km = +($("#sd-crbKm").value.replace(/\D/g, "")) || null, ph = $("#sd-crbPh").files[0];
         if (mt < 500) { toast("Écris le montant", true); $("#sd-crbMt").focus(); return; }
         if (!ph) { toast("Prends la photo du compteur", true); return; }
-        if (mt > GR.crb.reste) { toast("Budget dépassé : reste " + F(Math.max(0, GR.crb.reste)) + ". Demande l'accord.", true); return; }
+        if (mt > GR.crb.reste) { toast("Budget dépassé : reste " + F(Math.max(0, GR.crb.reste)) + ". Préviens la gérante.", true); return; }
         const b = f.querySelector("[type=submit]"); b.disabled = true; b.textContent = "Envoi…";
         let photo; try { photo = await depEnvoyer(ph, "compteur"); } catch (er) { toast("La photo n'a pas pu être envoyée", true); b.disabled = false; b.textContent = "Ajouter le plein"; return; }
         const r = await run(() => DB.q("carburant", { method: "POST", body: { montant: mt, km, photo, plein_complet: $("#sd-crbFull").checked }, prefer: "return=minimal" }).then(() => true), "Plein ajouté");
-        b.disabled = false; b.textContent = "Ajouter le plein"; if (r) crbCharger();
+        b.disabled = false; b.textContent = "Ajouter le plein"; if (r) crbCharger(sel);
       });
     }
 
@@ -5039,6 +5041,7 @@ function init(root) {
     let appelEdit = null; // séance dont on modifie l'appel déjà validé
     async function loadMon() {
       if (!me) return;
+      if (me.role === "moniteur") crbCharger("#sd-crbMon");
       const today = iso(new Date());
       const s0 = await run(() => DB.q("seances_code?select=*&jour=gte." + today + "&statut=neq.Annulé&order=jour&limit=12"));
       if (s0) {
