@@ -19,12 +19,12 @@
 <script>
 window.SODAF_APP = 1;
 window.addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); window.__bip = e; document.dispatchEvent(new Event("sodaf-bip")); });
-if ("serviceWorker" in navigator) window.addEventListener("load", function () { navigator.serviceWorker.register("/equipe/sw.js", { scope: "/equipe/" }).catch(function () {}); });
+if ("serviceWorker" in navigator) window.addEventListener("load", function () { navigator.serviceWorker.register("/equipe/sw.js", { scope: "/equipe/", updateViaCache: "none" }).catch(function () {}); });
 </script>
 </head>
 <body>
 <div id="sodaf-root"><div id="app"></div></div>
 <noscript><p>Active JavaScript pour utiliser l'espace équipe SODAF.</p></noscript>
-<script src="/app.js?v=163"></script>
+<script src="/app.js?v=164"></script>
 </body>
 </html>

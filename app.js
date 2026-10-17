@@ -145,7 +145,7 @@ nav.main{display:flex;gap:2px;margin-left:auto}
 @media (min-width:821px){.dots{bottom:50px!important}.rule{bottom:70px!important}.hero-in{padding-bottom:120px!important}}
 @media (max-width:900px){.pricebar{grid-template-columns:repeat(2,minmax(0,1fr))}.pricebar .btn{grid-column:1/-1;justify-content:center}}
 @media (max-width:520px){.pricebar{grid-template-columns:1fr;margin-top:-20px}}
-@media (max-width:1300px){.burger{display:inline-block}.bar>.btn-green,.bar>.hdr-link{display:none!important}nav.main{display:none;position:absolute;left:-16px;right:-16px;top:100%;background:#fff;flex-direction:column;padding:8px 16px 18px;border-bottom:1px solid var(--line);box-shadow:0 20px 30px -20px rgba(0,0,0,.2)}nav.main.open{display:flex}#sodaf-root nav.main a{padding:.8em .6em;font-size:1.08rem}#sodaf-root nav.main a.on{box-shadow:inset 3px 0 0 var(--yellow)}}
+@media (max-width:1300px){.burger{display:inline-block}.bar>.hdr-link{display:none!important}.bar>.btn-green{margin-left:8px}nav.main{display:none;position:absolute;left:-16px;right:-16px;top:100%;max-height:calc(100vh - 80px);max-height:calc(100dvh - 80px);overflow-y:auto;background:#fff;flex-direction:column;padding:8px 16px 18px;border-bottom:1px solid var(--line);box-shadow:0 20px 30px -20px rgba(0,0,0,.2)}nav.main.open{display:flex}#sodaf-root nav.main a{padding:.8em .6em;font-size:1.08rem}#sodaf-root nav.main a.on{box-shadow:inset 3px 0 0 var(--yellow)}}
 
 /* subtle white-background patterns */
 .pat-dots{background-image:radial-gradient(rgba(20,23,28,.07) 1px,transparent 1.2px);background-size:22px 22px}
@@ -501,6 +501,9 @@ article.ch p+p{margin-top:10px}
 .entdoc .acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 .navteam{display:none}
 @media (max-width:1300px){#sodaf-root nav.main a.navteam{display:block;margin-top:6px;border-top:1px solid var(--line);color:var(--green)}}
+@media (max-width:480px){#sodaf-root .bar>.btn-green{padding:.55em .9em;font-size:.85rem}#sodaf-root .bar>.btn-green .lg{display:none}}
+#sodaf-root .bar>.btn-green .sm{display:none}@media (max-width:480px){#sodaf-root .bar>.btn-green .sm{display:inline}}
+#sodaf-root{overflow-x:clip}
 .rcmotifs{border:0;padding:0;margin:0 0 6px;display:grid;gap:8px;min-width:0}
 .rcmotifs legend{font-weight:600;margin-bottom:8px;padding:0}
 .rcm{display:flex;align-items:center;gap:12px;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;background:#fff}
@@ -1405,7 +1408,7 @@ const HTML = `
 <nav class="main" id="sd-nav">
 <a href="#accueil" data-nav="accueil">Accueil</a><a href="#formations" data-nav="formations">Formations et tarifs</a><a href="#cours" data-nav="cours">Cours</a><a href="#panneaux" data-nav="panneaux">Panneaux</a><a href="#quiz" data-nav="quiz">Quiz</a><a href="#devoirs" data-nav="devoirs">Devoirs</a><a href="#outils" data-nav="outils">Outils</a><a href="#tirage" data-nav="tirage" class="navtir">Tirage au sort</a><a href="/equipe/" target="sodaf-equipe" class="navteam">Espace équipe</a>
 </nav>
-<a class="btn btn-green btn-sm" href="/equipe/" target="sodaf-equipe">Espace équipe</a>
+<a class="btn btn-green btn-sm" href="/equipe/" target="sodaf-equipe"><span class="lg">Espace équipe</span><span class="sm">Équipe</span></a>
 </div></header>
 <main>
 <div class="wrap"><div class="ap-install" id="sd-apInstall" hidden><div class="tm-install-ico">${LOGO("#FFFFFF", "mono")}</div><div><b>Installe l'application SODAF</b><span id="sd-apInstallTxt">Les cours et les quiz sur ton écran d'accueil, même sans connexion. Gratuit.</span></div><button class="btn btn-yellow btn-sm" type="button" id="sd-apInstallBtn">Installer</button><button class="ap-install-x" type="button" id="sd-apInstallX" aria-label="Masquer">×</button></div></div>
