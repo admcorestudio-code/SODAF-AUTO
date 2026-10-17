@@ -490,6 +490,8 @@ article.ch p+p{margin-top:10px}
 #sd-form:not(.par) .pi-par{display:none}
 .par-top{align-items:start}
 .par-gen h3{margin:4px 0 12px;font:700 1.35rem var(--f-display)}
+.par-bonus{margin:16px 0 0;font-weight:600;font-size:.92rem;color:var(--muted)}
+.par-bonus+.pills{margin-top:8px}
 .par-out{margin-top:14px;padding:14px;border-radius:12px;background:var(--green-soft)}
 .par-link{margin:0 0 10px;font-weight:700;word-break:break-all;color:var(--ink)}
 fieldset.pi-cat{border:0;padding:0;margin:0 0 14px;min-width:0}
@@ -1532,7 +1534,7 @@ ${HEAD("Formations", "Nos formations et tarifs", "Chaque formule comprend le cod
 <!-- Formation entreprise retirée du site le 17 oct. 2026 (une seule voiture, places limitées) : à remettre avec l'expansion.
 <div class="card offer"><span class="tag">Sociétés, ONG</span><h3>Formation entreprise</h3><p>Pour former vos chauffeurs, selon vos horaires.</p><ul><li>Conduite préventive</li><li>Vérification du véhicule chaque matin</li><li>Secourisme routier et constat amiable</li></ul><div class="price"><b>Sur devis</b><a class="btn btn-line btn-sm" href="#inscription" data-cat="Formation entreprise">Demander un devis</a></div></div>
 -->
-<div class="card offer"><span class="tag">Pour tout le monde</span><h3>Parrainage</h3><div class="cat">2 000 F</div><p>Pour chaque personne que tu amènes et qui s'inscrit chez SODAF, étudiant ou pas.</p><ul><li>Ton filleul donne ton numéro de téléphone à l'inscription</li><li>Tu reçois 2 000 F par Mixx by Yas ou Moov Money, dès qu'il a son reçu</li><li>2 filleuls : priorité sur les horaires · 3 : t-shirt SODAF · 5 : une séance offerte</li></ul><div class="price"><b>Sans limite de filleuls</b><a class="btn btn-line btn-sm" href="#parrainage">Parrainer un proche</a></div></div>
+<div class="card offer"><span class="tag">Pour tout le monde</span><h3>Parrainage</h3><div class="cat">2 000 F</div><p>Pour chaque personne que tu amènes et qui s'inscrit chez SODAF, étudiant ou pas.</p><ul><li>Ton filleul donne ton numéro de téléphone à l'inscription</li><li>Tu reçois 2 000 F par Mixx by Yas ou Moov Money, dès qu'il a son reçu</li><li>En plus, une seule fois : un t-shirt SODAF au 3e filleul, une séance offerte au 5e</li></ul><div class="price"><b>Sans limite de filleuls</b><a class="btn btn-line btn-sm" href="#parrainage">Parrainer un proche</a></div></div>
 </div>
 </div>
 <div class="wrap sec">
@@ -2009,7 +2011,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="gr-pane" data-grp="demandes"><div id="sd-depRecep"></div><div class="crb" id="sd-crb"></div><div id="sd-grDemForm"></div><div hidden><div class="field gr-elf" hidden><label for="sd-grDemElQ">Élève concerné (si besoin)</label><div class="gr-elbox"><input id="sd-grDemElQ" type="search" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Tape un nom ou un numéro (SO12)" role="combobox" aria-expanded="false" aria-controls="sd-grDemElL" aria-autocomplete="list"><input type="hidden" id="sd-grDemEl" value=""><div class="gr-elsel" id="sd-grDemElSel" hidden></div><div class="gr-ell" id="sd-grDemElL" role="listbox" hidden></div></div></div></div><h4 class="gr-h4 crb-h">Historique</h4><div id="sd-grDemList" class="gr-list"></div></div>
 <div class="gr-pane" data-grp="decisions" hidden style="display:none"><form id="sd-grDecForm" class="gr-form" hidden novalidate><div class="row2"><div class="field"><label for="sd-grDecCat">Sujet</label><select id="sd-grDecCat"><option>Élèves</option><option>Argent</option><option>Planning</option><option>Équipe</option><option>Autre</option></select></div><div class="field gr-grow"><label for="sd-grDecTx">Ce que j'ai décidé</label><textarea id="sd-grDecTx" rows="2" maxlength="600" placeholder="ex. Séance de samedi 7 h 30 déplacée à 8 h 45, le moniteur est prévenu."></textarea></div></div><button type="submit" class="btn btn-sm btn-green">Noter la décision</button></form><div id="sd-grDecList" class="gr-list"></div></div>
 <div class="gr-pane" data-grp="rapports" hidden><div id="sd-grAFaire" class="gr-afaire" hidden></div><div id="sd-grRapNew" hidden><div class="gr-semban" id="sd-grRapSem"></div><div class="tm-stats tm-dr" id="sd-grRapChiffres"></div><div class="field"><label for="sd-grRapTx">Mes remarques pour la direction</label><textarea id="sd-grRapTx" rows="4" maxlength="3000" placeholder="Ce qui s'est bien passé, les problèmes, ce qu'il faudrait changer, ce dont j'ai besoin."></textarea></div><button type="button" class="btn btn-sm btn-green" id="sd-grRapSend">Envoyer le rapport</button><p class="gr-rapnote" id="sd-grRapNote"></p></div><div id="sd-grCal" class="gr-cal" aria-label="Calendrier des rapports"></div><h4 class="gr-h4 gr-arch-h">Anciens rapports</h4><div id="sd-grRapList" class="gr-list"></div></div>
-<div class="gr-pane" data-grp="parrainage" hidden><p class="gr-sem">2 000 F par filleul inscrit, à envoyer au parrain par Mixx by Yas ou Moov Money après le reçu d'inscription du filleul. La commission apparaît ici toute seule.</p><div id="sd-paList"></div><div class="sec-mini"><h4 class="gr-h4">Meilleurs parrains</h4><p class="tm-note" style="margin:0 0 8px!important">2 filleuls : priorité sur les horaires · 3 : t-shirt · 5 : une séance offerte · 10 : karting à 3 et ambassadeur du mois (à confirmer) · meilleur de l'année : formation offerte à un proche.</p><div id="sd-paTop"></div></div></div>
+<div class="gr-pane" data-grp="parrainage" hidden><p class="gr-sem">2 000 F par filleul inscrit, à envoyer au parrain par Mixx by Yas ou Moov Money après le reçu d'inscription du filleul. La commission apparaît ici toute seule.</p><div id="sd-paList"></div><div class="sec-mini"><h4 class="gr-h4">Meilleurs parrains</h4><p class="tm-note" style="margin:0 0 8px!important">En plus des 2 000 F par filleul, une seule fois : un t-shirt au 3e filleul, une séance offerte au 5e.</p><div id="sd-paTop"></div></div></div>
 <div class="gr-pane" data-grp="tirage" hidden><div class="tr-hd"><div class="field"><label for="sd-trCamp">Tirage du mois</label><select id="sd-trCamp"></select></div><div class="tr-stats" id="sd-trStats"></div></div>
 <div class="tr-act"><button type="button" class="btn tir-btn" id="sd-trGo">Tirer un gagnant</button><button type="button" class="btn btn-line btn-sm" id="sd-trScreen">Grand écran pour la vidéo</button></div>
 <div id="sd-trWin" class="tr-wins"></div>
@@ -2198,7 +2200,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 ${HEAD("Parrainage", "Parraine un proche, reçois 2 000 F", "Tu connais quelqu'un qui veut son permis ? Envoie-lui ton lien. Dès qu'il s'inscrit chez SODAF, tu reçois 2 000 F.")}
 <div class="wrap sec"><div class="grid g2 par-top">
 <div class="card par-how"><p class="eyebrow">Comment ça marche</p><ol class="ok-steps"><li><b>Ton numéro de téléphone</b><span>C'est ton code de parrain. Mets celui de ton Mixx by Yas ou Moov Money : tes 2 000 F arrivent dessus.</span></li><li><b>Tu envoies ton lien</b><span>Sur WhatsApp, à tes proches, collègues, voisins.</span></li><li><b>Tu reçois 2 000 F</b><span>Par Mixx by Yas ou Moov Money, dès que ton filleul paie son inscription.</span></li></ol>
-<div class="pills"><span>2 filleuls : priorité sur les horaires</span><span>3 : t-shirt SODAF</span><span>5 : une séance offerte</span></div></div>
+<p class="par-bonus">En plus, une seule fois :</p><div class="pills"><span>3e filleul : un t-shirt SODAF</span><span>5e filleul : une séance offerte</span></div></div>
 <div class="card par-gen"><p class="eyebrow">Pour les parrains</p><h3>Crée ton lien</h3>
 <div class="field"><label for="sd-parCode">Ton numéro de téléphone</label><div class="tel"><span>+228</span><input id="sd-parCode" inputmode="numeric" maxlength="14" autocomplete="tel-national" placeholder="90 12 34 56"></div></div>
 <p class="pi-err" id="sd-parErr" hidden>Ton numéro doit avoir 8 chiffres.</p>
@@ -4733,7 +4735,7 @@ function init(root) {
       grDemRender(); await crbCharger(); await grRapRender(); await trCharger(); await paCharger(); grBadges(); grOnglet(GR.ong);
     }
     // ---- Parrainage : commissions à payer (table commissions, migration 0042)
-    const PALIERS = [[10, "karting à 3 et ambassadeur du mois (à confirmer)"], [5, "une séance offerte"], [3, "un t-shirt SODAF"], [2, "priorité sur les horaires"]];
+    const PALIERS = [[3, "un t-shirt SODAF"], [5, "une séance offerte"]]; // une seule fois chacun (décision du 17 oct.)
     async function paCharger() {
       const r = await DB.q("commissions?select=*&order=cree_le.desc&limit=500").catch(() => null);
       const box = $("#sd-paList"); if (!box) return;
@@ -4746,7 +4748,7 @@ function init(root) {
       box.innerHTML = (ap.length ? '<h4 class="gr-h4">À payer (' + ap.length + " · " + F(ap.length * 2000) + ")</h4>" + ap.map(ligne).join("") : '<p class="tm-empty">Aucune commission à payer.</p>') + (pay.length || r.some((c) => c.statut === "annulee") ? '<details class="pa-old"><summary>Déjà payées (' + pay.length + " · " + F(pay.reduce((a, c) => a + c.montant, 0)) + ")</summary>" + r.filter((c) => c.statut !== "a_payer").map(ligne).join("") + "</details>" : "");
       const T = {}; r.filter((c) => c.statut !== "annulee").forEach((c) => { const k = c.parrain_id ? "e" + c.parrain_id : c.parrain_tel; const t = T[k] || (T[k] = { id: c.parrain_id, tel: c.parrain_tel, n: 0 }); t.n++; });
       const top = Object.values(T).sort((a, b) => b.n - a.n).slice(0, 10);
-      $("#sd-paTop").innerHTML = top.length ? top.map((t) => { const pl = PALIERS.find((p) => t.n >= p[0]); return '<div class="pa-top"><b>' + esc(t.id ? nom(t.id) : t.tel) + "</b><span>" + t.n + " filleul" + (t.n > 1 ? "s" : "") + (pl ? " · a gagné : " + pl[1] : "") + "</span></div>"; }).join("") : '<p class="tm-empty">Pas encore de parrain.</p>';
+      $("#sd-paTop").innerHTML = top.length ? top.map((t) => { const pl = PALIERS.filter((p) => t.n >= p[0]).map((p) => p[1]).join(" et "); return '<div class="pa-top"><b>' + esc(t.id ? nom(t.id) : t.tel) + "</b><span>" + t.n + " filleul" + (t.n > 1 ? "s" : "") + (pl ? " · a gagné : " + pl : "") + "</span></div>"; }).join("") : '<p class="tm-empty">Pas encore de parrain.</p>';
     }
     $("#sd-gr") && $("#sd-gr").addEventListener("pj", async (e) => {
       const w = e.target.closest("[data-fac]"); if (!w) return; const pj = e.target.closest(".pj"); if (!pj || !pj._file) return; w.classList.add("is-busy");
