@@ -1512,7 +1512,7 @@ const HTML = `
 </section>
 
 <section class="page" data-page="formations" hidden>
-${HEAD("Formations", "Nos formations et tarifs", "Chaque formule comprend le code de la route, l'entretien mécanique et le secourisme. Prix en francs CFA. Droit d'inscription : 5 000 F (3 000 F pour les étudiants), payé une fois.")}
+${HEAD("Formations", "Nos formations et tarifs", "Chaque formule comprend le code de la route, l'entretien mécanique et le secourisme. Prix en francs CFA. Droit d'inscription : 5 000 F (3 000 F pour les étudiants), payé une fois. Remise à niveau : tout compris.")}
 <div class="wrap sec">
 <div class="sec-head"><div><p class="eyebrow">Permis B · voiture</p><h2>Choisis ta formule</h2></div><p>Même programme de code pour tous, en 6 semaines. La conduite se fait en équipe de 4 : chacun conduit à son tour, les autres observent.</p></div>
 <div class="grid g3">
@@ -1530,7 +1530,7 @@ ${HEAD("Formations", "Nos formations et tarifs", "Chaque formule comprend le cod
 <div class="wrap sec">
 <div class="sec-head"><div><p class="eyebrow">Autres formations</p><h2>Remise à niveau et parrainage</h2></div><p>Remise à niveau à prix fixe. Parrainage : ouvert à tous.</p></div>
 <div class="grid g2">
-<div class="card offer"><span class="tag">Déjà titulaire</span><h3>Remise à niveau</h3><div class="cat">25 000 F</div><p>Tu as ton permis mais tu n'as pas conduit depuis longtemps ? On te remet en confiance.</p><ul><li>4 blocs de conduite de 2 h, évaluation comprise</li><li>Leçons ciblées : ville, route, circulation dense</li><li>Rappel des règles du code</li></ul><div class="price"><b>Séance en plus : 5 000 F</b><a class="btn btn-line btn-sm" href="#inscription" data-cat="Remise à niveau">Choisir</a></div></div>
+<div class="card offer"><span class="tag">Déjà titulaire</span><h3>Remise à niveau</h3><div class="cat">25 000 F</div><p>Tu as ton permis mais tu n'as pas conduit depuis longtemps ? On te remet en confiance.</p><ul><li>4 blocs de conduite de 2 h, évaluation comprise</li><li>Leçons ciblées : ville, route, circulation dense</li><li>Rappel des règles du code</li></ul><div class="price"><b>Tout compris, sans frais d'inscription</b><a class="btn btn-line btn-sm" href="#inscription" data-cat="Remise à niveau">Choisir</a></div></div>
 <!-- Formation entreprise retirée du site le 17 oct. 2026 (une seule voiture, places limitées) : à remettre avec l'expansion.
 <div class="card offer"><span class="tag">Sociétés, ONG</span><h3>Formation entreprise</h3><p>Pour former vos chauffeurs, selon vos horaires.</p><ul><li>Conduite préventive</li><li>Vérification du véhicule chaque matin</li><li>Secourisme routier et constat amiable</li></ul><div class="price"><b>Sur devis</b><a class="btn btn-line btn-sm" href="#inscription" data-cat="Formation entreprise">Demander un devis</a></div></div>
 -->
@@ -1965,7 +1965,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="rcbox" id="equipe-recu"><div class="tm-sub"><div><p class="eyebrow">Après chaque paiement</p><h3>Faire un reçu</h3></div><p>Remplis après chaque paiement : le reçu PDF est créé aux couleurs SODAF avec le cachet, enregistré dans la base, et tu l'envoies à l'élève sur WhatsApp.</p></div>
 <form class="card rcform" id="sd-rcForm" novalidate>
 <input type="hidden" id="sd-rcEid" name="eleve_id"><div class="row2"><div class="field"><label for="sd-rcName">Nom et prénom de l'élève</label><input id="sd-rcName" name="eleve" list="sd-rcEleves" autocomplete="off" placeholder="Tape ou choisis un élève"><datalist id="sd-rcEleves"></datalist></div><div class="field"><label for="sd-rcTel">Téléphone / WhatsApp (non obligatoire)</label><div class="tel"><span>+228</span><input id="sd-rcTel" name="tel" inputmode="numeric" maxlength="11" placeholder="90 00 00 00"></div></div></div>
-<div class="field"><label for="sd-rcF">1. Quelle formation a-t-il choisie ?</label><select id="sd-rcF" name="formation"><option data-p="55000">Formation complète (permis B)</option><option data-p="35000">Formule rapide (permis B)</option><option data-p="30000" data-i="3000">Formation complète, tarif étudiant (permis B)</option><option data-p="15000" data-i="0">Formation complète, gagnant du tirage (permis B)</option><option data-p="25000">Remise à niveau</option><option data-p="25000">Formation théorique seule</option><option data-p="0">Formation entreprise (sur devis)</option><option data-p="0">Hors formation (séance ou frais)</option></select></div>
+<div class="field"><label for="sd-rcF">1. Quelle formation a-t-il choisie ?</label><select id="sd-rcF" name="formation"><option data-p="55000">Formation complète (permis B)</option><option data-p="35000">Formule rapide (permis B)</option><option data-p="30000" data-i="3000">Formation complète, tarif étudiant (permis B)</option><option data-p="15000" data-i="0">Formation complète, gagnant du tirage (permis B)</option><option data-p="25000" data-i="0">Remise à niveau</option><option data-p="25000">Formation théorique seule</option><option data-p="0">Formation entreprise (sur devis)</option><option data-p="0">Hors formation (séance ou frais)</option></select></div>
 <fieldset class="field rcmotifs" id="sd-rcMotifs"><legend>2. Qu'est-ce qu'il paie aujourd'hui ?</legend>
 <label class="rcm" data-k="ins-half"><input type="radio" name="motif" value="ins-half" checked><span><b>Il s'inscrit et paie la moitié</b><small data-ins="1re moitié de la formation">Droit d'inscription (5&nbsp;000&nbsp;F) + 1re moitié de la formation</small></span><em data-amt></em></label>
 <label class="rcm" data-k="ins-full"><input type="radio" name="motif" value="ins-full"><span><b>Il s'inscrit et paie tout</b><small data-ins="toute la formation">Droit d'inscription (5&nbsp;000&nbsp;F) + toute la formation</small></span><em data-amt></em></label>
@@ -2774,7 +2774,7 @@ function init(root) {
     }
     function suggest() {
       const p = price();
-      form.querySelectorAll("[data-ins]").forEach((sm) => { const fi = insFee(); sm.textContent = (fi ? "Droit d'inscription (" + fmt(fi) + ")" : "Inscription offerte") + " + " + sm.dataset.ins; });
+      form.querySelectorAll("[data-ins]").forEach((sm) => { const fi = insFee(); sm.textContent = (fi ? "Droit d'inscription (" + fmt(fi) + ")" : /remise/i.test(F.f.value) ? "Inscription comprise" : "Inscription offerte") + " + " + sm.dataset.ins; });
       form.querySelectorAll(".rcm").forEach((l) => {
         const k = l.dataset.k, c = calc(k, p), em = l.querySelector("[data-amt]");
         const off = c === null; l.hidden = off;
@@ -3941,8 +3941,8 @@ function init(root) {
     const msgGroupe = (x) => { const g = gOf(x.groupe_code), pc = prochainCours(g); return "Bonjour " + prenom(x) + ",\n\nVoici tes horaires de *cours de code en salle* chez SODAF Auto-École.\n\n*TON GROUPE : " + g.nom.toUpperCase() + "*\n• " + gJours(g).replace(/^./, (c) => c.toUpperCase()) + " : " + g.heure + "\n• Mercredi 14 h 30 : rattrapage et examen blanc (si tu as manqué un cours, ou pour t'entraîner)" +
       (pc ? "\n\n*TON PROCHAIN COURS*\n" + pc.d.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" }).replace(/^./, (c) => c.toUpperCase()) + " à " + gHeure(g) + " : cours " + pc.b.n + " sur 12, *" + pc.b.t + "*." : "") +
       "\n\n*LE PROGRAMME*\n12 cours en 6 semaines, puis il recommence : tu peux commencer n'importe quelle semaine, en 6 semaines tu vois tout. Après chaque cours, fais le *devoir du cours* sur autosodaf.com/#devoirs (10 questions, ton résultat part au moniteur).\n\nLa salle compte 6 places : merci d'arriver à l'heure. Tu peux aussi réviser à tout moment sur autosodaf.com (cours, quiz et devoir de la semaine).\n\nUn empêchement ? Préviens-nous en répondant à ce message." + SIGN; };
-    const PRIXM = { "Permis B": "55 000 F la formation complète en 6 semaines (formule rapide : 35 000 F ; étudiant de 18 ans et plus : 30 000 F)", "Tarif étudiant": "30 000 F la formation complète, tarif étudiant (carte d'étudiant de l'année et carte d'identité à présenter)", "Gagnant du tirage": "15 000 F la formation complète, lot du tirage au sort étudiant", "Remise à niveau": "25 000 F (4 blocs de conduite de 2 h)", "Formation entreprise": "sur devis, selon le nombre de chauffeurs", "Permis A": "30 000 F", "Pack A + B": "80 000 F" };
-    const INSM = { "Tarif étudiant": "3 000 F", "Gagnant du tirage": "offert" };
+    const PRIXM = { "Permis B": "55 000 F la formation complète en 6 semaines (formule rapide : 35 000 F ; étudiant de 18 ans et plus : 30 000 F)", "Tarif étudiant": "30 000 F la formation complète, tarif étudiant (carte d'étudiant de l'année et carte d'identité à présenter)", "Gagnant du tirage": "15 000 F la formation complète, lot du tirage au sort étudiant", "Remise à niveau": "25 000 F tout compris, inscription comprise (4 blocs de conduite de 2 h)", "Formation entreprise": "sur devis, selon le nombre de chauffeurs", "Permis A": "30 000 F", "Pack A + B": "80 000 F" };
+    const INSM = { "Tarif étudiant": "3 000 F", "Gagnant du tirage": "offert", "Remise à niveau": "compris dans le prix" };
     const jours = (d) => Math.floor((Date.now() - new Date(d)) / 864e5);
     const dosAge = (x) => { const b = x.web && x.web.le > (x.dossier_envoye_le || "") ? x.web.le : x.dossier_envoye_le; return jours(x.dossier_relance_le && x.dossier_relance_le > b ? x.dossier_relance_le : b); };
     const agence = (x) => x.web && x.web.mode === "agence";
@@ -5422,7 +5422,7 @@ function init(root) {
     "Permis B": [["Formation complète (permis B)", 55000, "6 semaines · 12 blocs de conduite de 2 h en équipe de 4", 5000], ["Formule rapide (permis B)", 35000, "Tu sais déjà tenir un volant · 6 blocs de conduite", 5000], ["Formation complète, tarif étudiant (permis B)", 30000, "Étudiant 18 ans et plus · carte d'étudiant et carte d'identité à présenter · un étudiant par équipe", 3000]],
     "Tarif étudiant": [["Formation complète, tarif étudiant (permis B)", 30000, "Étudiant 18 ans et plus · carte d'étudiant et carte d'identité à présenter", 3000]],
     "Gagnant du tirage": [["Formation complète, gagnant du tirage (permis B)", 15000, "Ton lot du tirage au sort · inscription offerte", 0]],
-    "Remise à niveau": [["Remise à niveau", 25000, "4 blocs de conduite de 2 h, évaluation comprise", 5000]],
+    "Remise à niveau": [["Remise à niveau", 25000, "4 blocs de conduite de 2 h, évaluation comprise · tout compris", 0]],
   };
   const MAPS = "https://www.google.com/maps/search/?api=1&query=6.168785%2C1.225462";
   const fmtF = (n) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " F";
@@ -5489,7 +5489,7 @@ function init(root) {
     const upd = () => {
       const v = val();
       form.querySelector('[data-p="moitie"]').textContent = fmtF(v.ins + v.f[1] / 2); form.querySelector('[data-p="total"]').textContent = fmtF(v.ins + v.f[1]);
-      $("#sd-inSum").innerHTML = '<span class="insc-sumrow"><span>À payer maintenant</span><b>' + fmtF(v.a) + "</b></span><span>" + (v.ins ? "Droit d'inscription " + fmtF(v.ins).replace(/ /g, "&nbsp;") : "Inscription offerte") + " + " + (v.p === "total" ? "toute la formation" : "la moitié de la formation") + "</span>" + (v.p === "moitie" ? '<span class="insc-reste">Reste à payer avant la 1re séance de conduite : <b>' + fmtF(v.f[1] / 2) + "</b></span>" : '<span class="insc-reste">Formation soldée : plus rien à payer ensuite</span>');
+      $("#sd-inSum").innerHTML = '<span class="insc-sumrow"><span>À payer maintenant</span><b>' + fmtF(v.a) + "</b></span><span>" + (v.ins ? "Droit d'inscription " + fmtF(v.ins).replace(/ /g, "&nbsp;") : /remise/i.test(v.f[0]) ? "Inscription comprise" : "Inscription offerte") + " + " + (v.p === "total" ? "toute la formation" : "la moitié de la formation") + "</span>" + (v.p === "moitie" ? '<span class="insc-reste">Reste à payer avant la 1re séance de conduite : <b>' + fmtF(v.f[1] / 2) + "</b></span>" : '<span class="insc-reste">Formation soldée : plus rien à payer ensuite</span>');
       $("#sd-inAmt").textContent = fmtF(v.a);
       if ($("#sd-inUssd")) { $("#sd-inUssd").textContent = MIXX_USSD(d.m, v.a); if ($("#sd-inPay")) $("#sd-inPay").href = MIXX_TEL(d.m, v.a); }
       form.querySelectorAll(".rcm").forEach((l) => l.classList.toggle("on", l.querySelector("input").checked));
