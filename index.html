@@ -28,6 +28,13 @@
 <script>
 window.addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); window.__bip = e; document.dispatchEvent(new Event("sodaf-bip")); });
 if ("serviceWorker" in navigator) window.addEventListener("load", function () { navigator.serviceWorker.register("/sw.js", { scope: "/" }).catch(function () {}); });
+// Ancien programme de l'espace équipe resté sur certains appareils (page « Pas de connexion » à tort) : on force sa mise à jour depuis le site public.
+if ("serviceWorker" in navigator) (function () {
+  function majEquipe() { navigator.serviceWorker.getRegistrations().then(function (rs) { rs.forEach(function (r) { if (/\/equipe\/$/.test(r.scope)) r.update().catch(function () {}); }); }).catch(function () {}); }
+  window.addEventListener("load", majEquipe);
+  var fait = 0; function avant(e) { var a = e.target.closest && e.target.closest('a[href^="/equipe/"]'); if (a && Date.now() - fait > 5000) { fait = Date.now(); majEquipe(); } }
+  document.addEventListener("pointerdown", avant, true); document.addEventListener("mouseover", avant, true);
+})();
 </script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "DrivingSchool", "name": "SODAF Auto-École",
   "slogan": "L'art de conduire, la force de réussir.", "url": "https://autosodaf.com/", "logo": "https://autosodaf.com/logo-sodaf-512.png", "image": "https://autosodaf.com/og-sodaf.jpg", "telephone": "+228 72 54 41 66", "description": "Auto-école à Lomé : permis B, permis A (moto), remise à niveau et formation de chauffeurs. Cours de code en ligne gratuits.", "address": {"@type": "PostalAddress", "streetAddress": "412 Avenue Akei, Tokoin Tamé (en face de la caisse)", "addressLocality": "Lomé", "addressCountry": "TG"}, "geo": {"@type": "GeoCoordinates", "latitude": 6.168785, "longitude": 1.225462}, "hasMap": "https://www.google.com/maps/search/?api=1&query=6.168785%2C1.225462", "areaServed": "Lomé", "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "08:00", "closes": "12:30"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "14:30", "closes": "18:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "08:00", "closes": "12:00"}], "priceRange": "20 000 – 80 000 FCFA", "currenciesAccepted": "XOF", "paymentAccepted": "Espèces, Mixx by Yas (T-Money)"}</script>
