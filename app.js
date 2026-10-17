@@ -2022,6 +2022,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 </div>
 <div class="tm-pane" data-pane="com" role="tabpanel" hidden>
 <p class="tm-role" id="sd-comRole"></p>
+<div class="card com-guide" id="sd-comGuide"><div class="cg-hd"><p class="eyebrow">Comment ça marche</p><button type="button" class="btn btn-sm btn-line" data-goms>Écrire à la gérante</button></div><ol class="cg-steps"><li><i>1</i><b>Préparer</b><span>La vidéo, le statut ou la pub.</span></li><li><i>2</i><b>Faire valider</b><span>Envoie-la à la gérante dans Messages.</span></li><li><i>3</i><b>Publier</b><span>Dès qu'elle dit « c'est bon ».</span></li><li><i>4</i><b>Noter ici</b><span>Le lien, juste en dessous.</span></li></ol></div>
 <div class="card com-card"><div class="gr-semban" id="sd-comSem"></div><div class="com-prog" id="sd-comProg"></div><form id="sd-comForm" class="com-form" hidden novalidate><h4 class="gr-h4">Noter une publication</h4><div class="com-types" role="radiogroup"><button type="button" role="radio" data-ct="TikTok" aria-checked="true">TikTok</button><button type="button" role="radio" data-ct="Statut WhatsApp" aria-checked="false">Statut WhatsApp</button><button type="button" role="radio" data-ct="Atelier filmé" aria-checked="false">Atelier filmé</button><button type="button" role="radio" data-ct="Pub étudiants" aria-checked="false">Pub étudiants</button><button type="button" role="radio" data-ct="Live du tirage" aria-checked="false">Live du tirage</button><button type="button" role="radio" data-ct="Autre" aria-checked="false">Autre</button></div><div class="field"><label for="sd-comLien">Lien (si en ligne)</label><input id="sd-comLien" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://www.tiktok.com/…"></div><div class="field"><label for="sd-comNote">Note (facultatif)</label><input id="sd-comNote" maxlength="300" autocomplete="off" placeholder="ex. Campus de Lomé, 40 flyers"></div><button type="submit" class="btn btn-sm btn-green">Noter</button></form></div>
 <div class="card com-card"><p class="eyebrow">Tâches</p><h3 class="tm-h3" id="sd-comTTitre">De la gérante</h3><form id="sd-comTForm" class="com-form com-tform" hidden novalidate><div class="field"><label for="sd-comTTx">Nouvelle tâche</label><input id="sd-comTTx" maxlength="300" autocomplete="off" placeholder="ex. Filmer l'atelier batterie samedi"></div><div class="field com-tdate"><label for="sd-comTDate">Pour le</label><input id="sd-comTDate" type="date"></div><button type="submit" class="btn btn-sm btn-green">Donner</button></form><div id="sd-comTaches" class="com-taches"></div></div>
 <div class="card com-card"><p class="eyebrow">Ce mois-ci</p><h3 class="tm-h3">Les résultats</h3><div id="sd-comRes"></div></div>
@@ -2064,7 +2065,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="mf-ov" id="sd-mfOv" hidden><div class="mf-box" id="sd-mfBox" role="dialog" aria-modal="true" aria-label="Fiche de l'élève"></div></div>
 <div class="tm-pane" data-pane="msg" role="tabpanel" hidden>
 <p class="tm-role">Les échanges de l'équipe. Le cadenas indique une conversation privée : seules les personnes nommées en haut de la conversation la lisent. Écris @ pour prévenir quelqu'un, SO12 pour ouvrir la fiche d'un élève, et le trombone (ou glisse le fichier dans la conversation) pour joindre une photo ou un document.</p>
-<div class="ms-wrap card" id="sd-msWrap"><nav class="ms-canaux" id="sd-msCanaux" aria-label="Conversations"></nav><section class="ms-fil"><header class="ms-head"><button type="button" class="ms-back" id="sd-msBack" aria-label="Retour aux conversations"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button><div class="ms-hd" id="sd-msHead"></div></header><div class="ms-list" id="sd-msList" aria-live="polite"><p class="ms-vide">Chargement…</p></div><button type="button" class="ms-bas" id="sd-msBas" hidden></button><div class="ms-sug" id="sd-msSug" role="listbox" aria-label="Mentionner" hidden></div><div class="ms-pj" id="sd-msPj" hidden></div><div class="ms-rec" id="sd-msRec" hidden><i class="ms-recdot" aria-hidden="true"></i><b id="sd-msRecT">0:00</b><span>Enregistrement… Touche la flèche pour envoyer (avec ton texte ou ta @mention)</span><button type="button" class="linkbtn" id="sd-msRecX">Annuler</button></div><form class="ms-form" id="sd-msForm" novalidate><label class="ms-clip" title="Joindre une photo ou un fichier" aria-label="Joindre une photo ou un fichier"><input type="file" id="sd-msFile" multiple accept="image/*,.pdf,.txt,.doc,.docx,.xls,.xlsx"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.4 11.1l-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a2 2 0 0 1-2.8-2.8l8.5-8.5"/></svg></label><button type="button" class="ms-mic" id="sd-msMic" title="Message vocal" aria-label="Enregistrer un message vocal"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5"/></svg></button><textarea id="sd-msTxt" rows="1" maxlength="2000" placeholder="Message… (@ pour mentionner)" aria-label="Message"></textarea><button class="btn btn-green" id="sd-msSend" type="submit" aria-label="Envoyer"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button></form></section></div>
+<div class="ms-wrap card" id="sd-msWrap"><nav class="ms-canaux" id="sd-msCanaux" aria-label="Conversations"></nav><section class="ms-fil"><header class="ms-head"><button type="button" class="ms-back" id="sd-msBack" aria-label="Retour aux conversations"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button><div class="ms-hd" id="sd-msHead"></div></header><div class="ms-list" id="sd-msList" aria-live="polite"><p class="ms-vide">Chargement…</p></div><button type="button" class="ms-bas" id="sd-msBas" hidden></button><div class="ms-sug" id="sd-msSug" role="listbox" aria-label="Mentionner" hidden></div><div class="ms-pj" id="sd-msPj" hidden></div><div class="ms-rec" id="sd-msRec" hidden><i class="ms-recdot" aria-hidden="true"></i><b id="sd-msRecT">0:00</b><span>Enregistrement… Touche la flèche pour envoyer (avec ton texte ou ta @mention)</span><button type="button" class="linkbtn" id="sd-msRecX">Annuler</button></div><form class="ms-form" id="sd-msForm" novalidate><label class="ms-clip" title="Joindre une photo ou un fichier" aria-label="Joindre une photo ou un fichier"><input type="file" id="sd-msFile" multiple accept="image/*,video/*,.pdf,.txt,.doc,.docx,.xls,.xlsx"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.4 11.1l-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a2 2 0 0 1-2.8-2.8l8.5-8.5"/></svg></label><button type="button" class="ms-mic" id="sd-msMic" title="Message vocal" aria-label="Enregistrer un message vocal"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5"/></svg></button><textarea id="sd-msTxt" rows="1" maxlength="2000" placeholder="Message… (@ pour mentionner)" aria-label="Message"></textarea><button class="btn btn-green" id="sd-msSend" type="submit" aria-label="Envoyer"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button></form></section></div>
 <div class="ms-notif" id="sd-msNotif"></div>
 </div>
 <div class="tm-pane" data-pane="docs" role="tabpanel" hidden>
@@ -3335,6 +3336,7 @@ function init(root) {
     const msTaille = (n) => (n >= 1048576 ? (n / 1048576).toFixed(1).replace(".", ",") + " Mo" : Math.max(1, Math.round(n / 1024)) + " Ko");
     const msEstImg = (f) => f && /^image\//.test(f.type || "");
     const msEstAud = (f) => f && /^audio\//.test(f.type || "");
+    const msEstVid = (f) => f && /^video\//.test(f.type || "");
     const msDuree = (n) => Math.floor(n / 60) + ":" + String(Math.floor(n % 60)).padStart(2, "0");
     function msTexte(t) {
       const noms = Object.values(MS.profs).filter((p) => p.actif !== false).map(msPrenom), moiNom = msPlat(msPrenom(MS.profs[me.id]));
@@ -3343,7 +3345,7 @@ function init(root) {
         .replace(/(^|[\s(])@([A-Za-zÀ-ÿ][\wÀ-ÿ'-]*)/g, (m, av, n) => (noms.some((y) => msPlat(y) === msPlat(n)) ? av + '<span class="ms-at' + (msPlat(n) === moiNom ? " moi" : "") + '">@' + n + "</span>" : m))
         .replace(/\n/g, "<br>");
     }
-    const msApercu = (x) => { if (!x) return "Aucun message"; const p = MS.profs[x.auteur], f = x.fichier, t = f ? (msEstAud(f) ? "Message vocal" + (f.duree ? " (" + msDuree(f.duree) + ")" : "") : msEstImg(f) ? "Photo" : "Fichier : " + (f.nom || "Fichier")) + (x.texte && x.texte !== f.nom ? " · " + x.texte : "") : x.texte; return (x.auteur === me.id ? "Toi" : msPrenom(p)) + " : " + t.replace(/\s+/g, " "); };
+    const msApercu = (x) => { if (!x) return "Aucun message"; const p = MS.profs[x.auteur], f = x.fichier, t = f ? (msEstAud(f) ? "Message vocal" + (f.duree ? " (" + msDuree(f.duree) + ")" : "") : msEstImg(f) ? "Photo" : msEstVid(f) ? "Vidéo" : "Fichier : " + (f.nom || "Fichier")) + (x.texte && x.texte !== f.nom ? " · " + x.texte : "") : x.texte; return (x.auteur === me.id ? "Toi" : msPrenom(p)) + " : " + t.replace(/\s+/g, " "); };
     const IC_LOCK = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
     const IC_PLAY = '<svg class="i-play" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.4-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z" fill="currentColor"/></svg><svg class="i-pause" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><rect x="6.5" y="5" width="4" height="14" rx="1.2" fill="currentColor"/><rect x="13.5" y="5" width="4" height="14" rx="1.2" fill="currentColor"/></svg><i class="i-load" aria-hidden="true"></i>';
     // Qui lit la conversation (affiché en haut) : la règle de confidentialité doit se voir
@@ -3375,6 +3377,7 @@ function init(root) {
       if (f && (f.path || f.local)) {
         const src = f.local ? ' src="' + f.local + '"' : "", dp = f.path ? ' data-pj="' + esc(f.path) + '"' : "";
         if (msEstAud(f)) h += msAudHtml(x, f, moi);
+        else if (msEstVid(f)) h += '<div class="ms-vid"><video controls playsinline preload="metadata"' + (f.path && !f.local ? ' data-sp="' + esc(f.path) + '"' : "") + (f.local ? ' src="' + f.local + '"' : "") + '></video><small>' + esc(f.nom || "Vidéo") + (f.taille ? " · " + msTaille(f.taille) : "") + (f.path ? '' : " · envoi…") + "</small></div>";
         else if (msEstImg(f)) h += '<button type="button" class="ms-img"' + dp + ' aria-label="Agrandir la photo"><img alt="' + esc(f.nom || "Photo") + '"' + (f.path && !f.local ? ' data-sp="' + esc(f.path) + '"' : "") + src + (f.w && f.h ? ' style="aspect-ratio:' + (+f.w) + "/" + (+f.h) + '"' : "") + "></button>";
         else h += '<button type="button" class="ms-file"' + dp + "><i>" + esc(((f.nom || "").split(".").pop() || "doc").slice(0, 4).toUpperCase()) + "</i><span><b>" + esc(f.nom || "Fichier") + "</b><small>" + (f.taille ? msTaille(f.taille) + " · " : "") + (f.path ? "ouvrir" : "envoi…") + "</small></span></button>";
       }
@@ -3427,12 +3430,12 @@ function init(root) {
       return paths.map((x) => (MS.urls[x] ? MS.urls[x].u : null));
     }
     async function msSigner() {
-      const imgs = [...document.querySelectorAll("#sd-msList img[data-sp]:not([src])")]; if (!imgs.length) return;
+      const imgs = [...document.querySelectorAll("#sd-msList img[data-sp]:not([src]), #sd-msList video[data-sp]:not([src])")]; if (!imgs.length) return;
       imgs.forEach((i) => { if (MS.blobs[i.dataset.sp]) i.src = MS.blobs[i.dataset.sp]; }); // ma photo envoyée : déjà sur le téléphone, rien à retélécharger
       const reste = imgs.filter((i) => !i.getAttribute("src")); if (!reste.length) return;
       const paths = [...new Set(reste.map((i) => i.dataset.sp))], u = await msSigne(paths), m = {}; paths.forEach((x, i) => (m[x] = u[i]));
       const box = $("#sd-msList"), bas = box.scrollHeight - box.scrollTop - box.clientHeight < 80;
-      reste.forEach((i) => { if (m[i.dataset.sp]) { i.src = m[i.dataset.sp]; i.addEventListener("load", () => { if (bas) box.scrollTop = box.scrollHeight; }, { once: true }); } });
+      reste.forEach((i) => { if (m[i.dataset.sp]) { i.src = m[i.dataset.sp] + (i.tagName === "VIDEO" ? "#t=0.1" : ""); i.addEventListener("load", () => { if (bas) box.scrollTop = box.scrollHeight; }, { once: true }); } });
     }
     // Lecture des vocaux : le fichier est téléchargé en entier puis lu sur le téléphone (lecture fluide, on peut avancer ou reculer)
     const AUD = new Audio(); AUD.preload = "auto";
@@ -3593,6 +3596,7 @@ function init(root) {
     // Pièce jointe : photo réduite (1600 px, JPEG) avant l'envoi, autres fichiers tels quels (10 Mo au plus)
     const MS_TYPES = ["image/jpeg", "image/png", "image/webp", "application/pdf", "text/plain", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"];
     const MS_EXT = { pdf: "application/pdf", txt: "text/plain", doc: "application/msword", docx: MS_TYPES[6], xls: "application/vnd.ms-excel", xlsx: MS_TYPES[8] };
+    const MS_VID = { mp4: "video/mp4", m4v: "video/mp4", mov: "video/quicktime", webm: "video/webm", "3gp": "video/3gpp" }, MS_VID_MAX = 52428800; // vidéos : 50 Mo au plus (17 oct.)
     function msReduire(file) {
       return new Promise((ok) => {
         const u = URL.createObjectURL(file), im = new Image();
@@ -3615,12 +3619,16 @@ function init(root) {
       if (/^image\//.test(file.type) || /^(jpe?g|png|webp|heic|heif)$/.test(ext)) {
         const r = await msReduire(file); if (!r) { toast(file.name + " : photo illisible, essaie en JPEG ou PNG"); return null; }
         pj = { blob: r.blob, type: r.type, nom: (file.name.replace(/\.[^.]+$/, "") || "photo") + ".jpg", ext: "jpg", w: r.w, h: r.h };
+      } else if (/^video\//.test(file.type) || MS_VID[ext]) {
+        const type = Object.values(MS_VID).includes(file.type) ? file.type : MS_VID[ext] || "video/mp4";
+        if (file.size > MS_VID_MAX) { toast(file.name + " : vidéo trop lourde (50 Mo au plus)"); return null; }
+        pj = { blob: file, type, nom: file.name, ext, video: true };
       } else {
         const type = MS_TYPES.includes(file.type) ? file.type : MS_EXT[ext];
-        if (!type) { toast(file.name + " : format non accepté (photo, PDF, Word, Excel ou texte)"); return null; }
+        if (!type) { toast(file.name + " : format non accepté (photo, vidéo, PDF, Word, Excel ou texte)"); return null; }
         pj = { blob: file, type, nom: file.name, ext };
       }
-      if (pj.blob.size > 10485760) { toast(file.name + " : trop lourd (10 Mo au plus)"); return null; }
+      if (!pj.video && pj.blob.size > 10485760) { toast(file.name + " : trop lourd (10 Mo au plus)"); return null; }
       pj.taille = pj.blob.size; pj.local = URL.createObjectURL(pj.blob); return pj;
     }
     async function msPrendre(files) {
@@ -3649,7 +3657,7 @@ function init(root) {
         try { t = await DB.token(); } catch (e) { ko(new Error("session expirée")); return; }
         const x = new XMLHttpRequest(); x.open("POST", SB_URL + "/storage/v1/object/messages/" + path);
         x.setRequestHeader("apikey", SB_KEY); x.setRequestHeader("Authorization", "Bearer " + t); x.setRequestHeader("Content-Type", pj.type); x.setRequestHeader("x-upsert", "false");
-        x.timeout = 120000;
+        x.timeout = /^video\//.test(pj.type) ? 1200000 : 120000; // vidéo : jusqu'à 20 min sur une connexion lente
         x.upload.onprogress = (e) => { if (e.lengthComputable && prog) prog(Math.round((e.loaded / e.total) * 100)); };
         x.onload = () => { if (x.status >= 200 && x.status < 300) { const f = { path, nom: pj.nom.slice(0, 120), type: pj.type, taille: pj.taille }; if (pj.w) { f.w = pj.w; f.h = pj.h; } if (pj.duree) f.duree = pj.duree; ok(f); } else { let m = ""; try { m = JSON.parse(x.responseText).message; } catch (e) {} ko(new Error(m || "envoi refusé (" + x.status + ")")); } };
         x.onerror = () => ko(new Error("pas de connexion")); x.ontimeout = () => ko(new Error("connexion trop lente"));
@@ -5066,6 +5074,7 @@ function init(root) {
       $("#sd-comRole").textContent = amb ? "Note chaque vidéo, statut ou pub. La gérante suit ta semaine." : me.role === "gerant" ? "La semaine de l'Ambassadeur. Donne-lui des tâches." : "Le travail de l'Ambassadeur, suivi par la gérante.";
       const a = dOf(l), b = dOf(fin), mo = (d) => d.toLocaleDateString("fr-FR", { month: "long" });
       $("#sd-comSem").innerHTML = '<div class="gsb-l"><span class="gsb-k">Semaine ' + grNumSem(l) + '</span><b class="gsb-d">' + (a.getMonth() === b.getMonth() ? a.getDate() + " – " + b.getDate() + " " + mo(b) : a.getDate() + " " + mo(a) + " – " + b.getDate() + " " + mo(b)) + '</b></div><div class="gsb-r"><span class="gsb-k">Programme</span><b>' + (comLive(l) ? "Semaine du tirage" : "Semaine normale") + "</b></div>";
+      { const gb = $("#sd-comGuide [data-goms]"); if (gb) gb.textContent = amb ? "Écrire à la gérante" : me.role === "gerant" ? "Écrire à l'Ambassadeur" : "Voir leur conversation"; }
       $("#sd-comForm").hidden = !amb; $("#sd-comTForm").hidden = !DIR(); $("#sd-comTTitre").textContent = amb ? "De la gérante" : "Pour l'Ambassadeur";
       const [ac, ta, ch] = await Promise.all([DB.q("com_actions?select=*&order=le.desc&limit=200").catch(() => null), DB.q("com_taches?select=*&order=le.desc&limit=80").catch(() => null), DB.q("rpc/com_chiffres", { method: "POST", body: { p_debut: m0, p_fin: iso(now) } }).catch(() => null)]);
       if (!ac || !ta) { prog.innerHTML = '<p class="tm-empty">La communication n\'est pas encore activée dans la base.</p>'; return; }
@@ -5086,6 +5095,7 @@ function init(root) {
       $("#sd-comList").innerHTML = ac.length ? ac.slice(0, 40).map((x) => '<div class="com-it"><span class="com-d">' + dOf(x.jour).toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" }) + '</span><em class="com-ty">' + esc(x.type) + "</em><span class=\"com-n\">" + esc(x.note || "") + "</span>" + (x.lien ? '<a class="linkbtn" target="_blank" rel="noopener" href="' + esc(x.lien) + '">Voir ↗</a>' : "<span></span>") + "</div>").join("") : '<p class="tm-empty">Rien de noté pour l\'instant.</p>';
       const bd = $("#sd-comBadge"); if (bd) { const n = amb ? af.length : 0; bd.textContent = n; bd.hidden = !n; }
     }
+    $("#sd-comGuide") && $("#sd-comGuide").addEventListener("click", (e) => { if (e.target.closest("[data-goms]")) msOuvrir("ambassadeur"); });
     $("#sd-comForm") && $("#sd-comForm").addEventListener("click", (e) => { const c = e.target.closest("[data-ct]"); if (c) $$("#sd-comForm [data-ct]").forEach((b) => b.setAttribute("aria-checked", b === c)); });
     $("#sd-comForm") && $("#sd-comForm").addEventListener("submit", async (e) => {
       e.preventDefault(); const f = e.target, lien = $("#sd-comLien").value.trim(), b = f.querySelector("[type=submit]");
@@ -6560,6 +6570,15 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 .fr-box[hidden]{display:none}.fr-box .crb{border-left:6px solid #C2410C}
 .fr-it{grid-template-columns:auto auto 1fr auto}
 .tm-pane[data-pane="com"] .tm-role{border-left-color:#C2410C}
+.com-guide{margin:0 0 16px;border-left:6px solid var(--yellow)}
+.cg-hd{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 10px}.cg-hd .eyebrow{margin:0}
+.cg-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;position:relative}
+.cg-steps::before{content:"";position:absolute;left:17px;right:calc(25% - 6px);top:16px;height:2px;background:repeating-linear-gradient(90deg,var(--yellow) 0 10px,transparent 10px 18px);z-index:0}
+.cg-steps li{position:relative;z-index:1;display:grid;gap:3px}
+.cg-steps i{font-style:normal;width:34px;height:34px;border-radius:50%;background:var(--asph);color:var(--yellow);display:grid;place-items:center;font:800 1rem var(--f-ui);box-shadow:0 0 0 4px #fff}
+.cg-steps b{font:700 .95rem var(--f-ui);margin-top:4px}.cg-steps span{color:var(--muted);font-size:.85rem;line-height:1.35}
+@media (max-width:700px){.cg-steps{grid-template-columns:1fr;gap:10px}.cg-steps::before{left:16px;right:auto;top:17px;bottom:17px;width:2px;height:auto;background:repeating-linear-gradient(180deg,var(--yellow) 0 8px,transparent 8px 14px)}.cg-steps li{grid-template-columns:34px 1fr;column-gap:12px;align-items:center}.cg-steps li i{grid-row:1/span 2}.cg-steps b{margin:0}.cg-hd{flex-wrap:wrap}}
+.ms-vid{display:grid;gap:4px;max-width:320px}.ms-vid video{width:100%;max-height:420px;border-radius:12px;background:#000;display:block}.ms-vid small{font-size:.75rem;opacity:.75}
 .com-card{margin:0 0 16px}
 .com-prog{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
 @media (max-width:600px){.com-prog{grid-template-columns:1fr 1fr}}
