@@ -1,0 +1,22 @@
+name: verif-site
+on:
+  push:
+    paths: [".github/workflows/verif-site.yml"]
+permissions:
+  contents: write
+jobs:
+  verif:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          {
+            date -u
+            echo "== NS"; dig +short NS autosodaf.com; echo "== NS (serveur .com)"; dig +short NS autosodaf.com @a.gtld-servers.net; dig NS autosodaf.com @a.gtld-servers.net +noall +authority
+            echo "== A"; dig +short A autosodaf.com; echo "== www"; dig +short www.autosodaf.com
+            NS1=$(dig NS autosodaf.com @a.gtld-servers.net +noall +authority | awk '{print $5}' | head -1)
+            echo "== A chez $NS1"; dig +short A autosodaf.com @$NS1; dig +short www.autosodaf.com @$NS1; dig +short TXT autosodaf.com @$NS1
+            echo "== https"; curl -sS -m 20 -o /dev/null -w "code=%{http_code}\n" https://autosodaf.com/equipe/ || echo ECHEC
+          } > .github/verif-resultat.txt 2>&1
+          git config user.name verif-bot; git config user.email verif@users.noreply.github.com
+          git add .github/verif-resultat.txt; git commit -m "Résultat de la vérification [skip ci]" && git push
