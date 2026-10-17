@@ -487,6 +487,12 @@ article.ch p+p{margin-top:10px}
 .di-pg img{display:block;width:100%;height:auto}
 .di-pg figcaption{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
 .di-pg figcaption a{font-weight:600;color:var(--green);text-decoration:none}
+fieldset.pi-cat{border:0;padding:0;margin:0 0 14px;min-width:0}
+fieldset.pi-cat legend{font-weight:600;font-size:.94rem;padding:0;margin-bottom:6px}
+.pi-cats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#sodaf-root .pi-cats .rcm{font-weight:400;font-size:1rem;padding:14px;border-radius:14px}
+#sodaf-root .pi-cats .rcm b{font-size:1rem}
+@media (max-width:420px){.pi-cats{grid-template-columns:1fr}}
 .vidbox{display:flex;flex-direction:column;align-items:flex-start;gap:10px;margin:8px 0 18px}
 .vidplay{position:relative;display:block;width:270px;max-width:100%;aspect-ratio:9/16;border:0;padding:0;border-radius:18px;overflow:hidden;cursor:pointer;background:#0E1114;box-shadow:0 14px 30px -18px rgba(0,0,0,.6)}
 .vidplay img{display:block;width:100%;height:100%;object-fit:cover}
@@ -2190,7 +2196,7 @@ ${HEAD("Pré-inscription", "Rejoins SODAF", "Envoie ta demande en une minute : e
 <div class="pi-hd"><div><p class="eyebrow">Pré-inscription en ligne</p><h3>Tes coordonnées</h3></div><ul class="pi-tags"><li>1 minute</li><li>Gratuit</li><li>Sans engagement</li></ul></div>
 <div class="row2"><div class="field"><label for="sd-fName">Nom</label><input id="sd-fName" autocomplete="family-name" maxlength="60" placeholder="Ex. AGBEKO"></div><div class="field"><label for="sd-fFirst">Prénoms</label><input id="sd-fFirst" autocomplete="given-name" maxlength="80" placeholder="Ex. Kossi Mawuli"></div></div>
 <div class="row2"><div class="field"><label for="sd-fPhone">Téléphone / WhatsApp</label><div class="tel"><span>+228</span><input id="sd-fPhone" inputmode="numeric" maxlength="11" autocomplete="tel-national" placeholder="90 00 00 00"></div></div><div class="field"><label for="sd-fCity">Quartier</label><input id="sd-fCity" maxlength="80" placeholder="Ex. Bè, Adidogomé"></div></div>
-<div class="field"><label for="sd-fCat">Formation</label><select id="sd-fCat" aria-describedby="sd-fCatAide"><option value="Permis B">Permis voiture</option><option value="Remise à niveau">Remise à niveau (déjà titulaire du permis)</option></select><small class="f-aide" id="sd-fCatAide">Ta formule et ton tarif (complète, courte ou étudiant) se choisissent ensuite, avec le lien d'inscription que le secrétariat t'envoie sur WhatsApp.</small></div>
+<fieldset class="field pi-cat" aria-describedby="sd-fCatAide"><legend>Formation</legend><div class="pi-cats" id="sd-fCat"><label class="rcm on"><input type="radio" name="fCat" value="Permis B" checked><span><b>Permis voiture</b><small>J'apprends à conduire</small></span></label><label class="rcm"><input type="radio" name="fCat" value="Remise à niveau"><span><b>Remise à niveau</b><small>J'ai déjà le permis</small></span></label></div><small class="f-aide" id="sd-fCatAide">Ton tarif (étudiant ou non) se choisit ensuite, dans le lien envoyé sur WhatsApp.</small></fieldset>
 <div class="field"><label for="sd-fPar">Code parrain <small>(non obligatoire)</small></label><input id="sd-fPar" maxlength="40" autocomplete="off" placeholder="Exemple : SO12 ou 90 12 34 56" aria-describedby="sd-fParAide"><small class="f-aide" id="sd-fParAide">Quelqu'un t'a conseillé SODAF ? Écris son numéro client (SO…) ou son numéro de téléphone.</small></div>
 <div class="field"><label for="sd-fMsg">Message (non obligatoire)</label><textarea id="sd-fMsg" placeholder="Une question, une contrainte d'horaire…"></textarea></div>
 <p id="sd-fErr" class="pi-err" hidden>Indique ton nom, tes prénoms et ton numéro à 8 chiffres (après le +228).</p>
@@ -3028,7 +3034,10 @@ function init(root) {
   };
   document.addEventListener("click", (e) => { const b = e.target.closest("[data-docimg]"); if (b) diOpen(b.dataset.docimg, b); });
   document.addEventListener("click", (e) => { const b = e.target.closest("[data-vid]"); if (!b) return; const v = document.createElement("video"); v.src = b.dataset.vid; v.poster = b.dataset.poster || ""; v.controls = true; v.autoplay = true; v.playsInline = true; v.setAttribute("playsinline", ""); b.replaceWith(v); const p = v.play(); if (p && p.catch) p.catch(() => {}); });
-  $$("[data-cat]").forEach((a) => a.addEventListener("click", () => { $("#sd-fCat").value = a.dataset.cat; if (a.dataset.msg) $("#sd-fMsg").value = a.dataset.msg; }));
+  const fCatSync = () => $$("#sd-fCat .rcm").forEach((l) => l.classList.toggle("on", l.querySelector("input").checked));
+  const fCatVal = () => { const r = $("#sd-fCat input:checked"); return r ? r.value : "Permis B"; };
+  $("#sd-fCat").addEventListener("change", fCatSync);
+  $$("[data-cat]").forEach((a) => a.addEventListener("click", () => { const r = $('#sd-fCat input[value="' + a.dataset.cat + '"]') || $("#sd-fCat input"); r.checked = true; fCatSync(); if (a.dataset.msg) $("#sd-fMsg").value = a.dataset.msg; }));
   const telIn = $("#sd-fPhone");
   const telDigits = () => { let d = telIn.value.replace(/\D/g, ""); if (d.length > 8 && d.startsWith("228")) d = d.slice(3); return d.slice(0, 8); };
   telIn.addEventListener("input", () => { telIn.value = telDigits().replace(/(\d{2})(?=\d)/g, "$1 "); });
@@ -3046,7 +3055,7 @@ function init(root) {
     $("#sd-okWhen").textContent = "Reçue le " + now.toLocaleDateString("fr-FR") + " à " + now.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
     $("#sd-okName").textContent = payload.nom.split(" ")[0];
     $("#sd-okPhone").textContent = payload.telephone;
-    const catLabel = $("#sd-fCat").selectedOptions[0].textContent;
+    const catLabel = ($("#sd-fCat input:checked") || $("#sd-fCat input")).closest(".rcm").querySelector("b").textContent;
     const rows = [["Nom", payload.nom], ["Téléphone", payload.telephone], ["Formation", catLabel], ["Quartier", payload.quartier || "—"]];
     $("#sd-okRecap").innerHTML = rows.map(([k, v]) => "<div><dt>" + k + "</dt><dd>" + String(v).replace(/[<>&]/g, "") + "</dd></div>").join("");
     $("#sd-waLink").href = WA + "?text=" + encodeURIComponent("Bonjour SODAF, je viens d'envoyer ma pré-inscription sur le site (" + payload.nom + ", " + payload.formation + "). Quand puis-je passer au secrétariat ?");
@@ -3061,13 +3070,13 @@ function init(root) {
     const okForm = nf.length >= 2 && pr.length >= 2 && digits.length === 8;
     $("#sd-fErr").hidden = okForm;
     if (!okForm) return;
-    lastPayload = { nom: name, nom_famille: nf, prenoms: pr, telephone: phone, formation: $("#sd-fCat").value, quartier: $("#sd-fCity").value.trim(), message: $("#sd-fMsg").value.trim(), parrain: $("#sd-fPar").value.trim(), source: "Site web" };
+    lastPayload = { nom: name, nom_famille: nf, prenoms: pr, telephone: phone, formation: fCatVal(), quartier: $("#sd-fCity").value.trim(), message: $("#sd-fMsg").value.trim(), parrain: $("#sd-fPar").value.trim(), source: "Site web" };
     const waText = "Bonjour SODAF, je souhaite m'inscrire.\nNom : " + name + "\nTéléphone : " + phone + "\nFormation : " + lastPayload.formation + "\nQuartier : " + (lastPayload.quartier || "—") + (lastPayload.parrain ? "\nCode parrain : " + lastPayload.parrain : "") + (lastPayload.message ? "\nMessage : " + lastPayload.message : "");
     submitInscription(lastPayload, waText);
   });
   $("#sd-retry").addEventListener("click", () => form.requestSubmit());
   $("#sd-again").addEventListener("click", () => {
-    form.reset(); $("#sd-ok").hidden = true; form.classList.remove("is-sent"); $("#sd-piHow").hidden = false; fieldsBox().forEach((c) => (c.hidden = false)); $("#sd-fErr").hidden = true; $("#sd-fail").hidden = true; $("#sd-fName").focus();
+    form.reset(); fCatSync(); $("#sd-ok").hidden = true; form.classList.remove("is-sent"); $("#sd-piHow").hidden = false; fieldsBox().forEach((c) => (c.hidden = false)); $("#sd-fErr").hidden = true; $("#sd-fail").hidden = true; $("#sd-fName").focus();
   });
 
   // ---------- Espace équipe (connexion + données Supabase) ----------
