@@ -3609,8 +3609,8 @@ function init(root) {
     const MS_MAX = 10;
     function msPjListe() {
       const el = $("#sd-msPj"), l = MS.pjs; el.hidden = !l.length;
-      el.innerHTML = l.map((pj, i) => '<div class="ms-pji">' + (pj.local && pj.w ? '<img src="' + pj.local + '" alt="">' : '<i class="ms-fic">' + esc(pj.ext.slice(0, 4).toUpperCase()) + "</i>") + "<span><b>" + esc(pj.nom) + "</b><small>" + msTaille(pj.taille) + '</small></span><button type="button" class="ms-pjx" data-pjx="' + i + '" aria-label="Retirer ' + esc(pj.nom) + '">×</button></div>').join("") +
-        (l.length ? '<p class="ms-pjn">' + l.length + " fichier" + (l.length > 1 ? "s" : "") + " prêt" + (l.length > 1 ? "s" : "") + " · ajoute un message si tu veux, puis Envoyer" + (l.length < MS_MAX ? " · le trombone en ajoute d'autres" : "") + "</p>" : "");
+      el.innerHTML = l.map((pj, i) => '<div class="ms-pji">' + (pj.local && pj.w ? '<img src="' + pj.local + '" alt="">' : '<i class="ms-fic">' + esc(pj.ext.slice(0, 4).toUpperCase()) + "</i>") + "<span><b>" + esc(pj.nom) + "</b><small>" + (pj.prepa && pj.prepa.besoin ? '<button type="button" class="ms-alleger" data-alleger="' + i + '">Alléger la vidéo</button> ' + msTaille(pj.taille) + " · envoi long" : pj.prepa ? '<em class="ms-prepa" data-prepa="' + pj.id + '">Préparation de la vidéo… ' + (pj.prepa.pct || 0) + " %</em>" : msTaille(pj.taille) + (pj.leger ? " · version légère" : "")) + '</small></span><button type="button" class="ms-pjx" data-pjx="' + i + '" aria-label="Retirer ' + esc(pj.nom) + '">×</button></div>').join("") +
+        (l.some((pj) => pj.prepa && !pj.prepa.besoin) ? '<p class="ms-pjn ms-pjw">Garde l\'application ouverte pendant la préparation. L\'original reste dans ta galerie.</p>' : "") + (l.length ? '<p class="ms-pjn">' + l.length + " fichier" + (l.length > 1 ? "s" : "") + " prêt" + (l.length > 1 ? "s" : "") + " · ajoute un message si tu veux, puis Envoyer" + (l.length < MS_MAX ? " · le trombone en ajoute d'autres" : "") + "</p>" : "");
     }
     function msPjRetirer(i) { const pj = MS.pjs[i]; if (pj && pj.local) URL.revokeObjectURL(pj.local); MS.pjs.splice(i, 1); msPjListe(); }
     function msPjVider() { MS.pjs.forEach((pj) => pj.local && URL.revokeObjectURL(pj.local)); MS.pjs = []; msPjListe(); $("#sd-msFile").value = ""; }
@@ -3622,7 +3622,7 @@ function init(root) {
       } else if (/^video\//.test(file.type) || MS_VID[ext]) {
         const type = Object.values(MS_VID).includes(file.type) ? file.type : MS_VID[ext] || "video/mp4";
         if (file.size > MS_VID_MAX) { toast(file.name + " : vidéo trop lourde (200 Mo au plus)"); return null; }
-        pj = { blob: file, type, nom: file.name, ext, video: true };
+        pj = { blob: file, type, nom: file.name, ext, video: true, orig: file, id: "v" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5) };
       } else {
         const type = MS_TYPES.includes(file.type) ? file.type : MS_EXT[ext];
         if (!type) { toast(file.name + " : format non accepté (photo, vidéo, PDF, Word, Excel ou texte)"); return null; }
@@ -3635,7 +3635,7 @@ function init(root) {
       let l = [...(files || [])]; if (!l.length) return;
       const place = MS_MAX - MS.pjs.length; if (place <= 0) { toast(MS_MAX + " fichiers au plus par envoi"); return; }
       if (l.length > place) { toast(MS_MAX + " fichiers au plus par envoi : les " + place + " premiers sont joints"); l = l.slice(0, place); }
-      for (const f of l) { const pj = await msPrendreUn(f); if (pj) { MS.pjs.push(pj); msPjListe(); } }
+      for (const f of l) { const pj = await msPrendreUn(f); if (pj) { MS.pjs.push(pj); msPjListe(); if (pj.video && pj.blob.size > MS_VID_LEGER) msAllegerPj(pj); } }
       $("#sd-msFile").value = ""; msTa.focus();
     }
     $("#sd-msFile").addEventListener("change", (e) => msPrendre(e.target.files));
@@ -3649,11 +3649,88 @@ function init(root) {
     window.addEventListener("dragover", (e) => { if (msAvecFichier(e) && !$('.tm-pane[data-pane="msg"]').hidden) e.preventDefault(); }); // déposé à côté : le navigateur n'ouvre pas le fichier à la place de l'espace équipe
     window.addEventListener("drop", (e) => { if (msAvecFichier(e) && !$('.tm-pane[data-pane="msg"]').hidden && !e.target.closest(".ms-fil")) { e.preventDefault(); toast("Dépose le fichier dans la conversation"); } });
     msTa.addEventListener("paste", (e) => { const f = (e.clipboardData && e.clipboardData.files) || []; if (f.length) { e.preventDefault(); msPrendre(f); } });
-    $("#sd-msPj").addEventListener("click", (e) => { const x = e.target.closest("[data-pjx]"); if (x) msPjRetirer(+x.dataset.pjx); });
+    $("#sd-msPj").addEventListener("click", (e) => { const a = e.target.closest("[data-alleger]"); if (a) { const pj = MS.pjs[+a.dataset.alleger]; if (pj) msAllegerPj(pj); return; } const x = e.target.closest("[data-pjx]"); if (x) msPjRetirer(+x.dataset.pjx); });
     // Envoi du fichier avec la progression (pourcentage affiché sous le message)
+    // ---- Vidéo légère (17 oct.) : avant l'envoi, une grosse vidéo est réduite sur le téléphone (720p, ~1,5 Mbit/s), comme WhatsApp.
+    //      La gérante valide le contenu ; l'original reste dans la galerie de l'Ambassadeur pour la publication.
+    const MS_VID_LEGER = 15728640; // au-dessus de 15 Mo, on allège
+    function msAlleger(file, prog) {
+      // Partie synchrone (appelée juste après le choix du fichier ou un toucher) : lecteur et son débloqués tout de suite
+      if (!window.MediaRecorder || !HTMLCanvasElement.prototype.captureStream) return Promise.resolve({ ko: "nonsupporte" });
+      const mimes = ["video/mp4;codecs=avc1.42E01E,mp4a.40.2", "video/mp4;codecs=avc1,mp4a", "video/mp4;codecs=avc1", "video/webm;codecs=vp8,opus", "video/webm;codecs=vp9,opus", "video/webm", "video/mp4"]; // H.264 d'abord : lisible sur Android et iPhone
+      const mime = mimes.find((m) => { try { return MediaRecorder.isTypeSupported(m); } catch (e) { return false; } }); if (!mime) return Promise.resolve({ ko: "nonsupporte" });
+      const url = URL.createObjectURL(file), v = document.createElement("video"); v.src = url; v.playsInline = true; v.setAttribute("playsinline", ""); v.preload = "auto";
+      v.style.cssText = "position:fixed;left:-9999px;top:0;width:2px;height:2px;opacity:0;pointer-events:none"; document.body.appendChild(v);
+      let ac = null, dst = null; try { const AC = window.AudioContext || window.webkitAudioContext; ac = new AC(); dst = ac.createMediaStreamDestination(); ac.createMediaElementSource(v).connect(dst); ac.resume && ac.resume(); } catch (e) { ac = null; }
+      const debloque = v.play().then(() => { v.pause(); v.currentTime = 0; return true; }).catch((e) => (e && e.name === "NotAllowedError" ? "bloque" : "lecture"));
+      const fin = () => { try { v.pause(); } catch (e) {} v.removeAttribute("src"); v.load(); v.remove(); URL.revokeObjectURL(url); if (ac) ac.close().catch(() => {}); };
+      return (async () => {
+        try {
+          await new Promise((ok, ko) => { if (v.readyState >= 1) return ok(); v.onloadedmetadata = ok; v.onerror = () => ko(new Error("lecture")); setTimeout(() => ko(new Error("lecture")), 20000); });
+          const d = await debloque; if (d !== true) { fin(); return { ko: d }; }
+          const dur = v.duration; if (!isFinite(dur) || dur <= 0 || dur > 900 || !v.videoWidth) { fin(); return { ko: "lecture" }; }
+          const sc = Math.min(1, 1280 / Math.max(v.videoWidth, v.videoHeight)), w = Math.round((v.videoWidth * sc) / 2) * 2, h = Math.round((v.videoHeight * sc) / 2) * 2;
+          const c = document.createElement("canvas"); c.width = w; c.height = h; const g = c.getContext("2d");
+          const tracks = c.captureStream(30).getVideoTracks(); if (dst) tracks.push(...dst.stream.getAudioTracks());
+          const rec = new MediaRecorder(new MediaStream(tracks), { mimeType: mime, videoBitsPerSecond: 1500000, audioBitsPerSecond: 96000 }), parts = [];
+          rec.ondataavailable = (e) => { if (e.data && e.data.size) parts.push(e.data); };
+          const arret = new Promise((ok) => (rec.onstop = ok)); let stop = false;
+          const dessine = () => { if (stop) return; try { g.drawImage(v, 0, 0, w, h); } catch (e) {} prog(Math.min(99, Math.round((v.currentTime / dur) * 100))); if (v.requestVideoFrameCallback) v.requestVideoFrameCallback(dessine); else requestAnimationFrame(dessine); };
+          g.drawImage(v, 0, 0, w, h); rec.start(1000);
+          await v.play(); dessine();
+          await new Promise((ok) => { v.onended = ok; v.onerror = ok; setTimeout(ok, dur * 3000 + 30000); });
+          stop = true; await new Promise((r) => setTimeout(r, 250)); rec.stop(); await arret; fin();
+          const type = mime.split(";")[0], blob = new Blob(parts, { type });
+          if (blob.size < 2000 || blob.size >= file.size * 0.85) return { ko: "inutile" };
+          return { blob, type, ext: type === "video/mp4" ? "mp4" : "webm" };
+        } catch (e) { fin(); return { ko: "lecture" }; }
+      })();
+    }
+    function msAllegerPj(pj) {
+      pj.prepa = { pct: 0 }; msPjListe();
+      msAlleger(pj.orig, (p) => { if (pj.prepa && pj.prepa.pct !== p) { pj.prepa.pct = p; const s = document.querySelector('#sd-msPj [data-prepa="' + pj.id + '"]'); if (s) s.textContent = "Préparation de la vidéo… " + p + " %"; } }).then((r) => {
+        if (!MS.pjs.includes(pj)) return; // retirée entre-temps
+        if (r.blob) { if (pj.local) URL.revokeObjectURL(pj.local); Object.assign(pj, { blob: r.blob, type: r.type, ext: r.ext, nom: (pj.orig.name.replace(/\.[^.]+$/, "") || "video") + " (légère)." + r.ext, taille: r.blob.size, local: URL.createObjectURL(r.blob), prepa: null, leger: true }); }
+        else if (r.ko === "bloque") pj.prepa = { besoin: true };
+        else { pj.prepa = null; if (r.ko !== "inutile") toast("Vidéo envoyée telle quelle (ce téléphone ne sait pas l'alléger)"); }
+        msPjListe();
+      });
+    }
+    // Envoi qui reprend après une coupure (protocole TUS de Supabase, morceaux de 6 Mo) : pour les fichiers lourds
+    async function msEnvoyerReprise(path, pj, prog) {
+      const CH = 6291456, tot = pj.blob.size, b64 = (s) => btoa(unescape(encodeURIComponent(s)));
+      const H = async () => ({ apikey: SB_KEY, Authorization: "Bearer " + (await DB.token()), "Tus-Resumable": "1.0.0" });
+      const err = async (r) => { let m = ""; try { const j = await r.json(); m = j.message || j.error || ""; } catch (e) {} const x = new Error(r.status === 413 ? "fichier trop lourd pour la base" : m || "envoi refusé (" + r.status + ")"); x.fatal = true; return x; };
+      if (!pj.tus) {
+        const r = await fetch(SB_URL + "/storage/v1/upload/resumable", { method: "POST", headers: Object.assign(await H(), { "Upload-Length": String(tot), "x-upsert": "false", "Upload-Metadata": "bucketName " + b64("messages") + ",objectName " + b64(path) + ",contentType " + b64(pj.type) + ",cacheControl " + b64("3600") }) });
+        if (r.status !== 201) throw await err(r);
+        pj.tus = new URL(r.headers.get("Location"), SB_URL).href; pj.tusOff = 0;
+      }
+      let off = pj.tusOff || 0, essais = 0;
+      const patch = (part, hd) => new Promise((ok, ko) => {
+        const x = new XMLHttpRequest(); x.open("PATCH", pj.tus); Object.entries(hd).forEach(([k, val]) => x.setRequestHeader(k, val));
+        x.setRequestHeader("Content-Type", "application/offset+octet-stream"); x.setRequestHeader("Upload-Offset", String(off)); x.timeout = 180000;
+        x.upload.onprogress = (e) => { if (e.lengthComputable && prog) prog(Math.min(99, Math.round(((off + e.loaded) / tot) * 100))); };
+        x.onload = () => { if (x.status === 204) ok(+x.getResponseHeader("Upload-Offset") || off + part.size); else { const e = new Error("envoi refusé (" + x.status + ")"); e.fatal = x.status >= 400 && x.status < 500 && x.status !== 409 && x.status !== 423; ko(e); } };
+        x.onerror = () => ko(new Error("pas de connexion")); x.ontimeout = () => ko(new Error("connexion trop lente"));
+        x.send(part);
+      });
+      while (off < tot) {
+        try { off = await patch(pj.blob.slice(off, Math.min(off + CH, tot)), await H()); pj.tusOff = off; essais = 0; }
+        catch (e) {
+          if (e.fatal || ++essais > 10) throw e;
+          await new Promise((r) => setTimeout(r, Math.min(30000, 2000 * essais)));
+          if (navigator.onLine === false) await new Promise((r) => { const f = () => { window.removeEventListener("online", f); r(); }; window.addEventListener("online", f); setTimeout(f, 60000); });
+          try { const hr = await fetch(pj.tus, { method: "HEAD", headers: await H() }); if (hr.ok) off = +hr.headers.get("Upload-Offset") || off; else if (hr.status === 404 || hr.status === 410) { pj.tus = null; pj.tusOff = 0; throw Object.assign(new Error("envoi à recommencer"), { fatal: true }); } } catch (er) { if (er.fatal) throw er; }
+        }
+      }
+      if (prog) prog(100);
+    }
     function msEnvoyerFichier(canal, pj, prog) {
       return new Promise(async (ok, ko) => {
-        const path = canal + "/" + Date.now() + "-" + Math.random().toString(36).slice(2, 8) + "." + pj.ext; let t = null;
+        const path = pj.chemin || (pj.chemin = canal + "/" + Date.now() + "-" + Math.random().toString(36).slice(2, 8) + "." + pj.ext); let t = null;
+        const fini = () => { const f = { path, nom: pj.nom.slice(0, 120), type: pj.type, taille: pj.taille }; if (pj.w) { f.w = pj.w; f.h = pj.h; } if (pj.duree) f.duree = pj.duree; return f; };
+        if (pj.blob.size > 6291456) { try { await msEnvoyerReprise(path, pj, prog); ok(fini()); } catch (e) { ko(e); } return; } // lourd : envoi par morceaux, reprend après une coupure
         try { t = await DB.token(); } catch (e) { ko(new Error("session expirée")); return; }
         const x = new XMLHttpRequest(); x.open("POST", SB_URL + "/storage/v1/object/messages/" + path);
         x.setRequestHeader("apikey", SB_KEY); x.setRequestHeader("Authorization", "Bearer " + t); x.setRequestHeader("Content-Type", pj.type); x.setRequestHeader("x-upsert", "false");
@@ -3723,6 +3800,7 @@ function init(root) {
     $("#sd-msRecX").addEventListener("click", () => recArret(false));
     $("#sd-msForm").addEventListener("submit", (e) => {
       e.preventDefault(); if (REC.mr) { recEnvoyer(); return; } // un vocal en cours : la flèche l'envoie, avec le texte et la mention
+      if (MS.pjs.some((pj) => pj.prepa && !pj.prepa.besoin)) { toast("Attends la fin de la préparation de la vidéo"); return; }
       const t = msTa.value.trim(), canal = MS.cur, pjs = MS.pjs.slice(); if ((!t && !pjs.length) || !canal) return;
       const mentions = msMentions(canal, t);
       // Tout part dans la file : la zone de saisie se vide tout de suite, on peut continuer à écrire
@@ -6578,6 +6656,7 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 .cg-steps i{font-style:normal;width:34px;height:34px;border-radius:50%;background:var(--asph);color:var(--yellow);display:grid;place-items:center;font:800 1rem var(--f-ui);box-shadow:0 0 0 4px #fff}
 .cg-steps b{font:700 .95rem var(--f-ui);margin-top:4px}.cg-steps span{color:var(--muted);font-size:.85rem;line-height:1.35}
 @media (max-width:700px){.cg-steps{grid-template-columns:1fr;gap:10px}.cg-steps::before{left:16px;right:auto;top:17px;bottom:17px;width:2px;height:auto;background:repeating-linear-gradient(180deg,var(--yellow) 0 8px,transparent 8px 14px)}.cg-steps li{grid-template-columns:34px 1fr;column-gap:12px;align-items:center}.cg-steps li i{grid-row:1/span 2}.cg-steps b{margin:0}.cg-hd{flex-wrap:wrap}}
+.ms-prepa{font-style:normal;color:#C2410C;font-weight:700}.ms-alleger{border:0;background:#C2410C;color:#fff;border-radius:999px;padding:.25em .8em;font:700 .78rem var(--f-ui);cursor:pointer}.ms-pjw{color:#9A3412!important}
 .ms-vid{display:grid;gap:4px;max-width:320px}.ms-vid video{width:100%;max-height:420px;border-radius:12px;background:#000;display:block}.ms-vid small{font-size:.75rem;opacity:.75}
 .com-card{margin:0 0 16px}
 .com-prog{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
