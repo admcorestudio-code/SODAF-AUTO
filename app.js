@@ -1534,7 +1534,7 @@ ${HEAD("Formations", "Nos formations et tarifs", "Chaque formule comprend le cod
 <!-- Formation entreprise retirée du site le 17 oct. 2026 (une seule voiture, places limitées) : à remettre avec l'expansion.
 <div class="card offer"><span class="tag">Sociétés, ONG</span><h3>Formation entreprise</h3><p>Pour former vos chauffeurs, selon vos horaires.</p><ul><li>Conduite préventive</li><li>Vérification du véhicule chaque matin</li><li>Secourisme routier et constat amiable</li></ul><div class="price"><b>Sur devis</b><a class="btn btn-line btn-sm" href="#inscription" data-cat="Formation entreprise">Demander un devis</a></div></div>
 -->
-<div class="card offer"><span class="tag">Pour tout le monde</span><h3>Parrainage</h3><div class="cat">2 000 F</div><p>Pour chaque personne que tu amènes et qui s'inscrit chez SODAF, étudiant ou pas.</p><ul><li>Ton filleul donne ton numéro de téléphone à l'inscription</li><li>Tu reçois 2 000 F par Mixx by Yas ou Moov Money, dès qu'il a son reçu</li><li>En plus, une seule fois : un t-shirt SODAF au 3e filleul, une séance offerte au 5e</li></ul><div class="price"><b>Sans limite de filleuls</b><a class="btn btn-line btn-sm" href="#parrainage">Parrainer un proche</a></div></div>
+<div class="card offer"><span class="tag">Pour tout le monde</span><h3>Parrainage</h3><div class="cat">2 000 F</div><p>Pour chaque personne que tu amènes et qui s'inscrit chez SODAF, étudiant ou pas.</p><ul><li>La personne donne ton numéro de téléphone à l'inscription</li><li>Tu reçois 2 000 F par Mixx by Yas ou Moov Money, dès qu'il a son reçu</li><li>3 clients : un t-shirt SODAF · 5 clients : une séance offerte</li></ul><div class="price"><b>Sans limite</b><a class="btn btn-line btn-sm" href="#parrainage">Parrainer un proche</a></div></div>
 </div>
 </div>
 <div class="wrap sec">
@@ -2199,8 +2199,8 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <section class="page" data-page="parrainage" hidden>
 ${HEAD("Parrainage", "Parraine un proche, reçois 2 000 F", "Tu connais quelqu'un qui veut son permis ? Envoie-lui ton lien. Dès qu'il s'inscrit chez SODAF, tu reçois 2 000 F.")}
 <div class="wrap sec"><div class="grid g2 par-top">
-<div class="card par-how"><p class="eyebrow">Comment ça marche</p><ol class="ok-steps"><li><b>Ton numéro de téléphone</b><span>C'est ton code de parrain. Mets celui de ton Mixx by Yas ou Moov Money : tes 2 000 F arrivent dessus.</span></li><li><b>Tu envoies ton lien</b><span>Sur WhatsApp, à tes proches, collègues, voisins.</span></li><li><b>Tu reçois 2 000 F</b><span>Par Mixx by Yas ou Moov Money, dès que ton filleul paie son inscription.</span></li></ol>
-<p class="par-bonus">En plus, une seule fois :</p><div class="pills"><span>3e filleul : un t-shirt SODAF</span><span>5e filleul : une séance offerte</span></div></div>
+<div class="card par-how"><p class="eyebrow">Comment ça marche</p><ol class="ok-steps"><li><b>Ton numéro de téléphone</b><span>C'est ton code de parrain. Mets celui de ton Mixx by Yas ou Moov Money : tes 2 000 F arrivent dessus.</span></li><li><b>Tu envoies ton lien</b><span>Sur WhatsApp, à tes proches, collègues, voisins.</span></li><li><b>Tu reçois 2 000 F</b><span>Par Mixx by Yas ou Moov Money, dès que la personne paie son inscription.</span></li></ol>
+<p class="par-bonus">En plus :</p><div class="pills"><span>3 clients : un t-shirt SODAF</span><span>5 clients : une séance offerte</span></div></div>
 <div class="card par-gen"><p class="eyebrow">Pour les parrains</p><h3>Crée ton lien</h3>
 <div class="field"><label for="sd-parCode">Ton numéro de téléphone</label><div class="tel"><span>+228</span><input id="sd-parCode" inputmode="numeric" maxlength="14" autocomplete="tel-national" placeholder="90 12 34 56"></div></div>
 <p class="pi-err" id="sd-parErr" hidden>Ton numéro doit avoir 8 chiffres.</p>
@@ -2208,7 +2208,7 @@ ${HEAD("Parrainage", "Parraine un proche, reçois 2 000 F", "Tu connais quelqu'u
 <div class="par-out" id="sd-parOut" hidden><p class="par-link" id="sd-parLink"></p><div class="acts"><a class="btn btn-wa btn-sm" id="sd-parWa" target="_blank" rel="noopener" href="#">Envoyer sur WhatsApp</a><button class="btn btn-line btn-sm" type="button" id="sd-parCopy">Copier le lien</button></div></div>
 </div>
 </div></div>
-<div class="wrap sec" id="parrainage-form" style="padding-top:0"><div class="sec-head"><div><p class="eyebrow">Pour les filleuls</p><h2>Inscris-toi avec le numéro de ton parrain</h2></div><p>Pas de parrain ? Fais la <a href="#inscription">pré-inscription normale</a>.</p></div>
+<div class="wrap sec" id="parrainage-form" style="padding-top:0"><div class="sec-head"><div><p class="eyebrow">On t'a conseillé SODAF ?</p><h2>Inscris-toi avec le numéro de ton parrain</h2></div><p>Pas de parrain ? Fais la <a href="#inscription">pré-inscription normale</a>.</p></div>
 <div id="sd-piSlotPar"></div></div>
 </section>
 
