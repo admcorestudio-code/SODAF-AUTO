@@ -3,14 +3,21 @@ on:
   push:
     paths: [".github/workflows/verif-site.yml"]
   workflow_dispatch:
+permissions:
+  contents: write
 jobs:
   verif:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - run: |
-          for u in https://autosodaf.com/ https://autosodaf.com/equipe/ https://autosodaf.com/equipe https://autosodaf.com/equipe/sw.js https://autosodaf.com/app.js https://www.autosodaf.com/equipe/; do
-            echo "== $u"; curl -sS -o /dev/null -m 20 -w "code=%{http_code} redirect=%{redirect_url} ip=%{remote_ip} temps=%{time_total}\n" "$u" || echo "ECHEC"
-          done
-          echo "== DNS"; dig +short autosodaf.com A; dig +short autosodaf.com AAAA; dig +short www.autosodaf.com
-          echo "== en-têtes equipe"; curl -sSI -m 20 https://autosodaf.com/equipe/ | head -20
-          echo "== debut equipe"; curl -sS -m 20 https://autosodaf.com/equipe/ | head -c 600
+          {
+            for u in https://autosodaf.com/ https://autosodaf.com/equipe/ https://autosodaf.com/equipe https://autosodaf.com/equipe/sw.js https://autosodaf.com/app.js https://www.autosodaf.com/equipe/; do
+              echo "== $u"; curl -sS -o /dev/null -m 20 -w "code=%{http_code} redirect=%{redirect_url} ip=%{remote_ip} temps=%{time_total}\n" "$u" || echo "ECHEC"
+            done
+            echo "== DNS"; dig +short autosodaf.com A; dig +short autosodaf.com AAAA; dig +short www.autosodaf.com
+            echo "== en-têtes equipe"; curl -sSI -m 20 https://autosodaf.com/equipe/ | head -20
+            echo "== debut equipe"; curl -sS -m 20 https://autosodaf.com/equipe/ | head -c 600
+          } > .github/verif-resultat.txt 2>&1
+          git config user.name verif-bot; git config user.email verif@users.noreply.github.com
+          git add .github/verif-resultat.txt; git commit -m "Résultat de la vérification du site [skip ci]" && git push
