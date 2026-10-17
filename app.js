@@ -3596,7 +3596,7 @@ function init(root) {
     // Pièce jointe : photo réduite (1600 px, JPEG) avant l'envoi, autres fichiers tels quels (10 Mo au plus)
     const MS_TYPES = ["image/jpeg", "image/png", "image/webp", "application/pdf", "text/plain", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"];
     const MS_EXT = { pdf: "application/pdf", txt: "text/plain", doc: "application/msword", docx: MS_TYPES[6], xls: "application/vnd.ms-excel", xlsx: MS_TYPES[8] };
-    const MS_VID = { mp4: "video/mp4", m4v: "video/mp4", mov: "video/quicktime", webm: "video/webm", "3gp": "video/3gpp" }, MS_VID_MAX = 52428800; // vidéos : 50 Mo au plus (17 oct.)
+    const MS_VID = { mp4: "video/mp4", m4v: "video/mp4", mov: "video/quicktime", webm: "video/webm", "3gp": "video/3gpp" }, MS_VID_MAX = 209715200; // vidéos : 200 Mo au plus (17 oct.)
     function msReduire(file) {
       return new Promise((ok) => {
         const u = URL.createObjectURL(file), im = new Image();
@@ -3621,7 +3621,7 @@ function init(root) {
         pj = { blob: r.blob, type: r.type, nom: (file.name.replace(/\.[^.]+$/, "") || "photo") + ".jpg", ext: "jpg", w: r.w, h: r.h };
       } else if (/^video\//.test(file.type) || MS_VID[ext]) {
         const type = Object.values(MS_VID).includes(file.type) ? file.type : MS_VID[ext] || "video/mp4";
-        if (file.size > MS_VID_MAX) { toast(file.name + " : vidéo trop lourde (50 Mo au plus)"); return null; }
+        if (file.size > MS_VID_MAX) { toast(file.name + " : vidéo trop lourde (200 Mo au plus)"); return null; }
         pj = { blob: file, type, nom: file.name, ext, video: true };
       } else {
         const type = MS_TYPES.includes(file.type) ? file.type : MS_EXT[ext];
