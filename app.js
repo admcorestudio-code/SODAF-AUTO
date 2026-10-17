@@ -1907,6 +1907,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <button role="tab" data-t="ger" aria-selected="false" hidden><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l2 2 4-4"/><path d="M4 5h16v11a2 2 0 0 1-2 2H9l-5 3z"/></svg></i><b>Gérance</b><small>Demandes, décisions, rapport</small><em class="tm-badge" id="sd-grTabBadge" hidden></em></button>
 <button role="tab" data-t="sec" aria-selected="true"><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 3v2h6V3M9 10h6M9 14h6M9 18h3"/></svg></i><b>Secrétariat</b><small>Inscriptions, paiements, réservations</small></button>
 <button role="tab" data-t="mon" aria-selected="false"><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/><path d="M12 14.5V21M9.6 11.2 3.5 9.5M14.4 11.2l6.1-1.7"/></svg></i><b>Moniteur</b><small>Code en salle, conduite</small></button>
+<button role="tab" data-t="mec" aria-selected="false" hidden><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.2L3 17.8V21h3.2l6.3-6.3a4 4 0 0 0 5.2-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/></svg></i><b>Mécanique</b><small>Voiture, atelier, contrôle</small><em class="tm-badge" id="sd-mcBadge" hidden></em></button>
 <button role="tab" data-t="com" aria-selected="false" hidden><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg></i><b>Communication</b><small>Vidéos, statuts, pub</small><em class="tm-badge" id="sd-comBadge" hidden></em></button>
 <button role="tab" data-t="docs" aria-selected="false"><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></i><b>Documents</b><small>Carte, cachet, QR, affiches</small></button>
 </div>
@@ -2019,6 +2020,12 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div id="sd-trWin" class="tr-wins"></div>
 <details class="tr-all"><summary id="sd-trAllSum">Tous les participants</summary><div id="sd-trAll" class="tr-alllist"></div></details></div>
 </div>
+</div>
+<div class="tm-pane" data-pane="mec" role="tabpanel" hidden>
+<p class="tm-role" id="sd-mcRole"></p>
+<div class="card com-card"><p class="eyebrow">Carnet</p><h3 class="tm-h3">La voiture</h3><div id="sd-mcVoit"></div></div>
+<div class="card com-card"><p class="eyebrow">Gratuit pour les élèves</p><h3 class="tm-h3">Atelier du samedi</h3><div id="sd-mcAt"></div></div>
+<div class="card com-card" id="sd-mcCtCard"><p class="eyebrow">Service payant</p><h3 class="tm-h3">Contrôle avant achat</h3><div id="sd-mcCt"></div></div>
 </div>
 <div class="tm-pane" data-pane="com" role="tabpanel" hidden>
 <p class="tm-role" id="sd-comRole"></p>
@@ -3161,7 +3168,7 @@ function init(root) {
       if (t === "mon") { const slot = $("#sd-mnPlanSlot"); if (cdSec.parentNode !== slot) slot.appendChild(cdSec); cdSec.hidden = false; (eleves.length ? Promise.resolve() : loadEleves(true)).then(() => loadDay()); }
       else if (cdSec.parentNode !== cdHome.p) { cdHome.p.insertBefore(cdSec, cdHome.n); const on = $('#sd-secNav button[aria-selected="true"]'); cdSec.hidden = !on || on.dataset.s !== "conduite"; }
     };
-    const pick = (t) => { if (AMB() && !["com", "msg", "docs"].includes(t)) t = "com"; if (t === "com" && me && !AMB() && !DIR()) t = "sec"; if (t === "sec" && me && me.role === "moniteur") t = "mon"; if (t === "mon" && me && me.role === "secretariat") t = "sec"; tabs.forEach((b) => b.setAttribute("aria-selected", b.dataset.t === t)); panes.forEach((p) => (p.hidden = p.dataset.pane !== t)); try { S.set("tmTab", t); } catch (e) {} placePlanning(t); if (t === "mon" || (t === "sec" && $("#sd-secAuj"))) loadMon(); if (t === "dir") loadDir(); if (t === "ger") grCharger(); if (t === "com") comCharger(); msVoirFil(false); if (t === "msg") { MS.repere = {}; MS.forceBas = true; msRender(); msNotifBox(); if (!isWide()) setTimeout(() => $(".ms-wrap").scrollIntoView({ block: "start" }), 60); } };
+    const pick = (t) => { if (AMB() && !["com", "msg", "docs"].includes(t)) t = "com"; if (t === "com" && me && !AMB() && !DIR()) t = "sec"; if (t === "sec" && me && me.role === "moniteur") t = "mon"; if (t === "mon" && me && me.role === "secretariat") t = "sec"; tabs.forEach((b) => b.setAttribute("aria-selected", b.dataset.t === t)); panes.forEach((p) => (p.hidden = p.dataset.pane !== t)); try { S.set("tmTab", t); } catch (e) {} placePlanning(t); if (t === "mon" || (t === "sec" && $("#sd-secAuj"))) loadMon(); if (t === "dir") loadDir(); if (t === "ger") grCharger(); if (t === "com") comCharger(); if (t === "mec") mcCharger(); msVoirFil(false); if (t === "msg") { MS.repere = {}; MS.forceBas = true; msRender(); msNotifBox(); if (!isWide()) setTimeout(() => $(".ms-wrap").scrollIntoView({ block: "start" }), 60); } };
     tabs.forEach((b) => b.addEventListener("click", () => pick(b.dataset.t)));
     const subs = $$("#sd-secNav button[data-s]"), secs = $$(".tm-sec");
     const LOAD = { eleves: () => loadEleves(), conduite: () => loadDay(), paiements: () => loadPay(), devoirs: () => loadDev() };
@@ -3950,7 +3957,7 @@ function init(root) {
       show(true);
       const dirTab = $('#sd-tmTabs [data-t="dir"]'); dirTab.hidden = !DIR(); // direction et gérante
       dirTab.querySelector("b").textContent = me.role === "gerant" ? "Chiffres" : "Direction"; dirTab.querySelector("small").textContent = me.role === "gerant" ? "Vue d'ensemble de l'agence" : "Chiffres du mois, à surveiller";
-      $('#sd-tmTabs [data-t="com"]').hidden = !(DIR() || AMB()); $('#sd-tmTabs [data-t="mon"]').hidden = AMB(); // Communication : l'Ambassadeur, la gérante, la direction
+      $('#sd-tmTabs [data-t="com"]').hidden = !(DIR() || AMB()); $('#sd-tmTabs [data-t="mon"]').hidden = AMB(); $('#sd-tmTabs [data-t="mec"]').hidden = AMB(); // Communication : l'Ambassadeur, la gérante, la direction
       $('#sd-tmTabs [data-t="ger"]').hidden = !DIR(); // onglet Gérance : la gérante y travaille, la direction y répond
       $("#sd-grRole").textContent = me.role === "gerant" ? "Ton espace de gérante : demande l'accord de la direction, note tes décisions, envoie ton rapport de la semaine. Tu as aussi les chiffres de l'agence, le secrétariat et le moniteur." : "L'espace de la gérante. Ici tu réponds à ses demandes, tu donnes ton avis sur ses décisions et tu lis ses rapports.";
       { const sec = $("#sd-drSec"); if (sec) sec.hidden = me.role !== "admin"; } // comptes et sécurité : direction seulement
@@ -4882,13 +4889,13 @@ function init(root) {
     // Chiffres de la semaine, calculés depuis la base au moment du rapport
     async function grChiffres(l) {
       const a = dOf(l), b = new Date(a); b.setDate(a.getDate() + 6); const fin = iso(b), finTs = iso(new Date(b.getTime() + 864e5));
-      const [pay, cr, el, dep, crb, fr, ca] = await Promise.all([DB.q("paiements?select=montant,annule,motif&jour=gte." + l + "&jour=lte." + fin).catch(() => []), DB.q("creneaux_conduite?select=statut,eleve_id,jour,heure&jour=gte." + l + "&jour=lte." + fin).catch(() => []), DB.q("eleves?select=id,cree_le,statut,archive_le,examen_date&or=(cree_le.gte." + l + ",archive_le.gte." + l + ",examen_date.gte." + l + ")").catch(() => []), DB.q("demandes?select=montant,nature&type=eq.D%C3%A9pense&statut=eq.accordee&le=gte." + l + "&le=lt." + finTs).catch(() => []), DB.q("carburant?select=montant,km&jour=gte." + l + "&jour=lte." + fin).catch(() => []), DB.q("frais?select=montant&jour=gte." + l + "&jour=lte." + fin).catch(() => null), DB.q("com_actions?select=type&jour=gte." + l + "&jour=lte." + fin).catch(() => null)]);
+      const [pay, cr, el, dep, crb, fr, ca, ct, at] = await Promise.all([DB.q("paiements?select=montant,annule,motif&jour=gte." + l + "&jour=lte." + fin).catch(() => []), DB.q("creneaux_conduite?select=statut,eleve_id,jour,heure&jour=gte." + l + "&jour=lte." + fin).catch(() => []), DB.q("eleves?select=id,cree_le,statut,archive_le,examen_date&or=(cree_le.gte." + l + ",archive_le.gte." + l + ",examen_date.gte." + l + ")").catch(() => []), DB.q("demandes?select=montant,nature&type=eq.D%C3%A9pense&statut=eq.accordee&le=gte." + l + "&le=lt." + finTs).catch(() => []), DB.q("carburant?select=montant,km&jour=gte." + l + "&jour=lte." + fin).catch(() => []), DB.q("frais?select=montant&jour=gte." + l + "&jour=lte." + fin).catch(() => null), DB.q("com_actions?select=type&jour=gte." + l + "&jour=lte." + fin).catch(() => null), DB.q("controles?select=id&statut=eq.fait&fait_le=gte." + l + "&fait_le=lt." + finTs).catch(() => null), DB.q("ateliers?select=statut&samedi=gte." + l + "&samedi=lte." + fin).catch(() => null)]);
       const ok = pay.filter((p) => !p.annule), dans = (d) => d && d >= l && d < finTs;
       return { encaisse: ok.reduce((n, p) => n + (p.montant || 0), 0), recus: ok.length, recus_annules: pay.filter((p) => p.annule).length, inscriptions: ok.filter((p) => /^Droit d'inscription/.test(p.motif || "")).length,
         contacts: el.filter((x) => dans(x.cree_le)).length, conduite_faites: cr.filter((c) => c.statut === "Fait").length, absences: cr.filter((c) => c.statut === "Absent").length,
-        abandons: el.filter((x) => x.statut === "Abandon" && dans(x.archive_le)).length, permis: el.filter((x) => x.statut === "Permis obtenu" && dans(x.examen_date)).length, depenses: (dep || []).filter((d) => d.nature !== "Carburant").reduce((n, d) => n + (d.montant || 0), 0), carburant: (crb || []).reduce((n, c) => n + (c.montant || 0), 0), km: ((k) => k.length > 1 ? Math.max(...k) - Math.min(...k) : null)((crb || []).map((c) => c.km).filter((v) => v)), blocs: new Set(cr.filter((c) => c.eleve_id && ["Réservé", "Fait", "Absent"].includes(c.statut)).map((c) => c.jour + c.heure)).size, frais: fr ? fr.reduce((n, f) => n + (f.montant || 0), 0) : null, com_tiktok: ca ? ca.filter((x) => x.type === "TikTok").length : null, com_statuts: ca ? ca.filter((x) => x.type === "Statut WhatsApp").length : null, com_pub: ca ? ca.filter((x) => x.type === "Pub étudiants").length : null };
+        abandons: el.filter((x) => x.statut === "Abandon" && dans(x.archive_le)).length, permis: el.filter((x) => x.statut === "Permis obtenu" && dans(x.examen_date)).length, depenses: (dep || []).filter((d) => d.nature !== "Carburant").reduce((n, d) => n + (d.montant || 0), 0), carburant: (crb || []).reduce((n, c) => n + (c.montant || 0), 0), km: ((k) => k.length > 1 ? Math.max(...k) - Math.min(...k) : null)((crb || []).map((c) => c.km).filter((v) => v)), blocs: new Set(cr.filter((c) => c.eleve_id && ["Réservé", "Fait", "Absent"].includes(c.statut)).map((c) => c.jour + c.heure)).size, frais: fr ? fr.reduce((n, f) => n + (f.montant || 0), 0) : null, com_tiktok: ca ? ca.filter((x) => x.type === "TikTok").length : null, com_statuts: ca ? ca.filter((x) => x.type === "Statut WhatsApp").length : null, com_pub: ca ? ca.filter((x) => x.type === "Pub étudiants").length : null, controles: ct ? ct.length : null, ateliers: at ? at.filter((x) => x.statut === "present").length : null };
     }
-    const GR_CH = [["encaisse", "Encaissé", (v) => F(v)], ["recus", "Reçus faits"], ["inscriptions", "Inscriptions"], ["contacts", "Nouveaux contacts"], ["conduite_faites", "Séances de conduite faites"], ["absences", "Absences en conduite"], ["permis", "Permis obtenus"], ["abandons", "Dossiers archivés"], ["recus_annules", "Reçus annulés"], ["depenses", "Dépenses accordées", (v) => F(v)], ["carburant", "Carburant", (v) => F(v)], ["frais", "Frais", (v) => F(v)], ["km", "Kilomètres parcourus", (v) => milliers(v) + " km"], ["blocs", "Blocs de conduite"], ["com_tiktok", "Vidéos TikTok"], ["com_statuts", "Statuts WhatsApp"], ["com_pub", "Pub étudiants"]];
+    const GR_CH = [["encaisse", "Encaissé", (v) => F(v)], ["recus", "Reçus faits"], ["inscriptions", "Inscriptions"], ["contacts", "Nouveaux contacts"], ["conduite_faites", "Séances de conduite faites"], ["absences", "Absences en conduite"], ["permis", "Permis obtenus"], ["abandons", "Dossiers archivés"], ["recus_annules", "Reçus annulés"], ["depenses", "Dépenses accordées", (v) => F(v)], ["carburant", "Carburant", (v) => F(v)], ["frais", "Frais", (v) => F(v)], ["km", "Kilomètres parcourus", (v) => milliers(v) + " km"], ["blocs", "Blocs de conduite"], ["com_tiktok", "Vidéos TikTok"], ["com_statuts", "Statuts WhatsApp"], ["com_pub", "Pub étudiants"], ["ateliers", "Élèves à l'atelier"], ["controles", "Contrôles avant achat"]];
     const grChHtml = (c, tuiles) => GR_CH.filter((k) => c[k[0]] != null).map((k) => tuiles ? "<div><span>" + k[1] + "</span><b>" + (k[2] ? k[2](c[k[0]]) : c[k[0]]) + "</b></div>" : "<span>" + k[1] + "<b>" + (k[2] ? k[2](c[k[0]]) : c[k[0]]) + "</b></span>").join("");
     async function grRapRender() {
       const g = me.role === "gerant", l = g ? grSemaineAFaire() : null, cur = grLundi(new Date());
@@ -5142,6 +5149,113 @@ function init(root) {
         b.disabled = false; b.textContent = "Noter le frais"; if (r) frCharger();
       });
     }
+    // ---- Mécanique (17 oct.) : carnet de la voiture, atelier du samedi (8 places, secrétariat), contrôle avant achat (migration 0055)
+    const MC = { e: [], a: [], c: [], km: 0, sam: null };
+    const MC_TYPES = ["Contrôle du samedi", "Contrôle du mois", "Vidange + filtre", "Filtre à air", "Pneus (permutation)", "Bougies", "Plaquettes", "Liquides (frein, refroidissement)", "Réparation", "Autre"];
+    const MC_REG = [["Vidange + filtre", 5000, "km"], ["Filtre à air", 10000, "km"], ["Pneus (permutation)", 10000, "km"], ["Bougies", 20000, "km"], ["Contrôle du mois", 31, "j"], ["Liquides (frein, refroidissement)", 730, "j"]];
+    const MC_THEMES = ["Avant de partir : huile, eau, pneus, feux", "Crevaison : changer une roue", "Batterie : câbles, démarrer", "Voyants et panne sur la route"];
+    const MC_PRIX = { Voiture: [15000, 10000], Moto: [10000, 7000] }; // prix client, part de la mécanicienne
+    const mcSamedis = () => { const d = new Date(); d.setHours(12, 0, 0, 0); d.setDate(d.getDate() + ((6 - d.getDay() + 7) % 7)); const l = []; for (let i = 0; i < 4; i++) { const x = new Date(d); x.setDate(d.getDate() + 7 * i); l.push(iso(x)); } return l; };
+    const mcTheme = (s) => { const n = Math.round((dOf(s) - dOf(CFG.atelier_debut || "2026-10-24")) / 6048e5); return [(((n % 4) + 4) % 4), MC_THEMES[(((n % 4) + 4) % 4)]]; };
+    const mcJour = (s) => dOf(s).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
+    const mcPeutInscrire = () => ["admin", "gerant", "secretariat"].includes(me.role);
+    async function mcCharger() {
+      const box = $("#sd-mcVoit"); if (!box || !me || AMB()) return;
+      const ct = mcPeutInscrire();
+      $("#sd-mcRole").textContent = me.role === "moniteur" ? "La voiture : entretiens à venir, et ce que la mécanicienne a fait." : "La voiture, l'atelier du samedi et le contrôle avant achat.";
+      const [e, km, a, c] = await Promise.all([DB.q("entretiens?select=*&order=jour.desc,le.desc&limit=200").catch(() => null), DB.q("carburant?select=km&km=not.is.null&order=km.desc&limit=1").catch(() => []), DB.q("ateliers?select=*&samedi=gte." + iso(new Date(Date.now() - 28 * 864e5)) + "&order=le.asc").catch(() => null), ct ? DB.q("controles?select=*&order=le.desc&limit=200").catch(() => null) : Promise.resolve([])]);
+      if (!e || !a) { box.innerHTML = '<p class="tm-empty">La mécanique n\'est pas encore activée dans la base.</p>'; $("#sd-mcAt").innerHTML = ""; $("#sd-mcCt").innerHTML = ""; return; }
+      MC.e = e; MC.a = a; MC.c = c || []; MC.km = Math.max(0, ...(km || []).map((x) => x.km || 0), ...e.map((x) => x.km || 0));
+      mcVoiture(); mcAtelier(); $("#sd-mcCtCard").hidden = !ct; if (ct) mcControles();
+      const bd = $("#sd-mcBadge"); if (bd) { const n = DIR() ? MC.c.filter((x) => x.statut === "fait" && !x.part_versee_le).length : 0; bd.textContent = n; bd.hidden = !n; }
+    }
+    function mcVoiture() {
+      const box = $("#sd-mcVoit"), today = iso(new Date());
+      const echeances = MC_REG.map(([t, n, u]) => {
+        const der = MC.e.find((x) => x.type === t && (u === "j" || x.km));
+        if (!der) return '<div class="mk-ech mk-none"><b>' + esc(t) + "</b><span>Pas encore noté</span></div>";
+        let txt, cls;
+        if (u === "km") { const r = der.km + n - MC.km; txt = !MC.km ? "à " + milliers(der.km + n) + " km" : r < 0 ? "Dépassé de " + milliers(-r) + " km" : "Dans " + milliers(r) + " km"; cls = r < 0 ? "mk-ko" : r < 500 ? "mk-bientot" : ""; }
+        else { const d = new Date(dOf(der.jour)); d.setDate(d.getDate() + n); const r = Math.round((d - dOf(today)) / 864e5); txt = r < 0 ? "En retard de " + -r + " j" : r === 0 ? "Aujourd'hui" : "Dans " + r + " j"; cls = r < 0 ? "mk-ko" : r < 7 ? "mk-bientot" : ""; }
+        return '<div class="mk-ech ' + cls + '"><b>' + esc(t) + "</b><span>" + txt + "</span></div>";
+      }).join("");
+      box.innerHTML = '<div class="mk-hd"><div><span class="crb-k">Compteur</span><b class="crb-big">' + (MC.km ? milliers(MC.km) + " km" : "—") + '</b><span class="crb-s">Dernier relevé (pleins et entretiens)</span></div></div><div class="mk-echs">' + echeances + "</div>" +
+        '<details class="crb-add"><summary>Noter un entretien</summary><form class="mk-form" novalidate><div class="crb-row"><div class="field"><label>Quoi</label><select class="mk-type">' + MC_TYPES.map((t) => "<option>" + t + "</option>").join("") + '</select></div><div class="field"><label>Compteur (km)</label><input class="mk-km" inputmode="numeric" autocomplete="off" value="' + (MC.km ? milliers(MC.km) : "") + '"></div></div>' +
+        '<div class="crb-row"><div class="field"><label>Pièces (F, si achetées)</label><input class="mk-cout" inputmode="numeric" autocomplete="off" placeholder="ex. 12 000"></div><div class="field"><label>Note</label><input class="mk-note" maxlength="500" autocomplete="off" placeholder="ex. Huile 5W30, filtre changé"></div></div><div class="field"><label>Photo (facultatif)</label>' + pjHtml(false) + '</div><button class="btn btn-green btn-sm" type="submit">Noter</button></form></details>' +
+        (MC.e.length ? '<h4 class="gr-h4">Historique</h4><div class="crb-list">' + MC.e.slice(0, 10).map((x) => '<div class="crb-it mk-it"><span>' + dOf(x.jour).toLocaleDateString("fr-FR", { day: "numeric", month: "short" }) + "</span><b>" + esc(x.type) + "</b><span>" + (x.km ? milliers(x.km) + " km" : "") + (x.cout ? " · pièces " + F(x.cout) : "") + (x.note ? " · " + esc(x.note) : "") + "</span>" + (x.photo ? '<button type="button" class="linkbtn" data-dep="' + esc(x.photo) + '">Photo</button>' : "<span></span>") + "</div>").join("") + "</div>" : '<p class="crb-vide">Rien de noté pour l\'instant.</p>');
+      const f = box.querySelector(".mk-form");
+      f.addEventListener("submit", async (ev) => {
+        ev.preventDefault(); const km = +(f.querySelector(".mk-km").value.replace(/\D/g, "")) || null, cout = +(f.querySelector(".mk-cout").value.replace(/\D/g, "")) || null, pj = f.querySelector(".pj"), b = f.querySelector("[type=submit]");
+        b.disabled = true; b.textContent = "Envoi…"; let photo = null;
+        if (pj._file) { try { photo = await depEnvoyer(pj._file, "entretien"); } catch (er) { toast("La photo n'a pas pu être envoyée", true); b.disabled = false; b.textContent = "Noter"; return; } }
+        const r = await run(() => DB.q("entretiens", { method: "POST", body: { type: f.querySelector(".mk-type").value, km, cout, note: f.querySelector(".mk-note").value.trim() || null, photo }, prefer: "return=minimal" }).then(() => true), "Entretien noté");
+        b.disabled = false; b.textContent = "Noter"; if (r) mcCharger();
+      });
+    }
+    function mcAtelier() {
+      const box = $("#sd-mcAt"), sams = mcSamedis(); if (!sams.includes(MC.sam)) MC.sam = sams[0];
+      const s = MC.sam, [ti, th] = mcTheme(s), L = MC.a.filter((x) => x.samedi === s && x.statut !== "annule"), today = iso(new Date()), jourJ = s <= today, peut = mcPeutInscrire();
+      const nom = (id) => eleves.find((y) => y.id === id) || { nom: "SO" + id, telephone: "" };
+      const dispo = eleves.filter((x) => etapeOf(x) === "formation" && !L.some((y) => y.eleve_id === x.id)).sort((p, q) => p.nom.localeCompare(q.nom, "fr"));
+      const msg = (x) => "Bonjour " + (x.prenoms || x.nom).split(" ")[0] + ",\n\nTu es inscrit(e) à l'*atelier mécanique gratuit* de SODAF :\n*" + mcJour(s) + ", 14 h – 15 h 30*\nThème : " + th + "\nÀ l'agence, 412 Avenue Akei, Tokoin Tamé (en face de la caisse).\n\nViens à l'heure, tu vas pratiquer toi-même.\n\nSODAF Auto-École";
+      box.innerHTML = '<div class="mk-sams">' + sams.map((x) => '<button type="button" class="' + (x === s ? "on" : "") + '" data-sam="' + x + '">' + dOf(x).toLocaleDateString("fr-FR", { day: "numeric", month: "short" }) + "<small>" + MC.a.filter((y) => y.samedi === x && y.statut !== "annule").length + "/8</small></button>").join("") + "</div>" +
+        '<div class="mk-ath"><div><b>' + esc(mcJour(s).replace(/^./, (c) => c.toUpperCase())) + " · 14 h – 15 h 30</b><span>Atelier " + (ti + 1) + "/4 : " + esc(th) + '</span></div><div class="mk-pl"><b>' + L.length + '</b><span>/ 8 places</span></div></div><div class="crb-bar"><i style="width:' + Math.round((L.length / 8) * 100) + '%"' + (L.length >= 8 ? ' class="crb-hot"' : "") + "></i></div>" +
+        (L.length ? '<div class="mk-ins">' + L.map((x) => { const el = nom(x.eleve_id), n = waNum(el.telephone);
+          return '<div class="mk-in st-' + x.statut + '" data-at="' + x.id + '"><button type="button" class="ms-el" data-goel="' + x.eleve_id + '">' + esc(el.nom) + '</button><em>' + { inscrit: "Inscrit", present: "Présent", absent: "Absent" }[x.statut] + "</em>" +
+            (peut ? (jourJ ? '<button type="button" class="btn btn-sm btn-green" data-atst="present">Présent</button><button type="button" class="btn btn-sm btn-line" data-atst="absent">Absent</button>' : (n ? '<a class="btn btn-sm btn-wa" target="_blank" rel="noopener" href="https://wa.me/228' + n + "?text=" + encodeURIComponent(msg(el)) + '">Prévenir ↗</a>' : "") + '<button type="button" class="linkbtn" data-atst="annule">Retirer</button>') : "") + "</div>"; }).join("") + "</div>" : '<p class="crb-vide">Personne d\'inscrit pour ce samedi.</p>') +
+        (peut && !jourJ && L.length < 8 ? '<div class="mk-add"><select class="mk-el" aria-label="Élève à inscrire"><option value="">Choisir un élève en formation…</option>' + dispo.map((x) => '<option value="' + x.id + '">' + esc(x.nom) + " · SO" + x.id + "</option>").join("") + '</select><button type="button" class="btn btn-sm btn-green" data-atadd>Inscrire</button></div>' : "") +
+        '<p class="tm-note mk-aide">Gratuit pour les élèves. 8 places. Le secrétariat inscrit et reste à l\'agence jusqu\'à 17 h le samedi.</p>';
+    }
+    function mcControles() {
+      const box = $("#sd-mcCt"), dir = DIR(), enc = MC.c.filter((x) => ["demande", "paye", "rdv"].includes(x.statut)), faits = MC.c.filter((x) => x.statut === "fait"), ann = MC.c.filter((x) => x.statut === "annule");
+      const apayer = faits.filter((x) => !x.part_versee_le);
+      const mPay = (x) => "Bonjour " + x.client.split(" ")[0] + ",\n\nMerci pour ta demande de *contrôle avant achat* (" + x.vehicule.toLowerCase() + ").\nPrix : *" + F(x.prix) + "*" + (x.lieu ? " (" + x.lieu + ")" : "") + ".\n\nTu peux payer " + (CFG.mixx_numero ? mixxMsg(x.prix, "CONTROLE") : "à l'agence.") + "\n\nDès réception, on fixe le rendez-vous avec notre mécanicienne. C'est un avis de professionnel, pas une garantie.\n\nSODAF Auto-École";
+      const mRdv = (x) => "Bonjour " + x.client.split(" ")[0] + ",\n\nPaiement bien reçu, merci. Rendez-vous pour le contrôle de ton " + x.vehicule.toLowerCase() + " :\n*" + (x.rdv ? new Date(x.rdv).toLocaleString("fr-FR", { weekday: "long", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }) : "") + "*" + (x.lieu ? "\nLieu : " + x.lieu : "") + "\n\nSODAF Auto-École";
+      const st = { demande: ["att", "Attend le paiement"], paye: ["neu", "Payé · RDV à fixer"], rdv: ["neu", "RDV fixé"], fait: ["oui", "Fait"], annule: ["non", "Annulé"] };
+      const ligne = (x) => { const n = waNum(x.telephone), wa = (t) => '<a class="btn btn-sm btn-wa" target="_blank" rel="noopener" href="https://wa.me/228' + n + "?text=" + encodeURIComponent(t) + '">';
+        let act = "";
+        if (x.statut === "demande") act = wa(mPay(x)) + 'Message de paiement ↗</a><input data-ctref maxlength="60" placeholder="Référence du paiement (SMS)"><button type="button" class="btn btn-sm btn-green" data-ctgo="paye">Paiement reçu</button><button type="button" class="linkbtn" data-ctgo="annule">Annuler</button>';
+        else if (x.statut === "paye" || x.statut === "rdv") act = '<input type="datetime-local" data-ctrdv value="' + (x.rdv ? new Date(new Date(x.rdv).getTime() - new Date().getTimezoneOffset() * 6e4).toISOString().slice(0, 16) : "") + '"><button type="button" class="btn btn-sm btn-line" data-ctgo="rdv">' + (x.rdv ? "Changer le RDV" : "Fixer le RDV") + "</button>" + (x.rdv ? wa(mRdv(x)) + "Envoyer le RDV ↗</a>" : "") +
+          '<select data-ctavis aria-label="Avis"><option value="">Avis de la mécanicienne…</option><option>Acheter</option><option>Négocier</option><option>Ne pas acheter</option></select><input data-ctnote maxlength="500" placeholder="Note (ex. pneus à changer)"><button type="button" class="btn btn-sm btn-green" data-ctgo="fait">Contrôle fait</button>';
+        else if (x.statut === "fait" && !x.part_versee_le) act = dir ? '<span class="mk-part">Part de la mécanicienne : <b>' + F(x.part) + '</b></span><input data-ctpref maxlength="60" placeholder="Référence (Mixx…)"><button type="button" class="btn btn-sm btn-green" data-ctpart>Versée</button>' : '<span class="mk-part">Part de la mécanicienne (' + F(x.part) + ") : versée par la gérante</span>";
+        return '<div class="mk-ct st-' + x.statut + '" data-ct="' + x.id + '"><div class="mk-cth"><b>' + esc(x.client) + " · " + esc(x.vehicule) + " · " + F(x.prix) + '</b><em class="gr-st ' + st[x.statut][0] + '">' + st[x.statut][1] + "</em></div><small>" + esc(x.telephone) + (x.lieu ? " · " + esc(x.lieu) : "") + " · demandé " + esc(grQuand(x.le)) + (x.paye_ref ? " · payé (réf. " + esc(x.paye_ref) + ")" : "") + (x.avis ? " · avis : <b>" + esc(x.avis) + "</b>" : "") + (x.part_versee_le ? " · part versée " + new Date(x.part_versee_le).toLocaleDateString("fr-FR") : "") + "</small>" + (x.note ? '<p class="mk-ctn">' + esc(x.note) + "</p>" : "") + (act ? '<div class="mk-cta">' + act + "</div>" : "") + "</div>"; };
+      box.innerHTML = '<p class="gr-sem">Voiture ' + F(MC_PRIX.Voiture[0]) + " · moto " + F(MC_PRIX.Moto[0]) + " (Lomé, port compris). Paiement sur le code marchand, puis rendez-vous.</p>" +
+        '<details class="crb-add"><summary>Nouvelle demande</summary><form class="mk-cform" novalidate><div class="crb-row"><div class="field"><label>Client</label><input class="mk-cn" maxlength="120" autocomplete="off" placeholder="Nom et prénom"></div><div class="field"><label>Téléphone (WhatsApp)</label><div class="tel"><span>+228</span><input class="mk-ctel" inputmode="numeric" maxlength="11" placeholder="90 00 00 00"></div></div></div>' +
+        '<div class="field"><label>Véhicule</label><div class="dep-kind" role="radiogroup"><button type="button" role="radio" data-veh="Voiture" aria-checked="true">Voiture</button><button type="button" role="radio" data-veh="Moto" aria-checked="false">Moto</button></div></div>' +
+        '<div class="crb-row"><div class="field"><label>Lieu</label><input class="mk-cl" maxlength="120" autocomplete="off" placeholder="ex. Port de Lomé, Agoè"></div><div class="field"><label>Prix (F)</label><input class="mk-cp" inputmode="numeric" value="15 000"><small class="mk-cpn">Hors Lomé : ajoute le transport.</small></div></div>' +
+        '<div class="field"><label>Note (facultatif)</label><input class="mk-cno" maxlength="500" autocomplete="off" placeholder="ex. Toyota Corolla 2012, vendeur au port"></div><button type="submit" class="btn btn-sm btn-green">Enregistrer</button></form></details>' +
+        (apayer.length && dir ? '<p class="mk-apayer">Parts à verser à la mécanicienne : <b>' + F(apayer.reduce((n, x) => n + x.part, 0)) + "</b> (" + apayer.length + ")</p>" : "") +
+        (enc.length ? '<h4 class="gr-h4">En cours (' + enc.length + ")</h4>" + enc.map(ligne).join("") : '<p class="crb-vide">Aucune demande en cours.</p>') +
+        (faits.length ? '<h4 class="gr-h4">Faits (' + faits.length + " · " + F(faits.reduce((n, x) => n + x.prix, 0)) + " encaissés)</h4>" + faits.slice(0, 15).map(ligne).join("") : "") +
+        (ann.length ? '<details class="com-old"><summary>Annulés (' + ann.length + ")</summary>" + ann.map(ligne).join("") + "</details>" : "");
+      const f = box.querySelector(".mk-cform");
+      f.addEventListener("click", (ev) => { const v = ev.target.closest("[data-veh]"); if (!v) return; f.querySelectorAll("[data-veh]").forEach((b) => b.setAttribute("aria-checked", b === v)); f.querySelector(".mk-cp").value = milliers(MC_PRIX[v.dataset.veh][0]); });
+      f.addEventListener("submit", async (ev) => {
+        ev.preventDefault(); const veh = f.querySelector('[data-veh][aria-checked="true"]').dataset.veh, nom = f.querySelector(".mk-cn").value.trim(), tel = f.querySelector(".mk-ctel").value.replace(/\D/g, ""), prix = +(f.querySelector(".mk-cp").value.replace(/\D/g, "")) || 0;
+        if (nom.length < 2) { toast("Écris le nom du client", true); return; } if (tel.length !== 8) { toast("Téléphone : 8 chiffres", true); return; }
+        const base = MC_PRIX[veh], part = Math.round(base[1] + Math.max(0, prix - base[0])); // le transport hors Lomé revient à la mécanicienne
+        const b = f.querySelector("[type=submit]"); b.disabled = true;
+        const r = await run(() => DB.q("controles", { method: "POST", body: { client: nom, telephone: "+228" + tel, vehicule: veh, lieu: f.querySelector(".mk-cl").value.trim() || null, prix, part, note: f.querySelector(".mk-cno").value.trim() || null }, prefer: "return=minimal" }).then(() => true), "Demande enregistrée : envoie le message de paiement");
+        b.disabled = false; if (r) mcCharger();
+      });
+    }
+    $('.tm-pane[data-pane="mec"]') && $('.tm-pane[data-pane="mec"]').addEventListener("click", async (ev) => {
+      const t = ev.target;
+      const dp = t.closest("[data-dep]"); if (dp) { depOuvrir(dp.dataset.dep); return; }
+      const ge = t.closest("[data-goel]"); if (ge) { goEleve(+ge.dataset.goel); return; }
+      const sm = t.closest("[data-sam]"); if (sm) { MC.sam = sm.dataset.sam; mcAtelier(); return; }
+      if (t.closest("[data-atadd]")) { const sel = $("#sd-mcAt .mk-el"); if (!sel.value) { toast("Choisis un élève", true); return; } t.disabled = true; const r = await run(() => DB.q("ateliers", { method: "POST", body: { samedi: MC.sam, eleve_id: +sel.value }, prefer: "return=minimal" }).then(() => true), "Inscrit à l'atelier : touche « Prévenir »"); t.disabled = false; if (r) mcCharger(); return; }
+      const as = t.closest("[data-atst]"); if (as) { const row = as.closest("[data-at]"); as.disabled = true; const r = await run(() => DB.q("ateliers?id=eq." + row.dataset.at, { method: "PATCH", body: { statut: as.dataset.atst }, prefer: "return=minimal" }).then(() => true), as.dataset.atst === "annule" ? "Retiré de l'atelier" : "Noté"); if (r) mcCharger(); else as.disabled = false; return; }
+      const cg = t.closest("[data-ctgo]"); if (cg) { const row = cg.closest("[data-ct]"), q = (s) => row.querySelector(s), k = cg.dataset.ctgo;
+        const rdv = q("[data-ctrdv]") && q("[data-ctrdv]").value ? new Date(q("[data-ctrdv]").value).toISOString() : null;
+        if (k === "rdv" && !rdv) { toast("Choisis la date et l'heure", true); return; }
+        if (k === "fait" && !q("[data-ctavis]").value) { toast("Choisis l'avis de la mécanicienne", true); return; }
+        cg.disabled = true;
+        const r = await run(() => DB.q("rpc/controle_etape", { method: "POST", body: { p_id: +row.dataset.ct, p_statut: k, p_ref: q("[data-ctref]") ? q("[data-ctref]").value.trim() : null, p_rdv: rdv, p_avis: q("[data-ctavis]") ? q("[data-ctavis]").value || null : null, p_note: q("[data-ctnote]") ? q("[data-ctnote]").value.trim() || null : null } }).then(() => true), { paye: "Paiement noté : fixe le rendez-vous", rdv: "Rendez-vous noté : envoie-le au client", fait: "Contrôle noté", annule: "Demande annulée" }[k]);
+        if (r) mcCharger(); else cg.disabled = false; return; }
+      const cp = t.closest("[data-ctpart]"); if (cp) { const row = cp.closest("[data-ct]"); cp.disabled = true; const r = await run(() => DB.q("rpc/controle_part_versee", { method: "POST", body: { p_id: +row.dataset.ct, p_ref: row.querySelector("[data-ctpref]").value.trim() || null } }).then(() => true), "Part versée, notée"); if (r) mcCharger(); else cp.disabled = false; }
+    });
+
     // ---- Communication (17 oct.) : l'Ambassadeur note ce qu'il publie ; la gérante suit sa semaine et lui donne des tâches (tables com_actions, com_taches)
     const COM_OBJ = [["TikTok", 3, "Vidéos TikTok"], ["Statut WhatsApp", 7, "Statuts WhatsApp"], ["Atelier filmé", 1, "Atelier du samedi"], ["Pub étudiants", 2, "Pub étudiants"], ["Live du tirage", 1, "Live du tirage"]];
     const COM = { a: [], t: [] };
@@ -6648,6 +6762,34 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 .fr-box[hidden]{display:none}.fr-box .crb{border-left:6px solid #C2410C}
 .fr-it{grid-template-columns:auto auto 1fr auto}
 .tm-pane[data-pane="com"] .tm-role{border-left-color:#C2410C}
+.tm-pane[data-pane="mec"] .tm-role{border-left-color:#475569}
+.mk-hd{display:flex;justify-content:space-between;gap:12px;margin:0 0 10px}
+.mk-echs{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px;margin:0 0 12px}
+.mk-ech{border:1px solid var(--line);border-left:5px solid #0B6E4F;border-radius:12px;padding:8px 10px;display:grid;gap:2px;background:#fff}
+.mk-ech b{font:700 .85rem var(--f-ui)}.mk-ech span{font-size:.85rem;color:var(--muted)}
+.mk-ech.mc-bientot{border-left-color:#D97706}.mk-ech.mc-bientot span{color:#B45309;font-weight:700}
+.mk-ech.mc-ko{border-left-color:var(--red);background:#FFF5F5}.mk-ech.mc-ko span{color:var(--red);font-weight:700}
+.mk-ech.mc-none{border-left-color:var(--line)}
+.mk-it{grid-template-columns:auto auto 1fr auto}
+@media (max-width:600px){.mk-it{grid-template-columns:auto 1fr auto}.mk-it>span:nth-child(3){grid-column:1/-1;grid-row:2;color:var(--muted)}}
+.mk-sams{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 12px}
+.mk-sams button{border:1px solid var(--line);background:#fff;border-radius:12px;padding:.45em .9em;font:700 .88rem var(--f-ui);cursor:pointer;display:grid;text-align:center;color:var(--ink)}
+.mk-sams button small{font-weight:600;color:var(--muted);font-size:.72rem}.mk-sams button.on{background:var(--ink);color:#fff;border-color:var(--ink)}.mk-sams button.on small{color:#cbd5e1}
+.mk-ath{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:0 0 6px}.mk-ath b{display:block;font:700 1rem var(--f-ui)}.mk-ath span{color:var(--muted);font-size:.88rem}
+.mk-pl{text-align:right}.mk-pl b{font:800 1.6rem var(--f-ui);display:inline}.mk-pl span{display:inline;margin-left:4px}
+.mk-ins{display:grid;gap:6px;margin:10px 0}
+.mk-in{display:flex;flex-wrap:wrap;gap:8px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:8px 10px}
+.mk-in em{font-style:normal;font:700 .75rem var(--f-ui);background:var(--soft);border-radius:999px;padding:.2em .7em;margin-right:auto}
+.mk-in.st-present em{background:#E8F3EE;color:#0B6E4F}.mk-in.st-absent em{background:#FDECEC;color:var(--red)}
+.mk-add{display:flex;gap:8px;margin:8px 0}.mk-add select{flex:1;min-width:0}
+.mk-aide{margin:8px 0 0!important}
+.mk-ct{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:0 0 8px;background:#fff}
+.mk-cth{display:flex;justify-content:space-between;gap:8px;align-items:center}.mk-ct small{color:var(--muted)}
+.mk-ctn{margin:6px 0 0;font-size:.9rem}
+.mk-cta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px}.mk-cta input,.mk-cta select{flex:1 1 160px;min-width:0}
+.mk-part{font-size:.88rem}.mk-apayer{background:#FFF7DC;border-radius:10px;padding:8px 12px;margin:0 0 10px}
+.mk-ct.st-fait{border-left:5px solid #0B6E4F}.mk-ct.st-annule{opacity:.6}
+.mk-cpn{color:var(--muted);font-size:.75rem}
 .com-guide{margin:0 0 16px;border-left:6px solid var(--yellow)}
 .cg-hd{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 10px}.cg-hd .eyebrow{margin:0}
 .cg-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;position:relative}
