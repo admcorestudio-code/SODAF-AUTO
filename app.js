@@ -40,6 +40,12 @@ const DB = {
 };
 
 const WA = "https://wa.me/22872544166";
+// Paiement Mixx by Yas (T-Money) sur le code marchand : formule USSD *145*5*montant*code#
+const MIXX_USSD = (code, amt) => "*145*5*" + Math.round(+amt || 0) + "*" + String(code || "").replace(/\D/g, "") + "#";
+const MIXX_TEL = (code, amt) => "tel:" + MIXX_USSD(code, amt).replace(/#/g, "%23");
+const MIXX_MARCHAND = (code) => /^\d{5,7}$/.test(String(code || "").replace(/\D/g, "")); // 8 chiffres = ancien numéro de téléphone
+const MIXX_IOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const copier = async (t) => { try { await navigator.clipboard.writeText(t); return true; } catch (e) { try { const a = document.createElement("textarea"); a.value = t; a.setAttribute("readonly", ""); a.style.position = "fixed"; a.style.opacity = "0"; document.body.appendChild(a); a.select(); const ok = document.execCommand("copy"); a.remove(); return ok; } catch (x) { return false; } } };
 // Application élève installée (icône sur l'écran d'accueil) : seulement ce qui sert à apprendre, sans la vitrine (inscription, prix, tirage)
 const ELEVE = !window.SODAF_APP && (/[?&]app=eleve\b/.test(location.search) || (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || navigator.standalone === true);
 if (ELEVE) document.documentElement.classList.add("mode-eleve");
@@ -833,6 +839,9 @@ label.ex-doc input{position:absolute;left:14px;top:12px;width:20px;height:20px;a
 .insc-mixx{margin-top:14px;background:#FFF5D6;border:1.5px solid var(--yellow);border-radius:12px;padding:14px 16px}
 .insc-mixx ol{margin:0 0 10px;padding-left:1.2em}
 .insc-mixx li{margin-bottom:4px}
+.mx-k{margin:0 0 8px;font-weight:600}
+.mx-code{font:700 1.25rem/1.3 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.02em;background:#fff;border:1.5px dashed var(--yellow);border-radius:10px;padding:12px;text-align:center;word-break:break-all;color:#1b2340}
+.mx-acts{display:flex;gap:8px;margin:10px 0 12px;flex-wrap:wrap}.mx-acts .btn{flex:1 1 140px;justify-content:center;text-align:center}
 .insc-note{font-size:.95rem;color:#3D444D;background:var(--soft);border-radius:12px;padding:12px 14px}
 .insc-err{color:var(--red);font-weight:600}
 .insc-photo{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
@@ -3914,7 +3923,10 @@ function init(root) {
     const ITI = "https://www.google.com/maps/search/?api=1&query=6.168785%2C1.225462";
     const AGENCE = "*OÙ NOUS TROUVER*\n412 Avenue Akei, Tokoin Tamé (en face de la caisse)\nLun – ven : 8 h – 12 h 30 et 14 h 30 – 18 h · Sam : 8 h – 12 h\nItinéraire : " + ITI;
     const EXDU = (x) => 35000 - (+x.examen_remise || 0); // dépôt d'examen à payer, remise déduite (max 5 000 F, migration 0043)
-    const exMixx = (x) => (CFG.mixx_numero ? "\n\nTu peux aussi payer les " + F(EXDU(x)) + " par *Mixx by Yas* au " + CFG.mixx_numero + (CFG.mixx_nom ? " (" + CFG.mixx_nom + ")" : "") + ", motif *" + CODE(x) + " EXAMEN*, puis nous envoyer la capture du SMS ici." : "");
+    const mixxMsg = (amt, motif) => MIXX_MARCHAND(CFG.mixx_numero)
+      ? "par *Mixx by Yas* : compose\n```" + MIXX_USSD(CFG.mixx_numero, amt) + "```\npuis tape ton code secret Mixx" + (CFG.mixx_nom ? " (nom affiché : " + CFG.mixx_nom + ")" : "") + ". Envoie-nous ensuite la capture du SMS ici."
+      : "par *Mixx by Yas* au " + CFG.mixx_numero + (CFG.mixx_nom ? " (" + CFG.mixx_nom + ")" : "") + ", motif *" + motif + "*, puis nous envoyer la capture du SMS ici.";
+    const exMixx = (x) => CFG.mixx_numero && MIXX_MARCHAND(CFG.mixx_numero) ? "\n\nTu peux aussi payer les " + F(EXDU(x)) + " " + mixxMsg(EXDU(x), CODE(x) + " EXAMEN") : (CFG.mixx_numero ? "\n\nTu peux aussi payer les " + F(EXDU(x)) + " par *Mixx by Yas* au " + CFG.mixx_numero + (CFG.mixx_nom ? " (" + CFG.mixx_nom + ")" : "") + ", motif *" + CODE(x) + " EXAMEN*, puis nous envoyer la capture du SMS ici." : "");
     const exLine = (x) => x.examen_etape === "pret" ? (x.examen_lien_le ? "message envoyé " + ago(x.examen_lien_le) + " · dossier à apporter" : "message à envoyer") : x.examen_etape === "complet" ? "dossier reçu · à déposer" + (x.examen_passages ? " · " + (x.examen_passages + 1) + "e passage" : "") : "déposé le " + dFr(x.examen_depose_le) + " · résultat à noter";
     const SIGN = "\n\n*L'équipe SODAF · L'art de conduire, la force de réussir.*";
     const jourLong = (j) => longDay(j).replace(/^./, (c) => c.toUpperCase());
@@ -4008,7 +4020,7 @@ function init(root) {
     const doit = (x) => x.solde === null || x.solde === undefined || x.solde > 0;
     const soldeTxt = (x) => x.solde === null || x.solde === undefined ? "aucun paiement enregistré" : x.solde > 0 ? "solde " + F(x.solde) + " à payer" : "formation soldée";
     async function soldeFrais(id) { const r = await DB.q("paiements?select=reste&annule=is.false&reste=not.is.null&eleve_id=eq." + id + "&order=cree_le.desc&limit=1"); return { s: r && r.length ? r[0].reste : null }; }
-    const msgSolde = (x, nr) => { const n = nr || (susp(x) ? 2 : 1), ec = solEche(x), pay = CFG.mixx_numero ? "\n\nTu peux payer à l'agence ou par *Mixx by Yas* au " + CFG.mixx_numero + (CFG.mixx_nom ? " (" + CFG.mixx_nom + ")" : "") + ", motif *" + CODE(x) + " SOLDE*, puis nous envoyer la capture du SMS ici." : "\n\nTu peux payer à l'agence aux heures de bureau.";
+    const msgSolde = (x, nr) => { const n = nr || (susp(x) ? 2 : 1), ec = solEche(x), pay = CFG.mixx_numero && MIXX_MARCHAND(CFG.mixx_numero) ? "\n\nTu peux payer à l'agence ou " + mixxMsg(x.solde, CODE(x) + " SOLDE") : CFG.mixx_numero ? "\n\nTu peux payer à l'agence ou par *Mixx by Yas* au " + CFG.mixx_numero + (CFG.mixx_nom ? " (" + CFG.mixx_nom + ")" : "") + ", motif *" + CODE(x) + " SOLDE*, puis nous envoyer la capture du SMS ici." : "\n\nTu peux payer à l'agence aux heures de bureau.";
       if (n === 1) return "Bonjour " + prenom(x) + ",\n\nPetit rappel de *SODAF Auto-École* : il te reste *" + F(x.solde) + "* à régler pour ta formation (N° Client : " + CODE(x) + ")" + (ec ? ", *avant le " + ec.toLocaleDateString("fr-FR", { day: "numeric", month: "long" }) + "*" : "") + ".\n\nTant que le solde n'est pas réglé, nous ne pouvons pas réserver tes séances de conduite." + pay + "\n\nTu reçois ensuite ton reçu sur WhatsApp." + SIGN;
       return "Bonjour " + prenom(x) + ",\n\nLe délai pour régler le solde de ta formation chez *SODAF Auto-École* est dépassé (*" + F(x.solde) + "*, N° Client : " + CODE(x) + ").\n\nTa place au cours de code en salle est donc *suspendue* : tu peux continuer à réviser en ligne sur autosodaf.com. Dès ton paiement, tu retrouves ta place en salle et nous réservons tes séances de conduite." + pay + SIGN; };
     const fmtN = milliers;
@@ -5409,8 +5421,14 @@ function init(root) {
       '<fieldset class="insc-step"><legend><i>4</i>Ton paiement</legend><p class="insc-sub">Comment veux-tu payer ?</p><div class="insc-cards insc-two insc-pay">' +
       '<label class="rcm on"><input type="radio" name="inM" value="agence" checked><span><b>À l\'agence</b><small>En espèces, au 412 Avenue Akei, Tokoin Tamé</small></span></label>' +
       '<label class="rcm' + (mixxOk ? "" : " off") + '"><input type="radio" name="inM" value="mixx"' + (mixxOk ? "" : " disabled") + '><span><b>Par Mixx by Yas (T-Money)</b><small>' + (mixxOk ? "Depuis ton téléphone, sans te déplacer" : "Bientôt disponible : pour l'instant, paie à l'agence") + "</small></span></label></div>" +
-      '<div class="insc-mixx" id="sd-inMixx" hidden><ol><li>Sur ton téléphone, envoie <b id="sd-inAmt"></b> par Mixx by Yas au <b>' + escI(d.m) + "</b>" + (d.n ? " (" + escI(d.n) + ")" : "") + ".</li><li>Motif : <b>SO" + d.i + "</b></li><li>Écris ci-dessous le numéro qui a payé et la référence du SMS de confirmation.</li></ol>" +
-      '<div class="insc-grid"><div class="field"><label for="sd-inMt">Numéro qui a payé</label><div class="tel"><span>+228</span><input id="sd-inMt" inputmode="numeric" maxlength="11" placeholder="90 00 00 00"></div></div><div class="field"><label for="sd-inMr">Référence de la transaction (SMS)</label><input id="sd-inMr" maxlength="60" placeholder="Ex. MP2410…"></div></div></div>' +
+      (MIXX_MARCHAND(d.m)
+        ? '<div class="insc-mixx mx" id="sd-inMixx" hidden><p class="mx-k">Paie <b id="sd-inAmt"></b> avec Mixx</p>' +
+          '<div class="mx-code" id="sd-inUssd"></div>' +
+          '<div class="mx-acts">' + (MIXX_IOS ? "" : '<a class="btn btn-green" id="sd-inPay" href="#">Payer avec Mixx</a>') + '<button class="btn ' + (MIXX_IOS ? "btn-green" : "btn-line") + '" type="button" id="sd-inCopy">Copier</button></div>' +
+          "<ol>" + (MIXX_IOS ? "<li>Touche <b>Copier</b>, ouvre ton clavier d'appel, colle et appelle.</li>" : "<li>Touche <b>Payer avec Mixx</b>, puis le bouton vert d'appel.</li>") + "<li>Tape ton code secret Mixx." + (d.n ? " Nom affiché : <b>" + escI(d.n) + "</b>." : "") + "</li><li>Écris ci-dessous la référence du SMS reçu.</li></ol>" +
+          '<div class="insc-grid"><div class="field"><label for="sd-inMr">Référence du SMS</label><input id="sd-inMr" maxlength="60" placeholder="Ex. MP2410…"></div><div class="field"><label for="sd-inMt">Numéro qui a payé</label><div class="tel"><span>+228</span><input id="sd-inMt" inputmode="numeric" maxlength="11" placeholder="90 00 00 00"></div></div></div></div>'
+        : '<div class="insc-mixx" id="sd-inMixx" hidden><ol><li>Sur ton téléphone, envoie <b id="sd-inAmt"></b> par Mixx by Yas au <b>' + escI(d.m) + "</b>" + (d.n ? " (" + escI(d.n) + ")" : "") + ".</li><li>Motif : <b>SO" + d.i + "</b></li><li>Écris ci-dessous le numéro qui a payé et la référence du SMS de confirmation.</li></ol>" +
+      '<div class="insc-grid"><div class="field"><label for="sd-inMt">Numéro qui a payé</label><div class="tel"><span>+228</span><input id="sd-inMt" inputmode="numeric" maxlength="11" placeholder="90 00 00 00"></div></div><div class="field"><label for="sd-inMr">Référence de la transaction (SMS)</label><input id="sd-inMr" maxlength="60" placeholder="Ex. MP2410…"></div></div></div>') +
       "</fieldset>" +
       (exam ? '<p class="insc-note">À la fin de ta formation : <b>35&nbsp;000&nbsp;F</b> pour l\'inscription à l\'examen d\'État et tes papiers (carte d\'identité, acte de naissance, 2 photos). SODAF dépose ton dossier ; l\'État t\'envoie ensuite la date et le lieu par message.</p>' : "") +
       '<p class="insc-err" id="sd-inErr" hidden></p><button class="btn btn-green insc-go" type="submit" id="sd-inGo">Valider mon inscription</button></form>';
@@ -5421,10 +5439,12 @@ function init(root) {
       form.querySelector('[data-p="moitie"]').textContent = fmtF(v.ins + v.f[1] / 2); form.querySelector('[data-p="total"]').textContent = fmtF(v.ins + v.f[1]);
       $("#sd-inSum").innerHTML = '<span class="insc-sumrow"><span>À payer maintenant</span><b>' + fmtF(v.a) + "</b></span><span>" + (v.ins ? "Droit d'inscription " + fmtF(v.ins).replace(/ /g, "&nbsp;") : "Inscription offerte") + " + " + (v.p === "total" ? "toute la formation" : "la moitié de la formation") + "</span>" + (v.p === "moitie" ? '<span class="insc-reste">Reste à payer avant la 1re séance de conduite : <b>' + fmtF(v.f[1] / 2) + "</b></span>" : '<span class="insc-reste">Formation soldée : plus rien à payer ensuite</span>');
       $("#sd-inAmt").textContent = fmtF(v.a);
+      if ($("#sd-inUssd")) { $("#sd-inUssd").textContent = MIXX_USSD(d.m, v.a); if ($("#sd-inPay")) $("#sd-inPay").href = MIXX_TEL(d.m, v.a); }
       form.querySelectorAll(".rcm").forEach((l) => l.classList.toggle("on", l.querySelector("input").checked));
       $("#sd-inMixx").hidden = form.querySelector("[name=inM]:checked").value !== "mixx";
     };
     form.addEventListener("change", upd); upd();
+    if ($("#sd-inCopy")) $("#sd-inCopy").addEventListener("click", async (e) => { const b = e.currentTarget, ok = await copier(MIXX_USSD(d.m, val().a)); b.textContent = ok ? "Copié" : "Copie impossible"; setTimeout(() => (b.textContent = "Copier"), 2500); });
     let phBlob = null;
     $("#sd-inPhF").addEventListener("change", async (e) => {
       const f = e.target.files && e.target.files[0]; if (!f) return;
