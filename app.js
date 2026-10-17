@@ -487,7 +487,7 @@ article.ch p+p{margin-top:10px}
 .di-pg img{display:block;width:100%;height:auto}
 .di-pg figcaption{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
 .di-pg figcaption a{font-weight:600;color:var(--green);text-decoration:none}
-#sd-form:not(.par) .pi-par{display:none}
+.pi-parline{margin:-4px 0 14px;font-size:.85rem;color:var(--muted)}.pi-parline b{color:var(--ink);font-weight:600}.pi-parline[hidden]{display:none}
 .par-top{align-items:start}
 .par-gen h3{margin:4px 0 12px;font:700 1.35rem var(--f-display)}
 .par-bonus{margin:16px 0 0;font-weight:600;font-size:.92rem;color:var(--muted)}
@@ -2199,7 +2199,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <section class="page" data-page="parrainage" hidden>
 ${HEAD("Parrainage", "Parraine un proche, reçois 2 000 F", "Tu connais quelqu'un qui veut son permis ? Envoie-lui ton lien. Dès qu'il s'inscrit chez SODAF, tu reçois 2 000 F.")}
 <div class="wrap sec"><div class="grid g2 par-top">
-<div class="card par-how"><p class="eyebrow">Comment ça marche</p><ol class="ok-steps"><li><b>Ton numéro de téléphone</b><span>C'est ton code de parrain. Mets celui de ton Mixx by Yas ou Moov Money : tes 2 000 F arrivent dessus.</span></li><li><b>Tu envoies ton lien</b><span>Sur WhatsApp, à tes proches, collègues, voisins.</span></li><li><b>Tu reçois 2 000 F</b><span>Par Mixx by Yas ou Moov Money, dès que la personne paie son inscription.</span></li></ol>
+<div class="card par-how"><p class="eyebrow">Comment ça marche</p><ol class="ok-steps"><li><b>Ton numéro de téléphone</b><span>C'est ton code de parrain. Mets celui de ton Mixx by Yas ou Moov Money : tes 2 000 F arrivent dessus.</span></li><li><b>Tu envoies ton lien</b><span>Sur WhatsApp, à tes proches, collègues, voisins. Ils arrivent sur le site et ton numéro reste avec eux.</span></li><li><b>Tu reçois 2 000 F</b><span>Par Mixx by Yas ou Moov Money, dès que la personne paie son inscription.</span></li></ol>
 <p class="par-bonus">En plus :</p><div class="pills"><span>3 clients : un t-shirt SODAF</span><span>5 clients : une séance offerte</span></div></div>
 <div class="card par-gen"><p class="eyebrow">Pour les parrains</p><h3>Crée ton lien</h3>
 <div class="field"><label for="sd-parCode">Ton numéro de téléphone</label><div class="tel"><span>+228</span><input id="sd-parCode" inputmode="numeric" maxlength="14" autocomplete="tel-national" placeholder="90 12 34 56"></div></div>
@@ -2208,19 +2208,17 @@ ${HEAD("Parrainage", "Parraine un proche, reçois 2 000 F", "Tu connais quelqu'u
 <div class="par-out" id="sd-parOut" hidden><p class="par-link" id="sd-parLink"></p><div class="acts"><a class="btn btn-wa btn-sm" id="sd-parWa" target="_blank" rel="noopener" href="#">Envoyer sur WhatsApp</a><button class="btn btn-line btn-sm" type="button" id="sd-parCopy">Copier le lien</button></div></div>
 </div>
 </div></div>
-<div class="wrap sec" id="parrainage-form" style="padding-top:0"><div class="sec-head"><div><p class="eyebrow">On t'a conseillé SODAF ?</p><h2>Inscris-toi avec le numéro de ton parrain</h2></div><p>Pas de parrain ? Fais la <a href="#inscription">pré-inscription normale</a>.</p></div>
-<div id="sd-piSlotPar"></div></div>
 </section>
 
 <section class="page" data-page="inscription" hidden>
 ${HEAD("Pré-inscription", "Rejoins SODAF", "Envoie ta demande en une minute : elle arrive directement au secrétariat, qui te recontacte pour fixer ton premier cours.")}
-<div class="wrap sec" id="sd-piSlotIns"><div class="insc pi" id="sd-pi">
+<div class="wrap sec"><div class="insc pi" id="sd-pi">
 <form class="card pi-form" id="sd-form" novalidate>
-<div class="pi-hd"><div><p class="eyebrow" id="sd-piK">Pré-inscription en ligne</p><h3>Tes coordonnées</h3></div><ul class="pi-tags"><li>1 minute</li><li>Gratuit</li><li>Sans engagement</li></ul></div>
+<div class="pi-hd"><div><p class="eyebrow">Pré-inscription en ligne</p><h3>Tes coordonnées</h3></div><ul class="pi-tags"><li>1 minute</li><li>Gratuit</li><li>Sans engagement</li></ul></div>
 <div class="row2"><div class="field"><label for="sd-fName">Nom</label><input id="sd-fName" autocomplete="family-name" maxlength="60" placeholder="Ex. AGBEKO"></div><div class="field"><label for="sd-fFirst">Prénoms</label><input id="sd-fFirst" autocomplete="given-name" maxlength="80" placeholder="Ex. Kossi Mawuli"></div></div>
 <div class="row2"><div class="field"><label for="sd-fPhone">Téléphone / WhatsApp</label><div class="tel"><span>+228</span><input id="sd-fPhone" inputmode="numeric" maxlength="11" autocomplete="tel-national" placeholder="90 00 00 00"></div></div><div class="field"><label for="sd-fCity">Quartier</label><input id="sd-fCity" maxlength="80" placeholder="Ex. Bè, Adidogomé"></div></div>
 <fieldset class="field pi-cat" aria-describedby="sd-fCatAide"><legend>Formation</legend><div class="pi-cats" id="sd-fCat"><label class="rcm on"><input type="radio" name="fCat" value="Permis B" checked><span><b>Permis voiture</b><small>J'apprends à conduire</small></span></label><label class="rcm"><input type="radio" name="fCat" value="Remise à niveau"><span><b>Remise à niveau</b><small>J'ai déjà le permis</small></span></label></div><small class="f-aide" id="sd-fCatAide">Ton tarif (étudiant ou non) se choisit ensuite, dans le lien envoyé sur WhatsApp.</small></fieldset>
-<div class="field pi-par"><label for="sd-fPar">Numéro de ton parrain</label><div class="tel"><span>+228</span><input id="sd-fPar" inputmode="numeric" maxlength="14" autocomplete="off" placeholder="90 12 34 56" aria-describedby="sd-fParAide"></div><small class="f-aide" id="sd-fParAide">Le numéro de téléphone de la personne qui t'a conseillé SODAF.</small><p class="pi-err" id="sd-fParErr" hidden>Écris le numéro de ton parrain (8 chiffres).</p></div>
+<p class="pi-parline" id="sd-fParLine" hidden>Parrain : <b id="sd-fParTxt"></b></p>
 <div class="field"><label for="sd-fMsg">Message (non obligatoire)</label><textarea id="sd-fMsg" placeholder="Une question, une contrainte d'horaire…"></textarea></div>
 <p id="sd-fErr" class="pi-err" hidden>Indique ton nom, tes prénoms et ton numéro à 8 chiffres (après le +228).</p>
 <button class="btn btn-green pi-go" type="submit" id="sd-send">Envoyer ma pré-inscription</button>
@@ -3092,28 +3090,20 @@ function init(root) {
     const nf = $("#sd-fName").value.trim().replace(/\s+/g, " "), pr = $("#sd-fFirst").value.trim().replace(/\s+/g, " "), name = (pr + " " + nf).trim(), digits = telDigits(), phone = "+228 " + digits.replace(/(\d{2})(?=\d)/g, "$1 ");
     const okForm = nf.length >= 2 && pr.length >= 2 && digits.length === 8;
     $("#sd-fErr").hidden = okForm;
-    const okPar = !form.classList.contains("par") || !!parNorm($("#sd-fPar").value);
-    $("#sd-fParErr").hidden = okPar;
-    if (!okForm || !okPar) return;
-    lastPayload = { nom: name, nom_famille: nf, prenoms: pr, telephone: phone, formation: fCatVal(), quartier: $("#sd-fCity").value.trim(), message: $("#sd-fMsg").value.trim(), parrain: parNorm($("#sd-fPar").value) ? "+228" + parNorm($("#sd-fPar").value) : "", source: "Site web" };
+    if (!okForm) return;
+    lastPayload = { nom: name, nom_famille: nf, prenoms: pr, telephone: phone, formation: fCatVal(), quartier: $("#sd-fCity").value.trim(), message: $("#sd-fMsg").value.trim(), parrain: parGet() ? "+228" + parGet() : "", source: "Site web" };
     const waText = "Bonjour SODAF, je souhaite m'inscrire.\nNom : " + name + "\nTéléphone : " + phone + "\nFormation : " + lastPayload.formation + "\nQuartier : " + (lastPayload.quartier || "—") + (lastPayload.parrain ? "\nParrain : " + lastPayload.parrain : "") + (lastPayload.message ? "\nMessage : " + lastPayload.message : "");
     submitInscription(lastPayload, waText);
   });
   $("#sd-retry").addEventListener("click", () => form.requestSubmit());
-  // Un seul formulaire pour deux pages : #inscription (sans parrain) et #parrainage (avec le code du parrain)
-  function piPlace(p, h) {
-    const pi = $("#sd-pi"), slot = $(p === "parrainage" ? "#sd-piSlotPar" : "#sd-piSlotIns");
-    if (pi && slot && pi.parentNode !== slot) slot.appendChild(pi);
-    form.classList.toggle("par", p === "parrainage");
-    $("#sd-piK").textContent = p === "parrainage" ? "Inscription avec parrain" : "Pré-inscription en ligne";
-    let c = ""; try { c = decodeURIComponent(h.slice(11)); } catch (e) {}
-    if (p === "parrainage" && parNorm(c)) $("#sd-fPar").value = telFmt(parNorm(c));
-    $("#sd-fParErr").hidden = true;
-  }
-  $("#sd-fPar").addEventListener("input", () => { if (parNorm($("#sd-fPar").value)) $("#sd-fParErr").hidden = true; });
+  // Lien d'un parrain (#parrainage-90123456) : son numéro est retenu 30 jours sur le téléphone de la personne,
+  // puis ajouté tout seul à sa pré-inscription (ligne « Parrain : … », non modifiable).
+  const parGet = () => { const v = S.get("parrain", null); return v && v.t && Date.now() - (v.at || 0) < 30 * 864e5 ? v.t : ""; };
+  const parShow = () => { const t = parGet(); $("#sd-fParLine").hidden = !t; $("#sd-fParTxt").textContent = t ? "+228 " + telFmt(t) : ""; };
+  function parRecu(code) { const t = parNorm(code); if (t) S.set("parrain", { t, at: Date.now() }); parShow(); }
   const parNorm = (v) => { let d = String(v || "").replace(/\D/g, ""); if (d.length > 8 && d.startsWith("228")) d = d.slice(3); return d.length === 8 ? d : ""; };
   const telFmt = (d) => d.replace(/(\d{2})(?=\d)/g, "$1 ");
-  ["#sd-parCode", "#sd-fPar"].forEach((id) => $(id).addEventListener("input", (e) => { let d = e.target.value.replace(/\D/g, ""); if (d.length > 8 && d.startsWith("228")) d = d.slice(3); e.target.value = telFmt(d.slice(0, 8)); }));
+  ["#sd-parCode"].forEach((id) => $(id).addEventListener("input", (e) => { let d = e.target.value.replace(/\D/g, ""); if (d.length > 8 && d.startsWith("228")) d = d.slice(3); e.target.value = telFmt(d.slice(0, 8)); }));
   $("#sd-parMake").addEventListener("click", () => {
     const c = parNorm($("#sd-parCode").value); $("#sd-parErr").hidden = !!c; $("#sd-parOut").hidden = !c; if (!c) return;
     const url = "https://autosodaf.com/#parrainage-" + c;
@@ -3121,6 +3111,7 @@ function init(root) {
     $("#sd-parWa").href = "https://wa.me/?text=" + encodeURIComponent("Salut ! Je te conseille SODAF Auto-École pour ton permis (Tokoin Tamé, Lomé). Inscris-toi avec mon lien, c'est rapide : " + url);
   });
   $("#sd-parCode").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); $("#sd-parMake").click(); } });
+  parShow();
   $("#sd-parCopy").addEventListener("click", async (e) => { const b = e.currentTarget, ok = await copier($("#sd-parLink").textContent); b.textContent = ok ? "Copié" : "Copie impossible"; setTimeout(() => (b.textContent = "Copier le lien"), 2500); });
   $("#sd-again").addEventListener("click", () => {
     form.reset(); fCatSync(); $("#sd-ok").hidden = true; form.classList.remove("is-sent"); $("#sd-piHow").hidden = false; fieldsBox().forEach((c) => (c.hidden = false)); $("#sd-fErr").hidden = true; $("#sd-fail").hidden = true; $("#sd-fName").focus();
@@ -5675,14 +5666,14 @@ function init(root) {
     if (p === "recu") rcPublic(h.slice(5));
     if (p === "inscrire") inscPage(h.slice(9));
     if (p === "tirage") tirPage();
-    if (p === "inscription" || p === "parrainage") piPlace(p, h);
+    if (p === "parrainage" && h.length > 11) { let c = ""; try { c = decodeURIComponent(h.slice(11)); } catch (e) {} parRecu(c); history.replaceState(null, "", "#accueil"); p = "accueil"; }
     $$("section.page").forEach((s) => (s.hidden = s.dataset.page !== p));
     $$("#sd-nav [data-nav]").forEach((a) => a.classList.toggle("on", a.dataset.nav === p));
     nav.classList.remove("open"); burger.setAttribute("aria-expanded", "false");
     if (p === "quiz") showBest();
     if (p === "classe") requestAnimationFrame(() => cls.open(h.split("-")[1]));
     if (p === "cours") requestAnimationFrame(() => requestAnimationFrame(spy));
-    let target = null; try { target = p === "parrainage" ? (h.length > 11 ? root.querySelector("#parrainage-form") : null) : h.includes("-") && p !== "recu" && p !== "inscrire" ? root.querySelector("#" + h) : null; } catch (e) {}
+    let target = null; try { target = p === "accueil" ? null : h.includes("-") && p !== "recu" && p !== "inscrire" ? root.querySelector("#" + h) : null; } catch (e) {}
     requestAnimationFrame(() => { if (target) target.scrollIntoView({ block: "start" }); else window.scrollTo(0, 0); });
   }
   window.addEventListener("hashchange", route);
