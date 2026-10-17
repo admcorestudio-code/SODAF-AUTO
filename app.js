@@ -502,7 +502,7 @@ article.ch p+p{margin-top:10px}
 .navteam{display:none}
 @media (max-width:1300px){#sodaf-root nav.main a.navteam{display:block;margin-top:6px;border-top:1px solid var(--line);color:var(--green)}}
 @media (max-width:480px){#sodaf-root .bar>.btn-green{padding:.55em .9em;font-size:.85rem}#sodaf-root .bar>.btn-green .lg{display:none}}
-#sodaf-root .bar>.btn-green .sm{display:none}@media (max-width:480px){#sodaf-root .bar>.btn-green .sm{display:inline}}
+#sodaf-root .bar>.btn-green{white-space:nowrap;flex:none}#sodaf-root .bar>.btn-green .sm{display:none}@media (max-width:480px){#sodaf-root .bar>.btn-green .sm{display:inline}}
 #sodaf-root{overflow-x:clip}
 .rcmotifs{border:0;padding:0;margin:0 0 6px;display:grid;gap:8px;min-width:0}
 .rcmotifs legend{font-weight:600;margin-bottom:8px;padding:0}
