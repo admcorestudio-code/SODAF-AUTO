@@ -1,0 +1,28 @@
+Sat Oct 17 13:51:48 UTC 2026
+== NS
+dns1.registrar-servers.com.
+dns2.registrar-servers.com.
+== NS (serveur .com)
+autosodaf.com.		172800	IN	NS	dns1.registrar-servers.com.
+autosodaf.com.		172800	IN	NS	dns2.registrar-servers.com.
+== A
+185.199.109.153
+185.199.108.153
+185.199.110.153
+185.199.111.153
+== www
+admcorestudio-code.github.io.
+185.199.108.153
+185.199.109.153
+185.199.110.153
+185.199.111.153
+== A chez dns1.registrar-servers.com.
+185.199.110.153
+185.199.109.153
+185.199.108.153
+185.199.111.153
+admcorestudio-code.github.io.
+"v=spf1 include:spf.efwd.registrar-servers.com ~all"
+"google-site-verification=y_7eTsVHBVLakY6pPeY0Ju7EiTZf0EG2g2j4WEhefXU"
+== https
+code=200
