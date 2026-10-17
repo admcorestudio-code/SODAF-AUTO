@@ -2199,7 +2199,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <section class="page" data-page="parrainage" hidden>
 ${HEAD("Parrainage", "Parraine un proche, reçois 2 000 F", "Tu connais quelqu'un qui veut son permis ? Envoie-lui ton lien. Dès qu'il s'inscrit chez SODAF, tu reçois 2 000 F.")}
 <div class="wrap sec"><div class="grid g2 par-top">
-<div class="card par-how"><p class="eyebrow">Comment ça marche</p><ol class="ok-steps"><li><b>Ton numéro de téléphone</b><span>C'est ton code de parrain. Mets celui de ton Mixx by Yas ou Moov Money : tes 2 000 F arrivent dessus.</span></li><li><b>Tu envoies ton lien</b><span>Sur WhatsApp, à tes proches, collègues, voisins. Ils arrivent sur le site et ton numéro reste avec eux.</span></li><li><b>Tu reçois 2 000 F</b><span>Par Mixx by Yas ou Moov Money, dès que la personne paie son inscription.</span></li></ol>
+<div class="card par-how"><p class="eyebrow">Comment ça marche</p><ol class="ok-steps"><li><b>Ton numéro de téléphone</b><span>C'est ton code de parrain. Mets celui de ton Mixx by Yas ou Moov Money : tes 2 000 F arrivent dessus.</span></li><li><b>Tu envoies ton lien</b><span>Sur WhatsApp, à tes proches, collègues, voisins. Ils arrivent sur le formulaire d'inscription, avec ton numéro déjà dedans.</span></li><li><b>Tu reçois 2 000 F</b><span>Par Mixx by Yas ou Moov Money, dès que la personne paie son inscription.</span></li></ol>
 <p class="par-bonus">En plus :</p><div class="pills"><span>3 clients : un t-shirt SODAF</span><span>5 clients : une séance offerte</span></div></div>
 <div class="card par-gen"><p class="eyebrow">Pour les parrains</p><h3>Crée ton lien</h3>
 <div class="field"><label for="sd-parCode">Ton numéro de téléphone</label><div class="tel"><span>+228</span><input id="sd-parCode" inputmode="numeric" maxlength="14" autocomplete="tel-national" placeholder="90 12 34 56"></div></div>
@@ -3096,7 +3096,7 @@ function init(root) {
     submitInscription(lastPayload, waText);
   });
   $("#sd-retry").addEventListener("click", () => form.requestSubmit());
-  // Lien d'un parrain (#parrainage-90123456) : son numéro est retenu 30 jours sur le téléphone de la personne,
+  // Lien d'un parrain (#parrainage-90123456) : ouvre la pré-inscription ; son numéro est retenu 30 jours sur le téléphone de la personne,
   // puis ajouté tout seul à sa pré-inscription (ligne « Parrain : … », non modifiable).
   const parGet = () => { const v = S.get("parrain", null); return v && v.t && Date.now() - (v.at || 0) < 30 * 864e5 ? v.t : ""; };
   const parShow = () => { const t = parGet(); $("#sd-fParLine").hidden = !t; $("#sd-fParTxt").textContent = t ? "+228 " + telFmt(t) : ""; };
@@ -5666,14 +5666,14 @@ function init(root) {
     if (p === "recu") rcPublic(h.slice(5));
     if (p === "inscrire") inscPage(h.slice(9));
     if (p === "tirage") tirPage();
-    if (p === "parrainage" && h.length > 11) { let c = ""; try { c = decodeURIComponent(h.slice(11)); } catch (e) {} parRecu(c); history.replaceState(null, "", "#accueil"); p = "accueil"; }
+    if (p === "parrainage" && h.length > 11) { let c = ""; try { c = decodeURIComponent(h.slice(11)); } catch (e) {} parRecu(c); history.replaceState(null, "", "#inscription"); p = "inscription"; }
     $$("section.page").forEach((s) => (s.hidden = s.dataset.page !== p));
     $$("#sd-nav [data-nav]").forEach((a) => a.classList.toggle("on", a.dataset.nav === p));
     nav.classList.remove("open"); burger.setAttribute("aria-expanded", "false");
     if (p === "quiz") showBest();
     if (p === "classe") requestAnimationFrame(() => cls.open(h.split("-")[1]));
     if (p === "cours") requestAnimationFrame(() => requestAnimationFrame(spy));
-    let target = null; try { target = p === "accueil" ? null : h.includes("-") && p !== "recu" && p !== "inscrire" ? root.querySelector("#" + h) : null; } catch (e) {}
+    let target = null; try { target = p === "inscription" ? null : h.includes("-") && p !== "recu" && p !== "inscrire" ? root.querySelector("#" + h) : null; } catch (e) {}
     requestAnimationFrame(() => { if (target) target.scrollIntoView({ block: "start" }); else window.scrollTo(0, 0); });
   }
   window.addEventListener("hashchange", route);
