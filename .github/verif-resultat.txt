@@ -1,0 +1,31 @@
+== https://autosodaf.com/
+curl: (7) Failed to connect to autosodaf.com port 443 after 242 ms: Couldn't connect to server
+code=000 redirect= ip= temps=0.242691
+ECHEC
+== https://autosodaf.com/equipe/
+curl: (7) Failed to connect to autosodaf.com port 443 after 140 ms: Couldn't connect to server
+code=000 redirect= ip= temps=0.139413
+ECHEC
+== https://autosodaf.com/equipe
+curl: (7) Failed to connect to autosodaf.com port 443 after 71 ms: Couldn't connect to server
+code=000 redirect= ip= temps=0.071329
+ECHEC
+== https://autosodaf.com/equipe/sw.js
+curl: (7) Failed to connect to autosodaf.com port 443 after 151 ms: Couldn't connect to server
+code=000 redirect= ip= temps=0.151261
+ECHEC
+== https://autosodaf.com/app.js
+curl: (7) Failed to connect to autosodaf.com port 443 after 69 ms: Couldn't connect to server
+code=000 redirect= ip= temps=0.069436
+ECHEC
+== https://www.autosodaf.com/equipe/
+curl: (7) Failed to connect to www.autosodaf.com port 443 after 285 ms: Couldn't connect to server
+code=000 redirect= ip= temps=0.285894
+ECHEC
+== DNS
+198.54.117.242
+198.54.117.242
+== en-têtes equipe
+curl: (7) Failed to connect to autosodaf.com port 443 after 143 ms: Couldn't connect to server
+== debut equipe
+curl: (7) Failed to connect to autosodaf.com port 443 after 191 ms: Couldn't connect to server
