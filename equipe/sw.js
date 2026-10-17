@@ -1,17 +1,8 @@
-// v2 · SODAF Équipe : aucun stockage des données. Le service worker affiche seulement
-// un message clair quand il n'y a pas de connexion internet.
+// v3 · SODAF Équipe : aucun stockage, aucune interception des pages.
+// La page « Pas de connexion » est retirée (17 oct.) : elle bloquait l'application même avec internet.
+// Le service worker ne sert plus qu'aux notifications.
 self.addEventListener("install", () => self.skipWaiting());
 self.addEventListener("activate", (e) => e.waitUntil(self.clients.claim()));
-self.addEventListener("fetch", (e) => {
-  if (e.request.mode !== "navigate") return;
-  // Deux essais avant d'afficher « Pas de connexion » (un premier échec réseau passager ne bloque plus l'application)
-  e.respondWith(fetch(e.request).catch(() => fetch(e.request.url, { cache: "reload", credentials: "same-origin" })).catch(() => new Response(
-    '<!doctype html><html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SODAF Équipe</title>' +
-    '<body style="margin:0;font-family:system-ui,sans-serif;background:#14171C;color:#fff;display:grid;place-items:center;min-height:100vh;text-align:center;padding:24px">' +
-    '<div><p style="font-size:3rem;margin:0">📶</p><h1 style="font-size:1.4rem">Pas de connexion internet</h1><p style="color:#C9CED4">Vérifie le Wi-Fi ou les données mobiles, puis réessaie.<br>En attendant, note les paiements dans le carnet de reçus.</p>' +
-    '<button onclick="location.replace(\'/equipe/?r=\'+Date.now())" style="margin-top:12px;font:600 1rem system-ui;padding:.8em 1.4em;border:0;border-radius:999px;background:#F2B100">Réessayer</button></div></body></html>',
-    { headers: { "Content-Type": "text/html; charset=utf-8" } })));
-});
 
 // Notifications de l'équipe (messages, nouvelles pré-inscriptions, paiements Mixx) envoyées par la base
 self.addEventListener("push", (e) => {
