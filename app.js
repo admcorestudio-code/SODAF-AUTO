@@ -3972,6 +3972,7 @@ function init(root) {
       if (AMB()) comCharger(); else sub("eleves");
       await msInit();
       { const g = new URLSearchParams(location.search).get("gerance"); if (g && DIR()) { history.replaceState(null, "", location.pathname + location.hash); pick("ger"); grOnglet(g); setTimeout(() => $("#sd-gr").scrollIntoView({ block: "start" }), 300); } }
+      { const o = new URLSearchParams(location.search).get("onglet"); if (o && $('#sd-tmTabs [data-t="' + o + '"]') && !$('#sd-tmTabs [data-t="' + o + '"]').hidden) { history.replaceState(null, "", location.pathname + location.hash); pick(o); } }
       { const q = new URLSearchParams(location.search), c = q.get("canal"), el = +q.get("eleve") || 0; if (c || el) { history.replaceState(null, "", location.pathname + location.hash); msOuvrir(c, el); } }
     }
 
@@ -5171,18 +5172,29 @@ function init(root) {
     }
     function mcVoiture() {
       const box = $("#sd-mcVoit"), today = iso(new Date());
+      const prevoir = [];
       const echeances = MC_REG.map(([t, n, u]) => {
         const der = MC.e.find((x) => x.type === t && (u === "j" || x.km));
         if (!der) return '<div class="mk-ech mk-none"><b>' + esc(t) + "</b><span>Pas encore noté</span></div>";
         let txt, cls;
-        if (u === "km") { const r = der.km + n - MC.km; txt = !MC.km ? "à " + milliers(der.km + n) + " km" : r < 0 ? "Dépassé de " + milliers(-r) + " km" : "Dans " + milliers(r) + " km"; cls = r < 0 ? "mk-ko" : r < 500 ? "mk-bientot" : ""; }
-        else { const d = new Date(dOf(der.jour)); d.setDate(d.getDate() + n); const r = Math.round((d - dOf(today)) / 864e5); txt = r < 0 ? "En retard de " + -r + " j" : r === 0 ? "Aujourd'hui" : "Dans " + r + " j"; cls = r < 0 ? "mk-ko" : r < 7 ? "mk-bientot" : ""; }
+        if (u === "km") { const r = der.km + n - MC.km; txt = !MC.km ? "à " + milliers(der.km + n) + " km" : r < 0 ? "Dépassé de " + milliers(-r) + " km" : "Dans " + milliers(r) + " km"; cls = r < 0 ? "mk-ko" : r < 600 ? "mk-bientot" : ""; if (MC.km && r < 600) prevoir.push([t, txt.toLowerCase()]); }
+        else { const d = new Date(dOf(der.jour)); d.setDate(d.getDate() + n); const r = Math.round((d - dOf(today)) / 864e5); txt = r < 0 ? "En retard de " + -r + " j" : r === 0 ? "Aujourd'hui" : "Dans " + r + " j"; cls = r < 0 ? "mk-ko" : r <= 8 ? "mk-bientot" : ""; if (r <= 8) prevoir.push([t, txt.toLowerCase()]); }
         return '<div class="mk-ech ' + cls + '"><b>' + esc(t) + "</b><span>" + txt + "</span></div>";
       }).join("");
-      box.innerHTML = '<div class="mk-hd"><div><span class="crb-k">Compteur</span><b class="crb-big">' + (MC.km ? milliers(MC.km) + " km" : "—") + '</b><span class="crb-s">Dernier relevé (pleins et entretiens)</span></div></div><div class="mk-echs">' + echeances + "</div>" +
+      const sam = mcSamedis()[0], peut = mcPeutInscrire(), tel = waNum(CFG.meca_tel || "");
+      const msgMeca = "Bonjour, c'est SODAF Auto-École.\n\nSamedi " + dOf(sam).toLocaleDateString("fr-FR", { day: "numeric", month: "long" }) + ", à prévoir sur la voiture :\n" + prevoir.map((p) => "• " + p[0] + " (" + p[1] + ")").join("\n") + "\n\nCompteur : " + milliers(MC.km) + " km.\nDis-nous les pièces à acheter et leur prix, pour qu'on les prépare avant samedi. Prévois de rester jusqu'à 17 h.\n\nMerci !";
+      const prev = prevoir.length ? '<div class="mk-prev"><div class="mk-prevh"><b>À prévoir samedi ' + dOf(sam).toLocaleDateString("fr-FR", { day: "numeric", month: "short" }) + '</b><span>La mécanicienne doit le savoir avant.</span></div><ul>' + prevoir.map((p) => "<li><b>" + esc(p[0]) + "</b> · " + esc(p[1]) + "</li>").join("") + "</ul>" +
+        (peut ? (tel ? '<div class="mk-prevb"><a class="btn btn-sm btn-wa" target="_blank" rel="noopener" href="https://wa.me/228' + tel + "?text=" + encodeURIComponent(msgMeca) + '">Prévenir la mécanicienne ↗</a><button type="button" class="linkbtn" data-mktel>Changer son numéro</button></div>' : "") +
+          '<form class="mk-tel"' + (tel ? " hidden" : "") + ' novalidate><label>Numéro WhatsApp de la mécanicienne</label><div class="mk-telr"><div class="tel"><span>+228</span><input inputmode="numeric" maxlength="11" placeholder="90 00 00 00" value="' + (tel ? tel.replace(/(\d{2})(?=\d)/g, "$1 ") : "") + '"></div><button type="submit" class="btn btn-sm btn-green">Enregistrer</button></div></form>' : "") + "</div>"
+        : '<div class="mk-prev mk-prev-ok"><b>Rien à prévoir samedi</b><span>Contrôle normal de 30 min.</span></div>';
+      box.innerHTML = prev + '<div class="mk-hd"><div><span class="crb-k">Compteur</span><b class="crb-big">' + (MC.km ? milliers(MC.km) + " km" : "—") + '</b><span class="crb-s">Dernier relevé (pleins et entretiens)</span></div></div><div class="mk-echs">' + echeances + "</div>" +
         '<details class="crb-add"><summary>Noter un entretien</summary><form class="mk-form" novalidate><div class="crb-row"><div class="field"><label>Quoi</label><select class="mk-type">' + MC_TYPES.map((t) => "<option>" + t + "</option>").join("") + '</select></div><div class="field"><label>Compteur (km)</label><input class="mk-km" inputmode="numeric" autocomplete="off" value="' + (MC.km ? milliers(MC.km) : "") + '"></div></div>' +
         '<div class="crb-row"><div class="field"><label>Pièces (F, si achetées)</label><input class="mk-cout" inputmode="numeric" autocomplete="off" placeholder="ex. 12 000"></div><div class="field"><label>Note</label><input class="mk-note" maxlength="500" autocomplete="off" placeholder="ex. Huile 5W30, filtre changé"></div></div><div class="field"><label>Photo (facultatif)</label>' + pjHtml(false) + '</div><button class="btn btn-green btn-sm" type="submit">Noter</button></form></details>' +
         (MC.e.length ? '<h4 class="gr-h4">Historique</h4><div class="crb-list">' + MC.e.slice(0, 10).map((x) => '<div class="crb-it mk-it"><span>' + dOf(x.jour).toLocaleDateString("fr-FR", { day: "numeric", month: "short" }) + "</span><b>" + esc(x.type) + "</b><span>" + (x.km ? milliers(x.km) + " km" : "") + (x.cout ? " · pièces " + F(x.cout) : "") + (x.note ? " · " + esc(x.note) : "") + "</span>" + (x.photo ? '<button type="button" class="linkbtn" data-dep="' + esc(x.photo) + '">Photo</button>' : "<span></span>") + "</div>").join("") + "</div>" : '<p class="crb-vide">Rien de noté pour l\'instant.</p>');
+      const tf = box.querySelector(".mk-tel");
+      if (tf) { const bt = box.querySelector("[data-mktel]"); if (bt) bt.addEventListener("click", () => { tf.hidden = false; tf.querySelector("input").focus(); });
+        tf.addEventListener("submit", async (ev) => { ev.preventDefault(); const v = tf.querySelector("input").value.replace(/\D/g, ""); if (v.length !== 8) { toast("Numéro : 8 chiffres", true); return; }
+          const r = await run(() => DB.q("rpc/meca_tel_regler", { method: "POST", body: { p_tel: v } }).then(() => true), "Numéro enregistré"); if (r) { CFG.meca_tel = "+228" + v; mcVoiture(); } }); }
       const f = box.querySelector(".mk-form");
       f.addEventListener("submit", async (ev) => {
         ev.preventDefault(); const km = +(f.querySelector(".mk-km").value.replace(/\D/g, "")) || null, cout = +(f.querySelector(".mk-cout").value.replace(/\D/g, "")) || null, pj = f.querySelector(".pj"), b = f.querySelector("[type=submit]");
@@ -6763,6 +6775,12 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 .fr-it{grid-template-columns:auto auto 1fr auto}
 .tm-pane[data-pane="com"] .tm-role{border-left-color:#C2410C}
 .tm-pane[data-pane="mec"] .tm-role{border-left-color:#475569}
+.mk-prev{border:1.5px solid #E3B83A;background:#FFF7DC;border-radius:14px;padding:12px 14px;margin:0 0 14px}
+.mk-prev.mk-prev-ok{border-color:#C7E2D6;background:#F2FAF6;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}.mk-prev-ok span{color:var(--muted);font-size:.88rem}
+.mk-prevh{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:baseline}.mk-prevh b{font:800 1.02rem var(--f-ui)}.mk-prevh span{color:#9A6B00;font-size:.85rem}
+.mk-prev ul{margin:8px 0 10px;padding-left:18px}.mk-prev li{margin:2px 0}
+.mk-prevb{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.mk-tel{margin-top:8px}.mk-tel[hidden]{display:none}.mk-tel label{display:block;font:600 .85rem var(--f-ui);margin:0 0 4px}.mk-telr{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.mk-telr .tel{flex:1 1 180px}
 .mk-hd{display:flex;justify-content:space-between;gap:12px;margin:0 0 10px}
 .mk-echs{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px;margin:0 0 12px}
 .mk-ech{border:1px solid var(--line);border-left:5px solid #0B6E4F;border-radius:12px;padding:8px 10px;display:grid;gap:2px;background:#fff}

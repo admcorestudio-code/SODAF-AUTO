@@ -2,6 +2,7 @@
 // Appelée uniquement par la base (déclencheurs de la migration 0028) avec un secret partagé.
 // Types : message (canal), preinscription (formulaire du site), inscription (finalisée en ligne), connexion (lieu + alerte nouvel appareil), test (bouton « Tester »), geotest (contrôle du lieu),
 // gérance : demande, demande_equipe (équipe → gérante), demande_reponse, decision, decision_avis, rapport, rapport_rappel (dimanche 18 h).
+// mécanique : entretien (jeudi 9 h, entretiens à prévoir samedi, liste calculée par prive.entretiens_a_prevoir).
 // Les clés VAPID et le secret sont lus dans prive.config_push : rien de secret dans ce fichier.
 import webpush from "npm:web-push@3.6.7";
 import postgres from "npm:postgres@3.4.5";
@@ -9,7 +10,7 @@ import postgres from "npm:postgres@3.4.5";
 const sql = postgres(Deno.env.get("SUPABASE_DB_URL")!, { prepare: false, max: 2, idle_timeout: 20 });
 const prenom = (n: string) => (n || "").trim().split(/\s+/)[0] || "Équipe";
 const milliers = (n: number) => String(Math.round(n || 0)).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-const ROLE: Record<string, string> = { admin: "Direction", gerant: "Gérante", secretariat: "Secrétariat", moniteur: "Moniteur" };
+const ROLE: Record<string, string> = { admin: "Direction", gerant: "Gérante", secretariat: "Secrétariat", moniteur: "Moniteur", ambassadeur: "Ambassadeur" };
 // Lieu approximatif d'une adresse internet (pays, ville, opérateur). Adresses locales ignorées. Deux services de secours, 4 s au plus chacun.
 const nomPays = (cc: string, n: string) => { try { return new Intl.DisplayNames(["fr"], { type: "region" }).of(String(cc).toUpperCase()) || n; } catch { return n; } };
 async function geo(ip: string): Promise<{ pays: string; ville: string | null; op: string | null } | null> {
@@ -31,7 +32,7 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ ok: true });
   const cfg: Record<string, string> = Object.fromEntries((await sql`select cle, valeur from prive.config_push`).map((r) => [r.cle, r.valeur]));
   if (!cfg.secret_fonction || req.headers.get("x-sodaf-secret") !== cfg.secret_fonction) return json({ erreur: "refusé" }, 401);
-  let p: { type?: string; id?: number; profil?: string; ip?: string };
+  let p: { type?: string; id?: number; profil?: string; ip?: string; liste?: { type: string; texte: string }[] };
   try { p = await req.json(); } catch { return json({ erreur: "requête illisible" }, 400); }
 
   let roles: string[] | null = null, exclure: string | null = null, seulement: string | null = null, aussi: string | null = null;
@@ -43,7 +44,7 @@ Deno.serve(async (req) => {
                             from public.messages m join public.canaux c on c.id = m.canal join public.profils pr on pr.id = m.auteur where m.id = ${p.id ?? 0}`;
     if (!m) return json({ envoyes: 0, raison: "message introuvable" });
     roles = m.roles; exclure = m.auteur; mentionnes = m.mentions || [];
-    const corpsTexte = (m.fichier ? (String(m.fichier.type || "").startsWith("audio/") ? "Message vocal" : String(m.fichier.type || "").startsWith("image/") ? "Photo" : "Fichier : " + (m.fichier.nom || "Fichier")) + (m.texte && m.texte !== m.fichier.nom ? " · " : "") : "") + (m.texte && (!m.fichier || m.texte !== m.fichier.nom) ? m.texte : "");
+    const corpsTexte = (m.fichier ? (String(m.fichier.type || "").startsWith("audio/") ? "Message vocal" : String(m.fichier.type || "").startsWith("image/") ? "Photo" : String(m.fichier.type || "").startsWith("video/") ? "Vidéo" : "Fichier : " + (m.fichier.nom || "Fichier")) + (m.texte && m.texte !== m.fichier.nom ? " · " : "") : "") + (m.texte && (!m.fichier || m.texte !== m.fichier.nom) ? m.texte : "");
     note = { title: prenom(m.auteur_nom) + " (" + (ROLE[m.auteur_role] || "Équipe") + ") · " + m.canal_nom, body: corpsTexte.length > 180 ? corpsTexte.slice(0, 177) + "…" : corpsTexte, url: "/equipe/?canal=" + m.canal, tag: "canal-" + m.canal };
     auteurPrenom = prenom(m.auteur_nom); canalNom = m.canal_nom;
   } else if (p.type === "preinscription") {
@@ -111,6 +112,12 @@ Deno.serve(async (req) => {
   } else if (p.type === "rapport_rappel") {
     roles = ["gerant"];
     note = { title: "Rapport de la semaine", body: "Les chiffres sont prêts. Ajoute tes remarques et envoie le rapport à la direction.", url: "/equipe/?gerance=rapports", tag: "rap-rappel" };
+  } else if (p.type === "entretien") {
+    const l = Array.isArray(p.liste) ? p.liste : [];
+    if (!l.length) return json({ envoyes: 0, raison: "rien à prévoir" });
+    roles = ["gerant", "secretariat"];
+    const corps = l.map((x) => x.type + " (" + x.texte + ")").join(" · ") + ". Préviens la mécanicienne : Mécanique → Prévenir.";
+    note = { title: "Samedi : entretien de la voiture", body: corps.length > 180 ? corps.slice(0, 177) + "…" : corps, url: "/equipe/?onglet=mec", tag: "entretien" };
   } else if (p.type === "geotest") {
     return json({ ip: p.ip || null, lieu: await geo(p.ip || "") }); // contrôle technique (secret obligatoire), aucune écriture
   } else if (p.type === "test") {
