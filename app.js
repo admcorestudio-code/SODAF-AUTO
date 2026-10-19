@@ -5068,25 +5068,34 @@ function init(root) {
     }
     // Formulaire de demande (même formulaire pour la gérante et pour l'équipe)
     function depFormHtml(g) {
-      const mon = me.role === "moniteur", titre = g ? "Proposer un achat" : mon ? "Demander une dépense" : "Demander une dépense";
-      return '<form class="dep-form" novalidate><h4 class="gr-h4">' + titre + '</h4><div class="dep-kind" role="radiogroup"' + (mon ? "" : " hidden") + '><button type="button" role="radio" data-kind="Carburant" aria-checked="' + mon + '">Essence en plus</button><button type="button" role="radio" data-kind="Autre" aria-checked="' + !mon + '">Autre dépense</button></div>' +
-        (mon ? "" : '<div class="field dep-pourf"><label>Pour quoi ?</label><div class="dep-kind dep-pour" role="radiogroup"><button type="button" role="radio" data-pour="voiture" aria-checked="false">Pour la voiture</button><button type="button" role="radio" data-pour="agence" aria-checked="false">Pour l\'agence</button></div><small class="dep-pourn">Voiture : pièce ou réparation (ex. noté « À réparer » sur la fiche du samedi).</small></div>') +
+      const mon = me.role === "moniteur", titre = g ? "Proposer un achat" : mon ? "Demander de l'essence en plus" : "Demander une dépense";
+      return '<form class="dep-form" novalidate><h4 class="gr-h4">' + titre + '</h4><div class="dep-kind" role="radiogroup" hidden><button type="button" role="radio" data-kind="Carburant" aria-checked="' + mon + '">Essence en plus</button><button type="button" role="radio" data-kind="Autre" aria-checked="' + !mon + '">Autre dépense</button></div>' +
+        (mon ? "" : '<div class="field dep-pourf"><label>Pour quoi ?</label><div class="dep-kind dep-pour" role="radiogroup"><button type="button" role="radio" data-pour="voiture" aria-checked="false">Pour la voiture</button><button type="button" role="radio" data-pour="agence" aria-checked="false">Pour l\'agence</button></div><small class="dep-pourn">Voiture : pièces, entretien ou réparation (ex. noté « À réparer » sur la fiche du samedi, problème signalé par le moniteur).</small></div>') +
         '<div class="field"><label>Montant (F)</label><input class="dep-mt" inputmode="numeric" autocomplete="off" placeholder="ex. 10 000"></div>' +
         '<div class="field dep-rzf"' + (mon ? "" : " hidden") + '><label>Pourquoi ? (touche une ou plusieurs raisons)</label><div class="crb-chips">' + DEP_RZ.map((r) => '<button type="button" aria-pressed="false" data-rz="' + esc(r) + '">' + esc(r) + "</button>").join("") + "</div></div>" +
         '<div class="field dep-devf"' + (mon ? " hidden" : "") + '><label>' + (g ? "Photo ou devis" : "Devis (obligatoire)") + "</label>" + pjHtml(true) + "</div>" +
         '<div class="field"><label class="dep-txl">' + (mon ? "Précise (si besoin)" : "Pour quoi ?") + '</label><textarea class="dep-tx" rows="2" maxlength="500" placeholder="' + (mon ? "" : g ? "ex. Un tableau blanc pour la salle de code" : "ex. Ramettes de papier pour les reçus") + '"></textarea></div>' +
-        '<button type="submit" class="btn btn-sm btn-green">' + (g ? "Envoyer à la direction" : "Envoyer à la gérante") + "</button></form>";
+        '<button type="submit" class="btn btn-sm btn-green">' + (g ? "Envoyer à la direction" : "Envoyer à la gérante") + "</button></form>" +
+        (mon ? '<form class="dep-pb" novalidate><h4 class="gr-h4">Un problème avec la voiture ?</h4><p class="tm-note">Bruit, voyant allumé, frein mou, pneu… Écris-le ici : le secrétariat le reçoit dans Messages, appelle la mécanicienne et s\'occupe de la suite. Tu ne fais pas de demande de réparation toi-même.</p><textarea class="dep-pbt" rows="2" maxlength="400" placeholder="ex. Bruit à l\'avant droit quand je freine"></textarea><button type="submit" class="btn btn-sm btn-line">Prévenir le secrétariat</button></form>' : "");
     }
     function depFormBind(root, apres) {
       const f = root.querySelector(".dep-form"); if (!f) return;
       const kind = (k) => { f.querySelectorAll("[data-kind]").forEach((b) => b.setAttribute("aria-checked", b.dataset.kind === k)); f.querySelector(".dep-rzf").hidden = k !== "Carburant"; f.querySelector(".dep-devf").hidden = k === "Carburant"; f.querySelector(".dep-txl").textContent = k === "Carburant" ? "Précise (si besoin)" : "Pour quoi ?"; if (me.role === "moniteur") f.querySelector(".dep-tx").placeholder = k === "Carburant" ? "" : "ex. Changer les plaquettes de frein"; };
       if (me.role !== "moniteur") kind("Autre");
       f.addEventListener("click", (e) => { const po = e.target.closest("[data-pour]"); if (po) f.querySelectorAll("[data-pour]").forEach((b) => b.setAttribute("aria-checked", b === po)); const k = e.target.closest("[data-kind]"); if (k) kind(k.dataset.kind); const z = e.target.closest("[data-rz]"); if (z) z.setAttribute("aria-pressed", z.getAttribute("aria-pressed") !== "true"); });
+      const pb = root.querySelector(".dep-pb");
+      if (pb) pb.addEventListener("submit", (e) => {
+        e.preventDefault(); const t = pb.querySelector(".dep-pbt").value.trim(); if (t.length < 3) { toast("Écris le problème", true); return; }
+        const k = (MS.canaux || []).find((c) => c.id === "planning"); if (!k) { toast("Messages pas encore chargés, réessaie", true); return; }
+        const sec = msMembres(k).filter((x) => x.role === "secretariat").map((x) => x.id);
+        msMettreEnFile("planning", "🔧 Problème à la voiture : " + t + "\n→ Secrétariat : appeler la mécanicienne. S'il faut une pièce ou une réparation, demande de dépense « Pour la voiture ».", null, sec);
+        pb.querySelector(".dep-pbt").value = ""; toast("Envoyé au secrétariat (Messages)");
+      });
       f.addEventListener("submit", async (e) => {
         e.preventDefault(); const nat = f.querySelector('[data-kind][aria-checked="true"]').dataset.kind, mt = +(f.querySelector(".dep-mt").value.replace(/\D/g, "")) || null;
         const rz = nat === "Carburant" ? [...f.querySelectorAll("[data-rz][aria-pressed=true]")].map((b) => b.dataset.rz) : [], t0 = f.querySelector(".dep-tx").value.trim(), tx = rz.length ? rz.join(" · ") + (t0 ? " : " + t0 : "") : t0, pj = f.querySelector(".dep-devf .pj");
         const pourB = f.querySelector('[data-pour][aria-checked="true"]'); if (f.querySelector(".dep-pour") && !pourB) { toast("Choisis : pour la voiture ou pour l'agence", true); return; }
-        const voiture = me.role === "moniteur" ? nat !== "Carburant" : !!pourB && pourB.dataset.pour === "voiture";
+        const voiture = !!pourB && pourB.dataset.pour === "voiture";
         if (!mt) { toast("Écris le montant", true); f.querySelector(".dep-mt").focus(); return; }
         if (nat !== "Carburant" && !pj._file) { toast(me.role === "gerant" ? "Ajoute une photo ou le devis" : "Ajoute le devis", true); return; }
         if (tx.length < 3) { toast(nat === "Carburant" ? "Choisis une raison" : "Écris pour quoi", true); return; }
@@ -5189,15 +5198,15 @@ function init(root) {
         const kmAv = Math.max(0, ...(avant || []).map((x) => x.km || 0), ...crb.filter((x) => x.jour < a && x.km).map((x) => x.km), ...MC.e.filter((x) => x.jour < a && x.km).map((x) => x.km));
         const kmIn = [...c.map((x) => x.km), ...ent.map((x) => x.km)].filter((v) => v);
         const km = kmIn.length ? Math.max(...kmIn) - (kmAv || Math.min(...kmIn)) : 0;
-        const blocs = new Set((cr || []).filter((x) => dans(x.jour)).map((x) => x.jour + x.heure)).size, tot = carb + pieces + rep;
+        const blocs = new Set((cr || []).filter((x) => dans(x.jour)).map((x) => x.jour + x.heure)).size, tot = carb + pieces + rep; // pieces : anciens prix notés au carnet (avant le 19 oct.)
         return { carb, pieces, rep, tot, km, blocs, fkm: km > 0 ? Math.round(tot / km) : null, fbloc: blocs ? Math.round(carb / blocs) : null };
       };
       const A = mois(m0, new Date(now.getFullYear(), now.getMonth() + 1, 1)), P = mois(mP, m0), nm = (d) => d.toLocaleDateString("fr-FR", { month: "long" });
-      const L = [["Carburant", "carb"], ["Pièces et entretiens", "pieces"], ["Réparations", "rep"]];
+      const L = [["Carburant", "carb"], ["Pièces, entretien, réparations", "pr"]]; A.pr = A.pieces + A.rep; P.pr = P.pieces + P.rep;
       const col = (x, t) => '<div class="mk-cc"><span class="mk-cm">' + t + "</span>" + L.map(([l, k]) => "<div><span>" + l + "</span><b>" + F(x[k]) + "</b></div>").join("") + '<div class="mk-tot"><span>Total</span><b>' + F(x.tot) + "</b></div>" +
         '<div class="mk-kp"><span>Kilomètres</span><b>' + (x.km ? milliers(x.km) + " km" : "—") + "</b></div>" + '<div class="mk-kp"><span>Coût par km</span><b>' + (x.fkm != null ? F(x.fkm) : "—") + "</b></div>" + '<div class="mk-kp"><span>Carburant par bloc fait</span><b>' + (x.fbloc != null ? F(x.fbloc) : "—") + "</b><small>" + x.blocs + " bloc" + (x.blocs > 1 ? "s" : "") + "</small></div></div>";
       box.innerHTML = '<div class="mk-cols">' + col(A, nm(now).replace(/^./, (c) => c.toUpperCase()) + " (en cours)") + col(P, nm(mP).replace(/^./, (c) => c.toUpperCase())) + "</div>" +
-        '<p class="tm-note mk-cnote">Budget carburant : 2 000 F par bloc prévu. « Carburant par bloc fait » montre ce que ça coûte vraiment. Réparations = dépenses accordées « pour la voiture ». Les kilomètres viennent des compteurs notés.</p>';
+        '<p class="tm-note mk-cnote">Budget carburant : 2 000 F par bloc prévu. « Carburant par bloc fait » montre ce que ça coûte vraiment. Pièces, entretien, réparations = dépenses accordées « pour la voiture ». Les kilomètres viennent des compteurs notés.</p>';
     }
     const mkLu = () => { try { return localStorage.getItem("sodaf.mk.ong"); } catch (e) { return null; } };
     function mkOnglet(k) {
@@ -5234,13 +5243,16 @@ function init(root) {
       const sam = mcSamedis()[0], peut = mcPeutInscrire(), tel = waNum(CFG.meca_tel || "");
       const msgMeca = "Bonjour, c'est SODAF Auto-École.\n\nSamedi " + dOf(sam).toLocaleDateString("fr-FR", { day: "numeric", month: "long" }) + ", à prévoir sur la voiture :\n" + prevoir.map((p) => "• " + p[0] + " (" + p[1] + ")").join("\n") + "\n\nCompteur : " + milliers(MC.km) + " km.\nDis-nous les pièces à acheter et leur prix, pour qu'on les prépare avant samedi. Prévois de rester jusqu'à 17 h.\n\nMerci !";
       const prev = prevoir.length ? '<div class="mk-prev"><div class="mk-prevh"><b>À prévoir samedi ' + dOf(sam).toLocaleDateString("fr-FR", { day: "numeric", month: "short" }) + '</b><span>La mécanicienne doit le savoir avant.</span></div><ul>' + prevoir.map((p) => "<li><b>" + esc(p[0]) + "</b> · " + esc(p[1]) + "</li>").join("") + "</ul>" +
+        '<p class="mk-prevd">Pièces à acheter (huile, filtre…) ? Demande de dépense « Pour la voiture » avant samedi.' + (me.role === "secretariat" ? ' <button type="button" class="linkbtn" data-mkdep>Faire la demande</button>' : "") + "</p>" +
         (peut ? (tel ? '<div class="mk-prevb"><a class="btn btn-sm btn-wa" target="_blank" rel="noopener" href="https://wa.me/228' + tel + "?text=" + encodeURIComponent(msgMeca) + '">Prévenir la mécanicienne ↗</a><button type="button" class="linkbtn" data-mktel>Changer son numéro</button></div>' : "") +
           '<form class="mk-tel"' + (tel ? " hidden" : "") + ' novalidate><label>Numéro WhatsApp de la mécanicienne</label><div class="mk-telr"><div class="tel"><span>+228</span><input inputmode="numeric" maxlength="11" placeholder="90 00 00 00" value="' + (tel ? tel.replace(/(\d{2})(?=\d)/g, "$1 ") : "") + '"></div><button type="submit" class="btn btn-sm btn-green">Enregistrer</button></div></form>' : "") + "</div>"
         : '<div class="mk-prev mk-prev-ok"><b>Rien à prévoir samedi</b><span>Contrôle normal de 30 min.</span></div>';
       box.innerHTML = prev + '<div class="mk-hd"><div><span class="crb-k">Compteur</span><b class="crb-big">' + (MC.km ? milliers(MC.km) + " km" : "—") + '</b><span class="crb-s">Dernier relevé (pleins et entretiens)</span></div></div><div class="mk-echs">' + echeances + "</div>" +
         '<details class="crb-add"><summary>Noter un entretien</summary><form class="mk-form" novalidate><div class="field"><label>Ce qui a été fait (touche tout ce qui est coché sur la fiche)</label><div class="crb-chips mk-types">' + MC_TYPES.map((t) => '<button type="button" aria-pressed="false" data-mkt="' + esc(t) + '">' + esc(t) + "</button>").join("") + '</div></div><div class="crb-row"><div class="field"><label>Compteur (km)</label><input class="mk-km" inputmode="numeric" autocomplete="off" value="' + (MC.km ? milliers(MC.km) : "") + '"></div></div>' +
-        '<div class="crb-row"><div class="field"><label>Prix des pièces, en tout (F)</label><input class="mk-cout" inputmode="numeric" autocomplete="off" placeholder="ex. 12 000"></div><div class="field"><label>Note</label><input class="mk-note" maxlength="500" autocomplete="off" placeholder="ex. Huile 5W30, filtre changé"></div></div><div class="field"><label>Photo (facultatif)</label>' + pjHtml(false) + '</div><button class="btn btn-green btn-sm" type="submit">Noter</button></form></details>' +
+        '<p class="tm-note mk-cnote">Ici on note ce qui a été fait (le carnet). L\'argent des pièces ou d\'une réparation se demande avant, par une demande de dépense « Pour la voiture ».</p><div class="crb-row"><div class="field"><label>Note</label><input class="mk-note" maxlength="500" autocomplete="off" placeholder="ex. Huile 5W30, filtre changé"></div></div><div class="field"><label>Photo (facultatif)</label>' + pjHtml(false) + '</div><button class="btn btn-green btn-sm" type="submit">Noter</button></form></details>' +
         (MC.e.length ? '<h4 class="gr-h4">Historique</h4><div class="crb-list">' + MC.e.slice(0, 10).map((x) => '<div class="crb-it mk-it"><span>' + dOf(x.jour).toLocaleDateString("fr-FR", { day: "numeric", month: "short" }) + "</span><b>" + esc(x.type) + "</b><span>" + (x.km ? milliers(x.km) + " km" : "") + (x.cout ? " · pièces " + F(x.cout) : "") + (x.note ? " · " + esc(x.note) : "") + "</span>" + (x.photo ? '<button type="button" class="linkbtn" data-dep="' + esc(x.photo) + '">Photo</button>' : "<span></span>") + "</div>").join("") + "</div>" : '<p class="crb-vide">Rien de noté pour l\'instant.</p>');
+      const md = box.querySelector("[data-mkdep]");
+      if (md) md.addEventListener("click", () => { pick("sec"); let n = 0; const go = () => { const f = $("#sd-crbMon .dep-form"); if (!f) { if (++n < 20) setTimeout(go, 200); return; } const v = f.querySelector('[data-pour="voiture"]'); if (v) v.click(); f.scrollIntoView({ block: "start", behavior: "smooth" }); setTimeout(() => f.querySelector(".dep-mt").focus({ preventScroll: true }), 400); }; setTimeout(go, 150); });
       const tf = box.querySelector(".mk-tel");
       if (tf) { const bt = box.querySelector("[data-mktel]"); if (bt) bt.addEventListener("click", () => { tf.hidden = false; tf.querySelector("input").focus(); });
         tf.addEventListener("submit", async (ev) => { ev.preventDefault(); const v = tf.querySelector("input").value.replace(/\D/g, ""); if (v.length !== 8) { toast("Numéro : 8 chiffres", true); return; }
@@ -5248,7 +5260,7 @@ function init(root) {
       const f = box.querySelector(".mk-form");
       f.addEventListener("click", (ev) => { const c = ev.target.closest("[data-mkt]"); if (c) c.setAttribute("aria-pressed", c.getAttribute("aria-pressed") !== "true"); });
       f.addEventListener("submit", async (ev) => {
-        ev.preventDefault(); const km = +(f.querySelector(".mk-km").value.replace(/\D/g, "")) || null, cout = +(f.querySelector(".mk-cout").value.replace(/\D/g, "")) || null, pj = f.querySelector(".pj"), b = f.querySelector("[type=submit]");
+        ev.preventDefault(); const km = +(f.querySelector(".mk-km").value.replace(/\D/g, "")) || null, cout = null, pj = f.querySelector(".pj"), b = f.querySelector("[type=submit]");
         const types = [...f.querySelectorAll('[data-mkt][aria-pressed="true"]')].map((x) => x.dataset.mkt);
         if (!types.length) { toast("Touche au moins une chose faite", true); return; }
         if (!km) { toast("Écris le compteur (il est en haut de la fiche)", true); f.querySelector(".mk-km").focus(); return; }
@@ -6831,7 +6843,7 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 .tm-pane[data-pane="com"] .tm-role{border-left-color:#C2410C}
 .tm-pane[data-pane="mec"] .tm-role{border-left-color:#475569}
 .mk-tabs{margin:0 0 14px}
-.dep-pour{margin:0 0 4px}.dep-pourn{color:var(--muted);font-size:.78rem}
+.dep-pour{margin:0 0 4px}.dep-pb{margin-top:18px;padding-top:14px;border-top:1px dashed var(--line)}.dep-pb .tm-note{margin:0 0 8px}.dep-pb textarea{width:100%;margin-bottom:8px}.mk-prevd{margin:8px 0 0;font-size:.82rem;color:var(--muted)}.dep-pourn{color:var(--muted);font-size:.78rem}
 .mk-cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media (max-width:600px){.mk-cols{grid-template-columns:1fr}}
 .mk-cc{border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:grid;gap:4px;background:#fff}
 .mk-cc>div{display:flex;justify-content:space-between;gap:8px;align-items:baseline;font-size:.9rem}.mk-cc>div span{color:var(--muted)}
