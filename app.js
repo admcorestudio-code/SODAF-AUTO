@@ -4866,7 +4866,7 @@ function init(root) {
     function depCarte(d, o) {
       const role = (GR.prof && GR.prof[d.auteur]) || (d.auteur === me.id ? me.role : ""), st = o.st;
       const pcs = (d.devis ? '<button type="button" class="btn btn-line btn-sm dq-pc" data-dep="' + esc(d.devis) + '">Voir le devis</button>' : "") + (d.facture ? '<button type="button" class="btn btn-line btn-sm dq-pc" data-dep="' + esc(d.facture) + '">Voir la facture</button>' : "");
-      return '<article class="dq dq-' + st[0] + '"><header class="dq-top"><span class="dq-role dq-r-' + (role || "x") + '">' + (ROLE_NOM[role] || "Équipe") + '</span><span class="dq-kind">' + (d.nature === "Carburant" ? "Essence en plus" : "Dépense") + '</span><span class="dq-when">' + esc(grQuand(d.le)) + "</span></header>" +
+      return '<article class="dq dq-' + st[0] + '"><header class="dq-top"><span class="dq-role dq-r-' + (role || "x") + '">' + (ROLE_NOM[role] || "Équipe") + '</span><span class="dq-kind">' + (d.nature === "Carburant" ? "Essence en plus" : d.voiture ? "Dépense · voiture" : "Dépense · agence") + '</span><span class="dq-when">' + esc(grQuand(d.le)) + "</span></header>" +
         '<div class="dq-mid"><b class="dq-mt">' + F(d.montant || 0) + '</b><em class="dq-st">' + st[1] + "</em></div>" +
         '<p class="dq-tx">' + esc(String(d.texte || "").replace(/^\[TEST\]\s*/, "")) + (/^\[TEST\]/.test(d.texte || "") ? ' <span class="dq-test">TEST</span>' : "") + "</p>" +
         (d.transmis_le && role !== "gerant" && o.vue !== "equipe" ? '<p class="dq-note">Transmis par la gérante</p>' : "") +
@@ -5068,8 +5068,9 @@ function init(root) {
     }
     // Formulaire de demande (même formulaire pour la gérante et pour l'équipe)
     function depFormHtml(g) {
-      const mon = me.role === "moniteur", titre = g ? "Proposer un achat" : mon ? "Demander une dépense" : "Demander une dépense pour l'agence";
+      const mon = me.role === "moniteur", titre = g ? "Proposer un achat" : mon ? "Demander une dépense" : "Demander une dépense";
       return '<form class="dep-form" novalidate><h4 class="gr-h4">' + titre + '</h4><div class="dep-kind" role="radiogroup"' + (mon ? "" : " hidden") + '><button type="button" role="radio" data-kind="Carburant" aria-checked="' + mon + '">Essence en plus</button><button type="button" role="radio" data-kind="Autre" aria-checked="' + !mon + '">Autre dépense</button></div>' +
+        (mon ? "" : '<div class="field dep-pourf"><label>Pour quoi ?</label><div class="dep-kind dep-pour" role="radiogroup"><button type="button" role="radio" data-pour="voiture" aria-checked="false">Pour la voiture</button><button type="button" role="radio" data-pour="agence" aria-checked="false">Pour l\'agence</button></div><small class="dep-pourn">Voiture : pièce ou réparation (ex. noté « À réparer » sur la fiche du samedi).</small></div>') +
         '<div class="field"><label>Montant (F)</label><input class="dep-mt" inputmode="numeric" autocomplete="off" placeholder="ex. 10 000"></div>' +
         '<div class="field dep-rzf"' + (mon ? "" : " hidden") + '><label>Pourquoi ? (touche une ou plusieurs raisons)</label><div class="crb-chips">' + DEP_RZ.map((r) => '<button type="button" aria-pressed="false" data-rz="' + esc(r) + '">' + esc(r) + "</button>").join("") + "</div></div>" +
         '<div class="field dep-devf"' + (mon ? " hidden" : "") + '><label>' + (g ? "Photo ou devis" : "Devis (obligatoire)") + "</label>" + pjHtml(true) + "</div>" +
@@ -5080,17 +5081,19 @@ function init(root) {
       const f = root.querySelector(".dep-form"); if (!f) return;
       const kind = (k) => { f.querySelectorAll("[data-kind]").forEach((b) => b.setAttribute("aria-checked", b.dataset.kind === k)); f.querySelector(".dep-rzf").hidden = k !== "Carburant"; f.querySelector(".dep-devf").hidden = k === "Carburant"; f.querySelector(".dep-txl").textContent = k === "Carburant" ? "Précise (si besoin)" : "Pour quoi ?"; if (me.role === "moniteur") f.querySelector(".dep-tx").placeholder = k === "Carburant" ? "" : "ex. Changer les plaquettes de frein"; };
       if (me.role !== "moniteur") kind("Autre");
-      f.addEventListener("click", (e) => { const k = e.target.closest("[data-kind]"); if (k) kind(k.dataset.kind); const z = e.target.closest("[data-rz]"); if (z) z.setAttribute("aria-pressed", z.getAttribute("aria-pressed") !== "true"); });
+      f.addEventListener("click", (e) => { const po = e.target.closest("[data-pour]"); if (po) f.querySelectorAll("[data-pour]").forEach((b) => b.setAttribute("aria-checked", b === po)); const k = e.target.closest("[data-kind]"); if (k) kind(k.dataset.kind); const z = e.target.closest("[data-rz]"); if (z) z.setAttribute("aria-pressed", z.getAttribute("aria-pressed") !== "true"); });
       f.addEventListener("submit", async (e) => {
         e.preventDefault(); const nat = f.querySelector('[data-kind][aria-checked="true"]').dataset.kind, mt = +(f.querySelector(".dep-mt").value.replace(/\D/g, "")) || null;
         const rz = nat === "Carburant" ? [...f.querySelectorAll("[data-rz][aria-pressed=true]")].map((b) => b.dataset.rz) : [], t0 = f.querySelector(".dep-tx").value.trim(), tx = rz.length ? rz.join(" · ") + (t0 ? " : " + t0 : "") : t0, pj = f.querySelector(".dep-devf .pj");
+        const pourB = f.querySelector('[data-pour][aria-checked="true"]'); if (f.querySelector(".dep-pour") && !pourB) { toast("Choisis : pour la voiture ou pour l'agence", true); return; }
+        const voiture = me.role === "moniteur" ? nat !== "Carburant" : !!pourB && pourB.dataset.pour === "voiture";
         if (!mt) { toast("Écris le montant", true); f.querySelector(".dep-mt").focus(); return; }
         if (nat !== "Carburant" && !pj._file) { toast(me.role === "gerant" ? "Ajoute une photo ou le devis" : "Ajoute le devis", true); return; }
         if (tx.length < 3) { toast(nat === "Carburant" ? "Choisis une raison" : "Écris pour quoi", true); return; }
         const b = f.querySelector("[type=submit]"), lab = b.textContent; b.disabled = true; b.textContent = "Envoi…";
         let devis = null;
         if (nat !== "Carburant") { try { devis = await depEnvoyer(pj._file, "devis"); } catch (er) { toast("Le devis n'a pas pu être envoyé", true); b.disabled = false; b.textContent = lab; return; } }
-        const r = await run(() => DB.q("demandes", { method: "POST", body: { type: "Dépense", nature: nat, montant: mt, texte: tx, devis }, prefer: "return=minimal" }).then(() => true), "Demande envoyée");
+        const r = await run(() => DB.q("demandes", { method: "POST", body: { type: "Dépense", nature: nat, montant: mt, texte: tx, devis, voiture }, prefer: "return=minimal" }).then(() => true), "Demande envoyée");
         b.disabled = false; b.textContent = lab; if (r) apres();
       });
     }
@@ -5173,7 +5176,7 @@ function init(root) {
       const [crb, avant, dep, pr, cr] = await Promise.all([
         DB.q("carburant?select=montant,km,jour&jour=gte." + deb + "&order=jour.asc").catch(() => null),
         DB.q("carburant?select=km&km=not.is.null&jour=lt." + deb + "&order=km.desc&limit=1").catch(() => []),
-        DB.q("demandes?select=montant,auteur,nature,repondu_le,le&type=eq.D%C3%A9pense&statut=eq.accordee&le=gte." + deb).catch(() => []),
+        DB.q("demandes?select=montant,auteur,nature,voiture,le&type=eq.D%C3%A9pense&statut=eq.accordee&le=gte." + deb).catch(() => []),
         DB.q("profils?select=id,role").catch(() => []),
         DB.q("creneaux_conduite?select=jour,heure&statut=eq.Fait&jour=gte." + deb + "&limit=5000").catch(() => [])]);
       if (!crb) { box.innerHTML = '<p class="tm-empty">Coût indisponible pour l\'instant.</p>'; return; }
@@ -5182,7 +5185,7 @@ function init(root) {
         const a = iso(d0), b = iso(d1), dans = (j) => j && j >= a && j < b;
         const c = crb.filter((x) => dans(x.jour)), carb = c.reduce((n, x) => n + (x.montant || 0), 0);
         const ent = MC.e.filter((x) => dans(x.jour)), pieces = ent.reduce((n, x) => n + (x.cout || 0), 0);
-        const rep = (dep || []).filter((x) => role[x.auteur] === "moniteur" && x.nature !== "Carburant" && dans(String(x.le).slice(0, 10))).reduce((n, x) => n + (x.montant || 0), 0);
+        const rep = (dep || []).filter((x) => (x.voiture || role[x.auteur] === "moniteur") && x.nature !== "Carburant" && dans(String(x.le).slice(0, 10))).reduce((n, x) => n + (x.montant || 0), 0);
         const kmAv = Math.max(0, ...(avant || []).map((x) => x.km || 0), ...crb.filter((x) => x.jour < a && x.km).map((x) => x.km), ...MC.e.filter((x) => x.jour < a && x.km).map((x) => x.km));
         const kmIn = [...c.map((x) => x.km), ...ent.map((x) => x.km)].filter((v) => v);
         const km = kmIn.length ? Math.max(...kmIn) - (kmAv || Math.min(...kmIn)) : 0;
@@ -5194,7 +5197,7 @@ function init(root) {
       const col = (x, t) => '<div class="mk-cc"><span class="mk-cm">' + t + "</span>" + L.map(([l, k]) => "<div><span>" + l + "</span><b>" + F(x[k]) + "</b></div>").join("") + '<div class="mk-tot"><span>Total</span><b>' + F(x.tot) + "</b></div>" +
         '<div class="mk-kp"><span>Kilomètres</span><b>' + (x.km ? milliers(x.km) + " km" : "—") + "</b></div>" + '<div class="mk-kp"><span>Coût par km</span><b>' + (x.fkm != null ? F(x.fkm) : "—") + "</b></div>" + '<div class="mk-kp"><span>Carburant par bloc fait</span><b>' + (x.fbloc != null ? F(x.fbloc) : "—") + "</b><small>" + x.blocs + " bloc" + (x.blocs > 1 ? "s" : "") + "</small></div></div>";
       box.innerHTML = '<div class="mk-cols">' + col(A, nm(now).replace(/^./, (c) => c.toUpperCase()) + " (en cours)") + col(P, nm(mP).replace(/^./, (c) => c.toUpperCase())) + "</div>" +
-        '<p class="tm-note mk-cnote">Budget carburant : 2 000 F par bloc prévu. « Carburant par bloc fait » montre ce que ça coûte vraiment. Réparations = dépenses accordées demandées par le moniteur. Les kilomètres viennent des compteurs notés.</p>';
+        '<p class="tm-note mk-cnote">Budget carburant : 2 000 F par bloc prévu. « Carburant par bloc fait » montre ce que ça coûte vraiment. Réparations = dépenses accordées « pour la voiture ». Les kilomètres viennent des compteurs notés.</p>';
     }
     const mkLu = () => { try { return localStorage.getItem("sodaf.mk.ong"); } catch (e) { return null; } };
     function mkOnglet(k) {
@@ -6828,6 +6831,7 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 .tm-pane[data-pane="com"] .tm-role{border-left-color:#C2410C}
 .tm-pane[data-pane="mec"] .tm-role{border-left-color:#475569}
 .mk-tabs{margin:0 0 14px}
+.dep-pour{margin:0 0 4px}.dep-pourn{color:var(--muted);font-size:.78rem}
 .mk-cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media (max-width:600px){.mk-cols{grid-template-columns:1fr}}
 .mk-cc{border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:grid;gap:4px;background:#fff}
 .mk-cc>div{display:flex;justify-content:space-between;gap:8px;align-items:baseline;font-size:.9rem}.mk-cc>div span{color:var(--muted)}
