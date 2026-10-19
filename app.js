@@ -2023,9 +2023,10 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 </div>
 <div class="tm-pane" data-pane="mec" role="tabpanel" hidden>
 <p class="tm-role" id="sd-mcRole"></p>
-<div class="card com-card"><p class="eyebrow">Carnet</p><h3 class="tm-h3">La voiture</h3><div id="sd-mcVoit"></div></div>
-<div class="card com-card"><p class="eyebrow">Gratuit pour les élèves</p><h3 class="tm-h3">Atelier du samedi</h3><div id="sd-mcAt"></div></div>
-<div class="card com-card" id="sd-mcCtCard"><p class="eyebrow">Service payant</p><h3 class="tm-h3">Contrôle avant achat</h3><div id="sd-mcCt"></div></div>
+<div class="gr-tabs mk-tabs" role="tablist"><button type="button" role="tab" data-mkp="voit" aria-selected="true">La voiture<em class="gr-badge" id="sd-mkBVoit" hidden></em></button><button type="button" role="tab" data-mkp="at" aria-selected="false">Atelier du samedi</button><button type="button" role="tab" data-mkp="ct" aria-selected="false">Contrôle avant achat<em class="gr-badge" id="sd-mkBCt" hidden></em></button></div>
+<div class="card com-card" data-mkpane="voit"><p class="eyebrow">Carnet</p><h3 class="tm-h3">La voiture</h3><div id="sd-mcVoit"></div></div>
+<div class="card com-card" data-mkpane="at" hidden><p class="eyebrow">Gratuit pour les élèves</p><h3 class="tm-h3">Atelier du samedi</h3><div id="sd-mcAt"></div></div>
+<div class="card com-card" id="sd-mcCtCard" data-mkpane="ct" hidden><p class="eyebrow">Service payant</p><h3 class="tm-h3">Contrôle avant achat</h3><div id="sd-mcCt"></div></div>
 </div>
 <div class="tm-pane" data-pane="com" role="tabpanel" hidden>
 <p class="tm-role" id="sd-comRole"></p>
@@ -5160,6 +5161,14 @@ function init(root) {
     const mcTheme = (s) => { const n = Math.round((dOf(s) - dOf(CFG.atelier_debut || "2026-10-24")) / 6048e5); return [(((n % 4) + 4) % 4), MC_THEMES[(((n % 4) + 4) % 4)]]; };
     const mcJour = (s) => dOf(s).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
     const mcPeutInscrire = () => ["admin", "gerant", "secretariat"].includes(me.role);
+    const mkLu = () => { try { return localStorage.getItem("sodaf.mk.ong"); } catch (e) { return null; } };
+    function mkOnglet(k) {
+      if (k === "ct" && !mcPeutInscrire()) k = "voit"; if (!["voit", "at", "ct"].includes(k)) k = "voit"; MC.ong = k;
+      try { localStorage.setItem("sodaf.mk.ong", k); } catch (e) {}
+      $$(".mk-tabs [data-mkp]").forEach((b) => b.setAttribute("aria-selected", b.dataset.mkp === k));
+      $$('[data-pane="mec"] [data-mkpane]').forEach((c) => (c.hidden = c.dataset.mkpane !== k));
+    }
+    $(".mk-tabs") && $(".mk-tabs").addEventListener("click", (e) => { const b = e.target.closest("[data-mkp]"); if (b) mkOnglet(b.dataset.mkp); });
     async function mcCharger() {
       const box = $("#sd-mcVoit"); if (!box || !me || AMB()) return;
       const ct = mcPeutInscrire();
@@ -5167,7 +5176,10 @@ function init(root) {
       const [e, km, a, c] = await Promise.all([DB.q("entretiens?select=*&order=jour.desc,le.desc&limit=200").catch(() => null), DB.q("carburant?select=km&km=not.is.null&order=km.desc&limit=1").catch(() => []), DB.q("ateliers?select=*&samedi=gte." + iso(new Date(Date.now() - 28 * 864e5)) + "&order=le.asc").catch(() => null), ct ? DB.q("controles?select=*&order=le.desc&limit=200").catch(() => null) : Promise.resolve([])]);
       if (!e || !a) { box.innerHTML = '<p class="tm-empty">La mécanique n\'est pas encore activée dans la base.</p>'; $("#sd-mcAt").innerHTML = ""; $("#sd-mcCt").innerHTML = ""; return; }
       MC.e = e; MC.a = a; MC.c = c || []; MC.km = Math.max(0, ...(km || []).map((x) => x.km || 0), ...e.map((x) => x.km || 0));
-      mcVoiture(); mcAtelier(); $("#sd-mcCtCard").hidden = !ct; if (ct) mcControles();
+      mcVoiture(); mcAtelier(); if (ct) mcControles();
+      $('.mk-tabs [data-mkp="ct"]').hidden = !ct; mkOnglet(MC.ong || mkLu() || "voit");
+      { const b = $("#sd-mkBCt"), n = MC.c.filter((x) => ["demande", "paye", "rdv"].includes(x.statut)).length + (DIR() ? MC.c.filter((x) => x.statut === "fait" && !x.part_versee_le).length : 0); b.textContent = n; b.hidden = !n; }
+      { const b = $("#sd-mkBVoit"), n = $$("#sd-mcVoit .mk-prev li").length; b.textContent = n; b.hidden = !n; }
       const bd = $("#sd-mcBadge"); if (bd) { const n = DIR() ? MC.c.filter((x) => x.statut === "fait" && !x.part_versee_le).length : 0; bd.textContent = n; bd.hidden = !n; }
     }
     function mcVoiture() {
@@ -6780,6 +6792,7 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 .fr-it{grid-template-columns:auto auto 1fr auto}
 .tm-pane[data-pane="com"] .tm-role{border-left-color:#C2410C}
 .tm-pane[data-pane="mec"] .tm-role{border-left-color:#475569}
+.mk-tabs{margin:0 0 14px}[data-pane="mec"] [data-mkpane][hidden]{display:none}
 .mk-prev{border:1.5px solid #E3B83A;background:#FFF7DC;border-radius:14px;padding:12px 14px;margin:0 0 14px}
 .mk-prev.mk-prev-ok{border-color:#C7E2D6;background:#F2FAF6;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}.mk-prev-ok span{color:var(--muted);font-size:.88rem}
 .mk-prevh{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:baseline}.mk-prevh b{font:800 1.02rem var(--f-ui)}.mk-prevh span{color:#9A6B00;font-size:.85rem}
