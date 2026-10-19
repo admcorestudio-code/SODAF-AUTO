@@ -2025,6 +2025,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <p class="tm-role" id="sd-mcRole"></p>
 <div class="gr-tabs mk-tabs" role="tablist"><button type="button" role="tab" data-mkp="voit" aria-selected="true">La voiture<em class="gr-badge" id="sd-mkBVoit" hidden></em></button><button type="button" role="tab" data-mkp="at" aria-selected="false">Atelier du samedi</button><button type="button" role="tab" data-mkp="ct" aria-selected="false">Contrôle avant achat<em class="gr-badge" id="sd-mkBCt" hidden></em></button></div>
 <div class="card com-card" data-mkpane="voit"><p class="eyebrow">Carnet</p><h3 class="tm-h3">La voiture</h3><div id="sd-mcVoit"></div></div>
+<div class="card com-card" data-mkpane="voit" data-dir="1" hidden><p class="eyebrow">Direction et gérante</p><h3 class="tm-h3">Coût de la voiture</h3><div id="sd-mkCout"><p class="tm-empty">Calcul…</p></div></div>
 <div class="card com-card" data-mkpane="at" hidden><p class="eyebrow">Gratuit pour les élèves</p><h3 class="tm-h3">Atelier du samedi</h3><div id="sd-mcAt"></div></div>
 <div class="card com-card" id="sd-mcCtCard" data-mkpane="ct" hidden><p class="eyebrow">Service payant</p><h3 class="tm-h3">Contrôle avant achat</h3><div id="sd-mcCt"></div></div>
 </div>
@@ -5165,12 +5166,42 @@ function init(root) {
     const mcTheme = (s) => { const n = Math.round((dOf(s) - dOf(CFG.atelier_debut || "2026-10-24")) / 6048e5); return [(((n % 4) + 4) % 4), MC_THEMES[(((n % 4) + 4) % 4)]]; };
     const mcJour = (s) => dOf(s).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
     const mcPeutInscrire = () => ["admin", "gerant", "secretariat"].includes(me.role);
+    // ---- Coût de la voiture (19 oct.) : carburant + pièces (carnet) + réparations (dépenses accordées demandées par le moniteur), par mois ; F par km et carburant par bloc fait. Direction et gérante.
+    async function mkCout() {
+      const box = $("#sd-mkCout"); if (!box || !DIR()) return;
+      const now = new Date(), m0 = new Date(now.getFullYear(), now.getMonth(), 1), mP = new Date(now.getFullYear(), now.getMonth() - 1, 1), deb = iso(mP);
+      const [crb, avant, dep, pr, cr] = await Promise.all([
+        DB.q("carburant?select=montant,km,jour&jour=gte." + deb + "&order=jour.asc").catch(() => null),
+        DB.q("carburant?select=km&km=not.is.null&jour=lt." + deb + "&order=km.desc&limit=1").catch(() => []),
+        DB.q("demandes?select=montant,auteur,nature,repondu_le,le&type=eq.D%C3%A9pense&statut=eq.accordee&le=gte." + deb).catch(() => []),
+        DB.q("profils?select=id,role").catch(() => []),
+        DB.q("creneaux_conduite?select=jour,heure&statut=eq.Fait&jour=gte." + deb + "&limit=5000").catch(() => [])]);
+      if (!crb) { box.innerHTML = '<p class="tm-empty">Coût indisponible pour l\'instant.</p>'; return; }
+      const role = {}; (pr || []).forEach((p) => (role[p.id] = p.role));
+      const mois = (d0, d1) => {
+        const a = iso(d0), b = iso(d1), dans = (j) => j && j >= a && j < b;
+        const c = crb.filter((x) => dans(x.jour)), carb = c.reduce((n, x) => n + (x.montant || 0), 0);
+        const ent = MC.e.filter((x) => dans(x.jour)), pieces = ent.reduce((n, x) => n + (x.cout || 0), 0);
+        const rep = (dep || []).filter((x) => role[x.auteur] === "moniteur" && x.nature !== "Carburant" && dans(String(x.le).slice(0, 10))).reduce((n, x) => n + (x.montant || 0), 0);
+        const kmAv = Math.max(0, ...(avant || []).map((x) => x.km || 0), ...crb.filter((x) => x.jour < a && x.km).map((x) => x.km), ...MC.e.filter((x) => x.jour < a && x.km).map((x) => x.km));
+        const kmIn = [...c.map((x) => x.km), ...ent.map((x) => x.km)].filter((v) => v);
+        const km = kmIn.length ? Math.max(...kmIn) - (kmAv || Math.min(...kmIn)) : 0;
+        const blocs = new Set((cr || []).filter((x) => dans(x.jour)).map((x) => x.jour + x.heure)).size, tot = carb + pieces + rep;
+        return { carb, pieces, rep, tot, km, blocs, fkm: km > 0 ? Math.round(tot / km) : null, fbloc: blocs ? Math.round(carb / blocs) : null };
+      };
+      const A = mois(m0, new Date(now.getFullYear(), now.getMonth() + 1, 1)), P = mois(mP, m0), nm = (d) => d.toLocaleDateString("fr-FR", { month: "long" });
+      const L = [["Carburant", "carb"], ["Pièces et entretiens", "pieces"], ["Réparations", "rep"]];
+      const col = (x, t) => '<div class="mk-cc"><span class="mk-cm">' + t + "</span>" + L.map(([l, k]) => "<div><span>" + l + "</span><b>" + F(x[k]) + "</b></div>").join("") + '<div class="mk-tot"><span>Total</span><b>' + F(x.tot) + "</b></div>" +
+        '<div class="mk-kp"><span>Kilomètres</span><b>' + (x.km ? milliers(x.km) + " km" : "—") + "</b></div>" + '<div class="mk-kp"><span>Coût par km</span><b>' + (x.fkm != null ? F(x.fkm) : "—") + "</b></div>" + '<div class="mk-kp"><span>Carburant par bloc fait</span><b>' + (x.fbloc != null ? F(x.fbloc) : "—") + "</b><small>" + x.blocs + " bloc" + (x.blocs > 1 ? "s" : "") + "</small></div></div>";
+      box.innerHTML = '<div class="mk-cols">' + col(A, nm(now).replace(/^./, (c) => c.toUpperCase()) + " (en cours)") + col(P, nm(mP).replace(/^./, (c) => c.toUpperCase())) + "</div>" +
+        '<p class="tm-note mk-cnote">Budget carburant : 2 000 F par bloc prévu. « Carburant par bloc fait » montre ce que ça coûte vraiment. Réparations = dépenses accordées demandées par le moniteur. Les kilomètres viennent des compteurs notés.</p>';
+    }
     const mkLu = () => { try { return localStorage.getItem("sodaf.mk.ong"); } catch (e) { return null; } };
     function mkOnglet(k) {
       if (k === "ct" && !mcPeutInscrire()) k = "voit"; if (!["voit", "at", "ct"].includes(k)) k = "voit"; MC.ong = k;
       try { localStorage.setItem("sodaf.mk.ong", k); } catch (e) {}
       $$(".mk-tabs [data-mkp]").forEach((b) => b.setAttribute("aria-selected", b.dataset.mkp === k));
-      $$('[data-pane="mec"] [data-mkpane]').forEach((c) => (c.hidden = c.dataset.mkpane !== k));
+      $$('[data-pane="mec"] [data-mkpane]').forEach((c) => (c.hidden = c.dataset.mkpane !== k || (c.dataset.dir && !DIR())));
     }
     $(".mk-tabs") && $(".mk-tabs").addEventListener("click", (e) => { const b = e.target.closest("[data-mkp]"); if (b) mkOnglet(b.dataset.mkp); });
     async function mcCharger() {
@@ -5180,7 +5211,7 @@ function init(root) {
       const [e, km, a, c] = await Promise.all([DB.q("entretiens?select=*&order=jour.desc,le.desc&limit=200").catch(() => null), DB.q("carburant?select=km&km=not.is.null&order=km.desc&limit=1").catch(() => []), DB.q("ateliers?select=*&samedi=gte." + iso(new Date(Date.now() - 28 * 864e5)) + "&order=le.asc").catch(() => null), ct ? DB.q("controles?select=*&order=le.desc&limit=200").catch(() => null) : Promise.resolve([])]);
       if (!e || !a) { box.innerHTML = '<p class="tm-empty">La mécanique n\'est pas encore activée dans la base.</p>'; $("#sd-mcAt").innerHTML = ""; $("#sd-mcCt").innerHTML = ""; return; }
       MC.e = e; MC.a = a; MC.c = c || []; MC.km = Math.max(0, ...(km || []).map((x) => x.km || 0), ...e.map((x) => x.km || 0));
-      mcVoiture(); mcAtelier(); if (ct) mcControles();
+      mcVoiture(); mcAtelier(); if (ct) mcControles(); mkCout();
       $('.mk-tabs [data-mkp="ct"]').hidden = !ct; mkOnglet(MC.ong || mkLu() || "voit");
       { const b = $("#sd-mkBCt"), n = MC.c.filter((x) => ["demande", "paye", "rdv"].includes(x.statut)).length + (DIR() ? MC.c.filter((x) => x.statut === "fait" && !x.part_versee_le).length : 0); b.textContent = n; b.hidden = !n; }
       { const b = $("#sd-mkBVoit"), n = $$("#sd-mcVoit .mk-prev li").length; b.textContent = n; b.hidden = !n; }
@@ -6796,7 +6827,14 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 .fr-it{grid-template-columns:auto auto 1fr auto}
 .tm-pane[data-pane="com"] .tm-role{border-left-color:#C2410C}
 .tm-pane[data-pane="mec"] .tm-role{border-left-color:#475569}
-.mk-tabs{margin:0 0 14px}[data-pane="mec"] [data-mkpane][hidden]{display:none}
+.mk-tabs{margin:0 0 14px}
+.mk-cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media (max-width:600px){.mk-cols{grid-template-columns:1fr}}
+.mk-cc{border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:grid;gap:4px;background:#fff}
+.mk-cc>div{display:flex;justify-content:space-between;gap:8px;align-items:baseline;font-size:.9rem}.mk-cc>div span{color:var(--muted)}
+.mk-cm{font:800 .95rem var(--f-ui);margin:0 0 4px}
+.mk-cc .mk-tot{border-top:1.5px solid var(--ink);padding-top:6px;margin-top:2px}.mk-tot span{color:var(--ink)!important;font-weight:700}.mk-tot b{font:800 1.15rem var(--f-ui)}
+.mk-kp{flex-wrap:wrap}.mk-kp small{width:100%;text-align:right;color:var(--muted);font-size:.75rem;margin-top:-4px}
+.mk-cnote{margin:10px 0 0!important}[data-pane="mec"] [data-mkpane][hidden]{display:none}
 .mk-prev{border:1.5px solid #E3B83A;background:#FFF7DC;border-radius:14px;padding:12px 14px;margin:0 0 14px}
 .mk-prev.mk-prev-ok{border-color:#C7E2D6;background:#F2FAF6;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}.mk-prev-ok span{color:var(--muted);font-size:.88rem}
 .mk-prevh{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:baseline}.mk-prevh b{font:800 1.02rem var(--f-ui)}.mk-prevh span{color:#9A6B00;font-size:.85rem}
