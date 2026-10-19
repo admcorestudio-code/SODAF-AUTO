@@ -2,6 +2,7 @@
 // Appelée uniquement par la base (déclencheurs de la migration 0028) avec un secret partagé.
 // Types : message (canal), preinscription (formulaire du site), inscription (finalisée en ligne), connexion (lieu + alerte nouvel appareil), test (bouton « Tester »), geotest (contrôle du lieu),
 // gérance : demande, demande_equipe (équipe → gérante), demande_reponse, decision, decision_avis, rapport, rapport_rappel (dimanche 18 h).
+// reçus : annulation (demande du secrétariat → gérante ; réponse → secrétariat).
 // mécanique : entretien (jeudi 9 h, entretiens à prévoir samedi, liste calculée par prive.entretiens_a_prevoir).
 // Les clés VAPID et le secret sont lus dans prive.config_push : rien de secret dans ce fichier.
 import webpush from "npm:web-push@3.6.7";
@@ -118,6 +119,17 @@ Deno.serve(async (req) => {
     roles = ["gerant", "secretariat"];
     const corps = l.map((x) => x.type + " (" + x.texte + ")").join(" · ") + ". Préviens la mécanicienne : Mécanique → Prévenir.";
     note = { title: "Samedi : entretien de la voiture", body: corps.length > 180 ? corps.slice(0, 177) + "…" : corps, url: "/equipe/?onglet=mec", tag: "entretien" };
+  } else if (p.type === "annulation") {
+    const [r] = await sql`select numero, eleve_nom, montant, annul_dem_motif from public.paiements where id = ${p.id ?? 0}`;
+    if (!r) return json({ envoyes: 0, raison: "reçu introuvable" });
+    roles = ["gerant"];
+    const corps = "Reçu n° " + r.numero + " · " + r.eleve_nom + " · " + milliers(r.montant) + " F. Raison : " + (r.annul_dem_motif || "");
+    note = { title: "Annulation de reçu à confirmer", body: corps.length > 180 ? corps.slice(0, 177) + "…" : corps, url: "/equipe/?gerance=recus", tag: "annul-" + p.id };
+  } else if (p.type === "annulation_reponse") {
+    const [r] = await sql`select numero, eleve_nom, annule, annul_refus_motif, annul_dem_par from public.paiements where id = ${p.id ?? 0}`;
+    if (!r || !r.annul_dem_par) return json({ envoyes: 0, raison: "reçu introuvable" });
+    seulement = r.annul_dem_par;
+    note = { title: r.annule ? "Reçu annulé · " + r.numero : "Annulation refusée · " + r.numero, body: r.annule ? r.eleve_nom + " : la gérante a confirmé. Refais le bon reçu." : r.eleve_nom + " : le reçu reste valable." + (r.annul_refus_motif ? " " + r.annul_refus_motif : ""), url: "/equipe/", tag: "annul-" + p.id };
   } else if (p.type === "geotest") {
     return json({ ip: p.ip || null, lieu: await geo(p.ip || "") }); // contrôle technique (secret obligatoire), aucune écriture
   } else if (p.type === "test") {
