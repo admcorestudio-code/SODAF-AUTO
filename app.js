@@ -2712,10 +2712,10 @@ function init(root) {
   function devList() {
     const w = devWeek(), sent = S.get("devSent", {}), best = S.get("devBest", {});
     const card = (k, quand) => { const d = DEV[k], mine = sent[w.key + d.l]; return '<div class="devnow"><div class="dl">' + d.l + '</div><div><p class="eyebrow">' + quand + '</p><h3>Devoir ' + d.l + " · " + escH(d.t) + "</h3><p>" +
-      (mine != null ? '<span class="done">✓ Envoyé au moniteur : ' + mine + "/" + d.q.length + "</span>" : "10 questions · à faire après ce cours, avant le cours suivant") + '</p></div><div class="devacts">' +
+      (mine != null ? '<span class="done">✓ Envoyé au moniteur : ' + mine + "/" + d.q.length + "</span>" : "10 questions · à faire après ce cours, avant le cours suivant (il reste ouvert la semaine d'après)") + '</p></div><div class="devacts">' +
       '<button class="btn btn-yellow" data-dev="' + k + '">' + (mine != null ? "Refaire pour m'entraîner" : "Commencer le devoir") + '</button><a class="btn btn-line btn-sm" href="#' + d.q[0][4] + '">Réviser le cours</a></div></div>'; };
     devEl.innerHTML = '<p class="devwk">Semaine du ' + frDay(w.monday) + " · <b>semaine " + (w.sem + 1) + " sur 6</b> du programme</p>" +
-      (w.sem < 5 ? card(w.c[0], "Cours " + (w.c[0] + 1) + " · lundi (groupes A et C) ou mardi (B et D)") + card(w.c[1], "Cours " + (w.c[1] + 1) + " · jeudi (groupes A et C) ou vendredi (B et D)")
+      (w.sem < 5 ? card(w.c[0], "Cours " + (w.c[0] + 1) + " · lundi (groupes A et C), mardi (B et D) ou mercredi (E) · à rendre avant ton cours suivant") + card(w.c[1], "Cours " + (w.c[1] + 1) + " · jeudi (groupes A et C), vendredi (B et D) ou samedi (E) · à rendre avant ton cours suivant")
         : '<div class="devnow"><div class="dl">6</div><div><p class="eyebrow">Cours 11 et 12</p><h3>Semaine de révision · pas de devoir</h3><p>Révision générale, puis examen blanc en salle. Entraîne-toi avec l\'examen blanc de 40 questions.</p></div><div class="devacts"><a class="btn btn-yellow" href="#quiz">Faire un examen blanc</a></div></div>') +
       '<p class="devlist-h">Tous les devoirs · un par cours, le programme fait le tour en 6 semaines</p><div class="devgrid">' +
       DEV.map((d, k) => '<button class="devtile' + (w.c.includes(k) ? " now" : "") + '" data-dev="' + k + '"><b>' + d.l + "</b><span>" + escH(d.t) + "</span>" +
