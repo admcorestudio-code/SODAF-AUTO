@@ -3216,7 +3216,7 @@ function init(root) {
       const day = (b, quand) => '<a class="tm-day" href="#' + (b.dv === null ? "classe-quiz" : "classe-lecon") + '"><b>Cours ' + b.n + " · " + esc(b.t) + "</b><span>" + quand + " · " + (b.dv !== null ? "chapitres : " + esc(chNoms(b)) : b.n === 11 ? "révision de tous les thèmes" : "examen blanc de 40 questions") + "</span><em>Début : " + debutCours(b.n - 1) + " · Mode classe → " + (b.dv === null ? "Quiz" : "Leçon") + "</em></a>";
       { const k = coursDuJour(), b = BOUCLE[k], dvc = DEV[devCorr()];
         $("#sd-mcCtaSub").textContent = "Cours " + b.n + " : " + b.t;
-        $("#sd-mcQuick").innerHTML = (b.dv !== null ? '<a href="#classe-lecon">Leçon · ' + esc(b.t) + "</a>" : "") + '<a href="#classe-devoir">Corriger le devoir ' + dvc.l + "</a>" + '<a href="#classe-quiz">' + (b.n === 12 ? "Examen blanc · 40 questions" : "Quiz") + "</a>"; }
+        $("#sd-mcQuick").innerHTML = '<a href="#classe-devoir">Corriger le devoir ' + dvc.l + "</a>" + (b.dv !== null ? '<a href="#classe-lecon">Leçon · ' + esc(b.t) + "</a>" : "") + '<a href="#classe-quiz">' + (b.n === 12 ? "Examen blanc · 40 questions" : "Quiz") + "</a>"; }
       tmWeek();
       $("#sd-tmProg").innerHTML = '<p class="tm-note" style="margin:0 0 4px!important">Tous les groupes font le même cours la même semaine. Un élève qui arrive commence au cours du jour : en 6 semaines (son cycle), il a tout vu. Après chaque cours, il fait le devoir du cours sur le site ; on le corrige au début du cours suivant.</p><div class="prog">' + progRows(w.sem, w.monday) + "</div>"; }
 
