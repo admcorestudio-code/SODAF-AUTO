@@ -1919,6 +1919,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <button data-s="conduite" aria-selected="false">Planning conduite</button>
 <button data-s="paiements" aria-selected="false">Paiements et reçus</button>
 <button data-s="devoirs" aria-selected="false">Devoirs</button>
+<button data-s="depenses" aria-selected="false" hidden>Demandes à la gérante</button>
 <button class="tm-newins" type="button" id="sd-insNew"><span class="ni-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="M19 8v6M16 11h6"/></svg></span><span class="ni-txt"><b>Nouvelle inscription</b><small>Client au bureau</small></span></button>
 </div>
 <div class="ins-ov" id="sd-insOv" hidden><form class="ins-box" id="sd-insForm" novalidate>
@@ -1993,6 +1994,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 </div></div>
 
 </section>
+<section class="tm-sec" data-s="depenses" hidden><div class="tm-sub"><div><p class="eyebrow">Dépenses</p><h3>Demandes à la gérante</h3></div><p>Pièce, réparation, fournitures : demande l'argent ici, avec le devis.</p></div><div id="sd-secDepSlot"></div></section>
 <section class="tm-sec" data-s="devoirs" hidden>
 <div class="tm-bar"><label for="sd-dvWeek" class="sr-only">Semaine</label><select id="sd-dvWeek"></select></div>
 <div class="tm-stats" id="sd-dvStats"></div>
@@ -3177,7 +3179,7 @@ function init(root) {
     const pick = (t) => { if (AMB() && !["com", "msg", "docs"].includes(t)) t = "com"; if (t === "com" && me && !AMB() && !DIR()) t = "sec"; if (t === "sec" && me && me.role === "moniteur") t = "mon"; if ((t === "sec" || t === "mon") && me && me.role === "gerant") t = "ger"; if (t === "mon" && me && me.role === "secretariat") t = "sec"; tabs.forEach((b) => b.setAttribute("aria-selected", b.dataset.t === t)); panes.forEach((p) => (p.hidden = p.dataset.pane !== t)); try { S.set("tmTab", t); } catch (e) {} placePlanning(t); if (t === "mon" || (t === "sec" && $("#sd-secAuj"))) loadMon(); if (t === "dir") loadDir(); if (t === "ger") grCharger(); if (t === "com") comCharger(); if (t === "mec") mcCharger(); msVoirFil(false); if (t === "msg") { MS.repere = {}; MS.forceBas = true; msRender(); msNotifBox(); if (!isWide()) setTimeout(() => $(".ms-wrap").scrollIntoView({ block: "start" }), 60); } };
     tabs.forEach((b) => b.addEventListener("click", () => pick(b.dataset.t)));
     const subs = $$("#sd-secNav button[data-s]"), secs = $$(".tm-sec");
-    const LOAD = { eleves: () => loadEleves(), conduite: () => loadDay(), paiements: () => loadPay(), devoirs: () => loadDev() };
+    const LOAD = { eleves: () => loadEleves(), conduite: () => loadDay(), paiements: () => loadPay(), devoirs: () => loadDev(), depenses: () => depEquipe() };
     const sub = (k) => { if (k === "paiements" && me && me.role === "moniteur") { toast("Les reçus sont faits par le secrétariat ou la direction."); return; } subs.forEach((b) => b.setAttribute("aria-selected", b.dataset.s === k)); secs.forEach((x) => { if (x === cdSec && cdSec.parentNode !== cdHome.p) return; x.hidden = x.dataset.s !== k; }); LOAD[k](); };
     subs.forEach((b) => b.addEventListener("click", () => sub(b.dataset.s)));
     $$('a[href="#equipe-recu"]').forEach((x) => x.addEventListener("click", () => { pick("sec"); sub("paiements"); }));
@@ -3864,7 +3866,7 @@ function init(root) {
       d.innerHTML = '<summary><span><b>Aujourd\'hui</b><small id="sd-secAujSum">Cours de code et séances de conduite du jour</small></span><em>Voir / replier</em></summary><div id="sd-secAujSlot"></div>';
       $('.tm-pane[data-pane="sec"]').appendChild(d);
       const g = $('.tm-pane[data-pane="mon"] .tm-mon'); if (g) $("#sd-secAujSlot").appendChild(g);
-      const cb = $("#sd-crbMon"); if (cb) $("#sd-secAujSlot").appendChild(cb);
+      const cb = $("#sd-crbMon"); if (cb && $("#sd-secDepSlot")) { $("#sd-secDepSlot").appendChild(cb); cb.style.marginTop = "0"; } // 20 oct. : les dépenses ont leur propre onglet (plus en bas d'« Aujourd'hui »)
       const h = $("#sd-mcDrive .tm-h3"); if (h) h.textContent = "Séances de conduite d'aujourd'hui";
       d.addEventListener("toggle", () => { S.set("secAuj", d.open ? "1" : "0"); if (d.open) loadMon(); });
     }
@@ -3969,7 +3971,7 @@ function init(root) {
       { const sec = $("#sd-drSec"); if (sec) sec.hidden = me.role !== "admin"; } // comptes et sécurité : direction seulement
       { const rl = $('.tm-pane[data-pane="dir"] .tm-role'); if (rl) rl.textContent = me.role === "gerant" ? "Vue d'ensemble de l'auto-école, mise à jour à chaque ouverture. Visible par la direction et toi." : "Vue d'ensemble de l'auto-école, mise à jour à chaque ouverture. Visible par la direction et la gérante."; }
       $('#sd-tmTabs [data-t="sec"]').hidden = me.role === "moniteur" || me.role === "gerant" || AMB(); // la gérante : pas le secrétariat (19 oct.), ses reçus sont dans Gérance // le moniteur a son espace : cours, conduite, réservations, messages
-      { const pb = $('#sd-secNav [data-s="paiements"]'); if (pb) pb.hidden = me.role === "moniteur"; } // reçus : direction et secrétariat seulement (règle aussi dans la base)
+      { const pb = $('#sd-secNav [data-s="paiements"]'); if (pb) pb.hidden = me.role === "moniteur"; } { const db = $('#sd-secNav [data-s="depenses"]'); if (db) db.hidden = me.role !== "secretariat"; } // reçus : direction et secrétariat seulement (règle aussi dans la base)
       if (me.role === "secretariat") secAujourdhui();
       if (!AMB()) await loadEleves(true);
       let t0 = S.get("tmTab", me.role === "gerant" ? "ger" : me.role === "admin" ? "dir" : me.role === "moniteur" ? "mon" : AMB() ? "com" : "sec"); if ((t0 === "dir" || t0 === "ger") && !DIR()) t0 = "sec";
@@ -5313,7 +5315,7 @@ function init(root) {
         '<p class="tm-note mk-cnote">Ici on note ce qui a été fait (le carnet). L\'argent des pièces ou d\'une réparation se demande avant, par une demande de dépense « Pour la voiture ».</p><div class="crb-row"><div class="field"><label>Note</label><input class="mk-note" maxlength="500" autocomplete="off" placeholder="ex. Huile 5W30, filtre changé"></div></div><div class="field"><label>Photo (facultatif)</label>' + pjHtml(false) + '</div><button class="btn btn-green btn-sm" type="submit">Noter</button></form></details>' +
         (MC.e.length ? '<h4 class="gr-h4">Historique</h4><div class="crb-list">' + MC.e.slice(0, 10).map((x) => '<div class="crb-it mk-it"><span>' + dOf(x.jour).toLocaleDateString("fr-FR", { day: "numeric", month: "short" }) + "</span><b>" + esc(x.type) + "</b><span>" + (x.km ? milliers(x.km) + " km" : "") + (x.cout ? " · pièces " + F(x.cout) : "") + (x.note ? " · " + esc(x.note) : "") + "</span>" + (x.photo ? '<button type="button" class="linkbtn" data-dep="' + esc(x.photo) + '">Photo</button>' : "<span></span>") + "</div>").join("") + "</div>" : '<p class="crb-vide">Rien de noté pour l\'instant.</p>');
       const md = box.querySelector("[data-mkdep]");
-      if (md) md.addEventListener("click", () => { pick("sec"); let n = 0; const go = () => { const f = $("#sd-crbMon .dep-form"); if (!f) { if (++n < 20) setTimeout(go, 200); return; } const v = f.querySelector('[data-pour="voiture"]'); if (v) v.click(); f.scrollIntoView({ block: "start", behavior: "smooth" }); setTimeout(() => f.querySelector(".dep-mt").focus({ preventScroll: true }), 400); }; setTimeout(go, 150); });
+      if (md) md.addEventListener("click", () => { pick("sec"); const nb = $('#sd-secNav [data-s="depenses"]'); if (nb) nb.click(); let n = 0; const go = () => { const f = $("#sd-crbMon .dep-form"); if (!f) { if (++n < 20) setTimeout(go, 200); return; } const v = f.querySelector('[data-pour="voiture"]'); if (v) v.click(); f.scrollIntoView({ block: "start", behavior: "smooth" }); setTimeout(() => f.querySelector(".dep-mt").focus({ preventScroll: true }), 400); }; setTimeout(go, 150); });
       const tf = box.querySelector(".mk-tel");
       if (tf) { const bt = box.querySelector("[data-mktel]"); if (bt) bt.addEventListener("click", () => { tf.hidden = false; tf.querySelector("input").focus(); });
         tf.addEventListener("submit", async (ev) => { ev.preventDefault(); const v = tf.querySelector("input").value.replace(/\D/g, ""); if (v.length !== 8) { toast("Numéro : 8 chiffres", true); return; }
