@@ -1523,7 +1523,7 @@ ${HEAD("Formations", "Nos formations et tarifs", "Chaque formule comprend le cod
 </div>
 <div class="card alacarte" style="margin-top:18px"><p class="eyebrow">À la carte</p>
 <div class="acrow"><div><b>Formation théorique seule</b><span> · code, mécanique et secourisme, sans conduite</span></div><strong>25 000 F</strong></div>
-<div class="acrow"><div><b>Séance de conduite en plus</b><span> · un bloc de 2 h en équipe, le mercredi à 15 h 45</span></div><strong>5 000 F</strong></div>
+<div class="acrow"><div><b>Séance de conduite en plus</b><span> · seulement si tu n'es pas encore prêt pour l'examen (évaluation au 10e bloc) : un bloc de 2 h en équipe, le mercredi à 15 h 45</span></div><strong>5 000 F</strong></div>
 <div class="acrow"><div><b>Dépôt pour l'examen d'État</b><span> · à la fin de la formation, en plus du prix de la formule</span></div><strong>35 000 F</strong></div>
 </div>
 <p style="margin-top:14px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px"><a class="btn btn-line btn-sm" href="/fiche-renseignement-sodaf.pdf" download>Télécharger la fiche des tarifs (PDF)</a><span style="color:var(--muted);font-size:.92rem">Une page A4, à imprimer ou à partager.</span></p>
