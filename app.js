@@ -599,7 +599,7 @@ a.teamtile.hl{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
 .tm-week{margin-bottom:16px;border-top:4px solid var(--yellow)}
 .tm-wk-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px 20px;flex-wrap:wrap;margin-bottom:14px}
 .tm-wk-head h3{font:700 1.3rem var(--f-display);margin-top:2px}
-.tm-days{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.tm-days{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.wk-d{padding:12px 14px;border-radius:12px;background:var(--soft);border:1.5px solid transparent}.wk-d.wk-auj{background:#FFF7DC;border-color:#F2B100}.wk-dh{font:800 1.05rem var(--f-display);margin-bottom:6px}.wk-dh em{font:700 .72rem var(--f-body);font-style:normal;background:#F2B100;color:#14171C;padding:2px 8px;border-radius:99px;margin-left:6px;vertical-align:middle}.wk-r{display:flex;gap:10px;font-size:.92rem;padding:2px 0}.wk-r span{min-width:56px;color:var(--muted);font-weight:600}.wk-rt b{color:#1D4F91}.wk-c{margin:8px 0 4px;font-weight:700;font-size:.92rem;color:var(--green)}.wk-s{margin:0;padding-left:1.2em;font-size:.86rem;line-height:1.45}.wk-n{margin:6px 0 0;font-size:.82rem;color:var(--muted)}
 @media (max-width:900px){.tm-days{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:480px){.tm-days{grid-template-columns:1fr}}
 .tm-day{display:flex;flex-direction:column;gap:2px;padding:12px 14px;border-radius:12px;background:var(--soft);text-decoration:none;color:var(--ink)}
@@ -3190,6 +3190,26 @@ function init(root) {
     const sub = (k) => { if (k === "paiements" && me && me.role === "moniteur") { toast("Les reçus sont faits par le secrétariat ou la direction."); return; } subs.forEach((b) => b.setAttribute("aria-selected", b.dataset.s === k)); secs.forEach((x) => { if (x === cdSec && cdSec.parentNode !== cdHome.p) return; x.hidden = x.dataset.s !== k; }); LOAD[k](); };
     subs.forEach((b) => b.addEventListener("click", () => sub(b.dataset.s)));
     $$('a[href="#equipe-recu"]').forEach((x) => x.addEventListener("click", () => { pick("sec"); sub("paiements"); }));
+    // Code en salle · la semaine jour par jour, en phrases simples (20 oct.) : chaque groupe a le 1er cours de la semaine à son 1er jour, le 2e cours à son 2e jour
+    function tmWeek() {
+      const box = $("#sd-tmDays"); if (!box) return;
+      const w = devWeek(), NJ = ["", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"], auj = new Date().getDay();
+      let gs = []; try { gs = GROUPES.filter((g) => g.actif); } catch (e) {}
+      if (!gs.length) gs = [["C", "11 h", [1, 4]], ["A", "14 h 30", [1, 4]], ["D", "11 h", [2, 5]], ["B", "14 h 30", [2, 5]], ["E", "11 h", [3, 6]]].map(([id, h, j]) => ({ nom: "Groupe " + id, heure: h, jours: j }));
+      const etapes = (b) => { const p = (b.n + 10) % 12, d = BOUCLE[p].dv !== null ? "Corrige le devoir " + DEV[BOUCLE[p].dv].l + " (bouton Mode classe → Devoir)." : p === 11 ? "Reviens sur l'examen blanc." : "";
+        return [d, b.dv !== null ? "Projette la leçon (bouton Mode classe) : " + chNoms(b) + "." : b.n === 11 ? "Révision de tous les thèmes avec le quiz (Mode classe → Quiz)." : "Examen blanc de 40 questions (Mode classe → Quiz).", b.dv !== null ? "Donne le devoir " + DEV[b.dv].l + " à faire sur autosodaf.com." : ""].filter(Boolean); };
+      let html = "";
+      for (let j = 1; j <= 6; j++) {
+        const ici = gs.filter((g) => (g.jours || []).includes(j)).map((g) => ({ g, k: (g.jours || []).indexOf(j) })).sort((a, b) => parseInt(a.g.heure, 10) - parseInt(b.g.heure, 10));
+        const rows = ici.map((x) => '<div class="wk-r"><span>' + esc(String(x.g.heure).split(" – ")[0]) + "</span><b>" + esc(x.g.nom) + "</b></div>").join("") + (j === 3 ? '<div class="wk-r wk-rt"><span>14 h 30</span><b>Rattrapage du code</b></div>' : "");
+        if (!rows) continue;
+        const b = ici.length ? BOUCLE[w.c[ici[0].k]] : null;
+        html += '<div class="wk-d' + (j === auj ? " wk-auj" : "") + '"><div class="wk-dh">' + NJ[j] + (j === auj ? " <em>aujourd'hui</em>" : "") + "</div>" + rows +
+          (b ? '<p class="wk-c">Cours ' + b.n + " : " + esc(b.t) + '</p><ol class="wk-s">' + etapes(b).map((t) => "<li>" + esc(t) + "</li>").join("") + "</ol>" : "") +
+          (j === 3 ? '<p class="wk-n">Rattrapage : les élèves qui ont manqué un cours, et l\'examen blanc pour ceux qui approchent de l\'examen.</p>' : "") + "</div>";
+      }
+      box.innerHTML = html;
+    }
     { const w = devWeek(), n = new Date(), c1 = BOUCLE[w.c[0]], c2 = BOUCLE[w.c[1]];
       $("#sd-tmTheme").textContent = "Semaine " + (w.sem + 1) + " sur 6 · cours " + c1.n + " et " + c2.n;
       $("#sd-tmToday").textContent = "Nous sommes le " + J[n.getDay()] + " " + n.getDate() + " " + M[n.getMonth()] + ". Code en salle : semaine " + (w.sem + 1) + " sur 6 du programme.";
@@ -3197,7 +3217,7 @@ function init(root) {
       { const k = coursDuJour(), b = BOUCLE[k], dvc = DEV[devCorr()];
         $("#sd-mcCtaSub").textContent = "Cours " + b.n + " : " + b.t;
         $("#sd-mcQuick").innerHTML = (b.dv !== null ? '<a href="#classe-lecon">Leçon · ' + esc(b.t) + "</a>" : "") + '<a href="#classe-devoir">Corriger le devoir ' + dvc.l + "</a>" + '<a href="#classe-quiz">' + (b.n === 12 ? "Examen blanc · 40 questions" : "Quiz") + "</a>"; }
-      $("#sd-tmDays").innerHTML = day(c1, "A et C : lundi · B et D : mardi") + day(c2, "A et C : jeudi · B et D : vendredi") + '<a class="tm-day" href="#classe-quiz"><b>Mercredi · 14 h 30</b><span>Rattrapage et examen blanc, tous groupes (6 places)</span><em>Ceux qui ont manqué un cours</em></a>';
+      tmWeek();
       $("#sd-tmProg").innerHTML = '<p class="tm-note" style="margin:0 0 4px!important">Tous les groupes font le même cours la même semaine. Un élève qui arrive commence au cours du jour : en 6 semaines (son cycle), il a tout vu. Après chaque cours, il fait le devoir du cours sur le site ; on le corrige au début du cours suivant.</p><div class="prog">' + progRows(w.sem, w.monday) + "</div>"; }
 
     // Connexion
@@ -4181,7 +4201,7 @@ function init(root) {
     }
     async function loadEleves(silent) {
       const [r, wb, pr, gr, cr] = await Promise.all([run(() => DB.q("eleves?select=*&order=cree_le.desc&limit=2000")), run(() => DB.q("inscriptions_web?select=*&order=le.desc&limit=2000")), run(() => DB.q(PAY_Q)), run(() => DB.q("groupes_code?select=*&order=ordre")), run(() => DB.q(CR_Q))]);
-      if (!r) return; if (gr) GROUPES = gr;
+      if (!r) return; if (gr) { GROUPES = gr; tmWeek(); }
       await loadEquipes();
       const W = {}; (wb || []).forEach((w) => { if (!W[w.eleve_id]) W[w.eleve_id] = w; });
       attach(r, pr, cr);
@@ -5697,7 +5717,7 @@ function init(root) {
       polling = true;
       try {
         const [r, wb, pr, cr, gr] = await Promise.all([DB.q("eleves?select=*&order=cree_le.desc&limit=2000"), DB.q("inscriptions_web?select=*&order=le.desc&limit=2000"), DB.q(PAY_Q), DB.q(CR_Q), DB.q("groupes_code?select=*&order=ordre")]);
-        const gChanged = !!gr && JSON.stringify(gr) !== JSON.stringify(GROUPES); if (gr) GROUPES = gr;
+        const gChanged = !!gr && JSON.stringify(gr) !== JSON.stringify(GROUPES); if (gr) { GROUPES = gr; tmWeek(); }
         const W = {}; (wb || []).forEach((w) => { if (!W[w.eleve_id]) W[w.eleve_id] = w; });
         attach(r, pr, cr);
         r.forEach((x) => { x.web = W[x.id] && W[x.id].statut === "Nouveau" ? W[x.id] : null; });
