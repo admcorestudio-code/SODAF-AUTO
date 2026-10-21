@@ -1921,6 +1921,8 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <button data-s="paiements" aria-selected="false">Paiements et reçus</button>
 <button data-s="devoirs" aria-selected="false" hidden>Devoirs</button>
 <button data-s="depenses" aria-selected="false" hidden>Demandes à la gérante</button>
+<button data-s="auj" aria-selected="false" hidden>Aujourd'hui</button>
+<button data-s="aide" aria-selected="false">Mode d'emploi</button>
 <button class="tm-newins" type="button" id="sd-insNew"><span class="ni-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="M19 8v6M16 11h6"/></svg></span><span class="ni-txt"><b>Nouvelle inscription</b><small>Client au bureau</small></span></button>
 </div>
 <div class="ins-ov" id="sd-insOv" hidden><form class="ins-box" id="sd-insForm" novalidate>
@@ -2008,12 +2010,16 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="tm-formact"><button class="btn btn-green btn-sm" type="button" id="sd-dvCopy">Copier le message</button><a class="btn btn-wa btn-sm" id="sd-dvWa" target="_blank" rel="noopener" href="#">Ouvrir WhatsApp avec le message</a></div>
 <div id="sd-dvRes" class="tm-list" style="margin-top:18px"></div>
 </section>
+<section class="tm-sec" data-s="aide" hidden>
 <div class="tm-sub"><div><p class="eyebrow">Mode d'emploi</p><h3>Les gestes du secrétariat</h3></div></div>
 <div class="grid g2 tm-guides">
 <div class="card soft"><p class="eyebrow">Le parcours d'un élève</p><ol class="teamsteps"><li><b>Accueil</b> : <b>Envoyer l'accueil</b> (WhatsApp). Le dossier passe tout seul en zone d'appel.</li><li><b>Appels</b> : appelle avec le script. Pas de réponse : choisis quand rappeler (un message WhatsApp part seulement au 1er appel manqué). Au 4e : dernier message et <b>Injoignable</b>.</li><li>Il est intéressé : <b>Envoyer le lien d'inscription</b> (en haut). Le dossier passe tout seul en paiement en attente.</li><li><b>Paiement en attente</b> : Mixx à vérifier sur le téléphone de l'agence, ou paiement à l'agence. Sans nouvelles : relance tous les 5 jours (4 au maximum).</li><li><b>Formation payée ? Faire le reçu</b> : le reçu s'ouvre déjà rempli, envoie-le. L'élève passe <b>En formation</b> et reçoit tout seul une place dans un groupe de code (6 places). Touche <b>Envoyer ses horaires</b>. Groupes complets : il passe en liste d'attente et il est placé tout seul dès qu'une place se libère (pour aller plus vite, ouvre un groupe dans « Gérer les groupes »).</li><li><b>Solde</b> : à payer dans les 2 semaines après l'inscription (c'est écrit sur son reçu). À 7 jours, il passe dans « Rappel de paiement » (en rouge, tout en haut) : le bouton du rappel s'active ce jour-là, envoie-le ; l'élève retourne ensuite dans son groupe. À 14 jours sans paiement, sa place au code est suspendue toute seule jusqu'au règlement.</li><li>Formation terminée : <b>Passer à l'examen</b>, message des papiers. Dossier complet + 35 000 F : reçu.</li><li><b>Dépôt d'examen</b> : coche le lot, imprime le bordereau, fais-le signer, puis <b>Lot déposé</b>. Au résultat : <b>Permis obtenu</b> ou <b>À repasser</b> (archivé « Permis échoué »).</li></ol></div>
 <div class="card soft"><p class="eyebrow">Placer un élève en conduite (équipes de 4)</p><ol class="teamsteps"><li>Seuls les élèves dont la formation est soldée peuvent être placés. S'il doit encore payer : fiche de l'élève → <b>Rappel du solde</b>.</li><li>Fiche de l'élève → bloc <b>Conduite</b> → choisis l'équipe (jours et heure qui l'arrangent) → <b>Placer</b>. Tous ses blocs sont réservés d'un coup, 2 par semaine. Tarif étudiant : un seul étudiant par équipe.</li><li>Touche <b>Envoyer ses horaires</b> : le message WhatsApp avec son équipe et son 1er bloc est prêt. La veille d'un bloc, le <b>Rappel</b> est dans le planning.</li><li>Élève absent (prévenu ou non) : dans le planning, mets « Absent », puis place-le sur le <b>mercredi 15 h 45</b> (rattrapage). Les places libres du mercredi s'ouvrent aux séances en plus (3 000 F) à partir du mardi 18 h.</li></ol></div>
 <div class="card soft"><p class="eyebrow">Règles</p><ol class="teamsteps"><li>On ne supprime rien : une séance annulée passe en <b>Annulé</b>, un dossier qui s'arrête va dans <b>Archivés</b> avec son motif, un reçu faux se fait <b>Annuler</b> (avec la raison) puis on refait le bon.</li><li>Erreur de nom ou de numéro : <b>Modifier</b> sur la fiche de l'élève.</li><li>Jour férié ou fermeture : <b>Planning conduite</b> → le jour → « Fermer ce jour », puis <b>Prévenir</b> chaque élève.</li><li>Les blocs du mois suivant se créent tout seuls le 24, et les élèves déjà placés y reçoivent leurs blocs restants.</li></ol></div>
-</div></div>
+</div>
+</section>
+<section class="tm-sec" data-s="auj" hidden><div class="tm-sub"><div><p class="eyebrow">Qui vient à l'agence</p><h3>Aujourd'hui</h3></div><p id="sd-secAujSum">Cours de code et séances de conduite du jour</p></div><div id="sd-secAujSlot"></div></section>
+</div>
 <div class="tm-pane" data-pane="ger" role="tabpanel" hidden>
 <p class="tm-role" id="sd-grRole"></p>
 <div class="card gr-card" id="sd-gr" hidden><p class="eyebrow">Gérance</p><h3 class="tm-h3" id="sd-grTitre">Gérante et direction</h3><p class="tm-note" id="sd-grIntro" style="margin:0 0 10px!important"></p>
@@ -3203,7 +3209,7 @@ function init(root) {
     const pick = (t) => { if (AMB() && !["com", "msg", "docs", "taf"].includes(t)) t = "com"; if (t === "com" && me && !AMB() && !DIR()) t = "sec"; if (t === "sec" && me && me.role === "moniteur") t = "mon"; if ((t === "sec" || t === "mon") && me && me.role === "gerant") t = "ger"; if (t === "mon" && me && me.role === "secretariat") t = "sec"; tabs.forEach((b) => b.setAttribute("aria-selected", b.dataset.t === t)); panes.forEach((p) => (p.hidden = p.dataset.pane !== t)); try { S.set("tmTab", t); } catch (e) {} placePlanning(t); if (t === "mon" || (t === "sec" && $("#sd-secAuj"))) loadMon(); if (t === "dir") loadDir(); if (t === "ger") grCharger(); if (t === "com") comCharger(); if (t === "mec") mcCharger(); if (t === "taf") tfCharger(); msVoirFil(false); if (t === "msg") { MS.repere = {}; MS.forceBas = true; msRender(); msNotifBox(); if (!isWide()) setTimeout(() => $(".ms-wrap").scrollIntoView({ block: "start" }), 60); } };
     tabs.forEach((b) => b.addEventListener("click", () => pick(b.dataset.t)));
     const subs = $$("#sd-secNav button[data-s]"), secs = $$(".tm-sec");
-    const LOAD = { eleves: () => loadEleves(), conduite: () => loadDay(), paiements: () => loadPay(), devoirs: () => loadDev(), depenses: () => depEquipe() };
+    const LOAD = { eleves: () => loadEleves(), conduite: () => loadDay(), paiements: () => loadPay(), devoirs: () => loadDev(), depenses: () => depEquipe(), aide: () => {}, auj: () => loadMon() };
     const sub = (k) => { if (k === "paiements" && me && me.role === "moniteur") { toast("Les reçus sont faits par le secrétariat ou la direction."); return; } subs.forEach((b) => b.setAttribute("aria-selected", b.dataset.s === k)); secs.forEach((x) => { if (x === cdSec && cdSec.parentNode !== cdHome.p) return; x.hidden = x.dataset.s !== k; }); LOAD[k](); };
     subs.forEach((b) => b.addEventListener("click", () => sub(b.dataset.s)));
     $$('a[href="#equipe-recu"]').forEach((x) => x.addEventListener("click", () => { pick("sec"); sub("paiements"); }));
@@ -3906,9 +3912,7 @@ function init(root) {
     function secAujourdhui() {
       if ($("#sd-secAuj")) return;
       $('#sd-tmTabs [data-t="mon"]').hidden = true;
-      const d = document.createElement("details"); d.className = "card tm-auj"; d.id = "sd-secAuj"; d.open = S.get("secAuj", "1") === "1";
-      d.innerHTML = '<summary><span><b>Aujourd\'hui</b><small id="sd-secAujSum">Cours de code et séances de conduite du jour</small></span><em>Voir / replier</em></summary><div id="sd-secAujSlot"></div>';
-      $('.tm-pane[data-pane="sec"]').appendChild(d);
+      const d = $('section.tm-sec[data-s="auj"]'); d.id = "sd-secAuj"; { const b = $('#sd-secNav [data-s="auj"]'); if (b) b.hidden = false; } // 21 oct. : un onglet à part, plus en bas de la page
       const g = $('.tm-pane[data-pane="mon"] .tm-mon'); if (g) $("#sd-secAujSlot").appendChild(g);
       const cb = $("#sd-crbMon"); if (cb && $("#sd-secDepSlot")) { $("#sd-secDepSlot").appendChild(cb); cb.style.marginTop = "0"; } // 20 oct. : les dépenses ont leur propre onglet (plus en bas d'« Aujourd'hui »)
       const h = $("#sd-mcDrive .tm-h3"); if (h) h.textContent = "Séances de conduite d'aujourd'hui";
