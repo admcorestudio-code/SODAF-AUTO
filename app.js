@@ -3210,6 +3210,7 @@ function init(root) {
     tabs.forEach((b) => b.addEventListener("click", () => pick(b.dataset.t)));
     const subs = $$("#sd-secNav button[data-s]"), secs = $$(".tm-sec");
     const LOAD = { eleves: () => loadEleves(), conduite: () => loadDay(), paiements: () => loadPay(), devoirs: () => loadDev(), depenses: () => depEquipe(), aide: () => {}, auj: () => loadMon() };
+    { const ps = $('section.tm-sec[data-s="paiements"]'), rc = $("#equipe-recu"); if (ps && rc) { ps.insertBefore(rc, ps.firstChild); rc.style.marginBottom = "26px"; } } // 21 oct. : « Faire un reçu » en haut, « Reçus faits » en dessous
     const sub = (k) => { if (k === "paiements" && me && me.role === "moniteur") { toast("Les reçus sont faits par le secrétariat ou la direction."); return; } subs.forEach((b) => b.setAttribute("aria-selected", b.dataset.s === k)); secs.forEach((x) => { if (x === cdSec && cdSec.parentNode !== cdHome.p) return; x.hidden = x.dataset.s !== k; }); LOAD[k](); };
     subs.forEach((b) => b.addEventListener("click", () => sub(b.dataset.s)));
     $$('a[href="#equipe-recu"]').forEach((x) => x.addEventListener("click", () => { pick("sec"); sub("paiements"); }));
@@ -4758,7 +4759,7 @@ function init(root) {
       const dates = [...new Set(mer.map((c) => c.jour))].slice(0, 5); RAT.dates = dates.map((j) => ({ j, rows: mer.filter((c) => c.jour === j) }));
       const lundi = (d) => { const x = dOf(d); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return iso(x); }, cette = lundi(td);
       const b = $("#sd-cdRatB"); if (b) { b.textContent = RAT.du.length; b.hidden = !RAT.du.length; }
-      box.innerHTML = '<div class="tf-hero cd-rhero" style="--tfc:#7C3AED"><i aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg></i><div class="tf-hero-t"><b>Rattrapages</b><span>Le mercredi, 15 h 45 – 17 h 45. Gratuit pour un bloc manqué.</span></div><div class="tf-hero-n"><b>' + RAT.du.length + "</b><span>à rattraper</span></div></div>" +
+      box.innerHTML = '<div class="tf-hero cd-rhero" style="--tfc:#4B3F8F"><i aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg></i><div class="tf-hero-t"><b>Rattrapages</b><span>Le mercredi, 15 h 45 – 17 h 45. Gratuit pour un bloc manqué.</span></div><div class="tf-hero-n"><b>' + RAT.du.length + "</b><span>à rattraper</span></div></div>" +
         '<div class="card cd-rdu"><h4 class="gr-h4">À rattraper</h4>' + (RAT.du.length ? RAT.du.map((o) => '<div class="cd-rel"><button type="button" class="ms-el" data-goel="' + o.x.id + '">' + esc(o.x.nom) + "</button><small>SO" + o.x.id + " · " + o.n + " bloc" + (o.n > 1 ? "s" : "") + " manqué" + (o.n > 1 ? "s" : "") + (o.der ? ", le dernier " + dOf(o.der).toLocaleDateString("fr-FR", { day: "numeric", month: "short" }) : "") + "</small></div>").join("") : '<p class="tm-empty">Personne n\'a de bloc à rattraper.</p>') + "</div>" +
         '<h4 class="gr-h4 cd-rh">Les prochains mercredis</h4>' + (RAT.dates.length ? RAT.dates.map((m) => { const pris = m.rows.filter((c) => c.eleve_id && c.statut !== "Annulé"), libres = m.rows.filter((c) => !c.eleve_id && c.statut === "Libre"), ann = m.rows.every((c) => c.statut === "Annulé");
           const quand = lundi(m.j) === cette ? "Cette semaine" : lundi(m.j) === lundi(iso(new Date(Date.now() + 7 * 864e5))) ? "La semaine prochaine" : "";
@@ -7443,9 +7444,9 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 
 /* Planning conduite : vue « Rattrapages » (21 oct.) */
 .cd-modes{margin:0 0 14px}.cd-rat[hidden],#sd-cdJour[hidden]{display:none}.cd-rhero{margin-bottom:14px}
-.cd-rdu{padding:14px 16px;margin:0 0 16px;border-top:4px solid #7C3AED!important}.cd-rdu .gr-h4{margin:0 0 8px}.cd-rel{display:flex;flex-direction:column;gap:2px;padding:8px 0;border-top:1px solid #EEF0F2}.cd-rel:first-of-type{border-top:0}.cd-rel small{color:var(--muted);font-size:.82rem}
+.cd-rdu{padding:14px 16px;margin:0 0 16px;border-top:4px solid #4B3F8F!important}.cd-rdu .gr-h4{margin:0 0 8px}.cd-rel{display:flex;flex-direction:column;gap:2px;padding:8px 0;border-top:1px solid #EEF0F2}.cd-rel:first-of-type{border-top:0}.cd-rel small{color:var(--muted);font-size:.82rem}
 .cd-rh{margin:4px 0 10px}.cd-rm{padding:14px 16px;margin:0 0 12px;border-top:4px solid #16A34A!important;display:flex;flex-direction:column;gap:10px}.cd-rm.cd-rplein{border-top-color:#CBD2D9!important;background:#FAFBFC}
-.cd-rmh{display:flex;justify-content:space-between;align-items:center;gap:10px}.cd-rmh b{font:800 1.02rem var(--f-ui);display:block}.cd-rmh span{font-size:.8rem;font-weight:700;color:#7C3AED}
+.cd-rmh{display:flex;justify-content:space-between;align-items:center;gap:10px}.cd-rmh b{font:800 1.02rem var(--f-ui);display:block}.cd-rmh span{font-size:.8rem;font-weight:700;color:#4B3F8F}
 .cd-rok,.cd-rko{font-style:normal;font:800 .82rem var(--f-ui);padding:.4em .8em;border-radius:999px;white-space:nowrap}.cd-rok{background:#DCFCE7;color:#166534}.cd-rko{background:#EEF0F3;color:#64748B}
 .cd-rpl{display:flex;flex-wrap:wrap;gap:6px}.cd-rp{font-size:.82rem;font-weight:600;padding:.3em .7em;border-radius:999px;background:#F1F5F9}.cd-rgo{align-self:flex-start;border:1px solid #E3E6EA}.cd-rnote{margin:0;font-size:.8rem;color:var(--muted)}
 /* À faire : chaque onglet a sa couleur, son icône et son grand en-tête */
