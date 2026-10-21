@@ -5539,7 +5539,7 @@ function init(root) {
       return '<div class="tf-box tf-pay" data-tfpay><b class="tf-bt">' + (t.pas_recu_le ? "Renvoyer l'argent" : "Envoyer l'argent") + (mt ? " : " + F(mt) : "") + " à " + esc(tfNom(t.pour)) + "</b>" +
         '<ol class="tf-steps"><li>Envoie l\'argent depuis le compte marchand Mixx (motif : <b>SODAF T-' + t.id + "</b>).</li><li>Télécharge le reçu dans l'application Mixx.</li><li>Joins-le ici, puis touche « Paiement effectué ».</li></ol>" +
         '<div class="tf-chips" role="radiogroup">' + ["Mixx", "Moov Money", "Espèces"].map((m, i) => '<button type="button" role="radio" data-tfmoy="' + m + '" aria-checked="' + (i === 0) + '">' + m + "</button>").join("") + "</div>" +
-        '<div class="tf-row"><div class="field"><label>Montant envoyé (F)</label><input class="tf-pmt" inputmode="numeric" autocomplete="off" value="' + (mt ? milliers(mt) : "") + '"></div><div class="field"><label>Référence (facultatif)</label><input class="tf-ref" maxlength="80" autocomplete="off" placeholder="ex. MP2610.1234"></div></div>' +
+        '<div class="field"><label>Montant envoyé (F)</label><input class="tf-pmt" inputmode="numeric" autocomplete="off" value="' + (mt ? milliers(mt) : "") + '"></div>' +
         '<div class="field"><label class="tf-recl">Reçu du paiement (photo, capture ou PDF)</label>' + pjHtml(true) + "</div>" +
         '<button type="button" class="btn btn-green" data-tfpaye>Paiement effectué</button></div>';
     }
@@ -5549,8 +5549,9 @@ function init(root) {
       if (t.etape === "accord" && adm) h += '<div class="tf-box"><b class="tf-bt">La gérante a trouvé le prix : ' + F(t.montant) + '</b><input class="tf-note" maxlength="300" placeholder="Un mot (facultatif)" aria-label="Un mot"><div class="tf-btns"><button type="button" class="btn btn-green" data-tfacc="1">Accorder</button><button type="button" class="btn dq-no" data-tfacc="0">Refuser</button></div></div>';
       if (adm && (t.etape === "payer" || (t.etape === "envoye" && t.pas_recu_le))) h += tfPayBox(t);
       if (t.etape === "envoye") {
-        const info = F(t.paye_montant) + (t.paye_moyen ? " par " + esc(t.paye_moyen) : "") + ", " + grQuand(t.paye_le) + (t.paye_ref ? " · réf. " + esc(t.paye_ref) : "");
-        if (t.pas_recu_le) h = '<p class="tf-alerte">« Pas reçu »' + (t.pas_recu_note ? " : " + esc(t.pas_recu_note) : "") + (moi ? ". La direction est prévenue." : "") + "</p>" + h;
+        const info = F(t.paye_montant) + (t.paye_moyen ? " par " + esc(t.paye_moyen) : "") + ", " + grQuand(t.paye_le);
+        if (t.pas_recu_le) { h = '<p class="tf-alerte">« Pas reçu »' + (t.pas_recu_note ? " : " + esc(t.pas_recu_note) : "") + (moi ? ". La direction est prévenue." : "") + "</p>" + h;
+          if (moi) h += '<div class="tf-box tf-recu"><p class="tf-aide">Regarde ton solde et ton historique Mixx (le SMS n\'arrive pas toujours). Si l\'argent y est :</p><div class="tf-btns"><button type="button" class="btn btn-green" data-tfact>Finalement, je l\'ai reçu</button></div></div>'; }
         else if (moi) h += '<div class="tf-box tf-recu"><b class="tf-bt">L\'argent est parti : ' + info + '</b><p class="tf-aide">Ouvre le reçu et vérifie sur ton téléphone. Si tout est bon, active la tâche.</p><div class="tf-btns"><button type="button" class="btn btn-green" data-tfact>Activer : j\'ai bien reçu</button></div><details class="tf-pas"><summary>Je n\'ai rien reçu</summary><input class="tf-pasn" maxlength="300" placeholder="ex. Rien sur mon compte Mixx" aria-label="Précise"><button type="button" class="btn dq-no btn-sm" data-tfpas>Pas reçu</button></details></div>';
         else h += '<p class="tf-aide">Envoyé : ' + info + "." + (Date.now() - new Date(t.paye_le) > 864e5 ? ' <b class="tf-retard">Plus de 24 h.</b>' : "") + "</p>";
       }
@@ -5570,8 +5571,14 @@ function init(root) {
         '<p class="tf-tx">' + esc(String(t.titre || "").replace(/^\[TEST\]\s*/, "")) + (test ? ' <span class="dq-test">TEST</span>' : "") + "</p>" +
         '<div class="tf-meta"><em class="tf-st">' + esc(st[1]) + "</em>" + (t.argent && (t.montant || t.paye_montant) ? '<b class="tf-mt">' + F(t.paye_montant || t.montant) + "</b>" : t.argent ? '<b class="tf-mt tf-inc">Prix à trouver</b>' : "") + (t.pour_le && !TF_FIN.includes(t.etape) ? '<span class="tf-date' + (late ? " tf-retard" : "") + '">' + (late ? "En retard · " : "") + "pour " + tfJour(t.pour_le) + "</span>" : "") + "</div>" +
         (t.accord_note && t.etape !== "fait" ? '<p class="tf-rep">Direction : « ' + esc(t.accord_note) + " »</p>" : "") + (t.fait_note ? '<p class="tf-rep">« ' + esc(t.fait_note) + " »</p>" : "") +
-        (pcs ? '<div class="tf-pcs">' + pcs + "</div>" : "") + (TF_FIN.includes(t.etape) ? "" : tfActions(t, vue)) + "</article>";
+        (pcs ? '<div class="tf-pcs">' + pcs + "</div>" : "") + tfEnvois(t) + (TF_FIN.includes(t.etape) ? "" : tfActions(t, vue)) + "</article>";
     }
+    const tfTotal = (t) => (t.envois || []).reduce((n, e) => n + (e.montant || 0), 0);
+    function tfEnvois(t) { // plusieurs envois (renvoi après « Pas reçu ») : chacun garde son reçu
+      const l = t.envois || []; if (l.length < 2) return "";
+      const tot = tfTotal(t), trop = t.montant && tot > t.montant ? tot - t.montant : 0;
+      return '<div class="tf-env"><b>' + l.length + " envois · " + F(tot) + " en tout</b>" + l.map((e, i) => '<div class="tf-envl"><span>' + (i + 1) + ". " + F(e.montant) + " par " + esc(e.moyen) + ", " + grQuand(e.le) + "</span>" + (e.recu ? '<button type="button" class="linkbtn" data-tfdoc="' + esc(e.recu) + '">Reçu</button>' : "") + "</div>").join("") +
+        (trop ? '<p class="tf-alerte">Envoyé en trop : ' + F(trop) + " (accordé " + F(t.montant) + ")</p>" : "") + "</div>"; }
     const tfTri = (a, b) => (tfAMoi(b) - tfAMoi(a)) || String(a.pour_le || "9999").localeCompare(String(b.pour_le || "9999")) || String(a.le).localeCompare(String(b.le));
     function tfForm() {
       const box = $("#sd-tfNew"); if (!box) return; if (!DIR()) { box.innerHTML = ""; return; }
@@ -5629,7 +5636,7 @@ function init(root) {
       // Paiements (direction)
       if (adm) {
         const env = ouv.filter((x) => x.etape === "envoye" && !x.pas_recu_le), cours = ouv.filter((x) => x.etape === "afaire" && x.argent), fin = t.filter((x) => x.etape === "fait" && x.argent && tfMois(x.paye_le));
-        const envMois = t.filter((x) => x.paye_le && tfMois(x.paye_le)).reduce((n, x) => n + (x.paye_montant || 0), 0), grp = (titre, l, aide, ouvert) => '<section class="tf-grp"><h4 class="gr-h4">' + titre + ' <span class="dq-count">' + l.length + "</span></h4>" + (aide ? '<p class="tf-aide">' + aide + "</p>" : "") + (l.length ? l.map((x) => tfCarte(x, "pay")).join("") : '<p class="tm-empty">Rien.</p>') + "</section>";
+        const envMois = t.reduce((n, x) => n + (x.envois || []).filter((e) => tfMois(e.le)).reduce((m, e) => m + (e.montant || 0), 0), 0), grp = (titre, l, aide, ouvert) => '<section class="tf-grp"><h4 class="gr-h4">' + titre + ' <span class="dq-count">' + l.length + "</span></h4>" + (aide ? '<p class="tf-aide">' + aide + "</p>" : "") + (l.length ? l.map((x) => tfCarte(x, "pay")).join("") : '<p class="tm-empty">Rien.</p>') + "</section>";
         $("#sd-tfPay").innerHTML = '<div class="tm-stats tm-dr tf-tot"><div><span>Envoyé ce mois</span><b>' + F(envMois) + "</b></div><div><span>Reste à envoyer</span><b>" + F(aPayer.reduce((n, x) => n + (x.montant || 0), 0)) + "</b></div></div>" +
           grp("À payer", aPayer, "Accordé : envoie l'argent, puis joins le reçu.") + grp("Envoyé, pas encore activé", env, "La personne doit ouvrir le reçu et toucher « Activer ».") + grp("En cours : achat et facture", cours, "Argent reçu. On attend l'achat et la facture.") +
           '<details class="tf-old"><summary>Terminé ce mois (' + fin.length + ")</summary>" + fin.map((x) => tfCarte(x, "pay")).join("") + "</details>";
@@ -5657,7 +5664,7 @@ function init(root) {
       if (btn.matches("[data-tfpaye]")) { const moy = q('[data-tfmoy][aria-checked="true"]').dataset.tfmoy, mt = +(q(".tf-pmt").value.replace(/\D/g, "")) || 0, pj = q(".tf-pay .pj");
         if (!mt) { toast("Écris le montant envoyé", true); q(".tf-pmt").focus(); return; } if (moy !== "Espèces" && !pj._file) { toast("Joins le reçu du paiement", true); return; }
         deux(async () => { let path = null; if (pj._file) { try { path = await depEnvoyer(pj._file, "taches"); } catch (er) { toast("Le reçu n'a pas pu être envoyé", true); return false; } }
-          return tfRpc("tache_payer", { p_id: id, p_moyen: moy, p_montant: mt, p_ref: q(".tf-ref").value.trim() || null, p_recu: path }, "Paiement noté : " + (x ? tfNom(x.pour) : "la personne") + " est prévenu(e)"); }); return; }
+          return tfRpc("tache_payer", { p_id: id, p_moyen: moy, p_montant: mt, p_ref: null, p_recu: path }, "Paiement noté : " + (x ? tfNom(x.pour) : "la personne") + " est prévenu(e)"); }); return; }
       if (btn.matches("[data-tfact]")) { deux(() => tfRpc("tache_activer", { p_id: id }, "Tâche activée : à toi de jouer")); return; }
       if (btn.matches("[data-tfpas]")) { deux(() => tfRpc("tache_pas_recu", { p_id: id, p_note: q(".tf-pasn").value.trim() || null }, "La direction est prévenue")); return; }
       if (btn.matches("[data-tffait]")) { deux(() => tfRpc("tache_faite", { p_id: id, p_note: null }, "Bravo, c'est fait")); return; }
@@ -7247,7 +7254,7 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 .tf-newc{padding:0;margin:0 0 14px}.tf-newc summary{cursor:pointer;padding:14px 16px;font:700 1rem var(--f-ui);color:#0F766E;list-style:none}.tf-newc summary::-webkit-details-marker{display:none}.tf-newc[open] summary{border-bottom:1px solid var(--line)}
 .tf-form{padding:14px 16px;display:flex;flex-direction:column;gap:12px}.tf-form .field{margin:0}.tf-form textarea,.tf-form input{width:100%;box-sizing:border-box}.tf-mt2{margin:8px 0 0}
 .tf-ban{all:unset;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;box-sizing:border-box;width:100%;padding:12px 16px;margin:0 0 12px;border-radius:12px;background:#0F766E;color:#fff}.tf-ban span{font-size:.88rem;opacity:.9}
-.tf-fac.is-busy{opacity:.6;pointer-events:none}.tf-grp{margin:0 0 18px}.tf-tot{margin:0 0 16px}.tf-old summary{cursor:pointer;font-weight:700;margin:0 0 10px}
+.tf-fac.is-busy{opacity:.6;pointer-events:none}.tf-env{margin:10px 0 0;padding:10px 12px;border-radius:10px;background:#F7F8FA;font-size:.88rem;display:flex;flex-direction:column;gap:4px}.tf-envl{display:flex;justify-content:space-between;gap:8px}.tf-env .tf-alerte{margin:6px 0 0}.tf-grp{margin:0 0 18px}.tf-tot{margin:0 0 16px}.tf-old summary{cursor:pointer;font-weight:700;margin:0 0 10px}
 .dq-count{display:inline-grid;place-items:center;min-width:22px;height:22px;border-radius:99px;background:#C8372D;color:#fff;font-size:.78rem;margin-left:6px;vertical-align:middle}
 .dep-ok{color:var(--green);font-weight:600}.dep-facw{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.dep-facw.is-busy{opacity:.6;pointer-events:none}
 .crb-mon .dep-eqf{margin-top:14px}.crb-mon .dep-form{padding:0;border:0;margin:0}

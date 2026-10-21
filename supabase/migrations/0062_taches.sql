@@ -29,6 +29,7 @@ create table if not exists public.taches (
   paye_montant integer check (paye_montant is null or paye_montant > 0),
   paye_ref text check (length(paye_ref) <= 80),
   paye_recu text check (length(paye_recu) <= 300),
+  envois jsonb not null default '[]'::jsonb, -- chaque envoi gardé : [{le, moyen, montant, recu}] (un renvoi n'efface pas le premier)
   active_le timestamptz,
   pas_recu_le timestamptz, pas_recu_note text check (length(pas_recu_note) <= 300),
   relance_le timestamptz,
@@ -104,8 +105,8 @@ begin
   if not p_ok then perform prive.tache_notif(p_id, 'refus'); end if;
 end $$;
 
--- 4. Paiement effectué (direction) : moyen, montant, référence, reçu Mixx (obligatoire sauf espèces)
---    Aussi possible pour renvoyer l'argent après un « Pas reçu ».
+-- 4. Paiement effectué (direction) : moyen, montant, reçu Mixx (obligatoire sauf espèces ; la référence est sur le reçu)
+--    Aussi possible pour renvoyer l'argent après un « Pas reçu » : chaque envoi reste dans « envois ».
 create or replace function public.tache_payer(p_id bigint, p_moyen text, p_montant integer, p_ref text, p_recu text)
 returns void language plpgsql security definer set search_path = '' as $$
 begin
@@ -116,13 +117,14 @@ begin
   if p_recu is not null and p_recu not like 'taches/%' then raise exception 'pièce invalide'; end if;
   update public.taches set etape = 'envoye', paye_le = now(), paye_par = auth.uid(), paye_moyen = p_moyen, paye_montant = p_montant,
          paye_ref = nullif(trim(coalesce(p_ref, '')), ''), paye_recu = nullif(p_recu, ''),
-         pas_recu_le = null, pas_recu_note = null, relance_le = null
+         pas_recu_le = null, pas_recu_note = null, relance_le = null,
+         envois = envois || jsonb_build_array(jsonb_build_object('le', now(), 'moyen', p_moyen, 'montant', p_montant, 'recu', nullif(p_recu, '')))
    where id = p_id and argent and (etape = 'payer' or (etape = 'envoye' and pas_recu_le is not null));
   if not found then raise exception 'tâche introuvable ou déjà payée'; end if;
   perform prive.tache_notif(p_id, 'argent');
 end $$;
 
--- 5. La personne a bien reçu l'argent : elle active la tâche
+-- 5. La personne a bien reçu l'argent : elle active la tâche (possible aussi après « Pas reçu » : « Finalement, je l'ai reçu »)
 create or replace function public.tache_activer(p_id bigint)
 returns void language plpgsql security definer set search_path = '' as $$
 begin
@@ -245,7 +247,8 @@ drop policy if exists "tâches : voir ses pièces" on storage.objects;
 create policy "tâches : voir ses pièces" on storage.objects for select to authenticated
   using (bucket_id = 'depenses' and prive.est_membre() and exists (
     select 1 from public.taches t where (t.pour = auth.uid() or t.par = auth.uid())
-       and (t.paye_recu = storage.objects.name or t.facture = storage.objects.name or t.devis = storage.objects.name)));
+       and (t.paye_recu = storage.objects.name or t.facture = storage.objects.name or t.devis = storage.objects.name
+            or t.envois @> jsonb_build_array(jsonb_build_object('recu', storage.objects.name)))));
 
 -- 13. Les tâches de l'Ambassadeur (Communication) rejoignent « À faire » (l'ancienne table reste, rien ne s'efface)
 insert into public.taches (le, par, pour, titre, pour_le, etape, fait_le, fait_par, com_tache_id)
