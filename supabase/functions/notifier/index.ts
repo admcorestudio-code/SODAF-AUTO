@@ -4,7 +4,7 @@
 // gérance : demande, demande_equipe (équipe → gérante), demande_reponse, decision, decision_avis, rapport, rapport_rappel (dimanche 18 h).
 // reçus : annulation (demande du secrétariat → gérante ; réponse → secrétariat).
 // mécanique : entretien (jeudi 9 h, entretiens à prévoir samedi, liste calculée par prive.entretiens_a_prevoir).
-// À faire (0062) : tache (quoi : nouvelle, prix, accord, refus, argent, pas_recu, faite, relance).
+// À faire (0062, 0063) : tache (quoi : nouvelle, prix, accord, refus, argent, pas_recu, numero_bon, faite, relance).
 // Les clés VAPID et le secret sont lus dans prive.config_push : rien de secret dans ce fichier.
 import webpush from "npm:web-push@3.6.7";
 import postgres from "npm:postgres@3.4.5";
@@ -143,6 +143,7 @@ Deno.serve(async (req) => {
     else if (p.quoi === "argent") { seulement = t.pour; note = { title: "Argent envoyé : " + milliers(t.paye_montant) + " F", body: court(t.titre + " · Ouvre le reçu, puis touche « Activer »."), url, tag }; }
     else if (p.quoi === "pas_recu") { roles = ["admin"]; note = { title: "Argent pas reçu · " + qui, body: court(t.titre + (t.pas_recu_note ? " · " + t.pas_recu_note : "")), url, tag }; }
     else if (p.quoi === "faite") { seulement = t.par; note = { title: "Tâche faite · " + qui, body: court(t.titre), url, tag }; }
+    else if (p.quoi === "numero_bon") { seulement = t.pour; note = { title: "L'argent est parti vers ton numéro", body: court(t.titre + " · Regarde ton solde et ton historique Mixx (le SMS n'arrive pas toujours), puis touche « Activer »."), url, tag }; }
     else if (p.quoi === "relance") { roles = ["admin"]; aussi = t.pour; note = { title: "Argent pas encore activé", body: court(qui + " : " + t.titre + " · Ouvre le reçu, puis touche « Activer »."), url, tag }; }
     else return json({ erreur: "tâche : quoi inconnu" }, 400);
   } else if (p.type === "geotest") {
