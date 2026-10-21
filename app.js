@@ -7415,15 +7415,22 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 .mf-dl{display:grid;gap:10px;margin:14px 0 0}.mf-dl div{display:grid;grid-template-columns:110px 1fr;gap:8px;align-items:baseline}
 .mf-dl dt{font-size:.82rem;color:var(--muted)}.mf-dl dd{margin:0;font-weight:600}
 
-/* Téléphone : onglets de l'équipe en liste verticale (tout visible, sans défiler de côté) */
+/* Téléphone (21 oct.) : onglets en cases, 2 par ligne, séparées par un trait fin (moins de hauteur) ; Messages sur toute la largeur */
 @media (max-width:1099px){
-#sodaf-root.app-mode .tm-tabs{flex-direction:column;overflow:visible;gap:2px;padding:8px}
-#sodaf-root.app-mode .tm-tabs button{flex:0 0 auto;width:100%;justify-content:flex-start;padding:9px 12px}
+#sodaf-root.app-mode .tm-tabs{display:grid;grid-template-columns:1fr 1fr;gap:0;padding:0;overflow:hidden}
+#sodaf-root.app-mode .tm-tabs button{width:auto;min-width:0;justify-content:flex-start;flex-wrap:nowrap;gap:8px;padding:11px 10px;border-radius:0;box-shadow:inset -1px -1px 0 rgba(255,255,255,.1)}
+#sodaf-root.app-mode .tm-tabs button b{font-size:.92rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+#sodaf-root.app-mode .tm-tabs button[data-t="msg"]{grid-column:1/-1}
+#sodaf-root.app-mode .tm-tabs button .tm-ic{width:26px;height:26px}
+#sodaf-root.app-mode .tm-tabs button:has(.tm-badge:not([hidden])){padding-right:34px}
+#sodaf-root.app-mode .tm-tabs button[aria-selected="true"]{background:rgba(255,255,255,.12)}
+#sodaf-root.app-mode .tm-tabs .tm-sep{margin:0;padding:8px 12px;box-shadow:inset 0 -1px 0 rgba(255,255,255,.1)}
 #sodaf-root.app-mode .tm-tabs button[hidden]{display:none}
-#sodaf-root.app-mode .tm-tabs .tm-badge{top:50%;transform:translateY(-50%);right:12px}
+#sodaf-root.app-mode .tm-tabs .tm-badge{top:50%;transform:translateY(-50%);right:8px}
 #sodaf-root.app-mode #sd-teamPanel>.tm-tabs{margin-bottom:0}
 #sodaf-root.app-mode .tm-pane{margin-top:20px;padding-top:20px;border-top:2px dashed #C3CAD1}
 }
+@media (max-width:400px){#sodaf-root.app-mode .tm-tabs button{gap:6px;padding-left:8px;padding-right:6px}#sodaf-root.app-mode .tm-tabs button b{font-size:.85rem}#sodaf-root.app-mode .tm-tabs button:has(.tm-badge:not([hidden])){padding-right:32px}}
 .tm-pane[data-pane="msg"] .ms-notif{margin:30px 0 0;position:relative}
 .tm-pane[data-pane="msg"] .ms-notif::before{content:"";position:absolute;left:0;right:0;top:-16px;border-top:2px dashed #C3CAD1}
 `;
