@@ -1955,6 +1955,9 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 </div>
 </section>
 <section class="tm-sec" data-s="conduite" hidden>
+<div class="gr-tabs cd-modes" role="tablist"><button type="button" role="tab" data-cdm="jour" aria-selected="true">Planning du jour</button><button type="button" role="tab" data-cdm="rat" aria-selected="false">Rattrapages<em class="gr-badge" id="sd-cdRatB" hidden></em></button></div>
+<div id="sd-cdRat" class="cd-rat" hidden></div>
+<div id="sd-cdJour">
 <details class="card tm-prog cd-eqs" id="sd-eqBox" hidden><summary><span><b>Les équipes de conduite</b><small id="sd-eqSum">4 élèves par équipe, 2 blocs de 2 h par semaine</small></span><em>Voir / replier</em></summary><div id="sd-eqList" class="eq-grid"></div><p class="tm-note" style="margin:10px 0 0!important">Pour placer un élève : ouvre sa fiche (onglet Élèves), bloc « Conduite », puis « Placer dans une équipe ». Ses blocs sont réservés d'un coup, 2 par semaine.</p></details>
 <div class="tm-bar tm-day-nav"><button class="btn btn-line btn-sm" type="button" id="sd-cdPrev">‹ Veille</button><b id="sd-cdDay"></b><button class="btn btn-line btn-sm" type="button" id="sd-cdNext">Lendemain ›</button><button class="linkbtn" type="button" id="sd-cdToday">Aujourd'hui</button></div>
 <div id="sd-cdClosed" class="tm-closed" hidden></div>
@@ -1962,6 +1965,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div id="sd-cdWarn" class="tm-warn"></div>
 <div id="sd-cdList" class="tm-list"></div>
 <p class="tm-foot"><button class="linkbtn" type="button" id="sd-cdCloseBtn">Fermer ce jour (férié, fermeture exceptionnelle…)</button></p>
+</div>
 </section>
 <section class="tm-sec" data-s="paiements" hidden>
 <div class="tm-stats" id="sd-pyStats"></div>
@@ -4728,6 +4732,58 @@ function init(root) {
       }).join("") : '<p class="tm-empty">Pas de conduite ce jour-là (dimanche ou jour férié).</p>';
       eqOverview();
     }
+
+    // ---- Rattrapages (21 oct.) : une vue à part, « on voit juste les rattrapages : cette semaine c'est complet, la semaine d'après il reste 2 places »
+    //      Mercredi 15 h 45 – 17 h 45 (bloc « mercredi », 4 places). Dû = blocs manqués (toute absence) − rattrapages déjà réservés ou faits.
+    const RAT = { mode: "jour", dates: [], du: [] };
+    function cdMode(k) {
+      RAT.mode = k; $$(".cd-modes [data-cdm]").forEach((b) => b.setAttribute("aria-selected", b.dataset.cdm === k));
+      $("#sd-cdJour").hidden = k !== "jour"; $("#sd-cdRat").hidden = k !== "rat"; if (k === "rat") ratCharger();
+    }
+    $(".cd-modes") && $(".cd-modes").addEventListener("click", (e) => { const b = e.target.closest("[data-cdm]"); if (b) cdMode(b.dataset.cdm); });
+    const ratJour = (d) => dOf(d).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" }).replace(/^./, (c) => c.toUpperCase());
+    async function ratCharger() {
+      const box = $("#sd-cdRat"); if (!box) return; const td = iso(new Date());
+      const [mer, abs] = await Promise.all([DB.q("creneaux_conduite?select=id,jour,heure,place,statut,eleve_id&bloc=eq.mercredi&jour=gte." + td + "&order=jour.asc,place.asc&limit=200").catch(() => null),
+        DB.q("creneaux_conduite?select=eleve_id,jour,statut,bloc&eleve_id=not.is.null&or=(statut.in.(Absent,Absent%20sans%20pr%C3%A9venir),bloc.eq.mercredi)&limit=3000").catch(() => null)]);
+      if (!mer || !abs) { box.innerHTML = '<p class="tm-empty">Rattrapages indisponibles pour l\'instant.</p>'; return; }
+      const actifs = eleves.filter((x) => ["Inscrit", "En formation"].includes(x.statut)), du = {};
+      abs.forEach((c) => { if (!du[c.eleve_id]) du[c.eleve_id] = { manques: 0, rat: 0, der: null };
+        const d = du[c.eleve_id]; if (c.bloc === "mercredi") { if (["Réservé", "Fait"].includes(c.statut)) d.rat++; } else { d.manques++; if (!d.der || c.jour > d.der) d.der = c.jour; } });
+      RAT.du = actifs.map((x) => ({ x, d: du[x.id] })).filter((o) => o.d && o.d.manques > o.d.rat).map((o) => ({ x: o.x, n: o.d.manques - o.d.rat, der: o.d.der })).sort((a, b) => String(a.der).localeCompare(String(b.der)));
+      const dates = [...new Set(mer.map((c) => c.jour))].slice(0, 5); RAT.dates = dates.map((j) => ({ j, rows: mer.filter((c) => c.jour === j) }));
+      const lundi = (d) => { const x = dOf(d); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return iso(x); }, cette = lundi(td);
+      const b = $("#sd-cdRatB"); if (b) { b.textContent = RAT.du.length; b.hidden = !RAT.du.length; }
+      box.innerHTML = '<div class="tf-hero cd-rhero" style="--tfc:#7C3AED"><i aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg></i><div class="tf-hero-t"><b>Rattrapages</b><span>Le mercredi, 15 h 45 – 17 h 45. Gratuit pour un bloc manqué.</span></div><div class="tf-hero-n"><b>' + RAT.du.length + "</b><span>à rattraper</span></div></div>" +
+        '<div class="card cd-rdu"><h4 class="gr-h4">À rattraper</h4>' + (RAT.du.length ? RAT.du.map((o) => '<div class="cd-rel"><button type="button" class="ms-el" data-goel="' + o.x.id + '">' + esc(o.x.nom) + "</button><small>SO" + o.x.id + " · " + o.n + " bloc" + (o.n > 1 ? "s" : "") + " manqué" + (o.n > 1 ? "s" : "") + (o.der ? ", le dernier " + dOf(o.der).toLocaleDateString("fr-FR", { day: "numeric", month: "short" }) : "") + "</small></div>").join("") : '<p class="tm-empty">Personne n\'a de bloc à rattraper.</p>') + "</div>" +
+        '<h4 class="gr-h4 cd-rh">Les prochains mercredis</h4>' + (RAT.dates.length ? RAT.dates.map((m) => { const pris = m.rows.filter((c) => c.eleve_id && c.statut !== "Annulé"), libres = m.rows.filter((c) => !c.eleve_id && c.statut === "Libre"), ann = m.rows.every((c) => c.statut === "Annulé");
+          const quand = lundi(m.j) === cette ? "Cette semaine" : lundi(m.j) === lundi(iso(new Date(Date.now() + 7 * 864e5))) ? "La semaine prochaine" : "";
+          const etat = ann ? '<em class="cd-rko">Fermé</em>' : libres.length ? '<em class="cd-rok">' + libres.length + " place" + (libres.length > 1 ? "s" : "") + " libre" + (libres.length > 1 ? "s" : "") + " sur " + m.rows.length + "</em>" : '<em class="cd-rko">Complet</em>';
+          return '<div class="card cd-rm' + (libres.length && !ann ? "" : " cd-rplein") + '" data-rj="' + m.j + '"><div class="cd-rmh"><div><b>' + ratJour(m.j) + "</b>" + (quand ? "<span>" + quand + "</span>" : "") + "</div>" + etat + "</div>" +
+            (pris.length ? '<div class="cd-rpl">' + pris.map((c) => { const el = eleves.find((y) => y.id === c.eleve_id); return '<span class="cd-rp">' + esc(el ? el.nom : "Élève") + (c.statut !== "Réservé" ? " · " + esc(c.statut) : "") + "</span>"; }).join("") + "</div>" : "") +
+            (libres.length && !ann ? '<button type="button" class="tf-b tf-b-ok cd-rgo" data-rplacer>Placer un élève</button><p class="cd-rnote">' + (merLibre(m.j) ? "Ouvert aussi aux séances en plus (3 000 F)." : "Réservé aux rattrapages jusqu'au mardi 18 h.") + "</p>" : "") + "</div>"; }).join("") : '<p class="tm-empty">Aucun mercredi prévu pour l\'instant (le planning du mois suivant se crée le 24).</p>');
+    }
+    $("#sd-cdRat") && $("#sd-cdRat").addEventListener("click", async (e) => {
+      const g = e.target.closest("[data-goel]"); if (g) { goEleve(+g.dataset.goel); return; }
+      const card = e.target.closest("[data-rj]"); if (!card) return; const j = card.dataset.rj, m = RAT.dates.find((x) => x.j === j); if (!m) return;
+      if (e.target.closest("[data-rplacer]")) { const old = card.querySelector(".cd-pp"); if (old) { old.remove(); return; }
+        const deja = new Set(m.rows.map((c) => c.eleve_id).filter(Boolean)), duIds = new Set(RAT.du.map((o) => o.x.id));
+        const liste = RAT.du.filter((o) => !deja.has(o.x.id)).map((o) => [o.x, "Rattrapage · " + o.n + " bloc" + (o.n > 1 ? "s" : "") + " manqué" + (o.n > 1 ? "s" : "")])
+          .concat(merLibre(j) ? eleves.filter((x) => ["Inscrit", "En formation"].includes(x.statut) && !duIds.has(x.id) && !deja.has(x.id)).sort((a, b) => a.nom.localeCompare(b.nom, "fr")).map((x) => [x, "Séance en plus · 3 000 F"]) : []);
+        const pp = document.createElement("div"); pp.className = "cd-pp";
+        pp.innerHTML = liste.length ? '<input type="search" class="cd-pq" placeholder="Rechercher : nom ou SO12" autocomplete="off" aria-label="Rechercher un élève"><div class="cd-pl">' + liste.map((o) => '<button type="button" data-ropt="' + o[0].id + '"><span>' + esc(o[0].nom) + "</span><small>SO" + o[0].id + " · " + o[1] + "</small></button>").join("") + '</div><p class="cd-pvide" hidden>Aucun élève trouvé.</p>'
+          : '<p class="cd-pvide">' + (merLibre(j) ? "Aucun élève à placer." : "Personne n'a de bloc à rattraper. Les séances en plus s'ouvrent le mardi 18 h.") + "</p>";
+        card.appendChild(pp); const q = pp.querySelector(".cd-pq"); if (q) { q.focus(); q.addEventListener("input", () => cdFiltre(pp)); } return; }
+      const op = e.target.closest("[data-ropt]"); if (!op || op.disabled) return;
+      if (!op.dataset.armed) { op.dataset.armed = 1; op.classList.add("armed"); const sp = op.querySelector("small"), av = sp.textContent; sp.textContent = "Confirmer ? touche encore";
+        setTimeout(() => { if (op.isConnected && op.dataset.armed) { delete op.dataset.armed; op.classList.remove("armed"); sp.textContent = av; } }, 5000); return; }
+      op.disabled = true; const id = +op.dataset.ropt, el = eleves.find((x) => x.id === id), sd = await run(() => soldeFrais(id));
+      if (!sd) { op.disabled = false; return; }
+      if (sd.s === null || sd.s > 0) { toast((el ? el.nom.split(" ")[0] + " : " : "") + (sd.s ? "solde de " + F(sd.s) + " non payé" : "aucun paiement enregistré") + ". Réservation impossible.", true); op.disabled = false; return; }
+      const libre = m.rows.find((c) => !c.eleve_id && c.statut === "Libre"); if (!libre) { toast("Plus de place ce mercredi", true); ratCharger(); return; }
+      const ok = await run(() => DB.q("creneaux_conduite?id=eq." + libre.id + "&eleve_id=is.null", { method: "PATCH", body: { eleve_id: id, statut: "Réservé", confirme_le: null, rappel_le: null, modifie_le: new Date().toISOString() }, prefer: "return=minimal" }).then(() => true), (el ? el.nom.split(" ")[0] : "Élève") + " placé le " + ratJour(j).toLowerCase());
+      if (ok) { await loadEleves(true); ratCharger(); } else op.disabled = false;
+    });
     async function eqOverview() {
       const box = $("#sd-eqList"); if (!box) return;
       if (!EQUIPES.length) await loadEquipes();
@@ -7380,6 +7436,14 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 .tf-btns{display:flex;flex-wrap:wrap;gap:10px;margin:2px 0 4px}.tf-ann{display:inline-block;margin:6px 0 0;font-size:.82rem;color:var(--muted)}
 .tf-bande{background:#fff;border:1px solid #E3E6EA;border-left:5px solid #0F766E;color:var(--ink)}.tf-bande b{color:var(--ink)}.tf-bande span{color:var(--muted)}
 .tf-b-conf{border-left-color:#2563EB}.tf-b-ach{border-left-color:#FFC400}.tf-b-attm{border-left-color:#94A3B8}.tf-b-moi{border-left-color:#0F766E}
+
+/* Planning conduite : vue « Rattrapages » (21 oct.) */
+.cd-modes{margin:0 0 14px}.cd-rat[hidden],#sd-cdJour[hidden]{display:none}.cd-rhero{margin-bottom:14px}
+.cd-rdu{padding:14px 16px;margin:0 0 16px;border-top:4px solid #7C3AED!important}.cd-rdu .gr-h4{margin:0 0 8px}.cd-rel{display:flex;flex-direction:column;gap:2px;padding:8px 0;border-top:1px solid #EEF0F2}.cd-rel:first-of-type{border-top:0}.cd-rel small{color:var(--muted);font-size:.82rem}
+.cd-rh{margin:4px 0 10px}.cd-rm{padding:14px 16px;margin:0 0 12px;border-top:4px solid #16A34A!important;display:flex;flex-direction:column;gap:10px}.cd-rm.cd-rplein{border-top-color:#CBD2D9!important;background:#FAFBFC}
+.cd-rmh{display:flex;justify-content:space-between;align-items:center;gap:10px}.cd-rmh b{font:800 1.02rem var(--f-ui);display:block}.cd-rmh span{font-size:.8rem;font-weight:700;color:#7C3AED}
+.cd-rok,.cd-rko{font-style:normal;font:800 .82rem var(--f-ui);padding:.4em .8em;border-radius:999px;white-space:nowrap}.cd-rok{background:#DCFCE7;color:#166534}.cd-rko{background:#EEF0F3;color:#64748B}
+.cd-rpl{display:flex;flex-wrap:wrap;gap:6px}.cd-rp{font-size:.82rem;font-weight:600;padding:.3em .7em;border-radius:999px;background:#F1F5F9}.cd-rgo{align-self:flex-start;border:1px solid #E3E6EA}.cd-rnote{margin:0;font-size:.8rem;color:var(--muted)}
 /* À faire : chaque onglet a sa couleur, son icône et son grand en-tête */
 .tf-hero{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:18px;background:var(--tfc,#15191E);color:#fff;margin:0 0 16px;box-shadow:0 6px 0 rgba(0,0,0,.16),0 12px 24px rgba(0,0,0,.12);background-image:linear-gradient(135deg,rgba(255,255,255,.14),rgba(255,255,255,0) 60%)}
 .tf-hero i{display:grid;place-items:center;width:52px;height:52px;border-radius:14px;background:rgba(255,255,255,.18);flex-shrink:0}
