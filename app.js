@@ -5539,57 +5539,89 @@ function init(root) {
       return t.etape === "refusee" ? ["non", "Refusé"] : ["x", "Annulé"];
     }
     const tfTel = (n) => n ? String(n).replace(/(\d{2})(?=\d)/g, "$1 ") : "";
+    // Carte d'une tâche (21 oct., refonte) : un seul modèle pour tout le monde.
+    //   en-tête (quoi, montant) · état · étapes de l'argent · pièces (devis, reçu, facture) · historique des envois
+    //   puis UN SEUL cadre sombre « À toi de jouer » quand un geste est attendu (même style partout).
+    const tfBtn = (attr, txt, cls) => '<button type="button" class="tf-b' + (cls ? " tf-b-" + cls : "") + '" ' + attr + ">" + txt + "</button>";
     function tfPayBox(t) {
       const mt = t.paye_montant || t.montant || "", num = TF.num[t.pour];
-      return '<div class="tf-box tf-pay" data-tfpay><b class="tf-bt">' + (t.mauvais_numero_le ? "Renvoyer au bon numéro" : "Envoyer l'argent") + (mt ? " : " + F(mt) : "") + " à " + esc(tfNom(t.pour)) + "</b>" +
-        (num ? '<div class="tf-num"><span>Envoie à</span><b>' + tfTel(num) + "</b><small>Compare avec le numéro tapé dans Mixx avant de valider." + (t.mauvais_numero_le ? " Si ce numéro est faux, corrige-le d'abord dans « Numéros Mixx de l'équipe », en bas." : "") + "</small></div>" : '<p class="tf-alerte">Numéro Mixx de ' + esc(tfNom(t.pour)) + " pas encore enregistré : en bas de « Paiements à faire ».</p>") +
-        '<ol class="tf-steps"><li>Envoie l\'argent depuis le compte marchand Mixx (motif : <b>SODAF T-' + t.id + "</b>).</li><li>Télécharge le reçu dans l'application Mixx.</li><li>Joins-le ici, puis touche « Paiement effectué ».</li></ol>" +
+      return '<div class="tf-pay" data-tfpay><p class="tf-act-t">' + (t.mauvais_numero_le ? "Renvoie au bon numéro" : "Envoie l'argent") + (mt ? " : " + F(mt) : "") + " à " + esc(tfNom(t.pour)) + "</p>" +
+        (num ? '<div class="tf-num"><span>Envoie à</span><b>' + tfTel(num) + "</b><small>Compare avec le numéro tapé dans Mixx avant de valider." + (t.mauvais_numero_le ? " Si ce numéro est faux, corrige-le d'abord dans « Numéros Mixx de l'équipe », en bas." : "") + "</small></div>"
+             : '<p class="tf-act-ko">Numéro Mixx de ' + esc(tfNom(t.pour)) + " pas encore enregistré : en bas de « Paiements à faire ».</p>") +
+        '<ol class="tf-steps"><li>Envoie depuis le compte marchand Mixx (motif : <b>SODAF T-' + t.id + "</b>).</li><li>Télécharge le reçu dans l'application Mixx.</li><li>Joins-le ici, puis « Paiement effectué ».</li></ol>" +
         '<div class="tf-chips" role="radiogroup">' + ["Mixx", "Moov Money", "Espèces"].map((m, i) => '<button type="button" role="radio" data-tfmoy="' + m + '" aria-checked="' + (i === 0) + '">' + m + "</button>").join("") + "</div>" +
-        '<div class="field"><label>Montant envoyé (F)</label><input class="tf-pmt" inputmode="numeric" autocomplete="off" value="' + (mt ? milliers(mt) : "") + '"></div>' +
-        '<div class="field"><label class="tf-recl">Reçu du paiement (photo, capture ou PDF)</label>' + pjHtml(true) + "</div>" +
-        '<button type="button" class="btn btn-green" data-tfpaye>Paiement effectué</button></div>';
+        '<label class="tf-lab">Montant envoyé (F)<input class="tf-pmt" inputmode="numeric" autocomplete="off" value="' + (mt ? milliers(mt) : "") + '"></label>' +
+        '<p class="tf-lab tf-recl">Reçu du paiement (photo, capture ou PDF)</p>' + pjHtml(true) +
+        '<div class="tf-btns">' + tfBtn("data-tfpaye", "Paiement effectué", "ok") + "</div></div>";
     }
+    // Retourne [infos (texte neutre), geste (cadre sombre)]
     function tfActions(t, vue) {
-      const adm = me.role === "admin", g = me.role === "gerant", moi = t.pour === me.id; let h = "";
-      if (t.etape === "prix" && g) h += '<div class="tf-box tf-prix"><b class="tf-bt">Trouve le prix, puis envoie-le à la direction</b><p class="tf-aide">Le montant et le devis (ou une photo du prix, du ticket).</p><input class="tf-pm" inputmode="numeric" autocomplete="off" placeholder="Montant (F)" aria-label="Montant">' + pjHtml(true) + '<button type="button" class="btn btn-green" data-tfprix>Envoyer le prix à la direction</button></div>';
-      if (t.etape === "accord" && adm) h += '<div class="tf-box"><b class="tf-bt">La gérante a trouvé le prix : ' + F(t.montant) + '</b><input class="tf-note" maxlength="300" placeholder="Un mot (facultatif)" aria-label="Un mot"><div class="tf-btns"><button type="button" class="btn btn-green" data-tfacc="1">Accorder</button><button type="button" class="btn dq-no" data-tfacc="0">Refuser</button></div></div>';
-      if (adm && t.etape === "envoye" && t.pas_recu_le && !t.mauvais_numero_le) { const dern = (t.envois || []).slice(-1)[0] || {};
-        h += '<div class="tf-box tf-prix"><b class="tf-bt">Ouvre ton reçu Mixx : l\'argent est-il parti vers le bon numéro ?</b><p class="tf-aide">' + (dern.vers ? "Numéro prévu : <b>" + tfTel(dern.vers) + "</b>. " : "") + "Sur Mixx, l'argent ne se perd presque jamais : c'est presque toujours le numéro.</p><div class=\"tf-btns\"><button type=\"button\" class=\"btn btn-green\" data-tfbon>Le numéro est bon</button><button type=\"button\" class=\"btn dq-no\" data-tfmauv>Mauvais numéro</button></div></div>"; }
-      if (adm && t.mauvais_numero_le) h += '<p class="tf-alerte">Mauvais numéro : appelle le service client Yas avec la référence du reçu pour récupérer l\'argent. Puis renvoie au bon numéro.</p>';
-      if (adm && (t.etape === "payer" || (t.etape === "envoye" && t.mauvais_numero_le))) h += tfPayBox(t);
+      const adm = me.role === "admin", g = me.role === "gerant", moi = t.pour === me.id; let info = "", act = "";
+      if (t.etape === "prix") {
+        if (g) act += '<div class="tf-prix"><p class="tf-act-t">Trouve le prix</p><p class="tf-act-s">Le montant et le devis (ou une photo du prix, du ticket), puis envoie à la direction.</p><label class="tf-lab">Montant (F)<input class="tf-pm" inputmode="numeric" autocomplete="off" placeholder="ex. 15 000"></label>' + pjHtml(true) + '<div class="tf-btns">' + tfBtn("data-tfprix", "Envoyer le prix à la direction", "ok") + "</div></div>";
+        else info += "La gérante cherche le prix et le devis.";
+      }
+      if (t.etape === "accord") {
+        if (adm) act += '<p class="tf-act-t">La gérante a trouvé le prix : ' + F(t.montant) + '</p><p class="tf-act-s">Regarde le devis, puis décide.</p><input class="tf-note" maxlength="300" placeholder="Un mot (facultatif)" aria-label="Un mot"><div class="tf-btns">' + tfBtn('data-tfacc="1"', "Accorder", "ok") + tfBtn('data-tfacc="0"', "Refuser", "ko") + "</div>";
+        else info += "Chez la direction, pour accord.";
+      }
+      if (t.etape === "payer") { if (adm) act += tfPayBox(t); else info += "C'est accordé. La direction va envoyer l'argent."; }
       if (t.etape === "envoye") {
-        const vers = ((t.envois || []).slice(-1)[0] || {}).vers, info = F(t.paye_montant) + (t.paye_moyen ? " par " + esc(t.paye_moyen) : "") + (vers ? " vers le " + tfTel(vers) : "") + ", " + grQuand(t.paye_le);
-        if (t.pas_recu_le) { h = '<p class="tf-alerte">« Pas reçu »' + (t.pas_recu_note ? " : " + esc(t.pas_recu_note) : "") + (moi ? ". La direction est prévenue." : "") + "</p>" + h;
-          if (moi) h += '<div class="tf-box tf-recu"><p class="tf-aide">Regarde ton solde et ton historique Mixx (le SMS n\'arrive pas toujours). Si l\'argent y est :</p><div class="tf-btns"><button type="button" class="btn btn-green" data-tfact>Finalement, je l\'ai reçu</button></div></div>'; }
-        else if (moi) h += '<div class="tf-box tf-recu"><b class="tf-bt">L\'argent est parti : ' + info + '</b><p class="tf-aide">Ouvre le reçu et vérifie sur ton téléphone. Si tout est bon, active la tâche.</p><div class="tf-btns"><button type="button" class="btn btn-green" data-tfact>Activer : j\'ai bien reçu</button></div><details class="tf-pas"><summary>Je n\'ai rien reçu</summary><input class="tf-pasn" maxlength="300" placeholder="ex. Rien sur mon compte Mixx" aria-label="Précise"><button type="button" class="btn dq-no btn-sm" data-tfpas>Pas reçu</button></details></div>';
-        else h += '<p class="tf-aide">Envoyé : ' + info + "." + (Date.now() - new Date(t.paye_le) > 864e5 ? ' <b class="tf-retard">Plus de 24 h.</b>' : "") + "</p>";
+        const dern = (t.envois || []).slice(-1)[0] || {}, quand = F(t.paye_montant) + (t.paye_moyen ? " par " + esc(t.paye_moyen) : "") + (dern.vers ? " vers le " + tfTel(dern.vers) : "") + ", " + grQuand(t.paye_le);
+        const pas = t.pas_recu_le ? "« Pas reçu »" + (t.pas_recu_note ? " : " + esc(t.pas_recu_note) : "") : "";
+        if (moi && !t.pas_recu_le) act += '<p class="tf-act-t">L\'argent est parti</p><p class="tf-act-s">' + quand + ". Regarde ton solde et ton historique Mixx (le SMS n'arrive pas toujours).</p>" +
+          '<div class="tf-btns">' + tfBtn("data-tfact", "Activer : j'ai bien reçu", "ok") + '</div><details class="tf-pas"><summary>Je n\'ai rien reçu</summary><input class="tf-pasn" maxlength="300" placeholder="ex. Rien sur mon compte Mixx" aria-label="Précise">' + tfBtn("data-tfpas", "Pas reçu", "ko") + "</details>";
+        else if (moi) act += '<p class="tf-act-t">Tu as dit « pas reçu »</p><p class="tf-act-s">La direction vérifie le numéro. Si l\'argent est finalement sur ton compte :</p><div class="tf-btns">' + tfBtn("data-tfact", "Finalement, je l'ai reçu", "ok") + "</div>";
+        else if (adm && t.pas_recu_le && !t.mauvais_numero_le) act += '<p class="tf-act-t">' + pas + '</p><p class="tf-act-s">Ouvre ton reçu Mixx : l\'argent est-il parti vers le bon numéro' + (dern.vers ? " (" + tfTel(dern.vers) + ")" : "") + " ? Sur Mixx, l'argent ne se perd presque jamais : c'est presque toujours le numéro.</p>" +
+          '<div class="tf-btns">' + tfBtn("data-tfbon", "Le numéro est bon", "ok") + tfBtn("data-tfmauv", "Mauvais numéro", "ko") + "</div>";
+        else if (adm && t.mauvais_numero_le) act += '<p class="tf-act-ko">Mauvais numéro : appelle le service client Yas avec la référence du reçu pour récupérer l\'argent.</p>' + tfPayBox(t);
+        else info += "Envoyé : " + quand + "." + (pas ? " " + pas + "." : "") + (Date.now() - new Date(t.paye_le) > 864e5 ? ' <b class="tf-retard">Plus de 24 h sans activation.</b>' : "");
       }
       if (t.etape === "afaire" && (moi || (DIR() && vue !== "moi"))) {
         const fac = t.argent && !t.carburant && !t.facture;
-        if (t.argent && !t.carburant) h += t.facture ? "" : '<div class="tf-box tf-fac" data-tffac><div class="tf-fach"><i aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l3 3v15l-2.5-1.5L13 21l-2.5-1.5L8 21l-2-1.5V3z"/><path d="M9 9h6M9 13h6"/></svg></i><div><b class="tf-bt">Après l\'achat, ajoute la facture ou le ticket</b><span>Obligatoire avant de toucher « Fait ».</span></div></div>' + pjHtml(true) + "</div>";
-        h += '<div class="tf-btns"><button type="button" class="btn ' + (fac ? "btn-line" : "btn-green") + '" data-tffait' + (fac ? " disabled" : "") + ">" + (moi ? "Fait" : "Marquer comme fait") + "</button></div>";
+        if (fac) act += '<div class="tf-fac" data-tffac><div class="tf-fach"><i aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l3 3v15l-2.5-1.5L13 21l-2.5-1.5L8 21l-2-1.5V3z"/><path d="M9 9h6M9 13h6"/></svg></i><div><p class="tf-act-t">Après l\'achat, ajoute la facture ou le ticket</p><p class="tf-act-s tf-jaune">Obligatoire avant de toucher « Fait ».</p></div></div>' + pjHtml(true) + "</div>";
+        else if (!t.argent) act += '<p class="tf-act-t">' + (moi ? "À faire" : "À faire par " + esc(tfNom(t.pour))) + "</p>";
+        else act += '<p class="tf-act-t">' + (t.carburant ? "Essence reçue" : "Facture ajoutée") + '</p><p class="tf-act-s">Touche « Fait » quand c\'est terminé.</p>';
+        act += '<div class="tf-btns">' + tfBtn("data-tffait" + (fac ? " disabled" : ""), moi ? "Fait" : "Marquer comme fait", "ok") + "</div>";
       }
       const annul = ["prix", "accord", "payer"].includes(t.etape) || (t.etape === "afaire" && !t.argent);
-      if (annul && ((t.par === me.id && DIR()) || adm)) h += '<button type="button" class="linkbtn tf-ann" data-tfann>Annuler la tâche</button>';
-      return h;
+      const ann = annul && ((t.par === me.id && DIR()) || adm) ? '<button type="button" class="linkbtn tf-ann" data-tfann>Annuler la tâche</button>' : "";
+      return [info, act, ann];
+    }
+    // Étapes de l'argent : Accordé → Envoyé → Reçu → Facture → Fait
+    function tfEtapes(t) {
+      if (!t.argent || ["refusee", "annulee"].includes(t.etape)) return "";
+      const n = ["Accordé", "Envoyé", "Reçu"].concat(t.carburant ? [] : ["Facture"]).concat(["Fait"]);
+      const fait = { prix: 0, accord: 0, payer: 1, envoye: 2, afaire: t.carburant || t.facture ? (t.carburant ? 3 : 4) : 3, fait: n.length }[t.etape] || 0;
+      return '<ol class="tf-et">' + n.map((x, i) => '<li class="' + (i < fait ? "ok" : i === fait ? "cur" : "") + '"><i></i><span>' + x + "</span></li>").join("") + "</ol>";
+    }
+    function tfPieces(t) {
+      if (!t.argent) return "";
+      const p = (lab, path, att) => path ? '<button type="button" class="tf-pc" data-tfdoc="' + esc(path) + '"><i></i>' + lab + "</button>" : '<span class="tf-pc tf-pc-x"><i></i>' + lab + (att ? " : " + att : "") + "</span>";
+      return '<div class="tf-pcs">' + p("Devis", t.devis, t.carburant ? "essence" : "") + p("Reçu", t.paye_recu, "") + (t.carburant ? "" : p("Facture", t.facture, "")) + "</div>";
     }
     function tfCarte(t, vue) {
       const st = tfEtat(t), today = iso(new Date()), late = !TF_FIN.includes(t.etape) && t.pour_le && t.pour_le < today, test = /^\[TEST\]/.test(t.titre || "");
-      const pcs = (t.devis ? '<button type="button" class="btn btn-line btn-sm" data-tfdoc="' + esc(t.devis) + '">Voir le devis</button>' : "") + (t.paye_recu ? '<button type="button" class="btn btn-line btn-sm" data-tfdoc="' + esc(t.paye_recu) + '">Voir le reçu</button>' : "") + (t.facture ? '<button type="button" class="btn btn-line btn-sm" data-tfdoc="' + esc(t.facture) + '">Voir la facture</button>' : "");
-      return '<article class="tf tf-' + st[0] + (late ? " tf-late" : "") + '" data-tf="' + t.id + '"><header class="tf-top"><span class="tf-who">' + (t.par === t.pour ? "Note pour toi" : "De " + esc(tfNom(t.par)) + " → pour " + esc(tfNom(t.pour))) + '</span><span class="tf-when">' + (t.demande_id ? "Dépense accordée · " : "") + "T-" + t.id + "</span></header>" +
-        '<p class="tf-tx">' + esc(String(t.titre || "").replace(/^\[TEST\]\s*/, "")) + (test ? ' <span class="dq-test">TEST</span>' : "") + "</p>" +
-        '<div class="tf-meta"><em class="tf-st">' + esc(st[1]) + "</em>" + (t.argent && (t.montant || t.paye_montant) ? '<b class="tf-mt">' + F(t.paye_montant || t.montant) + "</b>" : t.argent ? '<b class="tf-mt tf-inc">Prix à trouver</b>' : "") + (t.pour_le && !TF_FIN.includes(t.etape) ? '<span class="tf-date' + (late ? " tf-retard" : "") + '">' + (late ? "En retard · " : "") + "pour " + tfJour(t.pour_le) + "</span>" : "") + "</div>" +
+      const [info, act, ann] = TF_FIN.includes(t.etape) ? ["", "", ""] : tfActions(t, vue);
+      const qui = t.par === t.pour ? "Note pour toi" : "De " + esc(tfNom(t.par)) + " → pour " + esc(tfNom(t.pour));
+      return '<article class="tf tf-' + st[0] + (late ? " tf-late" : "") + '" data-tf="' + t.id + '">' +
+        '<div class="tf-h"><div class="tf-hl"><p class="tf-tx">' + esc(String(t.titre || "").replace(/^\[TEST\]\s*/, "")) + (test ? ' <span class="dq-test">TEST</span>' : "") + '</p><p class="tf-sub">' + qui + " · T-" + t.id + (t.demande_id ? " · dépense accordée" : "") +
+          (t.pour_le && !TF_FIN.includes(t.etape) ? ' · <span class="' + (late ? "tf-retard" : "") + '">' + (late ? "en retard, " : "") + "pour " + tfJour(t.pour_le) + "</span>" : "") + "</p></div>" +
+          (t.argent ? '<div class="tf-hr">' + (t.paye_montant || t.montant ? F(t.paye_montant || t.montant) : '<small>Prix à trouver</small>') + "</div>" : "") + "</div>" +
+        '<p class="tf-etat"><i></i>' + esc(st[1]) + "</p>" + tfEtapes(t) + tfPieces(t) + tfEnvois(t) +
         (t.accord_note && t.etape !== "fait" ? '<p class="tf-rep">Direction : « ' + esc(t.accord_note) + " »</p>" : "") + (t.fait_note ? '<p class="tf-rep">« ' + esc(t.fait_note) + " »</p>" : "") +
-        (pcs ? '<div class="tf-pcs">' + pcs + "</div>" : "") + tfEnvois(t) + (TF_FIN.includes(t.etape) ? "" : tfActions(t, vue)) + "</article>";
+        (info ? '<p class="tf-info">' + info + "</p>" : "") + (act ? '<div class="tf-act"><p class="tf-act-k">' + (tfAMoi(t) || t.pour === me.id ? "À toi de jouer" : "Tu peux aussi") + "</p>" + act + "</div>" : "") + ann + "</article>";
     }
     const tfTotal = (t) => (t.envois || []).reduce((n, e) => n + (e.montant || 0), 0);
-    function tfEnvois(t) { // plusieurs envois (renvoi après « Pas reçu ») : chacun garde son reçu
+    function tfEnvois(t) { // plusieurs envois (renvoi après « Mauvais numéro ») : chacun garde son reçu et son numéro
       const l = t.envois || []; if (l.length < 2 && !l.some((e) => e.mauvais_numero)) return "";
-      const bons = l.filter((e) => !e.mauvais_numero).reduce((n, e) => n + (e.montant || 0), 0), trop = t.montant && bons > t.montant ? bons - t.montant : 0, adm = me.role === "admin";
-      return '<div class="tf-env"><b>' + l.length + " envoi" + (l.length > 1 ? "s" : "") + " · " + F(tfTotal(t)) + " en tout</b>" + l.map((e, i) => '<div class="tf-envl' + (e.mauvais_numero && !e.recupere ? " tf-envko" : "") + '"><span>' + (i + 1) + ". " + F(e.montant) + " par " + esc(e.moyen) + (e.vers ? " vers le " + tfTel(e.vers) : "") + ", " + grQuand(e.le) +
-          (e.mauvais_numero ? (e.recupere ? " · <b>mauvais numéro, récupéré</b>" : " · <b>mauvais numéro, à récupérer</b>") : "") + "</span><span class=\"tf-envb\">" + (e.recu ? '<button type="button" class="linkbtn" data-tfdoc="' + esc(e.recu) + '">Reçu</button>' : "") +
-          (adm && e.mauvais_numero && !e.recupere ? '<button type="button" class="btn btn-sm btn-line" data-tfrec="' + i + '">Argent récupéré</button>' : "") + "</span></div>").join("") +
-        (trop ? '<p class="tf-alerte">Envoyé en trop : ' + F(trop) + " (accordé " + F(t.montant) + ")</p>" : "") + "</div>"; }
+      const bons = l.filter((e) => !e.mauvais_numero).reduce((n, e) => n + (e.montant || 0), 0), trop = t.montant && bons > t.montant ? bons - t.montant : 0, adm = me.role === "admin", arec = l.some((e) => e.mauvais_numero && !e.recupere);
+      return '<details class="tf-hist"' + (arec ? " open" : "") + "><summary>" + l.length + " envoi" + (l.length > 1 ? "s" : "") + " · " + F(tfTotal(t)) + (arec ? ' · <b class="tf-retard">argent à récupérer</b>' : "") + "</summary>" +
+        l.map((e, i) => '<div class="tf-envl' + (e.mauvais_numero && !e.recupere ? " tf-envko" : "") + '"><span>' + (i + 1) + ". " + F(e.montant) + " par " + esc(e.moyen) + (e.vers ? " vers le " + tfTel(e.vers) : "") + ", " + grQuand(e.le) +
+          (e.mauvais_numero ? (e.recupere ? " · mauvais numéro, récupéré" : " · <b>mauvais numéro, à récupérer</b>") : "") + '</span><span class="tf-envb">' + (e.recu ? '<button type="button" class="linkbtn" data-tfdoc="' + esc(e.recu) + '">Reçu</button>' : "") +
+          (adm && e.mauvais_numero && !e.recupere ? tfBtn('data-tfrec="' + i + '"', "Argent récupéré", "") : "") + "</span></div>").join("") +
+        (trop ? '<p class="tf-act-ko">Envoyé en trop : ' + F(trop) + " (accordé " + F(t.montant) + ")</p>" : "") + "</details>";
+    }
     const tfTri = (a, b) => (tfAMoi(b) - tfAMoi(a)) || String(a.pour_le || "9999").localeCompare(String(b.pour_le || "9999")) || String(a.le).localeCompare(String(b.le));
     function tfForm() {
       const box = $("#sd-tfNew"); if (!box) return; if (!DIR()) { box.innerHTML = ""; return; }
@@ -7291,7 +7323,39 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 .tf-newc{padding:0;margin:0 0 14px}.tf-newh{margin:0;padding:16px 16px 0}.tf-newa{padding:4px 16px 0}.tf-intro{margin:0 0 12px}.tf-tabs button[hidden]{display:none}.tf-newc summary{cursor:pointer;padding:14px 16px;font:700 1rem var(--f-ui);color:#0F766E;list-style:none}.tf-newc summary::-webkit-details-marker{display:none}.tf-newc[open] summary{border-bottom:1px solid var(--line)}
 .tf-form{padding:14px 16px;display:flex;flex-direction:column;gap:12px}.tf-form .field{margin:0}.tf-form textarea,.tf-form input{width:100%;box-sizing:border-box}.tf-mt2{margin:8px 0 0}
 .tf-ban{all:unset;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;box-sizing:border-box;width:100%;padding:12px 16px;margin:0 0 12px;border-radius:12px;background:#0F766E;color:#fff}.tf-ban span{font-size:.88rem;opacity:.9}
-.tf-fac.is-busy{opacity:.6;pointer-events:none}.tf-bande{display:flex;flex-direction:column;gap:2px;padding:12px 16px;border-radius:12px;margin:0 0 12px;border-left:6px solid}.tf-bande b{font:800 1.05rem var(--f-ui)}.tf-bande span{font-size:.9rem}.tf-b-moi{background:#E6F4F1;border-color:#0F766E;color:#134E4A}.tf-b-conf{background:#DBEAFE;border-color:#2563EB;color:#1E3A8A}.tf-b-ach{background:#15191E;border-color:#FFC400;color:#fff}.tf-b-ach b{color:#FFC400}.tf-b-attm{background:#F1F5F9;border-color:#94A3B8;color:#334155}.tf-box.tf-fac{background:linear-gradient(180deg,#2B323C 0%,#15191E 100%);border:2px solid #FFC400;border-radius:16px;padding:14px 14px 16px;margin:14px 0 20px;box-shadow:0 6px 0 #C99400,0 14px 26px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.08)}.tf-fach{display:flex;gap:12px;align-items:center}.tf-fach i{display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:linear-gradient(180deg,#FFD84D,#FFB800);color:#15191E;flex-shrink:0;box-shadow:0 3px 0 #A87A00,0 0 18px rgba(255,196,0,.45)}.tf-fach b{color:#fff;display:block;font-size:1.02rem}.tf-fach span{font-size:.88rem;color:#FFC400;font-weight:700}#sodaf-root .tf-box.tf-fac .pj .btn{background:#fff;color:#15191E;border:0;font-weight:800;box-shadow:0 4px 0 #FFB800;transform:translateY(0);transition:transform .08s,box-shadow .08s}#sodaf-root .tf-box.tf-fac .pj .btn:active{transform:translateY(4px);box-shadow:0 0 0 #FFB800}.tf-fac .pj-nom{color:#C3CAD1}.tf-num{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border-radius:10px;background:#fff;border:2px solid #0F766E}.tf-num span{font-size:.8rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em}.tf-num b{font:800 1.6rem var(--f-ui);letter-spacing:.04em;color:var(--ink)}.tf-num small{font-size:.8rem;color:var(--muted)}.tf-envko{color:#B3132B}.tf-envb{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.tf-env .tf-envl{flex-direction:column;align-items:flex-start;gap:4px;padding:4px 0}.tf-nums{padding:0;margin:16px 0 0}.tf-nums summary{cursor:pointer;padding:14px 16px;font-weight:700}.tf-nums>.tf-aide{padding:0 16px 8px}.tf-numl{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 8px;align-items:center;padding:6px 16px}.tf-numl span{grid-column:1/-1;font-weight:700;font-size:.9rem}.tf-numl:last-child{padding-bottom:16px}.tf-numl input{width:100%;box-sizing:border-box;min-width:0;padding:.6em .8em;border:1.5px solid var(--line);border-radius:10px;font:600 1rem var(--f-ui);background:#fff;color:var(--ink)}.tf-env{margin:10px 0 0;padding:10px 12px;border-radius:10px;background:#F7F8FA;font-size:.88rem;display:flex;flex-direction:column;gap:4px}.tf-envl{display:flex;justify-content:space-between;gap:8px}.tf-env .tf-alerte{margin:6px 0 0}.tf-grp{margin:0 0 18px}.tf-tot{margin:0 0 16px}.tf-old summary{cursor:pointer;font-weight:700;margin:0 0 10px}
+.tf-fac.is-busy{opacity:.6;pointer-events:none}.tf-bande{display:flex;flex-direction:column;gap:2px;padding:12px 16px;border-radius:12px;margin:0 0 12px;border-left:6px solid}.tf-bande b{font:800 1.05rem var(--f-ui)}.tf-bande span{font-size:.9rem}.tf-b-moi{background:#E6F4F1;border-color:#0F766E;color:#134E4A}.tf-b-conf{background:#DBEAFE;border-color:#2563EB;color:#1E3A8A}.tf-b-ach{background:#15191E;border-color:#FFC400;color:#fff}.tf-b-ach b{color:#FFC400}
+/* À faire : refonte homogène (21 oct.) — carte blanche, étapes, pièces, un seul cadre sombre « À toi de jouer » */
+.tf{background:#fff;border:1px solid #E3E6EA;border-radius:16px;padding:16px;margin:0 0 14px;box-shadow:0 1px 2px rgba(20,23,28,.04)}.tf-late{background:#fff}.tf-x{opacity:.75}
+.tf-h{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.tf-hl{min-width:0}
+#sodaf-root .tf-tx{margin:0;font:700 1.02rem/1.35 var(--f-ui);color:var(--ink)}.tf-sub{margin:4px 0 0;font-size:.8rem;color:var(--muted);line-height:1.4}
+.tf-hr{font:800 1.15rem var(--f-ui);white-space:nowrap;color:var(--ink)}.tf-hr small{font:700 .8rem var(--f-ui);color:#8A5A00}
+.tf-etat{display:flex;align-items:center;gap:8px;margin:12px 0 0;font:700 .86rem var(--f-ui);color:var(--ink)}.tf-etat i{width:9px;height:9px;border-radius:50%;background:#94A3B8;flex-shrink:0}
+.tf-att .tf-etat i{background:#F5B800}.tf-non .tf-etat i{background:#DC2626}.tf-oui .tf-etat i{background:#16A34A}.tf-neu .tf-etat i{background:#0F766E}
+.tf-et{display:flex;gap:6px;list-style:none;margin:12px 0 0;padding:0}.tf-et li{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}.tf-et i{height:5px;border-radius:5px;background:#E3E6EA}.tf-et span{font:600 .72rem var(--f-ui);color:#9AA3AD;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tf-et li.ok i{background:#0F766E}.tf-et li.ok span{color:var(--ink)}.tf-et li.cur i{background:#F5B800}.tf-et li.cur span{color:var(--ink);font-weight:800}
+.tf-pcs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 0}
+.tf-pc{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:999px;border:1px solid #D7DCE1;background:#F7F8FA;font:700 .82rem var(--f-ui);color:var(--ink)}.tf-pc i{width:8px;height:8px;border-radius:50%;background:#16A34A}
+.tf-pc:hover{background:#EEF1F4}.tf-pc-x{cursor:default;background:#fff;border-style:dashed;color:#9AA3AD}.tf-pc-x i{background:#CBD2D9}.tf-pc-x:hover{background:#fff}
+.tf-hist{margin:12px 0 0;border:1px solid #E3E6EA;border-radius:12px;padding:10px 12px;font-size:.86rem;background:#FAFBFC}.tf-hist summary{cursor:pointer;font-weight:700}
+#sodaf-root .tf-hist .tf-envl{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:8px 0 0;margin:8px 0 0;border-top:1px solid #EEF0F2}.tf-hist .tf-act-ko{background:#FDE7EA;color:#B3132B;margin:8px 0 0}
+.tf-info{margin:12px 0 0;font-size:.88rem;color:var(--muted)}.tf-rep{margin:10px 0 0}
+.tf-act{margin:14px 0 8px;background:linear-gradient(180deg,#2B323C 0%,#15191E 100%);border:2px solid #FFC400;border-radius:16px;padding:14px;box-shadow:0 6px 0 #C99400,0 14px 26px rgba(0,0,0,.28);color:#E6E9ED;display:flex;flex-direction:column;gap:10px}
+.tf-act>*{margin:0}.tf-act-k{font:800 .7rem var(--f-ui);letter-spacing:.14em;text-transform:uppercase;color:#FFC400}
+#sodaf-root .tf-act-t{margin:0;font:700 1rem/1.35 var(--f-ui);color:#fff}.tf-act-s{margin:0;font-size:.86rem;line-height:1.45;color:#C3CAD1}.tf-act-s.tf-jaune{color:#FFC400;font-weight:700}
+.tf-act-ko{margin:0;padding:8px 10px;border-radius:10px;background:rgba(239,68,68,.16);color:#FCA5A5;font-weight:600;font-size:.86rem}
+.tf-act .tf-prix,.tf-act .tf-pay,.tf-act .tf-fac{display:flex;flex-direction:column;gap:10px;background:none;border:0;padding:0;margin:0;box-shadow:none}
+.tf-act input:not([type=file]):not([type=checkbox]){width:100%;box-sizing:border-box;background:#fff;border:0;border-radius:10px;padding:.65em .8em;font:600 1rem var(--f-ui);color:var(--ink)}
+.tf-lab{display:flex;flex-direction:column;gap:6px;font-size:.84rem;color:#C3CAD1;font-weight:600;margin:0}
+.tf-act .tf-chips button{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);color:#fff}.tf-act .tf-chips button[aria-checked=true]{background:#FFC400;border-color:#FFC400;color:#15191E}
+.tf-act .tf-steps{color:#C3CAD1;font-size:.86rem;margin:0}.tf-act .tf-steps b{color:#fff}.tf-act .pj-nom{color:#C3CAD1}.tf-act .tf-pas summary{cursor:pointer;color:#C3CAD1;font-size:.86rem}.tf-act .tf-pas[open]{display:flex;flex-direction:column;gap:8px}
+.tf-act .tf-num{background:#fff;border:0}
+#sodaf-root .tf-act .pj .btn,.tf-b{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:.65em 1.15em;border-radius:999px;background:#fff;color:#15191E;font:800 .9rem var(--f-ui);box-shadow:0 4px 0 #FFB800;transition:transform .08s,box-shadow .08s}
+#sodaf-root .tf-act .pj .btn:active,.tf-b:active{transform:translateY(4px);box-shadow:0 0 0 #FFB800}.tf-b-ko{color:#B3132B;box-shadow:0 4px 0 #EF4444}.tf-b[disabled]{opacity:.45;cursor:not-allowed;transform:none;box-shadow:0 4px 0 #6B7280}
+.tf-hist .tf-b{box-shadow:0 3px 0 #FFB800;border:1px solid #E3E6EA;padding:.45em .9em;font-size:.82rem}
+.tf-btns{display:flex;flex-wrap:wrap;gap:10px;margin:2px 0 4px}.tf-ann{display:inline-block;margin:6px 0 0;font-size:.82rem;color:var(--muted)}
+.tf-bande{background:#fff;border:1px solid #E3E6EA;border-left:5px solid #0F766E;color:var(--ink)}.tf-bande b{color:var(--ink)}.tf-bande span{color:var(--muted)}
+.tf-b-conf{border-left-color:#2563EB}.tf-b-ach{border-left-color:#FFC400}.tf-b-attm{border-left-color:#94A3B8}.tf-b-moi{border-left-color:#0F766E}
+.tf-b-attm{background:#F1F5F9;border-color:#94A3B8;color:#334155}.tf-box.tf-fac{background:linear-gradient(180deg,#2B323C 0%,#15191E 100%);border:2px solid #FFC400;border-radius:16px;padding:14px 14px 16px;margin:14px 0 20px;box-shadow:0 6px 0 #C99400,0 14px 26px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.08)}.tf-fach{display:flex;gap:12px;align-items:center}.tf-fach i{display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:linear-gradient(180deg,#FFD84D,#FFB800);color:#15191E;flex-shrink:0;box-shadow:0 3px 0 #A87A00,0 0 18px rgba(255,196,0,.45)}.tf-fach b{color:#fff;display:block;font-size:1.02rem}.tf-fach span{font-size:.88rem;color:#FFC400;font-weight:700}#sodaf-root .tf-box.tf-fac .pj .btn{background:#fff;color:#15191E;border:0;font-weight:800;box-shadow:0 4px 0 #FFB800;transform:translateY(0);transition:transform .08s,box-shadow .08s}#sodaf-root .tf-box.tf-fac .pj .btn:active{transform:translateY(4px);box-shadow:0 0 0 #FFB800}.tf-fac .pj-nom{color:#C3CAD1}.tf-num{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border-radius:10px;background:#fff;border:2px solid #0F766E}.tf-num span{font-size:.8rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em}.tf-num b{font:800 1.6rem var(--f-ui);letter-spacing:.04em;color:var(--ink)}.tf-num small{font-size:.8rem;color:var(--muted)}.tf-envko{color:#B3132B}.tf-envb{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.tf-env .tf-envl{flex-direction:column;align-items:flex-start;gap:4px;padding:4px 0}.tf-nums{padding:0;margin:16px 0 0}.tf-nums summary{cursor:pointer;padding:14px 16px;font-weight:700}.tf-nums>.tf-aide{padding:0 16px 8px}.tf-numl{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 8px;align-items:center;padding:6px 16px}.tf-numl span{grid-column:1/-1;font-weight:700;font-size:.9rem}.tf-numl:last-child{padding-bottom:16px}.tf-numl input{width:100%;box-sizing:border-box;min-width:0;padding:.6em .8em;border:1.5px solid var(--line);border-radius:10px;font:600 1rem var(--f-ui);background:#fff;color:var(--ink)}.tf-env{margin:10px 0 0;padding:10px 12px;border-radius:10px;background:#F7F8FA;font-size:.88rem;display:flex;flex-direction:column;gap:4px}.tf-envl{display:flex;justify-content:space-between;gap:8px}.tf-env .tf-alerte{margin:6px 0 0}.tf-grp{margin:0 0 18px}.tf-tot{margin:0 0 16px}.tf-old summary{cursor:pointer;font-weight:700;margin:0 0 10px}
 .dq-count{display:inline-grid;place-items:center;min-width:22px;height:22px;border-radius:99px;background:#C8372D;color:#fff;font-size:.78rem;margin-left:6px;vertical-align:middle}
 .dep-ok{color:var(--green);font-weight:600}.dep-facw{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.dep-facw.is-busy{opacity:.6;pointer-events:none}
 .crb-mon .dep-eqf{margin-top:14px}.crb-mon .dep-form{padding:0;border:0;margin:0}
