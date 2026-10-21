@@ -5659,6 +5659,26 @@ function init(root) {
       return '<details class="card tf-nums"' + (l.some((p) => !TF.num[p.id]) ? " open" : "") + '><summary>Numéros Mixx de l\'équipe</summary><p class="tf-aide">Le numéro où tu envoies l\'argent. Toi seul le vois et le changes.</p>' +
         l.map((p) => '<div class="tf-numl" data-tfnp="' + p.id + '"><span>' + esc(ROLE_NOM[p.role] || p.nom) + '</span><input inputmode="numeric" maxlength="14" autocomplete="off" placeholder="ex. 72 54 41 66" value="' + tfTel(TF.num[p.id] || "") + '" aria-label="Numéro Mixx"><button type="button" class="btn btn-sm btn-line" data-tfnok>Enregistrer</button></div>').join("") + "</details>";
     }
+    // Chaque onglet a sa couleur, son icône et son grand en-tête (21 oct. : « on a l'impression de voir la même page »)
+    const TF_IC = { plus: '<path d="M12 5v14M5 12h14"/>', wallet: '<path d="M3 7a2 2 0 0 1 2-2h12v4"/><path d="M3 7v10a2 2 0 0 0 2 2h14V9H5a2 2 0 0 1-2-2z"/><circle cx="16" cy="14" r="1.4"/>', cart: '<circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.6 12.2a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.5L21 8H6.2"/>',
+      list: '<path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2"/>', sablier: '<path d="M6 3h12M6 21h12M7 3c0 5 5 6 5 9s-5 4-5 9M17 3c0 5-5 6-5 9s5 4 5 9"/>', tag: '<path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/>',
+      ok: '<path d="M20 6 9 17l-5-5"/>', envoi: '<path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/>', horloge: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>', gens: '<circle cx="9" cy="8" r="3.5"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6 6 0 0 1 4 7"/>', fini: '<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>' };
+    const TF_ONG = {
+      new: ["#15191E", "plus", "Nouvelle tâche", "Écris ce qu'il faut faire et choisis pour qui."],
+      conf: ["#2563EB", "wallet", "Argent à confirmer", "La direction t'a envoyé de l'argent. Regarde ton solde Mixx, puis touche « Activer »."],
+      ach: ["#FFC400", "cart", "Achats à faire", "Argent reçu : fais l'achat, ajoute la facture ou le ticket, puis touche « Fait »."],
+      moi: ["#0F766E", "list", "Mes tâches", "Ce qu'on t'a demandé de faire. Touche « Fait » quand c'est fini."],
+      attm: ["#64748B", "sablier", "En attente de l'argent", "C'est accordé. La direction va t'envoyer l'argent. Rien à faire pour l'instant."],
+      prix: ["#7C3AED", "tag", "Prix à trouver", "La direction a besoin du prix. Trouve le montant et le devis, puis envoie."],
+      acc: ["#7C3AED", "ok", "À accorder", "La gérante a trouvé le prix. Regarde le devis, puis accorde ou refuse."],
+      pay: ["#15803D", "envoi", "Paiements à faire", "Envoie depuis le compte marchand Mixx, joins le reçu, puis « Paiement effectué »."],
+      att: ["#0369A1", "horloge", "Paiements en attente", "L'argent est parti : on attend que la personne active, puis l'achat et la facture."],
+      eq: ["#334155", "gens", "L'équipe", "Les tâches en cours de chacun, rangées par personne."],
+      fini: ["#16A34A", "fini", "Terminé", "Tout ce qui est fini, refusé ou annulé."] };
+    function tfHero(k, n, lab) {
+      const c = TF_ONG[k]; if (!c) return "";
+      return '<div class="tf-hero' + (k === "ach" ? " tf-hero-clair" : "") + '"><i aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' + TF_IC[c[1]] + '</svg></i><div class="tf-hero-t"><b>' + c[2] + "</b><span>" + c[3] + "</span></div>" + (n != null ? '<div class="tf-hero-n"><b>' + n + "</b><span>" + lab + "</span></div>" : "") + "</div>";
+    }
     function tfOnglet(k) {
       TF.ong = k; $$(".tf-tabs [data-tfp]").forEach((b) => b.setAttribute("aria-selected", b.dataset.tfp === k));
       $$('[data-pane="taf"] [data-tfpane]').forEach((p) => (p.hidden = p.dataset.tfpane !== k));
@@ -5681,7 +5701,7 @@ function init(root) {
       const grp = (titre, l, aide, v) => '<section class="tf-grp"><h4 class="gr-h4">' + titre + ' <span class="dq-count">' + l.length + "</span></h4>" + (aide ? '<p class="tf-aide">' + aide + "</p>" : "") + cartes(l, v, "Rien.") + "</section>";
       // Mes tâches : ce qu'on m'a donné (le prix et l'accord ne sont pas encore pour moi)
       const moi = mine.filter((x) => !x.argent).sort(tfTri);
-      const bande = (cls, titre, txt) => '<div class="tf-bande tf-b-' + cls + '"><b>' + titre + "</b><span>" + txt + "</span></div>";
+      const bande = () => "";
       const prix = g ? ouv.filter((x) => x.etape === "prix").sort(tfTri) : [], acc = adm ? ouv.filter((x) => x.etape === "accord").sort(tfTri) : [];
       const aPayer = adm ? ouv.filter((x) => x.etape === "payer" || (x.etape === "envoye" && x.pas_recu_le)).sort(tfTri) : [];
       const env = adm ? ouv.filter((x) => x.etape === "envoye" && !x.pas_recu_le) : [], cours = adm ? ouv.filter((x) => x.etape === "afaire" && x.argent) : [];
@@ -5689,12 +5709,12 @@ function init(root) {
       $("#sd-tfConf").innerHTML = bande("conf", "Argent à confirmer", "La direction t'a envoyé de l'argent. Regarde ton solde Mixx, puis touche « Activer ».") + cartes(conf, "moi", "Rien.");
       $("#sd-tfAch").innerHTML = bande("ach", "Achats à faire", "Argent reçu : fais l'achat, ajoute la facture ou le ticket, puis touche « Fait ».") + cartes(ach, "moi", "Rien.");
       $("#sd-tfAttm").innerHTML = bande("attm", "En attente de l'argent", "C'est accordé. La direction va t'envoyer l'argent. Rien à faire pour l'instant.") + cartes(attm, "moi", "Rien.");
-      if (g) $("#sd-tfPrix").innerHTML = '<p class="tf-aide tf-intro">La direction a besoin du prix. Trouve le montant et le devis (ou une photo du ticket), puis envoie.</p>' + cartes(prix, "moi", "Aucun prix à trouver.");
+      if (g) $("#sd-tfPrix").innerHTML = cartes(prix, "moi", "Aucun prix à trouver.");
       if (adm) {
-        $("#sd-tfAcc").innerHTML = '<p class="tf-aide tf-intro">La gérante a trouvé le prix. Regarde le devis, puis accorde ou refuse.</p>' + cartes(acc, "moi", "Rien à accorder.");
+        $("#sd-tfAcc").innerHTML = cartes(acc, "moi", "Rien à accorder.");
         const aRecup = t.reduce((n, x) => n + (x.envois || []).filter((e) => e.mauvais_numero && !e.recupere).reduce((m, e) => m + (e.montant || 0), 0), 0);
         const envMois = t.reduce((n, x) => n + (x.envois || []).filter((e) => tfMois(e.le)).reduce((m, e) => m + (e.montant || 0), 0), 0);
-        $("#sd-tfPay").innerHTML = '<div class="tm-stats tm-dr tf-tot"><div><span>Reste à envoyer</span><b>' + F(aPayer.reduce((n, x) => n + (x.montant || 0), 0)) + "</b></div><div><span>Envoyé ce mois</span><b>" + F(envMois) + "</b></div>" + (aRecup ? "<div><span>À récupérer (mauvais numéro)</span><b>" + F(aRecup) + "</b></div>" : "") + '</div><p class="tf-aide tf-intro">Envoie l\'argent depuis le compte marchand Mixx, télécharge le reçu, joins-le, puis « Paiement effectué ».</p>' + cartes(aPayer, "pay", "Aucun paiement à faire.") + tfNumHtml();
+        $("#sd-tfPay").innerHTML = '<div class="tm-stats tm-dr tf-tot"><div><span>Reste à envoyer</span><b>' + F(aPayer.reduce((n, x) => n + (x.montant || 0), 0)) + "</b></div><div><span>Envoyé ce mois</span><b>" + F(envMois) + "</b></div>" + (aRecup ? "<div><span>À récupérer (mauvais numéro)</span><b>" + F(aRecup) + "</b></div>" : "") + '</div>' + cartes(aPayer, "pay", "Aucun paiement à faire.") + tfNumHtml();
         $("#sd-tfAtt").innerHTML = grp("Pas encore activé", env, "L'argent est parti. La personne doit ouvrir le reçu et toucher « Activer ».", "pay") + grp("Achat en cours", cours, "Argent reçu. On attend l'achat et la facture.", "pay");
       }
       // L'équipe : tâches en cours des autres, par personne
@@ -5703,6 +5723,11 @@ function init(root) {
       // Terminé (avec les paiements du mois pour la direction)
       const fini = t.filter((x) => TF_FIN.includes(x.etape)).sort((a, b) => String(b.fait_le || b.annule_le || b.accord_le || b.le).localeCompare(String(a.fait_le || a.annule_le || a.accord_le || a.le))).slice(0, 60);
       $("#sd-tfFini").innerHTML = cartes(fini, "fini", "Rien de terminé pour l'instant.");
+      // En-têtes de couleur (un par onglet) et couleur des cartes
+      const nb = { conf: conf.length, ach: ach.length, moi: moi.length, attm: attm.length, prix: prix.length, acc: acc.length, pay: aPayer.length, att: env.length + cours.length, fini: fini.length };
+      const lab = { conf: "à confirmer", ach: "à acheter", moi: "à faire", attm: "en attente", prix: "à trouver", acc: "à décider", pay: "à envoyer", att: "en cours", fini: "terminées" };
+      $$('[data-pane="taf"] [data-tfpane]').forEach((p) => { const k = p.dataset.tfpane, c = TF_ONG[k]; if (!c) return; p.style.setProperty("--tfc", c[0]); const old = p.querySelector(":scope > .tf-hero"); if (old) old.remove(); p.insertAdjacentHTML("afterbegin", tfHero(k, nb[k], lab[k])); });
+      $$(".tf-tabs [data-tfp]").forEach((b) => { const c = TF_ONG[b.dataset.tfp]; if (c) b.style.setProperty("--tfc", c[0]); b.classList.toggle("tf-clair", b.dataset.tfp === "ach"); });
       // Pastilles
       const pas = (id, n) => { const e = $("#" + id); if (e) { e.textContent = n; e.hidden = !n; } };
       pas("sd-tfBMoi", moi.length); pas("sd-tfBConf", conf.length); pas("sd-tfBAch", ach.length); pas("sd-tfBPrix", prix.length); pas("sd-tfBAcc", acc.length); pas("sd-tfBPay", aPayer.length); pas("sd-tfBAtt", env.filter((x) => Date.now() - new Date(x.paye_le) > 864e5).length);
@@ -7355,6 +7380,19 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 .tf-btns{display:flex;flex-wrap:wrap;gap:10px;margin:2px 0 4px}.tf-ann{display:inline-block;margin:6px 0 0;font-size:.82rem;color:var(--muted)}
 .tf-bande{background:#fff;border:1px solid #E3E6EA;border-left:5px solid #0F766E;color:var(--ink)}.tf-bande b{color:var(--ink)}.tf-bande span{color:var(--muted)}
 .tf-b-conf{border-left-color:#2563EB}.tf-b-ach{border-left-color:#FFC400}.tf-b-attm{border-left-color:#94A3B8}.tf-b-moi{border-left-color:#0F766E}
+/* À faire : chaque onglet a sa couleur, son icône et son grand en-tête */
+.tf-hero{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:18px;background:var(--tfc,#15191E);color:#fff;margin:0 0 16px;box-shadow:0 6px 0 rgba(0,0,0,.16),0 12px 24px rgba(0,0,0,.12);background-image:linear-gradient(135deg,rgba(255,255,255,.14),rgba(255,255,255,0) 60%)}
+.tf-hero i{display:grid;place-items:center;width:52px;height:52px;border-radius:14px;background:rgba(255,255,255,.18);flex-shrink:0}
+.tf-hero-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}.tf-hero-t b{font:800 1.3rem/1.15 var(--f-ui)}.tf-hero-t span{font-size:.9rem;opacity:.92;line-height:1.4}
+.tf-hero-n{display:flex;flex-direction:column;align-items:center;min-width:64px}.tf-hero-n b{font:800 2rem/1 var(--f-ui)}.tf-hero-n span{font-size:.72rem;font-weight:700;opacity:.85;text-transform:uppercase;letter-spacing:.06em}
+.tf-hero-clair{color:#15191E}.tf-hero-clair i{background:rgba(21,25,30,.12)}
+@media (max-width:520px){.tf-hero{padding:14px}.tf-hero i{width:44px;height:44px}.tf-hero-t b{font-size:1.12rem}.tf-hero-t span{font-size:.84rem}.tf-hero-n{min-width:48px}.tf-hero-n b{font-size:1.6rem}}
+[data-pane="taf"] [data-tfpane] .tf{border-top:4px solid var(--tfc,#E3E6EA)}
+.tf-tabs button[data-tfp]::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--tfc,#94A3B8);flex-shrink:0}
+#sodaf-root .tf-tabs button[data-tfp][aria-selected="true"]{background:var(--tfc);border-color:var(--tfc);color:#fff}#sodaf-root .tf-tabs button[data-tfp][aria-selected="true"]::before{background:#fff}
+#sodaf-root .tf-tabs button.tf-clair[aria-selected="true"]{color:#15191E}#sodaf-root .tf-tabs button.tf-clair[aria-selected="true"]::before{background:#15191E}
+.tf-newc{border-top:4px solid #15191E}.tf-newh{display:none}
+
 .tf-b-attm{background:#F1F5F9;border-color:#94A3B8;color:#334155}.tf-box.tf-fac{background:linear-gradient(180deg,#2B323C 0%,#15191E 100%);border:2px solid #FFC400;border-radius:16px;padding:14px 14px 16px;margin:14px 0 20px;box-shadow:0 6px 0 #C99400,0 14px 26px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.08)}.tf-fach{display:flex;gap:12px;align-items:center}.tf-fach i{display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:linear-gradient(180deg,#FFD84D,#FFB800);color:#15191E;flex-shrink:0;box-shadow:0 3px 0 #A87A00,0 0 18px rgba(255,196,0,.45)}.tf-fach b{color:#fff;display:block;font-size:1.02rem}.tf-fach span{font-size:.88rem;color:#FFC400;font-weight:700}#sodaf-root .tf-box.tf-fac .pj .btn{background:#fff;color:#15191E;border:0;font-weight:800;box-shadow:0 4px 0 #FFB800;transform:translateY(0);transition:transform .08s,box-shadow .08s}#sodaf-root .tf-box.tf-fac .pj .btn:active{transform:translateY(4px);box-shadow:0 0 0 #FFB800}.tf-fac .pj-nom{color:#C3CAD1}.tf-num{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border-radius:10px;background:#fff;border:2px solid #0F766E}.tf-num span{font-size:.8rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em}.tf-num b{font:800 1.6rem var(--f-ui);letter-spacing:.04em;color:var(--ink)}.tf-num small{font-size:.8rem;color:var(--muted)}.tf-envko{color:#B3132B}.tf-envb{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.tf-env .tf-envl{flex-direction:column;align-items:flex-start;gap:4px;padding:4px 0}.tf-nums{padding:0;margin:16px 0 0}.tf-nums summary{cursor:pointer;padding:14px 16px;font-weight:700}.tf-nums>.tf-aide{padding:0 16px 8px}.tf-numl{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 8px;align-items:center;padding:6px 16px}.tf-numl span{grid-column:1/-1;font-weight:700;font-size:.9rem}.tf-numl:last-child{padding-bottom:16px}.tf-numl input{width:100%;box-sizing:border-box;min-width:0;padding:.6em .8em;border:1.5px solid var(--line);border-radius:10px;font:600 1rem var(--f-ui);background:#fff;color:var(--ink)}.tf-env{margin:10px 0 0;padding:10px 12px;border-radius:10px;background:#F7F8FA;font-size:.88rem;display:flex;flex-direction:column;gap:4px}.tf-envl{display:flex;justify-content:space-between;gap:8px}.tf-env .tf-alerte{margin:6px 0 0}.tf-grp{margin:0 0 18px}.tf-tot{margin:0 0 16px}.tf-old summary{cursor:pointer;font-weight:700;margin:0 0 10px}
 .dq-count{display:inline-grid;place-items:center;min-width:22px;height:22px;border-radius:99px;background:#C8372D;color:#fff;font-size:.78rem;margin-left:6px;vertical-align:middle}
 .dep-ok{color:var(--green);font-weight:600}.dep-facw{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.dep-facw.is-busy{opacity:.6;pointer-events:none}
