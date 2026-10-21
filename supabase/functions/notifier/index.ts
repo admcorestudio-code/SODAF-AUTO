@@ -4,6 +4,7 @@
 // gérance : demande, demande_equipe (équipe → gérante), demande_reponse, decision, decision_avis, rapport, rapport_rappel (dimanche 18 h).
 // reçus : annulation (demande du secrétariat → gérante ; réponse → secrétariat).
 // mécanique : entretien (jeudi 9 h, entretiens à prévoir samedi, liste calculée par prive.entretiens_a_prevoir).
+// À faire (0062) : tache (quoi : nouvelle, prix, accord, refus, argent, pas_recu, faite, relance).
 // Les clés VAPID et le secret sont lus dans prive.config_push : rien de secret dans ce fichier.
 import webpush from "npm:web-push@3.6.7";
 import postgres from "npm:postgres@3.4.5";
@@ -33,7 +34,7 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ ok: true });
   const cfg: Record<string, string> = Object.fromEntries((await sql`select cle, valeur from prive.config_push`).map((r) => [r.cle, r.valeur]));
   if (!cfg.secret_fonction || req.headers.get("x-sodaf-secret") !== cfg.secret_fonction) return json({ erreur: "refusé" }, 401);
-  let p: { type?: string; id?: number; profil?: string; ip?: string; liste?: { type: string; texte: string }[] };
+  let p: { type?: string; quoi?: string; id?: number; profil?: string; ip?: string; liste?: { type: string; texte: string }[] };
   try { p = await req.json(); } catch { return json({ erreur: "requête illisible" }, 400); }
 
   let roles: string[] | null = null, exclure: string | null = null, seulement: string | null = null, aussi: string | null = null;
@@ -130,6 +131,20 @@ Deno.serve(async (req) => {
     if (!r || !r.annul_dem_par) return json({ envoyes: 0, raison: "reçu introuvable" });
     seulement = r.annul_dem_par;
     note = { title: r.annule ? "Reçu annulé · " + r.numero : "Annulation refusée · " + r.numero, body: r.annule ? r.eleve_nom + " : la gérante a confirmé. Refais le bon reçu." : r.eleve_nom + " : le reçu reste valable." + (r.annul_refus_motif ? " " + r.annul_refus_motif : ""), url: "/equipe/", tag: "annul-" + p.id };
+  } else if (p.type === "tache") {
+    const [t] = await sql`select t.titre, t.montant, t.paye_montant, t.paye_moyen, t.pas_recu_note, t.accord_note, t.par, t.pour, pp.role as pour_role, pa.role as par_role
+                            from public.taches t join public.profils pp on pp.id = t.pour join public.profils pa on pa.id = t.par where t.id = ${p.id ?? 0}`;
+    if (!t) return json({ envoyes: 0, raison: "tâche introuvable" });
+    const court = (x: string) => (x.length > 180 ? x.slice(0, 177) + "…" : x), url = "/equipe/?onglet=taf", tag = "tache-" + p.id, qui = ROLE[t.pour_role] || "Équipe";
+    if (p.quoi === "nouvelle") { seulement = t.pour; note = { title: "Nouvelle tâche · de la " + (t.par_role === "admin" ? "direction" : "gérante"), body: court(t.titre), url, tag }; }
+    else if (p.quoi === "prix") { roles = ["gerant"]; note = { title: "Prix à trouver", body: court(t.titre + " · Trouve le prix et le devis, puis envoie-les à la direction."), url, tag }; }
+    else if (p.quoi === "accord") { roles = ["admin"]; note = { title: "Prix trouvé : " + milliers(t.montant) + " F", body: court(t.titre + " · Accorde ou refuse."), url, tag }; }
+    else if (p.quoi === "refus") { roles = ["gerant"]; note = { title: "Refusé par la direction", body: court(t.titre + (t.accord_note ? " · " + t.accord_note : "")), url, tag }; }
+    else if (p.quoi === "argent") { seulement = t.pour; note = { title: "Argent envoyé : " + milliers(t.paye_montant) + " F", body: court(t.titre + " · Ouvre le reçu, puis touche « Activer »."), url, tag }; }
+    else if (p.quoi === "pas_recu") { roles = ["admin"]; note = { title: "Argent pas reçu · " + qui, body: court(t.titre + (t.pas_recu_note ? " · " + t.pas_recu_note : "")), url, tag }; }
+    else if (p.quoi === "faite") { seulement = t.par; note = { title: "Tâche faite · " + qui, body: court(t.titre), url, tag }; }
+    else if (p.quoi === "relance") { roles = ["admin"]; aussi = t.pour; note = { title: "Argent pas encore activé", body: court(qui + " : " + t.titre + " · Ouvre le reçu, puis touche « Activer »."), url, tag }; }
+    else return json({ erreur: "tâche : quoi inconnu" }, 400);
   } else if (p.type === "geotest") {
     return json({ ip: p.ip || null, lieu: await geo(p.ip || "") }); // contrôle technique (secret obligatoire), aucune écriture
   } else if (p.type === "test") {

@@ -1904,6 +1904,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="tm-tabs" role="tablist" id="sd-tmTabs">
 <button role="tab" data-t="msg" aria-selected="false"><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 10.5h7M8.5 14h4.5"/></svg></i><b>Messages</b><small>Canaux de l'équipe</small><em class="tm-badge" id="sd-msBadge" hidden></em></button>
 <div class="tm-sep" role="presentation"><span>Espace de travail</span></div>
+<button role="tab" data-t="taf" aria-selected="false"><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 9l1.5 1.5L12 8M8 15l1.5 1.5L12 14M14.5 9.5H17M14.5 15.5H17"/></svg></i><b>À faire</b><small id="sd-tfSub">Tâches à faire</small><em class="tm-badge" id="sd-tfBadge" hidden></em></button>
 <button role="tab" data-t="dir" aria-selected="false" hidden><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></i><b>Direction</b><small>Chiffres du mois, à surveiller</small></button>
 <button role="tab" data-t="ger" aria-selected="false" hidden><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l2 2 4-4"/><path d="M4 5h16v11a2 2 0 0 1-2 2H9l-5 3z"/></svg></i><b>Gérance</b><small>Demandes, décisions, rapport</small><em class="tm-badge" id="sd-grTabBadge" hidden></em></button>
 <button role="tab" data-t="sec" aria-selected="true"><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 3v2h6V3M9 10h6M9 14h6M9 18h3"/></svg></i><b>Secrétariat</b><small>Inscriptions, paiements, réservations</small></button>
@@ -2032,11 +2033,19 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="card com-card" data-mkpane="at" hidden><p class="eyebrow">Gratuit pour les élèves</p><h3 class="tm-h3">Atelier du samedi</h3><div id="sd-mcAt"></div></div>
 <div class="card com-card" id="sd-mcCtCard" data-mkpane="ct" hidden><p class="eyebrow">Service payant</p><h3 class="tm-h3">Contrôle avant achat</h3><div id="sd-mcCt"></div></div>
 </div>
+<div class="tm-pane" data-pane="taf" role="tabpanel" hidden>
+<p class="tm-role" id="sd-tfRole"></p>
+<div class="gr-tabs tf-tabs" role="tablist"><button type="button" role="tab" data-tfp="moi" aria-selected="true">À faire<em class="gr-badge" id="sd-tfBMoi" hidden></em></button><button type="button" role="tab" data-tfp="eq" aria-selected="false" hidden>L'équipe</button><button type="button" role="tab" data-tfp="pay" aria-selected="false" hidden>Paiements<em class="gr-badge" id="sd-tfBPay" hidden></em></button><button type="button" role="tab" data-tfp="fini" aria-selected="false">Terminé</button></div>
+<div data-tfpane="moi"><div id="sd-tfNew"></div><div id="sd-tfMoi" class="tf-list"></div></div>
+<div data-tfpane="eq" hidden><div id="sd-tfEq" class="tf-list"></div></div>
+<div data-tfpane="pay" hidden><div id="sd-tfPay" class="tf-list"></div></div>
+<div data-tfpane="fini" hidden><div id="sd-tfFini" class="tf-list"></div></div>
+</div>
 <div class="tm-pane" data-pane="com" role="tabpanel" hidden>
 <p class="tm-role" id="sd-comRole"></p>
 <div class="card com-guide" id="sd-comGuide"><div class="cg-hd"><p class="eyebrow">Comment ça marche</p><button type="button" class="btn btn-sm btn-line" data-goms>Écrire à la gérante</button></div><ol class="cg-steps"><li><i>1</i><b>Préparer</b><span>La vidéo, le statut ou la pub.</span></li><li><i>2</i><b>Faire valider</b><span>Envoie-la à la gérante dans Messages.</span></li><li><i>3</i><b>Publier</b><span>Dès qu'elle dit « c'est bon ».</span></li><li><i>4</i><b>Noter ici</b><span>Le lien, juste en dessous.</span></li></ol></div>
 <div class="card com-card"><div class="gr-semban" id="sd-comSem"></div><div class="com-prog" id="sd-comProg"></div><form id="sd-comForm" class="com-form" hidden novalidate><h4 class="gr-h4">Noter une publication</h4><div class="com-types" role="radiogroup"><button type="button" role="radio" data-ct="TikTok" aria-checked="true">TikTok</button><button type="button" role="radio" data-ct="Statut WhatsApp" aria-checked="false">Statut WhatsApp</button><button type="button" role="radio" data-ct="Atelier filmé" aria-checked="false">Atelier filmé</button><button type="button" role="radio" data-ct="Pub étudiants" aria-checked="false">Pub étudiants</button><button type="button" role="radio" data-ct="Live du tirage" aria-checked="false">Live du tirage</button><button type="button" role="radio" data-ct="Autre" aria-checked="false">Autre</button></div><div class="field"><label for="sd-comLien">Lien (si en ligne)</label><input id="sd-comLien" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://www.tiktok.com/…"></div><div class="field"><label for="sd-comNote">Note (facultatif)</label><input id="sd-comNote" maxlength="300" autocomplete="off" placeholder="ex. Campus de Lomé, 40 flyers"></div><button type="submit" class="btn btn-sm btn-green">Noter</button></form></div>
-<div class="card com-card"><p class="eyebrow">Tâches</p><h3 class="tm-h3" id="sd-comTTitre">De la gérante</h3><form id="sd-comTForm" class="com-form com-tform" hidden novalidate><div class="field"><label for="sd-comTTx">Nouvelle tâche</label><input id="sd-comTTx" maxlength="300" autocomplete="off" placeholder="ex. Filmer l'atelier batterie samedi"></div><div class="field com-tdate"><label for="sd-comTDate">Pour le</label><input id="sd-comTDate" type="date"></div><button type="submit" class="btn btn-sm btn-green">Donner</button></form><div id="sd-comTaches" class="com-taches"></div></div>
+<div class="card com-card com-tafc"><p class="eyebrow">Tâches</p><h3 class="tm-h3">Dans l'onglet « À faire »</h3><p class="tm-note">Les tâches de l'Ambassadeur sont maintenant avec celles de toute l'équipe.</p><button type="button" class="btn btn-sm btn-line" data-gotaf>Ouvrir « À faire »</button></div>
 <div class="card com-card"><p class="eyebrow">Ce mois-ci</p><h3 class="tm-h3">Les résultats</h3><div id="sd-comRes"></div></div>
 <div class="card com-card"><p class="eyebrow">Historique</p><h3 class="tm-h3">Publications</h3><div id="sd-comList" class="com-list"></div></div>
 </div>
@@ -3183,7 +3192,7 @@ function init(root) {
       if (t === "mon") { const slot = $("#sd-mnPlanSlot"); if (cdSec.parentNode !== slot) slot.appendChild(cdSec); cdSec.hidden = false; (eleves.length ? Promise.resolve() : loadEleves(true)).then(() => loadDay()); }
       else if (cdSec.parentNode !== cdHome.p) { cdHome.p.insertBefore(cdSec, cdHome.n); const on = $('#sd-secNav button[aria-selected="true"]'); cdSec.hidden = !on || on.dataset.s !== "conduite"; }
     };
-    const pick = (t) => { if (AMB() && !["com", "msg", "docs"].includes(t)) t = "com"; if (t === "com" && me && !AMB() && !DIR()) t = "sec"; if (t === "sec" && me && me.role === "moniteur") t = "mon"; if ((t === "sec" || t === "mon") && me && me.role === "gerant") t = "ger"; if (t === "mon" && me && me.role === "secretariat") t = "sec"; tabs.forEach((b) => b.setAttribute("aria-selected", b.dataset.t === t)); panes.forEach((p) => (p.hidden = p.dataset.pane !== t)); try { S.set("tmTab", t); } catch (e) {} placePlanning(t); if (t === "mon" || (t === "sec" && $("#sd-secAuj"))) loadMon(); if (t === "dir") loadDir(); if (t === "ger") grCharger(); if (t === "com") comCharger(); if (t === "mec") mcCharger(); msVoirFil(false); if (t === "msg") { MS.repere = {}; MS.forceBas = true; msRender(); msNotifBox(); if (!isWide()) setTimeout(() => $(".ms-wrap").scrollIntoView({ block: "start" }), 60); } };
+    const pick = (t) => { if (AMB() && !["com", "msg", "docs", "taf"].includes(t)) t = "com"; if (t === "com" && me && !AMB() && !DIR()) t = "sec"; if (t === "sec" && me && me.role === "moniteur") t = "mon"; if ((t === "sec" || t === "mon") && me && me.role === "gerant") t = "ger"; if (t === "mon" && me && me.role === "secretariat") t = "sec"; tabs.forEach((b) => b.setAttribute("aria-selected", b.dataset.t === t)); panes.forEach((p) => (p.hidden = p.dataset.pane !== t)); try { S.set("tmTab", t); } catch (e) {} placePlanning(t); if (t === "mon" || (t === "sec" && $("#sd-secAuj"))) loadMon(); if (t === "dir") loadDir(); if (t === "ger") grCharger(); if (t === "com") comCharger(); if (t === "mec") mcCharger(); if (t === "taf") tfCharger(); msVoirFil(false); if (t === "msg") { MS.repere = {}; MS.forceBas = true; msRender(); msNotifBox(); if (!isWide()) setTimeout(() => $(".ms-wrap").scrollIntoView({ block: "start" }), 60); } };
     tabs.forEach((b) => b.addEventListener("click", () => pick(b.dataset.t)));
     const subs = $$("#sd-secNav button[data-s]"), secs = $$(".tm-sec");
     const LOAD = { eleves: () => loadEleves(), conduite: () => loadDay(), paiements: () => loadPay(), devoirs: () => loadDev(), depenses: () => depEquipe() };
@@ -3993,6 +4002,7 @@ function init(root) {
       const dirTab = $('#sd-tmTabs [data-t="dir"]'); dirTab.hidden = !DIR(); // direction et gérante
       dirTab.querySelector("b").textContent = me.role === "gerant" ? "Chiffres" : "Direction"; dirTab.querySelector("small").textContent = me.role === "gerant" ? "Vue d'ensemble de l'agence" : "Chiffres du mois, à surveiller";
       $('#sd-tmTabs [data-t="com"]').hidden = !(DIR() || AMB()); $('#sd-tmTabs [data-t="mon"]').hidden = AMB() || me.role === "gerant"; { const vb = $('.mn-tabs [data-mnp="voit"]'); if (vb) vb.hidden = me.role !== "moniteur"; let k0 = null; try { k0 = localStorage.getItem("sodaf.mn.ong"); } catch (e) {} mnOnglet(k0 || "auj"); } $('#sd-tmTabs [data-t="mec"]').hidden = AMB(); // Communication : l'Ambassadeur, la gérante, la direction
+      { const tf = $("#sd-tfSub"); if (tf) tf.textContent = me.role === "admin" ? "Tâches et paiements" : me.role === "gerant" ? "Tâches de l'équipe" : "Tes tâches"; }
       $('#sd-tmTabs [data-t="ger"]').hidden = !DIR(); // onglet Gérance : la gérante y travaille, la direction y répond
       $("#sd-grRole").textContent = me.role === "gerant" ? "Ton espace de gérante : demande l'accord de la direction, note tes décisions, envoie ton rapport de la semaine. Tu as aussi les chiffres de l'agence, les reçus et le moniteur." : "L'espace de la gérante. Ici tu réponds à ses demandes, tu donnes ton avis sur ses décisions et tu lis ses rapports.";
       { const sec = $("#sd-drSec"); if (sec) sec.hidden = me.role !== "admin"; } // comptes et sécurité : direction seulement
@@ -4003,6 +4013,7 @@ function init(root) {
       if (!AMB()) await loadEleves(true);
       let t0 = S.get("tmTab", me.role === "gerant" ? "ger" : me.role === "admin" ? "dir" : me.role === "moniteur" ? "mon" : AMB() ? "com" : "sec"); if ((t0 === "dir" || t0 === "ger") && !DIR()) t0 = "sec";
       if (DIR()) grCharger(); // pastilles de la gérance dès l'ouverture
+      tfCharger(); // pastille « À faire »
       pick(t0);
       if (AMB()) comCharger(); else sub("eleves");
       await msInit();
@@ -5459,7 +5470,7 @@ function init(root) {
       const a = dOf(l), b = dOf(fin), mo = (d) => d.toLocaleDateString("fr-FR", { month: "long" });
       $("#sd-comSem").innerHTML = '<div class="gsb-l"><span class="gsb-k">Semaine ' + grNumSem(l) + '</span><b class="gsb-d">' + (a.getMonth() === b.getMonth() ? a.getDate() + " – " + b.getDate() + " " + mo(b) : a.getDate() + " " + mo(a) + " – " + b.getDate() + " " + mo(b)) + '</b></div><div class="gsb-r"><span class="gsb-k">Programme</span><b>' + (comLive(l) ? "Semaine du tirage" : "Semaine normale") + "</b></div>";
       { const gb = $("#sd-comGuide [data-goms]"); if (gb) gb.textContent = amb ? "Écrire à la gérante" : me.role === "gerant" ? "Écrire à l'Ambassadeur" : "Voir leur conversation"; }
-      $("#sd-comForm").hidden = !amb; $("#sd-comTForm").hidden = !DIR(); $("#sd-comTTitre").textContent = amb ? "De la gérante" : "Pour l'Ambassadeur";
+      $("#sd-comForm").hidden = !amb;
       const [ac, ta, ch] = await Promise.all([DB.q("com_actions?select=*&order=le.desc&limit=200").catch(() => null), DB.q("com_taches?select=*&order=le.desc&limit=80").catch(() => null), DB.q("rpc/com_chiffres", { method: "POST", body: { p_debut: m0, p_fin: iso(now) } }).catch(() => null)]);
       if (!ac || !ta) { prog.innerHTML = '<p class="tm-empty">La communication n\'est pas encore activée dans la base.</p>'; return; }
       COM.a = ac; COM.t = ta;
@@ -5469,7 +5480,7 @@ function init(root) {
       const today = iso(now), af = ta.filter((t) => !t.fait_le), faits = ta.filter((t) => t.fait_le).slice(0, 10);
       const tl = (t) => { const late = !t.fait_le && t.pour_le && t.pour_le < today;
         return '<div class="com-tk' + (t.fait_le ? " fait" : late ? " late" : "") + '" data-tk="' + t.id + '"><div><b>' + esc(t.texte) + "</b><small>" + (t.fait_le ? "Fait " + esc(grQuand(t.fait_le)) : t.pour_le ? (late ? "En retard · " : "") + "pour le " + dOf(t.pour_le).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "short" }) : "Donnée " + esc(grQuand(t.le))) + "</small></div>" + (!t.fait_le && amb ? '<button type="button" class="btn btn-sm btn-green" data-tkok>Fait</button>' : "") + "</div>"; };
-      $("#sd-comTaches").innerHTML = (af.length ? af.map(tl).join("") : '<p class="tm-empty">' + (amb ? "Aucune tâche pour l'instant." : "Aucune tâche en cours.") + "</p>") + (faits.length ? '<details class="com-old"><summary>Déjà faites (' + faits.length + ")</summary>" + faits.map(tl).join("") + "</details>" : "");
+      if ($("#sd-comTaches")) $("#sd-comTaches").innerHTML = (af.length ? af.map(tl).join("") : '<p class="tm-empty">' + (amb ? "Aucune tâche pour l'instant." : "Aucune tâche en cours.") + "</p>") + (faits.length ? '<details class="com-old"><summary>Déjà faites (' + faits.length + ")</summary>" + faits.map(tl).join("") + "</details>" : "");
       if (ch) { const pv = ch.provenance || {}, T = (k, v) => "<div><span>" + k + "</span><b>" + v + "</b></div>";
         const rows = Object.entries(pv).sort((x, y) => y[1] - x[1]), mx = rows.length ? rows[0][1] : 1;
         $("#sd-comRes").innerHTML = '<div class="tm-stats tm-dr com-res">' + T("Nouveaux contacts", ch.nouveaux) + T("Via TikTok, Facebook", pv.reseaux || 0) + T("Via l'Ambassadeur", pv.ambassadeur || 0) + T("Via le site", pv.site || 0) + T("Étudiants (contacts)", ch.etudiants_contacts) + T("Étudiants inscrits", ch.etudiants_inscrits) + "</div>" +
@@ -5477,9 +5488,10 @@ function init(root) {
           '<p class="tm-note com-aide">Au bureau, choisir « L\'Ambassadeur » dans « Comment il nous a connus » quand l\'élève vient grâce à lui.</p>'; }
       else $("#sd-comRes").innerHTML = '<p class="tm-empty">Chiffres indisponibles pour l\'instant.</p>';
       $("#sd-comList").innerHTML = ac.length ? ac.slice(0, 40).map((x) => '<div class="com-it"><span class="com-d">' + dOf(x.jour).toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" }) + '</span><em class="com-ty">' + esc(x.type) + "</em><span class=\"com-n\">" + esc(x.note || "") + "</span>" + (x.lien ? '<a class="linkbtn" target="_blank" rel="noopener" href="' + esc(x.lien) + '">Voir ↗</a>' : "<span></span>") + "</div>").join("") : '<p class="tm-empty">Rien de noté pour l\'instant.</p>';
-      const bd = $("#sd-comBadge"); if (bd) { const n = amb ? af.length : 0; bd.textContent = n; bd.hidden = !n; }
+      const bd = $("#sd-comBadge"); if (bd) { const n = 0; bd.textContent = n; bd.hidden = !n; }
     }
     $("#sd-comGuide") && $("#sd-comGuide").addEventListener("click", (e) => { if (e.target.closest("[data-goms]")) msOuvrir("ambassadeur"); });
+    $(".com-tafc") && $(".com-tafc").addEventListener("click", (e) => { if (e.target.closest("[data-gotaf]")) pick("taf"); });
     $("#sd-comForm") && $("#sd-comForm").addEventListener("click", (e) => { const c = e.target.closest("[data-ct]"); if (c) $$("#sd-comForm [data-ct]").forEach((b) => b.setAttribute("aria-checked", b === c)); });
     $("#sd-comForm") && $("#sd-comForm").addEventListener("submit", async (e) => {
       e.preventDefault(); const f = e.target, lien = $("#sd-comLien").value.trim(), b = f.querySelector("[type=submit]");
@@ -5499,6 +5511,163 @@ function init(root) {
       const k = e.target.closest("[data-tkok]"); if (!k) return; const row = k.closest("[data-tk]"); k.disabled = true;
       const r = await run(() => DB.q("rpc/com_tache_faite", { method: "POST", body: { p_id: +row.dataset.tk } }).then(() => true), "Bravo, c'est fait");
       if (r) comCharger(); else k.disabled = false;
+    });
+
+    // ---- À faire (21 oct., migration 0062) : tâches de tous les jours + argent des dépenses accordées.
+    //      Demande accordée → tâche « argent à envoyer » ; la direction paie (reçu Mixx joint) ; la personne active, achète, ajoute la facture, puis « Fait ».
+    //      La direction écrit aussi des tâches (prix inconnu → la gérante le trouve → la direction accorde). La gérante donne des tâches sans argent.
+    const TF = { t: [], prof: [], ong: null, arg: "non", pour: null };
+    const TF_FIN = ["fait", "refusee", "annulee"];
+    const tfNom = (id) => { if (me && id === me.id) return "toi"; const p = TF.prof.find((x) => x.id === id); return p ? ROLE_NOM[p.role] || p.nom : "Équipe"; };
+    const tfJour = (d) => dOf(d).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "short" });
+    const tfMois = (d) => { const n = new Date(); return d && new Date(d) >= new Date(n.getFullYear(), n.getMonth(), 1); };
+    // Ce qui attend MON geste
+    const tfAMoi = (t) => !!me && ((t.etape === "prix" && me.role === "gerant") || (t.etape === "accord" && me.role === "admin") || (t.etape === "payer" && me.role === "admin") ||
+      (t.etape === "envoye" && me.role === "admin" && !!t.pas_recu_le) || (t.pour === me.id && (t.etape === "afaire" || (t.etape === "envoye" && !t.pas_recu_le))));
+    function tfEtat(t) {
+      const adm = me.role === "admin", moi = t.pour === me.id;
+      if (t.etape === "prix") return ["att", me.role === "gerant" ? "Prix à trouver" : "Chez la gérante : prix à trouver"];
+      if (t.etape === "accord") return ["att", adm ? "Prix trouvé : à accorder" : "Chez la direction"];
+      if (t.etape === "payer") return ["att", adm ? "Argent à envoyer" : "Accordé : en attente de l'argent"];
+      if (t.etape === "envoye") return t.pas_recu_le ? ["non", "Argent pas reçu"] : ["att", moi ? "Argent envoyé : vérifie et active" : "Envoyé, pas encore activé"];
+      if (t.etape === "afaire") return ["neu", t.argent && !t.carburant && !t.facture ? "À faire · facture à ajouter" : "À faire"];
+      if (t.etape === "fait") return ["oui", "Fait " + grQuand(t.fait_le)];
+      return t.etape === "refusee" ? ["non", "Refusé"] : ["x", "Annulé"];
+    }
+    function tfPayBox(t) {
+      const mt = t.paye_montant || t.montant || "";
+      return '<div class="tf-box tf-pay" data-tfpay><b class="tf-bt">' + (t.pas_recu_le ? "Renvoyer l'argent" : "Envoyer l'argent") + (mt ? " : " + F(mt) : "") + " à " + esc(tfNom(t.pour)) + "</b>" +
+        '<ol class="tf-steps"><li>Envoie l\'argent depuis le compte marchand Mixx (motif : <b>SODAF T-' + t.id + "</b>).</li><li>Télécharge le reçu dans l'application Mixx.</li><li>Joins-le ici, puis touche « Paiement effectué ».</li></ol>" +
+        '<div class="tf-chips" role="radiogroup">' + ["Mixx", "Moov Money", "Espèces"].map((m, i) => '<button type="button" role="radio" data-tfmoy="' + m + '" aria-checked="' + (i === 0) + '">' + m + "</button>").join("") + "</div>" +
+        '<div class="tf-row"><div class="field"><label>Montant envoyé (F)</label><input class="tf-pmt" inputmode="numeric" autocomplete="off" value="' + (mt ? milliers(mt) : "") + '"></div><div class="field"><label>Référence (facultatif)</label><input class="tf-ref" maxlength="80" autocomplete="off" placeholder="ex. MP2610.1234"></div></div>' +
+        '<div class="field"><label class="tf-recl">Reçu du paiement (photo, capture ou PDF)</label>' + pjHtml(true) + "</div>" +
+        '<button type="button" class="btn btn-green" data-tfpaye>Paiement effectué</button></div>';
+    }
+    function tfActions(t, vue) {
+      const adm = me.role === "admin", g = me.role === "gerant", moi = t.pour === me.id; let h = "";
+      if (t.etape === "prix" && g) h += '<div class="tf-box tf-prix"><b class="tf-bt">Trouve le prix, puis envoie-le à la direction</b><p class="tf-aide">Le montant et le devis (ou une photo du prix, du ticket).</p><input class="tf-pm" inputmode="numeric" autocomplete="off" placeholder="Montant (F)" aria-label="Montant">' + pjHtml(true) + '<button type="button" class="btn btn-green" data-tfprix>Envoyer le prix à la direction</button></div>';
+      if (t.etape === "accord" && adm) h += '<div class="tf-box"><b class="tf-bt">La gérante a trouvé le prix : ' + F(t.montant) + '</b><input class="tf-note" maxlength="300" placeholder="Un mot (facultatif)" aria-label="Un mot"><div class="tf-btns"><button type="button" class="btn btn-green" data-tfacc="1">Accorder</button><button type="button" class="btn dq-no" data-tfacc="0">Refuser</button></div></div>';
+      if (adm && (t.etape === "payer" || (t.etape === "envoye" && t.pas_recu_le))) h += tfPayBox(t);
+      if (t.etape === "envoye") {
+        const info = F(t.paye_montant) + (t.paye_moyen ? " par " + esc(t.paye_moyen) : "") + ", " + grQuand(t.paye_le) + (t.paye_ref ? " · réf. " + esc(t.paye_ref) : "");
+        if (t.pas_recu_le) h = '<p class="tf-alerte">« Pas reçu »' + (t.pas_recu_note ? " : " + esc(t.pas_recu_note) : "") + (moi ? ". La direction est prévenue." : "") + "</p>" + h;
+        else if (moi) h += '<div class="tf-box tf-recu"><b class="tf-bt">L\'argent est parti : ' + info + '</b><p class="tf-aide">Ouvre le reçu et vérifie sur ton téléphone. Si tout est bon, active la tâche.</p><div class="tf-btns"><button type="button" class="btn btn-green" data-tfact>Activer : j\'ai bien reçu</button></div><details class="tf-pas"><summary>Je n\'ai rien reçu</summary><input class="tf-pasn" maxlength="300" placeholder="ex. Rien sur mon compte Mixx" aria-label="Précise"><button type="button" class="btn dq-no btn-sm" data-tfpas>Pas reçu</button></details></div>';
+        else h += '<p class="tf-aide">Envoyé : ' + info + "." + (Date.now() - new Date(t.paye_le) > 864e5 ? ' <b class="tf-retard">Plus de 24 h.</b>' : "") + "</p>";
+      }
+      if (t.etape === "afaire" && (moi || (DIR() && vue !== "moi"))) {
+        const fac = t.argent && !t.carburant && !t.facture;
+        if (t.argent && !t.carburant) h += t.facture ? "" : '<div class="tf-box tf-fac" data-tffac><b class="tf-bt">Après l\'achat, ajoute la facture ou le ticket</b>' + pjHtml(true) + "</div>";
+        h += '<div class="tf-btns"><button type="button" class="btn ' + (fac ? "btn-line" : "btn-green") + '" data-tffait' + (fac ? " disabled" : "") + ">" + (moi ? "Fait" : "Marquer comme fait") + "</button></div>";
+      }
+      const annul = ["prix", "accord", "payer"].includes(t.etape) || (t.etape === "afaire" && !t.argent);
+      if (annul && ((t.par === me.id && DIR()) || adm)) h += '<button type="button" class="linkbtn tf-ann" data-tfann>Annuler la tâche</button>';
+      return h;
+    }
+    function tfCarte(t, vue) {
+      const st = tfEtat(t), today = iso(new Date()), late = !TF_FIN.includes(t.etape) && t.pour_le && t.pour_le < today, test = /^\[TEST\]/.test(t.titre || "");
+      const pcs = (t.devis ? '<button type="button" class="btn btn-line btn-sm" data-tfdoc="' + esc(t.devis) + '">Voir le devis</button>' : "") + (t.paye_recu ? '<button type="button" class="btn btn-line btn-sm" data-tfdoc="' + esc(t.paye_recu) + '">Voir le reçu</button>' : "") + (t.facture ? '<button type="button" class="btn btn-line btn-sm" data-tfdoc="' + esc(t.facture) + '">Voir la facture</button>' : "");
+      return '<article class="tf tf-' + st[0] + (late ? " tf-late" : "") + '" data-tf="' + t.id + '"><header class="tf-top"><span class="tf-who">' + (t.par === t.pour ? "Note pour toi" : "De " + esc(tfNom(t.par)) + " → pour " + esc(tfNom(t.pour))) + '</span><span class="tf-when">' + (t.demande_id ? "Dépense accordée · " : "") + "T-" + t.id + "</span></header>" +
+        '<p class="tf-tx">' + esc(String(t.titre || "").replace(/^\[TEST\]\s*/, "")) + (test ? ' <span class="dq-test">TEST</span>' : "") + "</p>" +
+        '<div class="tf-meta"><em class="tf-st">' + esc(st[1]) + "</em>" + (t.argent && (t.montant || t.paye_montant) ? '<b class="tf-mt">' + F(t.paye_montant || t.montant) + "</b>" : t.argent ? '<b class="tf-mt tf-inc">Prix à trouver</b>' : "") + (t.pour_le && !TF_FIN.includes(t.etape) ? '<span class="tf-date' + (late ? " tf-retard" : "") + '">' + (late ? "En retard · " : "") + "pour " + tfJour(t.pour_le) + "</span>" : "") + "</div>" +
+        (t.accord_note && t.etape !== "fait" ? '<p class="tf-rep">Direction : « ' + esc(t.accord_note) + " »</p>" : "") + (t.fait_note ? '<p class="tf-rep">« ' + esc(t.fait_note) + " »</p>" : "") +
+        (pcs ? '<div class="tf-pcs">' + pcs + "</div>" : "") + (TF_FIN.includes(t.etape) ? "" : tfActions(t, vue)) + "</article>";
+    }
+    const tfTri = (a, b) => (tfAMoi(b) - tfAMoi(a)) || String(a.pour_le || "9999").localeCompare(String(b.pour_le || "9999")) || String(a.le).localeCompare(String(b.le));
+    function tfForm() {
+      const box = $("#sd-tfNew"); if (!box) return; if (!DIR()) { box.innerHTML = ""; return; }
+      const adm = me.role === "admin", ok = TF.prof.filter((p) => p.actif !== false && (adm || p.id === me.id || ["secretariat", "moniteur", "ambassadeur"].includes(p.role)));
+      if (box.dataset.pret === me.id) return; box.dataset.pret = me.id;
+      box.innerHTML = '<details class="card tf-newc"><summary>+ Nouvelle tâche</summary><form class="tf-form" novalidate>' +
+        '<div class="field"><label>Quoi ?</label><textarea class="tf-tx2" rows="2" maxlength="600" placeholder="ex. Refaire l\'enseigne de l\'agence"></textarea></div>' +
+        '<div class="field"><label>Pour qui ?</label><div class="tf-chips" role="radiogroup">' + ok.map((p) => '<button type="button" role="radio" data-tfqui="' + p.id + '" aria-checked="false">' + (p.id === me.id ? "Moi" : esc(ROLE_NOM[p.role] || p.nom)) + "</button>").join("") + "</div></div>" +
+        '<div class="field"><label>Pour quand ? (facultatif)</label><input type="date" class="tf-date2"></div>' +
+        (adm ? '<div class="field"><label>Ça coûte de l\'argent ?</label><div class="tf-chips" role="radiogroup"><button type="button" role="radio" data-tfarg="non" aria-checked="true">Non</button><button type="button" role="radio" data-tfarg="oui" aria-checked="false">Oui, je connais le prix</button><button type="button" role="radio" data-tfarg="prix" aria-checked="false">Oui, prix à trouver</button></div>' +
+          '<input class="tf-mt2" inputmode="numeric" autocomplete="off" placeholder="Montant (F)" aria-label="Montant" hidden><small class="tf-aide tf-arga" hidden>La gérante cherche le prix et le devis. Tu accordes ensuite, puis tu envoies l\'argent.</small></div>' : '<p class="tf-aide">Une tâche qui coûte de l\'argent : passe par Gérance → Dépenses → « Proposer un achat ».</p>') +
+        '<button type="submit" class="btn btn-green">Donner la tâche</button></form></details>';
+      const f = box.querySelector(".tf-form");
+      f.addEventListener("click", (e) => {
+        const q = e.target.closest("[data-tfqui]"); if (q) f.querySelectorAll("[data-tfqui]").forEach((b) => b.setAttribute("aria-checked", b === q));
+        const a = e.target.closest("[data-tfarg]"); if (a) { f.querySelectorAll("[data-tfarg]").forEach((b) => b.setAttribute("aria-checked", b === a)); f.querySelector(".tf-mt2").hidden = a.dataset.tfarg !== "oui"; f.querySelector(".tf-arga").hidden = a.dataset.tfarg !== "prix"; }
+      });
+      f.addEventListener("submit", (e) => {
+        e.preventDefault(); const b = f.querySelector("[type=submit]"), tx = f.querySelector(".tf-tx2").value.trim(), qui = f.querySelector('[data-tfqui][aria-checked="true"]');
+        const arg = adm ? f.querySelector('[data-tfarg][aria-checked="true"]').dataset.tfarg : "non", mt = adm ? +(f.querySelector(".tf-mt2").value.replace(/\D/g, "")) || null : null;
+        if (tx.length < 3) { toast("Écris la tâche", true); f.querySelector(".tf-tx2").focus(); return; }
+        if (!qui) { toast("Choisis pour qui", true); return; }
+        if (arg === "oui" && !mt) { toast("Écris le montant (ou choisis « prix à trouver »)", true); f.querySelector(".tf-mt2").focus(); return; }
+        if (arg !== "non" && qui.dataset.tfqui === me.id) { toast("Une tâche avec de l'argent se donne à quelqu'un de l'équipe", true); return; }
+        confirmBtn(b, async () => {
+          b.disabled = true;
+          const r = await run(() => DB.q("rpc/tache_creer", { method: "POST", body: { p_pour: qui.dataset.tfqui, p_titre: tx, p_pour_le: f.querySelector(".tf-date2").value || null, p_argent: arg !== "non", p_montant: arg === "oui" ? mt : null } }), arg === "prix" ? "Envoyé à la gérante : elle cherche le prix" : "Tâche donnée");
+          b.disabled = false; if (r !== null) { box.dataset.pret = ""; tfCharger(); }
+        });
+      });
+    }
+    function tfOnglet(k) {
+      TF.ong = k; $$(".tf-tabs [data-tfp]").forEach((b) => b.setAttribute("aria-selected", b.dataset.tfp === k));
+      $$('[data-pane="taf"] [data-tfpane]').forEach((p) => (p.hidden = p.dataset.tfpane !== k));
+    }
+    $(".tf-tabs") && $(".tf-tabs").addEventListener("click", (e) => { const b = e.target.closest("[data-tfp]"); if (b) tfOnglet(b.dataset.tfp); });
+    async function tfCharger() {
+      if (!me || !$("#sd-tfMoi")) return;
+      const [t, p] = await Promise.all([DB.q("taches?select=*&order=le.desc&limit=500").catch(() => null), TF.prof.length ? Promise.resolve(TF.prof) : DB.q("profils?select=id,nom,role,actif").catch(() => [])]);
+      TF.prof = p || [];
+      if (!t) { $("#sd-tfMoi").innerHTML = '<p class="tm-empty">L\'onglet « À faire » n\'est pas encore activé dans la base.</p>'; return; }
+      TF.t = t; const adm = me.role === "admin", g = me.role === "gerant";
+      $("#sd-tfRole").textContent = adm ? "Tes tâches, celles de l'équipe et l'argent à envoyer pour les dépenses accordées." : g ? "Tes tâches, les prix à trouver, et les tâches que tu donnes à l'équipe." : "Ce qu'on t'a demandé de faire. Touche « Fait » quand c'est fini.";
+      $('.tf-tabs [data-tfp="eq"]').hidden = !DIR(); $('.tf-tabs [data-tfp="pay"]').hidden = !adm;
+      tfForm();
+      const ouv = t.filter((x) => !TF_FIN.includes(x.etape));
+      // À faire : mes tâches + ce qui attend mon geste (prix pour la gérante, accord pour la direction)
+      const moi = ouv.filter((x) => (x.pour === me.id && x.etape !== "prix" && x.etape !== "accord") || (g && x.etape === "prix") || (adm && x.etape === "accord")).sort(tfTri);
+      const aPayer = adm ? ouv.filter((x) => x.etape === "payer" || (x.etape === "envoye" && x.pas_recu_le)) : [];
+      $("#sd-tfMoi").innerHTML = (aPayer.length ? '<button type="button" class="tf-ban" data-tfgo="pay"><b>' + aPayer.length + " paiement" + (aPayer.length > 1 ? "s" : "") + " à faire</b><span>" + F(aPayer.reduce((n, x) => n + (x.montant || 0), 0)) + " · Ouvrir Paiements →</span></button>" : "") +
+        (moi.length ? moi.map((x) => tfCarte(x, "moi")).join("") : '<p class="tm-empty">Rien à faire pour l\'instant.</p>');
+      // L'équipe : tâches en cours des autres, par personne
+      if (DIR()) { const autres = ouv.filter((x) => !moi.includes(x) && x.pour !== me.id), qui = [...new Set(autres.map((x) => x.pour))];
+        $("#sd-tfEq").innerHTML = qui.length ? qui.map((id) => { const l = autres.filter((x) => x.pour === id).sort(tfTri); return '<section class="tf-grp"><h4 class="gr-h4">' + esc(tfNom(id).replace(/^./, (c) => c.toUpperCase())) + ' <span class="dq-count">' + l.length + "</span></h4>" + l.map((x) => tfCarte(x, "eq")).join("") + "</section>"; }).join("") : '<p class="tm-empty">Aucune tâche en cours dans l\'équipe.</p>'; }
+      // Paiements (direction)
+      if (adm) {
+        const env = ouv.filter((x) => x.etape === "envoye" && !x.pas_recu_le), cours = ouv.filter((x) => x.etape === "afaire" && x.argent), fin = t.filter((x) => x.etape === "fait" && x.argent && tfMois(x.paye_le));
+        const envMois = t.filter((x) => x.paye_le && tfMois(x.paye_le)).reduce((n, x) => n + (x.paye_montant || 0), 0), grp = (titre, l, aide, ouvert) => '<section class="tf-grp"><h4 class="gr-h4">' + titre + ' <span class="dq-count">' + l.length + "</span></h4>" + (aide ? '<p class="tf-aide">' + aide + "</p>" : "") + (l.length ? l.map((x) => tfCarte(x, "pay")).join("") : '<p class="tm-empty">Rien.</p>') + "</section>";
+        $("#sd-tfPay").innerHTML = '<div class="tm-stats tm-dr tf-tot"><div><span>Envoyé ce mois</span><b>' + F(envMois) + "</b></div><div><span>Reste à envoyer</span><b>" + F(aPayer.reduce((n, x) => n + (x.montant || 0), 0)) + "</b></div></div>" +
+          grp("À payer", aPayer, "Accordé : envoie l'argent, puis joins le reçu.") + grp("Envoyé, pas encore activé", env, "La personne doit ouvrir le reçu et toucher « Activer ».") + grp("En cours : achat et facture", cours, "Argent reçu. On attend l'achat et la facture.") +
+          '<details class="tf-old"><summary>Terminé ce mois (' + fin.length + ")</summary>" + fin.map((x) => tfCarte(x, "pay")).join("") + "</details>";
+        const bp = $("#sd-tfBPay"); bp.textContent = aPayer.length; bp.hidden = !aPayer.length;
+      }
+      // Terminé
+      const fini = t.filter((x) => TF_FIN.includes(x.etape)).sort((a, b) => String(b.fait_le || b.annule_le || b.accord_le || b.le).localeCompare(String(a.fait_le || a.annule_le || a.accord_le || a.le))).slice(0, 60);
+      $("#sd-tfFini").innerHTML = fini.length ? fini.map((x) => tfCarte(x, "fini")).join("") : '<p class="tm-empty">Rien de terminé pour l\'instant.</p>';
+      const n = ouv.filter(tfAMoi).length, bd = $("#sd-tfBadge"), bm = $("#sd-tfBMoi"); bd.textContent = n; bd.hidden = !n; const nm = moi.filter(tfAMoi).length; bm.textContent = nm; bm.hidden = !nm;
+      if (!TF.ong) tfOnglet("moi");
+    }
+    // Actions sur une tâche
+    const tfRpc = (fn, body, msg) => run(() => DB.q("rpc/" + fn, { method: "POST", body }).then(() => true), msg);
+    $('.tm-pane[data-pane="taf"]') && $('.tm-pane[data-pane="taf"]').addEventListener("click", async (e) => {
+      const t = e.target, go = t.closest("[data-tfgo]"); if (go) { tfOnglet(go.dataset.tfgo); return; }
+      const doc = t.closest("[data-tfdoc]"); if (doc) { depOuvrir(doc.dataset.tfdoc); return; }
+      const card = t.closest("[data-tf]"); if (!card) return; const id = +card.dataset.tf, q = (s) => card.querySelector(s), x = TF.t.find((y) => y.id === id);
+      const m = t.closest("[data-tfmoy]"); if (m) { card.querySelectorAll("[data-tfmoy]").forEach((b) => b.setAttribute("aria-checked", b === m)); q(".tf-recl").textContent = m.dataset.tfmoy === "Espèces" ? "Reçu (facultatif pour des espèces)" : "Reçu du paiement (photo, capture ou PDF)"; return; }
+      const btn = t.closest("button"); if (!btn || btn.disabled) return;
+      const deux = (fn) => confirmBtn(btn, async () => { btn.disabled = true; const ok = await fn(); btn.disabled = false; if (ok) tfCharger(); });
+      if (btn.matches("[data-tfprix]")) { const mt = +(q(".tf-pm").value.replace(/\D/g, "")) || 0, pj = q(".tf-prix .pj");
+        if (!mt) { toast("Écris le montant", true); q(".tf-pm").focus(); return; } if (!pj._file) { toast("Ajoute le devis ou une photo du prix", true); return; }
+        deux(async () => { let path; try { path = await depEnvoyer(pj._file, "taches"); } catch (er) { toast("La photo n'a pas pu être envoyée", true); return false; } return tfRpc("tache_prix", { p_id: id, p_montant: mt, p_devis: path }, "Prix envoyé à la direction"); }); return; }
+      if (btn.matches("[data-tfacc]")) { const okk = btn.dataset.tfacc === "1"; deux(() => tfRpc("tache_accord", { p_id: id, p_ok: okk, p_note: q(".tf-note").value.trim() || null }, okk ? "Accordé : envoie l'argent (Paiements)" : "Refusé, la gérante est prévenue")); return; }
+      if (btn.matches("[data-tfpaye]")) { const moy = q('[data-tfmoy][aria-checked="true"]').dataset.tfmoy, mt = +(q(".tf-pmt").value.replace(/\D/g, "")) || 0, pj = q(".tf-pay .pj");
+        if (!mt) { toast("Écris le montant envoyé", true); q(".tf-pmt").focus(); return; } if (moy !== "Espèces" && !pj._file) { toast("Joins le reçu du paiement", true); return; }
+        deux(async () => { let path = null; if (pj._file) { try { path = await depEnvoyer(pj._file, "taches"); } catch (er) { toast("Le reçu n'a pas pu être envoyé", true); return false; } }
+          return tfRpc("tache_payer", { p_id: id, p_moyen: moy, p_montant: mt, p_ref: q(".tf-ref").value.trim() || null, p_recu: path }, "Paiement noté : " + (x ? tfNom(x.pour) : "la personne") + " est prévenu(e)"); }); return; }
+      if (btn.matches("[data-tfact]")) { deux(() => tfRpc("tache_activer", { p_id: id }, "Tâche activée : à toi de jouer")); return; }
+      if (btn.matches("[data-tfpas]")) { deux(() => tfRpc("tache_pas_recu", { p_id: id, p_note: q(".tf-pasn").value.trim() || null }, "La direction est prévenue")); return; }
+      if (btn.matches("[data-tffait]")) { deux(() => tfRpc("tache_faite", { p_id: id, p_note: null }, "Bravo, c'est fait")); return; }
+      if (btn.matches("[data-tfann]")) { deux(() => tfRpc("tache_annuler", { p_id: id }, "Tâche annulée")); return; }
+    });
+    // Facture : envoyée dès qu'on choisit le fichier
+    $('.tm-pane[data-pane="taf"]') && $('.tm-pane[data-pane="taf"]').addEventListener("pj", async (e) => {
+      const w = e.target.closest("[data-tffac]"); if (!w) return; const pj = e.target.closest(".pj"), card = w.closest("[data-tf]"); if (!pj || !pj._file) return; w.classList.add("is-busy");
+      try { const path = await depEnvoyer(pj._file, "taches"); const r = await tfRpc("tache_facture", { p_id: +card.dataset.tf, p_chemin: path }, "Facture ajoutée : touche « Fait »"); if (r) tfCharger(); }
+      catch (er) { toast("La facture n'a pas pu être envoyée", true); } finally { w.classList.remove("is-busy"); }
     });
 
     $("#sd-grDecForm").addEventListener("submit", async (e) => {
@@ -7060,6 +7229,25 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 .dq-act{margin-top:12px;display:grid;gap:8px}.dq-act input{font:inherit;font-size:.92rem;padding:.55em .75em;border:1px solid var(--line);border-radius:10px;width:100%;box-sizing:border-box}
 .dq-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}.dq-btns .btn{width:100%;justify-content:center;padding:.7em 1em}
 .dq-no{background:#fff;color:#B3132B;border:1.5px solid #E7B4BB}
+.tm-pane[data-pane="taf"] .tm-role{border-left-color:#0F766E}[data-pane="taf"] [data-tfpane][hidden]{display:none}
+.tf-list{display:block}.tf{background:#fff;border:1px solid var(--line);border-left:6px solid var(--line);border-radius:14px;padding:12px 14px;margin:0 0 10px}
+.tf-att{border-left-color:var(--yellow)}.tf-oui{border-left-color:var(--green)}.tf-non{border-left-color:#C8372D}.tf-neu{border-left-color:#0F766E}.tf-x{opacity:.7}.tf-late{background:#FFFBF5}
+.tf-top{display:flex;justify-content:space-between;gap:8px;font:600 .78rem var(--f-ui);color:var(--muted)}.tf-who{color:var(--ink)}
+.tf-tx{margin:6px 0 0;font-size:1rem;font-weight:600;line-height:1.35}
+.tf-meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin:8px 0 0}
+.tf-st{font-style:normal;font:700 .8rem var(--f-ui);border-radius:999px;padding:.35em .85em;background:#FFF4D6;color:#8A5A00}.tf-oui .tf-st{background:var(--green-soft);color:var(--green)}.tf-non .tf-st{background:#FDE7EA;color:#B3132B}.tf-neu .tf-st{background:#E6F4F1;color:#0F766E}.tf-x .tf-st{background:#EEF0F3;color:var(--muted)}
+.tf-mt{font:800 1rem var(--f-ui)}.tf-inc{color:#8A5A00;font-size:.88rem}.tf-date{font-size:.84rem;color:var(--muted)}.tf-retard{color:#B3132B!important;font-weight:700}
+.tf-rep{margin:8px 0 0;font-size:.88rem;color:var(--muted);font-style:italic}.tf-pcs{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0}
+.tf-box{margin:12px 0 0;padding:12px;border-radius:12px;background:#F7F8FA;border:1px solid var(--line);display:flex;flex-direction:column;gap:8px}.tf-prix{background:#FFF8E1;border-color:#F5D77A}.tf-pay{background:#EEF7F5;border-color:#B6DDD5}.tf-recu{background:#E6F4F1;border-color:#9BD0C5}
+.tf-bt{font-size:.95rem}.tf-aide{margin:0;font-size:.86rem;color:var(--muted)}.tf-box input:not([type]),.tf-box input[inputmode],.tf-note,.tf-pasn{width:100%;box-sizing:border-box}
+.tf-steps{margin:0;padding-left:1.2em;font-size:.88rem;line-height:1.5}.tf-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}@media (max-width:520px){.tf-row{grid-template-columns:1fr}}
+.tf-btns{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}.tf-box .tf-btns{margin:0}.tf-alerte{margin:10px 0 0;padding:8px 10px;border-radius:10px;background:#FDE7EA;color:#B3132B;font-weight:600;font-size:.9rem}
+.tf-pas{font-size:.86rem}.tf-pas summary{cursor:pointer;color:var(--muted)}.tf-pas[open]{display:flex;flex-direction:column;gap:6px}.tf-ann{margin:10px 0 0;font-size:.82rem;color:var(--muted)}
+.tf-chips{display:flex;flex-wrap:wrap;gap:6px}.tf-chips button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:.5em 1em;font:600 .88rem var(--f-ui);cursor:pointer;color:var(--ink)}.tf-chips button[aria-checked=true]{background:var(--ink);border-color:var(--ink);color:#fff}
+.tf-newc{padding:0;margin:0 0 14px}.tf-newc summary{cursor:pointer;padding:14px 16px;font:700 1rem var(--f-ui);color:#0F766E;list-style:none}.tf-newc summary::-webkit-details-marker{display:none}.tf-newc[open] summary{border-bottom:1px solid var(--line)}
+.tf-form{padding:14px 16px;display:flex;flex-direction:column;gap:12px}.tf-form .field{margin:0}.tf-form textarea,.tf-form input{width:100%;box-sizing:border-box}.tf-mt2{margin:8px 0 0}
+.tf-ban{all:unset;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;box-sizing:border-box;width:100%;padding:12px 16px;margin:0 0 12px;border-radius:12px;background:#0F766E;color:#fff}.tf-ban span{font-size:.88rem;opacity:.9}
+.tf-fac.is-busy{opacity:.6;pointer-events:none}.tf-grp{margin:0 0 18px}.tf-tot{margin:0 0 16px}.tf-old summary{cursor:pointer;font-weight:700;margin:0 0 10px}
 .dq-count{display:inline-grid;place-items:center;min-width:22px;height:22px;border-radius:99px;background:#C8372D;color:#fff;font-size:.78rem;margin-left:6px;vertical-align:middle}
 .dep-ok{color:var(--green);font-weight:600}.dep-facw{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.dep-facw.is-busy{opacity:.6;pointer-events:none}
 .crb-mon .dep-eqf{margin-top:14px}.crb-mon .dep-form{padding:0;border:0;margin:0}
