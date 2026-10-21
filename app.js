@@ -2035,10 +2035,14 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 </div>
 <div class="tm-pane" data-pane="taf" role="tabpanel" hidden>
 <p class="tm-role" id="sd-tfRole"></p>
-<div class="gr-tabs tf-tabs" role="tablist"><button type="button" role="tab" data-tfp="moi" aria-selected="true">À faire<em class="gr-badge" id="sd-tfBMoi" hidden></em></button><button type="button" role="tab" data-tfp="eq" aria-selected="false" hidden>L'équipe</button><button type="button" role="tab" data-tfp="pay" aria-selected="false" hidden>Paiements<em class="gr-badge" id="sd-tfBPay" hidden></em></button><button type="button" role="tab" data-tfp="fini" aria-selected="false">Terminé</button></div>
-<div data-tfpane="moi"><div id="sd-tfNew"></div><div id="sd-tfMoi" class="tf-list"></div></div>
-<div data-tfpane="eq" hidden><div id="sd-tfEq" class="tf-list"></div></div>
+<div class="gr-tabs tf-tabs" role="tablist"><button type="button" role="tab" data-tfp="new" aria-selected="false" hidden>Nouvelle tâche</button><button type="button" role="tab" data-tfp="moi" aria-selected="false">Mes tâches<em class="gr-badge" id="sd-tfBMoi" hidden></em></button><button type="button" role="tab" data-tfp="prix" aria-selected="false" hidden>Prix à trouver<em class="gr-badge" id="sd-tfBPrix" hidden></em></button><button type="button" role="tab" data-tfp="acc" aria-selected="false" hidden>À accorder<em class="gr-badge" id="sd-tfBAcc" hidden></em></button><button type="button" role="tab" data-tfp="pay" aria-selected="false" hidden>Paiements à faire<em class="gr-badge" id="sd-tfBPay" hidden></em></button><button type="button" role="tab" data-tfp="att" aria-selected="false" hidden>Paiements en attente<em class="gr-badge" id="sd-tfBAtt" hidden></em></button><button type="button" role="tab" data-tfp="eq" aria-selected="false" hidden>L\'équipe</button><button type="button" role="tab" data-tfp="fini" aria-selected="false">Terminé</button></div>
+<div data-tfpane="new" hidden><div id="sd-tfNew"></div></div>
+<div data-tfpane="moi" hidden><div id="sd-tfMoi" class="tf-list"></div></div>
+<div data-tfpane="prix" hidden><div id="sd-tfPrix" class="tf-list"></div></div>
+<div data-tfpane="acc" hidden><div id="sd-tfAcc" class="tf-list"></div></div>
 <div data-tfpane="pay" hidden><div id="sd-tfPay" class="tf-list"></div></div>
+<div data-tfpane="att" hidden><div id="sd-tfAtt" class="tf-list"></div></div>
+<div data-tfpane="eq" hidden><div id="sd-tfEq" class="tf-list"></div></div>
 <div data-tfpane="fini" hidden><div id="sd-tfFini" class="tf-list"></div></div>
 </div>
 <div class="tm-pane" data-pane="com" role="tabpanel" hidden>
@@ -5584,13 +5588,13 @@ function init(root) {
       const box = $("#sd-tfNew"); if (!box) return; if (!DIR()) { box.innerHTML = ""; return; }
       const adm = me.role === "admin", ok = TF.prof.filter((p) => p.actif !== false && (adm || p.id === me.id || ["secretariat", "moniteur", "ambassadeur"].includes(p.role)));
       if (box.dataset.pret === me.id) return; box.dataset.pret = me.id;
-      box.innerHTML = '<details class="card tf-newc"><summary>+ Nouvelle tâche</summary><form class="tf-form" novalidate>' +
+      box.innerHTML = '<div class="card tf-newc"><h3 class="tm-h3 tf-newh">Nouvelle tâche</h3><p class="tf-aide tf-newa">' + (adm ? "Pour toi ou pour quelqu'un de l'équipe. S'il faut de l'argent, choisis « Oui » plus bas." : "Pour toi, le secrétariat, le moniteur ou l'Ambassadeur.") + '</p><form class="tf-form" novalidate>' +
         '<div class="field"><label>Quoi ?</label><textarea class="tf-tx2" rows="2" maxlength="600" placeholder="ex. Refaire l\'enseigne de l\'agence"></textarea></div>' +
         '<div class="field"><label>Pour qui ?</label><div class="tf-chips" role="radiogroup">' + ok.map((p) => '<button type="button" role="radio" data-tfqui="' + p.id + '" aria-checked="false">' + (p.id === me.id ? "Moi" : esc(ROLE_NOM[p.role] || p.nom)) + "</button>").join("") + "</div></div>" +
         '<div class="field"><label>Pour quand ? (facultatif)</label><input type="date" class="tf-date2"></div>' +
         (adm ? '<div class="field"><label>Ça coûte de l\'argent ?</label><div class="tf-chips" role="radiogroup"><button type="button" role="radio" data-tfarg="non" aria-checked="true">Non</button><button type="button" role="radio" data-tfarg="oui" aria-checked="false">Oui, je connais le prix</button><button type="button" role="radio" data-tfarg="prix" aria-checked="false">Oui, prix à trouver</button></div>' +
           '<input class="tf-mt2" inputmode="numeric" autocomplete="off" placeholder="Montant (F)" aria-label="Montant" hidden><small class="tf-aide tf-arga" hidden>La gérante cherche le prix et le devis. Tu accordes ensuite, puis tu envoies l\'argent.</small></div>' : '<p class="tf-aide">Une tâche qui coûte de l\'argent : passe par Gérance → Dépenses → « Proposer un achat ».</p>') +
-        '<button type="submit" class="btn btn-green">Donner la tâche</button></form></details>';
+        '<button type="submit" class="btn btn-green">Donner la tâche</button></form></div>';
       const f = box.querySelector(".tf-form");
       f.addEventListener("click", (e) => {
         const q = e.target.closest("[data-tfqui]"); if (q) f.querySelectorAll("[data-tfqui]").forEach((b) => b.setAttribute("aria-checked", b === q));
@@ -5606,7 +5610,7 @@ function init(root) {
         confirmBtn(b, async () => {
           b.disabled = true;
           const r = await run(() => DB.q("rpc/tache_creer", { method: "POST", body: { p_pour: qui.dataset.tfqui, p_titre: tx, p_pour_le: f.querySelector(".tf-date2").value || null, p_argent: arg !== "non", p_montant: arg === "oui" ? mt : null } }), arg === "prix" ? "Envoyé à la gérante : elle cherche le prix" : "Tâche donnée");
-          b.disabled = false; if (r !== null) { box.dataset.pret = ""; tfCharger(); }
+          b.disabled = false; if (r !== null) { box.dataset.pret = ""; await tfCharger(); tfOnglet(arg === "prix" || qui.dataset.tfqui !== me.id ? "eq" : "moi"); }
         });
       });
     }
@@ -5622,31 +5626,36 @@ function init(root) {
       if (!t) { $("#sd-tfMoi").innerHTML = '<p class="tm-empty">L\'onglet « À faire » n\'est pas encore activé dans la base.</p>'; return; }
       TF.t = t; const adm = me.role === "admin", g = me.role === "gerant";
       $("#sd-tfRole").textContent = adm ? "Tes tâches, celles de l'équipe et l'argent à envoyer pour les dépenses accordées." : g ? "Tes tâches, les prix à trouver, et les tâches que tu donnes à l'équipe." : "Ce qu'on t'a demandé de faire. Touche « Fait » quand c'est fini.";
-      $('.tf-tabs [data-tfp="eq"]').hidden = !DIR(); $('.tf-tabs [data-tfp="pay"]').hidden = !adm;
+      const vis = { new: DIR(), moi: true, prix: g, acc: adm, pay: adm, att: adm, eq: DIR(), fini: true };
+      Object.keys(vis).forEach((k) => { const bt = $('.tf-tabs [data-tfp="' + k + '"]'); if (bt) bt.hidden = !vis[k]; });
       tfForm();
-      const ouv = t.filter((x) => !TF_FIN.includes(x.etape));
-      // À faire : mes tâches + ce qui attend mon geste (prix pour la gérante, accord pour la direction)
-      const moi = ouv.filter((x) => (x.pour === me.id && x.etape !== "prix" && x.etape !== "accord") || (g && x.etape === "prix") || (adm && x.etape === "accord")).sort(tfTri);
-      const aPayer = adm ? ouv.filter((x) => x.etape === "payer" || (x.etape === "envoye" && x.pas_recu_le)) : [];
-      $("#sd-tfMoi").innerHTML = (aPayer.length ? '<button type="button" class="tf-ban" data-tfgo="pay"><b>' + aPayer.length + " paiement" + (aPayer.length > 1 ? "s" : "") + " à faire</b><span>" + F(aPayer.reduce((n, x) => n + (x.montant || 0), 0)) + " · Ouvrir Paiements →</span></button>" : "") +
-        (moi.length ? moi.map((x) => tfCarte(x, "moi")).join("") : '<p class="tm-empty">Rien à faire pour l\'instant.</p>');
-      // L'équipe : tâches en cours des autres, par personne
-      if (DIR()) { const autres = ouv.filter((x) => !moi.includes(x) && x.pour !== me.id), qui = [...new Set(autres.map((x) => x.pour))];
-        $("#sd-tfEq").innerHTML = qui.length ? qui.map((id) => { const l = autres.filter((x) => x.pour === id).sort(tfTri); return '<section class="tf-grp"><h4 class="gr-h4">' + esc(tfNom(id).replace(/^./, (c) => c.toUpperCase())) + ' <span class="dq-count">' + l.length + "</span></h4>" + l.map((x) => tfCarte(x, "eq")).join("") + "</section>"; }).join("") : '<p class="tm-empty">Aucune tâche en cours dans l\'équipe.</p>'; }
-      // Paiements (direction)
+      const ouv = t.filter((x) => !TF_FIN.includes(x.etape)), vide = (m) => '<p class="tm-empty">' + m + "</p>", cartes = (l, v, m) => (l.length ? l.map((x) => tfCarte(x, v)).join("") : vide(m));
+      const grp = (titre, l, aide, v) => '<section class="tf-grp"><h4 class="gr-h4">' + titre + ' <span class="dq-count">' + l.length + "</span></h4>" + (aide ? '<p class="tf-aide">' + aide + "</p>" : "") + cartes(l, v, "Rien.") + "</section>";
+      // Mes tâches : ce qu'on m'a donné (le prix et l'accord ne sont pas encore pour moi)
+      const moi = ouv.filter((x) => x.pour === me.id && x.etape !== "prix" && x.etape !== "accord").sort(tfTri);
+      const prix = g ? ouv.filter((x) => x.etape === "prix").sort(tfTri) : [], acc = adm ? ouv.filter((x) => x.etape === "accord").sort(tfTri) : [];
+      const aPayer = adm ? ouv.filter((x) => x.etape === "payer" || (x.etape === "envoye" && x.pas_recu_le)).sort(tfTri) : [];
+      const env = adm ? ouv.filter((x) => x.etape === "envoye" && !x.pas_recu_le) : [], cours = adm ? ouv.filter((x) => x.etape === "afaire" && x.argent) : [];
+      $("#sd-tfMoi").innerHTML = cartes(moi, "moi", "Rien à faire pour l'instant.");
+      if (g) $("#sd-tfPrix").innerHTML = '<p class="tf-aide tf-intro">La direction a besoin du prix. Trouve le montant et le devis (ou une photo du ticket), puis envoie.</p>' + cartes(prix, "moi", "Aucun prix à trouver.");
       if (adm) {
-        const env = ouv.filter((x) => x.etape === "envoye" && !x.pas_recu_le), cours = ouv.filter((x) => x.etape === "afaire" && x.argent), fin = t.filter((x) => x.etape === "fait" && x.argent && tfMois(x.paye_le));
-        const envMois = t.reduce((n, x) => n + (x.envois || []).filter((e) => tfMois(e.le)).reduce((m, e) => m + (e.montant || 0), 0), 0), grp = (titre, l, aide, ouvert) => '<section class="tf-grp"><h4 class="gr-h4">' + titre + ' <span class="dq-count">' + l.length + "</span></h4>" + (aide ? '<p class="tf-aide">' + aide + "</p>" : "") + (l.length ? l.map((x) => tfCarte(x, "pay")).join("") : '<p class="tm-empty">Rien.</p>') + "</section>";
-        $("#sd-tfPay").innerHTML = '<div class="tm-stats tm-dr tf-tot"><div><span>Envoyé ce mois</span><b>' + F(envMois) + "</b></div><div><span>Reste à envoyer</span><b>" + F(aPayer.reduce((n, x) => n + (x.montant || 0), 0)) + "</b></div></div>" +
-          grp("À payer", aPayer, "Accordé : envoie l'argent, puis joins le reçu.") + grp("Envoyé, pas encore activé", env, "La personne doit ouvrir le reçu et toucher « Activer ».") + grp("En cours : achat et facture", cours, "Argent reçu. On attend l'achat et la facture.") +
-          '<details class="tf-old"><summary>Terminé ce mois (' + fin.length + ")</summary>" + fin.map((x) => tfCarte(x, "pay")).join("") + "</details>";
-        const bp = $("#sd-tfBPay"); bp.textContent = aPayer.length; bp.hidden = !aPayer.length;
+        $("#sd-tfAcc").innerHTML = '<p class="tf-aide tf-intro">La gérante a trouvé le prix. Regarde le devis, puis accorde ou refuse.</p>' + cartes(acc, "moi", "Rien à accorder.");
+        const envMois = t.reduce((n, x) => n + (x.envois || []).filter((e) => tfMois(e.le)).reduce((m, e) => m + (e.montant || 0), 0), 0);
+        $("#sd-tfPay").innerHTML = '<div class="tm-stats tm-dr tf-tot"><div><span>Reste à envoyer</span><b>' + F(aPayer.reduce((n, x) => n + (x.montant || 0), 0)) + "</b></div><div><span>Envoyé ce mois</span><b>" + F(envMois) + '</b></div></div><p class="tf-aide tf-intro">Envoie l\'argent depuis le compte marchand Mixx, télécharge le reçu, joins-le, puis « Paiement effectué ».</p>' + cartes(aPayer, "pay", "Aucun paiement à faire.");
+        $("#sd-tfAtt").innerHTML = grp("Pas encore activé", env, "L'argent est parti. La personne doit ouvrir le reçu et toucher « Activer ».", "pay") + grp("Achat en cours", cours, "Argent reçu. On attend l'achat et la facture.", "pay");
       }
-      // Terminé
+      // L'équipe : tâches en cours des autres, par personne
+      if (DIR()) { const autres = ouv.filter((x) => x.pour !== me.id && !prix.includes(x) && !acc.includes(x) && !aPayer.includes(x) && !env.includes(x) && !cours.includes(x)), qui = [...new Set(autres.map((x) => x.pour))];
+        $("#sd-tfEq").innerHTML = qui.length ? qui.map((id) => { const l = autres.filter((x) => x.pour === id).sort(tfTri); return '<section class="tf-grp"><h4 class="gr-h4">' + esc(tfNom(id).replace(/^./, (c) => c.toUpperCase())) + ' <span class="dq-count">' + l.length + "</span></h4>" + l.map((x) => tfCarte(x, "eq")).join("") + "</section>"; }).join("") : vide("Aucune tâche en cours dans l'équipe."); }
+      // Terminé (avec les paiements du mois pour la direction)
       const fini = t.filter((x) => TF_FIN.includes(x.etape)).sort((a, b) => String(b.fait_le || b.annule_le || b.accord_le || b.le).localeCompare(String(a.fait_le || a.annule_le || a.accord_le || a.le))).slice(0, 60);
-      $("#sd-tfFini").innerHTML = fini.length ? fini.map((x) => tfCarte(x, "fini")).join("") : '<p class="tm-empty">Rien de terminé pour l\'instant.</p>';
-      const n = ouv.filter(tfAMoi).length, bd = $("#sd-tfBadge"), bm = $("#sd-tfBMoi"); bd.textContent = n; bd.hidden = !n; const nm = moi.filter(tfAMoi).length; bm.textContent = nm; bm.hidden = !nm;
-      if (!TF.ong) tfOnglet("moi");
+      $("#sd-tfFini").innerHTML = cartes(fini, "fini", "Rien de terminé pour l'instant.");
+      // Pastilles
+      const pas = (id, n) => { const e = $("#" + id); if (e) { e.textContent = n; e.hidden = !n; } };
+      pas("sd-tfBMoi", moi.filter(tfAMoi).length); pas("sd-tfBPrix", prix.length); pas("sd-tfBAcc", acc.length); pas("sd-tfBPay", aPayer.length); pas("sd-tfBAtt", env.filter((x) => Date.now() - new Date(x.paye_le) > 864e5).length);
+      pas("sd-tfBadge", ouv.filter(tfAMoi).length);
+      // Première ouverture : le premier sous-onglet qui attend un geste, sinon « Mes tâches »
+      if (!TF.ong) tfOnglet((acc.length && "acc") || (aPayer.length && "pay") || (prix.length && "prix") || "moi");
     }
     // Actions sur une tâche
     const tfRpc = (fn, body, msg) => run(() => DB.q("rpc/" + fn, { method: "POST", body }).then(() => true), msg);
@@ -7251,7 +7260,7 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 .tf-btns{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}.tf-box .tf-btns{margin:0}.tf-alerte{margin:10px 0 0;padding:8px 10px;border-radius:10px;background:#FDE7EA;color:#B3132B;font-weight:600;font-size:.9rem}
 .tf-pas{font-size:.86rem}.tf-pas summary{cursor:pointer;color:var(--muted)}.tf-pas[open]{display:flex;flex-direction:column;gap:6px}.tf-ann{margin:10px 0 0;font-size:.82rem;color:var(--muted)}
 .tf-chips{display:flex;flex-wrap:wrap;gap:6px}.tf-chips button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:.5em 1em;font:600 .88rem var(--f-ui);cursor:pointer;color:var(--ink)}.tf-chips button[aria-checked=true]{background:var(--ink);border-color:var(--ink);color:#fff}
-.tf-newc{padding:0;margin:0 0 14px}.tf-newc summary{cursor:pointer;padding:14px 16px;font:700 1rem var(--f-ui);color:#0F766E;list-style:none}.tf-newc summary::-webkit-details-marker{display:none}.tf-newc[open] summary{border-bottom:1px solid var(--line)}
+.tf-newc{padding:0;margin:0 0 14px}.tf-newh{margin:0;padding:16px 16px 0}.tf-newa{padding:4px 16px 0}.tf-intro{margin:0 0 12px}.tf-tabs button[hidden]{display:none}.tf-newc summary{cursor:pointer;padding:14px 16px;font:700 1rem var(--f-ui);color:#0F766E;list-style:none}.tf-newc summary::-webkit-details-marker{display:none}.tf-newc[open] summary{border-bottom:1px solid var(--line)}
 .tf-form{padding:14px 16px;display:flex;flex-direction:column;gap:12px}.tf-form .field{margin:0}.tf-form textarea,.tf-form input{width:100%;box-sizing:border-box}.tf-mt2{margin:8px 0 0}
 .tf-ban{all:unset;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;box-sizing:border-box;width:100%;padding:12px 16px;margin:0 0 12px;border-radius:12px;background:#0F766E;color:#fff}.tf-ban span{font-size:.88rem;opacity:.9}
 .tf-fac.is-busy{opacity:.6;pointer-events:none}.tf-env{margin:10px 0 0;padding:10px 12px;border-radius:10px;background:#F7F8FA;font-size:.88rem;display:flex;flex-direction:column;gap:4px}.tf-envl{display:flex;justify-content:space-between;gap:8px}.tf-env .tf-alerte{margin:6px 0 0}.tf-grp{margin:0 0 18px}.tf-tot{margin:0 0 16px}.tf-old summary{cursor:pointer;font-weight:700;margin:0 0 10px}
