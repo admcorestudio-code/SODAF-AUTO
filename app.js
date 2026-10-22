@@ -1961,8 +1961,9 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 </div>
 </section>
 <section class="tm-sec" data-s="conduite" hidden>
-<div class="gr-tabs cd-modes" role="tablist"><button type="button" role="tab" data-cdm="jour" aria-selected="true">Planning du jour</button><button type="button" role="tab" data-cdm="rat" aria-selected="false">Rattrapages<em class="gr-badge" id="sd-cdRatB" hidden></em></button></div>
+<div class="gr-tabs cd-modes" role="tablist"><button type="button" role="tab" data-cdm="jour" aria-selected="true">Planning du jour</button><button type="button" role="tab" data-cdm="rat" aria-selected="false">Rattrapages<em class="gr-badge" id="sd-cdRatB" hidden></em></button><button type="button" role="tab" data-cdm="pl" aria-selected="false">Places libres</button></div>
 <div id="sd-cdRat" class="cd-rat" hidden></div>
+<div id="sd-cdPl" class="cd-rat" hidden></div>
 <div id="sd-cdJour">
 <details class="card tm-prog cd-eqs" id="sd-eqBox" hidden><summary><span><b>Les équipes de conduite</b><small id="sd-eqSum">4 élèves par équipe, 2 blocs de 2 h par semaine</small></span><em>Voir / replier</em></summary><div id="sd-eqList" class="eq-grid"></div><p class="tm-note" style="margin:10px 0 0!important">Pour placer un élève : ouvre sa fiche (onglet Élèves), bloc « Conduite », puis « Placer dans une équipe ». Ses blocs sont réservés d'un coup, 2 par semaine.</p></details>
 <div class="tm-bar tm-day-nav"><button class="btn btn-line btn-sm" type="button" id="sd-cdPrev">‹ Veille</button><b id="sd-cdDay"></b><button class="btn btn-line btn-sm" type="button" id="sd-cdNext">Lendemain ›</button><button class="linkbtn" type="button" id="sd-cdToday">Aujourd'hui</button></div>
@@ -4802,7 +4803,31 @@ function init(root) {
     const RAT = { mode: "jour", dates: [], du: [] };
     function cdMode(k) {
       RAT.mode = k; $$(".cd-modes [data-cdm]").forEach((b) => b.setAttribute("aria-selected", b.dataset.cdm === k));
-      $("#sd-cdJour").hidden = k !== "jour"; $("#sd-cdRat").hidden = k !== "rat"; if (k === "rat") ratCharger();
+      $("#sd-cdJour").hidden = k !== "jour"; $("#sd-cdRat").hidden = k !== "rat"; $("#sd-cdPl").hidden = k !== "pl"; if (k === "rat") ratCharger(); if (k === "pl") plCharger();
+    }
+
+    // ---- Places libres (22 oct.) : « peut-on prendre de nouveaux élèves ? »
+    //      Places libres à venir (planning déjà créé) − séances que les élèves en formation doivent encore réserver = ce qui reste pour les nouveaux.
+    async function plCharger() {
+      const box = $("#sd-cdPl"); if (!box) return; const td = iso(new Date());
+      const cr = await DB.q("creneaux_conduite?select=jour,statut,eleve_id&jour=gt." + td + "&statut=in." + encodeURIComponent("(Libre,Réservé)") + "&limit=5000").catch(() => null);
+      if (!cr) { box.innerHTML = '<p class="tm-empty">Places indisponibles pour l\'instant.</p>'; return; }
+      const W = {}; cr.forEach((c) => { const w = lundiDe(c.jour); W[w] = W[w] || { l: 0, t: 0 }; W[w].t++; if (c.statut === "Libre" && !c.eleve_id) W[w].l++; });
+      const sem = Object.keys(W).sort(), libres = sem.reduce((a, w) => a + W[w].l, 0);
+      const doivent = eleves.filter((x) => ["Inscrit", "En formation"].includes(x.statut) && x.quota > 0).map((x) => ({ x, n: Math.max(0, x.quota - x.faits - x.resa - (x.perdus || 0)) })).filter((o) => o.n > 0);
+      const besoin = doivent.reduce((a, o) => a + o.n, 0), reste = libres - besoin, nouveaux = Math.max(0, Math.floor(reste / 12));
+      const part = libres ? reste / libres : 0, et = part >= 0.4 ? "ok" : part >= 0.15 ? "mi" : "ko";
+      const C = { ok: ["#15803D", "Oui, il reste de la place", "On peut inscrire de nouveaux élèves."], mi: ["#B45309", "Ça se remplit", "On peut encore inscrire, mais préviens les nouveaux que la conduite peut attendre un peu."], ko: ["#B91C1C", "Presque complet", "Les élèves déjà inscrits prennent presque toutes les places. Un nouvel élève attendra pour conduire, sauf si on ajoute des heures."] }[et];
+      const fin = cr.length ? dOf(cr.reduce((m, c) => (c.jour > m ? c.jour : m), cr[0].jour)) : null;
+      const sd = (w) => dOf(w).toLocaleDateString("fr-FR", { day: "numeric", month: "short" }), cette = lundiDe(td);
+      box.innerHTML = '<div class="tf-hero cd-rhero" style="--tfc:' + C[0] + '"><i aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/><path d="M12 3v6.5M4.5 15.5l5.4-2.2M19.5 15.5l-5.4-2.2"/></svg></i><div class="tf-hero-t"><b>' + C[1] + "</b><span>" + C[2] + '</span></div><div class="tf-hero-n"><b>' + nouveaux + "</b><span>nouveaux</span></div></div>" +
+        '<div class="card pl-calc"><h4 class="gr-h4">Le calcul' + (fin ? ", jusqu'au " + fin.toLocaleDateString("fr-FR", { day: "numeric", month: "long" }) : "") + '</h4>' +
+        '<div class="pl-l"><span>Places de conduite encore libres</span><b>' + libres + "</b></div>" +
+        '<div class="pl-l"><span>Séances que les ' + doivent.length + " élève" + (doivent.length > 1 ? "s" : "") + " déjà inscrit" + (doivent.length > 1 ? "s" : "") + " doivent encore réserver</span><b>− " + besoin + "</b></div>" +
+        '<div class="pl-l pl-tot"><span>Reste pour les nouveaux</span><b>' + Math.max(0, reste) + "</b></div>" +
+        '<p class="cd-rnote">Un nouvel élève a besoin de 12 séances : ' + Math.max(0, reste) + " places, c'est environ <b>" + nouveaux + " nouvel" + (nouveaux > 1 ? "s" : "") + " élève" + (nouveaux > 1 ? "s" : "") + "</b>. Il commence à conduire environ 5 semaines après son inscription (cours 1 à 9). Le planning du mois suivant se crée le 24 : le chiffre monte alors.</p></div>" +
+        '<h4 class="gr-h4 cd-rh">Semaine par semaine</h4>' + (sem.length ? sem.map((w) => { const o = W[w], pris = o.t - o.l, pc = o.t ? Math.round((pris / o.t) * 100) : 0;
+          return '<div class="card pl-w"><div class="cd-rmh"><div><b>Semaine du ' + sd(w) + "</b>" + (w === cette ? "<span>Cette semaine</span>" : "") + "</div>" + (o.l ? '<em class="cd-rok">' + o.l + " libre" + (o.l > 1 ? "s" : "") + " sur " + o.t + "</em>" : '<em class="cd-rko">Complet</em>') + '</div><div class="pl-bar" role="img" aria-label="' + pc + ' % pris"><i style="width:' + pc + '%"></i></div></div>'; }).join("") : '<p class="tm-empty">Aucune séance prévue pour l\'instant.</p>');
     }
     $(".cd-modes") && $(".cd-modes").addEventListener("click", (e) => { const b = e.target.closest("[data-cdm]"); if (b) cdMode(b.dataset.cdm); });
     const ratJour = (d) => dOf(d).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" }).replace(/^./, (c) => c.toUpperCase());
@@ -7529,7 +7554,9 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 .tf-b-conf{border-left-color:#2563EB}.tf-b-ach{border-left-color:#FFC400}.tf-b-attm{border-left-color:#94A3B8}.tf-b-moi{border-left-color:#0F766E}
 
 /* Planning conduite : vue « Rattrapages » (21 oct.) */
-.cd-modes{margin:0 0 14px}.cd-rat[hidden],#sd-cdJour[hidden]{display:none}.cd-rhero{margin-bottom:14px}
+.cd-modes{margin:0 0 14px}.cd-rat[hidden],#sd-cdJour[hidden]{display:none}
+.pl-calc{padding:14px 16px;margin:0 0 16px}.pl-calc .gr-h4{margin:0 0 6px}.pl-l{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:8px 0;border-top:1px solid #EEF0F2}.pl-l:first-of-type{border-top:0}.pl-l b{font:800 1.1rem var(--f-ui);white-space:nowrap}.pl-tot{border-top:2px solid #15191E}.pl-tot span{font-weight:700}.pl-tot b{font-size:1.35rem}.pl-calc .cd-rnote{margin-top:8px}
+.pl-w{padding:12px 16px;margin:0 0 10px;display:flex;flex-direction:column;gap:10px}.pl-bar{height:10px;border-radius:999px;background:#EEF0F3;overflow:hidden}.pl-bar i{display:block;height:100%;background:#4B3F8F;border-radius:999px}.cd-rhero{margin-bottom:14px}
 .cd-rdu{padding:14px 16px;margin:0 0 16px;border-top:4px solid #4B3F8F!important}.cd-rdu .gr-h4{margin:0 0 8px}.cd-rel{display:flex;flex-direction:column;gap:2px;padding:8px 0;border-top:1px solid #EEF0F2}.cd-rel:first-of-type{border-top:0}.cd-rel small{color:var(--muted);font-size:.82rem}
 .cd-rh{margin:4px 0 10px}.cd-rm{padding:14px 16px;margin:0 0 12px;border-top:4px solid #16A34A!important;display:flex;flex-direction:column;gap:10px}.cd-rm.cd-rplein{border-top-color:#CBD2D9!important;background:#FAFBFC}
 .cd-rmh{display:flex;justify-content:space-between;align-items:center;gap:10px}.cd-rmh b{font:800 1.02rem var(--f-ui);display:block}.cd-rmh span{font-size:.8rem;font-weight:700;color:#4B3F8F}
