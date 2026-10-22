@@ -1,4 +1,4 @@
--- 0066 · Conduite à ton rythme (décision du propriétaire, 22 oct. 2026)
+-- 0068 · Conduite à ton rythme (décision du propriétaire, 22 oct. 2026)
 -- « Comme une salle de sport » : l'élève paie une fois, puis vient quand il peut. Plus d'équipe fixe réservée pour 6 semaines.
 -- 1. Feu vert : il conduit seulement quand il a suivi EN SALLE les cours 1 à 9 (parties A à F du manuel :
 --    code de la route, intersections, priorités, secourisme, assurance, notion théorique de conduite).
