@@ -3,8 +3,9 @@
 -- 1. Feu vert : il conduit seulement quand il a suivi EN SALLE les cours 1 à 9 (parties A à F du manuel :
 --    code de la route, intersections, priorités, secourisme, assurance, notion théorique de conduite).
 --    Exception : la remise à niveau (déjà titulaire du permis, pas de code).
--- 2. Au plus 2 séances de conduite par semaine (lundi → dimanche), pour que tout le monde ait sa place.
+-- 2. Au plus 3 séances de conduite par semaine (lundi → dimanche) : une possibilité, pas une obligation.
 -- 3. Tout est à faire dans les 3 mois après son premier reçu d'inscription (le plus rapide : environ 2 mois).
+--    Souplesse : la gérante ou la direction peut prolonger d'un mois (eleves.prolonge_jusqu, fonction formation_prolonger).
 -- 4. Pas de limite pour le tarif étudiant (décision du 22 oct. : « ceux qui viennent, ils viennent »).
 -- Les créneaux ne changent pas (mêmes heures, 4 places) ; le secrétariat place l'élève sur une place libre.
 -- Rien n'est supprimé. Idempotent.
@@ -28,6 +29,33 @@ returns date language sql stable security definer set search_path = '' as $$
 $$;
 revoke all on function prive.debut_formation(bigint) from public;
 
+-- Prolongation accordée par la gérante ou la direction (rien n'est supprimé, une note est gardée dans le suivi)
+alter table public.eleves add column if not exists prolonge_jusqu date;
+
+-- Date limite : 3 mois après l'inscription, ou plus tard si une prolongation a été accordée
+create or replace function prive.fin_formation(e bigint)
+returns date language sql stable security definer set search_path = '' as $$
+  select case when d.d0 is null then null else greatest((d.d0 + interval '3 months')::date, (select x.prolonge_jusqu from public.eleves x where x.id = e)) end
+    from (select prive.debut_formation(e) as d0) d
+$$;
+revoke all on function prive.fin_formation(bigint) from public;
+
+-- Prolonger d'un mois (à partir de la date limite, ou d'aujourd'hui si elle est déjà passée)
+create or replace function public.formation_prolonger(p_eleve bigint)
+returns date language plpgsql volatile security definer set search_path = '' as $$
+declare f date; n date;
+begin
+  if not prive.a_role(array['admin', 'gerant']) then raise exception 'réservé à la gérante et à la direction' using errcode = '42501'; end if;
+  f := prive.fin_formation(p_eleve);
+  if f is null then raise exception 'Pas encore de reçu d''inscription pour cet élève.'; end if;
+  n := (greatest(f, current_date) + interval '1 month')::date;
+  update public.eleves set prolonge_jusqu = n where id = p_eleve;
+  insert into public.suivi (eleve_id, type, note) values (p_eleve, 'Note', 'Délai de formation prolongé jusqu''au ' || to_char(n, 'DD/MM/YYYY'));
+  return n;
+end $$;
+revoke all on function public.formation_prolonger(bigint) from public, anon;
+grant execute on function public.formation_prolonger(bigint) to authenticated;
+
 -- Ce que l'écran a besoin de savoir pour chaque élève en cours (équipe seulement)
 create or replace function public.conduite_infos()
 returns table (eleve_id bigint, cours_af int[], debut date, fin date)
@@ -35,7 +63,7 @@ language plpgsql stable security definer set search_path = '' as $$
 begin
   if not prive.a_role(array['admin', 'gerant', 'secretariat', 'moniteur']) then raise exception 'accès refusé' using errcode = '42501'; end if;
   return query
-    select e.id, prive.cours_af(e.id), prive.debut_formation(e.id), (prive.debut_formation(e.id) + interval '3 months')::date
+    select e.id, prive.cours_af(e.id), prive.debut_formation(e.id), prive.fin_formation(e.id)
       from public.eleves e
      where e.statut in ('Inscrit', 'En formation');
 end $$;
@@ -74,22 +102,22 @@ begin
       raise exception 'Pas encore de conduite : il doit d''abord suivre en salle les cours 1 à 9 (parties A à F du manuel). Il lui manque : %.', array_to_string(m, ', ') using errcode = 'P0001';
     end if;
   end if;
-  -- 3 mois après l'inscription
-  d0 := prive.debut_formation(new.eleve_id);
-  if d0 is not null and new.jour > (d0 + interval '3 months')::date then
-    raise exception 'Réservation impossible : ses séances étaient à faire avant le % (3 mois après l''inscription).', to_char((d0 + interval '3 months')::date, 'DD/MM/YYYY') using errcode = 'P0001';
+  -- 3 mois après l'inscription (ou date de prolongation)
+  d0 := prive.fin_formation(new.eleve_id);
+  if d0 is not null and new.jour > d0 then
+    raise exception 'Réservation impossible : le délai de formation se terminait le % (3 mois). La gérante peut le prolonger d''un mois depuis sa fiche.', to_char(d0, 'DD/MM/YYYY') using errcode = 'P0001';
   end if;
   -- Une seule place par élève dans une même séance
   if exists (select 1 from public.creneaux_conduite c
               where c.eleve_id = new.eleve_id and c.id <> new.id and c.jour = new.jour and c.heure = new.heure and c.statut in ('Réservé', 'Fait')) then
     raise exception 'Réservation impossible : il a déjà une place à cette séance.' using errcode = 'P0001';
   end if;
-  -- 2 séances au plus par semaine
+  -- 3 séances au plus par semaine
   select count(*) into k from public.creneaux_conduite c
    where c.eleve_id = new.eleve_id and c.id <> new.id and c.statut in ('Réservé', 'Fait')
      and date_trunc('week', c.jour) = date_trunc('week', new.jour);
-  if k >= 2 then
-    raise exception 'Réservation impossible : il a déjà 2 séances la semaine du % (2 au plus par semaine).', to_char(date_trunc('week', new.jour), 'DD/MM') using errcode = 'P0001';
+  if k >= 3 then
+    raise exception 'Réservation impossible : il a déjà 3 séances la semaine du % (3 au plus par semaine).', to_char(date_trunc('week', new.jour), 'DD/MM') using errcode = 'P0001';
   end if;
   if new.bloc = 'mercredi'
      and now() < (((new.jour - 1)::timestamp + time '18:00') at time zone 'Africa/Lome')
