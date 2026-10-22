@@ -5596,7 +5596,7 @@ function init(root) {
       if (t.etape === "accord") return ["att", adm ? "Prix trouvé : à accorder" : "Chez la direction"];
       if (t.etape === "payer") return ["att", adm ? "Argent à envoyer" : "Accordé : en attente de l'argent"];
       if (t.etape === "envoye") return t.pas_recu_le ? ["non", "Argent pas reçu"] : ["att", moi ? "Argent envoyé : vérifie et active" : "Envoyé, pas encore activé"];
-      if (t.etape === "afaire") return ["neu", t.argent && !t.carburant && !t.facture ? "Facture à ajouter" : t.argent ? "Achat à faire" : "À faire"];
+      if (t.etape === "afaire") return ["neu", t.argent && t.par === t.pour ? "Achat à faire toi-même" : t.argent && !t.carburant && !t.facture ? "Facture à ajouter" : t.argent ? "Achat à faire" : "À faire"];
       if (t.etape === "fait") return ["oui", "Fait " + grQuand(t.fait_le)];
       return t.etape === "refusee" ? ["non", "Refusé"] : ["x", "Annulé"];
     }
@@ -5639,26 +5639,31 @@ function init(root) {
         else if (adm && t.mauvais_numero_le) act += '<p class="tf-act-ko">Mauvais numéro : appelle le service client Yas avec la référence du reçu pour récupérer l\'argent.</p>' + tfPayBox(t);
         else info += "Envoyé : " + quand + "." + (pas ? " " + pas + "." : "") + (Date.now() - new Date(t.paye_le) > 864e5 ? ' <b class="tf-retard">Plus de 24 h sans activation.</b>' : "");
       }
-      if (t.etape === "afaire" && (moi || (DIR() && vue !== "moi"))) {
+      if (t.etape === "afaire" && t.argent && t.par === t.pour && moi && adm) {
+        act += '<div class="tf-dir"><p class="tf-act-t">Après l\'achat : écris le prix payé et joins le ticket</p><p class="tf-act-s">Pas de ticket ? Une photo de ce que tu as acheté suffit.</p>' +
+          '<label class="tf-lab">Prix payé (F)<input class="tf-dm" inputmode="numeric" autocomplete="off" placeholder="ex. 45 000" value="' + (t.montant ? milliers(t.montant) : "") + '"></label>' + pjHtml(true) +
+          '<div class="tf-btns">' + tfBtn("data-tfdir", "Achat fait", "ok") + "</div></div>";
+      } else if (t.etape === "afaire" && (moi || (DIR() && vue !== "moi"))) {
         const fac = t.argent && !t.carburant && !t.facture;
         if (fac) act += '<div class="tf-fac" data-tffac><div class="tf-fach"><i aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l3 3v15l-2.5-1.5L13 21l-2.5-1.5L8 21l-2-1.5V3z"/><path d="M9 9h6M9 13h6"/></svg></i><div><p class="tf-act-t">Après l\'achat, ajoute la facture ou le ticket</p><p class="tf-act-s tf-jaune">Obligatoire avant de toucher « Fait ».</p></div></div>' + pjHtml(true) + "</div>";
         else if (!t.argent) act += '<p class="tf-act-t">' + (moi ? "À faire" : "À faire par " + esc(tfNom(t.pour))) + "</p>";
         else act += '<p class="tf-act-t">' + (t.carburant ? "Essence reçue" : "Facture ajoutée") + '</p><p class="tf-act-s">Touche « Fait » quand c\'est terminé.</p>';
         act += '<div class="tf-btns">' + tfBtn("data-tffait" + (fac ? " disabled" : ""), moi ? "Fait" : "Marquer comme fait", "ok") + "</div>";
       }
-      const annul = ["prix", "accord", "payer"].includes(t.etape) || (t.etape === "afaire" && !t.argent);
+      const annul = ["prix", "accord", "payer"].includes(t.etape) || (t.etape === "afaire" && (!t.argent || (t.par === t.pour && !t.facture)));
       const ann = annul && ((t.par === me.id && DIR()) || adm) ? '<button type="button" class="linkbtn tf-ann" data-tfann>Annuler la tâche</button>' : "";
       return [info, act, ann];
     }
     // Étapes de l'argent : Accordé → Envoyé → Reçu → Facture → Fait
     function tfEtapes(t) {
-      if (!t.argent || ["refusee", "annulee"].includes(t.etape)) return "";
+      if (!t.argent || ["refusee", "annulee"].includes(t.etape) || t.par === t.pour) return "";
       const n = ["Accordé", "Envoyé", "Reçu"].concat(t.carburant ? [] : ["Facture"]).concat(["Fait"]);
       const fait = { prix: 0, accord: 0, payer: 1, envoye: 2, afaire: t.carburant || t.facture ? (t.carburant ? 3 : 4) : 3, fait: n.length }[t.etape] || 0;
       return '<ol class="tf-et">' + n.map((x, i) => '<li class="' + (i < fait ? "ok" : i === fait ? "cur" : "") + '"><i></i><span>' + x + "</span></li>").join("") + "</ol>";
     }
     function tfPieces(t) {
       if (!t.argent) return "";
+      if (t.par === t.pour) return t.facture ? '<div class="tf-pcs"><button type="button" class="tf-pc" data-tfdoc="' + esc(t.facture) + '"><i></i>Ticket</button></div>' : "";
       const p = (lab, path, att) => path ? '<button type="button" class="tf-pc" data-tfdoc="' + esc(path) + '"><i></i>' + lab + "</button>" : '<span class="tf-pc tf-pc-x"><i></i>' + lab + (att ? " : " + att : "") + "</span>";
       return '<div class="tf-pcs">' + p("Devis", t.devis, t.carburant ? "essence" : "") + p("Reçu", t.paye_recu, "") + (t.carburant ? "" : p("Facture", t.facture, "")) + "</div>";
     }
@@ -5669,7 +5674,7 @@ function init(root) {
       return '<article class="tf tf-' + st[0] + (late ? " tf-late" : "") + '" data-tf="' + t.id + '">' +
         '<div class="tf-h"><div class="tf-hl"><p class="tf-tx">' + esc(String(t.titre || "").replace(/^\[TEST\]\s*/, "")) + (test ? ' <span class="dq-test">TEST</span>' : "") + '</p><p class="tf-sub">' + qui + " · T-" + t.id + (t.demande_id ? " · dépense accordée" : "") +
           (t.pour_le && !TF_FIN.includes(t.etape) ? ' · <span class="' + (late ? "tf-retard" : "") + '">' + (late ? "en retard, " : "") + "pour " + tfJour(t.pour_le) + "</span>" : "") + "</p></div>" +
-          (t.argent ? '<div class="tf-hr">' + (t.paye_montant || t.montant ? F(t.paye_montant || t.montant) : '<small>Prix à trouver</small>') + "</div>" : "") + "</div>" +
+          (t.argent ? '<div class="tf-hr">' + (t.paye_montant || t.montant ? F(t.paye_montant || t.montant) : '<small>' + (t.par === t.pour ? "Prix au retour" : "Prix à trouver") + "</small>") + "</div>" : "") + "</div>" +
         '<p class="tf-etat"><i></i>' + esc(st[1]) + "</p>" + tfEtapes(t) + tfPieces(t) + tfEnvois(t) +
         (t.accord_note && t.etape !== "fait" ? '<p class="tf-rep">Direction : « ' + esc(t.accord_note) + " »</p>" : "") + (t.fait_note ? '<p class="tf-rep">« ' + esc(t.fait_note) + " »</p>" : "") +
         (info ? '<p class="tf-info">' + info + "</p>" : "") + (act ? '<div class="tf-act"><p class="tf-act-k">' + (tfAMoi(t) || t.pour === me.id ? "À toi de jouer" : "Tu peux aussi") + "</p>" + act + "</div>" : "") + ann + "</article>";
@@ -5694,12 +5699,15 @@ function init(root) {
         '<div class="field"><label>Pour qui ?</label><div class="tf-chips" role="radiogroup">' + ok.map((p) => '<button type="button" role="radio" data-tfqui="' + p.id + '" aria-checked="false">' + (p.id === me.id ? "Moi" : esc(ROLE_NOM[p.role] || p.nom)) + "</button>").join("") + "</div></div>" +
         '<div class="field"><label>Pour quand ? (facultatif)</label><input type="date" class="tf-date2"></div>' +
         (adm ? '<div class="field"><label>Ça coûte de l\'argent ?</label><div class="tf-chips" role="radiogroup"><button type="button" role="radio" data-tfarg="non" aria-checked="true">Non</button><button type="button" role="radio" data-tfarg="oui" aria-checked="false">Oui, je connais le prix</button><button type="button" role="radio" data-tfarg="prix" aria-checked="false">Oui, prix à trouver</button></div>' +
-          '<input class="tf-mt2" inputmode="numeric" autocomplete="off" placeholder="Montant (F)" aria-label="Montant" hidden><small class="tf-aide tf-arga" hidden>La gérante cherche le prix et le devis. Tu accordes ensuite, puis tu envoies l\'argent.</small></div>' : '<p class="tf-aide">Une tâche qui coûte de l\'argent : passe par Gérance → Dépenses → « Proposer un achat ».</p>') +
+          '<input class="tf-mt2" inputmode="numeric" autocomplete="off" placeholder="Montant (F)" aria-label="Montant" hidden><small class="tf-aide tf-arga" hidden>La gérante cherche le prix et le devis. Tu accordes ensuite, puis tu envoies l\'argent.</small><small class="tf-aide tf-argm" hidden>Tu fais l\'achat toi-même : après, tu écris le prix payé et tu joins le ticket. Rien ne part à la gérante.</small></div>' : '<p class="tf-aide">Une tâche qui coûte de l\'argent : passe par Gérance → Dépenses → « Proposer un achat ».</p>') +
         '<button type="submit" class="btn btn-green">Donner la tâche</button></form></div>';
       const f = box.querySelector(".tf-form");
       f.addEventListener("click", (e) => {
         const q = e.target.closest("[data-tfqui]"); if (q) f.querySelectorAll("[data-tfqui]").forEach((b) => b.setAttribute("aria-checked", b === q));
-        const a = e.target.closest("[data-tfarg]"); if (a) { f.querySelectorAll("[data-tfarg]").forEach((b) => b.setAttribute("aria-checked", b === a)); f.querySelector(".tf-mt2").hidden = a.dataset.tfarg !== "oui"; f.querySelector(".tf-arga").hidden = a.dataset.tfarg !== "prix"; }
+        const a = e.target.closest("[data-tfarg]"); if (a) f.querySelectorAll("[data-tfarg]").forEach((b) => b.setAttribute("aria-checked", b === a));
+        if ((q || a) && adm) { const ar = f.querySelector('[data-tfarg][aria-checked="true"]').dataset.tfarg, qq = f.querySelector('[data-tfqui][aria-checked="true"]'), soi = !!qq && qq.dataset.tfqui === me.id;
+          f.querySelector(".tf-mt2").hidden = ar !== "oui"; f.querySelector(".tf-arga").hidden = !(ar === "prix" && !soi); f.querySelector(".tf-argm").hidden = !(ar !== "non" && soi);
+          f.querySelector('[data-tfarg="prix"]').textContent = soi ? "Oui, je ne connais pas le prix" : "Oui, prix à trouver"; }
       });
       f.addEventListener("submit", (e) => {
         e.preventDefault(); const b = f.querySelector("[type=submit]"), tx = f.querySelector(".tf-tx2").value.trim(), qui = f.querySelector('[data-tfqui][aria-checked="true"]');
@@ -5707,11 +5715,10 @@ function init(root) {
         if (tx.length < 3) { toast("Écris la tâche", true); f.querySelector(".tf-tx2").focus(); return; }
         if (!qui) { toast("Choisis pour qui", true); return; }
         if (arg === "oui" && !mt) { toast("Écris le montant (ou choisis « prix à trouver »)", true); f.querySelector(".tf-mt2").focus(); return; }
-        if (arg !== "non" && qui.dataset.tfqui === me.id) { toast("Une tâche avec de l'argent se donne à quelqu'un de l'équipe", true); return; }
         confirmBtn(b, async () => {
           b.disabled = true;
-          const r = await run(() => DB.q("rpc/tache_creer", { method: "POST", body: { p_pour: qui.dataset.tfqui, p_titre: tx, p_pour_le: f.querySelector(".tf-date2").value || null, p_argent: arg !== "non", p_montant: arg === "oui" ? mt : null } }), arg === "prix" ? "Envoyé à la gérante : elle cherche le prix" : "Tâche donnée");
-          b.disabled = false; if (r !== null) { box.dataset.pret = ""; await tfCharger(); tfOnglet(arg === "prix" || qui.dataset.tfqui !== me.id ? "eq" : "moi"); }
+          const r = await run(() => DB.q("rpc/tache_creer", { method: "POST", body: { p_pour: qui.dataset.tfqui, p_titre: tx, p_pour_le: f.querySelector(".tf-date2").value || null, p_argent: arg !== "non", p_montant: arg === "oui" ? mt : null } }), arg === "prix" && qui.dataset.tfqui !== me.id ? "Envoyé à la gérante : elle cherche le prix" : qui.dataset.tfqui === me.id ? "Tâche ajoutée pour toi" : "Tâche donnée");
+          b.disabled = false; if (r !== null) { box.dataset.pret = ""; await tfCharger(); tfOnglet(qui.dataset.tfqui !== me.id ? "eq" : arg !== "non" ? "ach" : "moi"); }
         });
       });
     }
@@ -5728,7 +5735,7 @@ function init(root) {
     const TF_ONG = {
       new: ["#15191E", "plus", "Nouvelle tâche", "Écris ce qu'il faut faire et choisis pour qui."],
       conf: ["#2563EB", "wallet", "Argent à confirmer", "La direction t'a envoyé de l'argent. Regarde ton solde Mixx, puis touche « Activer »."],
-      ach: ["#FFC400", "cart", "Achats à faire", "Argent reçu : fais l'achat, ajoute la facture ou le ticket, puis touche « Fait »."],
+      ach: ["#FFC400", "cart", "Achats à faire", "Fais l'achat, puis ajoute le ticket ou la facture et confirme."],
       moi: ["#0F766E", "list", "Mes tâches", "Ce qu'on t'a demandé de faire. Touche « Fait » quand c'est fini."],
       attm: ["#64748B", "sablier", "En attente de l'argent", "C'est accordé. La direction va t'envoyer l'argent. Rien à faire pour l'instant."],
       prix: ["#7C3AED", "tag", "Prix à trouver", "La direction a besoin du prix. Trouve le montant et le devis, puis envoie."],
@@ -5821,6 +5828,9 @@ function init(root) {
       if (btn.matches("[data-tfbon]")) { deux(() => tfRpc("tache_numero_bon", { p_id: id }, "La personne est prévenue : elle regarde son solde Mixx")); return; }
       if (btn.matches("[data-tfmauv]")) { deux(() => tfRpc("tache_mauvais_numero", { p_id: id }, "Noté : appelle Yas, puis renvoie au bon numéro")); return; }
       if (btn.matches("[data-tfrec]")) { const i = +btn.dataset.tfrec; deux(() => tfRpc("tache_envoi_recupere", { p_id: id, p_index: i }, "Argent récupéré, noté")); return; }
+      if (btn.matches("[data-tfdir]")) { const mt = +(q(".tf-dm").value.replace(/\D/g, "")) || 0, pj = q(".tf-dir .pj");
+        if (!mt) { toast("Écris le prix payé", true); q(".tf-dm").focus(); return; } if (!pj._file) { toast("Ajoute le ticket ou une photo de l'achat", true); return; }
+        deux(async () => { let path; try { path = await depEnvoyer(pj._file, "taches"); } catch (er) { toast("La photo n'a pas pu être envoyée", true); return false; } return tfRpc("tache_achat_fini", { p_id: id, p_montant: mt, p_piece: path }, "Achat noté : " + F(mt)); }); return; }
       if (btn.matches("[data-tfact]")) { deux(() => tfRpc("tache_activer", { p_id: id }, "Tâche activée : à toi de jouer")); return; }
       if (btn.matches("[data-tfpas]")) { deux(() => tfRpc("tache_pas_recu", { p_id: id, p_note: q(".tf-pasn").value.trim() || null }, "La direction est prévenue")); return; }
       if (btn.matches("[data-tffait]")) { deux(() => tfRpc("tache_faite", { p_id: id, p_note: null }, "Bravo, c'est fait")); return; }
@@ -7430,7 +7440,7 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 .tf-act>*{margin:0}.tf-act-k{font:800 .7rem var(--f-ui);letter-spacing:.14em;text-transform:uppercase;color:#FFC400}
 #sodaf-root .tf-act-t{margin:0;font:700 1rem/1.35 var(--f-ui);color:#fff}.tf-act-s{margin:0;font-size:.86rem;line-height:1.45;color:#C3CAD1}.tf-act-s.tf-jaune{color:#FFC400;font-weight:700}
 .tf-act-ko{margin:0;padding:8px 10px;border-radius:10px;background:rgba(239,68,68,.16);color:#FCA5A5;font-weight:600;font-size:.86rem}
-.tf-act .tf-prix,.tf-act .tf-pay,.tf-act .tf-fac{display:flex;flex-direction:column;gap:10px;background:none;border:0;padding:0;margin:0;box-shadow:none}
+.tf-act .tf-prix,.tf-act .tf-pay,.tf-act .tf-fac,.tf-act .tf-dir{display:flex;flex-direction:column;gap:10px;background:none;border:0;padding:0;margin:0;box-shadow:none}
 .tf-act input:not([type=file]):not([type=checkbox]){width:100%;box-sizing:border-box;background:#fff;border:0;border-radius:10px;padding:.65em .8em;font:600 1rem var(--f-ui);color:var(--ink)}
 .tf-lab{display:flex;flex-direction:column;gap:6px;font-size:.84rem;color:#C3CAD1;font-weight:600;margin:0}
 .tf-act .tf-chips button{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);color:#fff}.tf-act .tf-chips button[aria-checked=true]{background:#FFC400;border-color:#FFC400;color:#15191E}
