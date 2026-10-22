@@ -1549,7 +1549,8 @@ ${HEAD("Formations", "Nos formations et tarifs", "Chaque formule comprend le cod
 <div class="card"><p class="eyebrow">Code en salle · groupes de 6</p><h3 style="margin-top:10px">2 cours par semaine</h3>
 <div class="wk"><b>Après-midi</b><span>14 h 30 – 15 h 30 · lundi et jeudi, ou mardi et vendredi</span></div>
 <div class="wk"><b>Matin</b><span>11 h – 12 h · lundi et jeudi, ou mardi et vendredi, ou mercredi et samedi</span></div>
-<div class="wk"><b>Mercredi 14 h 30</b><span>Rattrapage et examen blanc, tous groupes</span></div>
+<div class="wk"><b>Soir</b><span>18 h – 19 h · lundi et jeudi, ou mardi et vendredi (pour ceux qui travaillent)</span></div>
+<div class="wk"><b>Mercredi 14 h 30 ou 18 h</b><span>Rattrapage et examen blanc, tous groupes</span></div>
 <p style="margin-top:12px;font-size:.92rem;color:var(--muted)">Un thème par cours, 12 cours en 6 semaines : tu peux commencer n'importe quelle semaine.</p></div>
 <div class="card"><p class="eyebrow">Conduite · à ton rythme</p><h3 style="margin-top:10px">Tu viens quand tu peux</h3>
 <div class="wk"><b>Du lundi au vendredi</b><span>6 h 30 · 8 h 45 · 15 h 45</span></div>
@@ -1575,7 +1576,7 @@ ${HEAD("Formations", "Nos formations et tarifs", "Chaque formule comprend le cod
 
 <section class="page" data-page="cours" hidden>
 ${HEAD("Manuel officiel SODAF", "Les cours", "Tout ce qui est enseigné en salle, chapitre par chapitre. Marque chaque chapitre comme lu pour voir d'un coup d'œil où tu en es.")}
-<div class="wrap"><div class="classband"><p class="cb-t">Code en salle · groupes de 6 élèves</p><p class="cb-d">Groupe A : lundi et jeudi 14 h 30 · Groupe B : mardi et vendredi 14 h 30 · Groupe C : lundi et jeudi 11 h · Mercredi 14 h 30 : rattrapage et examen blanc</p><a class="btn btn-line btn-sm" href="#formations" style="margin-left:auto">Voir le planning</a></div></div>
+<div class="wrap"><div class="classband"><p class="cb-t">Code en salle · groupes de 6 élèves</p><p class="cb-d">Groupe A : lundi et jeudi 14 h 30 · Groupe B : mardi et vendredi 14 h 30 · Groupe C : lundi et jeudi 11 h · Le soir (F, G) : 18 h, lundi et jeudi ou mardi et vendredi · Mercredi 14 h 30 ou 18 h : rattrapage et examen blanc</p><a class="btn btn-line btn-sm" href="#formations" style="margin-left:auto">Voir le planning</a></div></div>
 <div class="wrap" style="margin-top:22px"><div class="card doc doc-cover"><img class="cover" src="/couverture-manuel.jpg" alt="Couverture du manuel de l'élève conducteur SODAF" width="120" height="160" loading="lazy"><div><span class="tag">Manuel officiel · 34 pages</span><h3 style="margin-top:8px">Manuel de l'élève conducteur</h3><p>Code, secourisme et mécanique, en 7 parties :</p>
 <ol class="toc-list"><li><a href="#cours-signalisation">Le code de la route</a></li><li><a href="#cours-intersections">Les intersections</a></li><li><a href="#cours-priorites">Les règles de priorité</a></li><li><a href="#cours-secourisme">Le secourisme routier</a></li><li><a href="#cours-assurance">L'assurance automobile</a></li><li><a href="#cours-conduite">Notions de conduite</a></li><li><a href="#cours-mecanique">Mécanique automobile</a></li></ol>
 <div class="acts"><a class="btn btn-green btn-sm" href="#cours-signalisation">Commencer la lecture</a><a class="btn btn-line btn-sm" target="_blank" rel="noopener" href="${WA}?text=${encodeURIComponent("Bonjour SODAF, je souhaite recevoir le manuel de l'élève en PDF.")}">Recevoir le PDF sur WhatsApp</a></div></div></div></div>
@@ -3231,7 +3232,7 @@ function init(root) {
       let html = "";
       for (let j = 1; j <= 6; j++) {
         const ici = gs.filter((g) => (g.jours || []).includes(j)).map((g) => ({ g, k: (g.jours || []).indexOf(j) })).sort((a, b) => parseInt(a.g.heure, 10) - parseInt(b.g.heure, 10));
-        const rows = ici.map((x) => '<div class="wk-r"><span>' + esc(String(x.g.heure).split(" – ")[0]) + "</span><b>" + esc(x.g.nom) + "</b></div>").join("") + (j === 3 ? '<div class="wk-r wk-rt"><span>14 h 30</span><b>Rattrapage du code</b></div>' : "");
+        const rows = ici.map((x) => '<div class="wk-r"><span>' + esc(String(x.g.heure).split(" – ")[0]) + "</span><b>" + esc(x.g.nom) + "</b></div>").join("") + (j === 3 ? '<div class="wk-r wk-rt"><span>14 h 30</span><b>Rattrapage du code</b></div><div class="wk-r wk-rt"><span>18 h</span><b>Rattrapage du code (soir)</b></div>' : "");
         if (!rows) continue;
         const b = ici.length ? BOUCLE[w.c[ici[0].k]] : null;
         html += '<div class="wk-d' + (j === auj ? " wk-auj" : "") + '"><div class="wk-dh">' + NJ[j] + (j === auj ? " <em>aujourd'hui</em>" : "") + "</div>" + rows +
@@ -4075,7 +4076,7 @@ function init(root) {
     const gJours = (g) => g.jours.map((d) => JN[d]).join(" et ");
     const gHeure = (g) => g.heure.split(" – ")[0];
     const gOf = (id) => GROUPES.find((g) => g.id === id);
-    const gLibre = () => GROUPES.filter((g) => g.actif).sort((a, b) => a.ordre - b.ordre).find((g) => occ(g.id) < g.places);
+    const gLibre = (x) => GROUPES.filter((g) => g.actif && (!x || !!g.soir === !!x.code_soir)).sort((a, b) => a.ordre - b.ordre).find((g) => occ(g.id) < g.places);
     const attente = () => eleves.filter((x) => enCode(x) && !x.groupe_code);
     const gPlein = () => { const a = GROUPES.filter((g) => g.actif); return !a.length || a.every((g) => occ(g.id) >= g.places); };
     const hCode = () => { const m = GROUPES.filter((g) => g.actif && parseInt(g.heure, 10) < 12); return "deux fois par semaine, l'après-midi à 14 h 30" + (m.length ? " ou le matin à " + gHeure(m[0]) : ""); };
@@ -4441,7 +4442,7 @@ function init(root) {
       try { [pr, ss] = await Promise.all([DB.q("presences?select=seances_code(theme)&eleve_id=eq." + x.id), x.groupe_code && x.groupe_depuis ? DB.q("seances_code?select=theme&groupe=eq." + x.groupe_code + "&statut=eq.Fait&jour=gte." + x.groupe_depuis.slice(0, 10) + "&jour=lte." + iso(new Date())) : Promise.resolve([])]); } catch (e) { return; }
       if (!pr || $("#sd-pcCours") !== el) return;
       const vus = new Set(pr.map((p) => p.seances_code && p.seances_code.theme).filter((t) => bIdx(t) >= 0)), manq = [...new Set((ss || []).map((z) => z.theme).filter((t) => bIdx(t) >= 0 && !vus.has(t)))];
-      el.innerHTML = "<b>Cours suivis : " + vus.size + " sur 12</b>" + (manq.length ? " · à rattraper (mercredi 14 h 30 ou sur le site) : " + manq.map(esc).join(", ") : vus.size ? "" : " · le moniteur coche les présents à chaque cours");
+      el.innerHTML = "<b>Cours suivis : " + vus.size + " sur 12</b>" + (manq.length ? " · à rattraper (mercredi 14 h 30 ou 18 h, ou sur le site) : " + manq.map(esc).join(", ") : vus.size ? "" : " · le moniteur coche les présents à chaque cours");
     }
     async function renderDetail() {
       const box = $("#sd-pcDetail"), pc = $("#sd-pc");
@@ -4515,7 +4516,9 @@ function init(root) {
           (sansCode(x) ? "" : '<div class="pc-block"><div class="pc-bh"><b>Cours de code en salle' + (x.groupe_code && gOf(x.groupe_code) ? ' <i class="gb gb-' + x.groupe_code + '">' + esc(gOf(x.groupe_code).nom) + "</i>" : "") + "</b>" + (!x.groupe_code ? '<span class="pc-waittag">Liste d\'attente</span>' : !cycleOk(x) || susp(x) ? "" : x.groupe_msg_le ? '<span class="pc-ok">horaires envoyés ' + ago(x.groupe_msg_le) + "</span>" : '<span class="pc-waittag">Horaires à envoyer</span>') + '</div><div class="gc-pick"><select data-a="groupe" aria-label="Groupe de code">' + (x.groupe_code ? "" : '<option value="" selected disabled>Liste d\'attente</option>') +
             GROUPES.slice().sort((a, b) => a.ordre - b.ordre).map((g) => { const o = occ(g.id), mine = g.id === x.groupe_code, full = !mine && o >= g.places, off = !mine && !g.actif; return '<option value="' + g.id + '"' + (mine ? " selected" : full || off ? " disabled" : "") + ">" + esc(g.nom) + " · " + gJours(g) + " · " + gHeure(g) + " · " + (off ? "fermé" : o + "/" + g.places + (full ? " (complet)" : "")) + "</option>"; }).join("") + "</select>" +
             (x.groupe_code && n && gOf(x.groupe_code) ? '<a class="btn ' + (x.groupe_msg_le ? "btn-line" : "btn-wa") + ' btn-sm" target="_blank" rel="noopener" data-a="sendGroupe" href="' + wa(msgGroupe(x)) + '">' + (x.groupe_msg_le ? "Renvoyer ses horaires ↗" : "Envoyer ses horaires ↗") + "</a>" : "") + "</div>" +
-            '<p class="tm-note" style="margin:8px 0 0!important">' + (susp(x) ? "Place suspendue tant que le solde n'est pas payé : il révise en ligne. Il la retrouve dès son paiement (ou la première place libre si son groupe s'est rempli)." : x.groupe_code && !cycleOk(x) ? "Cycle de 6 semaines terminé" + (x.groupe_depuis ? " (commencé le " + dFr(x.groupe_depuis) + ")" : "") + " : sa place est libérée. Il révise en ligne et peut venir au rattrapage du mercredi. Pour un nouveau cycle, choisis à nouveau son groupe." : x.groupe_code ? "Cycle de code : semaine " + Math.min(6, Math.floor((Date.now() - new Date(x.groupe_depuis || Date.now())) / (7 * 864e5)) + 1) + " sur 6. Il vient à ses 2 cours par semaine, et le mercredi en rattrapage s'il en a manqué un." : gLibre() ? "Une place est libre : il est placé automatiquement dans quelques secondes." : "Tous les groupes ouverts sont complets : il révise en ligne et sera placé automatiquement à la première place libre. Pour aller plus vite, ouvre un groupe (« Gérer les groupes », en haut de la liste).") + '</p><p class="pc-cours" id="sd-pcCours"></p></div>') +
+            '<label class="pc-soir"><input type="checkbox" data-a="soir"' + (x.code_soir ? " checked" : "") + '> Il travaille la journée : code le soir (18 h – 19 h)</label>' +
+            (x.groupe_code && gOf(x.groupe_code) && !!gOf(x.groupe_code).soir !== !!x.code_soir ? '<p class="tm-note pc-soirw" style="margin:6px 0 0!important">' + (x.code_soir ? "Il est encore dans un groupe de journée : choisis le groupe F ou G (soir) dans la liste." : "Il est dans un groupe du soir : choisis un groupe de journée dans la liste.") + "</p>" : "") +
+            '<p class="tm-note" style="margin:8px 0 0!important">' + (susp(x) ? "Place suspendue tant que le solde n'est pas payé : il révise en ligne. Il la retrouve dès son paiement (ou la première place libre si son groupe s'est rempli)." : x.groupe_code && !cycleOk(x) ? "Cycle de 6 semaines terminé" + (x.groupe_depuis ? " (commencé le " + dFr(x.groupe_depuis) + ")" : "") + " : sa place est libérée. Il révise en ligne et peut venir au rattrapage du mercredi. Pour un nouveau cycle, choisis à nouveau son groupe." : x.groupe_code ? "Cycle de code : semaine " + Math.min(6, Math.floor((Date.now() - new Date(x.groupe_depuis || Date.now())) / (7 * 864e5)) + 1) + " sur 6. Il vient à ses 2 cours par semaine, et le mercredi en rattrapage s'il en a manqué un." : gLibre(x) ? "Une place est libre : il est placé automatiquement dans quelques secondes." : (x.code_soir ? "Les groupes du soir sont complets" : "Tous les groupes ouverts sont complets") + " : il révise en ligne et sera placé automatiquement à la première place libre. Pour aller plus vite, ouvre un groupe (« Gérer les groupes », en haut de la liste).") + '</p><p class="pc-cours" id="sd-pcCours"></p></div>') +
           (x.quota !== null ? (() => { const q = x.quota, f = x.faits, et = seEtat(x), ea = evalAt(x), pct = q ? Math.min(100, Math.round((f / q) * 100)) : 100, rest = Math.max(0, q - f - x.resa);
             const al = et === "pret" ? '<div class="se-al se-ok"><b>Le moniteur le juge prêt' + (x.evaluation_le ? " (" + dFr(x.evaluation_le) + ")" : "") + '.</b> Prochaine étape : « Formation terminée : passer à l\'examen » (plus bas).</div>'
               : et === "fin" ? '<div class="se-al se-warn"><b>' + (x.evaluation === "plus" ? "Le moniteur conseille des séances en plus." : "Tous ses blocs prévus sont faits.") + '</b> Prochaine étape : lui proposer des séances en plus (3 000 F la séance ; on l\'appelle dès qu\'une place se libère), ou le passer à l\'examen s\'il est prêt.<div class="tm-formact">' + (n ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" data-a="relPlus" href="' + wa(msgPlus(x)) + '">Proposer des séances en plus ↗</a>' : "") + '<button class="btn btn-green btn-sm" type="button" data-a="rcPlus">Séance payée ? Faire le reçu</button>' + (x.evaluation !== "pret" ? '<button class="linkbtn" type="button" data-ev="pret">Il est prêt quand même</button>' : "") + "</div></div>"
@@ -4693,6 +4696,7 @@ function init(root) {
       if (e.target.matches('[data-a="photo"]')) { const f = e.target.files && e.target.files[0]; if (f && await phPrendre(x, f)) { renderDetail(); renderList && renderList(); } return; }
       const pc = e.target.closest("[data-piece]");
       if (pc) { const d = Object.assign({}, x.dossier || {}); d[pc.dataset.piece] = pc.checked; await patchEl(x, { dossier: d }, "Dossier mis à jour"); return; }
+      if (e.target.matches('[data-a="soir"]')) { const v = e.target.checked; if (await patchEl(x, { code_soir: v }, v ? "Noté : code le soir" : "Noté : code en journée", ["Note", v ? "Cours de code le soir (travaille la journée)" : "Cours de code en journée"])) renderList(true); return; }
       if (e.target.matches('[data-a="groupe"]')) { const v = e.target.value || null, g = v && gOf(v); if (await patchEl(x, { groupe_code: v, groupe_depuis: v ? new Date().toISOString() : null, groupe_msg_le: null }, v ? "Placé dans le " + g.nom : "Mis en liste d'attente", ["Note", v ? "Groupe de code : " + g.nom : "Groupe de code : liste d'attente"])) renderList(true); return; }
       if (e.target.matches('[data-a="statut"]')) { if (await patchEl(x, { statut: e.target.value }, "Statut enregistré", ["Étape", e.target.value])) renderList(); }
     });
@@ -6821,7 +6825,7 @@ html:has(#sodaf-root.app-mode),body:has(#sodaf-root.app-mode){background:#ECEFEE
 #sodaf-root .tm-formact .btn[disabled]{opacity:.55;cursor:not-allowed;box-shadow:none}
 
 /* Couleurs des groupes de code (en-têtes pleins, bien distincts) : A bleu, B orange, C vert sarcelle (matin), D violet */
-.pc-gh.gc-A,.pc-gh.gc-B,.pc-gh.gc-C,.pc-gh.gc-D{color:#fff}
+.pc-gh.gc-A,.pc-gh.gc-B,.pc-gh.gc-C,.pc-gh.gc-D,.pc-gh.gc-E,.pc-gh.gc-F,.pc-gh.gc-G{color:#fff}.pc-gh.gc-E{background:#0E7490;border-left:5px solid #155E75}.pc-gh.gc-F{background:#1E293B;border-left:5px solid #0F172A}.pc-gh.gc-G{background:#9F1239;border-left:5px solid #6B0F28}
 .pc-gh.gc-A{background:#1F5FAE;border-left:5px solid #0F3A70}
 .pc-gh.gc-B{background:#B45309;border-left:5px solid #7A3604}
 .pc-gh.gc-C{background:#0B7570;border-left:5px solid #054642}
@@ -6831,9 +6835,9 @@ html:has(#sodaf-root.app-mode),body:has(#sodaf-root.app-mode){background:#ECEFEE
 .pc-item.ig-A{border-left-color:#1F5FAE}.pc-item.on.ig-A{background:#EAF1FB}
 .pc-item.ig-B{border-left-color:#B45309}.pc-item.on.ig-B{background:#FDF1E6}
 .pc-item.ig-C{border-left-color:#0B7570}.pc-item.on.ig-C{background:#E6F4F3}
-.pc-item.ig-D{border-left-color:#7B3FB5}.pc-item.on.ig-D{background:#F3ECFA}
+.pc-item.ig-D{border-left-color:#7B3FB5}.pc-item.ig-E{border-left-color:#0E7490}.pc-item.ig-F{border-left-color:#1E293B}.pc-item.ig-G{border-left-color:#9F1239}.pc-item.on.ig-D{background:#F3ECFA}
 .gb{font-style:normal;font-weight:700;font-size:.74rem;letter-spacing:.02em;padding:.05em .5em;border-radius:6px;color:#fff!important;background:#5B6B7D;white-space:nowrap;text-transform:none}
-.gb-A{background:#1F5FAE}.gb-B{background:#B45309}.gb-C{background:#0B7570}.gb-D{background:#7B3FB5}
+.gb-A{background:#1F5FAE}.gb-B{background:#B45309}.gb-C{background:#0B7570}.gb-D{background:#7B3FB5}.gb-E{background:#0E7490}.gb-F{background:#1E293B}.gb-G{background:#9F1239}
 .pc-bh .gb{font-size:.78rem;margin-left:6px;vertical-align:1px}
 .gdot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:7px;padding:0}
 .pc-fold.g-fgrp,.pc-fold.g-fcond,.pc-fold.g-fsus{padding:9px 14px}
@@ -7563,6 +7567,7 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 
 /* Planning conduite : vue « Rattrapages » (21 oct.) */
 .cd-modes{margin:0 0 14px}.cd-rat[hidden],#sd-cdJour[hidden]{display:none}
+.pc-soir{display:flex;align-items:center;gap:8px;margin:10px 0 0;font-size:.9rem;font-weight:600;cursor:pointer}.pc-soir input{width:18px;height:18px;accent-color:#0B6E4F}.pc-soirw{color:#9A3412!important}
 .pc-rdv{display:block;margin-top:4px;font-size:.86rem;color:#9A3412}.pc-bloc{margin:10px 0 0;padding:12px 14px;border-radius:12px;background:#FEF2F2;border:1px solid #FCA5A5;display:flex;flex-direction:column;gap:6px;align-items:flex-start}.pc-bloc b{color:#991B1B}.pc-bloc span{font-size:.9rem}
 .pl-calc{padding:14px 16px;margin:0 0 16px}.pl-calc .gr-h4{margin:0 0 6px}.pl-l{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:8px 0;border-top:1px solid #EEF0F2}.pl-l:first-of-type{border-top:0}.pl-l b{font:800 1.1rem var(--f-ui);white-space:nowrap}.pl-tot{border-top:2px solid #15191E}.pl-tot span{font-weight:700}.pl-tot b{font-size:1.35rem}.pl-calc .cd-rnote{margin-top:8px}
 .pl-w{padding:12px 16px;margin:0 0 10px;display:flex;flex-direction:column;gap:10px}.pl-bar{height:10px;border-radius:999px;background:#EEF0F3;overflow:hidden}.pl-bar i{display:block;height:100%;background:#4B3F8F;border-radius:999px}.cd-rhero{margin-bottom:14px}
