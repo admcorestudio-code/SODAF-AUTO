@@ -4,7 +4,7 @@
 --    code de la route, intersections, priorités, secourisme, assurance, notion théorique de conduite).
 --    Exception : la remise à niveau (déjà titulaire du permis, pas de code).
 -- 2. Au plus 2 séances de conduite par semaine (lundi → dimanche), pour que tout le monde ait sa place.
--- 3. Ses séances sont à faire dans les 6 mois après son premier reçu d'inscription.
+-- 3. Tout est à faire dans les 3 mois après son premier reçu d'inscription (le plus rapide : environ 2 mois).
 -- 4. Pas de limite pour le tarif étudiant (décision du 22 oct. : « ceux qui viennent, ils viennent »).
 -- Les créneaux ne changent pas (mêmes heures, 4 places) ; le secrétariat place l'élève sur une place libre.
 -- Rien n'est supprimé. Idempotent.
@@ -20,7 +20,7 @@ returns int[] language sql stable security definer set search_path = '' as $$
 $$;
 revoke all on function prive.cours_af(bigint) from public;
 
--- Date du premier reçu d'inscription (début des 6 mois)
+-- Date du premier reçu d'inscription (début des 3 mois)
 create or replace function prive.debut_formation(e bigint)
 returns date language sql stable security definer set search_path = '' as $$
   select min(p.cree_le)::date from public.paiements p
@@ -35,7 +35,7 @@ language plpgsql stable security definer set search_path = '' as $$
 begin
   if not prive.a_role(array['admin', 'gerant', 'secretariat', 'moniteur']) then raise exception 'accès refusé' using errcode = '42501'; end if;
   return query
-    select e.id, prive.cours_af(e.id), prive.debut_formation(e.id), (prive.debut_formation(e.id) + interval '6 months')::date
+    select e.id, prive.cours_af(e.id), prive.debut_formation(e.id), (prive.debut_formation(e.id) + interval '3 months')::date
       from public.eleves e
      where e.statut in ('Inscrit', 'En formation');
 end $$;
@@ -74,10 +74,10 @@ begin
       raise exception 'Pas encore de conduite : il doit d''abord suivre en salle les cours 1 à 9 (parties A à F du manuel). Il lui manque : %.', array_to_string(m, ', ') using errcode = 'P0001';
     end if;
   end if;
-  -- 6 mois après l'inscription
+  -- 3 mois après l'inscription
   d0 := prive.debut_formation(new.eleve_id);
-  if d0 is not null and new.jour > (d0 + interval '6 months')::date then
-    raise exception 'Réservation impossible : ses séances étaient à faire avant le % (6 mois après l''inscription).', to_char((d0 + interval '6 months')::date, 'DD/MM/YYYY') using errcode = 'P0001';
+  if d0 is not null and new.jour > (d0 + interval '3 months')::date then
+    raise exception 'Réservation impossible : ses séances étaient à faire avant le % (3 mois après l''inscription).', to_char((d0 + interval '3 months')::date, 'DD/MM/YYYY') using errcode = 'P0001';
   end if;
   -- Une seule place par élève dans une même séance
   if exists (select 1 from public.creneaux_conduite c
