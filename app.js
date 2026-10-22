@@ -4240,6 +4240,22 @@ function init(root) {
     // Solde de formation : il doit être à zéro avant toute séance de conduite et avant l'examen
     const doit = (x) => x.solde === null || x.solde === undefined || x.solde > 0;
     const soldeTxt = (x) => x.solde === null || x.solde === undefined ? "aucun paiement enregistré" : x.solde > 0 ? "solde " + F(x.solde) + " à payer" : "formation soldée";
+    // Formule de l'inscription en ligne (22 oct.) : le secrétariat signale, la gérante appelle le client puis corrige. Personne d'autre ne change la formule.
+    const WEB_FORM = [["Formation complète (permis B)", "Formation complète · tarif normal (55 000 F)"], ["Formation complète, tarif étudiant (permis B)", "Formation complète · tarif étudiant (30 000 F)"], ["Formule rapide (permis B)", "Formule rapide (35 000 F)"], ["Remise à niveau", "Remise à niveau (25 000 F)"], ["Formation complète, gagnant du tirage (permis B)", "Gagnant du tirage (15 000 F)"]];
+    const webNom = (n) => (WEB_FORM.find((y) => y[0] === n) || [n, n])[1];
+    function webCorrHtml(w, x) {
+      const enCours = w.correction_demande_le && !w.corrige_le, recu = !!(x && x.formule);
+      let h = "";
+      if (enCours) h += '<div class="pc-alert pc-verif"><b>Formule signalée à la gérante</b> : « ' + esc(w.correction_motif || "") + " ». Elle appelle le client, puis corrige. Attends sa réponse avant de faire le reçu.</div>";
+      if (w.corrige_le) h += '<p class="tm-note pc-corrok">Formule vérifiée par la gérante' + (w.formule_demandee && w.formule_demandee !== w.formule ? " : il avait choisi « " + esc(webNom(w.formule_demandee)) + " »" : "") + ". " + esc(w.correction_note || "") + "</p>";
+      if (recu) return h;
+      if (DIR()) h += '<details class="pc-corr"' + (enCours ? " open" : "") + '><summary>Corriger la formule</summary><p class="tm-note">Appelle d\'abord le client. Pour le tarif étudiant : carte d\'étudiant et carte d\'identité vues.</p>' +
+        '<select data-wfo aria-label="Formule">' + WEB_FORM.map((o) => '<option value="' + esc(o[0]) + '"' + (o[0] === w.formule ? " selected" : "") + ">" + esc(o[1]) + "</option>").join("") + "</select>" +
+        '<select data-wfp aria-label="Il paie"><option value="moitie"' + (w.paiement !== "total" ? " selected" : "") + '>Il paie la moitié</option><option value="total"' + (w.paiement === "total" ? " selected" : "") + ">Il paie tout</option></select>" +
+        '<input data-wfn maxlength="300" placeholder="Ce que tu as vérifié (ex. client appelé, carte d\'étudiant vue)" aria-label="Ce que tu as vérifié"><button class="btn btn-sm btn-green" type="button" data-a="webFix">Corriger la formule</button></details>';
+      else if (!enCours) h += '<details class="pc-corr"><summary>Le client s\'est trompé de formule ?</summary><p class="tm-note">Tu ne changes pas la formule toi-même : la gérante appelle le client et corrige.</p><input data-wcm maxlength="300" placeholder="ex. Il est étudiant (il a choisi le tarif normal)" aria-label="Ce qui ne va pas"><button class="btn btn-sm btn-line" type="button" data-a="webCorr">Envoyer à la gérante</button></details>';
+      return h;
+    }
     async function soldeFrais(id) { const r = await DB.q("paiements?select=reste&annule=is.false&reste=not.is.null&eleve_id=eq." + id + "&order=cree_le.desc&limit=1"); return { s: r && r.length ? r[0].reste : null }; }
     const msgSolde = (x, nr) => { const n = nr || (susp(x) ? 2 : 1), ec = solEche(x), pay = CFG.mixx_numero && MIXX_MARCHAND(CFG.mixx_numero) ? "\n\nTu peux payer à l'agence ou " + mixxMsg(x.solde, CODE(x) + " SOLDE") : CFG.mixx_numero ? "\n\nTu peux payer à l'agence ou par *Mixx by Yas* au " + CFG.mixx_numero + (CFG.mixx_nom ? " (" + CFG.mixx_nom + ")" : "") + ", motif *" + CODE(x) + " SOLDE*, puis nous envoyer la capture du SMS ici." : "\n\nTu peux payer à l'agence aux heures de bureau.";
       if (n === 1) return "Bonjour " + prenom(x) + ",\n\nPetit rappel de *SODAF Auto-École* : il te reste *" + F(x.solde) + "* à régler pour ta formation (N° Client : " + CODE(x) + ")" + (ec ? ", *avant le " + ec.toLocaleDateString("fr-FR", { day: "numeric", month: "long" }) + "*" : "") + ".\n\nTant que le solde n'est pas réglé, nous ne pouvons pas réserver tes séances de conduite." + pay + "\n\nTu reçois ensuite ton reçu sur WhatsApp." + SIGN;
@@ -4459,11 +4475,12 @@ function init(root) {
           '<div class="pc-block pc-range"><div class="pc-bh"><b>Il a répondu : ranger le dossier</b><span class="tm-note" style="margin:0!important">Deux touches pour confirmer</span></div><div class="pc-rgrid"><button class="btn btn-line btn-sm" type="button" data-arch="Plus tard"><b>Plus tard</b><small>Pas avant plusieurs semaines : archivé, à ressortir</small></button><button class="btn btn-sm pc-dark" type="button" data-arch="Rétractation"><b>Rétractation</b><small>Ne veut plus s\'inscrire</small></button><button class="btn btn-sm pc-red" type="button" data-arch="Faux numéro"><b>Faux numéro</b><small>Coordonnées erronées</small></button></div></div>';
       } else if (st === "dossier") {
         const age = jours(x.dossier_envoye_le), late = dosAge(x) >= 5;
-        const w = x.web;
+        const w = x.web; // 22 oct. : formule signalée par le secrétariat, corrigée par la gérante (webCorrHtml)
         const webBlock = w ? '<div class="pc-block pc-web"><div class="pc-bh"><b>Inscription en ligne</b><span class="pc-ok">reçue ' + ago(w.le) + "</span></div>" +
           (w.mode === "mixx" ? '<div class="pc-alert pc-verif"><b>À vérifier sur le téléphone de l\'agence :</b> un paiement Mixx by Yas de <b>' + F(w.a_payer) + "</b>" + (w.mixx_tel ? " depuis le <b>" + esc(w.mixx_tel.replace("+228", "+228 ")) + "</b>" : "") + (w.mixx_ref ? ", référence <b>" + esc(w.mixx_ref) + "</b>" : "") + ", motif « " + CODE(x) + " ». S'il est bien arrivé : « Mixx vérifié ? Faire le reçu ». Sinon : « Paiement introuvable ».</div>" : '<p class="tm-note" style="margin:0 0 10px!important">Il a choisi de payer <b>' + F(w.a_payer) + "</b> en espèces à l'agence. Quand il vient : « Formation payée ? Faire le reçu ».</p>") +
-          '<div class="pc-info"><div><span>Formule</span><b>' + esc(w.formule) + '</b></div><div><span>Prix</span><b>' + F(w.prix) + '</b></div><div><span>Il paie</span><b>' + (w.paiement === "total" ? "Tout" : "La moitié") + " · " + F(w.a_payer) + '</b></div><div><span>Mode</span><b>' + (w.mode === "mixx" ? "Mixx by Yas" : "À l'agence") + '</b></div>' +
+          '<div class="pc-info"><div><span>Formule</span><b>' + esc(webNom(w.formule).replace(/ \([\d ]+ F\)$/, "")) + '</b></div><div><span>Prix</span><b>' + F(w.prix) + '</b></div><div><span>Il paie</span><b>' + (w.paiement === "total" ? "Tout" : "La moitié") + " · " + F(w.a_payer) + '</b></div><div><span>Mode</span><b>' + (w.mode === "mixx" ? "Mixx by Yas" : "À l'agence") + '</b></div>' +
           '<div><span>Nom et prénoms</span><b>' + esc(w.prenoms + " " + w.nom) + '</b></div><div><span>Téléphone</span><b>' + esc((w.telephone || "—").replace("+228", "+228 ")) + '</b></div><div><span>Quartier</span><b>' + esc(w.quartier || "—") + "</b></div></div>" +
+          webCorrHtml(w, x) +
           (w.mode === "mixx" ? '<div class="tm-formact"><button class="btn btn-sm pc-red" type="button" data-a="webReject">Paiement introuvable</button></div>' : "") + "</div>" : "";
         const kr = Math.min((x.dossier_relances || 0) + 1, 4), relBtn = (cls, label) => n ? '<a class="btn ' + cls + ' btn-sm" target="_blank" rel="noopener" data-a="relDossier" href="' + wa(msgRel(x, kr)) + '">' + label + "</a>" : "";
         const relLabel = kr === 4 ? "Dernière relance (4/4) : envoyer et archiver ↗" : "Envoyer la relance " + kr + "/4 ↗";
@@ -4601,6 +4618,10 @@ function init(root) {
         toast("Fais le reçu : il passera en formation dès que le reçu sera enregistré");
         if (window.__sodafRcFill) { sub("paiements"); window.__sodafRcFill(x, w ? { formation: w.formule, motif: w.paiement === "total" ? "ins-full" : "ins-half", mode: w.mode === "mixx" ? "Mixx by Yas (T-Money)" : "Espèces", note: w.mode === "mixx" ? "Mixx" + (w.mixx_ref ? " réf. " + w.mixx_ref : "") + (w.mixx_tel ? " depuis " + w.mixx_tel : "") : "" } : null); }
       }
+      else if (k === "webCorr") { const w = x.web, m = ($("#sd-pc [data-wcm]") || {}).value || ""; if (!w) return; if (m.trim().length < 3) { toast("Écris ce qui ne va pas (ex. il est étudiant)", true); return; }
+        confirmBtn(a, async () => { const ok = await run(() => DB.q("rpc/inscription_correction_demander", { method: "POST", body: { p_id: w.id, p_motif: m.trim() } }).then(() => true), "Envoyé à la gérante : elle appelle le client"); if (ok) { await addSuivi(x, "Note", "Formule signalée à la gérante : " + m.trim()); await loadEleves(true); } }); }
+      else if (k === "webFix") { const w = x.web, fo = $("#sd-pc [data-wfo]").value, pa = $("#sd-pc [data-wfp]").value, n = $("#sd-pc [data-wfn]").value.trim(); if (!w) return; if (n.length < 3) { toast("Écris ce que tu as vérifié", true); $("#sd-pc [data-wfn]").focus(); return; }
+        confirmBtn(a, async () => { const ok = await run(() => DB.q("rpc/inscription_corriger", { method: "POST", body: { p_id: w.id, p_formule: fo, p_paiement: pa, p_note: n } }).then(() => true), "Formule corrigée : le secrétariat peut faire le reçu"); if (ok) { await addSuivi(x, "Note", "Formule corrigée : " + webNom(fo) + ". " + n); await loadEleves(true); } }); }
       else if (k === "webReject") { const w = x.web; if (!w) return; confirmBtn(a, async () => { const ok = await run(() => DB.q("inscriptions_web?id=eq." + w.id, { method: "PATCH", body: { statut: "Rejeté" }, prefer: "return=minimal" }), "Paiement marqué introuvable"); if (ok) { await addSuivi(x, "Note", "Paiement Mixx introuvable (" + F(w.a_payer) + (w.mixx_ref ? ", réf. " + w.mixx_ref : "") + "). Contacter l'élève."); x.web = null; renderList(); } }); }
       else if (k === "rcSolde") { if (window.__sodafRcFill) { sub("paiements"); window.__sodafRcFill(x, x.solde ? { formation: x.formation || "", motif: "rest", mode: "Espèces", note: "" } : null); } }
       else if (k === "relPlus") { await addSuivi(x, "Note", "Proposition de séances en plus envoyée"); toast("Proposition envoyée"); }
@@ -5672,7 +5693,7 @@ function init(root) {
       const [info, act, ann] = TF_FIN.includes(t.etape) ? ["", "", ""] : tfActions(t, vue);
       const qui = t.par === t.pour ? "Note pour toi" : "De " + esc(tfNom(t.par)) + " → pour " + esc(tfNom(t.pour));
       return '<article class="tf tf-' + st[0] + (late ? " tf-late" : "") + '" data-tf="' + t.id + '">' +
-        '<div class="tf-h"><div class="tf-hl"><p class="tf-tx">' + esc(String(t.titre || "").replace(/^\[TEST\]\s*/, "")) + (test ? ' <span class="dq-test">TEST</span>' : "") + '</p><p class="tf-sub">' + qui + " · T-" + t.id + (t.demande_id ? " · dépense accordée" : "") +
+        '<div class="tf-h"><div class="tf-hl"><p class="tf-tx">' + esc(String(t.titre || "").replace(/^\[TEST\]\s*/, "")).replace(/\bSO(\d+)\b/g, (m, n) => eleves.some((y) => y.id === +n) ? '<button type="button" class="ms-el" data-goel="' + n + '">' + m + "</button>" : m) + (test ? ' <span class="dq-test">TEST</span>' : "") + '</p><p class="tf-sub">' + qui + " · T-" + t.id + (t.demande_id ? " · dépense accordée" : "") +
           (t.pour_le && !TF_FIN.includes(t.etape) ? ' · <span class="' + (late ? "tf-retard" : "") + '">' + (late ? "en retard, " : "") + "pour " + tfJour(t.pour_le) + "</span>" : "") + "</p></div>" +
           (t.argent ? '<div class="tf-hr">' + (t.paye_montant || t.montant ? F(t.paye_montant || t.montant) : '<small>' + (t.par === t.pour ? "Prix au retour" : "Prix à trouver") + "</small>") + "</div>" : "") + "</div>" +
         '<p class="tf-etat"><i></i>' + esc(st[1]) + "</p>" + tfEtapes(t) + tfPieces(t) + tfEnvois(t) +
@@ -5809,6 +5830,7 @@ function init(root) {
     const tfRpc = (fn, body, msg) => run(() => DB.q("rpc/" + fn, { method: "POST", body }).then(() => true), msg);
     $('.tm-pane[data-pane="taf"]') && $('.tm-pane[data-pane="taf"]').addEventListener("click", async (e) => {
       const t = e.target, go = t.closest("[data-tfgo]"); if (go) { tfOnglet(go.dataset.tfgo); return; }
+      const ge = t.closest("[data-goel]"); if (ge) { goEleve(+ge.dataset.goel); return; }
       const doc = t.closest("[data-tfdoc]"); if (doc) { depOuvrir(doc.dataset.tfdoc); return; }
       { const btn = t.closest("[data-tfnok]"); if (btn && !btn.disabled) { const row = btn.closest("[data-tfnp]"), v = row.querySelector("input").value.replace(/\D/g, "");
         if (v && v.length !== 8) { toast("Numéro à 8 chiffres (ex. 72 54 41 66)", true); return; }
@@ -6280,6 +6302,10 @@ function init(root) {
     const forms = INSC_FORMULES[d.f], done = S.get("insc" + d.i, null);
     if (!forms) { box.innerHTML = '<div class="card insc-msg"><h3>Bonjour ' + escI(d.p) + '</h3><p>Pour ta formation (' + escI(d.f || "à préciser") + '), le secrétariat prépare un devis avec toi. Écris-nous sur WhatsApp ou passe à l\'agence.</p><a class="btn btn-wa" href="' + WA + '" target="_blank" rel="noopener">Écrire au secrétariat</a></div>' + inscFindUs(0, d.i); return; }
     const exam = /Permis|Pack|étudiant|tirage/i.test(d.f), mixxOk = !MIXX_MAINT && !!d.m;
+    // 22 oct. : un étudiant avait choisi « Formation complète » (55 000 F). On demande d'abord s'il est étudiant, et rien n'est pré-coché.
+    const askEtu = forms.some((f) => /étudiant/i.test(f[0])) && forms.some((f) => !/étudiant/i.test(f[0])), un = !askEtu && forms.length === 1;
+    const nomF = (n) => /étudiant/i.test(n) ? "Formation complète · tarif étudiant" : n === "Formation complète (permis B)" ? "Formation complète · tarif normal" : n.replace(/ \(permis B\)$/, "");
+    const descF = (f) => f[0] === "Formation complète (permis B)" ? "Pour les non-étudiants · " + f[2] : f[2];
     const show = (res) => {
       box.innerHTML = res.mode === "agence"
         ? '<div class="okbox insc-okbox"><div class="ok-top"><span class="okcheck" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div><p class="ok-kicker">Inscription enregistrée</p><b class="ok-title">Nous t\'attendons à l\'agence</b></div></div><div class="ok-body"><p class="ok-lead">Merci ' + escI(d.p) + '. Viens au bureau avec ton paiement en espèces : tu repars avec ton reçu officiel.</p><div class="insc-sumrow insc-okamt"><span>À apporter</span><b>' + fmtF(res.a) + '</b></div><button class="linkbtn" type="button" id="sd-inRedo">Modifier mon inscription</button></div></div>' + inscFindUs(0, 0)
@@ -6290,7 +6316,9 @@ function init(root) {
     if (done) { show(done); return; }
     box.innerHTML = '<form class="insc-form" id="sd-inForm" novalidate>' +
       '<div class="insc-hello"><p class="eyebrow">N° client SO' + d.i + ' · ' + escI(d.f) + '</p><h2>Bonjour ' + escI(d.p) + '</h2><p>Quatre petites étapes et ton inscription est faite.</p></div>' +
-      '<fieldset class="insc-step"><legend><i>1</i>Ta formule</legend><p class="insc-sub">Choisis ta formation</p><div class="insc-cards">' + forms.map((f, k) => '<label class="rcm' + (k ? "" : " on") + (/étudiant/i.test(f[0]) ? " etu" : "") + '"><input type="radio" name="inF" value="' + k + '"' + (k ? "" : " checked") + '><span><b>' + escI(f[0].replace(/ \(permis B\)$/, "")) + "</b><small>" + escI(f[2]) + "</small></span><em>" + fmtF(f[1]) + "</em></label>").join("") + "</div>" +
+      '<fieldset class="insc-step"><legend><i>1</i>Ta formule</legend>' +
+      (askEtu ? '<p class="insc-sub">Es-tu étudiant(e) ?</p><div class="insc-cards insc-two insc-etuq"><label class="rcm"><input type="radio" name="inE" value="non"><span><b>Non, je ne suis pas étudiant(e)</b><small>Tarif normal</small></span></label><label class="rcm etu"><input type="radio" name="inE" value="oui"><span><b>Oui, je suis étudiant(e)</b><small>Carte d\'étudiant et carte d\'identité à montrer à l\'agence</small></span></label></div><div class="insc-div insc-fq" role="separator" hidden></div>' : "") +
+      '<p class="insc-sub insc-fq"' + (askEtu ? " hidden" : "") + '>Choisis ta formation</p><div class="insc-cards insc-fl"' + (askEtu ? " hidden" : "") + ">" + forms.map((f, k) => '<label class="rcm' + (un ? " on" : "") + (/étudiant/i.test(f[0]) ? " etu" : "") + '" data-etu="' + (/étudiant/i.test(f[0]) ? 1 : 0) + '"><input type="radio" name="inF" value="' + k + '"' + (un ? " checked" : "") + "><span><b>" + escI(nomF(f[0])) + "</b><small>" + escI(descF(f)) + "</small></span><em>" + fmtF(f[1]) + "</em></label>").join("") + "</div>" +
       '<div class="insc-div" role="separator"></div><p class="insc-sub">Combien paies-tu maintenant ?</p>' +
       '<div class="insc-cards insc-two insc-pay"><label class="rcm on"><input type="radio" name="inP" value="moitie" checked><span><b>Je paie la moitié maintenant</b><small>Le reste dans les 2 semaines</small></span><em data-p="moitie"></em></label><label class="rcm"><input type="radio" name="inP" value="total"><span><b>Je paie tout maintenant</b><small>Formation soldée, plus rien à payer</small></span><em data-p="total"></em></label></div>' +
       '<p class="insc-sum" id="sd-inSum"></p></fieldset>' +
@@ -6316,18 +6344,27 @@ function init(root) {
       (exam ? '<p class="insc-note">À la fin de ta formation : <b>35&nbsp;000&nbsp;F</b> pour l\'inscription à l\'examen d\'État et tes papiers (carte d\'identité, acte de naissance, 2 photos). SODAF dépose ton dossier ; l\'État t\'envoie ensuite la date et le lieu par message.</p>' : "") +
       '<p class="insc-err" id="sd-inErr" hidden></p><button class="btn btn-green insc-go" type="submit" id="sd-inGo">Valider mon inscription</button></form>';
     const form = $("#sd-inForm");
-    const val = () => { const f = forms[+form.querySelector("[name=inF]:checked").value], p = form.querySelector("[name=inP]:checked").value; return { f, p, ins: f[3] === undefined ? 5000 : f[3], a: (f[3] === undefined ? 5000 : f[3]) + (p === "total" ? f[1] : f[1] / 2) }; };
+    const val = () => { const c = form.querySelector("[name=inF]:checked"); if (!c) return null; const f = forms[+c.value], p = form.querySelector("[name=inP]:checked").value; return { f, p, ins: f[3] === undefined ? 5000 : f[3], a: (f[3] === undefined ? 5000 : f[3]) + (p === "total" ? f[1] : f[1] / 2) }; };
+    const etuChoix = () => { const e = form.querySelector("[name=inE]:checked"); if (!e) return; const oui = e.value === "oui";
+      form.querySelectorAll(".insc-fq,.insc-fl").forEach((x) => (x.hidden = false));
+      const vis = [...form.querySelectorAll(".insc-fl [data-etu]")].filter((l) => { const ok = l.dataset.etu === (oui ? "1" : "0"); l.hidden = !ok; if (!ok) l.querySelector("input").checked = false; return ok; });
+      if (vis.length === 1) vis[0].querySelector("input").checked = true; };
     const upd = () => {
+      etuChoix();
       const v = val();
+      form.querySelectorAll(".rcm").forEach((l) => l.classList.toggle("on", l.querySelector("input").checked));
+      $("#sd-inMixx").hidden = form.querySelector("[name=inM]:checked").value !== "mixx";
+      if (!v) { form.querySelector('[data-p="moitie"]').textContent = "—"; form.querySelector('[data-p="total"]').textContent = "—"; $("#sd-inSum").innerHTML = '<span class="insc-sumrow"><span>À payer maintenant</span><b>—</b></span><span>' + (askEtu && !form.querySelector("[name=inE]:checked") ? "Réponds d'abord : es-tu étudiant(e) ?" : "Choisis ta formation.") + "</span>"; $("#sd-inAmt").textContent = "—"; return; }
       form.querySelector('[data-p="moitie"]').textContent = fmtF(v.ins + v.f[1] / 2); form.querySelector('[data-p="total"]').textContent = fmtF(v.ins + v.f[1]);
       $("#sd-inSum").innerHTML = '<span class="insc-sumrow"><span>À payer maintenant</span><b>' + fmtF(v.a) + "</b></span><span>" + (v.ins ? "Droit d'inscription " + fmtF(v.ins).replace(/ /g, "&nbsp;") : /remise/i.test(v.f[0]) ? "Inscription comprise" : "Inscription offerte") + " + " + (v.p === "total" ? "toute la formation" : "la moitié de la formation") + "</span>" + (v.p === "moitie" ? '<span class="insc-reste">Reste à payer avant la 1re séance de conduite : <b>' + fmtF(v.f[1] / 2) + "</b></span>" : '<span class="insc-reste">Formation soldée : plus rien à payer ensuite</span>');
       $("#sd-inAmt").textContent = fmtF(v.a);
+      if (/étudiant/i.test(v.f[0])) $("#sd-inSum").insertAdjacentHTML("beforeend", '<span class="insc-etunote">À l\'agence, montre ta <b>carte d\'étudiant</b> et ta <b>carte d\'identité</b> : sans elles, c\'est le tarif normal.</span>');
       if ($("#sd-inUssd")) { $("#sd-inUssd").textContent = MIXX_USSD(d.m, v.a); if ($("#sd-inPay")) $("#sd-inPay").href = MIXX_TEL(d.m, v.a); }
       form.querySelectorAll(".rcm").forEach((l) => l.classList.toggle("on", l.querySelector("input").checked));
       $("#sd-inMixx").hidden = form.querySelector("[name=inM]:checked").value !== "mixx";
     };
     form.addEventListener("change", upd); upd();
-    if ($("#sd-inCopy")) $("#sd-inCopy").addEventListener("click", async (e) => { const b = e.currentTarget, ok = await copier(MIXX_USSD(d.m, val().a)); b.textContent = ok ? "Copié" : "Copie impossible"; setTimeout(() => (b.textContent = "Copier"), 2500); });
+    if ($("#sd-inCopy")) $("#sd-inCopy").addEventListener("click", async (e) => { const b = e.currentTarget; if (!val()) return; const ok = await copier(MIXX_USSD(d.m, val().a)); b.textContent = ok ? "Copié" : "Copie impossible"; setTimeout(() => (b.textContent = "Copier"), 2500); });
     let phBlob = null;
     $("#sd-inPhF").addEventListener("change", async (e) => {
       const f = e.target.files && e.target.files[0]; if (!f) return;
@@ -6338,6 +6375,7 @@ function init(root) {
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const v = val(), mode = form.querySelector("[name=inM]:checked").value, err = $("#sd-inErr"), btn = $("#sd-inGo");
+      if (!v) { err.textContent = askEtu && !form.querySelector("[name=inE]:checked") ? "Réponds d'abord : es-tu étudiant(e) ?" : "Choisis ta formation."; err.hidden = false; form.querySelector(".insc-step").scrollIntoView({ block: "start" }); return; }
       const nom = $("#sd-inNom").value.trim(), pre = $("#sd-inPre").value.trim(), tl = tel8($("#sd-inTel")), mt = tel8($("#sd-inMt")), mr = $("#sd-inMr").value.trim();
       const bad = nom.length < 2 ? "Écris ton nom." : pre.length < 2 ? "Écris tes prénoms." : tl.length !== 8 ? "Ton numéro de téléphone doit avoir 8 chiffres (après le +228)." : !phBlob ? "Ajoute ton selfie : il est obligatoire pour l'inscription." : !$("#sd-inPhOk").checked ? "Coche la case pour accepter que SODAF garde ta photo." : mode === "mixx" && !(mt.length === 8 || mr.length >= 4) ? "Pour Mixx by Yas, écris le numéro qui a payé (8 chiffres) ou la référence du SMS." : "";
       if (bad) { err.textContent = bad; err.hidden = false; err.scrollIntoView({ block: "center" }); return; }
@@ -7136,7 +7174,7 @@ html{scrollbar-gutter:stable}
 #sodaf-root .insc-okamt{padding:12px 16px;margin:0;border:1px solid #E4E8EC;border-radius:14px;background:#F4F6F8}
 #sodaf-root .insc-okamt b{font:800 1.5rem var(--f-display);color:var(--green)}
 #sodaf-root .insc-okbox #sd-inRedo{justify-self:center;font-size:.86rem}
-#sodaf-root .insc-hello{padding:4px 2px}
+#sodaf-root .insc-hello{padding:4px 2px}.pc-corr{margin:10px 0 0;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fff}.pc-corr summary{cursor:pointer;font-weight:700}.pc-corr[open]{display:flex;flex-direction:column;gap:8px}.pc-corr select,.pc-corr input{width:100%;box-sizing:border-box}.pc-corr .btn{align-self:flex-start}.pc-corrok{color:#166534!important}.insc-etunote{display:block;margin-top:8px;padding:8px 10px;border-radius:10px;background:#FFF4CC;color:#3B2A00;font-size:.9rem}.insc-cards [hidden],.insc-fq[hidden],.insc-fl[hidden]{display:none!important}
 @media (max-width:520px){#sodaf-root .insc-step{padding:20px 14px 16px}#sodaf-root .insc-step .rcm{padding:12px 13px}}
 /* Page Pré-inscription : formulaire + panneau contact sombre */
 #sodaf-root .pi{grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:22px;align-items:start}
