@@ -5,7 +5,7 @@
 --    Exception : la remise à niveau (déjà titulaire du permis, pas de code).
 -- 2. Au plus 2 séances de conduite par semaine (lundi → dimanche), pour que tout le monde ait sa place.
 -- 3. Ses séances sont à faire dans les 6 mois après son premier reçu d'inscription.
--- 4. Tarif étudiant : un seul étudiant par séance (avant : un par équipe).
+-- 4. Pas de limite pour le tarif étudiant (décision du 22 oct. : « ceux qui viennent, ils viennent »).
 -- Les créneaux ne changent pas (mêmes heures, 4 places) ; le secrétariat place l'élève sur une place libre.
 -- Rien n'est supprimé. Idempotent.
 
@@ -90,16 +90,6 @@ begin
      and date_trunc('week', c.jour) = date_trunc('week', new.jour);
   if k >= 2 then
     raise exception 'Réservation impossible : il a déjà 2 séances la semaine du % (2 au plus par semaine).', to_char(date_trunc('week', new.jour), 'DD/MM') using errcode = 'P0001';
-  end if;
-  -- Tarif étudiant : un seul élève au tarif étudiant par séance (avant : un par équipe)
-  if coalesce(f, '') ilike '%étudiant%' and exists (
-       select 1 from public.creneaux_conduite c
-        cross join lateral (select p.formation from public.paiements p
-                             where p.eleve_id = c.eleve_id and coalesce(p.annule, false) = false and p.motif like 'Droit d''inscription%'
-                             order by p.cree_le desc limit 1) fo
-        where c.jour = new.jour and c.heure = new.heure and c.id <> new.id and c.eleve_id <> new.eleve_id
-          and c.statut in ('Réservé', 'Fait') and fo.formation ilike '%étudiant%') then
-    raise exception 'Tarif étudiant : un seul étudiant par séance. Choisis une autre heure.' using errcode = 'P0001';
   end if;
   if new.bloc = 'mercredi'
      and now() < (((new.jour - 1)::timestamp + time '18:00') at time zone 'Africa/Lome')
