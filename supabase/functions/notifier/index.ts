@@ -136,7 +136,7 @@ Deno.serve(async (req) => {
                             from public.taches t join public.profils pp on pp.id = t.pour join public.profils pa on pa.id = t.par where t.id = ${p.id ?? 0}`;
     if (!t) return json({ envoyes: 0, raison: "tâche introuvable" });
     const court = (x: string) => (x.length > 180 ? x.slice(0, 177) + "…" : x), url = "/equipe/?onglet=taf", tag = "tache-" + p.id, qui = ROLE[t.pour_role] || "Équipe";
-    if (p.quoi === "nouvelle") { seulement = t.pour; note = { title: "Nouvelle tâche · de la " + (t.par_role === "admin" ? "direction" : "gérante"), body: court(t.titre), url, tag }; }
+    if (p.quoi === "nouvelle") { seulement = t.pour; note = { title: "Nouvelle tâche · " + (t.par_role === "admin" ? "de la direction" : t.par_role === "gerant" ? "de la gérante" : "du " + (ROLE[t.par_role] || "équipe").toLowerCase()), body: court(t.titre), url, tag }; }
     else if (p.quoi === "prix") { roles = ["gerant"]; note = { title: "Prix à trouver", body: court(t.titre + " · Trouve le prix et le devis, puis envoie-les à la direction."), url, tag }; }
     else if (p.quoi === "accord") { roles = ["admin"]; note = { title: "Prix trouvé : " + milliers(t.montant) + " F", body: court(t.titre + " · Accorde ou refuse."), url, tag }; }
     else if (p.quoi === "refus") { roles = ["gerant"]; note = { title: "Refusé par la direction", body: court(t.titre + (t.accord_note ? " · " + t.accord_note : "")), url, tag }; }
