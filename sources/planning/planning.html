@@ -34,7 +34,7 @@ h2 small{font:500 8pt "Inter";color:var(--muted)}
 .how li{display:grid;grid-template-columns:4.6mm 1fr;gap:1.6mm;font-size:8pt;line-height:1.3;counter-increment:n}
 .how li::before{content:counter(n);display:grid;place-items:center;width:4.6mm;height:4.6mm;border-radius:50%;background:var(--code);font:700 7.4pt "Poppins"}
 .code{display:grid;grid-template-columns:auto 1fr;gap:3mm;align-items:stretch}
-.groups{display:grid;grid-template-columns:repeat(5,1fr);gap:2mm}
+.groups{display:grid;grid-template-columns:repeat(4,1fr);gap:2mm}
 .gp{border:1.2px solid var(--code);background:var(--codes);border-radius:2mm;padding:1.4mm 2.2mm;border-left:2.2mm solid}
 .gp b{display:block;font:700 9pt "Poppins",sans-serif}
 .gp span{font-size:7.8pt}
@@ -65,10 +65,10 @@ h2 small{font:500 8pt "Inter";color:var(--muted)}
  <div>
   <h2><i>1</i>Ta conduite : quand tu peux <small>· 4 élèves par voiture, jusqu'à 3 séances de 2 h par semaine</small></h2>
   <div class="pairs">
-   <div class="pair x1"><div class="ph">Tôt le matin<small>lundi → samedi</small></div>
-    <div class="eq"><b>6 h 30 – 8 h 30</b><span>4 places</span></div></div>
-   <div class="pair x2"><div class="ph">Matin<small>lundi → samedi</small></div>
-    <div class="eq"><b>8 h 45 – 10 h 45</b><span>4 places</span></div></div>
+   <div class="pair x1"><div class="ph">Matin<small>lundi → samedi</small></div>
+    <div class="eq"><b>7 h 30 – 9 h 30</b><span>4 places</span></div></div>
+   <div class="pair x2"><div class="ph">Fin de matinée<small>lundi → samedi</small></div>
+    <div class="eq"><b>10 h – 12 h</b><span>4 places</span></div></div>
    <div class="pair x3"><div class="ph">Fin d'après-midi<small>lundi → vendredi</small></div>
     <div class="eq"><b>15 h 45 – 17 h 45</b><span>4 places</span></div>
     <div class="eq vide">Mercredi 15 h 45 : rattrapages d'abord</div></div>
@@ -88,7 +88,6 @@ h2 small{font:500 8pt "Inter";color:var(--muted)}
   <div class="groups">
    <div class="gp p1"><b>Groupe A</b><span>Lundi + jeudi · 14 h 30</span></div>
    <div class="gp p2"><b>Groupe B</b><span>Mardi + vendredi · 14 h 30</span></div>
-   <div class="gp p1"><b>Groupe C</b><span>Lundi + jeudi · 11 h</span></div>
    <div class="gp p1"><b>Groupe F · soir</b><span>Lundi + jeudi · 18 h</span></div>
    <div class="gp p2"><b>Groupe G · soir</b><span>Mardi + vendredi · 18 h</span></div>
   </div>
@@ -100,12 +99,11 @@ h2 small{font:500 8pt "Inter";color:var(--muted)}
  <h2 style="margin-bottom:1.6mm"><i>3</i>La semaine complète <small>· conduite : 4 places par séance, tu réserves au secrétariat</small></h2>
  <div class="grid">
   <div></div><div class="dh p1">Lundi</div><div class="dh p2">Mardi</div><div class="dh p3">Mercredi</div><div class="dh p1">Jeudi</div><div class="dh p2">Vendredi</div><div class="dh p3">Samedi</div>
-  <div class="hr">6 h 30<small>à 8 h 30</small></div>
+  <div class="hr">7 h 30<small>à 9 h 30</small></div>
    <div class="c p1"><b>Conduite</b><span>4 places</span></div><div class="c p2"><b>Conduite</b><span>4 places</span></div><div class="c p3"><b>Conduite</b><span>4 places</span></div><div class="c p1"><b>Conduite</b><span>4 places</span></div><div class="c p2"><b>Conduite</b><span>4 places</span></div><div class="c p3"><b>Conduite</b><span>4 places</span></div>
-  <div class="hr">8 h 45<small>à 10 h 45</small></div>
+  <div class="pause">9 h 30 – 10 h · 30 min de repos (voiture, élèves)</div>
+  <div class="hr">10 h<small>à 12 h</small></div>
    <div class="c p1"><b>Conduite</b><span>4 places</span></div><div class="c p2"><b>Conduite</b><span>4 places</span></div><div class="c p3"><b>Conduite</b><span>4 places</span></div><div class="c p1"><b>Conduite</b><span>4 places</span></div><div class="c p2"><b>Conduite</b><span>4 places</span></div><div class="c p3"><b>Conduite</b><span>4 places</span></div>
-  <div class="hr">11 h<small>à 12 h</small></div>
-   <div class="c cd"><b>Code · Groupe C</b></div><div class="c vd"></div><div class="c vd"></div><div class="c cd"><b>Code · Groupe C</b></div><div class="c vd"></div><div class="c vd"></div>
   <div class="pause">12 h – 14 h 30 · pause du moniteur (heures chaudes)</div>
   <div class="hr">14 h 30<small>à 15 h 30</small></div>
    <div class="c cd"><b>Code · Groupe A</b></div><div class="c cd"><b>Code · Groupe B</b></div><div class="c rt"><b>Rattrapage du code</b><span>et examen blanc</span></div><div class="c cd"><b>Code · Groupe A</b></div><div class="c cd"><b>Code · Groupe B</b></div><div class="c off"><b>Fermé</b><span>Entretien de la voiture</span></div>
