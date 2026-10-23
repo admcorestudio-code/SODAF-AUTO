@@ -1556,7 +1556,7 @@ ${HEAD("Formations", "Nos formations et tarifs", "Chaque formule comprend le cod
 <div class="wk"><b>Samedi</b><span>7 h 30 · 10 h</span></div>
 <p style="margin-top:12px;font-size:.92rem;color:var(--muted)">Tu commences la conduite quand tu as suivi en salle les cours 1 à 9 (jusqu'à la notion théorique de conduite). Ensuite, tu réserves tes séances au secrétariat : jusqu'à 3 par semaine, quand tu peux, dans les 3 mois. Chaque séance dure 2 h, 4 élèves dans la voiture, chacun conduit à son tour. Tu travailles ? Prends 7 h 30 ou 15 h 45, et le code le soir à 18 h.</p></div>
 <div class="card"><p class="eyebrow">Ton parcours</p><h3 style="margin-top:10px">Étape par étape</h3>
-<ol class="steps-ol"><li><b>Dès ton inscription :</b> ton groupe de code, 2 cours par semaine en salle.</li><li><b>Après les cours 1 à 9</b> (jusqu'à la notion théorique de conduite) et ta formation soldée : la conduite, jusqu'à 3 séances par semaine, quand tu peux.</li><li><b>À la 10e séance :</b> le moniteur t'évalue pour l'examen. Tout est à faire dans les 3 mois.</li><li><b>Un cours ou une séance manqués :</b> rattrapage gratuit.</li></ol></div>
+<ol class="steps-ol"><li><b>Dès ton inscription :</b> ton groupe de code, 2 cours par semaine en salle.</li><li><b>Après les cours 1 à 9</b> (jusqu'à la notion théorique de conduite) et ta formation soldée : la conduite, jusqu'à 3 séances par semaine, quand tu peux.</li><li><b>À la 10e séance :</b> le moniteur t'évalue pour l'examen. Tout est à faire dans les 3 mois.</li><li><b>Un cours de code manqué :</b> rattrape-le gratuitement la même semaine dans un autre groupe s'il reste une place (demande au secrétariat), sinon le mercredi.</li></ol></div>
 </div>
 <div class="card prog-pub" id="sd-progPub" style="margin-top:18px"></div>
 </div>
@@ -4433,12 +4433,29 @@ function init(root) {
 
     // Fiche : cours du programme suivis (présences cochées par le moniteur) et cours à rattraper
     async function fillCours(x) {
-      const el = $("#sd-pcCours"); if (!el) return;
+      const el = $("#sd-pcCours"); if (!el) return; const vieux = $("#sd-pcCrat"); if (vieux) vieux.remove();
       let pr = null, ss = [];
       try { [pr, ss] = await Promise.all([DB.q("presences?select=seances_code(theme)&eleve_id=eq." + x.id), x.groupe_code && x.groupe_depuis ? DB.q("seances_code?select=theme&groupe=eq." + x.groupe_code + "&statut=eq.Fait&jour=gte." + x.groupe_depuis.slice(0, 10) + "&jour=lte." + iso(new Date())) : Promise.resolve([])]); } catch (e) { return; }
       if (!pr || $("#sd-pcCours") !== el) return;
       const vus = new Set(pr.map((p) => p.seances_code && p.seances_code.theme).filter((t) => bIdx(t) >= 0)), manq = [...new Set((ss || []).map((z) => z.theme).filter((t) => bIdx(t) >= 0 && !vus.has(t)))];
       el.innerHTML = "<b>Cours suivis : " + vus.size + " sur 12</b>" + (manq.length ? " · à rattraper (mercredi 14 h 30 ou 18 h, ou sur le site) : " + manq.map(esc).join(", ") : vus.size ? "" : " · le moniteur coche les présents à chaque cours");
+      // Rattraper le même cours dans un autre groupe, dans les 7 jours, s'il reste une place (0072)
+      const td = iso(new Date()), lim = iso(new Date(Date.now() + 7 * 864e5));
+      const [mes, ses] = await Promise.all([DB.q("code_rattrapages?select=id,seance_id,seances_code(jour,heure,groupe,theme)&eleve_id=eq." + x.id + "&statut=eq.Réservé").catch(() => []),
+        manq.length ? DB.q("seances_code?select=id,jour,heure,groupe,theme&statut=eq.Prévu&groupe=not.is.null&jour=gte." + td + "&jour=lte." + lim + "&theme=in.(" + manq.map((t) => '"' + encodeURIComponent(t) + '"').join(",") + ")&order=jour,heure").catch(() => []) : Promise.resolve([])]);
+      if ($("#sd-pcCours") !== el) return;
+      const futurs = (Array.isArray(mes) ? mes : []).filter((r) => r.seances_code && r.seances_code.jour >= td);
+      const prises = new Set(futurs.map((r) => r.seance_id));
+      const cand = (Array.isArray(ses) ? ses : []).filter((z) => z.groupe !== x.groupe_code && !prises.has(z.id) && !futurs.some((r) => r.seances_code.theme === z.theme));
+      let rr = []; if (cand.length) rr = await DB.q("code_rattrapages?select=seance_id&statut=eq.Réservé&seance_id=in.(" + cand.map((z) => z.id).join(",") + ")").catch(() => []) || [];
+      const libre = (z) => { const g = gOf(z.groupe); return g ? g.places - occ(z.groupe) - rr.filter((r) => r.seance_id === z.id).length : 0; };
+      const quand = (z) => longDay(z.jour) + " · " + String(z.heure).split(" – ")[0] + " · " + ((gOf(z.groupe) || {}).nom || "Groupe " + z.groupe);
+      let h = "";
+      if (futurs.length) h += '<div class="pc-crat"><span>Rattrapage réservé</span>' + futurs.map((r) => '<div class="pc-cr"><b>' + esc(quand(r.seances_code)) + "</b><small>" + esc(r.seances_code.theme || "") + '</small><button class="linkbtn" type="button" data-cran="' + r.id + '">Annuler</button></div>').join("") + "</div>";
+      const ok = cand.filter((z) => libre(z) > 0);
+      if (ok.length) h += '<div class="pc-crat"><span>Rattraper dans un autre groupe (même cours, cette semaine)</span>' + ok.map((z) => '<div class="pc-cr"><b>' + esc(quand(z)) + "</b><small>" + esc(z.theme) + " · " + libre(z) + " place" + (libre(z) > 1 ? "s" : "") + '</small><button class="btn btn-green btn-sm" type="button" data-crat="' + z.id + '">Réserver</button></div>').join("") + "</div>";
+      else if (manq.length && !futurs.length) h += '<p class="tm-note" style="margin:6px 0 0!important">Pas de place dans un autre groupe cette semaine : rattrapage le mercredi à 14 h 30 ou 18 h.</p>';
+      if (h) el.insertAdjacentHTML("afterend", '<div id="sd-pcCrat">' + h + "</div>");
     }
     async function renderDetail() {
       const box = $("#sd-pcDetail"), pc = $("#sd-pc");
@@ -4602,6 +4619,10 @@ function init(root) {
     $("#sd-pcDetail").addEventListener("click", async (e) => {
       const gp = e.target.closest("[data-goel]"); if (gp) { goEleve(+gp.dataset.goel); return; }
       const x = eleves.find((y) => y.id === pcSel); if (!x) return;
+      const cra = e.target.closest("[data-crat]");
+      if (cra) { confirmBtn(cra, async () => { const r = await run(() => DB.q("rpc/code_rattrapage", { method: "POST", body: { p_eleve: x.id, p_seance: +cra.dataset.crat } })); if (r) { toast("Rattrapage réservé : préviens l'élève"); fillCours(x); } }); return; }
+      const crn = e.target.closest("[data-cran]");
+      if (crn) { confirmBtn(crn, async () => { const r = await run(() => DB.q("rpc/code_rattrapage_annuler", { method: "POST", body: { p_id: +crn.dataset.cran } }).then(() => true)); if (r) { toast("Rattrapage annulé"); fillCours(x); } }); return; }
       const pl = e.target.closest("[data-prolonger]");
       if (pl) { confirmBtn(pl, async () => { const d = await run(() => DB.q("rpc/formation_prolonger", { method: "POST", body: { p_eleve: x.id } })); if (!d) return; toast("Délai prolongé jusqu'au " + dOf(String(d).slice(0, 10)).toLocaleDateString("fr-FR")); await loadEleves(true); const y = eleves.find((z) => z.id === x.id); if (y && pcSel === y.id) pcEquipe(y); }); return; }
       const cz = e.target.closest("[data-cresa]");
@@ -6125,7 +6146,8 @@ function init(root) {
       const today = iso(new Date());
       const s0 = await run(() => DB.q("seances_code?select=*&jour=gte." + today + "&statut=neq.Annulé&order=jour&limit=12"));
       if (s0) {
-        const s1 = eleves.length ? s0.filter((x) => !x.groupe || eleves.some((y) => y.groupe_code === x.groupe && enCode(y) && !susp(y) && cycleOk(y))) : s0; // un groupe sans élève : pas de cours à faire
+        const rs0 = s0.length ? new Set(((await DB.q("code_rattrapages?select=seance_id&statut=eq.Réservé&seance_id=in.(" + s0.map((x) => x.id).join(",") + ")").catch(() => [])) || []).map((r) => r.seance_id)) : new Set();
+        const s1 = eleves.length ? s0.filter((x) => !x.groupe || rs0.has(x.id) || eleves.some((y) => y.groupe_code === x.groupe && enCode(y) && !susp(y) && cycleOk(y))) : s0; // un groupe sans élève (ni rattrapage) : pas de cours à faire
         const ses = s1.filter((x) => x.jour === (s1[0] && s1[0].jour)).sort((a, b) => hmin(a.heure) - hmin(b.heure));
         if (monIdx >= ses.length) monIdx = 0;
         const se = ses[monIdx], picker = ses.length > 1 ? '<div class="gc-ses">' + ses.map((x, i) => '<button type="button" class="btn btn-sm ' + (i === monIdx ? "btn-green" : "btn-line") + '" data-mses="' + i + '">' + esc(x.groupe ? (gOf(x.groupe) || { nom: "Groupe " + x.groupe }).nom : "Rattrapage") + " · " + esc(x.heure.split(" – ")[0]) + "</button>").join("") + "</div>" : "";
@@ -6133,7 +6155,8 @@ function init(root) {
         else {
           const pr = await run(() => DB.q("presences?select=eleve_id&seance_id=eq." + se.id)) || [];
           const ids = new Set(pr.map((x) => x.eleve_id));
-          const act = eleves.filter((x) => enCode(x) && !susp(x) && (!se.groupe || (x.groupe_code === se.groupe && cycleOk(x)))).sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
+          const rat = se.groupe ? new Set(((await DB.q("code_rattrapages?select=eleve_id&statut=eq.Réservé&seance_id=eq." + se.id).catch(() => [])) || []).map((r) => r.eleve_id)) : new Set();
+          const act = eleves.filter((x) => (enCode(x) && !susp(x) && (!se.groupe || (x.groupe_code === se.groupe && cycleOk(x)))) || rat.has(x.id)).sort((a, b) => (rat.has(a.id) ? 1 : 0) - (rat.has(b.id) ? 1 : 0) || a.nom.localeCompare(b.nom, "fr"));
           $("#sd-mcTitle").textContent = (se.jour === today ? "Aujourd'hui" : longDay(se.jour).replace(/^./, (c) => c.toUpperCase())) + " · " + (se.groupe ? (gOf(se.groupe) || { nom: "Groupe " + se.groupe }).nom + " · " : "") + (se.groupe && bIdx(se.theme) >= 0 ? "Cours " + (bIdx(se.theme) + 1) + "/12 : " + se.theme : se.type) + " · " + se.heure + (se.statut === "Fait" ? " ✓" : "");
           const bi = se.groupe ? bIdx(se.theme) : -1, bo = bi >= 0 ? BOUCLE[bi] : null, lock = se.statut === "Fait" && appelEdit !== se.id;
           $("#sd-mcBody").innerHTML = picker + (se.groupe ? "" : '<p class="tm-note" style="margin:0 0 8px!important">Séance commune : élèves de tous les groupes qui ont manqué un cours ou veulent s\'entraîner. 6 places au maximum. Choisis le cours que tu rattrapes : il compte pour les présents.</p>') +
@@ -6142,7 +6165,7 @@ function init(root) {
             // L'appel : au début du cours, le moniteur coche les présents puis valide ; le cours compte alors comme fait
             '<div class="mc-appel' + (lock ? " ok" : "") + '"><div class="mc-ah"><b>Présences</b><span id="sd-mcCnt">' + ids.size + " présent" + (ids.size > 1 ? "s" : "") + " sur " + act.length + "</span></div>" +
             (lock ? '<p class="mc-done">✓ Présences validées : cours fait' + (bo ? " (cours " + bo.n + "/12)" : "") + ".</p>" : '<p class="tm-note" style="margin:0 0 8px!important">Au début du cours, fais l\'appel : coche les élèves présents, puis valide les présences.</p>') +
-            (act.length ? '<div class="tm-checks">' + act.map((x) => '<label><input type="checkbox" data-pe="' + x.id + '"' + (ids.has(x.id) ? " checked" : "") + (lock ? " disabled" : "") + "> " + phAvatar(x, "ph-sm") + esc(x.nom) + (waNum(x.telephone) ? '<a class="pe-tel" href="tel:+228' + waNum(x.telephone) + '" aria-label="Appeler ' + esc(x.nom) + '" title="Appeler"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></a>' : "") + "</label>").join("") + "</div>" : '<p class="tm-empty">Aucun élève inscrit pour l\'instant.</p>') +
+            (act.length ? '<div class="tm-checks">' + act.map((x) => '<label><input type="checkbox" data-pe="' + x.id + '"' + (ids.has(x.id) ? " checked" : "") + (lock ? " disabled" : "") + "> " + phAvatar(x, "ph-sm") + esc(x.nom) + (rat.has(x.id) ? ' <em class="pe-rat">rattrapage</em>' : "") + (waNum(x.telephone) ? '<a class="pe-tel" href="tel:+228' + waNum(x.telephone) + '" aria-label="Appeler ' + esc(x.nom) + '" title="Appeler"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></a>' : "") + "</label>").join("") + "</div>" : '<p class="tm-empty">Aucun élève inscrit pour l\'instant.</p>') +
             (lock ? '<div class="tm-formact"><button class="btn btn-line btn-sm" type="button" id="sd-mcEdit">Modifier les présences</button></div>' : '<details class="mc-nt"' + (se.note ? " open" : "") + '><summary>Ajouter une note (non obligatoire)</summary><input id="sd-mcNote" aria-label="Note" value="' + esc(se.note || "") + '"></details><div class="tm-formact"><button class="btn btn-green btn-sm" type="button" id="sd-mcDone" data-id="' + se.id + '">Valider les présences (' + ids.size + " présent" + (ids.size > 1 ? "s" : "") + ")</button></div>") + "</div>";
           // Devoir à corriger au début du cours : qui l'a fait, qui ne l'a pas fait (20 oct. : plus de message de groupe)
           const dvP = bo && se.groupe && BOUCLE[(bi + 11) % 12].dv !== null ? DEV[BOUCLE[(bi + 11) % 12].dv] : null;
@@ -7626,6 +7649,7 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 
 /* Planning conduite : vue « Rattrapages » (21 oct.) */
 .cd-modes{margin:0 0 14px}.cd-rat[hidden],#sd-cdJour[hidden]{display:none}
+.pc-crat{margin:10px 0 0;padding:10px 12px;border-radius:12px;background:#F5F3FF;border:1px solid #DDD6FE}.pc-crat>span{display:block;font-weight:700;font-size:.86rem;color:#4B3F8F;margin-bottom:4px}.pc-cr{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;padding:6px 0;border-top:1px solid #EDE9FE}.pc-cr:first-of-type{border-top:0}.pc-cr b{font-size:.9rem}.pc-cr small{flex:1;min-width:140px;color:var(--muted)}.pe-rat{font-style:normal;font-size:.72rem;font-weight:700;color:#4B3F8F;background:#EDE9FE;border-radius:999px;padding:.1em .6em;margin-left:4px}
 .pc-soir{display:flex;align-items:center;gap:8px;margin:10px 0 0;font-size:.9rem;font-weight:600;cursor:pointer}.pc-soir input{width:18px;height:18px;accent-color:#0B6E4F}.pc-soirw{color:#9A3412!important}
 .pc-rdv{display:block;margin-top:4px;font-size:.86rem;color:#9A3412}.pc-bloc{margin:10px 0 0;padding:12px 14px;border-radius:12px;background:#FEF2F2;border:1px solid #FCA5A5;display:flex;flex-direction:column;gap:6px;align-items:flex-start}.pc-bloc b{color:#991B1B}.pc-bloc span{font-size:.9rem}
 .pl-calc{padding:14px 16px;margin:0 0 16px}.pl-calc .gr-h4{margin:0 0 6px}.pl-l{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:8px 0;border-top:1px solid #EEF0F2}.pl-l:first-of-type{border-top:0}.pl-l b{font:800 1.1rem var(--f-ui);white-space:nowrap}.pl-tot{border-top:2px solid #15191E}.pl-tot span{font-weight:700}.pl-tot b{font-size:1.35rem}.pl-calc .cd-rnote{margin-top:8px}
