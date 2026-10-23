@@ -5857,22 +5857,20 @@ function init(root) {
       $("#sd-tfRole").textContent = adm ? "Tes tâches, celles de l'équipe et l'argent à envoyer pour les dépenses accordées." : g ? "Tes tâches, les prix à trouver, et les tâches que tu donnes à l'équipe." : "Tes tâches, rangées par étape : ouvre chaque onglet en haut.";
       const ouv0 = t.filter((x) => !TF_FIN.includes(x.etape)), mine = ouv0.filter((x) => x.pour === me.id && x.etape !== "prix" && x.etape !== "accord");
       const conf = mine.filter((x) => x.etape === "envoye").sort(tfTri), ach = mine.filter((x) => x.etape === "afaire" && x.argent).sort(tfTri), attm = mine.filter((x) => x.etape === "payer").sort(tfTri);
-      const vis = { new: DIR(), conf: conf.length > 0, ach: ach.length > 0, moi: true, attm: attm.length > 0, prix: g, acc: adm, pay: adm, att: adm, eq: DIR(), fini: true };
+      const vis = { new: DIR(), conf: conf.length > 0, ach: ach.length > 0, moi: true, attm: attm.length > 0, prix: false, acc: adm, pay: adm, att: adm, eq: DIR(), fini: true };
       Object.keys(vis).forEach((k) => { const bt = $('.tf-tabs [data-tfp="' + k + '"]'); if (bt) bt.hidden = !vis[k]; });
       tfForm();
       const ouv = t.filter((x) => !TF_FIN.includes(x.etape)), vide = (m) => '<p class="tm-empty">' + m + "</p>", cartes = (l, v, m) => (l.length ? l.map((x) => tfCarte(x, v)).join("") : vide(m));
       const grp = (titre, l, aide, v) => '<section class="tf-grp"><h4 class="gr-h4">' + titre + ' <span class="dq-count">' + l.length + "</span></h4>" + (aide ? '<p class="tf-aide">' + aide + "</p>" : "") + cartes(l, v, "Rien.") + "</section>";
       // Mes tâches : ce qu'on m'a donné (le prix et l'accord ne sont pas encore pour moi)
-      const moi = mine.filter((x) => !x.argent).sort(tfTri);
       const bande = () => "";
-      const prix = g ? ouv.filter((x) => x.etape === "prix").sort(tfTri) : [], acc = adm ? ouv.filter((x) => x.etape === "accord").sort(tfTri) : [];
+      const prix = g ? ouv.filter((x) => x.etape === "prix").sort(tfTri) : [], moi = prix.concat(mine.filter((x) => !x.argent).sort(tfTri)), acc = adm ? ouv.filter((x) => x.etape === "accord").sort(tfTri) : [];
       const aPayer = adm ? ouv.filter((x) => x.etape === "payer" || (x.etape === "envoye" && x.pas_recu_le)).sort(tfTri) : [];
       const env = adm ? ouv.filter((x) => x.etape === "envoye" && !x.pas_recu_le) : [], cours = adm ? ouv.filter((x) => x.etape === "afaire" && x.argent) : [];
       $("#sd-tfMoi").innerHTML = bande("moi", "Mes tâches", "Ce qu'on t'a demandé de faire. Touche « Fait » quand c'est fini.") + cartes(moi, "moi", "Rien à faire pour l'instant.");
       $("#sd-tfConf").innerHTML = bande("conf", "Argent à confirmer", "La direction t'a envoyé de l'argent. Regarde ton solde Mixx, puis touche « Activer ».") + cartes(conf, "moi", "Rien.");
       $("#sd-tfAch").innerHTML = bande("ach", "Achats à faire", "Argent reçu : fais l'achat, ajoute la facture ou le ticket, puis touche « Fait ».") + cartes(ach, "moi", "Rien.");
       $("#sd-tfAttm").innerHTML = bande("attm", "En attente de l'argent", "C'est accordé. La direction va t'envoyer l'argent. Rien à faire pour l'instant.") + cartes(attm, "moi", "Rien.");
-      if (g) $("#sd-tfPrix").innerHTML = cartes(prix, "moi", "Aucun prix à trouver.");
       if (adm) {
         $("#sd-tfAcc").innerHTML = cartes(acc, "moi", "Rien à accorder.");
         const aRecup = t.reduce((n, x) => n + (x.envois || []).filter((e) => e.mauvais_numero && !e.recupere).reduce((m, e) => m + (e.montant || 0), 0), 0);
@@ -5897,7 +5895,7 @@ function init(root) {
       pas("sd-tfBadge", ouv.filter(tfAMoi).length);
       // Première ouverture : le premier sous-onglet qui attend un geste, sinon « Mes tâches »
       if (TF.ong && vis[TF.ong] === false) TF.ong = null; // l'onglet ouvert s'est vidé
-      if (!TF.ong) tfOnglet((conf.length && "conf") || (ach.length && "ach") || (acc.length && "acc") || (aPayer.length && "pay") || (prix.length && "prix") || "moi");
+      if (!TF.ong) tfOnglet((conf.length && "conf") || (ach.length && "ach") || (acc.length && "acc") || (aPayer.length && "pay") || "moi");
     }
     // Actions sur une tâche
     const tfRpc = (fn, body, msg) => run(() => DB.q("rpc/" + fn, { method: "POST", body }).then(() => true), msg);
