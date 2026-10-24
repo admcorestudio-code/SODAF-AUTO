@@ -5320,7 +5320,8 @@ function init(root) {
     const DEP_RZ = ["Rattrapages en plus", "Séances en plus", "Chercher le gagnant du tirage", "Prix de l'essence en hausse", "Route bloquée ou détour", "Trajet au garage"];
     const ROLE_NOM = { admin: "Direction", gerant: "Gérante", secretariat: "Secrétariat", moniteur: "Moniteur", ambassadeur: "Ambassadeur" };
     // Champ pièce jointe : « Prendre une photo » ou « Choisir un fichier »
-    const pjHtml = (pdf) => '<div class="pj"><label class="btn btn-line btn-sm">Prendre une photo<input type="file" accept="image/*" capture="environment" hidden></label><label class="btn btn-line btn-sm">Choisir ' + (pdf ? "un fichier" : "une image") + '<input type="file" accept="image/*' + (pdf ? ",application/pdf" : "") + '" hidden></label><span class="pj-nom">Aucun fichier</span></div>';
+    // Pièce jointe (24 oct.) : « Galerie » ouvre les photos du téléphone (photos prises, images reçues sur WhatsApp) ; le PDF à part, en petit
+    const pjHtml = (pdf) => '<div class="pj"><label class="btn btn-line btn-sm">Prendre une photo<input type="file" accept="image/*" capture="environment" hidden></label><label class="btn btn-line btn-sm">Galerie<input type="file" accept="image/*" hidden></label>' + (pdf ? '<label class="pj-pdf">Fichier PDF<input type="file" accept="application/pdf" hidden></label>' : "") + '<span class="pj-nom">Aucun fichier</span></div>';
     document.addEventListener("change", (e) => { const i = e.target.closest && e.target.closest(".pj input[type=file]"); if (!i) return; const pj = i.closest(".pj"); pj._file = i.files[0] || null; pj.querySelector(".pj-nom").textContent = pj._file ? pj._file.name : "Aucun fichier"; pj.classList.toggle("ok", !!pj._file); pj.dispatchEvent(new CustomEvent("pj", { bubbles: true })); });
     async function depEnvoyer(file, dossier) {
       const img = /^image\//.test(file.type); if (!img && file.type !== "application/pdf") throw new Error("type");
@@ -7678,6 +7679,7 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 #sodaf-root [data-pane="taf"] .tf-b[disabled]{opacity:.4;box-shadow:none}
 #sodaf-root [data-pane="taf"] .tf-plus{color:var(--tfm)}
 .tf-numx{font-weight:500;color:var(--tfm,#6B7480)}
+.pj-pdf{cursor:pointer;font:600 .84rem var(--f-ui);color:#6B7480;text-decoration:underline;align-self:center}
 
 /* Rubriques listées de haut en bas (24 oct.) */
 .tfc-nav{display:flex;flex-direction:column;border:1px solid var(--tfl,#E3E6EA);border-radius:12px;background:#fff;overflow:hidden;margin:0 0 18px}
