@@ -6663,6 +6663,7 @@ function init(root) {
     apShow(p);
     if (APP && !["equipe", "classe", "recu"].includes(p)) { if (location.hash && location.hash !== "#accueil") { location.replace("/" + location.hash); return; } history.replaceState(null, "", "#equipe"); p = "equipe"; }
     if (p === "recu") rcPublic(h.slice(5));
+    { const wf = $(".wa-float"); if (wf) wf.hidden = p === "inscrire"; } // le bouton flottant cachait les cases du lien d'inscription sur téléphone
     if (p === "inscrire") inscPage(h.slice(9));
     if (p === "tirage") tirPage();
     if (p === "parrainage" && h.length > 11) { let c = ""; try { c = decodeURIComponent(h.slice(11)); } catch (e) {} parRecu(c); history.replaceState(null, "", "#inscription"); p = "inscription"; }
@@ -7305,7 +7306,7 @@ html{scrollbar-gutter:stable}
 #sodaf-root .insc-okamt b{font:800 1.5rem var(--f-display);color:var(--green)}
 #sodaf-root .insc-okbox #sd-inRedo{justify-self:center;font-size:.86rem}
 #sodaf-root .insc-hello{padding:4px 2px}.pc-corr{margin:10px 0 0;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fff}.pc-corr summary{cursor:pointer;font-weight:700}.pc-corr[open]{display:flex;flex-direction:column;gap:8px}.pc-corr select,.pc-corr input{width:100%;box-sizing:border-box}.pc-corr .btn{align-self:flex-start}.pc-corrok{color:#166534!important}.insc-etunote{display:block;margin-top:8px;padding:8px 10px;border-radius:10px;background:#FFF4CC;color:#3B2A00;font-size:.9rem}
-.insc-etunote b{font:inherit;font-weight:700;color:inherit}
+.wa-float[hidden]{display:none!important}.insc-etunote b{font:inherit;font-weight:700;color:inherit}
 .insc-etuline{display:grid;grid-template-columns:1fr auto;gap:2px 12px;margin:14px 0 0;padding:14px 16px;border-radius:14px;background:#E8F2FF;border:1.5px solid #9CC3F5}.insc-etuline[hidden]{display:none}.insc-etuline span{grid-column:1/-1;font:700 .74rem var(--f-ui);text-transform:uppercase;letter-spacing:.06em;color:#1F5FAE}.insc-etuline b{font:800 1.05rem var(--f-ui)}.insc-etuline em{font:800 1.1rem var(--f-ui);font-style:normal;white-space:nowrap}.insc-etuline small{grid-column:1/-1;color:var(--muted);font-size:.86rem}.insc-payq[hidden]{display:none}.insc-cards [hidden],.insc-fq[hidden],.insc-fl[hidden]{display:none!important}
 @media (max-width:520px){#sodaf-root .insc-step{padding:20px 14px 16px}#sodaf-root .insc-step .rcm{padding:12px 13px}}
 /* Page Pré-inscription : formulaire + panneau contact sombre */
