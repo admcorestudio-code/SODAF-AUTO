@@ -5809,7 +5809,7 @@ function init(root) {
         confirmBtn(b, async () => {
           b.disabled = true;
           const r = await run(() => DB.q("rpc/tache_creer", { method: "POST", body: { p_pour: qui.dataset.tfqui, p_titre: tx, p_pour_le: f.querySelector(".tf-date2").value || null, p_argent: arg !== "non", p_montant: arg === "oui" ? mt : null } }), arg === "prix" && qui.dataset.tfqui !== me.id ? "Envoyé à la gérante : elle cherche le prix" : qui.dataset.tfqui === me.id ? "Tâche ajoutée pour toi" : "Tâche donnée");
-          b.disabled = false; if (r !== null) { box.dataset.pret = ""; $("#sd-tfNew").hidden = true; await tfCharger(); }
+          b.disabled = false; if (r !== null) { box.dataset.pret = ""; TF.cat = qui.dataset.tfqui === me.id ? "mes" : "eq"; await tfCharger(); }
         });
       });
     }
@@ -5870,33 +5870,53 @@ function init(root) {
       if (!t) { L.innerHTML = '<p class="tm-empty">L\'onglet « À faire » n\'est pas encore activé dans la base.</p>'; return; }
       TF.t = t;
       if (adm) { const nm = await DB.q("rpc/numeros_mixx", { method: "POST", body: {} }).catch(() => null); TF.num = {}; (nm || []).forEach((x) => { if (x.numero) TF.num[x.profil] = x.numero; }); TF.numOk = !!nm; }
-      $("#sd-tfRole").textContent = "Touche une ligne pour l'ouvrir." + (DIR() ? " Les tâches que tu te donnes à toi-même ne sont vues que par toi." : "");
-      $("#sd-tfNewBar").hidden = !DIR(); tfForm();
+      $("#sd-tfRole").textContent = "Choisis une rubrique dans la liste, puis touche une tâche pour l'ouvrir.";
+      $("#sd-tfNewBar").hidden = true; tfForm();
       const ouv = t.filter((x) => !TF_FIN.includes(x.etape));
       const kind = (x) => (x.etape === "prix" ? "prix" : x.argent ? "argent" : "simple");
       const amoi = ouv.filter(tfAMoi).sort(tfTri), autres = ouv.filter((x) => !tfAMoi(x)).sort((a, b) => String(b.le).localeCompare(String(a.le)));
       const fini = t.filter((x) => TF_FIN.includes(x.etape)).sort((a, b) => String(b.fait_le || b.annule_le || b.accord_le || b.le).localeCompare(String(a.fait_le || a.annule_le || a.accord_le || a.le))).slice(0, 40);
-      // L'argent, en une ligne (direction)
-      if (adm) { const reste = ouv.filter((x) => x.etape === "payer" || x.etape === "accord").reduce((n, x) => n + (x.montant || 0), 0) + TF.dm.reduce((n, d) => n + (d.montant || 0), 0);
-        const envMois = t.reduce((n, x) => n + (x.envois || []).filter((e) => tfMois(e.le)).reduce((m, e) => m + (e.montant || 0), 0), 0), aRecup = t.reduce((n, x) => n + (x.envois || []).filter((e) => e.mauvais_numero && !e.recupere).reduce((m, e) => m + (e.montant || 0), 0), 0);
-        $("#sd-tfTop").innerHTML = '<div class="tf-money"><span>Reste à envoyer <b>' + F(reste) + "</b></span><span>Envoyé ce mois <b>" + F(envMois) + "</b></span>" + (aRecup ? '<span class="tf-retard">À récupérer <b>' + F(aRecup) + "</b></span>" : "") + "</div>"; }
-      else $("#sd-tfTop").innerHTML = "";
-      // Première ouverture : la première chose à faire est ouverte
+      // Rubriques, listées de haut en bas dans l'ordre (24 oct. : « que ça soit juste listé… en haut, en bas »)
+      const argent = adm ? amoi.filter((x) => ["accord", "payer"].includes(x.etape) || (x.etape === "envoye" && x.pas_recu_le && x.pour !== me.id)) : [];
+      const prix = g ? amoi.filter((x) => x.etape === "prix") : [];
+      const mes = amoi.filter((x) => !argent.includes(x) && !prix.includes(x));
+      const lig = (l, sous) => l.map((x) => tfLigne(x, kind(x), sous(x))).join("");
+      const C = [];
+      if (DIR()) C.push({ k: "new", n: null, t: "Nouvelle tâche", d: "Donner une tâche, ou t'en noter une." });
+      if (adm) C.push({ k: "arg", n: TF.dm.length + argent.length, act: true, t: "Argent à accorder et envoyer", d: "Demandes de dépense et paiements à faire.", haut: () => tfMoney(t, ouv), h: () => TF.dm.map(dmLigne).join("") + lig(argent, (x) => tfEtat(x)[1]), pied: () => tfNumHtml() });
+      if (g) C.push({ k: "prix", n: prix.length, act: true, t: "Prix à trouver", d: "Trouve le prix et le devis pour la direction.", h: () => lig(prix, (x) => tfEtat(x)[1]) });
+      C.push({ k: "mes", n: mes.length, act: true, t: "Mes tâches", d: DIR() ? "Ce que tu dois faire toi-même (tes notes perso ne sont vues que par toi)." : "Ce qu'on t'a demandé de faire.", h: () => lig(mes, (x) => tfEtat(x)[1]) });
+      C.push({ k: "eq", n: autres.length, t: DIR() ? "En cours dans l'équipe" : "En attente", d: DIR() ? "Ce que les autres doivent faire. Rien à faire pour toi ici." : "Ce qui attend la gérante ou la direction.", h: () => lig(autres, tfQui) });
+      C.push({ k: "fini", n: fini.length, t: "Terminé", d: "Les 40 dernières tâches finies, refusées ou annulées.", h: () => fini.map((x) => tfLigne(x, "fini", tfEtat(x)[1])).join("") });
+      TF.C = C;
+      if (!TF.cat || !C.some((c) => c.k === TF.cat)) TF.cat = (C.find((c) => c.act && c.n) || C.find((c) => c.k === "mes")).k;
       const nAmoi = amoi.length + TF.dm.length;
-      if (!TF.vu) { TF.vu = true; const first = TF.dm.length ? "d" + TF.dm[0].id : amoi.length ? String(amoi[0].id) : null; if (first) TF.open.add(first); }
-      const sec = (cls, titre, n, corps, vide) => '<section class="tfs tfs-' + cls + '"><h4 class="tfs-h"><span>' + titre + "</span>" + '<em class="tfs-n">' + n + "</em></h4>" + (corps || '<p class="tfs-vide">' + vide + "</p>") + "</section>";
-      L.innerHTML = sec("moi", "À faire par toi", nAmoi, TF.dm.map(dmLigne).join("") + amoi.map((x) => tfLigne(x, kind(x), tfEtat(x)[1])).join(""), "Rien à faire pour toi.") +
-        // Chez les autres : replié (24 oct. : « on n'a pas besoin de voir ça… un truc que si on clique, ça ouvre »)
-        '<details class="tfs tfs-autres tfs-pli"' + (TF.autresOuvert ? " open" : "") + '><summary class="tfs-h"><span>Chez les autres</span><em class="tfs-n">' + autres.length + "</em></summary>" + (autres.map((x) => tfLigne(x, kind(x), tfQui(x))).join("") || '<p class="tfs-vide">Personne n\'attend rien.</p>') + "</details>" +
-        '<details class="tfs tfs-fini"' + (TF.finiOuvert ? " open" : "") + '><summary class="tfs-h"><span>Terminé</span><em class="tfs-n">' + fini.length + "</em></summary>" + (fini.map((x) => tfLigne(x, "fini", tfEtat(x)[1])).join("") || '<p class="tfs-vide">Rien de terminé pour l\'instant.</p>') + "</details>" +
-        (adm ? tfNumHtml() : "");
+      tfAfficher();
       const pas = (id, n) => { const e = $("#" + id); if (e) { e.textContent = n; e.hidden = !n; } };
       pas("sd-tfBadge", nAmoi);
+    }
+    function tfMoney(t, ouv) { // l'argent en une ligne (direction)
+      const reste = ouv.filter((x) => x.etape === "payer" || x.etape === "accord").reduce((n, x) => n + (x.montant || 0), 0) + TF.dm.reduce((n, d) => n + (d.montant || 0), 0);
+      const envMois = t.reduce((n, x) => n + (x.envois || []).filter((e) => tfMois(e.le)).reduce((m, e) => m + (e.montant || 0), 0), 0), aRecup = t.reduce((n, x) => n + (x.envois || []).filter((e) => e.mauvais_numero && !e.recupere).reduce((m, e) => m + (e.montant || 0), 0), 0);
+      return '<div class="tf-money"><span>Reste à envoyer <b>' + F(reste) + "</b></span><span>Envoyé ce mois <b>" + F(envMois) + "</b></span>" + (aRecup ? '<span class="tf-retard">À récupérer <b>' + F(aRecup) + "</b></span>" : "") + "</div>";
+    }
+    function tfAfficher() {
+      const C = TF.C || [], c = C.find((x) => x.k === TF.cat) || C[0]; if (!c) return;
+      $("#sd-tfTop").innerHTML = '<nav class="tfc-nav" aria-label="Rubriques">' + C.map((x, i) => '<button type="button" class="tfc' + (x.k === c.k ? " on" : "") + (x.act && x.n ? " tfc-act" : "") + '" data-tfcat="' + x.k + '"' + (x.k === c.k ? ' aria-current="true"' : "") + '><span class="tfc-i">' + (i + 1) + '</span><span class="tfc-t"><b>' + x.t + "</b><small>" + x.d + "</small></span>" + (x.n == null ? '<span class="tfc-p">+</span>' : '<em class="tfc-n">' + x.n + "</em>") + "</button>").join("") + "</nav>" +
+        '<h3 class="tfc-h"><span>Tu es dans</span>' + c.t + "</h3>";
+      $("#sd-tfNew").hidden = c.k !== "new";
+      if (c.k === "new") { $("#sd-tfList").innerHTML = ""; return; }
+      if (!TF.vuCat) TF.vuCat = {};
+      const corps = c.h(); $("#sd-tfList").className = "tf-list" + (c.act ? " tfl-act" : c.k === "fini" ? " tfl-fini" : "");
+      $("#sd-tfList").innerHTML = (c.haut ? c.haut() : "") + (corps || '<p class="tfs-vide">Rien ici pour l\'instant.</p>') + (c.pied ? c.pied() : "");
+      // la première tâche de la rubrique s'ouvre (une seule fois)
+      if (!TF.vuCat[c.k] && c.k !== "fini") { TF.vuCat[c.k] = true; const r = $("#sd-tfList .tfr:not(.open) [data-tfrow]"); if (r && !$("#sd-tfList .tfr.open")) r.click(); }
     }
     // Actions sur une tâche
     const tfRpc = (fn, body, msg) => run(() => DB.q("rpc/" + fn, { method: "POST", body }).then(() => true), msg);
     $('.tm-pane[data-pane="taf"]') && $('.tm-pane[data-pane="taf"]').addEventListener("click", async (e) => {
       const t = e.target;
+      { const ct = t.closest("[data-tfcat]"); if (ct) { TF.cat = ct.dataset.tfcat; tfAfficher(); const h = $(".tfc-h"); if (h && !isWide()) h.scrollIntoView({ block: "start", behavior: "smooth" }); return; } }
       { const nw = t.closest("[data-tfnew]"); if (nw) { const b = $("#sd-tfNew"); b.hidden = !b.hidden; nw.textContent = b.hidden ? "+ Nouvelle tâche" : "Fermer"; if (!b.hidden) { const x = b.querySelector(".tf-tx2"); x && x.focus(); } return; } }
       { const rw = t.closest("[data-tfrow]"); if (rw) { const r = rw.closest("[data-tfr]"), k = r.dataset.tfr, on = !r.classList.contains("open");
         if (on) { TF.open.add(k); const body = r.querySelector(".tfr-b"); if (!body.innerHTML) { if (k[0] === "d") { const d = TF.dm.find((y) => "d" + y.id === k); body.innerHTML = d ? dmCarte(d) : ""; } else { const x = TF.t.find((y) => String(y.id) === k); body.innerHTML = x ? tfCarte(x, "moi", true) : ""; } } }
@@ -7629,7 +7649,7 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 #sodaf-root [data-pane="taf"] .tfr{border:1px solid var(--tfl);border-left:1px solid var(--tfl);border-radius:10px;margin:0 0 6px;opacity:1;box-shadow:none}
 #sodaf-root [data-pane="taf"] .tfr.open{border-color:#C9CED4;box-shadow:0 2px 10px rgba(21,25,30,.06)}
 #sodaf-root [data-pane="taf"] .tfr-h{padding:12px 14px;gap:12px}
-.tfr-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:#B8BFC7}.tfs-moi .tfr-dot{background:#E8A400}.tfs-fini .tfr-dot{background:#3BA55C}
+.tfr-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:#B8BFC7}.tfs-moi .tfr-dot,.tfl-act .tfr-dot{background:#E8A400}.tfs-fini .tfr-dot,.tfl-fini .tfr-dot{background:#3BA55C}
 #sodaf-root [data-pane="taf"] .tfr-t b{font:600 .95rem/1.35 var(--f-ui)}#sodaf-root [data-pane="taf"] .tfr-t small,#sodaf-root [data-pane="taf"] .tfs-moi .tfr-t small{color:var(--tfm);font-weight:500}
 #sodaf-root [data-pane="taf"] .tfr-late .tfr-t small{color:#B3132B}#sodaf-root [data-pane="taf"] .tfr-late{background:#fff}
 #sodaf-root [data-pane="taf"] .tfr-h em{font:600 .92rem var(--f-ui)}#sodaf-root [data-pane="taf"] .tfr-ch{color:#9AA3AD}
@@ -7655,6 +7675,17 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 #sodaf-root [data-pane="taf"] .tf-b[disabled]{opacity:.4;box-shadow:none}
 #sodaf-root [data-pane="taf"] .tf-plus{color:var(--tfm)}
 .tf-numx{font-weight:500;color:var(--tfm,#6B7480)}
+
+/* Rubriques listées de haut en bas (24 oct.) */
+.tfc-nav{display:flex;flex-direction:column;border:1px solid var(--tfl,#E3E6EA);border-radius:12px;background:#fff;overflow:hidden;margin:0 0 18px}
+#sodaf-root .tfc{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:12px;padding:12px 14px;border-top:1px solid #EEF0F2;border-left:4px solid transparent}#sodaf-root .tfc:first-child{border-top:0}
+#sodaf-root .tfc:hover{background:#F8F9FA}#sodaf-root .tfc.on{background:#F3F4F6;border-left-color:#15191E}#sodaf-root .tfc:focus-visible{outline:3px solid #15191E;outline-offset:-3px}
+.tfc-i{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;border:1px solid #D7DCE1;font:700 .8rem var(--f-ui);color:#6B7480;flex-shrink:0}.tfc.on .tfc-i{background:#15191E;border-color:#15191E;color:#fff}
+.tfc-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}.tfc-t b{font:700 .95rem/1.3 var(--f-ui);color:#15191E}.tfc-t small{font:500 .8rem/1.35 var(--f-ui);color:#6B7480}
+.tfc-n{font-style:normal;min-width:26px;text-align:center;padding:2px 8px;border-radius:99px;background:#EEF0F2;color:#4B5563;font:700 .82rem var(--f-ui)}.tfc-act .tfc-n{background:#E8A400;color:#fff}
+.tfc-p{font:700 1.2rem var(--f-ui);color:#15191E;width:26px;text-align:center}
+#sodaf-root .tfc-h{display:flex;flex-direction:column;gap:2px;margin:0 0 10px;font:800 1.15rem var(--f-ui);color:#15191E}.tfc-h span{font:600 .75rem var(--f-ui);color:#6B7480;text-transform:uppercase;letter-spacing:.08em}
+#sodaf-root [data-pane="taf"] #sd-tfList .tf-money{margin:0 0 12px}
 
 .tf-b-attm{background:#F1F5F9;border-color:#94A3B8;color:#334155}.tf-box.tf-fac{background:linear-gradient(180deg,#2B323C 0%,#15191E 100%);border:2px solid #FFC400;border-radius:16px;padding:14px 14px 16px;margin:14px 0 20px;box-shadow:0 6px 0 #C99400,0 14px 26px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.08)}.tf-fach{display:flex;gap:12px;align-items:center}.tf-fach i{display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:linear-gradient(180deg,#FFD84D,#FFB800);color:#15191E;flex-shrink:0;box-shadow:0 3px 0 #A87A00,0 0 18px rgba(255,196,0,.45)}.tf-fach b{color:#fff;display:block;font-size:1.02rem}.tf-fach span{font-size:.88rem;color:#FFC400;font-weight:700}#sodaf-root .tf-box.tf-fac .pj .btn{background:#fff;color:#15191E;border:0;font-weight:800;box-shadow:0 4px 0 #FFB800;transform:translateY(0);transition:transform .08s,box-shadow .08s}#sodaf-root .tf-box.tf-fac .pj .btn:active{transform:translateY(4px);box-shadow:0 0 0 #FFB800}.tf-fac .pj-nom{color:#C3CAD1}.tf-num{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border-radius:10px;background:#fff;border:2px solid #0F766E}.tf-num span{font-size:.8rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em}.tf-num b{font:800 1.6rem var(--f-ui);letter-spacing:.04em;color:var(--ink)}.tf-num small{font-size:.8rem;color:var(--muted)}.tf-envko{color:#B3132B}.tf-envb{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.tf-env .tf-envl{flex-direction:column;align-items:flex-start;gap:4px;padding:4px 0}.tf-nums{padding:0;margin:16px 0 0}.tf-nums summary{cursor:pointer;padding:14px 16px;font-weight:700}.tf-nums>.tf-aide{padding:0 16px 8px}.tf-numl{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 8px;align-items:center;padding:6px 16px}.tf-numl span{grid-column:1/-1;font-weight:700;font-size:.9rem}.tf-numl:last-child{padding-bottom:16px}.tf-numl input{width:100%;box-sizing:border-box;min-width:0;padding:.6em .8em;border:1.5px solid var(--line);border-radius:10px;font:600 1rem var(--f-ui);background:#fff;color:var(--ink)}.tf-env{margin:10px 0 0;padding:10px 12px;border-radius:10px;background:#F7F8FA;font-size:.88rem;display:flex;flex-direction:column;gap:4px}.tf-envl{display:flex;justify-content:space-between;gap:8px}.tf-env .tf-alerte{margin:6px 0 0}.tf-grp{margin:0 0 18px}.tf-tot{margin:0 0 16px}.tf-old summary{cursor:pointer;font-weight:700;margin:0 0 10px}
 .dq-count{display:inline-grid;place-items:center;min-width:22px;height:22px;border-radius:99px;background:#C8372D;color:#fff;font-size:.78rem;margin-left:6px;vertical-align:middle}
