@@ -2051,7 +2051,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="tm-pane" data-pane="taf" role="tabpanel" hidden>
 <p class="tm-role" id="sd-tfRole"></p>
 <div id="sd-tfTop"></div>
-<div class="tf-newbar" id="sd-tfNewBar" hidden><button type="button" class="tf-b tf-b-ok tf-newbtn" data-tfnew>+ Nouvelle tâche</button></div>
+<div class="tf-newbar" id="sd-tfNewBar" hidden><button type="button" class="tf-newbtn" data-tfnew>+ Nouvelle tâche</button></div>
 <div id="sd-tfNew" hidden></div>
 <div id="sd-tfList" class="tf-list"></div>
 </div>
@@ -5768,7 +5768,7 @@ function init(root) {
           (t.argent ? '<div class="tf-hr">' + (t.paye_montant || t.montant ? F(t.paye_montant || t.montant) : '<small>' + (t.par === t.pour ? "Prix au retour" : "Prix à trouver") + "</small>") + "</div>" : "") + "</div>" +
         '<p class="tf-etat"><i></i>' + esc(st[1]) + "</p>" + tfEtapes(t) + tfPieces(t) + tfEnvois(t) +
         (t.accord_note && t.etape !== "fait" ? '<p class="tf-rep">Direction : « ' + esc(t.accord_note) + " »</p>" : "") + (t.fait_note ? '<p class="tf-rep">« ' + esc(t.fait_note) + " »</p>" : "") +
-        (info ? '<p class="tf-info">' + info + "</p>" : "") + (act ? '<div class="tf-act"><p class="tf-act-k">' + (tfAMoi(t) || t.pour === me.id ? "À toi de jouer" : "Tu peux aussi") + "</p>" + act + "</div>" : "") + ann + "</article>";
+        (info ? '<p class="tf-info">' + info + "</p>" : "") + (act ? '<div class="tf-act"><p class="tf-act-k">' + (tfAMoi(t) || t.pour === me.id ? "Ce que tu dois faire" : "Tu peux aussi") + "</p>" + act + "</div>" : "") + ann + "</article>";
     }
     const tfTotal = (t) => (t.envois || []).reduce((n, e) => n + (e.montant || 0), 0);
     function tfEnvois(t) { // plusieurs envois (renvoi après « Mauvais numéro ») : chacun garde son reçu et son numéro
@@ -5816,14 +5816,14 @@ function init(root) {
     function tfNumHtml() { // numéros Mixx de l'équipe (la direction seule les voit et les change)
       if (!TF.numOk) return '<p class="tf-aide">Numéros Mixx : pas encore activés dans la base.</p>';
       const l = TF.prof.filter((p) => p.actif !== false && p.role !== "admin");
-      return '<details class="card tf-nums"' + (l.some((p) => !TF.num[p.id]) ? " open" : "") + '><summary>Numéros Mixx de l\'équipe</summary><p class="tf-aide">Le numéro où tu envoies l\'argent. Toi seul le vois et le changes.</p>' +
+      return '<details class="card tf-nums"><summary>Numéros Mixx de l\'équipe' + (l.some((p) => !TF.num[p.id]) ? ' <small class="tf-numx">(' + l.filter((p) => !TF.num[p.id]).length + " à compléter)</small>" : "") + "</summary>" + '<p class="tf-aide">Le numéro où tu envoies l\'argent. Toi seul le vois et le changes.</p>' +
         l.map((p) => '<div class="tf-numl" data-tfnp="' + p.id + '"><span>' + esc(ROLE_NOM[p.role] || p.nom) + '</span><input inputmode="numeric" maxlength="14" autocomplete="off" placeholder="ex. 72 54 41 66" value="' + tfTel(TF.num[p.id] || "") + '" aria-label="Numéro Mixx"><button type="button" class="btn btn-sm btn-line" data-tfnok>Enregistrer</button></div>').join("") + "</details>";
     }
     // ---- Une seule liste, dans l'ordre (24 oct. : « faire un truc qui liste avec un sens précis ») ----
     //   1. + Nouvelle tâche  2. À toi de jouer (ce qui attend MON geste)  3. En attente des autres (qui doit agir)  4. Terminé (replié)
     //   Chaque ligne tient sur une ligne ; on la touche pour l'ouvrir (la carte complète, avec le geste à faire).
     const TF_ICL = { argent: '<circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.6 12.2a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.5L21 8H6.2"/>', simple: '<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>', prix: '<path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/>', fini: '<path d="M20 6 9 17l-5-5"/>' };
-    const tfIcone = (k) => '<i class="tfr-ic tfr-' + k + '" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' + TF_ICL[k] + "</svg></i>";
+    const tfIcone = (k) => '<i class="tfr-dot tfr-' + k + '" aria-hidden="true"></i>'; // épuré (24 oct.) : un simple point
     const tfCap = (x) => String(x || "").replace(/^./, (c) => c.toUpperCase());
     // Qui doit agir maintenant (pour la partie « En attente des autres »)
     function tfQui(t) {
@@ -5847,7 +5847,7 @@ function init(root) {
       return '<article class="tf tf-att" data-dm="' + d.id + '"><p class="tf-sub">Demande ' + (p.role ? "du " + esc((ROLE_NOM[p.role] || "").toLowerCase()) : "de l'équipe") + (d.transmis_le ? " · transmise par la gérante" : "") + " · " + esc(grQuand(d.le)) + (d.voiture ? " · pour la voiture" : "") + "</p>" +
         '<p class="tf-etat"><i></i>' + (d.nature === "Carburant" ? "Essence en plus : à accorder" : "Dépense : à accorder") + "</p>" +
         (d.devis ? '<div class="tf-pcs"><button type="button" class="tf-pc" data-tfdoc="' + esc(d.devis) + '"><i></i>Devis</button></div>' : "") +
-        '<div class="tf-act"><p class="tf-act-k">À toi de jouer</p><p class="tf-act-t">Si c\'est bon : envoie l\'argent et joins le reçu</p><p class="tf-act-s">C\'est accordé et payé en un seul geste. Ensuite, il ajoute la facture et c\'est fini.</p>' +
+        '<div class="tf-act"><p class="tf-act-k">Ce que tu dois faire</p><p class="tf-act-t">Si c\'est bon : envoie l\'argent et joins le reçu</p><p class="tf-act-s">C\'est accordé et payé en un seul geste. Ensuite, il ajoute la facture et c\'est fini.</p>' +
           '<input class="tf-note" maxlength="300" placeholder="Un mot (facultatif)" aria-label="Un mot"><div class="tf-pay">' +
           (num ? '<div class="tf-num"><span>Envoie à</span><b>' + tfTel(num) + "</b><small>Compare avec le numéro tapé dans Mixx avant de valider.</small></div>" : '<p class="tf-act-ko">Numéro Mixx pas encore enregistré : « Numéros Mixx de l\'équipe », en bas.</p>') +
           '<div class="tf-chips" role="radiogroup">' + ["Mixx", "Moov Money", "Espèces"].map((m, i) => '<button type="button" role="radio" data-tfmoy="' + m + '" aria-checked="' + (i === 0) + '">' + m + "</button>").join("") + "</div>" +
@@ -5858,7 +5858,7 @@ function init(root) {
     function dmLigne(d) {
       const ouvert = TF.open.has("d" + d.id), p = TF.prof.find((y) => y.id === d.auteur) || {};
       return '<div class="tfr' + (ouvert ? " open" : "") + '" data-tfr="d' + d.id + '"><button type="button" class="tfr-h" data-tfrow aria-expanded="' + ouvert + '">' + tfIcone("argent") +
-        '<span class="tfr-t"><b>' + esc(String(d.texte || "").replace(/^\[TEST\]\s*/, "")) + (/^\[TEST\]/.test(d.texte || "") ? ' <span class="dq-test">TEST</span>' : "") + "</b><small>" + esc(tfCap(ROLE_NOM[p.role] || "Équipe")) + " demande : à accorder et payer</small></span>" + (d.montant ? "<em>" + F(d.montant) + "</em>" : "") +
+        '<span class="tfr-t"><b>' + esc(String(d.texte || "").replace(/^\[TEST\]\s*/, "")) + (/^\[TEST\]/.test(d.texte || "") ? ' <span class="dq-test">TEST</span>' : "") + "</b><small>" + esc(tfCap(ROLE_NOM[p.role] || "Équipe")) + " demande · à accorder</small></span>" + (d.montant ? "<em>" + F(d.montant) + "</em>" : "") +
         '<i class="tfr-ch" aria-hidden="true">›</i></button><div class="tfr-b">' + (ouvert ? dmCarte(d) : "") + "</div></div>";
     }
     async function tfCharger() {
@@ -5870,7 +5870,7 @@ function init(root) {
       if (!t) { L.innerHTML = '<p class="tm-empty">L\'onglet « À faire » n\'est pas encore activé dans la base.</p>'; return; }
       TF.t = t;
       if (adm) { const nm = await DB.q("rpc/numeros_mixx", { method: "POST", body: {} }).catch(() => null); TF.num = {}; (nm || []).forEach((x) => { if (x.numero) TF.num[x.profil] = x.numero; }); TF.numOk = !!nm; }
-      $("#sd-tfRole").textContent = adm ? "Ce qui attend ton geste en haut, puis ce qu'attendent les autres. Touche une ligne pour l'ouvrir." : "Ce que tu dois faire en haut. Touche une ligne pour l'ouvrir.";
+      $("#sd-tfRole").textContent = "Touche une ligne pour l'ouvrir." + (DIR() ? " Les tâches que tu te donnes à toi-même ne sont vues que par toi." : "");
       $("#sd-tfNewBar").hidden = !DIR(); tfForm();
       const ouv = t.filter((x) => !TF_FIN.includes(x.etape));
       const kind = (x) => (x.etape === "prix" ? "prix" : x.argent ? "argent" : "simple");
@@ -5884,9 +5884,9 @@ function init(root) {
       // Première ouverture : la première chose à faire est ouverte
       const nAmoi = amoi.length + TF.dm.length;
       if (!TF.vu) { TF.vu = true; const first = TF.dm.length ? "d" + TF.dm[0].id : amoi.length ? String(amoi[0].id) : null; if (first) TF.open.add(first); }
-      const sec = (cls, titre, n, corps, vide) => '<section class="tfs tfs-' + cls + '"><h4 class="tfs-h"><span>' + titre + "</span>" + (n ? '<em class="dq-count">' + n + "</em>" : "") + "</h4>" + (corps || '<p class="tfs-vide">' + vide + "</p>") + "</section>";
-      L.innerHTML = sec("moi", "À toi de jouer", nAmoi, TF.dm.map(dmLigne).join("") + amoi.map((x) => tfLigne(x, kind(x), tfEtat(x)[1])).join(""), "Rien à faire pour toi. 👍") +
-        sec("autres", "En attente des autres", autres.length, autres.map((x) => tfLigne(x, kind(x), tfQui(x))).join(""), "Personne n'attend rien.") +
+      const sec = (cls, titre, n, corps, vide) => '<section class="tfs tfs-' + cls + '"><h4 class="tfs-h"><span>' + titre + "</span>" + '<em class="tfs-n">' + n + "</em></h4>" + (corps || '<p class="tfs-vide">' + vide + "</p>") + "</section>";
+      L.innerHTML = sec("moi", "À faire par toi", nAmoi, TF.dm.map(dmLigne).join("") + amoi.map((x) => tfLigne(x, kind(x), tfEtat(x)[1])).join(""), "Rien à faire pour toi.") +
+        sec("autres", "Chez les autres", autres.length, autres.map((x) => tfLigne(x, kind(x), tfQui(x))).join(""), "Personne n'attend rien.") +
         '<details class="tfs tfs-fini"' + (TF.finiOuvert ? " open" : "") + '><summary class="tfs-h"><span>Terminé</span><em class="tfs-n">' + fini.length + "</em></summary>" + (fini.map((x) => tfLigne(x, "fini", tfEtat(x)[1])).join("") || '<p class="tfs-vide">Rien de terminé pour l\'instant.</p>') + "</details>" +
         (adm ? tfNumHtml() : "");
       const pas = (id, n) => { const e = $("#" + id); if (e) { e.textContent = n; e.hidden = !n; } };
@@ -7612,6 +7612,46 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 .tfr-h em{font:800 .95rem var(--f-ui);font-style:normal;color:var(--ink);white-space:nowrap}.tfr-ch{font-style:normal;font-size:1.4rem;color:#94A3B8;transition:transform .15s;line-height:1}.tfr.open .tfr-ch{transform:rotate(90deg)}
 .tfr-b{display:none;padding:0 10px 10px}.tfr.open .tfr-b{display:block}.tfr-b .tf{margin:0;border:0;border-top:1px solid #EEF0F2;border-radius:0;padding:10px 4px 0}
 .tf-tx-in{display:none!important}.tf-h-in .tf-hr{display:none}
+/* « À faire » épuré (24 oct., « un truc épuré, professionnel, facile à travailler ») : blanc, gris, une seule couleur pour le bouton principal */
+#sodaf-root [data-pane="taf"]{--tfi:#15191E;--tfm:#6B7480;--tfl:#E3E6EA;--tfs:#F6F7F9}
+#sodaf-root [data-pane="taf"] .tm-role{margin:0 0 14px;font-size:.88rem;color:var(--tfm)}
+#sodaf-root [data-pane="taf"] .tf-money{gap:0;border:1px solid var(--tfl);border-radius:12px;background:#fff;overflow:hidden}
+#sodaf-root [data-pane="taf"] .tf-money span{border:0;border-radius:0;background:none;border-right:1px solid var(--tfl);color:var(--tfm);font-weight:500}#sodaf-root [data-pane="taf"] .tf-money span:last-child{border-right:0}
+#sodaf-root [data-pane="taf"] .tf-newbar{display:flex;justify-content:flex-end;margin:0 0 6px}
+#sodaf-root .tf-newbtn{all:unset;box-sizing:border-box;cursor:pointer;padding:.6em 1.1em;border:1px solid var(--tfl);border-radius:10px;background:#fff;font:700 .9rem var(--f-ui);color:var(--tfi)}#sodaf-root .tf-newbtn:hover{background:var(--tfs)}
+#sodaf-root [data-pane="taf"] .tfs{margin:0 0 22px}
+#sodaf-root [data-pane="taf"] .tfs-h{font:700 1rem var(--f-ui);letter-spacing:0;text-transform:none;color:var(--tfi);margin:0 0 8px;gap:8px}
+#sodaf-root [data-pane="taf"] .tfs-n{background:none;padding:0;color:var(--tfm);font:500 .95rem var(--f-ui)}
+#sodaf-root [data-pane="taf"] .tfs-vide{border:0;background:none;padding:2px 0;font-size:.88rem}
+#sodaf-root [data-pane="taf"] .tfr{border:1px solid var(--tfl);border-left:1px solid var(--tfl);border-radius:10px;margin:0 0 6px;opacity:1;box-shadow:none}
+#sodaf-root [data-pane="taf"] .tfr.open{border-color:#C9CED4;box-shadow:0 2px 10px rgba(21,25,30,.06)}
+#sodaf-root [data-pane="taf"] .tfr-h{padding:12px 14px;gap:12px}
+.tfr-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:#B8BFC7}.tfs-moi .tfr-dot{background:#E8A400}.tfs-fini .tfr-dot{background:#3BA55C}
+#sodaf-root [data-pane="taf"] .tfr-t b{font:600 .95rem/1.35 var(--f-ui)}#sodaf-root [data-pane="taf"] .tfr-t small,#sodaf-root [data-pane="taf"] .tfs-moi .tfr-t small{color:var(--tfm);font-weight:500}
+#sodaf-root [data-pane="taf"] .tfr-late .tfr-t small{color:#B3132B}#sodaf-root [data-pane="taf"] .tfr-late{background:#fff}
+#sodaf-root [data-pane="taf"] .tfr-h em{font:600 .92rem var(--f-ui)}#sodaf-root [data-pane="taf"] .tfr-ch{color:#9AA3AD}
+#sodaf-root [data-pane="taf"] .tfr-b{padding:0 14px 14px}#sodaf-root [data-pane="taf"] .tfr-b .tf{padding:12px 0 0;border-top:1px solid #EEF0F2;background:none}
+#sodaf-root [data-pane="taf"] .tf-dq,#sodaf-root [data-pane="taf"] .dq-test{font-size:.62rem}
+#sodaf-root [data-pane="taf"] .tfr-b .tf-etat{display:none}
+#sodaf-root [data-pane="taf"] .tf-et li.ok i{background:var(--tfi)}#sodaf-root [data-pane="taf"] .tf-et li.cur i{background:#9AA3AD}
+#sodaf-root [data-pane="taf"] .tf-pc{background:#fff;border-color:var(--tfl);font-weight:600}#sodaf-root [data-pane="taf"] .tf-pc i{background:#3BA55C}
+/* le geste à faire : panneau gris clair, pas de noir ni de jaune */
+#sodaf-root [data-pane="taf"] .tf-act,#sodaf-root [data-pane="taf"] .tf-box.tf-fac{background:var(--tfs);border:1px solid var(--tfl);border-radius:12px;box-shadow:none;color:var(--tfi);padding:14px;margin:14px 0 4px}
+#sodaf-root [data-pane="taf"] .tf-act .tf-fac{background:none;border:0;padding:0;margin:0}
+#sodaf-root [data-pane="taf"] .tf-act-k{color:var(--tfm);letter-spacing:0;text-transform:none;font:600 .8rem var(--f-ui)}
+#sodaf-root [data-pane="taf"] .tf-act-t{color:var(--tfi);font:700 .98rem/1.35 var(--f-ui)}#sodaf-root [data-pane="taf"] .tf-act-s,#sodaf-root [data-pane="taf"] .tf-act-s.tf-jaune{color:var(--tfm);font-weight:500}
+#sodaf-root [data-pane="taf"] .tf-fach i{background:#fff;border:1px solid var(--tfl);box-shadow:none;color:var(--tfi);width:40px;height:40px}
+#sodaf-root [data-pane="taf"] .tf-lab,#sodaf-root [data-pane="taf"] .tf-act .tf-steps,#sodaf-root [data-pane="taf"] .tf-act .pj-nom,#sodaf-root [data-pane="taf"] .tf-act .tf-pas summary{color:var(--tfm)}#sodaf-root [data-pane="taf"] .tf-act .tf-steps b{color:var(--tfi)}
+#sodaf-root [data-pane="taf"] .tf-act input:not([type=file]):not([type=checkbox]){border:1px solid var(--tfl)}
+#sodaf-root [data-pane="taf"] .tf-act .tf-num{border:1px solid var(--tfl)}
+#sodaf-root [data-pane="taf"] .tf-act .tf-chips button{background:#fff;border:1px solid var(--tfl);color:var(--tfi)}#sodaf-root [data-pane="taf"] .tf-act .tf-chips button[aria-checked=true]{background:var(--tfi);border-color:var(--tfi);color:#fff}
+#sodaf-root [data-pane="taf"] .tf-act-ko{background:#FDECEC;color:#B3132B}
+#sodaf-root [data-pane="taf"] .tf-b,#sodaf-root [data-pane="taf"] .tf-act .pj .btn,#sodaf-root [data-pane="taf"] .tf-box.tf-fac .pj .btn{box-shadow:none;transform:none;border:1px solid var(--tfl);border-radius:10px;background:#fff;color:var(--tfi);font:700 .9rem var(--f-ui);padding:.65em 1.1em}
+#sodaf-root [data-pane="taf"] .tf-b-ok{background:var(--tfi);border-color:var(--tfi);color:#fff}#sodaf-root [data-pane="taf"] .tf-b-ko{color:#B3132B}
+#sodaf-root [data-pane="taf"] .tf-b:active,#sodaf-root [data-pane="taf"] .tf-act .pj .btn:active{transform:none;box-shadow:none;opacity:.85}
+#sodaf-root [data-pane="taf"] .tf-b[disabled]{opacity:.4;box-shadow:none}
+#sodaf-root [data-pane="taf"] .tf-plus{color:var(--tfm)}
+.tf-numx{font-weight:500;color:var(--tfm,#6B7480)}
 
 .tf-b-attm{background:#F1F5F9;border-color:#94A3B8;color:#334155}.tf-box.tf-fac{background:linear-gradient(180deg,#2B323C 0%,#15191E 100%);border:2px solid #FFC400;border-radius:16px;padding:14px 14px 16px;margin:14px 0 20px;box-shadow:0 6px 0 #C99400,0 14px 26px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.08)}.tf-fach{display:flex;gap:12px;align-items:center}.tf-fach i{display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:linear-gradient(180deg,#FFD84D,#FFB800);color:#15191E;flex-shrink:0;box-shadow:0 3px 0 #A87A00,0 0 18px rgba(255,196,0,.45)}.tf-fach b{color:#fff;display:block;font-size:1.02rem}.tf-fach span{font-size:.88rem;color:#FFC400;font-weight:700}#sodaf-root .tf-box.tf-fac .pj .btn{background:#fff;color:#15191E;border:0;font-weight:800;box-shadow:0 4px 0 #FFB800;transform:translateY(0);transition:transform .08s,box-shadow .08s}#sodaf-root .tf-box.tf-fac .pj .btn:active{transform:translateY(4px);box-shadow:0 0 0 #FFB800}.tf-fac .pj-nom{color:#C3CAD1}.tf-num{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border-radius:10px;background:#fff;border:2px solid #0F766E}.tf-num span{font-size:.8rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em}.tf-num b{font:800 1.6rem var(--f-ui);letter-spacing:.04em;color:var(--ink)}.tf-num small{font-size:.8rem;color:var(--muted)}.tf-envko{color:#B3132B}.tf-envb{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.tf-env .tf-envl{flex-direction:column;align-items:flex-start;gap:4px;padding:4px 0}.tf-nums{padding:0;margin:16px 0 0}.tf-nums summary{cursor:pointer;padding:14px 16px;font-weight:700}.tf-nums>.tf-aide{padding:0 16px 8px}.tf-numl{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 8px;align-items:center;padding:6px 16px}.tf-numl span{grid-column:1/-1;font-weight:700;font-size:.9rem}.tf-numl:last-child{padding-bottom:16px}.tf-numl input{width:100%;box-sizing:border-box;min-width:0;padding:.6em .8em;border:1.5px solid var(--line);border-radius:10px;font:600 1rem var(--f-ui);background:#fff;color:var(--ink)}.tf-env{margin:10px 0 0;padding:10px 12px;border-radius:10px;background:#F7F8FA;font-size:.88rem;display:flex;flex-direction:column;gap:4px}.tf-envl{display:flex;justify-content:space-between;gap:8px}.tf-env .tf-alerte{margin:6px 0 0}.tf-grp{margin:0 0 18px}.tf-tot{margin:0 0 16px}.tf-old summary{cursor:pointer;font-weight:700;margin:0 0 10px}
 .dq-count{display:inline-grid;place-items:center;min-width:22px;height:22px;border-radius:99px;background:#C8372D;color:#fff;font-size:.78rem;margin-left:6px;vertical-align:middle}
