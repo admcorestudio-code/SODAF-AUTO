@@ -140,10 +140,10 @@ Deno.serve(async (req) => {
     else if (p.quoi === "prix") { roles = ["gerant"]; note = { title: "Prix à trouver", body: court(t.titre + " · Trouve le prix et le devis, puis envoie-les à la direction."), url, tag }; }
     else if (p.quoi === "accord") { roles = ["admin"]; note = { title: "Prix trouvé : " + milliers(t.montant) + " F", body: court(t.titre + " · Accorde ou refuse."), url, tag }; }
     else if (p.quoi === "refus") { roles = ["gerant"]; note = { title: "Refusé par la direction", body: court(t.titre + (t.accord_note ? " · " + t.accord_note : "")), url, tag }; }
-    else if (p.quoi === "argent") { seulement = t.pour; note = { title: "Argent envoyé : " + milliers(t.paye_montant) + " F", body: court(t.titre + (t.carburant ? " · Fais le plein, puis touche « Fait »." : " · Fais l'achat, puis ajoute la facture : c'est terminé.")), url, tag }; }
+    else if (p.quoi === "argent") { seulement = t.pour; note = { title: "Argent envoyé : " + milliers(t.paye_montant) + " F", body: court(t.titre + (t.carburant ? " · Fais le plein, puis touche « Fait »." : " · Une fois fait (achat, travaux…), ajoute la facture : c'est terminé.")), url, tag }; }
     else if (p.quoi === "pas_recu") { roles = ["admin"]; note = { title: "Argent pas reçu · " + qui, body: court(t.titre + (t.pas_recu_note ? " · " + t.pas_recu_note : "")), url, tag }; }
     else if (p.quoi === "faite") { seulement = t.par; note = { title: "Tâche faite · " + qui, body: court(t.titre), url, tag }; }
-    else if (p.quoi === "numero_bon") { seulement = t.pour; note = { title: "L'argent est parti vers ton numéro", body: court(t.titre + " · Regarde ton solde et ton historique Mixx (le SMS n'arrive pas toujours), puis fais l'achat et ajoute la facture."), url, tag }; }
+    else if (p.quoi === "numero_bon") { seulement = t.pour; note = { title: "L'argent est parti vers ton numéro", body: court(t.titre + " · Regarde ton solde et ton historique Mixx (le SMS n'arrive pas toujours), puis ajoute la facture une fois fait."), url, tag }; }
     else if (p.quoi === "relance") { roles = ["admin"]; aussi = t.pour; note = { title: "Facture attendue · " + qui, body: court(t.titre + " · L'argent est parti il y a 3 jours : ajoute la facture ou le ticket dans « À faire »."), url, tag }; }
     else return json({ erreur: "tâche : quoi inconnu" }, 400);
   } else if (p.type === "geotest") {

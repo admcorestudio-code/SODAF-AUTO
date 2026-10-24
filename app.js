@@ -5684,8 +5684,8 @@ function init(root) {
       if (t.etape === "prix") return ["att", me.role === "gerant" ? "Prix à trouver" : "Chez la gérante : prix à trouver"];
       if (t.etape === "accord") return ["att", adm ? "Prix trouvé : à accorder" : "Chez la direction"];
       if (t.etape === "payer") return ["att", adm ? "Argent à envoyer" : "Accordé : en attente de l'argent"];
-      if (t.etape === "envoye") return t.pas_recu_le ? ["non", "Argent pas reçu"] : ["att", t.carburant ? (moi ? "Essence envoyée : fais le plein" : "Essence envoyée") : moi ? "Argent envoyé : achat puis facture" : "Argent envoyé : facture attendue"];
-      if (t.etape === "afaire") return ["neu", t.argent && t.par === t.pour ? "Achat à faire toi-même" : t.argent && !t.carburant && !t.facture ? "Facture à ajouter" : t.argent ? "Achat à faire" : "À faire"];
+      if (t.etape === "envoye") return t.pas_recu_le ? ["non", "Argent pas reçu"] : ["att", t.carburant ? (moi ? "Essence envoyée : fais le plein" : "Essence envoyée") : moi ? "Argent envoyé : facture à ajouter" : "Argent envoyé : facture attendue"];
+      if (t.etape === "afaire") return ["neu", t.argent && t.par === t.pour ? "Dépense à faire toi-même" : t.argent && !t.carburant && !t.facture ? "Facture à ajouter" : t.argent ? "Dépense à faire" : "À faire"];
       if (t.etape === "fait") return ["oui", "Fait " + grQuand(t.fait_le)];
       return t.etape === "refusee" ? ["non", "Refusé"] : ["x", "Annulé"];
     }
@@ -5725,7 +5725,7 @@ function init(root) {
         const dern = (t.envois || []).slice(-1)[0] || {}, quand = F(t.paye_montant) + (t.paye_moyen ? " par " + esc(t.paye_moyen) : "") + (dern.vers ? " vers le " + tfTel(dern.vers) : "") + ", " + grQuand(t.paye_le);
         const pas = t.pas_recu_le ? "« Pas reçu »" + (t.pas_recu_note ? " : " + esc(t.pas_recu_note) : "") : "";
         if (moi && !t.pas_recu_le && t.carburant) act += '<p class="tf-act-t">Essence envoyée</p><p class="tf-act-s">' + quand + '. Fais le plein (photo du compteur dans « Essence et voiture »), puis touche « Fait ».</p><div class="tf-btns">' + tfBtn("data-tffait", "Fait", "ok") + "</div>" + tfPasRecu();
-        else if (moi && !t.pas_recu_le) act += tfFacBox("Fais l\'achat, puis ajoute la facture ou le ticket", "C\'est elle qui termine la tâche. Argent envoyé : " + quand + ".") + tfPasRecu();
+        else if (moi && !t.pas_recu_le) act += tfFacBox("Une fois fait, ajoute la facture", "Achat, travaux, réparation… : la facture (ou une photo du travail fait) termine la tâche. Argent envoyé : " + quand + ".") + tfPasRecu();
         else if (moi) act += '<p class="tf-act-t">Tu as dit « pas reçu »</p><p class="tf-act-s">La direction vérifie le numéro. Si l\'argent est finalement sur ton compte :</p><div class="tf-btns">' + tfBtn("data-tfact", "Finalement, je l'ai reçu", "ok") + "</div>";
         else if (adm && t.pas_recu_le && !t.mauvais_numero_le) act += '<p class="tf-act-t">' + pas + '</p><p class="tf-act-s">Ouvre ton reçu Mixx : l\'argent est-il parti vers le bon numéro' + (dern.vers ? " (" + tfTel(dern.vers) + ")" : "") + " ? Sur Mixx, l'argent ne se perd presque jamais : c'est presque toujours le numéro.</p>" +
           '<div class="tf-btns">' + tfBtn("data-tfbon", "Le numéro est bon", "ok") + tfBtn("data-tfmauv", "Mauvais numéro", "ko") + "</div>";
@@ -5733,12 +5733,12 @@ function init(root) {
         else info += "Envoyé : " + quand + "." + (pas ? " " + pas + "." : t.carburant ? "" : " Facture attendue.") + (!t.carburant && Date.now() - new Date(t.paye_le) > 3 * 864e5 ? ' <b class="tf-retard">Plus de 3 jours.</b>' : "");
       }
       if (t.etape === "afaire" && t.argent && t.par === t.pour && moi && adm) {
-        act += '<div class="tf-dir"><p class="tf-act-t">Après l\'achat : écris le prix payé et joins le ticket</p><p class="tf-act-s">Pas de ticket ? Une photo de ce que tu as acheté suffit.</p>' +
+        act += '<div class="tf-dir"><p class="tf-act-t">Une fois fait : écris le prix payé et joins la facture</p><p class="tf-act-s">Pas de facture ? Une photo de l\'achat ou du travail fait suffit.</p>' +
           '<label class="tf-lab">Prix payé (F)<input class="tf-dm" inputmode="numeric" autocomplete="off" placeholder="ex. 45 000" value="' + (t.montant ? milliers(t.montant) : "") + '"></label>' + pjHtml(true) +
-          '<div class="tf-btns">' + tfBtn("data-tfdir", "Achat fait", "ok") + "</div></div>";
+          '<div class="tf-btns">' + tfBtn("data-tfdir", "C\'est fait", "ok") + "</div></div>";
       } else if (t.etape === "afaire" && (moi || (DIR() && vue !== "moi"))) {
         const fac = t.argent && !t.carburant && !t.facture;
-        if (fac) act += tfFacBox(moi ? "Fais l\'achat, puis ajoute la facture ou le ticket" : "Facture attendue de " + esc(tfNom(t.pour)), "C\'est elle qui termine la tâche.");
+        if (fac) act += tfFacBox(moi ? "Une fois fait, ajoute la facture" : "Facture attendue de " + esc(tfNom(t.pour)), "Achat, travaux, réparation… : la facture (ou une photo du travail fait) termine la tâche.");
         else { act += '<p class="tf-act-t">' + (t.argent ? (t.carburant ? "Essence" : "Facture ajoutée") : moi ? "À faire" : "À faire par " + esc(tfNom(t.pour))) + "</p>"; act += '<div class="tf-btns">' + tfBtn("data-tffait", moi ? "Fait" : "Marquer comme fait", "ok") + "</div>"; }
       }
       const annul = ["prix", "accord", "payer"].includes(t.etape) || (t.etape === "afaire" && (!t.argent || (t.par === t.pour && !t.facture)));
@@ -5790,7 +5790,7 @@ function init(root) {
         '<div class="field"><label>Pour qui ?</label><div class="tf-chips" role="radiogroup">' + ok.map((p) => '<button type="button" role="radio" data-tfqui="' + p.id + '" aria-checked="false">' + (p.id === me.id ? "Moi" : esc(ROLE_NOM[p.role] || p.nom)) + "</button>").join("") + "</div></div>" +
         '<div class="field"><label>Pour quand ? (facultatif)</label><input type="date" class="tf-date2"></div>' +
         (adm ? '<div class="field"><label>Ça coûte de l\'argent ?</label><div class="tf-chips" role="radiogroup"><button type="button" role="radio" data-tfarg="non" aria-checked="true">Non</button><button type="button" role="radio" data-tfarg="oui" aria-checked="false">Oui, je connais le prix</button><button type="button" role="radio" data-tfarg="prix" aria-checked="false">Oui, prix à trouver</button></div>' +
-          '<input class="tf-mt2" inputmode="numeric" autocomplete="off" placeholder="Montant (F)" aria-label="Montant" hidden><small class="tf-aide tf-arga" hidden>La gérante cherche le prix et le devis. Tu accordes ensuite, puis tu envoies l\'argent.</small><small class="tf-aide tf-argm" hidden>Tu fais l\'achat toi-même : après, tu écris le prix payé et tu joins le ticket. Rien ne part à la gérante.</small></div>' : '<p class="tf-aide">Une tâche qui coûte de l\'argent : passe par Gérance → Dépenses → « Proposer un achat ».</p>') +
+          '<input class="tf-mt2" inputmode="numeric" autocomplete="off" placeholder="Montant (F)" aria-label="Montant" hidden><small class="tf-aide tf-arga" hidden>La gérante cherche le prix et le devis. Tu accordes ensuite, puis tu envoies l\'argent.</small><small class="tf-aide tf-argm" hidden>Tu t\'en occupes toi-même : après, tu écris le prix payé et tu joins la facture. Rien ne part à la gérante.</small></div>' : '<p class="tf-aide">Une tâche qui coûte de l\'argent : passe par Gérance → Dépenses → « Proposer un achat ».</p>') +
         '<button type="submit" class="btn btn-green">Donner la tâche</button></form></div>';
       const f = box.querySelector(".tf-form");
       f.addEventListener("click", (e) => {
@@ -5831,7 +5831,7 @@ function init(root) {
       if (t.etape === "accord") return "Direction : accorder";
       if (t.etape === "payer") return "Direction : envoyer l'argent";
       if (t.etape === "envoye" && t.pas_recu_le) return "Direction : vérifier le numéro (« pas reçu »)";
-      if (t.etape === "envoye" || (t.etape === "afaire" && t.argent)) return tfCap(tfNom(t.pour)) + (t.carburant ? " : faire le plein" : " : achat et facture");
+      if (t.etape === "envoye" || (t.etape === "afaire" && t.argent)) return tfCap(tfNom(t.pour)) + (t.carburant ? " : faire le plein" : " : facture à ajouter");
       return tfCap(tfNom(t.pour)) + " : à faire";
     }
     const tfTitre = (t) => esc(String(t.titre || "").replace(/^\[TEST\]\s*/, "")) + (/^\[TEST\]/.test(t.titre || "") ? ' <span class="dq-test">TEST</span>' : "");
@@ -5959,7 +5959,7 @@ function init(root) {
       if (btn.matches("[data-tfrec]")) { const i = +btn.dataset.tfrec; deux(() => tfRpc("tache_envoi_recupere", { p_id: id, p_index: i }, "Argent récupéré, noté")); return; }
       if (btn.matches("[data-tfdir]")) { const mt = +(q(".tf-dm").value.replace(/\D/g, "")) || 0, pj = q(".tf-dir .pj");
         if (!mt) { toast("Écris le prix payé", true); q(".tf-dm").focus(); return; } if (!pj._file) { toast("Ajoute le ticket ou une photo de l'achat", true); return; }
-        deux(async () => { let path; try { path = await depEnvoyer(pj._file, "taches"); } catch (er) { toast("La photo n'a pas pu être envoyée", true); return false; } return tfRpc("tache_achat_fini", { p_id: id, p_montant: mt, p_piece: path }, "Achat noté : " + F(mt)); }); return; }
+        deux(async () => { let path; try { path = await depEnvoyer(pj._file, "taches"); } catch (er) { toast("La photo n'a pas pu être envoyée", true); return false; } return tfRpc("tache_achat_fini", { p_id: id, p_montant: mt, p_piece: path }, "C'est noté : " + F(mt)); }); return; }
       if (btn.matches("[data-tfact]")) { deux(() => tfRpc("tache_activer", { p_id: id }, "Tâche activée : à toi de jouer")); return; }
       if (btn.matches("[data-tfpas]")) { deux(() => tfRpc("tache_pas_recu", { p_id: id, p_note: q(".tf-pasn").value.trim() || null }, "La direction est prévenue")); return; }
       if (btn.matches("[data-tffait]")) { deux(() => tfRpc("tache_faite", { p_id: id, p_note: null }, "Bravo, c'est fait")); return; }
