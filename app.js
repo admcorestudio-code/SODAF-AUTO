@@ -4998,6 +4998,9 @@ function init(root) {
       const r = await run(() => DB.q("paiements?select=*&jour=gte." + d90 + "&order=cree_le.desc"));
       if (!r) return;
       const att = r.filter(pyAttente), liste = att.concat(r.filter((p) => p.jour >= m0 && !pyAttente(p))); GR.annul = att.length; if (DIR() && typeof grBadges === "function" && GR.dem) grBadges();
+      // Gérance → « Annuler un reçu ? » (24 oct.) : seulement les demandes d'annulation et les reçus déjà annulés
+      const ga = $("#sd-grRecus"); if (ga) { const fait = r.filter((p) => p.annule).slice(0, 15), lig = (p) => '<div class="tm-row' + (p.annule ? " annule" : " py-att") + '" data-id="' + p.id + '"><div class="tm-main"><b>' + esc(p.eleve_nom) + " · " + F(p.montant) + "</b><span>Reçu n° " + esc(p.numero) + " du " + dOf(p.jour).toLocaleDateString("fr-FR") + " · " + esc(p.motif) + "</span>" + (p.annule ? '<small><b class="tm-ko">Annulé</b>' + (p.annule_motif ? " : " + esc(p.annule_motif) : "") + "</small>" : '<small class="py-dem"><b>Pourquoi</b> : ' + esc(p.annul_dem_motif || "") + "</small>") + "</div>" + (p.annule ? "" : '<div class="tm-acts"><button class="btn btn-sm" style="background:var(--red);color:#fff" type="button" data-gaok>Annuler le reçu</button><button class="btn btn-line btn-sm" type="button" data-gano>Refuser</button></div>') + "</div>";
+        ga.innerHTML = '<h4 class="gr-h4">À décider</h4>' + (att.length ? '<div class="tm-list">' + att.map(lig).join("") + "</div>" : '<p class="tm-empty">Aucune demande d\'annulation pour l\'instant.</p>') + (fait.length ? '<h4 class="gr-h4" style="margin-top:18px">Reçus déjà annulés</h4><div class="tm-list">' + fait.map(lig).join("") + "</div>" : ""); }
       const mois = r.filter((p) => p.jour >= m0), ok = mois.filter((p) => !p.annule), tot = ok.reduce((a, p) => a + p.montant, 0);
       const esp = ok.filter((p) => p.mode === "Espèces").reduce((a, p) => a + p.montant, 0);
       const last = {}; r.filter((p) => !p.annule).reverse().forEach((p) => (last[(p.eleve_id || p.eleve_nom)] = p));
@@ -5007,6 +5010,16 @@ function init(root) {
       $("#sd-pyLate").innerHTML = late.length ? '<div class="tm-sub"><div><p class="eyebrow">À relancer</p><h3>Reste à payer</h3></div></div><div class="tm-list">' + late.map((p) => { const n = waNum(p.telephone); return '<div class="tm-row"><div class="tm-main"><b>' + esc(p.eleve_nom) + " · reste " + F(p.reste) + "</b><span>" + esc(p.formation || "") + " · dernier paiement le " + dOf(p.jour).toLocaleDateString("fr-FR") + '</span></div><div class="tm-acts">' + (n ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" href="https://wa.me/228' + n + "?text=" + encodeURIComponent("Bonjour " + p.eleve_nom.split(" ")[0] + ", petit rappel de SODAF : il reste " + F(p.reste) + " à régler pour ta formation, dans les 2 semaines après ton inscription (avant ta première séance de conduite). Merci !") + '">Relancer</a>' : "") + "</div></div>"; }).join("") + "</div>" : "";
     }
 
+    $("#sd-grRecus") && $("#sd-grRecus").addEventListener("click", (e) => {
+      const ok = e.target.closest("[data-gaok]"), no = e.target.closest("[data-gano]"); if (!ok && !no) return;
+      const row = e.target.closest("[data-id]"), id = +row.dataset.id;
+      if (ok) { confirmBtn(ok, async () => { const r = await run(() => DB.q("rpc/recu_annulation_decider", { method: "POST", body: { p_id: id, p_ok: true, p_note: null } }).then(() => true), "Reçu annulé : le secrétariat refait le bon reçu"); if (r) loadPay(); }); return; }
+      if (row.querySelector(".tm-edit")) return;
+      const f = document.createElement("form"); f.className = "tm-edit"; f.noValidate = true;
+      f.innerHTML = '<div class="field"><label>Pourquoi refuser ? (facultatif)</label><input name="why" maxlength="200" placeholder="Ex. le montant est juste"></div><div class="tm-formact"><button class="btn btn-sm btn-green" type="submit">Refuser l\'annulation</button><button class="linkbtn" type="button" data-x>Fermer</button></div>';
+      row.appendChild(f); f.why.focus(); f.querySelector("[data-x]").addEventListener("click", () => f.remove());
+      f.addEventListener("submit", async (ev) => { ev.preventDefault(); const why = f.why.value.trim(); const r = await run(() => DB.q("rpc/recu_annulation_decider", { method: "POST", body: { p_id: id, p_ok: false, p_note: why || null } }).then(() => true), "Annulation refusée"); if (r) loadPay(); });
+    });
     $("#sd-pyList").addEventListener("click", async (e) => {
       const ok = e.target.closest("[data-acok]"), no = e.target.closest("[data-acno]"), dem = e.target.closest("[data-acdem]"); if (!ok && !no && !dem) return;
       const row = e.target.closest("[data-id]"), id = +row.dataset.id;
@@ -5108,7 +5121,6 @@ function init(root) {
       $$('#sd-gr [data-gr="tirage"], #sd-gr [data-gr="parrainage"]').forEach((t) => (t.hidden = me.role === "admin"));
       if (me.role === "admin" && ["tirage", "parrainage"].includes(GR.ong)) GR.ong = "rapports";
       $("#sd-grDemForm").hidden = !g; $("#sd-grDecForm").hidden = !g; $('#sd-gr [data-gr="recus"]').hidden = !g;
-      if (g && !$("#sd-grRecus").dataset.pret) { $("#sd-grRecus").dataset.pret = 1; const sub = $("#sd-pyList").previousElementSibling; [$("#sd-pyStats"), sub, $("#sd-pyList"), $("#sd-pyLate")].forEach((n) => n && $("#sd-grRecus").appendChild(n)); if (sub) sub.style.marginTop = "18px"; }
       if (g) loadPay();
       if (g && !$("#sd-grDemForm").dataset.pret) { $("#sd-grDemForm").dataset.pret = 1; $("#sd-grDemForm").innerHTML = depFormHtml(true); depFormBind($("#sd-grDemForm"), () => { $("#sd-grDemForm").dataset.pret = ""; grCharger(); }); }
       const [dm, dc, rp] = await Promise.all([DB.q("demandes?select=*&order=le.desc&limit=60").catch(() => null), DB.q("decisions?select=*&order=le.desc&limit=60").catch(() => null), DB.q("rapports?select=*&order=semaine.desc&limit=20").catch(() => null)]);
