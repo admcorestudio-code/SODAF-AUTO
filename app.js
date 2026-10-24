@@ -5886,7 +5886,8 @@ function init(root) {
       if (!TF.vu) { TF.vu = true; const first = TF.dm.length ? "d" + TF.dm[0].id : amoi.length ? String(amoi[0].id) : null; if (first) TF.open.add(first); }
       const sec = (cls, titre, n, corps, vide) => '<section class="tfs tfs-' + cls + '"><h4 class="tfs-h"><span>' + titre + "</span>" + '<em class="tfs-n">' + n + "</em></h4>" + (corps || '<p class="tfs-vide">' + vide + "</p>") + "</section>";
       L.innerHTML = sec("moi", "À faire par toi", nAmoi, TF.dm.map(dmLigne).join("") + amoi.map((x) => tfLigne(x, kind(x), tfEtat(x)[1])).join(""), "Rien à faire pour toi.") +
-        sec("autres", "Chez les autres", autres.length, autres.map((x) => tfLigne(x, kind(x), tfQui(x))).join(""), "Personne n'attend rien.") +
+        // Chez les autres : replié (24 oct. : « on n'a pas besoin de voir ça… un truc que si on clique, ça ouvre »)
+        '<details class="tfs tfs-autres tfs-pli"' + (TF.autresOuvert ? " open" : "") + '><summary class="tfs-h"><span>Chez les autres</span><em class="tfs-n">' + autres.length + "</em></summary>" + (autres.map((x) => tfLigne(x, kind(x), tfQui(x))).join("") || '<p class="tfs-vide">Personne n\'attend rien.</p>') + "</details>" +
         '<details class="tfs tfs-fini"' + (TF.finiOuvert ? " open" : "") + '><summary class="tfs-h"><span>Terminé</span><em class="tfs-n">' + fini.length + "</em></summary>" + (fini.map((x) => tfLigne(x, "fini", tfEtat(x)[1])).join("") || '<p class="tfs-vide">Rien de terminé pour l\'instant.</p>') + "</details>" +
         (adm ? tfNumHtml() : "");
       const pas = (id, n) => { const e = $("#" + id); if (e) { e.textContent = n; e.hidden = !n; } };
@@ -5941,7 +5942,7 @@ function init(root) {
       if (btn.matches("[data-tffait]")) { deux(() => tfRpc("tache_faite", { p_id: id, p_note: null }, "Bravo, c'est fait")); return; }
       if (btn.matches("[data-tfann]")) { deux(() => tfRpc("tache_annuler", { p_id: id }, "Tâche annulée")); return; }
     });
-    $('.tm-pane[data-pane="taf"]') && $('.tm-pane[data-pane="taf"]').addEventListener("toggle", (e) => { if (e.target.matches && e.target.matches(".tfs-fini")) TF.finiOuvert = e.target.open; }, true);
+    $('.tm-pane[data-pane="taf"]') && $('.tm-pane[data-pane="taf"]').addEventListener("toggle", (e) => { if (e.target.matches && e.target.matches(".tfs-fini")) TF.finiOuvert = e.target.open; if (e.target.matches && e.target.matches(".tfs-autres")) TF.autresOuvert = e.target.open; }, true);
     // Facture : envoyée dès qu'on choisit le fichier
     $('.tm-pane[data-pane="taf"]') && $('.tm-pane[data-pane="taf"]').addEventListener("pj", async (e) => {
       const w = e.target.closest("[data-tffac]"); if (!w) return; const pj = e.target.closest(".pj"), card = w.closest("[data-tf]"); if (!pj || !pj._file) return; w.classList.add("is-busy");
@@ -7602,7 +7603,9 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 .tf-newbar{margin:0 0 12px}.tf-newbtn{width:100%;padding:.85em 1.2em;font-size:1rem}
 .tf-money{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}.tf-money span{flex:1 1 140px;display:flex;flex-direction:column;gap:2px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font:600 .78rem var(--f-ui);color:var(--muted)}.tf-money b{font:800 1.1rem var(--f-ui);color:var(--ink)}
 .tfs{margin:0 0 18px}.tfs-h{display:flex;align-items:center;gap:6px;margin:0 0 8px;font:800 .78rem var(--f-ui);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}.tfs-moi>.tfs-h{color:#15191E}
-.tfs-fini>summary{cursor:pointer;list-style:none}.tfs-fini>summary::-webkit-details-marker{display:none}.tfs-fini>summary::after{content:"›";margin-left:auto;font-size:1.2rem;transition:transform .15s}.tfs-fini[open]>summary::after{transform:rotate(90deg)}
+.tfs-fini>summary,.tfs-pli>summary{cursor:pointer;list-style:none}.tfs-fini>summary::-webkit-details-marker,.tfs-pli>summary::-webkit-details-marker{display:none}.tfs-fini>summary::after,.tfs-pli>summary::after{content:"›";margin-left:auto;font-size:1.2rem;transition:transform .15s}.tfs-fini[open]>summary::after,.tfs-pli[open]>summary::after{transform:rotate(90deg)}
+#sodaf-root [data-pane="taf"] .tfs-pli>summary,#sodaf-root [data-pane="taf"] .tfs-fini>summary{padding:12px 14px;border:1px solid var(--tfl);border-radius:10px;background:#fff;margin:0}#sodaf-root [data-pane="taf"] .tfs-pli[open]>summary,#sodaf-root [data-pane="taf"] .tfs-fini[open]>summary{margin:0 0 8px}
+#sodaf-root [data-pane="taf"] .tfs-pli,#sodaf-root [data-pane="taf"] .tfs-fini{margin:0 0 10px}
 .tfs-n{font-style:normal;background:#E3E6EA;color:#334155;border-radius:99px;padding:0 8px;font-size:.78rem}.tfs-vide{margin:0;padding:12px 14px;border:1px dashed #D7DCE1;border-radius:12px;color:var(--muted);font-size:.9rem;background:#fff}
 .tfr{background:#fff;border:1px solid var(--line);border-radius:14px;margin:0 0 8px;overflow:hidden}.tfs-moi .tfr{border-left:5px solid #FFC400}.tfs-autres .tfr{border-left:5px solid #CBD2D9}.tfs-fini .tfr{opacity:.85}.tfr-late{background:#FFFBF5}
 .tfr-h{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:10px;width:100%;padding:11px 12px}.tfr-h:focus-visible{outline:3px solid #FFC400;outline-offset:-3px}
@@ -7613,12 +7616,12 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 .tfr-b{display:none;padding:0 10px 10px}.tfr.open .tfr-b{display:block}.tfr-b .tf{margin:0;border:0;border-top:1px solid #EEF0F2;border-radius:0;padding:10px 4px 0}
 .tf-tx-in{display:none!important}.tf-h-in .tf-hr{display:none}
 /* « À faire » épuré (24 oct., « un truc épuré, professionnel, facile à travailler ») : blanc, gris, une seule couleur pour le bouton principal */
-#sodaf-root [data-pane="taf"]{--tfi:#15191E;--tfm:#6B7480;--tfl:#E3E6EA;--tfs:#F6F7F9}
+#sodaf-root [data-pane="taf"]{--tfi:#15191E;--tfm:#6B7480;--tfl:#E3E6EA;--tfs:#FBF8F1;--tfsl:#ECE5D5}
 #sodaf-root [data-pane="taf"] .tm-role{margin:0 0 14px;font-size:.88rem;color:var(--tfm)}
 #sodaf-root [data-pane="taf"] .tf-money{gap:0;border:1px solid var(--tfl);border-radius:12px;background:#fff;overflow:hidden}
 #sodaf-root [data-pane="taf"] .tf-money span{border:0;border-radius:0;background:none;border-right:1px solid var(--tfl);color:var(--tfm);font-weight:500}#sodaf-root [data-pane="taf"] .tf-money span:last-child{border-right:0}
 #sodaf-root [data-pane="taf"] .tf-newbar{display:flex;justify-content:flex-end;margin:0 0 6px}
-#sodaf-root .tf-newbtn{all:unset;box-sizing:border-box;cursor:pointer;padding:.6em 1.1em;border:1px solid var(--tfl);border-radius:10px;background:#fff;font:700 .9rem var(--f-ui);color:var(--tfi)}#sodaf-root .tf-newbtn:hover{background:var(--tfs)}
+#sodaf-root .tf-newbtn{all:unset;box-sizing:border-box;cursor:pointer;padding:.6em 1.1em;border:1px solid var(--tfl);border-radius:10px;background:#fff;font:700 .9rem var(--f-ui);color:var(--tfi)}#sodaf-root .tf-newbtn:hover{background:#F6F7F9}
 #sodaf-root [data-pane="taf"] .tfs{margin:0 0 22px}
 #sodaf-root [data-pane="taf"] .tfs-h{font:700 1rem var(--f-ui);letter-spacing:0;text-transform:none;color:var(--tfi);margin:0 0 8px;gap:8px}
 #sodaf-root [data-pane="taf"] .tfs-n{background:none;padding:0;color:var(--tfm);font:500 .95rem var(--f-ui)}
@@ -7636,7 +7639,7 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 #sodaf-root [data-pane="taf"] .tf-et li.ok i{background:var(--tfi)}#sodaf-root [data-pane="taf"] .tf-et li.cur i{background:#9AA3AD}
 #sodaf-root [data-pane="taf"] .tf-pc{background:#fff;border-color:var(--tfl);font-weight:600}#sodaf-root [data-pane="taf"] .tf-pc i{background:#3BA55C}
 /* le geste à faire : panneau gris clair, pas de noir ni de jaune */
-#sodaf-root [data-pane="taf"] .tf-act,#sodaf-root [data-pane="taf"] .tf-box.tf-fac{background:var(--tfs);border:1px solid var(--tfl);border-radius:12px;box-shadow:none;color:var(--tfi);padding:14px;margin:14px 0 4px}
+#sodaf-root [data-pane="taf"] .tf-act,#sodaf-root [data-pane="taf"] .tf-box.tf-fac{background:var(--tfs);border:1px solid var(--tfsl);border-radius:12px;box-shadow:none;color:var(--tfi);padding:14px;margin:14px 0 4px}
 #sodaf-root [data-pane="taf"] .tf-act .tf-fac{background:none;border:0;padding:0;margin:0}
 #sodaf-root [data-pane="taf"] .tf-act-k{color:var(--tfm);letter-spacing:0;text-transform:none;font:600 .8rem var(--f-ui)}
 #sodaf-root [data-pane="taf"] .tf-act-t{color:var(--tfi);font:700 .98rem/1.35 var(--f-ui)}#sodaf-root [data-pane="taf"] .tf-act-s,#sodaf-root [data-pane="taf"] .tf-act-s.tf-jaune{color:var(--tfm);font-weight:500}
