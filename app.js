@@ -6427,8 +6427,8 @@ function init(root) {
     const exam = /Permis|Pack|étudiant|tirage/i.test(d.f), mixxOk = !MIXX_MAINT && !!d.m;
     // 22 oct. : un étudiant avait choisi « Formation complète » (55 000 F). On demande d'abord s'il est étudiant, et rien n'est pré-coché.
     const askEtu = forms.some((f) => /étudiant/i.test(f[0])) && forms.some((f) => !/étudiant/i.test(f[0])), un = !askEtu && forms.length === 1;
-    const nomF = (n) => /étudiant/i.test(n) ? "Formation complète · tarif étudiant" : n === "Formation complète (permis B)" ? "Formation complète · tarif normal" : n.replace(/ \(permis B\)$/, "");
-    const descF = (f) => f[0] === "Formation complète (permis B)" ? "Pour les non-étudiants · " + f[2] : f[2];
+    const nomF = (n) => /étudiant/i.test(n) ? "Formation complète · tarif étudiant" : n.replace(/ \(permis B\)$/, "");
+    const descF = (f) => f[2];
     const show = (res) => {
       box.innerHTML = res.mode === "agence"
         ? '<div class="okbox insc-okbox"><div class="ok-top"><span class="okcheck" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div><p class="ok-kicker">Inscription enregistrée</p><b class="ok-title">Nous t\'attendons à l\'agence</b></div></div><div class="ok-body"><p class="ok-lead">Merci ' + escI(d.p) + '. Viens au bureau avec ton paiement en espèces : tu repars avec ton reçu officiel.</p><div class="insc-sumrow insc-okamt"><span>À apporter</span><b>' + fmtF(res.a) + '</b></div><button class="linkbtn" type="button" id="sd-inRedo">Modifier mon inscription</button></div></div>' + inscFindUs(0, 0)
@@ -6440,11 +6440,12 @@ function init(root) {
     box.innerHTML = '<form class="insc-form" id="sd-inForm" novalidate>' +
       '<div class="insc-hello"><p class="eyebrow">N° client SO' + d.i + ' · ' + escI(d.f) + '</p><h2>Bonjour ' + escI(d.p) + '</h2><p>Quatre petites étapes et ton inscription est faite.</p></div>' +
       '<fieldset class="insc-step"><legend><i>1</i>Ta formule</legend>' +
-      (askEtu ? '<p class="insc-sub">Es-tu étudiant(e) ?</p><div class="insc-cards insc-two insc-etuq"><label class="rcm"><input type="radio" name="inE" value="non"><span><b>Non, je ne suis pas étudiant(e)</b><small>Tarif normal</small></span></label><label class="rcm etu"><input type="radio" name="inE" value="oui"><span><b>Oui, je suis étudiant(e)</b><small>Carte d\'étudiant et carte d\'identité à montrer à l\'agence</small></span></label></div><div class="insc-div insc-fq" role="separator" hidden></div>' : "") +
+      (askEtu ? '<p class="insc-sub">Es-tu étudiant(e) ?</p><div class="insc-cards insc-two insc-etuq"><label class="rcm"><input type="radio" name="inE" value="non"><span><b>Non</b><small>Tarif normal</small></span></label><label class="rcm etu"><input type="radio" name="inE" value="oui"><span><b>Oui, je suis étudiant(e)</b><small>Tarif étudiant</small></span></label></div><div class="insc-div insc-fq" role="separator" hidden></div>' +
+        (() => { const fe = forms.find((f) => /étudiant/i.test(f[0])); return fe ? '<div class="insc-etuline" hidden><span>Ta formation</span><b>Formation complète · tarif étudiant</b><em>' + fmtF(fe[1]) + '</em><small>12 cours de code en salle · 12 séances de conduite de 2 h, à ton rythme</small></div>' : ""; })() : "") +
       '<p class="insc-sub insc-fq"' + (askEtu ? " hidden" : "") + '>Choisis ta formation</p><div class="insc-cards insc-fl"' + (askEtu ? " hidden" : "") + ">" + forms.map((f, k) => '<label class="rcm' + (un ? " on" : "") + (/étudiant/i.test(f[0]) ? " etu" : "") + '" data-etu="' + (/étudiant/i.test(f[0]) ? 1 : 0) + '"><input type="radio" name="inF" value="' + k + '"' + (un ? " checked" : "") + "><span><b>" + escI(nomF(f[0])) + "</b><small>" + escI(descF(f)) + "</small></span><em>" + fmtF(f[1]) + "</em></label>").join("") + "</div>" +
-      '<div class="insc-div" role="separator"></div><p class="insc-sub">Combien paies-tu maintenant ?</p>' +
+      '<div class="insc-payq"' + (un ? "" : " hidden") + '><div class="insc-div" role="separator"></div><p class="insc-sub">Combien paies-tu maintenant ?</p>' +
       '<div class="insc-cards insc-two insc-pay"><label class="rcm on"><input type="radio" name="inP" value="moitie" checked><span><b>Je paie la moitié maintenant</b><small>Le reste dans les 2 semaines</small></span><em data-p="moitie"></em></label><label class="rcm"><input type="radio" name="inP" value="total"><span><b>Je paie tout maintenant</b><small>Formation soldée, plus rien à payer</small></span><em data-p="total"></em></label></div>' +
-      '<p class="insc-sum" id="sd-inSum"></p></fieldset>' +
+      '<p class="insc-sum" id="sd-inSum"></p></div></fieldset>' +
       '<fieldset class="insc-step"><legend><i>2</i>Tes informations</legend><p class="insc-sub">Vérifie que c\'est bien toi. Une erreur ? Écris au secrétariat sur WhatsApp.</p><div class="insc-grid">' +
       '<div class="field"><label for="sd-inNom">Nom</label><input id="sd-inNom" autocomplete="family-name" maxlength="60" value="' + escI(d.nf || "") + '"' + (d.nf ? " readonly" : "") + '></div><div class="field"><label for="sd-inPre">Prénoms</label><input id="sd-inPre" autocomplete="given-name" maxlength="80" value="' + escI(d.pr || d.nc || d.p || "") + '"' + (d.pr || d.nc || d.p ? " readonly" : "") + '></div>' +
       '<div class="field"><label for="sd-inTel">Téléphone / WhatsApp</label><div class="tel"><span>+228</span><input id="sd-inTel" inputmode="numeric" maxlength="11" value="' + escI(String(d.t || "").replace(/\D/g, "").replace(/^228/, "").replace(/(\d{2})(?=\d)/g, "$1 ")) + '"' + (String(d.t || "").replace(/\D/g, "").length >= 8 ? " readonly" : "") + '></div></div><div class="field"><label for="sd-inQ">Quartier</label><input id="sd-inQ" maxlength="80" placeholder="Ex. Bè, Adidogomé" value="' + escI(d.q || "") + '"' + (d.q ? " readonly" : "") + '></div>' +
@@ -6468,18 +6469,22 @@ function init(root) {
       '<p class="insc-err" id="sd-inErr" hidden></p><button class="btn btn-green insc-go" type="submit" id="sd-inGo">Valider mon inscription</button></form>';
     const form = $("#sd-inForm");
     const val = () => { const c = form.querySelector("[name=inF]:checked"); if (!c) return null; const f = forms[+c.value], p = form.querySelector("[name=inP]:checked").value; return { f, p, ins: f[3] === undefined ? 5000 : f[3], a: (f[3] === undefined ? 5000 : f[3]) + (p === "total" ? f[1] : f[1] / 2) }; };
+    // 24 oct. : une question à la fois. Oui → tarif étudiant directement (pas de case à cocher) ; Non → formation complète ou formule rapide.
     const etuChoix = () => { const e = form.querySelector("[name=inE]:checked"); if (!e) return; const oui = e.value === "oui";
-      form.querySelectorAll(".insc-fq,.insc-fl").forEach((x) => (x.hidden = false));
       const vis = [...form.querySelectorAll(".insc-fl [data-etu]")].filter((l) => { const ok = l.dataset.etu === (oui ? "1" : "0"); l.hidden = !ok; if (!ok) l.querySelector("input").checked = false; return ok; });
-      if (vis.length === 1) vis[0].querySelector("input").checked = true; };
+      if (oui && vis.length) vis[0].querySelector("input").checked = true;
+      form.querySelectorAll(".insc-fq,.insc-fl").forEach((x) => (x.hidden = oui));
+      const el = form.querySelector(".insc-etuline"); if (el) el.hidden = !oui;
+      if (!oui && vis.length === 1) vis[0].querySelector("input").checked = true; };
     const upd = () => {
       etuChoix();
       const v = val();
       form.querySelectorAll(".rcm").forEach((l) => l.classList.toggle("on", l.querySelector("input").checked));
       $("#sd-inMixx").hidden = form.querySelector("[name=inM]:checked").value !== "mixx";
+      form.querySelector(".insc-payq").hidden = !v;
       if (!v) { form.querySelector('[data-p="moitie"]').textContent = "—"; form.querySelector('[data-p="total"]').textContent = "—"; $("#sd-inSum").innerHTML = '<span class="insc-sumrow"><span>À payer maintenant</span><b>—</b></span><span>' + (askEtu && !form.querySelector("[name=inE]:checked") ? "Réponds d'abord : es-tu étudiant(e) ?" : "Choisis ta formation.") + "</span>"; $("#sd-inAmt").textContent = "—"; return; }
       form.querySelector('[data-p="moitie"]').textContent = fmtF(v.ins + v.f[1] / 2); form.querySelector('[data-p="total"]').textContent = fmtF(v.ins + v.f[1]);
-      $("#sd-inSum").innerHTML = '<span class="insc-sumrow"><span>À payer maintenant</span><b>' + fmtF(v.a) + "</b></span><span>" + (v.ins ? "Droit d'inscription " + fmtF(v.ins).replace(/ /g, "&nbsp;") : /remise/i.test(v.f[0]) ? "Inscription comprise" : "Inscription offerte") + " + " + (v.p === "total" ? "toute la formation" : "la moitié de la formation") + "</span>" + (v.p === "moitie" ? '<span class="insc-reste">Reste à payer avant la 1re séance de conduite : <b>' + fmtF(v.f[1] / 2) + "</b></span>" : '<span class="insc-reste">Formation soldée : plus rien à payer ensuite</span>');
+      $("#sd-inSum").innerHTML = '<span class="insc-sumrow"><span>À payer maintenant</span><b>' + fmtF(v.a) + "</b></span><span>" + (v.ins ? "Droit d'inscription " + fmtF(v.ins).replace(/ /g, "&nbsp;") : /remise/i.test(v.f[0]) ? "Inscription comprise" : "Inscription offerte") + " + " + (v.p === "total" ? "toute la formation" : "la moitié de la formation") + "</span>" + (v.p === "moitie" ? '<span class="insc-reste">Reste à payer dans les 2 semaines : <b>' + fmtF(v.f[1] / 2) + "</b>. Pas de conduite avant.</span>" : '<span class="insc-reste">Formation soldée : plus rien à payer ensuite</span>');
       $("#sd-inAmt").textContent = fmtF(v.a);
       if (/étudiant/i.test(v.f[0])) $("#sd-inSum").insertAdjacentHTML("beforeend", '<span class="insc-etunote">À l\'agence, montre ta <b>carte d\'étudiant</b> et ta <b>carte d\'identité</b> : sans elles, c\'est le tarif normal.</span>');
       if ($("#sd-inUssd")) { $("#sd-inUssd").textContent = MIXX_USSD(d.m, v.a); if ($("#sd-inPay")) $("#sd-inPay").href = MIXX_TEL(d.m, v.a); }
@@ -7299,7 +7304,9 @@ html{scrollbar-gutter:stable}
 #sodaf-root .insc-okamt{padding:12px 16px;margin:0;border:1px solid #E4E8EC;border-radius:14px;background:#F4F6F8}
 #sodaf-root .insc-okamt b{font:800 1.5rem var(--f-display);color:var(--green)}
 #sodaf-root .insc-okbox #sd-inRedo{justify-self:center;font-size:.86rem}
-#sodaf-root .insc-hello{padding:4px 2px}.pc-corr{margin:10px 0 0;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fff}.pc-corr summary{cursor:pointer;font-weight:700}.pc-corr[open]{display:flex;flex-direction:column;gap:8px}.pc-corr select,.pc-corr input{width:100%;box-sizing:border-box}.pc-corr .btn{align-self:flex-start}.pc-corrok{color:#166534!important}.insc-etunote{display:block;margin-top:8px;padding:8px 10px;border-radius:10px;background:#FFF4CC;color:#3B2A00;font-size:.9rem}.insc-cards [hidden],.insc-fq[hidden],.insc-fl[hidden]{display:none!important}
+#sodaf-root .insc-hello{padding:4px 2px}.pc-corr{margin:10px 0 0;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fff}.pc-corr summary{cursor:pointer;font-weight:700}.pc-corr[open]{display:flex;flex-direction:column;gap:8px}.pc-corr select,.pc-corr input{width:100%;box-sizing:border-box}.pc-corr .btn{align-self:flex-start}.pc-corrok{color:#166534!important}.insc-etunote{display:block;margin-top:8px;padding:8px 10px;border-radius:10px;background:#FFF4CC;color:#3B2A00;font-size:.9rem}
+.insc-etunote b{font:inherit;font-weight:700;color:inherit}
+.insc-etuline{display:grid;grid-template-columns:1fr auto;gap:2px 12px;margin:14px 0 0;padding:14px 16px;border-radius:14px;background:#E8F2FF;border:1.5px solid #9CC3F5}.insc-etuline[hidden]{display:none}.insc-etuline span{grid-column:1/-1;font:700 .74rem var(--f-ui);text-transform:uppercase;letter-spacing:.06em;color:#1F5FAE}.insc-etuline b{font:800 1.05rem var(--f-ui)}.insc-etuline em{font:800 1.1rem var(--f-ui);font-style:normal;white-space:nowrap}.insc-etuline small{grid-column:1/-1;color:var(--muted);font-size:.86rem}.insc-payq[hidden]{display:none}.insc-cards [hidden],.insc-fq[hidden],.insc-fl[hidden]{display:none!important}
 @media (max-width:520px){#sodaf-root .insc-step{padding:20px 14px 16px}#sodaf-root .insc-step .rcm{padding:12px 13px}}
 /* Page Pré-inscription : formulaire + panneau contact sombre */
 #sodaf-root .pi{grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:22px;align-items:start}
