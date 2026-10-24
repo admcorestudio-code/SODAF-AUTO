@@ -6650,11 +6650,13 @@ function init(root) {
     const h = (location.hash || (APP ? "#equipe" : ELEVE ? "#appli" : "#accueil")).slice(1);
     let p = h.split("-")[0]; if (!pages.includes(p)) p = APP ? "equipe" : ELEVE ? "appli" : "accueil";
     if (!APP && !ELEVE && p === "appli") p = "accueil";
-    if (ELEVE && ["accueil", "formations", "inscription", "parrainage", "inscrire", "tirage", "classe"].includes(p)) { if (p === "inscrire" || p === "tirage" || p === "inscription" || p === "parrainage") { window.open("/#" + h, "_blank"); } history.replaceState(null, "", "#appli"); p = "appli"; }
+    // Application élève installée : un lien reçu (inscription, parrainage, tirage) s'ouvre directement ici.
+    // Avant (24 oct.) : nouvelle fenêtre ouverte sans toucher l'écran → « pop-up bloqué » sur le téléphone.
+    if (ELEVE && ["accueil", "formations", "classe"].includes(p)) { history.replaceState(null, "", "#appli"); p = "appli"; }
     if (p === "appli") apFill();
     $$("#sd-appbar [data-ab]").forEach((a) => a.classList.toggle("on", a.dataset.ab === p));
     apShow(p);
-    if (APP && !["equipe", "classe", "recu"].includes(p)) { if (location.hash && location.hash !== "#accueil") window.open("/" + location.hash, "_blank"); history.replaceState(null, "", "#equipe"); p = "equipe"; }
+    if (APP && !["equipe", "classe", "recu"].includes(p)) { if (location.hash && location.hash !== "#accueil") { location.replace("/" + location.hash); return; } history.replaceState(null, "", "#equipe"); p = "equipe"; }
     if (p === "recu") rcPublic(h.slice(5));
     if (p === "inscrire") inscPage(h.slice(9));
     if (p === "tirage") tirPage();
