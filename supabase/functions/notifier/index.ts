@@ -4,7 +4,7 @@
 // gérance : demande, demande_equipe (équipe → gérante), demande_reponse, decision, decision_avis, rapport, rapport_rappel (dimanche 18 h).
 // reçus : annulation (demande du secrétariat → gérante ; réponse → secrétariat).
 // mécanique : entretien (jeudi 9 h, entretiens à prévoir samedi, liste calculée par prive.entretiens_a_prevoir).
-// À faire (0062, 0063) : tache (quoi : nouvelle, prix, accord, refus, argent, pas_recu, numero_bon, faite, relance).
+// À faire (0062, 0063, 0072 : la facture termine la tâche) : tache (quoi : nouvelle, prix, accord, refus, argent, pas_recu, numero_bon, faite, relance).
 // Les clés VAPID et le secret sont lus dans prive.config_push : rien de secret dans ce fichier.
 import webpush from "npm:web-push@3.6.7";
 import postgres from "npm:postgres@3.4.5";
@@ -132,7 +132,7 @@ Deno.serve(async (req) => {
     seulement = r.annul_dem_par;
     note = { title: r.annule ? "Reçu annulé · " + r.numero : "Annulation refusée · " + r.numero, body: r.annule ? r.eleve_nom + " : la gérante a confirmé. Refais le bon reçu." : r.eleve_nom + " : le reçu reste valable." + (r.annul_refus_motif ? " " + r.annul_refus_motif : ""), url: "/equipe/", tag: "annul-" + p.id };
   } else if (p.type === "tache") {
-    const [t] = await sql`select t.titre, t.montant, t.paye_montant, t.paye_moyen, t.pas_recu_note, t.accord_note, t.par, t.pour, pp.role as pour_role, pa.role as par_role
+    const [t] = await sql`select t.titre, t.carburant, t.montant, t.paye_montant, t.paye_moyen, t.pas_recu_note, t.accord_note, t.par, t.pour, pp.role as pour_role, pa.role as par_role
                             from public.taches t join public.profils pp on pp.id = t.pour join public.profils pa on pa.id = t.par where t.id = ${p.id ?? 0}`;
     if (!t) return json({ envoyes: 0, raison: "tâche introuvable" });
     const court = (x: string) => (x.length > 180 ? x.slice(0, 177) + "…" : x), url = "/equipe/?onglet=taf", tag = "tache-" + p.id, qui = ROLE[t.pour_role] || "Équipe";
@@ -140,11 +140,11 @@ Deno.serve(async (req) => {
     else if (p.quoi === "prix") { roles = ["gerant"]; note = { title: "Prix à trouver", body: court(t.titre + " · Trouve le prix et le devis, puis envoie-les à la direction."), url, tag }; }
     else if (p.quoi === "accord") { roles = ["admin"]; note = { title: "Prix trouvé : " + milliers(t.montant) + " F", body: court(t.titre + " · Accorde ou refuse."), url, tag }; }
     else if (p.quoi === "refus") { roles = ["gerant"]; note = { title: "Refusé par la direction", body: court(t.titre + (t.accord_note ? " · " + t.accord_note : "")), url, tag }; }
-    else if (p.quoi === "argent") { seulement = t.pour; note = { title: "Argent envoyé : " + milliers(t.paye_montant) + " F", body: court(t.titre + " · Ouvre le reçu, puis touche « Activer »."), url, tag }; }
+    else if (p.quoi === "argent") { seulement = t.pour; note = { title: "Argent envoyé : " + milliers(t.paye_montant) + " F", body: court(t.titre + (t.carburant ? " · Fais le plein, puis touche « Fait »." : " · Fais l'achat, puis ajoute la facture : c'est terminé.")), url, tag }; }
     else if (p.quoi === "pas_recu") { roles = ["admin"]; note = { title: "Argent pas reçu · " + qui, body: court(t.titre + (t.pas_recu_note ? " · " + t.pas_recu_note : "")), url, tag }; }
     else if (p.quoi === "faite") { seulement = t.par; note = { title: "Tâche faite · " + qui, body: court(t.titre), url, tag }; }
-    else if (p.quoi === "numero_bon") { seulement = t.pour; note = { title: "L'argent est parti vers ton numéro", body: court(t.titre + " · Regarde ton solde et ton historique Mixx (le SMS n'arrive pas toujours), puis touche « Activer »."), url, tag }; }
-    else if (p.quoi === "relance") { roles = ["admin"]; aussi = t.pour; note = { title: "Argent pas encore activé", body: court(qui + " : " + t.titre + " · Ouvre le reçu, puis touche « Activer »."), url, tag }; }
+    else if (p.quoi === "numero_bon") { seulement = t.pour; note = { title: "L'argent est parti vers ton numéro", body: court(t.titre + " · Regarde ton solde et ton historique Mixx (le SMS n'arrive pas toujours), puis fais l'achat et ajoute la facture."), url, tag }; }
+    else if (p.quoi === "relance") { roles = ["admin"]; aussi = t.pour; note = { title: "Facture attendue · " + qui, body: court(t.titre + " · L'argent est parti il y a 3 jours : ajoute la facture ou le ticket dans « À faire »."), url, tag }; }
     else return json({ erreur: "tâche : quoi inconnu" }, 400);
   } else if (p.type === "geotest") {
     return json({ ip: p.ip || null, lieu: await geo(p.ip || "") }); // contrôle technique (secret obligatoire), aucune écriture

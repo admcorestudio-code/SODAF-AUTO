@@ -2050,15 +2050,10 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 </div>
 <div class="tm-pane" data-pane="taf" role="tabpanel" hidden>
 <p class="tm-role" id="sd-tfRole"></p>
-<div class="gr-tabs tf-tabs" role="tablist"><button type="button" role="tab" data-tfp="new" aria-selected="false" hidden>Nouvelle tâche</button><button type="button" role="tab" data-tfp="conf" aria-selected="false" hidden>Argent à confirmer<em class="gr-badge" id="sd-tfBConf" hidden></em></button><button type="button" role="tab" data-tfp="ach" aria-selected="false" hidden>Achats à faire<em class="gr-badge" id="sd-tfBAch" hidden></em></button><button type="button" role="tab" data-tfp="moi" aria-selected="false">Mes tâches<em class="gr-badge" id="sd-tfBMoi" hidden></em></button><button type="button" role="tab" data-tfp="attm" aria-selected="false" hidden>En attente de l\'argent</button><button type="button" role="tab" data-tfp="prix" aria-selected="false" hidden>Prix à trouver<em class="gr-badge" id="sd-tfBPrix" hidden></em></button><button type="button" role="tab" data-tfp="acc" aria-selected="false" hidden>À accorder<em class="gr-badge" id="sd-tfBAcc" hidden></em></button><button type="button" role="tab" data-tfp="pay" aria-selected="false" hidden>Paiements à faire<em class="gr-badge" id="sd-tfBPay" hidden></em></button><button type="button" role="tab" data-tfp="att" aria-selected="false" hidden>Paiements en attente<em class="gr-badge" id="sd-tfBAtt" hidden></em></button><button type="button" role="tab" data-tfp="eq" aria-selected="false" hidden>L\'équipe</button><button type="button" role="tab" data-tfp="fini" aria-selected="false">Terminé</button></div>
-<div data-tfpane="new" hidden><div id="sd-tfNew"></div></div>
-<div data-tfpane="conf" hidden><div id="sd-tfConf" class="tf-list"></div></div><div data-tfpane="ach" hidden><div id="sd-tfAch" class="tf-list"></div></div><div data-tfpane="moi" hidden><div id="sd-tfMoi" class="tf-list"></div></div><div data-tfpane="attm" hidden><div id="sd-tfAttm" class="tf-list"></div></div>
-<div data-tfpane="prix" hidden><div id="sd-tfPrix" class="tf-list"></div></div>
-<div data-tfpane="acc" hidden><div id="sd-tfAcc" class="tf-list"></div></div>
-<div data-tfpane="pay" hidden><div id="sd-tfPay" class="tf-list"></div></div>
-<div data-tfpane="att" hidden><div id="sd-tfAtt" class="tf-list"></div></div>
-<div data-tfpane="eq" hidden><div id="sd-tfEq" class="tf-list"></div></div>
-<div data-tfpane="fini" hidden><div id="sd-tfFini" class="tf-list"></div></div>
+<div id="sd-tfTop"></div>
+<div class="tf-newbar" id="sd-tfNewBar" hidden><button type="button" class="tf-b tf-b-ok tf-newbtn" data-tfnew>+ Nouvelle tâche</button></div>
+<div id="sd-tfNew" hidden></div>
+<div id="sd-tfList" class="tf-list"></div>
 </div>
 <div class="tm-pane" data-pane="com" role="tabpanel" hidden>
 <p class="tm-role" id="sd-comRole"></p>
@@ -5676,7 +5671,7 @@ function init(root) {
     // ---- À faire (21 oct., migration 0062) : tâches de tous les jours + argent des dépenses accordées.
     //      Demande accordée → tâche « argent à envoyer » ; la direction paie (reçu Mixx joint) ; la personne active, achète, ajoute la facture, puis « Fait ».
     //      La direction écrit aussi des tâches (prix inconnu → la gérante le trouve → la direction accorde). La gérante donne des tâches sans argent.
-    const TF = { t: [], prof: [], ong: null, arg: "non", pour: null, num: {}, numOk: false };
+    const TF = { t: [], prof: [], dm: [], open: new Set(), vu: false, finiOuvert: false, num: {}, numOk: false };
     const TF_FIN = ["fait", "refusee", "annulee"];
     const tfNom = (id) => { if (me && id === me.id) return "toi"; const p = TF.prof.find((x) => x.id === id); return p ? ROLE_NOM[p.role] || p.nom : "Équipe"; };
     const tfJour = (d) => dOf(d).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "short" });
@@ -5689,7 +5684,7 @@ function init(root) {
       if (t.etape === "prix") return ["att", me.role === "gerant" ? "Prix à trouver" : "Chez la gérante : prix à trouver"];
       if (t.etape === "accord") return ["att", adm ? "Prix trouvé : à accorder" : "Chez la direction"];
       if (t.etape === "payer") return ["att", adm ? "Argent à envoyer" : "Accordé : en attente de l'argent"];
-      if (t.etape === "envoye") return t.pas_recu_le ? ["non", "Argent pas reçu"] : ["att", moi ? "Argent envoyé : vérifie et active" : "Envoyé, pas encore activé"];
+      if (t.etape === "envoye") return t.pas_recu_le ? ["non", "Argent pas reçu"] : ["att", t.carburant ? (moi ? "Essence envoyée : fais le plein" : "Essence envoyée") : moi ? "Argent envoyé : achat puis facture" : "Argent envoyé : facture attendue"];
       if (t.etape === "afaire") return ["neu", t.argent && t.par === t.pour ? "Achat à faire toi-même" : t.argent && !t.carburant && !t.facture ? "Facture à ajouter" : t.argent ? "Achat à faire" : "À faire"];
       if (t.etape === "fait") return ["oui", "Fait " + grQuand(t.fait_le)];
       return t.etape === "refusee" ? ["non", "Refusé"] : ["x", "Annulé"];
@@ -5699,17 +5694,20 @@ function init(root) {
     //   en-tête (quoi, montant) · état · étapes de l'argent · pièces (devis, reçu, facture) · historique des envois
     //   puis UN SEUL cadre sombre « À toi de jouer » quand un geste est attendu (même style partout).
     const tfBtn = (attr, txt, cls) => '<button type="button" class="tf-b' + (cls ? " tf-b-" + cls : "") + '" ' + attr + ">" + txt + "</button>";
-    function tfPayBox(t) {
+    function tfPayBox(t, accord) {
       const mt = t.paye_montant || t.montant || "", num = TF.num[t.pour];
       return '<div class="tf-pay" data-tfpay><p class="tf-act-t">' + (t.mauvais_numero_le ? "Renvoie au bon numéro" : "Envoie l'argent") + (mt ? " : " + F(mt) : "") + " à " + esc(tfNom(t.pour)) + "</p>" +
         (num ? '<div class="tf-num"><span>Envoie à</span><b>' + tfTel(num) + "</b><small>Compare avec le numéro tapé dans Mixx avant de valider." + (t.mauvais_numero_le ? " Si ce numéro est faux, corrige-le d'abord dans « Numéros Mixx de l'équipe », en bas." : "") + "</small></div>"
-             : '<p class="tf-act-ko">Numéro Mixx de ' + esc(tfNom(t.pour)) + " pas encore enregistré : en bas de « Paiements à faire ».</p>") +
-        '<ol class="tf-steps"><li>Envoie depuis le compte marchand Mixx (motif : <b>SODAF T-' + t.id + "</b>).</li><li>Télécharge le reçu dans l'application Mixx.</li><li>Joins-le ici, puis « Paiement effectué ».</li></ol>" +
+             : '<p class="tf-act-ko">Numéro Mixx de ' + esc(tfNom(t.pour)) + " pas encore enregistré : « Numéros Mixx de l\'équipe », en bas.</p>") +
+        '<ol class="tf-steps"><li>Envoie depuis le compte marchand Mixx (motif : <b>SODAF T-' + t.id + "</b>).</li><li>Télécharge le reçu dans l'application Mixx.</li><li>Joins-le ici, puis « " + (accord ? "Accorder et payer" : "Paiement effectué") + " ».</li></ol>" +
         '<div class="tf-chips" role="radiogroup">' + ["Mixx", "Moov Money", "Espèces"].map((m, i) => '<button type="button" role="radio" data-tfmoy="' + m + '" aria-checked="' + (i === 0) + '">' + m + "</button>").join("") + "</div>" +
         '<label class="tf-lab">Montant envoyé (F)<input class="tf-pmt" inputmode="numeric" autocomplete="off" value="' + (mt ? milliers(mt) : "") + '"></label>' +
         '<p class="tf-lab tf-recl">Reçu du paiement (photo, capture ou PDF)</p>' + pjHtml(true) +
-        '<div class="tf-btns">' + tfBtn("data-tfpaye", "Paiement effectué", "ok") + "</div></div>";
+        '<div class="tf-btns">' + tfBtn(accord ? "data-tfaccpaye" : "data-tfpaye", accord ? "Accorder et payer" : "Paiement effectué", "ok") + "</div></div>";
     }
+    // Facture ou ticket : c'est elle qui termine la tâche (24 oct.)
+    const tfFacBox = (titre, sous) => '<div class="tf-fac" data-tffac><div class="tf-fach"><i aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l3 3v15l-2.5-1.5L13 21l-2.5-1.5L8 21l-2-1.5V3z"/><path d="M9 9h6M9 13h6"/></svg></i><div><p class="tf-act-t">' + titre + '</p><p class="tf-act-s tf-jaune">' + sous + "</p></div></div>" + pjHtml(true) + "</div>";
+    const tfPasRecu = () => '<details class="tf-pas"><summary>Je n\'ai rien reçu</summary><input class="tf-pasn" maxlength="300" placeholder="ex. Rien sur mon compte Mixx" aria-label="Précise">' + tfBtn("data-tfpas", "Pas reçu", "ko") + "</details>";
     // Retourne [infos (texte neutre), geste (cadre sombre)]
     function tfActions(t, vue) {
       const adm = me.role === "admin", g = me.role === "gerant", moi = t.pour === me.id; let info = "", act = "";
@@ -5718,20 +5716,21 @@ function init(root) {
         else info += "La gérante cherche le prix et le devis.";
       }
       if (t.etape === "accord") {
-        if (adm) act += '<p class="tf-act-t">La gérante a trouvé le prix : ' + F(t.montant) + '</p><p class="tf-act-s">Regarde le devis, puis décide.</p><input class="tf-note" maxlength="300" placeholder="Un mot (facultatif)" aria-label="Un mot"><div class="tf-btns">' + tfBtn('data-tfacc="1"', "Accorder", "ok") + tfBtn('data-tfacc="0"', "Refuser", "ko") + "</div>";
+        if (adm) act += '<p class="tf-act-t">La gérante a trouvé le prix : ' + F(t.montant) + '</p><p class="tf-act-s">Regarde le devis. Si c\'est bon : envoie l\'argent, joins le reçu, et c\'est accordé et payé en un seul geste.</p><input class="tf-note" maxlength="300" placeholder="Un mot (facultatif)" aria-label="Un mot">' + tfPayBox(t, true) +
+          '<div class="tf-btns tf-btns2">' + tfBtn('data-tfacc="0"', "Refuser", "ko") + '<button type="button" class="linkbtn tf-plus" data-tfacc="1">Accorder, je paie plus tard</button></div>';
         else info += "Chez la direction, pour accord.";
       }
       if (t.etape === "payer") { if (adm) act += tfPayBox(t); else info += "C'est accordé. La direction va envoyer l'argent."; }
       if (t.etape === "envoye") {
         const dern = (t.envois || []).slice(-1)[0] || {}, quand = F(t.paye_montant) + (t.paye_moyen ? " par " + esc(t.paye_moyen) : "") + (dern.vers ? " vers le " + tfTel(dern.vers) : "") + ", " + grQuand(t.paye_le);
         const pas = t.pas_recu_le ? "« Pas reçu »" + (t.pas_recu_note ? " : " + esc(t.pas_recu_note) : "") : "";
-        if (moi && !t.pas_recu_le) act += '<p class="tf-act-t">L\'argent est parti</p><p class="tf-act-s">' + quand + ". Regarde ton solde et ton historique Mixx (le SMS n'arrive pas toujours).</p>" +
-          '<div class="tf-btns">' + tfBtn("data-tfact", "Activer : j'ai bien reçu", "ok") + '</div><details class="tf-pas"><summary>Je n\'ai rien reçu</summary><input class="tf-pasn" maxlength="300" placeholder="ex. Rien sur mon compte Mixx" aria-label="Précise">' + tfBtn("data-tfpas", "Pas reçu", "ko") + "</details>";
+        if (moi && !t.pas_recu_le && t.carburant) act += '<p class="tf-act-t">Essence envoyée</p><p class="tf-act-s">' + quand + '. Fais le plein (photo du compteur dans « Essence et voiture »), puis touche « Fait ».</p><div class="tf-btns">' + tfBtn("data-tffait", "Fait", "ok") + "</div>" + tfPasRecu();
+        else if (moi && !t.pas_recu_le) act += tfFacBox("Fais l\'achat, puis ajoute la facture ou le ticket", "C\'est elle qui termine la tâche. Argent envoyé : " + quand + ".") + tfPasRecu();
         else if (moi) act += '<p class="tf-act-t">Tu as dit « pas reçu »</p><p class="tf-act-s">La direction vérifie le numéro. Si l\'argent est finalement sur ton compte :</p><div class="tf-btns">' + tfBtn("data-tfact", "Finalement, je l'ai reçu", "ok") + "</div>";
         else if (adm && t.pas_recu_le && !t.mauvais_numero_le) act += '<p class="tf-act-t">' + pas + '</p><p class="tf-act-s">Ouvre ton reçu Mixx : l\'argent est-il parti vers le bon numéro' + (dern.vers ? " (" + tfTel(dern.vers) + ")" : "") + " ? Sur Mixx, l'argent ne se perd presque jamais : c'est presque toujours le numéro.</p>" +
           '<div class="tf-btns">' + tfBtn("data-tfbon", "Le numéro est bon", "ok") + tfBtn("data-tfmauv", "Mauvais numéro", "ko") + "</div>";
         else if (adm && t.mauvais_numero_le) act += '<p class="tf-act-ko">Mauvais numéro : appelle le service client Yas avec la référence du reçu pour récupérer l\'argent.</p>' + tfPayBox(t);
-        else info += "Envoyé : " + quand + "." + (pas ? " " + pas + "." : "") + (Date.now() - new Date(t.paye_le) > 864e5 ? ' <b class="tf-retard">Plus de 24 h sans activation.</b>' : "");
+        else info += "Envoyé : " + quand + "." + (pas ? " " + pas + "." : t.carburant ? "" : " Facture attendue.") + (!t.carburant && Date.now() - new Date(t.paye_le) > 3 * 864e5 ? ' <b class="tf-retard">Plus de 3 jours.</b>' : "");
       }
       if (t.etape === "afaire" && t.argent && t.par === t.pour && moi && adm) {
         act += '<div class="tf-dir"><p class="tf-act-t">Après l\'achat : écris le prix payé et joins le ticket</p><p class="tf-act-s">Pas de ticket ? Une photo de ce que tu as acheté suffit.</p>' +
@@ -5739,10 +5738,8 @@ function init(root) {
           '<div class="tf-btns">' + tfBtn("data-tfdir", "Achat fait", "ok") + "</div></div>";
       } else if (t.etape === "afaire" && (moi || (DIR() && vue !== "moi"))) {
         const fac = t.argent && !t.carburant && !t.facture;
-        if (fac) act += '<div class="tf-fac" data-tffac><div class="tf-fach"><i aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l3 3v15l-2.5-1.5L13 21l-2.5-1.5L8 21l-2-1.5V3z"/><path d="M9 9h6M9 13h6"/></svg></i><div><p class="tf-act-t">Après l\'achat, ajoute la facture ou le ticket</p><p class="tf-act-s tf-jaune">Obligatoire avant de toucher « Fait ».</p></div></div>' + pjHtml(true) + "</div>";
-        else if (!t.argent) act += '<p class="tf-act-t">' + (moi ? "À faire" : "À faire par " + esc(tfNom(t.pour))) + "</p>";
-        else act += '<p class="tf-act-t">' + (t.carburant ? "Essence reçue" : "Facture ajoutée") + '</p><p class="tf-act-s">Touche « Fait » quand c\'est terminé.</p>';
-        act += '<div class="tf-btns">' + tfBtn("data-tffait" + (fac ? " disabled" : ""), moi ? "Fait" : "Marquer comme fait", "ok") + "</div>";
+        if (fac) act += tfFacBox(moi ? "Fais l\'achat, puis ajoute la facture ou le ticket" : "Facture attendue de " + esc(tfNom(t.pour)), "C\'est elle qui termine la tâche.");
+        else { act += '<p class="tf-act-t">' + (t.argent ? (t.carburant ? "Essence" : "Facture ajoutée") : moi ? "À faire" : "À faire par " + esc(tfNom(t.pour))) + "</p>"; act += '<div class="tf-btns">' + tfBtn("data-tffait", moi ? "Fait" : "Marquer comme fait", "ok") + "</div>"; }
       }
       const annul = ["prix", "accord", "payer"].includes(t.etape) || (t.etape === "afaire" && (!t.argent || (t.par === t.pour && !t.facture)));
       const ann = annul && ((t.par === me.id && DIR()) || adm) ? '<button type="button" class="linkbtn tf-ann" data-tfann>Annuler la tâche</button>' : "";
@@ -5751,8 +5748,8 @@ function init(root) {
     // Étapes de l'argent : Accordé → Envoyé → Reçu → Facture → Fait
     function tfEtapes(t) {
       if (!t.argent || ["refusee", "annulee"].includes(t.etape) || t.par === t.pour) return "";
-      const n = ["Accordé", "Envoyé", "Reçu"].concat(t.carburant ? [] : ["Facture"]).concat(["Fait"]);
-      const fait = { prix: 0, accord: 0, payer: 1, envoye: 2, afaire: t.carburant || t.facture ? (t.carburant ? 3 : 4) : 3, fait: n.length }[t.etape] || 0;
+      const n = ["Accordé", "Argent envoyé", t.carburant ? "Fait" : "Facture"];
+      const fait = { prix: 0, accord: 0, payer: 1, envoye: 2, afaire: 2, fait: 3 }[t.etape] || 0;
       return '<ol class="tf-et">' + n.map((x, i) => '<li class="' + (i < fait ? "ok" : i === fait ? "cur" : "") + '"><i></i><span>' + x + "</span></li>").join("") + "</ol>";
     }
     function tfPieces(t) {
@@ -5761,12 +5758,12 @@ function init(root) {
       const p = (lab, path, att) => path ? '<button type="button" class="tf-pc" data-tfdoc="' + esc(path) + '"><i></i>' + lab + "</button>" : '<span class="tf-pc tf-pc-x"><i></i>' + lab + (att ? " : " + att : "") + "</span>";
       return '<div class="tf-pcs">' + p("Devis", t.devis, t.carburant ? "essence" : "") + p("Reçu", t.paye_recu, "") + (t.carburant ? "" : p("Facture", t.facture, "")) + "</div>";
     }
-    function tfCarte(t, vue) {
+    function tfCarte(t, vue, dedans) { // dedans : ouverte dans une ligne de la liste (le titre et le montant sont déjà sur la ligne)
       const st = tfEtat(t), today = iso(new Date()), late = !TF_FIN.includes(t.etape) && t.pour_le && t.pour_le < today, test = /^\[TEST\]/.test(t.titre || "");
       const [info, act, ann] = TF_FIN.includes(t.etape) ? ["", "", ""] : tfActions(t, vue);
       const qui = t.par === t.pour ? "Note pour toi" : "De " + esc(tfNom(t.par)) + " → pour " + esc(tfNom(t.pour));
       return '<article class="tf tf-' + st[0] + (late ? " tf-late" : "") + '" data-tf="' + t.id + '">' +
-        '<div class="tf-h"><div class="tf-hl"><p class="tf-tx">' + esc(String(t.titre || "").replace(/^\[TEST\]\s*/, "")).replace(/\bSO(\d+)\b/g, (m, n) => eleves.some((y) => y.id === +n) ? '<button type="button" class="ms-el" data-goel="' + n + '">' + m + "</button>" : m) + (test ? ' <span class="dq-test">TEST</span>' : "") + '</p><p class="tf-sub">' + qui + " · T-" + t.id + (t.demande_id ? " · dépense accordée" : "") +
+        '<div class="tf-h' + (dedans ? " tf-h-in" : "") + '"><div class="tf-hl"><p class="tf-tx' + (dedans && !/\bSO\d+\b/.test(t.titre || "") ? " tf-tx-in" : "") + '">' + esc(String(t.titre || "").replace(/^\[TEST\]\s*/, "")).replace(/\bSO(\d+)\b/g, (m, n) => eleves.some((y) => y.id === +n) ? '<button type="button" class="ms-el" data-goel="' + n + '">' + m + "</button>" : m) + (test ? ' <span class="dq-test">TEST</span>' : "") + '</p><p class="tf-sub">' + qui + " · T-" + t.id + (t.demande_id ? " · dépense accordée" : "") +
           (t.pour_le && !TF_FIN.includes(t.etape) ? ' · <span class="' + (late ? "tf-retard" : "") + '">' + (late ? "en retard, " : "") + "pour " + tfJour(t.pour_le) + "</span>" : "") + "</p></div>" +
           (t.argent ? '<div class="tf-hr">' + (t.paye_montant || t.montant ? F(t.paye_montant || t.montant) : '<small>' + (t.par === t.pour ? "Prix au retour" : "Prix à trouver") + "</small>") + "</div>" : "") + "</div>" +
         '<p class="tf-etat"><i></i>' + esc(st[1]) + "</p>" + tfEtapes(t) + tfPieces(t) + tfEnvois(t) +
@@ -5812,7 +5809,7 @@ function init(root) {
         confirmBtn(b, async () => {
           b.disabled = true;
           const r = await run(() => DB.q("rpc/tache_creer", { method: "POST", body: { p_pour: qui.dataset.tfqui, p_titre: tx, p_pour_le: f.querySelector(".tf-date2").value || null, p_argent: arg !== "non", p_montant: arg === "oui" ? mt : null } }), arg === "prix" && qui.dataset.tfqui !== me.id ? "Envoyé à la gérante : elle cherche le prix" : qui.dataset.tfqui === me.id ? "Tâche ajoutée pour toi" : "Tâche donnée");
-          b.disabled = false; if (r !== null) { box.dataset.pret = ""; await tfCharger(); tfOnglet(qui.dataset.tfqui !== me.id ? "eq" : arg !== "non" ? "ach" : "moi"); }
+          b.disabled = false; if (r !== null) { box.dataset.pret = ""; $("#sd-tfNew").hidden = true; await tfCharger(); }
         });
       });
     }
@@ -5822,102 +5819,117 @@ function init(root) {
       return '<details class="card tf-nums"' + (l.some((p) => !TF.num[p.id]) ? " open" : "") + '><summary>Numéros Mixx de l\'équipe</summary><p class="tf-aide">Le numéro où tu envoies l\'argent. Toi seul le vois et le changes.</p>' +
         l.map((p) => '<div class="tf-numl" data-tfnp="' + p.id + '"><span>' + esc(ROLE_NOM[p.role] || p.nom) + '</span><input inputmode="numeric" maxlength="14" autocomplete="off" placeholder="ex. 72 54 41 66" value="' + tfTel(TF.num[p.id] || "") + '" aria-label="Numéro Mixx"><button type="button" class="btn btn-sm btn-line" data-tfnok>Enregistrer</button></div>').join("") + "</details>";
     }
-    // Chaque onglet a sa couleur, son icône et son grand en-tête (21 oct. : « on a l'impression de voir la même page »)
-    const TF_IC = { plus: '<path d="M12 5v14M5 12h14"/>', wallet: '<path d="M3 7a2 2 0 0 1 2-2h12v4"/><path d="M3 7v10a2 2 0 0 0 2 2h14V9H5a2 2 0 0 1-2-2z"/><circle cx="16" cy="14" r="1.4"/>', cart: '<circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.6 12.2a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.5L21 8H6.2"/>',
-      list: '<path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2"/>', sablier: '<path d="M6 3h12M6 21h12M7 3c0 5 5 6 5 9s-5 4-5 9M17 3c0 5-5 6-5 9s5 4 5 9"/>', tag: '<path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/>',
-      ok: '<path d="M20 6 9 17l-5-5"/>', envoi: '<path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/>', horloge: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>', gens: '<circle cx="9" cy="8" r="3.5"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6 6 0 0 1 4 7"/>', fini: '<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>' };
-    const TF_ONG = {
-      new: ["#15191E", "plus", "Nouvelle tâche", "Écris ce qu'il faut faire et choisis pour qui."],
-      conf: ["#2563EB", "wallet", "Argent à confirmer", "La direction t'a envoyé de l'argent. Regarde ton solde Mixx, puis touche « Activer »."],
-      ach: ["#FFC400", "cart", "Achats à faire", "Fais l'achat, puis ajoute le ticket ou la facture et confirme."],
-      moi: ["#0F766E", "list", "Mes tâches", "Ce qu'on t'a demandé de faire. Touche « Fait » quand c'est fini."],
-      attm: ["#64748B", "sablier", "En attente de l'argent", "C'est accordé. La direction va t'envoyer l'argent. Rien à faire pour l'instant."],
-      prix: ["#7C3AED", "tag", "Prix à trouver", "La direction a besoin du prix. Trouve le montant et le devis, puis envoie."],
-      acc: ["#7C3AED", "ok", "À accorder", "La gérante a trouvé le prix. Regarde le devis, puis accorde ou refuse."],
-      pay: ["#15803D", "envoi", "Paiements à faire", "Envoie depuis le compte marchand Mixx, joins le reçu, puis « Paiement effectué »."],
-      att: ["#0369A1", "horloge", "Paiements en attente", "L'argent est parti : on attend que la personne active, puis l'achat et la facture."],
-      eq: ["#334155", "gens", "L'équipe", "Les tâches en cours de chacun, rangées par personne."],
-      fini: ["#16A34A", "fini", "Terminé", "Tout ce qui est fini, refusé ou annulé."] };
-    function tfHero(k, n, lab) {
-      const c = TF_ONG[k]; if (!c) return "";
-      return '<div class="tf-hero' + (k === "ach" ? " tf-hero-clair" : "") + '"><i aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' + TF_IC[c[1]] + '</svg></i><div class="tf-hero-t"><b>' + c[2] + "</b><span>" + c[3] + "</span></div>" + (n != null ? '<div class="tf-hero-n"><b>' + n + "</b><span>" + lab + "</span></div>" : "") + "</div>";
+    // ---- Une seule liste, dans l'ordre (24 oct. : « faire un truc qui liste avec un sens précis ») ----
+    //   1. + Nouvelle tâche  2. À toi de jouer (ce qui attend MON geste)  3. En attente des autres (qui doit agir)  4. Terminé (replié)
+    //   Chaque ligne tient sur une ligne ; on la touche pour l'ouvrir (la carte complète, avec le geste à faire).
+    const TF_ICL = { argent: '<circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.6 12.2a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.5L21 8H6.2"/>', simple: '<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>', prix: '<path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/>', fini: '<path d="M20 6 9 17l-5-5"/>' };
+    const tfIcone = (k) => '<i class="tfr-ic tfr-' + k + '" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' + TF_ICL[k] + "</svg></i>";
+    const tfCap = (x) => String(x || "").replace(/^./, (c) => c.toUpperCase());
+    // Qui doit agir maintenant (pour la partie « En attente des autres »)
+    function tfQui(t) {
+      if (t.etape === "prix") return "Gérante : trouver le prix";
+      if (t.etape === "accord") return "Direction : accorder";
+      if (t.etape === "payer") return "Direction : envoyer l'argent";
+      if (t.etape === "envoye" && t.pas_recu_le) return "Direction : vérifier le numéro (« pas reçu »)";
+      if (t.etape === "envoye" || (t.etape === "afaire" && t.argent)) return tfCap(tfNom(t.pour)) + (t.carburant ? " : faire le plein" : " : achat et facture");
+      return tfCap(tfNom(t.pour)) + " : à faire";
     }
-    function tfOnglet(k) {
-      TF.ong = k; $$(".tf-tabs [data-tfp]").forEach((b) => b.setAttribute("aria-selected", b.dataset.tfp === k));
-      $$('[data-pane="taf"] [data-tfpane]').forEach((p) => (p.hidden = p.dataset.tfpane !== k));
+    const tfTitre = (t) => esc(String(t.titre || "").replace(/^\[TEST\]\s*/, "")) + (/^\[TEST\]/.test(t.titre || "") ? ' <span class="dq-test">TEST</span>' : "");
+    function tfLigne(t, k, sous) {
+      const ouvert = TF.open.has(String(t.id)), late = !TF_FIN.includes(t.etape) && t.pour_le && t.pour_le < iso(new Date()), mt = t.argent ? (t.paye_montant || t.montant ? F(t.paye_montant || t.montant) : "") : "";
+      return '<div class="tfr' + (ouvert ? " open" : "") + (late ? " tfr-late" : "") + '" data-tfr="' + t.id + '"><button type="button" class="tfr-h" data-tfrow aria-expanded="' + ouvert + '">' + tfIcone(k) +
+        '<span class="tfr-t"><b>' + tfTitre(t) + "</b><small>" + esc(sous) + (late ? " · en retard" : "") + "</small></span>" + (mt ? "<em>" + mt + "</em>" : "") + '<i class="tfr-ch" aria-hidden="true">›</i></button><div class="tfr-b">' + (ouvert ? tfCarte(t, "moi", true) : "") + "</div></div>";
     }
-    $(".tf-tabs") && $(".tf-tabs").addEventListener("click", (e) => { const b = e.target.closest("[data-tfp]"); if (b) tfOnglet(b.dataset.tfp); });
+    // Demande de dépense de l'équipe, transmise par la gérante : la direction accorde ET paie en un geste
+    function dmCarte(d) {
+      const p = TF.prof.find((y) => y.id === d.auteur) || {}, mt = d.montant || "";
+      const pour = p.role === "admin" ? (TF.prof.find((y) => y.role === "gerant" && y.actif !== false) || {}).id : d.auteur, num = TF.num[pour];
+      return '<article class="tf tf-att" data-dm="' + d.id + '"><p class="tf-sub">Demande ' + (p.role ? "du " + esc((ROLE_NOM[p.role] || "").toLowerCase()) : "de l'équipe") + (d.transmis_le ? " · transmise par la gérante" : "") + " · " + esc(grQuand(d.le)) + (d.voiture ? " · pour la voiture" : "") + "</p>" +
+        '<p class="tf-etat"><i></i>' + (d.nature === "Carburant" ? "Essence en plus : à accorder" : "Dépense : à accorder") + "</p>" +
+        (d.devis ? '<div class="tf-pcs"><button type="button" class="tf-pc" data-tfdoc="' + esc(d.devis) + '"><i></i>Devis</button></div>' : "") +
+        '<div class="tf-act"><p class="tf-act-k">À toi de jouer</p><p class="tf-act-t">Si c\'est bon : envoie l\'argent et joins le reçu</p><p class="tf-act-s">C\'est accordé et payé en un seul geste. Ensuite, il ajoute la facture et c\'est fini.</p>' +
+          '<input class="tf-note" maxlength="300" placeholder="Un mot (facultatif)" aria-label="Un mot"><div class="tf-pay">' +
+          (num ? '<div class="tf-num"><span>Envoie à</span><b>' + tfTel(num) + "</b><small>Compare avec le numéro tapé dans Mixx avant de valider.</small></div>" : '<p class="tf-act-ko">Numéro Mixx pas encore enregistré : « Numéros Mixx de l\'équipe », en bas.</p>') +
+          '<div class="tf-chips" role="radiogroup">' + ["Mixx", "Moov Money", "Espèces"].map((m, i) => '<button type="button" role="radio" data-tfmoy="' + m + '" aria-checked="' + (i === 0) + '">' + m + "</button>").join("") + "</div>" +
+          '<label class="tf-lab">Montant envoyé (F)<input class="tf-pmt" inputmode="numeric" autocomplete="off" value="' + (mt ? milliers(mt) : "") + '"></label><p class="tf-lab tf-recl">Reçu du paiement (photo, capture ou PDF)</p>' + pjHtml(true) +
+          '<div class="tf-btns">' + tfBtn("data-dmpaye", "Accorder et payer", "ok") + "</div></div>" +
+          '<div class="tf-btns tf-btns2">' + tfBtn("data-dmref", "Refuser", "ko") + '<button type="button" class="linkbtn tf-plus" data-dmacc>Accorder, je paie plus tard</button></div></div></article>';
+    }
+    function dmLigne(d) {
+      const ouvert = TF.open.has("d" + d.id), p = TF.prof.find((y) => y.id === d.auteur) || {};
+      return '<div class="tfr' + (ouvert ? " open" : "") + '" data-tfr="d' + d.id + '"><button type="button" class="tfr-h" data-tfrow aria-expanded="' + ouvert + '">' + tfIcone("argent") +
+        '<span class="tfr-t"><b>' + esc(String(d.texte || "").replace(/^\[TEST\]\s*/, "")) + (/^\[TEST\]/.test(d.texte || "") ? ' <span class="dq-test">TEST</span>' : "") + "</b><small>" + esc(tfCap(ROLE_NOM[p.role] || "Équipe")) + " demande : à accorder et payer</small></span>" + (d.montant ? "<em>" + F(d.montant) + "</em>" : "") +
+        '<i class="tfr-ch" aria-hidden="true">›</i></button><div class="tfr-b">' + (ouvert ? dmCarte(d) : "") + "</div></div>";
+    }
     async function tfCharger() {
-      if (!me || !$("#sd-tfMoi")) return;
-      const [t, p] = await Promise.all([DB.q("taches?select=*&order=le.desc&limit=500").catch(() => null), TF.prof.length ? Promise.resolve(TF.prof) : DB.q("profils?select=id,nom,role,actif").catch(() => [])]);
-      TF.prof = p || [];
-      if (!t) { $("#sd-tfMoi").innerHTML = '<p class="tm-empty">L\'onglet « À faire » n\'est pas encore activé dans la base.</p>'; return; }
-      TF.t = t; const adm = me.role === "admin", g = me.role === "gerant";
+      const L = $("#sd-tfList"); if (!me || !L) return;
+      const adm = me.role === "admin", g = me.role === "gerant";
+      const [t, p, dm] = await Promise.all([DB.q("taches?select=*&order=le.desc&limit=500").catch(() => null), TF.prof.length ? Promise.resolve(TF.prof) : DB.q("profils?select=id,nom,role,actif").catch(() => []),
+        adm ? DB.q("demandes?select=*&type=eq.D%C3%A9pense&statut=eq.attente&etape=eq.direction&order=le.asc").catch(() => []) : Promise.resolve([])]);
+      TF.prof = p || []; TF.dm = dm || [];
+      if (!t) { L.innerHTML = '<p class="tm-empty">L\'onglet « À faire » n\'est pas encore activé dans la base.</p>'; return; }
+      TF.t = t;
       if (adm) { const nm = await DB.q("rpc/numeros_mixx", { method: "POST", body: {} }).catch(() => null); TF.num = {}; (nm || []).forEach((x) => { if (x.numero) TF.num[x.profil] = x.numero; }); TF.numOk = !!nm; }
-      $("#sd-tfRole").textContent = adm ? "Tes tâches, celles de l'équipe et l'argent à envoyer pour les dépenses accordées." : g ? "Tes tâches, les prix à trouver, et les tâches que tu donnes à l'équipe." : "Tes tâches, rangées par étape : ouvre chaque onglet en haut.";
-      const ouv0 = t.filter((x) => !TF_FIN.includes(x.etape)), mine = ouv0.filter((x) => x.pour === me.id && x.etape !== "prix" && x.etape !== "accord");
-      const conf = mine.filter((x) => x.etape === "envoye").sort(tfTri), ach = mine.filter((x) => x.etape === "afaire" && x.argent).sort(tfTri), attm = mine.filter((x) => x.etape === "payer").sort(tfTri);
-      const vis = { new: DIR(), conf: conf.length > 0, ach: ach.length > 0, moi: true, attm: attm.length > 0, prix: false, acc: adm, pay: adm, att: adm, eq: DIR(), fini: true };
-      Object.keys(vis).forEach((k) => { const bt = $('.tf-tabs [data-tfp="' + k + '"]'); if (bt) bt.hidden = !vis[k]; });
-      tfForm();
-      const ouv = t.filter((x) => !TF_FIN.includes(x.etape)), vide = (m) => '<p class="tm-empty">' + m + "</p>", cartes = (l, v, m) => (l.length ? l.map((x) => tfCarte(x, v)).join("") : vide(m));
-      const grp = (titre, l, aide, v) => '<section class="tf-grp"><h4 class="gr-h4">' + titre + ' <span class="dq-count">' + l.length + "</span></h4>" + (aide ? '<p class="tf-aide">' + aide + "</p>" : "") + cartes(l, v, "Rien.") + "</section>";
-      // Mes tâches : ce qu'on m'a donné (le prix et l'accord ne sont pas encore pour moi)
-      const bande = () => "";
-      const prix = g ? ouv.filter((x) => x.etape === "prix").sort(tfTri) : [], moi = prix.concat(mine.filter((x) => !x.argent).sort(tfTri)), acc = adm ? ouv.filter((x) => x.etape === "accord").sort(tfTri) : [];
-      const aPayer = adm ? ouv.filter((x) => x.etape === "payer" || (x.etape === "envoye" && x.pas_recu_le)).sort(tfTri) : [];
-      const env = adm ? ouv.filter((x) => x.etape === "envoye" && !x.pas_recu_le) : [], cours = adm ? ouv.filter((x) => x.etape === "afaire" && x.argent) : [];
-      $("#sd-tfMoi").innerHTML = bande("moi", "Mes tâches", "Ce qu'on t'a demandé de faire. Touche « Fait » quand c'est fini.") + cartes(moi, "moi", "Rien à faire pour l'instant.");
-      $("#sd-tfConf").innerHTML = bande("conf", "Argent à confirmer", "La direction t'a envoyé de l'argent. Regarde ton solde Mixx, puis touche « Activer ».") + cartes(conf, "moi", "Rien.");
-      $("#sd-tfAch").innerHTML = bande("ach", "Achats à faire", "Argent reçu : fais l'achat, ajoute la facture ou le ticket, puis touche « Fait ».") + cartes(ach, "moi", "Rien.");
-      $("#sd-tfAttm").innerHTML = bande("attm", "En attente de l'argent", "C'est accordé. La direction va t'envoyer l'argent. Rien à faire pour l'instant.") + cartes(attm, "moi", "Rien.");
-      if (adm) {
-        $("#sd-tfAcc").innerHTML = cartes(acc, "moi", "Rien à accorder.");
-        const aRecup = t.reduce((n, x) => n + (x.envois || []).filter((e) => e.mauvais_numero && !e.recupere).reduce((m, e) => m + (e.montant || 0), 0), 0);
-        const envMois = t.reduce((n, x) => n + (x.envois || []).filter((e) => tfMois(e.le)).reduce((m, e) => m + (e.montant || 0), 0), 0);
-        $("#sd-tfPay").innerHTML = '<div class="tm-stats tm-dr tf-tot"><div><span>Reste à envoyer</span><b>' + F(aPayer.reduce((n, x) => n + (x.montant || 0), 0)) + "</b></div><div><span>Envoyé ce mois</span><b>" + F(envMois) + "</b></div>" + (aRecup ? "<div><span>À récupérer (mauvais numéro)</span><b>" + F(aRecup) + "</b></div>" : "") + '</div>' + cartes(aPayer, "pay", "Aucun paiement à faire.") + tfNumHtml();
-        $("#sd-tfAtt").innerHTML = grp("Pas encore activé", env, "L'argent est parti. La personne doit ouvrir le reçu et toucher « Activer ».", "pay") + grp("Achat en cours", cours, "Argent reçu. On attend l'achat et la facture.", "pay");
-      }
-      // L'équipe : tâches en cours des autres, par personne
-      if (DIR()) { const autres = ouv.filter((x) => x.pour !== me.id && !prix.includes(x) && !acc.includes(x) && !aPayer.includes(x) && !env.includes(x) && !cours.includes(x)), qui = [...new Set(autres.map((x) => x.pour))];
-        $("#sd-tfEq").innerHTML = qui.length ? qui.map((id) => { const l = autres.filter((x) => x.pour === id).sort(tfTri); return '<section class="tf-grp"><h4 class="gr-h4">' + esc(tfNom(id).replace(/^./, (c) => c.toUpperCase())) + ' <span class="dq-count">' + l.length + "</span></h4>" + l.map((x) => tfCarte(x, "eq")).join("") + "</section>"; }).join("") : vide("Aucune tâche en cours dans l'équipe."); }
-      // Terminé (avec les paiements du mois pour la direction)
-      const fini = t.filter((x) => TF_FIN.includes(x.etape)).sort((a, b) => String(b.fait_le || b.annule_le || b.accord_le || b.le).localeCompare(String(a.fait_le || a.annule_le || a.accord_le || a.le))).slice(0, 60);
-      $("#sd-tfFini").innerHTML = cartes(fini, "fini", "Rien de terminé pour l'instant.");
-      // En-têtes de couleur (un par onglet) et couleur des cartes
-      const nb = { conf: conf.length, ach: ach.length, moi: moi.length, attm: attm.length, prix: prix.length, acc: acc.length, pay: aPayer.length, att: env.length + cours.length, fini: fini.length };
-      const lab = { conf: "à confirmer", ach: "à acheter", moi: "à faire", attm: "en attente", prix: "à trouver", acc: "à décider", pay: "à envoyer", att: "en cours", fini: "terminées" };
-      $$('[data-pane="taf"] [data-tfpane]').forEach((p) => { const k = p.dataset.tfpane, c = TF_ONG[k]; if (!c) return; p.style.setProperty("--tfc", c[0]); const old = p.querySelector(":scope > .tf-hero"); if (old) old.remove(); p.insertAdjacentHTML("afterbegin", tfHero(k, nb[k], lab[k])); });
-      $$(".tf-tabs [data-tfp]").forEach((b) => { const c = TF_ONG[b.dataset.tfp]; if (c) b.style.setProperty("--tfc", c[0]); b.classList.toggle("tf-clair", b.dataset.tfp === "ach"); });
-      // Pastilles
+      $("#sd-tfRole").textContent = adm ? "Ce qui attend ton geste en haut, puis ce qu'attendent les autres. Touche une ligne pour l'ouvrir." : "Ce que tu dois faire en haut. Touche une ligne pour l'ouvrir.";
+      $("#sd-tfNewBar").hidden = !DIR(); tfForm();
+      const ouv = t.filter((x) => !TF_FIN.includes(x.etape));
+      const kind = (x) => (x.etape === "prix" ? "prix" : x.argent ? "argent" : "simple");
+      const amoi = ouv.filter(tfAMoi).sort(tfTri), autres = ouv.filter((x) => !tfAMoi(x)).sort((a, b) => String(b.le).localeCompare(String(a.le)));
+      const fini = t.filter((x) => TF_FIN.includes(x.etape)).sort((a, b) => String(b.fait_le || b.annule_le || b.accord_le || b.le).localeCompare(String(a.fait_le || a.annule_le || a.accord_le || a.le))).slice(0, 40);
+      // L'argent, en une ligne (direction)
+      if (adm) { const reste = ouv.filter((x) => x.etape === "payer" || x.etape === "accord").reduce((n, x) => n + (x.montant || 0), 0) + TF.dm.reduce((n, d) => n + (d.montant || 0), 0);
+        const envMois = t.reduce((n, x) => n + (x.envois || []).filter((e) => tfMois(e.le)).reduce((m, e) => m + (e.montant || 0), 0), 0), aRecup = t.reduce((n, x) => n + (x.envois || []).filter((e) => e.mauvais_numero && !e.recupere).reduce((m, e) => m + (e.montant || 0), 0), 0);
+        $("#sd-tfTop").innerHTML = '<div class="tf-money"><span>Reste à envoyer <b>' + F(reste) + "</b></span><span>Envoyé ce mois <b>" + F(envMois) + "</b></span>" + (aRecup ? '<span class="tf-retard">À récupérer <b>' + F(aRecup) + "</b></span>" : "") + "</div>"; }
+      else $("#sd-tfTop").innerHTML = "";
+      // Première ouverture : la première chose à faire est ouverte
+      const nAmoi = amoi.length + TF.dm.length;
+      if (!TF.vu) { TF.vu = true; const first = TF.dm.length ? "d" + TF.dm[0].id : amoi.length ? String(amoi[0].id) : null; if (first) TF.open.add(first); }
+      const sec = (cls, titre, n, corps, vide) => '<section class="tfs tfs-' + cls + '"><h4 class="tfs-h"><span>' + titre + "</span>" + (n ? '<em class="dq-count">' + n + "</em>" : "") + "</h4>" + (corps || '<p class="tfs-vide">' + vide + "</p>") + "</section>";
+      L.innerHTML = sec("moi", "À toi de jouer", nAmoi, TF.dm.map(dmLigne).join("") + amoi.map((x) => tfLigne(x, kind(x), tfEtat(x)[1])).join(""), "Rien à faire pour toi. 👍") +
+        sec("autres", "En attente des autres", autres.length, autres.map((x) => tfLigne(x, kind(x), tfQui(x))).join(""), "Personne n'attend rien.") +
+        '<details class="tfs tfs-fini"' + (TF.finiOuvert ? " open" : "") + '><summary class="tfs-h"><span>Terminé</span><em class="tfs-n">' + fini.length + "</em></summary>" + (fini.map((x) => tfLigne(x, "fini", tfEtat(x)[1])).join("") || '<p class="tfs-vide">Rien de terminé pour l\'instant.</p>') + "</details>" +
+        (adm ? tfNumHtml() : "");
       const pas = (id, n) => { const e = $("#" + id); if (e) { e.textContent = n; e.hidden = !n; } };
-      pas("sd-tfBMoi", moi.length); pas("sd-tfBConf", conf.length); pas("sd-tfBAch", ach.length); pas("sd-tfBPrix", prix.length); pas("sd-tfBAcc", acc.length); pas("sd-tfBPay", aPayer.length); pas("sd-tfBAtt", env.filter((x) => Date.now() - new Date(x.paye_le) > 864e5).length);
-      pas("sd-tfBadge", ouv.filter(tfAMoi).length);
-      // Première ouverture : le premier sous-onglet qui attend un geste, sinon « Mes tâches »
-      if (TF.ong && vis[TF.ong] === false) TF.ong = null; // l'onglet ouvert s'est vidé
-      if (!TF.ong) tfOnglet((conf.length && "conf") || (ach.length && "ach") || (acc.length && "acc") || (aPayer.length && "pay") || "moi");
+      pas("sd-tfBadge", nAmoi);
     }
     // Actions sur une tâche
     const tfRpc = (fn, body, msg) => run(() => DB.q("rpc/" + fn, { method: "POST", body }).then(() => true), msg);
     $('.tm-pane[data-pane="taf"]') && $('.tm-pane[data-pane="taf"]').addEventListener("click", async (e) => {
-      const t = e.target, go = t.closest("[data-tfgo]"); if (go) { tfOnglet(go.dataset.tfgo); return; }
+      const t = e.target;
+      { const nw = t.closest("[data-tfnew]"); if (nw) { const b = $("#sd-tfNew"); b.hidden = !b.hidden; nw.textContent = b.hidden ? "+ Nouvelle tâche" : "Fermer"; if (!b.hidden) { const x = b.querySelector(".tf-tx2"); x && x.focus(); } return; } }
+      { const rw = t.closest("[data-tfrow]"); if (rw) { const r = rw.closest("[data-tfr]"), k = r.dataset.tfr, on = !r.classList.contains("open");
+        if (on) { TF.open.add(k); const body = r.querySelector(".tfr-b"); if (!body.innerHTML) { if (k[0] === "d") { const d = TF.dm.find((y) => "d" + y.id === k); body.innerHTML = d ? dmCarte(d) : ""; } else { const x = TF.t.find((y) => String(y.id) === k); body.innerHTML = x ? tfCarte(x, "moi", true) : ""; } } }
+        else TF.open.delete(k);
+        r.classList.toggle("open", on); rw.setAttribute("aria-expanded", on); return; } }
       const ge = t.closest("[data-goel]"); if (ge) { goEleve(+ge.dataset.goel); return; }
       const doc = t.closest("[data-tfdoc]"); if (doc) { depOuvrir(doc.dataset.tfdoc); return; }
       { const btn = t.closest("[data-tfnok]"); if (btn && !btn.disabled) { const row = btn.closest("[data-tfnp]"), v = row.querySelector("input").value.replace(/\D/g, "");
         if (v && v.length !== 8) { toast("Numéro à 8 chiffres (ex. 72 54 41 66)", true); return; }
         confirmBtn(btn, async () => { btn.disabled = true; const ok = await tfRpc("numero_mixx_regler", { p_profil: row.dataset.tfnp, p_numero: v || null }, "Numéro enregistré"); btn.disabled = false; if (ok) tfCharger(); }); return; } }
+      { const dc = t.closest("[data-dm]"); if (dc) { const did = +dc.dataset.dm, d = TF.dm.find((y) => y.id === did), q = (z) => dc.querySelector(z);
+        const m = t.closest("[data-tfmoy]"); if (m) { dc.querySelectorAll("[data-tfmoy]").forEach((b) => b.setAttribute("aria-checked", b === m)); q(".tf-recl").textContent = m.dataset.tfmoy === "Espèces" ? "Reçu (facultatif pour des espèces)" : "Reçu du paiement (photo, capture ou PDF)"; return; }
+        const btn = t.closest("button"); if (!btn || btn.disabled) return; const note = () => (q(".tf-note").value.trim() || null);
+        const deux = (fn) => confirmBtn(btn, async () => { btn.disabled = true; const ok = await fn(); btn.disabled = false; if (ok) { TF.open.delete("d" + did); tfCharger(); } });
+        if (btn.matches("[data-dmpaye]")) { const moy = q('[data-tfmoy][aria-checked="true"]').dataset.tfmoy, mt = +(q(".tf-pmt").value.replace(/\D/g, "")) || 0, pj = q(".tf-pay .pj");
+          if (!mt) { toast("Écris le montant envoyé", true); q(".tf-pmt").focus(); return; } if (moy !== "Espèces" && !pj._file) { toast("Joins le reçu du paiement", true); return; }
+          deux(async () => { let path = null; if (pj._file) { try { path = await depEnvoyer(pj._file, "taches"); } catch (er) { toast("Le reçu n'a pas pu être envoyé", true); return false; } }
+            return tfRpc("demande_accorder_payer", { p_id: did, p_note: note(), p_moyen: moy, p_montant: mt, p_recu: path }, "Accordé et payé : la personne est prévenue"); }); return; }
+        if (btn.matches("[data-dmacc]")) { deux(() => tfRpc("demande_accorder_payer", { p_id: did, p_note: note(), p_moyen: null, p_montant: null, p_recu: null }, "Accordé : l'argent est à envoyer, plus bas")); return; }
+        if (btn.matches("[data-dmref]")) { if (!note()) { toast("Écris pourquoi, en un mot", true); q(".tf-note").focus(); return; } deux(() => tfRpc("demande_repondre", { p_id: did, p_accord: false, p_note: note() }, "Refusé : la personne est prévenue")); return; }
+        return; } }
       const card = t.closest("[data-tf]"); if (!card) return; const id = +card.dataset.tf, q = (s) => card.querySelector(s), x = TF.t.find((y) => y.id === id);
       const m = t.closest("[data-tfmoy]"); if (m) { card.querySelectorAll("[data-tfmoy]").forEach((b) => b.setAttribute("aria-checked", b === m)); q(".tf-recl").textContent = m.dataset.tfmoy === "Espèces" ? "Reçu (facultatif pour des espèces)" : "Reçu du paiement (photo, capture ou PDF)"; return; }
       const btn = t.closest("button"); if (!btn || btn.disabled) return;
-      const deux = (fn) => confirmBtn(btn, async () => { btn.disabled = true; const ok = await fn(); btn.disabled = false; if (ok) tfCharger(); });
+      const deux = (fn) => confirmBtn(btn, async () => { btn.disabled = true; const ok = await fn(); btn.disabled = false; if (ok) { TF.open.delete(String(id)); tfCharger(); } });
       if (btn.matches("[data-tfprix]")) { const mt = +(q(".tf-pm").value.replace(/\D/g, "")) || 0, pj = q(".tf-prix .pj");
         if (!mt) { toast("Écris le montant", true); q(".tf-pm").focus(); return; } if (!pj._file) { toast("Ajoute le devis ou une photo du prix", true); return; }
         deux(async () => { let path; try { path = await depEnvoyer(pj._file, "taches"); } catch (er) { toast("La photo n'a pas pu être envoyée", true); return false; } return tfRpc("tache_prix", { p_id: id, p_montant: mt, p_devis: path }, "Prix envoyé à la direction"); }); return; }
-      if (btn.matches("[data-tfacc]")) { const okk = btn.dataset.tfacc === "1"; deux(() => tfRpc("tache_accord", { p_id: id, p_ok: okk, p_note: q(".tf-note").value.trim() || null }, okk ? "Accordé : envoie l'argent (Paiements)" : "Refusé, la gérante est prévenue")); return; }
-      if (btn.matches("[data-tfpaye]")) { const moy = q('[data-tfmoy][aria-checked="true"]').dataset.tfmoy, mt = +(q(".tf-pmt").value.replace(/\D/g, "")) || 0, pj = q(".tf-pay .pj");
+      if (btn.matches("[data-tfacc]")) { const okk = btn.dataset.tfacc === "1"; deux(() => tfRpc("tache_accord", { p_id: id, p_ok: okk, p_note: q(".tf-note").value.trim() || null }, okk ? "Accordé : l'argent est à envoyer" : "Refusé, la gérante est prévenue")); return; }
+      if (btn.matches("[data-tfpaye], [data-tfaccpaye]")) { const acc = btn.matches("[data-tfaccpaye]"); const moy = q('[data-tfmoy][aria-checked="true"]').dataset.tfmoy, mt = +(q(".tf-pmt").value.replace(/\D/g, "")) || 0, pj = q(".tf-pay .pj");
         if (!mt) { toast("Écris le montant envoyé", true); q(".tf-pmt").focus(); return; } if (moy !== "Espèces" && !pj._file) { toast("Joins le reçu du paiement", true); return; }
         deux(async () => { let path = null; if (pj._file) { try { path = await depEnvoyer(pj._file, "taches"); } catch (er) { toast("Le reçu n'a pas pu être envoyé", true); return false; } }
-          return tfRpc("tache_payer", { p_id: id, p_moyen: moy, p_montant: mt, p_ref: null, p_recu: path }, "Paiement noté : " + (x ? tfNom(x.pour) : "la personne") + " est prévenu(e)"); }); return; }
+          return acc ? tfRpc("tache_accorder_payer", { p_id: id, p_note: (q(".tf-note") || {}).value ? q(".tf-note").value.trim() : null, p_moyen: moy, p_montant: mt, p_recu: path }, "Accordé et payé : " + (x ? tfNom(x.pour) : "la personne") + " est prévenu(e)")
+            : tfRpc("tache_payer", { p_id: id, p_moyen: moy, p_montant: mt, p_ref: null, p_recu: path }, "Paiement noté : " + (x ? tfNom(x.pour) : "la personne") + " est prévenu(e)"); }); return; }
       if (btn.matches("[data-tfbon]")) { deux(() => tfRpc("tache_numero_bon", { p_id: id }, "La personne est prévenue : elle regarde son solde Mixx")); return; }
       if (btn.matches("[data-tfmauv]")) { deux(() => tfRpc("tache_mauvais_numero", { p_id: id }, "Noté : appelle Yas, puis renvoie au bon numéro")); return; }
       if (btn.matches("[data-tfrec]")) { const i = +btn.dataset.tfrec; deux(() => tfRpc("tache_envoi_recupere", { p_id: id, p_index: i }, "Argent récupéré, noté")); return; }
@@ -5929,10 +5941,11 @@ function init(root) {
       if (btn.matches("[data-tffait]")) { deux(() => tfRpc("tache_faite", { p_id: id, p_note: null }, "Bravo, c'est fait")); return; }
       if (btn.matches("[data-tfann]")) { deux(() => tfRpc("tache_annuler", { p_id: id }, "Tâche annulée")); return; }
     });
+    $('.tm-pane[data-pane="taf"]') && $('.tm-pane[data-pane="taf"]').addEventListener("toggle", (e) => { if (e.target.matches && e.target.matches(".tfs-fini")) TF.finiOuvert = e.target.open; }, true);
     // Facture : envoyée dès qu'on choisit le fichier
     $('.tm-pane[data-pane="taf"]') && $('.tm-pane[data-pane="taf"]').addEventListener("pj", async (e) => {
       const w = e.target.closest("[data-tffac]"); if (!w) return; const pj = e.target.closest(".pj"), card = w.closest("[data-tf]"); if (!pj || !pj._file) return; w.classList.add("is-busy");
-      try { const path = await depEnvoyer(pj._file, "taches"); const r = await tfRpc("tache_facture", { p_id: +card.dataset.tf, p_chemin: path }, "Facture ajoutée : touche « Fait »"); if (r) tfCharger(); }
+      try { const path = await depEnvoyer(pj._file, "taches"); const r = await tfRpc("tache_facture", { p_id: +card.dataset.tf, p_chemin: path }, "Facture ajoutée : c'est terminé"); if (r) { TF.open.delete(card.dataset.tf); tfCharger(); } }
       catch (er) { toast("La facture n'a pas pu être envoyée", true); } finally { w.classList.remove("is-busy"); }
     });
 
@@ -7585,6 +7598,20 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 #sodaf-root .tf-tabs button[data-tfp][aria-selected="true"]{background:var(--tfc);border-color:var(--tfc);color:#fff}#sodaf-root .tf-tabs button[data-tfp][aria-selected="true"]::before{background:#fff}
 #sodaf-root .tf-tabs button.tf-clair[aria-selected="true"]{color:#15191E}#sodaf-root .tf-tabs button.tf-clair[aria-selected="true"]::before{background:#15191E}
 .tf-newc{border-top:4px solid #15191E}.tf-newh{display:none}
+/* Une seule liste (24 oct.) : lignes repliées, on touche pour ouvrir */
+.tf-newbar{margin:0 0 12px}.tf-newbtn{width:100%;padding:.85em 1.2em;font-size:1rem}
+.tf-money{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}.tf-money span{flex:1 1 140px;display:flex;flex-direction:column;gap:2px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font:600 .78rem var(--f-ui);color:var(--muted)}.tf-money b{font:800 1.1rem var(--f-ui);color:var(--ink)}
+.tfs{margin:0 0 18px}.tfs-h{display:flex;align-items:center;gap:6px;margin:0 0 8px;font:800 .78rem var(--f-ui);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}.tfs-moi>.tfs-h{color:#15191E}
+.tfs-fini>summary{cursor:pointer;list-style:none}.tfs-fini>summary::-webkit-details-marker{display:none}.tfs-fini>summary::after{content:"›";margin-left:auto;font-size:1.2rem;transition:transform .15s}.tfs-fini[open]>summary::after{transform:rotate(90deg)}
+.tfs-n{font-style:normal;background:#E3E6EA;color:#334155;border-radius:99px;padding:0 8px;font-size:.78rem}.tfs-vide{margin:0;padding:12px 14px;border:1px dashed #D7DCE1;border-radius:12px;color:var(--muted);font-size:.9rem;background:#fff}
+.tfr{background:#fff;border:1px solid var(--line);border-radius:14px;margin:0 0 8px;overflow:hidden}.tfs-moi .tfr{border-left:5px solid #FFC400}.tfs-autres .tfr{border-left:5px solid #CBD2D9}.tfs-fini .tfr{opacity:.85}.tfr-late{background:#FFFBF5}
+.tfr-h{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:10px;width:100%;padding:11px 12px}.tfr-h:focus-visible{outline:3px solid #FFC400;outline-offset:-3px}
+.tfr-ic{display:grid;place-items:center;width:36px;height:36px;border-radius:10px;flex-shrink:0;background:#F1F5F9;color:#334155}.tfr-argent{background:#FFF4D6;color:#8A5A00}.tfr-prix{background:#EDE9FE;color:#6D28D9}.tfr-simple{background:#E6F4F1;color:#0F766E}.tfr-fini{background:#E8F5EC;color:#16A34A}
+.tfr-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}.tfr-t b{font:700 .95rem/1.3 var(--f-ui);color:var(--ink);overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}.tfr-t small{font:600 .8rem/1.3 var(--f-ui);color:var(--muted)}
+.tfs-moi .tfr-t small{color:#8A5A00}.tfr-late .tfr-t small{color:#B3132B}
+.tfr-h em{font:800 .95rem var(--f-ui);font-style:normal;color:var(--ink);white-space:nowrap}.tfr-ch{font-style:normal;font-size:1.4rem;color:#94A3B8;transition:transform .15s;line-height:1}.tfr.open .tfr-ch{transform:rotate(90deg)}
+.tfr-b{display:none;padding:0 10px 10px}.tfr.open .tfr-b{display:block}.tfr-b .tf{margin:0;border:0;border-top:1px solid #EEF0F2;border-radius:0;padding:10px 4px 0}
+.tf-tx-in{display:none!important}.tf-h-in .tf-hr{display:none}
 
 .tf-b-attm{background:#F1F5F9;border-color:#94A3B8;color:#334155}.tf-box.tf-fac{background:linear-gradient(180deg,#2B323C 0%,#15191E 100%);border:2px solid #FFC400;border-radius:16px;padding:14px 14px 16px;margin:14px 0 20px;box-shadow:0 6px 0 #C99400,0 14px 26px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.08)}.tf-fach{display:flex;gap:12px;align-items:center}.tf-fach i{display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:linear-gradient(180deg,#FFD84D,#FFB800);color:#15191E;flex-shrink:0;box-shadow:0 3px 0 #A87A00,0 0 18px rgba(255,196,0,.45)}.tf-fach b{color:#fff;display:block;font-size:1.02rem}.tf-fach span{font-size:.88rem;color:#FFC400;font-weight:700}#sodaf-root .tf-box.tf-fac .pj .btn{background:#fff;color:#15191E;border:0;font-weight:800;box-shadow:0 4px 0 #FFB800;transform:translateY(0);transition:transform .08s,box-shadow .08s}#sodaf-root .tf-box.tf-fac .pj .btn:active{transform:translateY(4px);box-shadow:0 0 0 #FFB800}.tf-fac .pj-nom{color:#C3CAD1}.tf-num{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border-radius:10px;background:#fff;border:2px solid #0F766E}.tf-num span{font-size:.8rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em}.tf-num b{font:800 1.6rem var(--f-ui);letter-spacing:.04em;color:var(--ink)}.tf-num small{font-size:.8rem;color:var(--muted)}.tf-envko{color:#B3132B}.tf-envb{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.tf-env .tf-envl{flex-direction:column;align-items:flex-start;gap:4px;padding:4px 0}.tf-nums{padding:0;margin:16px 0 0}.tf-nums summary{cursor:pointer;padding:14px 16px;font-weight:700}.tf-nums>.tf-aide{padding:0 16px 8px}.tf-numl{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 8px;align-items:center;padding:6px 16px}.tf-numl span{grid-column:1/-1;font-weight:700;font-size:.9rem}.tf-numl:last-child{padding-bottom:16px}.tf-numl input{width:100%;box-sizing:border-box;min-width:0;padding:.6em .8em;border:1.5px solid var(--line);border-radius:10px;font:600 1rem var(--f-ui);background:#fff;color:var(--ink)}.tf-env{margin:10px 0 0;padding:10px 12px;border-radius:10px;background:#F7F8FA;font-size:.88rem;display:flex;flex-direction:column;gap:4px}.tf-envl{display:flex;justify-content:space-between;gap:8px}.tf-env .tf-alerte{margin:6px 0 0}.tf-grp{margin:0 0 18px}.tf-tot{margin:0 0 16px}.tf-old summary{cursor:pointer;font-weight:700;margin:0 0 10px}
 .dq-count{display:inline-grid;place-items:center;min-width:22px;height:22px;border-radius:99px;background:#C8372D;color:#fff;font-size:.78rem;margin-left:6px;vertical-align:middle}
