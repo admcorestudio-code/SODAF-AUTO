@@ -2179,7 +2179,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 </div>
 </div></div>
 
-<div class="cz-live"><div class="wrap cz-livein"><span class="cz-dot" aria-hidden="true"></span><p><b>Le tirage se joue en direct sur TikTok.</b> Le live commence à <b>17&nbsp;h</b>, les gagnants sont tirés à <b>18&nbsp;h</b> le <span class="sd-tirDay">1er</span>. Abonne-toi pour ne pas le rater.</p><a class="btn cz-tk" id="sd-tirTk" href="#" target="_blank" rel="noopener" hidden>Suivre SODAF sur TikTok</a></div></div>
+<div class="cz-live"><div class="wrap cz-livein"><span class="cz-dot" aria-hidden="true"></span><p><b>Le tirage se joue en direct sur TikTok.</b> Le live commence à <b>19&nbsp;h</b>, les gagnants sont tirés à <b>20&nbsp;h</b> le <span class="sd-tirDay">1er</span>. Abonne-toi pour ne pas le rater.</p><a class="btn cz-tk" id="sd-tirTk" href="#" target="_blank" rel="noopener" hidden>Suivre SODAF sur TikTok</a></div></div>
 
 <div class="wrap sec cz-body">
 <div class="cz-sh"><p class="cz-k2">Le lot</p><h2>Plus de 60&nbsp;000&nbsp;F de valeur. Tu paies 15&nbsp;000&nbsp;F.</h2></div>
@@ -2222,7 +2222,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="tir-closed" id="sd-tirClosed" hidden></div>
 </div>
 <aside class="cz-side">
-<ol class="cz-steps"><li><b>Tu t'inscris ici</b><span>Une minute, avec la photo de ta carte d'étudiant.</span></li><li><b>Tirage en direct le <span class="sd-tirDay">1er</span></b><span>Sur TikTok à 18 h. L'ordinateur tire 2 gagnants au hasard.</span></li><li><b>Tu passes à l'agence</b><span>Sous 48 h, avec ta carte d'étudiant et ta carte d'identité.</span></li></ol>
+<ol class="cz-steps"><li><b>Tu t'inscris ici</b><span>Une minute, avec la photo de ta carte d'étudiant.</span></li><li><b>Tirage en direct le <span class="sd-tirDay">1er</span></b><span>Sur TikTok à 20 h. L'ordinateur tire 2 gagnants au hasard.</span></li><li><b>Tu passes à l'agence</b><span>Sous 48 h, avec ta carte d'étudiant et ta carte d'identité.</span></li></ol>
 <div class="cz-alt"><b>Pas le temps d'attendre ?</b><p>Le tarif étudiant : formation complète à <b>30 000 F</b>, inscription à 5 000 F, sans tirage.</p><a class="btn btn-line btn-sm" href="#inscription">Je me pré-inscris</a></div>
 <div class="cz-alt cz-altg"><b>Parrainage : 2 000 F pour toi</b><p>Pour chaque personne que tu amènes et qui s'inscrit chez SODAF, étudiant ou pas.</p></div>
 </aside>
@@ -2236,7 +2236,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="tir-faq">
 <details><summary>C'est vraiment gratuit ?</summary><p>Oui. Participer ne coûte rien. Seuls les 2 gagnants paient 15 000 F, s'ils veulent faire leur formation.</p></details>
 <details><summary>J'ai déjà le permis, ou je n'ai pas encore 18 ans</summary><p>Tu peux offrir ton lot à un proche de 18 ans ou plus qui n'a pas le permis. Il fait alors la formation au tarif étudiant, 30 000 F.</p></details>
-<details><summary>Comment je saurai si j'ai gagné ?</summary><p>Suis le live sur TikTok le 1er du mois à 18 h. On t'appelle et on t'écrit aussi sur WhatsApp le jour même.</p></details>
+<details><summary>Comment je saurai si j'ai gagné ?</summary><p>Suis le live sur TikTok le 1er du mois : il commence à 19 h, le tirage est à 20 h. On t'appelle et on t'écrit aussi sur WhatsApp le jour même.</p></details>
 <details><summary>Je n'ai pas gagné. Je peux rejouer ?</summary><p>Oui, chaque mois. Les inscriptions rouvrent le 2 du mois pour le tirage suivant.</p></details>
 <details><summary>Pourquoi la photo de ma carte ?</summary><p>Le tirage est réservé aux étudiants. On vérifie la carte des gagnants avant d'annoncer leur nom. Si elle ne correspond pas, on tire un autre gagnant.</p></details>
 <details><summary>Le tirage est-il honnête ?</summary><p>Oui. L'ordinateur tire au hasard parmi tous les inscrits du mois, en direct sur TikTok, devant tout le monde.</p></details>
@@ -2244,8 +2244,8 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <details class="tir-rules"><summary>Règlement du tirage</summary><ol>
 <li>Le tirage est organisé chaque mois par SODAF Auto-École, 412 Avenue Akei, Tokoin Tamé, Lomé. La participation est gratuite et sans obligation d'achat.</li>
 <li>Il est réservé aux étudiants de 18 ans ou plus, inscrits dans une université ou une école pour l'année en cours.</li>
-<li>Inscriptions du 2 au 28 du mois. Une seule participation par numéro de téléphone et par mois.</li>
-<li>Le 1er du mois suivant à 18 h, 2 gagnants sont tirés au hasard par l'ordinateur, en direct sur le compte TikTok de SODAF.</li>
+<li>Inscriptions du 2 au 30 du mois (en février : jusqu'au dernier jour). Une seule participation par numéro de téléphone et par mois.</li>
+<li>Le 1er du mois suivant à 20 h, 2 gagnants sont tirés au hasard par l'ordinateur, en direct sur le compte TikTok de SODAF.</li>
 <li>Chaque gagnant présente à l'agence, sous 48 h, sa carte d'étudiant de l'année et sa carte d'identité. Si les informations ne correspondent pas, ou sans nouvelles sous 48 h, un autre gagnant est tiré.</li>
 <li>Le lot : la formation complète permis B à 15 000 F au lieu de 55 000 F, l'inscription offerte (5 000 F), une séance de conduite en plus, un t-shirt SODAF et la priorité sur les horaires de conduite.</li>
 <li>Le lot est valable 3 mois. Il peut être cédé une fois à un proche de 18 ans ou plus sans permis, qui paie alors 30 000 F. Il ne peut pas être échangé contre de l'argent.</li>
@@ -6585,14 +6585,15 @@ function init(root) {
   }
   const TMOIS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
   const tirCampagne = () => { const d = new Date(); return { y: d.getUTCMonth() === 11 ? d.getUTCFullYear() + 1 : d.getUTCFullYear(), m: (d.getUTCMonth() + 1) % 12 }; }; // Lomé = UTC
-  const tirOuvert = () => { const j = new Date().getUTCDate(); return j >= 2 && j <= 28; };
+  const tirFinJ = (y, m) => Math.min(30, new Date(Date.UTC(y, m + 1, 0)).getUTCDate()); // dernier jour d'inscription : le 30 (février : le dernier jour)
+  const tirOuvert = () => { const d = new Date(), j = d.getUTCDate(); return j >= 2 && j <= tirFinJ(d.getUTCFullYear(), d.getUTCMonth()); };
   function tirHorloge() {
-    const c = tirCampagne(), tirage = Date.UTC(c.y, c.m, 1, 18, 0, 0), fin = Date.UTC(c.y, c.m - 1 < 0 ? 11 : c.m - 1, 28, 23, 59, 59) , now = Date.now();
+    const c = tirCampagne(), tirage = Date.UTC(c.y, c.m, 1, 20, 0, 0), fin = Date.UTC(c.m === 0 ? c.y - 1 : c.y, c.m - 1 < 0 ? 11 : c.m - 1, tirFinJ(c.m === 0 ? c.y - 1 : c.y, c.m - 1 < 0 ? 11 : c.m - 1), 23, 59, 59), now = Date.now();
     const ouvert = tirOuvert(), cible = tirage, ms = Math.max(0, cible - now), d = Math.floor(ms / 864e5), h = Math.floor(ms / 36e5) % 24, mi = Math.floor(ms / 6e4) % 60, se = Math.floor(ms / 1e3) % 60;
     const b = $$("#sd-tirCd b"); if (b.length === 4) [d, h, mi, se].forEach((v, i) => (b[i].textContent = String(v).padStart(2, "0")));
     const mois = TMOIS[c.m];
-    $$(".sd-tirDay").forEach((e) => (e.textContent = "1er " + mois)); $("#sd-tirClockLab").textContent = "Tirage le 1er " + mois + " à 18 h, dans";
-    $("#sd-tirFormSub").textContent = "Inscriptions jusqu'au 28 " + TMOIS[(c.m + 11) % 12] + " à minuit. Une seule participation par numéro.";
+    $$(".sd-tirDay").forEach((e) => (e.textContent = "1er " + mois)); $("#sd-tirClockLab").textContent = "Tirage le 1er " + mois + " à 20 h, dans";
+    $("#sd-tirFormSub").textContent = "Inscriptions jusqu'au " + new Date(fin).getUTCDate() + " " + TMOIS[(c.m + 11) % 12] + " à minuit. Une seule participation par numéro.";
     return { ouvert, fin };
   }
   async function tirPage() {
@@ -6609,9 +6610,9 @@ function init(root) {
   function tirTicket(n, deja, qui) {
     TIR.dl = { n, qui: qui || null };
     const c = tirCampagne(), num = String(n).padStart(4, "0"), url = location.origin + "/#tirage";
-    const msg = "Jackpot étudiant SODAF : le permis à 15 000 F au lieu de 60 000 F. 2 gagnants tirés au sort en direct sur TikTok le 1er " + TMOIS[c.m] + " à 18 h. C'est gratuit, inscris-toi ici : " + url;
+    const msg = "Jackpot étudiant SODAF : le permis à 15 000 F au lieu de 60 000 F. 2 gagnants tirés au sort en direct sur TikTok le 1er " + TMOIS[c.m] + " à 20 h. C'est gratuit, inscris-toi ici : " + url;
     $("#sd-tirForm").hidden = true; const box = $("#sd-tirDone"); box.hidden = false;
-    box.innerHTML = '<div class="tir-myticket"><div class="mt-l"><p class="cz-k">Ton ticket</p><b>N° ' + num + '</b><span>Tirage le 1er ' + TMOIS[c.m] + ' à 18 h, en direct sur TikTok</span></div><div class="mt-r"><span>' + (deja ? "Tu es déjà inscrit ce mois-ci" : "Participation enregistrée") + '</span><b>Bonne chance</b></div></div>' +
+    box.innerHTML = '<div class="tir-myticket"><div class="mt-l"><p class="cz-k">Ton ticket</p><b>N° ' + num + '</b><span>Tirage le 1er ' + TMOIS[c.m] + ' à 20 h, en direct sur TikTok</span></div><div class="mt-r"><span>' + (deja ? "Tu es déjà inscrit ce mois-ci" : "Participation enregistrée") + '</span><b>Bonne chance</b></div></div>' +
       '<p class="tir-donep">Suis le live sur TikTok le jour du tirage. On t\'appelle et on t\'écrit aussi sur WhatsApp si tu gagnes. Plus tes amis jouent, plus on parle de SODAF dans ton université : partage le tirage.</p>' +
       '<div class="tir-dl"><button class="btn cz-btn" type="button" data-tirdl><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>Télécharger mon ticket</button><small>Garde-le dans ta galerie : il sert de preuve le jour du tirage.</small></div>' +
       '<div class="tir-share"><a class="btn btn-wa" target="_blank" rel="noopener" href="https://wa.me/?text=' + encodeURIComponent(msg) + '">Partager sur WhatsApp</a><button class="btn btn-line" type="button" data-copy="' + escHtml(url) + '">Copier le lien</button></div>';
@@ -6660,8 +6661,8 @@ function init(root) {
     const c = tirCampagne();
     T("TIRAGE AU SORT", cx + 70, cut + 82, F(800, 28), "#8E99A4", "left", 6);
     T("1er " + TMOIS[c.m] + " " + c.y, cx + 70, cut + 156, F(800, 58), "#FFFFFF");
-    T("à 18 h, en direct sur TikTok", cx + 70, cut + 222, F(700, 40), "#F2B705");
-    x.fillStyle = "#FF2D55"; x.beginPath(); x.arc(cx + 82, cut + 276, 11, 0, 7); x.fill(); T("Le live commence à 17 h", cx + 106, cut + 288, F(500, 32, "Figtree"), "#C9D0D6");
+    T("à 20 h, en direct sur TikTok", cx + 70, cut + 222, F(700, 40), "#F2B705");
+    x.fillStyle = "#FF2D55"; x.beginPath(); x.arc(cx + 82, cut + 276, 11, 0, 7); x.fill(); T("Le live commence à 19 h", cx + 106, cut + 288, F(500, 32, "Figtree"), "#C9D0D6");
     T("Participation enregistrée · gratuite", cx + 70, cut + 362, F(600, 28, "Figtree"), "#6F7A85");
     const sx = cx + cw - 140, sy = cut + 236; x.fillStyle = "#fff"; x.beginPath(); x.arc(sx, sy, 92, 0, 7); x.fill(); x.strokeStyle = "#D7263D"; x.lineWidth = 20; x.beginPath(); x.arc(sx, sy, 76, 0, 7); x.stroke();
     T("15 000", sx, sy + 4, F(800, 34), "#111", "center", -1); T("F", sx, sy + 38, F(800, 22), "#111", "center");
