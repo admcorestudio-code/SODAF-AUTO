@@ -43,7 +43,7 @@ const WA = "https://wa.me/22872544166";
 // Paiement Mixx by Yas (T-Money) sur le code marchand : formule USSD *145*5*montant*code#
 const MIXX_USSD = (code, amt) => "*145*5*" + Math.round(+amt || 0) + "*" + String(code || "").replace(/\D/g, "") + "#";
 const MIXX_TEL = (code, amt) => "tel:" + MIXX_USSD(code, amt).replace(/#/g, "%23");
-const MIXX_MAINT = true; // 20 oct. : paiement Mixx en maintenance (décision du propriétaire) : visible mais pas sélectionnable ; messages : « à l'agence » seulement. Remettre false quand Mixx est vérifié.
+const MIXX_MAINT = false; // 20 oct. : Mixx mis en maintenance ; 24 oct. : rouvert (code marchand 1492996 vérifié par le propriétaire). Remettre true pour griser le choix Mixx.
 const MIXX_MARCHAND = (code) => /^\d{5,7}$/.test(String(code || "").replace(/\D/g, "")); // 8 chiffres = ancien numéro de téléphone
 const MIXX_IOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 const copier = async (t) => { try { await navigator.clipboard.writeText(t); return true; } catch (e) { try { const a = document.createElement("textarea"); a.value = t; a.setAttribute("readonly", ""); a.style.position = "fixed"; a.style.opacity = "0"; document.body.appendChild(a); a.select(); const ok = document.execCommand("copy"); a.remove(); return ok; } catch (x) { return false; } } };
