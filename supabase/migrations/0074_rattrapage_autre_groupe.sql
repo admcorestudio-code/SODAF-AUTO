@@ -1,4 +1,4 @@
--- 0072 · Rattraper un cours de code dans un autre groupe (décision du propriétaire, 23 oct. 2026)
+-- 0074 · Rattraper un cours de code dans un autre groupe (décision du propriétaire, 23 oct. 2026)
 -- Tous les groupes font le même cours la même semaine : un élève qui a raté son cours peut venir
 -- au même cours dans un autre groupe, s'il reste une place (6 au plus dans la salle). Sinon : mercredi 14 h 30 ou 18 h.
 -- Le secrétariat réserve la place ; le moniteur le voit dans son appel et coche sa présence (le cours compte alors).
