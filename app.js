@@ -7636,7 +7636,7 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 .tfr-b{display:none;padding:0 10px 10px}.tfr.open .tfr-b{display:block}.tfr-b .tf{margin:0;border:0;border-top:1px solid #EEF0F2;border-radius:0;padding:10px 4px 0}
 .tf-tx-in{display:none!important}.tf-h-in .tf-hr{display:none}
 /* « À faire » épuré (24 oct., « un truc épuré, professionnel, facile à travailler ») : blanc, gris, une seule couleur pour le bouton principal */
-#sodaf-root [data-pane="taf"]{--tfi:#15191E;--tfm:#6B7480;--tfl:#E3E6EA;--tfs:#FBF8F1;--tfsl:#ECE5D5}
+#sodaf-root [data-pane="taf"]{--tfi:#15191E;--tfm:#6B7480;--tfl:#E3E6EA;--tfs:#F3EBDA;--tfsl:#DFD0B0}
 #sodaf-root [data-pane="taf"] .tm-role{margin:0 0 14px;font-size:.88rem;color:var(--tfm)}
 #sodaf-root [data-pane="taf"] .tf-money{gap:0;border:1px solid var(--tfl);border-radius:12px;background:#fff;overflow:hidden}
 #sodaf-root [data-pane="taf"] .tf-money span{border:0;border-radius:0;background:none;border-right:1px solid var(--tfl);color:var(--tfm);font-weight:500}#sodaf-root [data-pane="taf"] .tf-money span:last-child{border-right:0}
@@ -7657,7 +7657,7 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 #sodaf-root [data-pane="taf"] .tf-dq,#sodaf-root [data-pane="taf"] .dq-test{font-size:.62rem}
 #sodaf-root [data-pane="taf"] .tfr-b .tf-etat{display:none}
 #sodaf-root [data-pane="taf"] .tf-et li.ok i{background:var(--tfi)}#sodaf-root [data-pane="taf"] .tf-et li.cur i{background:#9AA3AD}
-#sodaf-root [data-pane="taf"] .tf-pc{background:#fff;border-color:var(--tfl);font-weight:600}#sodaf-root [data-pane="taf"] .tf-pc i{background:#3BA55C}
+#sodaf-root [data-pane="taf"] .tf-pc{background:#fff;border-color:var(--tfl);font-weight:600}#sodaf-root [data-pane="taf"] .tf-pc i{background:#3BA55C}#sodaf-root [data-pane="taf"] .tf-pc-x i{background:#CBD2D9}#sodaf-root [data-pane="taf"] .tf-pc-x{color:#9AA3AD;border-style:dashed}
 /* le geste à faire : panneau gris clair, pas de noir ni de jaune */
 #sodaf-root [data-pane="taf"] .tf-act,#sodaf-root [data-pane="taf"] .tf-box.tf-fac{background:var(--tfs);border:1px solid var(--tfsl);border-radius:12px;box-shadow:none;color:var(--tfi);padding:14px;margin:14px 0 4px}
 #sodaf-root [data-pane="taf"] .tf-act .tf-fac{background:none;border:0;padding:0;margin:0}
