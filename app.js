@@ -5322,7 +5322,17 @@ function init(root) {
     // Champ pièce jointe : « Prendre une photo » ou « Choisir un fichier »
     // Pièce jointe (24 oct.) : « Galerie » ouvre les photos du téléphone (photos prises, images reçues sur WhatsApp) ; le PDF à part, en petit
     const pjHtml = (pdf) => '<div class="pj"><label class="btn btn-line btn-sm">Prendre une photo<input type="file" accept="image/*" capture="environment" hidden></label><label class="btn btn-line btn-sm">Galerie<input type="file" accept="image/*" hidden></label>' + (pdf ? '<label class="pj-pdf">Fichier PDF<input type="file" accept="application/pdf" hidden></label>' : "") + '<span class="pj-nom">Aucun fichier</span></div>';
-    document.addEventListener("change", (e) => { const i = e.target.closest && e.target.closest(".pj input[type=file]"); if (!i) return; const pj = i.closest(".pj"); pj._file = i.files[0] || null; pj.querySelector(".pj-nom").textContent = pj._file ? pj._file.name : "Aucun fichier"; pj.classList.toggle("ok", !!pj._file); pj.dispatchEvent(new CustomEvent("pj", { bubbles: true })); });
+    // Pièce choisie : une case verte bien visible, avec une petite vignette (24 oct. : « on se demande si on a vraiment mis le document »)
+    function pjMontrer(pj) {
+      let ok = pj.querySelector(".pj-ok"); if (ok) { if (ok._url) URL.revokeObjectURL(ok._url); ok.remove(); }
+      const f = pj._file; pj.classList.toggle("ok", !!f); pj.querySelector(".pj-nom").textContent = f ? f.name : "Aucun fichier"; if (!f) return;
+      const img = /^image\//.test(f.type); ok = document.createElement("div"); ok.className = "pj-ok";
+      if (img) ok._url = URL.createObjectURL(f);
+      ok.innerHTML = (img ? '<img alt="" src="' + ok._url + '">' : '<i class="pj-pdfi" aria-hidden="true">PDF</i>') + '<span class="pj-okt"><b>✓ ' + (img ? "Photo ajoutée" : "PDF ajouté") + '</b><small></small></span><button type="button" class="pj-x">Retirer</button>';
+      ok.querySelector("small").textContent = f.name; pj.appendChild(ok);
+    }
+    document.addEventListener("change", (e) => { const i = e.target.closest && e.target.closest(".pj input[type=file]"); if (!i) return; const pj = i.closest(".pj"); pj._file = i.files[0] || null; pj.querySelectorAll("input[type=file]").forEach((x) => { if (x !== i) x.value = ""; }); pjMontrer(pj); pj.dispatchEvent(new CustomEvent("pj", { bubbles: true })); });
+    document.addEventListener("click", (e) => { const x = e.target.closest && e.target.closest(".pj-x"); if (!x) return; e.preventDefault(); e.stopPropagation(); const pj = x.closest(".pj"); pj._file = null; pj.querySelectorAll("input[type=file]").forEach((i) => (i.value = "")); pjMontrer(pj); }, true);
     async function depEnvoyer(file, dossier) {
       const img = /^image\//.test(file.type); if (!img && file.type !== "application/pdf") throw new Error("type");
       const blob = img ? await photoCompresse(file, 1600, false) : file; if (blob.size > 10485760) throw new Error("taille");
@@ -7681,6 +7691,11 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 #sodaf-root [data-pane="taf"] .tf-b[disabled]{opacity:.4;box-shadow:none}
 #sodaf-root [data-pane="taf"] .tf-plus{color:var(--tfm)}
 .tf-numx{font-weight:500;color:var(--tfm,#6B7480)}
+.pj-ok{flex-basis:100%;display:flex;align-items:center;gap:10px;padding:8px 10px;border:1.5px solid #3BA55C;border-radius:10px;background:#EAF6EE}
+.pj-ok img{width:44px;height:44px;object-fit:cover;border-radius:6px;flex-shrink:0;background:#fff}.pj-pdfi{display:grid;place-items:center;width:44px;height:44px;border-radius:6px;background:#fff;border:1px solid #CFE6D6;font:800 .72rem var(--f-ui);font-style:normal;color:#B3132B;flex-shrink:0}
+.pj-okt{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}.pj-okt b{font:700 .9rem var(--f-ui);color:#1E7B3C}.pj-okt small{font-size:.78rem;color:#4B5563;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#sodaf-root .pj-x{all:unset;cursor:pointer;font:600 .8rem var(--f-ui);color:#6B7480;text-decoration:underline;padding:4px}
+.pj.ok .pj-nom{display:none}
 .pj-pdf{cursor:pointer;font:600 .84rem var(--f-ui);color:#6B7480;text-decoration:underline;align-self:center}
 
 /* Rubriques listées de haut en bas (24 oct.) */
