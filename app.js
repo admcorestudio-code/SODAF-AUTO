@@ -5907,7 +5907,9 @@ function init(root) {
       const btn = (x, i) => '<button type="button" class="tfc' + (x.k === c.k ? " on" : "") + (x.act && x.n ? " tfc-act" : "") + '" data-tfcat="' + x.k + '"' + (x.k === c.k ? ' aria-current="true"' : "") + '><span class="tfc-i">' + (i == null ? "i" : i + 1) + '</span><span class="tfc-t"><b>' + x.t + "</b><small>" + x.d + "</small></span>" + (x.n == null ? '<span class="tfc-p">+</span>' : '<em class="tfc-n">' + x.n + "</em>") + "</button>";
       const ess = C.filter((x) => !x.info), inf = C.filter((x) => x.info);
       $("#sd-tfTop").innerHTML = '<nav class="tfc-nav" aria-label="Rubriques">' + ess.map((x, i) => btn(x, i)).join("") + "</nav>" + '<h3 class="tfc-h"><span>Tu es dans</span>' + c.t + "</h3>";
-      const basHtml = '<div class="tfc-bas"><p class="tfc-sep"><span>Pour information</span></p><nav class="tfc-nav tfc-nav2" aria-label="Pour information">' + inf.map((x) => btn(x, null)).join("") + "</nav></div>";
+      // « Pour information » : seulement dans « Nouvelle tâche » (24 oct.) ; sans « Nouvelle tâche » (secrétariat, moniteur…) : sous « Mes tâches »
+      const ici = c.info || c.k === "new" || (!C.some((x) => x.k === "new") && c.k === "mes");
+      const basHtml = !ici ? "" : '<div class="tfc-bas"><p class="tfc-sep"><span>Pour information</span></p><nav class="tfc-nav tfc-nav2" aria-label="Pour information">' + inf.map((x) => btn(x, null)).join("") + "</nav></div>";
       $("#sd-tfNew").hidden = c.k !== "new";
       if (c.k === "new") { $("#sd-tfList").innerHTML = basHtml; return; }
       if (!TF.vuCat) TF.vuCat = {};
