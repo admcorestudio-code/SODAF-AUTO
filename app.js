@@ -5886,8 +5886,8 @@ function init(root) {
       if (adm) C.push({ k: "arg", n: TF.dm.length + argent.length, act: true, t: "Argent à accorder et envoyer", d: "Demandes de dépense et paiements à faire.", haut: () => tfMoney(t, ouv), h: () => TF.dm.map(dmLigne).join("") + lig(argent, (x) => tfEtat(x)[1]), pied: () => tfNumHtml() });
       if (g) C.push({ k: "prix", n: prix.length, act: true, t: "Prix à trouver", d: "Trouve le prix et le devis pour la direction.", h: () => lig(prix, (x) => tfEtat(x)[1]) });
       C.push({ k: "mes", n: mes.length, act: true, t: "Mes tâches", d: DIR() ? "Ce que tu dois faire toi-même (tes notes perso ne sont vues que par toi)." : "Ce qu'on t'a demandé de faire.", h: () => lig(mes, (x) => tfEtat(x)[1]) });
-      C.push({ k: "eq", n: autres.length, t: DIR() ? "En cours dans l'équipe" : "En attente", d: DIR() ? "Ce que les autres doivent faire. Rien à faire pour toi ici." : "Ce qui attend la gérante ou la direction.", h: () => lig(autres, tfQui) });
-      C.push({ k: "fini", n: fini.length, t: "Terminé", d: "Les 40 dernières tâches finies, refusées ou annulées.", h: () => fini.map((x) => tfLigne(x, "fini", tfEtat(x)[1])).join("") });
+      C.push({ k: "eq", info: true, n: autres.length, t: DIR() ? "En cours dans l'équipe" : "En attente", d: DIR() ? "Ce que les autres doivent faire. Rien à faire pour toi ici." : "Ce qui attend la gérante ou la direction.", h: () => lig(autres, tfQui) });
+      C.push({ k: "fini", info: true, n: fini.length, t: "Terminé", d: "Les 40 dernières tâches finies, refusées ou annulées.", h: () => fini.map((x) => tfLigne(x, "fini", tfEtat(x)[1])).join("") });
       TF.C = C;
       if (!TF.cat || !C.some((c) => c.k === TF.cat)) TF.cat = (C.find((c) => c.act && c.n) || C.find((c) => c.k === "mes")).k;
       const nAmoi = amoi.length + TF.dm.length;
@@ -5902,13 +5902,16 @@ function init(root) {
     }
     function tfAfficher() {
       const C = TF.C || [], c = C.find((x) => x.k === TF.cat) || C[0]; if (!c) return;
-      $("#sd-tfTop").innerHTML = '<nav class="tfc-nav" aria-label="Rubriques">' + C.map((x, i) => '<button type="button" class="tfc' + (x.k === c.k ? " on" : "") + (x.act && x.n ? " tfc-act" : "") + '" data-tfcat="' + x.k + '"' + (x.k === c.k ? ' aria-current="true"' : "") + '><span class="tfc-i">' + (i + 1) + '</span><span class="tfc-t"><b>' + x.t + "</b><small>" + x.d + "</small></span>" + (x.n == null ? '<span class="tfc-p">+</span>' : '<em class="tfc-n">' + x.n + "</em>") + "</button>").join("") + "</nav>" +
-        '<h3 class="tfc-h"><span>Tu es dans</span>' + c.t + "</h3>";
+      // L'essentiel en haut (numéroté) ; « En cours dans l'équipe » et « Terminé » tout en bas, après un trait (24 oct. : « c'est juste des informations »)
+      const btn = (x, i) => '<button type="button" class="tfc' + (x.k === c.k ? " on" : "") + (x.act && x.n ? " tfc-act" : "") + '" data-tfcat="' + x.k + '"' + (x.k === c.k ? ' aria-current="true"' : "") + '><span class="tfc-i">' + (i == null ? "i" : i + 1) + '</span><span class="tfc-t"><b>' + x.t + "</b><small>" + x.d + "</small></span>" + (x.n == null ? '<span class="tfc-p">+</span>' : '<em class="tfc-n">' + x.n + "</em>") + "</button>";
+      const ess = C.filter((x) => !x.info), inf = C.filter((x) => x.info);
+      $("#sd-tfTop").innerHTML = '<nav class="tfc-nav" aria-label="Rubriques">' + ess.map((x, i) => btn(x, i)).join("") + "</nav>" + '<h3 class="tfc-h"><span>Tu es dans</span>' + c.t + "</h3>";
+      const basHtml = '<div class="tfc-bas"><p class="tfc-sep"><span>Pour information</span></p><nav class="tfc-nav tfc-nav2" aria-label="Pour information">' + inf.map((x) => btn(x, null)).join("") + "</nav></div>";
       $("#sd-tfNew").hidden = c.k !== "new";
-      if (c.k === "new") { $("#sd-tfList").innerHTML = ""; return; }
+      if (c.k === "new") { $("#sd-tfList").innerHTML = basHtml; return; }
       if (!TF.vuCat) TF.vuCat = {};
       const corps = c.h(); $("#sd-tfList").className = "tf-list" + (c.act ? " tfl-act" : c.k === "fini" ? " tfl-fini" : "");
-      $("#sd-tfList").innerHTML = (c.haut ? c.haut() : "") + (corps || '<p class="tfs-vide">Rien ici pour l\'instant.</p>') + (c.pied ? c.pied() : "");
+      $("#sd-tfList").innerHTML = (c.haut ? c.haut() : "") + (corps || '<p class="tfs-vide">Rien ici pour l\'instant.</p>') + (c.pied ? c.pied() : "") + basHtml;
       // la première tâche de la rubrique s'ouvre (une seule fois)
       if (!TF.vuCat[c.k] && c.k !== "fini") { TF.vuCat[c.k] = true; const r = $("#sd-tfList .tfr:not(.open) [data-tfrow]"); if (r && !$("#sd-tfList .tfr.open")) r.click(); }
     }
@@ -7686,6 +7689,8 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 .tfc-p{font:700 1.2rem var(--f-ui);color:#15191E;width:26px;text-align:center}
 #sodaf-root .tfc-h{display:flex;flex-direction:column;gap:2px;margin:0 0 10px;font:800 1.15rem var(--f-ui);color:#15191E}.tfc-h span{font:600 .75rem var(--f-ui);color:#6B7480;text-transform:uppercase;letter-spacing:.08em}
 #sodaf-root [data-pane="taf"] #sd-tfList .tf-money{margin:0 0 12px}
+.tfc-bas{margin:28px 0 0}.tfc-sep{display:flex;align-items:center;gap:10px;margin:0 0 10px;font:600 .75rem var(--f-ui);color:#6B7480;text-transform:uppercase;letter-spacing:.08em}.tfc-sep::before,.tfc-sep::after{content:"";flex:1;height:1px;background:#D7DCE1}
+.tfc-nav2{background:#FAFAFB}.tfc-nav2 .tfc-i{font-style:italic;font-family:Georgia,serif}
 
 .tf-b-attm{background:#F1F5F9;border-color:#94A3B8;color:#334155}.tf-box.tf-fac{background:linear-gradient(180deg,#2B323C 0%,#15191E 100%);border:2px solid #FFC400;border-radius:16px;padding:14px 14px 16px;margin:14px 0 20px;box-shadow:0 6px 0 #C99400,0 14px 26px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.08)}.tf-fach{display:flex;gap:12px;align-items:center}.tf-fach i{display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:linear-gradient(180deg,#FFD84D,#FFB800);color:#15191E;flex-shrink:0;box-shadow:0 3px 0 #A87A00,0 0 18px rgba(255,196,0,.45)}.tf-fach b{color:#fff;display:block;font-size:1.02rem}.tf-fach span{font-size:.88rem;color:#FFC400;font-weight:700}#sodaf-root .tf-box.tf-fac .pj .btn{background:#fff;color:#15191E;border:0;font-weight:800;box-shadow:0 4px 0 #FFB800;transform:translateY(0);transition:transform .08s,box-shadow .08s}#sodaf-root .tf-box.tf-fac .pj .btn:active{transform:translateY(4px);box-shadow:0 0 0 #FFB800}.tf-fac .pj-nom{color:#C3CAD1}.tf-num{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border-radius:10px;background:#fff;border:2px solid #0F766E}.tf-num span{font-size:.8rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em}.tf-num b{font:800 1.6rem var(--f-ui);letter-spacing:.04em;color:var(--ink)}.tf-num small{font-size:.8rem;color:var(--muted)}.tf-envko{color:#B3132B}.tf-envb{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.tf-env .tf-envl{flex-direction:column;align-items:flex-start;gap:4px;padding:4px 0}.tf-nums{padding:0;margin:16px 0 0}.tf-nums summary{cursor:pointer;padding:14px 16px;font-weight:700}.tf-nums>.tf-aide{padding:0 16px 8px}.tf-numl{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 8px;align-items:center;padding:6px 16px}.tf-numl span{grid-column:1/-1;font-weight:700;font-size:.9rem}.tf-numl:last-child{padding-bottom:16px}.tf-numl input{width:100%;box-sizing:border-box;min-width:0;padding:.6em .8em;border:1.5px solid var(--line);border-radius:10px;font:600 1rem var(--f-ui);background:#fff;color:var(--ink)}.tf-env{margin:10px 0 0;padding:10px 12px;border-radius:10px;background:#F7F8FA;font-size:.88rem;display:flex;flex-direction:column;gap:4px}.tf-envl{display:flex;justify-content:space-between;gap:8px}.tf-env .tf-alerte{margin:6px 0 0}.tf-grp{margin:0 0 18px}.tf-tot{margin:0 0 16px}.tf-old summary{cursor:pointer;font-weight:700;margin:0 0 10px}
 .dq-count{display:inline-grid;place-items:center;min-width:22px;height:22px;border-radius:99px;background:#C8372D;color:#fff;font-size:.78rem;margin-left:6px;vertical-align:middle}
