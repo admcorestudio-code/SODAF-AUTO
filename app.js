@@ -1916,6 +1916,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <button role="tab" data-t="mon" aria-selected="false"><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/><path d="M12 14.5V21M9.6 11.2 3.5 9.5M14.4 11.2l6.1-1.7"/></svg></i><b>Moniteur</b><small>Code en salle, conduite</small></button>
 <button role="tab" data-t="mec" aria-selected="false" hidden><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.2L3 17.8V21h3.2l6.3-6.3a4 4 0 0 0 5.2-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/></svg></i><b>Mécanique</b><small>Voiture, atelier, contrôle</small><em class="tm-badge" id="sd-mcBadge" hidden></em></button>
 <button role="tab" data-t="com" aria-selected="false" hidden><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg></i><b>Communication</b><small>Vidéos, statuts, pub</small><em class="tm-badge" id="sd-comBadge" hidden></em></button>
+<button role="tab" data-t="plan" aria-selected="false"><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M7 14h3M14 14h3M7 18h3"/></svg></i><b>Planning</b><small>Qui est où, chaque jour</small></button>
 <button role="tab" data-t="docs" aria-selected="false"><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></i><b>Documents</b><small>Carte, cachet, QR, affiches</small></button>
 </div>
 <div class="tm-pane" data-pane="sec" role="tabpanel">
@@ -2113,6 +2114,10 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <p class="tm-role">Les échanges de l'équipe. Le cadenas indique une conversation privée : seules les personnes nommées en haut de la conversation la lisent. Écris @ pour prévenir quelqu'un, SO12 pour ouvrir la fiche d'un élève, et le trombone (ou glisse le fichier dans la conversation) pour joindre une photo ou un document.</p>
 <div class="ms-wrap card" id="sd-msWrap"><nav class="ms-canaux" id="sd-msCanaux" aria-label="Conversations"></nav><section class="ms-fil"><header class="ms-head"><button type="button" class="ms-back" id="sd-msBack" aria-label="Retour aux conversations"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button><div class="ms-hd" id="sd-msHead"></div></header><div class="ms-list" id="sd-msList" aria-live="polite"><p class="ms-vide">Chargement…</p></div><button type="button" class="ms-bas" id="sd-msBas" hidden></button><div class="ms-sug" id="sd-msSug" role="listbox" aria-label="Mentionner" hidden></div><div class="ms-pj" id="sd-msPj" hidden></div><div class="ms-rec" id="sd-msRec" hidden><i class="ms-recdot" aria-hidden="true"></i><b id="sd-msRecT">0:00</b><span>Enregistrement… Touche la flèche pour envoyer (avec ton texte ou ta @mention)</span><button type="button" class="linkbtn" id="sd-msRecX">Annuler</button></div><form class="ms-form" id="sd-msForm" novalidate><label class="ms-clip" title="Joindre une photo ou un fichier" aria-label="Joindre une photo ou un fichier"><input type="file" id="sd-msFile" multiple accept="image/*,video/*,.pdf,.txt,.doc,.docx,.xls,.xlsx"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.4 11.1l-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a2 2 0 0 1-2.8-2.8l8.5-8.5"/></svg></label><button type="button" class="ms-mic" id="sd-msMic" title="Message vocal" aria-label="Enregistrer un message vocal"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5"/></svg></button><textarea id="sd-msTxt" rows="1" maxlength="2000" placeholder="Message… (@ pour mentionner)" aria-label="Message"></textarea><button class="btn btn-green" id="sd-msSend" type="submit" aria-label="Envoyer"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button></form></section></div>
 <div class="ms-notif" id="sd-msNotif"></div>
+</div>
+<div class="tm-pane" data-pane="plan" role="tabpanel" hidden>
+<p class="tm-role">Qui tient l'agence chaque jour, et le planning de chaque personne de l'équipe.</p>
+<div id="sd-plBox"></div>
 </div>
 <div class="tm-pane" data-pane="docs" role="tabpanel" hidden>
 <p class="tm-role">Supports de communication et documents officiels SODAF, à télécharger ou à envoyer à l'imprimeur.</p>
@@ -3225,7 +3230,7 @@ function init(root) {
       if (t === "mon") { const slot = $("#sd-mnPlanSlot"); if (cdSec.parentNode !== slot) slot.appendChild(cdSec); cdSec.hidden = false; (eleves.length ? Promise.resolve() : loadEleves(true)).then(() => loadDay()); }
       else if (cdSec.parentNode !== cdHome.p) { cdHome.p.insertBefore(cdSec, cdHome.n); const on = $('#sd-secNav button[aria-selected="true"]'); cdSec.hidden = !on || on.dataset.s !== "conduite"; }
     };
-    const pick = (t) => { if (AMB() && !["com", "msg", "docs", "taf"].includes(t)) t = "com"; if (t === "com" && me && !AMB() && !DIR()) t = "sec"; if (t === "sec" && me && me.role === "moniteur") t = "mon"; if (t === "mon" && me && me.role === "gerant") t = "ger"; if (t === "mon" && me && me.role === "secretariat") t = "sec"; tabs.forEach((b) => b.setAttribute("aria-selected", b.dataset.t === t)); panes.forEach((p) => (p.hidden = p.dataset.pane !== t)); try { S.set("tmTab", t); } catch (e) {} placePlanning(t); if (t === "mon" || (t === "sec" && $("#sd-secAuj"))) loadMon(); if (t === "dir") loadDir(); if (t === "ger") grCharger(); if (t === "com") comCharger(); if (t === "mec") mcCharger(); if (t === "taf") tfCharger(); msVoirFil(false); if (t === "msg") { MS.repere = {}; MS.forceBas = true; msRender(); msNotifBox(); if (!isWide()) setTimeout(() => $(".ms-wrap").scrollIntoView({ block: "start" }), 60); } };
+    const pick = (t) => { if (AMB() && !["com", "msg", "docs", "taf", "plan"].includes(t)) t = "com"; if (t === "com" && me && !AMB() && !DIR()) t = "sec"; if (t === "sec" && me && me.role === "moniteur") t = "mon"; if (t === "mon" && me && me.role === "gerant") t = "ger"; if (t === "mon" && me && me.role === "secretariat") t = "sec"; tabs.forEach((b) => b.setAttribute("aria-selected", b.dataset.t === t)); panes.forEach((p) => (p.hidden = p.dataset.pane !== t)); try { S.set("tmTab", t); } catch (e) {} placePlanning(t); if (t === "mon" || (t === "sec" && $("#sd-secAuj"))) loadMon(); if (t === "dir") loadDir(); if (t === "ger") grCharger(); if (t === "com") comCharger(); if (t === "mec") mcCharger(); if (t === "taf") tfCharger(); if (t === "plan") plCharger(); msVoirFil(false); if (t === "msg") { MS.repere = {}; MS.forceBas = true; msRender(); msNotifBox(); if (!isWide()) setTimeout(() => $(".ms-wrap").scrollIntoView({ block: "start" }), 60); } };
     tabs.forEach((b) => b.addEventListener("click", () => pick(b.dataset.t)));
     const subs = $$("#sd-secNav button[data-s]"), secs = $$(".tm-sec");
     const LOAD = { eleves: () => loadEleves(), conduite: () => loadDay(), paiements: () => loadPay(), devoirs: () => loadDev(), depenses: () => depEquipe(), aide: () => {}, auj: () => loadMon() };
@@ -6073,6 +6078,80 @@ function init(root) {
       b.disabled = false; if (r) { try { localStorage.removeItem("sodaf.gr.brouillon." + GR.semaine); } catch (e) {} $("#sd-grRapTx").value = ""; GR.choix = null; GR.vue = null; grCharger(); }
     });
 
+    // ---- Planning de l'équipe (25 oct.) : qui tient l'agence, et le planning de chacun
+    //   Règle : le secrétariat (étudiant) a cours une semaine sur deux le mercredi et le vendredi ; ces jours-là, la gérante tient l'agence.
+    //   Semaine du lundi 26 oct. 2026 = semaine de cours. Un jour peut être changé (direction, gérante) : table agence_jours.
+    const PL = { sem: 0, qui: null, j: {}, prof: [], edit: null };
+    const PL_REF = new Date(2026, 9, 26, 12);
+    const PL_JOURS = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
+    const plLundi = (k) => { const n = new Date(); n.setHours(12, 0, 0, 0); n.setDate(n.getDate() + (n.getDay() === 0 ? 1 : -((n.getDay() + 6) % 7)) + 7 * k); return n; }; // le dimanche : la semaine qui commence demain
+    const plCours = (lun) => (((Math.round((lun - PL_REF) / 864e5 / 7) % 2) + 2) % 2) === 0;
+    const plRegle = (d) => { const w = (d.getDay() + 6) % 7; if (w === 6) return "ferme"; const lun = new Date(d); lun.setDate(d.getDate() - w); return (w === 2 || w === 4) && plCours(lun) ? "gerant" : "secretariat"; };
+    const plQui = (d) => (PL.j[iso(d)] ? PL.j[iso(d)].qui : plRegle(d));
+    const PL_NOM = { secretariat: "Secrétariat", gerant: "Gérante", admin: "Direction", ferme: "Agence fermée" };
+    const plPrenom = (role) => { const p = PL.prof.find((x) => x.role === role && x.actif !== false); const n = p && p.nom ? String(p.nom).replace(/\s*SODAF\s*/i, "").trim() : ""; return n && n.toLowerCase() !== (ROLE_NOM[role] || "").toLowerCase() ? n : ""; };
+    const plHeures = (w) => (w === 5 ? "8 h – 12 h, puis l'atelier jusqu'à 17 h" : "8 h – 12 h 30 et 14 h 30 – 18 h");
+    // Ce que fait chaque personne un jour donné
+    function plJour(role, d) {
+      const w = (d.getDay() + 6) % 7, q = plQui(d), sam = w === 5, mer = w === 2;
+      const ag = (r) => (q === r ? [["À l'agence", plHeures(w), "on"]] : []);
+      if (role === "secretariat") return q === "secretariat" ? [["À l'agence", plHeures(w), "on"]] : plRegle(d) === "gerant" && q === "gerant" ? [["Cours à l'université", "Remplacé par la gérante", "off"]] : q === "ferme" ? [["Agence fermée", PL.j[iso(d)] && PL.j[iso(d)].note || "", "off"]] : [["Pas à l'agence", "Remplacé : " + PL_NOM[q].toLowerCase(), "off"]];
+      if (role === "gerant") return ag("gerant").length ? ag("gerant") : [["À distance", "Demandes, prix, équipe", ""]];
+      if (role === "admin") return ag("admin").length ? ag("admin") : [["À distance", "Accords et paiements", ""]];
+      if (role === "moniteur") {
+        const l = [["Conduite", "7 h 30 – 9 h 30 et 10 h – 12 h", ""]];
+        if (sam) { l.push(["Contrôle de la voiture", "13 h 30, avec la mécanicienne", ""]); return l; }
+        l.push(["Code en salle", mer ? "14 h 30 : rattrapage et examen blanc" : "14 h 30 – 15 h 30", ""], ["Conduite", "15 h 45 – 17 h 45" + (mer ? " (rattrapages d'abord)" : ""), ""], ["Code du soir", mer ? "18 h : rattrapage et examen blanc" : "18 h – 19 h", ""]);
+        return l;
+      }
+      if (role === "mecanicienne") return sam ? [["Contrôle de la voiture", "13 h 30", ""], ["Atelier mécanique des élèves", "14 h – 15 h 30", ""]] : [];
+      if (role === "ambassadeur") return [];
+      return [];
+    }
+    const PL_PERS = [["secretariat", "Secrétariat"], ["gerant", "Gérante"], ["moniteur", "Moniteur"], ["mecanicienne", "Mécanicienne"], ["admin", "Direction"], ["ambassadeur", "Ambassadeur"]];
+    async function plCharger() {
+      if (!me || !$("#sd-plBox")) return;
+      const a = iso(plLundi(0)), b = iso(new Date(plLundi(1).getTime() + 6 * 864e5));
+      const [j, p] = await Promise.all([DB.q("agence_jours?select=*&jour=gte." + a + "&jour=lte." + b).catch(() => null), PL.prof.length ? Promise.resolve(PL.prof) : DB.q("profils?select=id,nom,role,actif").catch(() => [])]);
+      PL.prof = p || []; PL.j = {}; (j || []).forEach((x) => (PL.j[x.jour] = x)); PL.ok = !!j;
+      if (!PL.qui) PL.qui = PL_PERS.some((x) => x[0] === me.role) ? me.role : "secretariat";
+      plAfficher();
+    }
+    function plAfficher() {
+      const lun = plLundi(PL.sem), cours = plCours(lun), today = iso(new Date()), sam = new Date(lun.getTime() + 5 * 864e5);
+      const jours = PL_JOURS.map((n, i) => { const d = new Date(lun.getTime() + i * 864e5); return { n, d, k: iso(d) }; });
+      const fmt = (d) => d.getDate() + " " + M[d.getMonth()];
+      let h = '<div class="pl-sem" role="tablist">' + ["Cette semaine", "Semaine prochaine"].map((t, i) => '<button type="button" role="tab" data-plsem="' + i + '" aria-selected="' + (PL.sem === i) + '">' + t + "</button>").join("") + "</div>" +
+        '<p class="pl-info"><b>Du ' + lun.getDate() + " au " + sam.getDate() + " " + M[sam.getMonth()] + "</b> · " + (cours ? "Le secrétariat a cours mercredi et vendredi : la gérante tient l'agence ces deux jours." : "Semaine libre : le secrétariat est à l'agence tous les jours.") + "</p>";
+      // 1. Qui tient l'agence
+      h += '<section class="pl-card"><h3 class="pl-h">Qui tient l\'agence</h3><div class="pl-ag">' + jours.map((x) => {
+        const q = plQui(x.d), ex = PL.j[x.k], chg = ex && ex.qui !== plRegle(x.d), nom = plPrenom(q);
+        const ed = PL.edit === x.k;
+        return '<div class="pl-r' + (x.k === today ? " pl-auj" : "") + (x.k < today ? " pl-passe" : "") + '" data-plj="' + x.k + '"><span class="pl-j"><b>' + x.n + "</b><small>" + fmt(x.d) + (x.k === today ? " · aujourd'hui" : "") + '</small></span><span class="pl-q pl-' + q + '"><b>' + PL_NOM[q] + (nom ? " · " + esc(nom) : "") + "</b><small>" + (q === "ferme" ? esc(ex && ex.note || "") : plHeures(x.d.getDay() === 6 ? 5 : 0)) + (chg ? " · changé" + (ex.note && q !== "ferme" ? " : " + esc(ex.note) : "") : "") + "</small></span>" +
+          (DIR() && x.k >= today ? '<button type="button" class="linkbtn pl-chg" data-plchg>' + (ed ? "Fermer" : "Changer") + "</button>" : "") + "</div>" +
+          (ed ? '<div class="pl-ed" data-plj="' + x.k + '"><p class="pl-edt">' + x.n + " " + fmt(x.d) + " : qui tient l'agence ?</p><div class=\"tf-chips\" role=\"radiogroup\">" + ["secretariat", "gerant", "admin", "ferme"].map((r) => '<button type="button" role="radio" data-plqui="' + r + '" aria-checked="' + (q === r) + '">' + PL_NOM[r] + "</button>").join("") + '</div><input class="pl-note" maxlength="200" placeholder="Pourquoi ? (facultatif, ex. jour férié)" value="' + esc(ex && ex.note && ex.note !== "Retour à la règle" ? ex.note : "") + '"><div class="pl-edb"><button type="button" class="btn btn-green btn-sm" data-plok>Enregistrer</button>' + (ex ? '<button type="button" class="linkbtn" data-plregle>Revenir à la règle</button>' : "") + "</div></div>" : "");
+      }).join("") + "</div>" + (PL.ok ? "" : '<p class="tf-aide">Les changements de jour ne sont pas encore activés dans la base.</p>') + "</section>";
+      // 2. Le planning de chacun
+      h += '<section class="pl-card"><h3 class="pl-h">Le planning de chacun</h3><div class="tf-chips pl-pers" role="radiogroup">' + PL_PERS.map((x) => '<button type="button" role="radio" data-plpers="' + x[0] + '" aria-checked="' + (PL.qui === x[0]) + '">' + (x[0] === me.role ? "Moi" : x[1]) + "</button>").join("") + "</div>";
+      const nomP = plPrenom(PL.qui);
+      if (PL.qui === "ambassadeur") h += '<p class="pl-vide">Pas d\'horaires fixes : vidéos, statuts, campus, au fil de la semaine.</p>';
+      else h += (nomP ? '<p class="pl-nom">' + esc(nomP) + "</p>" : "") + '<div class="pl-tab">' + jours.map((x) => { const l = plJour(PL.qui, x.d);
+        return '<div class="pl-r' + (x.k === today ? " pl-auj" : "") + (x.k < today ? " pl-passe" : "") + '"><span class="pl-j"><b>' + x.n + "</b><small>" + fmt(x.d) + "</small></span><span class=\"pl-l\">" + (l.length ? l.map((y) => '<span class="pl-it' + (y[2] ? " pl-it-" + y[2] : "") + '"><b>' + y[0] + "</b>" + (y[1] ? "<small>" + y[1] + "</small>" : "") + "</span>").join("") : '<span class="pl-it pl-it-off"><b>Pas de travail prévu</b></span>') + "</span></div>"; }).join("") + "</div>";
+      h += "</section>";
+      $("#sd-plBox").innerHTML = h;
+    }
+    $('.tm-pane[data-pane="plan"]') && $('.tm-pane[data-pane="plan"]').addEventListener("click", (e) => {
+      const t = e.target;
+      const s = t.closest("[data-plsem]"); if (s) { PL.sem = +s.dataset.plsem; PL.edit = null; plAfficher(); return; }
+      const pe = t.closest("[data-plpers]"); if (pe) { PL.qui = pe.dataset.plpers; plAfficher(); return; }
+      const ch = t.closest("[data-plchg]"); if (ch) { const k = ch.closest("[data-plj]").dataset.plj; PL.edit = PL.edit === k ? null : k; plAfficher(); return; }
+      const ed = t.closest(".pl-ed"); if (!ed) return; const k = ed.dataset.plj;
+      const q = t.closest("[data-plqui]"); if (q) { ed.querySelectorAll("[data-plqui]").forEach((b) => b.setAttribute("aria-checked", b === q)); return; }
+      const ok = t.closest("[data-plok]"), rg = t.closest("[data-plregle]"), btn = ok || rg; if (!btn || btn.disabled) return;
+      const qui = rg ? null : ed.querySelector('[data-plqui][aria-checked="true"]').dataset.plqui, note = ed.querySelector(".pl-note").value.trim() || null;
+      confirmBtn(btn, async () => { btn.disabled = true; const r = await run(() => DB.q("rpc/agence_regler", { method: "POST", body: { p_jour: k, p_qui: qui, p_note: note } }).then(() => true), rg ? "Revenu à la règle" : "Planning changé"); btn.disabled = false; if (r) { PL.edit = null; plCharger(); } });
+    });
+
     // ---- Direction
     async function loadDir() {
       if (!me || !DIR()) return;
@@ -7944,6 +8023,22 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 #sodaf-root [data-pane="taf"] .tf-b[disabled]{opacity:.4;box-shadow:none}
 #sodaf-root [data-pane="taf"] .tf-plus{color:var(--tfm)}
 .tf-numx{font-weight:500;color:var(--tfm,#6B7480)}
+/* Planning de l'équipe (25 oct.) */
+.tm-tabs button[data-t="plan"][aria-selected="true"]{border-color:var(--ink);border-top-color:var(--ink);background:var(--soft)}
+.pl-sem{display:flex;gap:6px;margin:0 0 10px}#sodaf-root .pl-sem button{all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:.6em 1em;border:1px solid #E3E6EA;border-radius:10px;background:#fff;font:700 .9rem var(--f-ui);color:#15191E}#sodaf-root .pl-sem button[aria-selected="true"]{background:#15191E;border-color:#15191E;color:#fff}
+.pl-info{margin:0 0 14px;font-size:.9rem;color:#4B5563;line-height:1.45}.pl-info b{color:#15191E}
+.pl-card{background:#fff;border:1px solid #E3E6EA;border-radius:12px;padding:14px;margin:0 0 16px}.pl-h{margin:0 0 10px;font:800 1.02rem var(--f-ui);color:#15191E}
+.pl-r{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-top:1px solid #EEF0F2}.pl-ag .pl-r:first-child,.pl-tab .pl-r:first-child{border-top:0}
+.pl-auj{background:#FFF8E1;margin:0 -14px;padding:10px 14px}.pl-passe{opacity:.55}
+.pl-j{width:92px;flex-shrink:0;display:flex;flex-direction:column}.pl-j b{font:700 .92rem var(--f-ui);color:#15191E}.pl-j small{font-size:.78rem;color:#6B7480}
+.pl-q{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px;padding-left:10px;border-left:4px solid #CBD2D9}.pl-q b{font:700 .92rem var(--f-ui);color:#15191E}.pl-q small{font-size:.8rem;color:#6B7480}
+.pl-secretariat{border-left-color:#0F766E}.pl-gerant{border-left-color:#E8A400}.pl-admin{border-left-color:#15191E}.pl-ferme{border-left-color:#C8372D}.pl-ferme b{color:#B3132B}
+.pl-chg{font-size:.84rem;color:#4B5563;flex-shrink:0}
+.pl-ed{margin:0 0 10px;padding:12px;border:1px solid #DFD0B0;border-radius:10px;background:#F3EBDA;display:flex;flex-direction:column;gap:10px}.pl-edt{margin:0;font:700 .9rem var(--f-ui)}.pl-note{width:100%;box-sizing:border-box}.pl-edb{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+#sodaf-root .pl-ed .tf-chips button[aria-checked=true],#sodaf-root .pl-pers button[aria-checked=true]{background:#15191E;border-color:#15191E;color:#fff}
+.pl-pers{margin:0 0 10px}.pl-nom{margin:0 0 4px;font:600 .88rem var(--f-ui);color:#4B5563}.pl-vide{margin:4px 0 0;color:#6B7480;font-size:.9rem}
+.pl-l{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}.pl-it{display:flex;flex-direction:column;padding-left:10px;border-left:3px solid #CBD2D9}.pl-it b{font:700 .9rem var(--f-ui);color:#15191E}.pl-it small{font-size:.8rem;color:#6B7480}
+.pl-it-on{border-left-color:#0F766E}.pl-it-off{border-left-color:#E3E6EA}.pl-it-off b{color:#9AA3AD;font-weight:600}
 .pj-ok{flex-basis:100%;display:flex;align-items:center;gap:10px;padding:8px 10px;border:1.5px solid #3BA55C;border-radius:10px;background:#EAF6EE}
 .pj-ok img{width:44px;height:44px;object-fit:cover;border-radius:6px;flex-shrink:0;background:#fff}.pj-pdfi{display:grid;place-items:center;width:44px;height:44px;border-radius:6px;background:#fff;border:1px solid #CFE6D6;font:800 .72rem var(--f-ui);font-style:normal;color:#B3132B;flex-shrink:0}
 .pj-okt{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}.pj-okt b{font:700 .9rem var(--f-ui);color:#1E7B3C}.pj-okt small{font-size:.78rem;color:#4B5563;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}

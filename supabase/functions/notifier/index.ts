@@ -3,6 +3,7 @@
 // Types : message (canal), preinscription (formulaire du site), inscription (finalisée en ligne), connexion (lieu + alerte nouvel appareil), test (bouton « Tester »), geotest (contrôle du lieu),
 // gérance : demande, demande_equipe (équipe → gérante), demande_reponse, decision, decision_avis, rapport, rapport_rappel (dimanche 18 h).
 // reçus : annulation (demande du secrétariat → gérante ; réponse → secrétariat).
+// planning : agence (0080, veille à 18 h : qui remplace le secrétariat).
 // mécanique : entretien (jeudi 9 h, entretiens à prévoir samedi, liste calculée par prive.entretiens_a_prevoir).
 // À faire (0062, 0063, 0072 : la facture termine la tâche) : tache (quoi : nouvelle, prix, accord, refus, argent, pas_recu, numero_bon, faite, relance).
 // Les clés VAPID et le secret sont lus dans prive.config_push : rien de secret dans ce fichier.
@@ -34,7 +35,7 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ ok: true });
   const cfg: Record<string, string> = Object.fromEntries((await sql`select cle, valeur from prive.config_push`).map((r) => [r.cle, r.valeur]));
   if (!cfg.secret_fonction || req.headers.get("x-sodaf-secret") !== cfg.secret_fonction) return json({ erreur: "refusé" }, 401);
-  let p: { type?: string; quoi?: string; id?: number; profil?: string; ip?: string; liste?: { type: string; texte: string }[] };
+  let p: { type?: string; quoi?: string; id?: number; profil?: string; ip?: string; jour?: string; qui?: string; note?: string | null; liste?: { type: string; texte: string }[] };
   try { p = await req.json(); } catch { return json({ erreur: "requête illisible" }, 400); }
 
   let roles: string[] | null = null, exclure: string | null = null, seulement: string | null = null, aussi: string | null = null;
@@ -146,6 +147,13 @@ Deno.serve(async (req) => {
     else if (p.quoi === "numero_bon") { seulement = t.pour; note = { title: "L'argent est parti vers ton numéro", body: court(t.titre + " · Regarde ton solde et ton historique Mixx (le SMS n'arrive pas toujours), puis ajoute la facture une fois fait."), url, tag }; }
     else if (p.quoi === "relance") { roles = ["admin"]; aussi = t.pour; note = { title: "Facture attendue · " + qui, body: court(t.titre + " · L'argent est parti il y a 3 jours : ajoute la facture ou le ticket dans « À faire »."), url, tag }; }
     else return json({ erreur: "tâche : quoi inconnu" }, 400);
+  } else if (p.type === "agence") {
+    // Planning (0080) : la veille, rappel à la personne qui tient l'agence à la place du secrétariat
+    if (!p.qui || !["gerant", "admin"].includes(p.qui) || !p.jour) return json({ envoyes: 0, raison: "rien à rappeler" });
+    roles = [p.qui];
+    const j = new Date(p.jour + "T12:00:00Z"), jour = j.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" });
+    const sam = j.getUTCDay() === 6;
+    note = { title: "Demain, tu tiens l'agence", body: jour.replace(/^./, (c) => c.toUpperCase()) + " : " + (p.note ? p.note : "le secrétariat a cours") + ". Agence " + (sam ? "8 h – 12 h, puis l'atelier jusqu'à 17 h." : "8 h – 12 h 30 et 14 h 30 – 18 h."), url: "/equipe/?onglet=plan", tag: "agence-" + p.jour };
   } else if (p.type === "geotest") {
     return json({ ip: p.ip || null, lieu: await geo(p.ip || "") }); // contrôle technique (secret obligatoire), aucune écriture
   } else if (p.type === "test") {
