@@ -6537,7 +6537,7 @@ function init(root) {
       (MIXX_MARCHAND(d.m)
         ? '<div class="insc-mixx mx" id="sd-inMixx" hidden><p class="mx-k">Paie <b id="sd-inAmt"></b> avec Mixx</p>' +
           '<div class="mx-code" id="sd-inUssd"></div>' +
-          '<div class="mx-acts">' + (MIXX_IOS ? "" : '<a class="btn btn-green" id="sd-inPay" href="#">Payer avec Mixx</a>') + '<button class="btn ' + (MIXX_IOS ? "btn-green" : "btn-line") + '" type="button" id="sd-inCopy">Copier</button></div>' +
+          '<div class="mx-acts">' + (MIXX_IOS ? "" : '<a class="btn btn-green" id="sd-inPay" href="#">Payer avec Mixx</a>') + '<button class="btn ' + (MIXX_IOS ? "btn-green" : "btn-line") + '" type="button" id="sd-inCopy">Copier</button></div><p id="sd-inCopyOk" hidden></p>' +
           "<ol>" + (MIXX_IOS ? "<li>Touche <b>Copier</b>, ouvre ton clavier d'appel, colle et appelle.</li>" : "<li>Touche <b>Payer avec Mixx</b>, puis le bouton vert d'appel.</li>") + "<li>Tape ton code secret Mixx." + (d.n ? " Nom affiché : <b>" + escI(d.n) + "</b>." : "") + "</li><li>Fais une <b>capture d'écran</b> du SMS de paiement reçu, et ajoute-la ci-dessous.</li></ol>" + insCap() + "</div>"
         : '<div class="insc-mixx" id="sd-inMixx" hidden><ol><li>Sur ton téléphone, envoie <b id="sd-inAmt"></b> par Mixx by Yas au <b>' + escI(d.m) + "</b>" + (d.n ? " (" + escI(d.n) + ")" : "") + ".</li><li>Motif : <b>SO" + d.i + "</b></li><li>Fais une <b>capture d'écran</b> du SMS de paiement reçu, et ajoute-la ci-dessous.</li></ol>" + insCap() + "</div>") +
       "</fieldset>" +
@@ -6576,7 +6576,11 @@ function init(root) {
       $("#sd-inMixx").hidden = form.querySelector("[name=inM]:checked").value !== "mixx";
     };
     form.addEventListener("change", upd); upd();
-    if ($("#sd-inCopy")) $("#sd-inCopy").addEventListener("click", async (e) => { const b = e.currentTarget; if (!val() || !val().p) return; const ok = await copier(MIXX_USSD(d.m, val().a)); b.textContent = ok ? "Copié" : "Copie impossible"; setTimeout(() => (b.textContent = "Copier"), 2500); });
+    if ($("#sd-inCopy")) $("#sd-inCopy").addEventListener("click", async (e) => { const b = e.currentTarget; if (!val() || !val().p) return; const ok = await copier(MIXX_USSD(d.m, val().a)), code = $("#sd-inUssd"), nt = $("#sd-inCopyOk");
+      // 25 oct. : on voit clairement que c'est copié (bouton vert, code encadré en vert, phrase en dessous)
+      if (ok) { b.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px;margin-right:6px"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Code copié'; b.classList.add("is-ok"); code.classList.add("copied"); nt.innerHTML = "<b>Code copié.</b> Ouvre ton clavier d'appel, colle le code et appelle."; nt.className = "mx-ok"; nt.hidden = false; try { navigator.vibrate && navigator.vibrate(40); } catch (x) {}
+        clearTimeout(b._t); b._t = setTimeout(() => { b.textContent = "Copier"; b.classList.remove("is-ok"); code.classList.remove("copied"); }, 4000); }
+      else { try { const r = document.createRange(); r.selectNodeContents(code); const s = getSelection(); s.removeAllRanges(); s.addRange(r); } catch (x) {} nt.innerHTML = "La copie automatique ne marche pas ici : <b>appuie longtemps sur le code</b> pour le copier."; nt.className = "mx-ok ko"; nt.hidden = false; } });
     let phBlob = null, capBlob = null;
     if ($("#sd-inCapF")) $("#sd-inCapF").addEventListener("change", async (e) => {
       const f = e.target.files && e.target.files[0]; if (!f) return;
@@ -7508,6 +7512,11 @@ html.code-verrou article.ch.verrou>:not(header):not(.lock-cta){display:none!impo
 #sodaf-root .insc-form .insc-accord{margin-top:16px;padding-top:14px;border-top:1px solid #E8EBEE;font-size:.9rem;color:#3D444D}
 #sodaf-root .insc-form .insc-note{margin:0;padding:12px 14px;background:#F7F8FA;border:1px solid #E8EBEE;border-left:3px solid #15191E;border-radius:8px;font-size:.86rem;line-height:1.55;color:#4A535D}
 #sodaf-root .insc-form .insc-go{align-self:stretch;justify-content:center;text-align:center;padding:16px;border-radius:10px;font:700 1.02rem var(--f-ui)}
+#sodaf-root .mx-code{transition:border-color .2s,background .2s;-webkit-user-select:all;user-select:all}
+#sodaf-root .mx-code.copied{border:1.5px solid var(--green);background:var(--green-soft);color:var(--green)}
+#sodaf-root .mx-acts .btn.is-ok{background:#0A5A40;border-color:#0A5A40;color:#fff;box-shadow:0 0 0 3px rgba(10,90,64,.18)}
+#sodaf-root .mx-ok{margin:-4px 0 12px!important;padding:9px 12px;border-radius:8px;background:var(--green-soft);border:1px solid #BFDCCF;color:#1F4D3B;font-size:.86rem;line-height:1.45}
+#sodaf-root .mx-ok.ko{background:#FFF4EC;border-color:#F3C9A8;color:#7A3410}
 #sodaf-root .insc-cap{margin-top:14px;padding-top:14px;border-top:1px dashed #E0C97A}
 #sodaf-root .insc-cap-t{margin:0 0 10px!important;font:700 .76rem/1.3 var(--f-ui);letter-spacing:.07em;text-transform:uppercase;color:#4A535D}
 #sodaf-root .insc-cap-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
