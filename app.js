@@ -488,7 +488,7 @@ article.ch p+p{margin-top:10px}
 .di-pg img{display:block;width:100%;height:auto}
 .di-pg figcaption{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
 .di-pg figcaption a{font-weight:600;color:var(--green);text-decoration:none}
-.pi-parline{margin:-4px 0 14px;font-size:.85rem;color:var(--muted)}.pi-parline b{color:var(--ink);font-weight:600}.pi-parline[hidden]{display:none}
+.pi-par{margin:2px 0 16px}.pi-parline{display:flex;align-items:center;gap:10px;margin:0;padding:12px 14px;border-radius:12px;background:#E8F4EE;border:1.5px solid #0B6E4F;font-size:1rem;color:#0B6E4F}.pi-parline span{font-weight:600;color:#0B6E4F!important}.pi-parline b{color:#0B6E4F!important;font-weight:800!important;font-size:1.1rem}.pi-parbtn{display:block;width:100%;text-align:left;padding:12px 14px;border-radius:12px;border:1.5px dashed #0B6E4F;background:#F3FAF6;color:#0B6E4F;font:600 1rem var(--f-ui);cursor:pointer}.pi-parbtn u{font-weight:800}.pi-parbtn[hidden],.pi-parbox[hidden]{display:none}.pi-parbox{padding:12px 14px;border-radius:12px;background:#E8F4EE;border:1.5px solid #0B6E4F}.pi-parbox label{display:block;font-weight:700;color:#0B6E4F;margin:0 0 6px}.pi-parbox small{display:block;margin-top:6px;color:#2F5D4A}.pi-parline b{color:var(--ink);font-weight:600}.pi-parline[hidden]{display:none}
 .par-top{align-items:start}
 .par-gen h3{margin:4px 0 12px;font:700 1.35rem var(--f-display)}
 .par-bonus{margin:16px 0 0;font-weight:600;font-size:.92rem;color:var(--muted)}
@@ -2276,7 +2276,7 @@ ${HEAD("Pré-inscription", "Rejoins SODAF", "Envoie ta demande en une minute : e
 <div class="row2"><div class="field"><label for="sd-fName">Nom</label><input id="sd-fName" autocomplete="family-name" maxlength="60" placeholder="Ex. AGBEKO"></div><div class="field"><label for="sd-fFirst">Prénoms</label><input id="sd-fFirst" autocomplete="given-name" maxlength="80" placeholder="Ex. Kossi Mawuli"></div></div>
 <div class="row2"><div class="field"><label for="sd-fPhone">Téléphone / WhatsApp</label><div class="tel"><span>+228</span><input id="sd-fPhone" inputmode="numeric" maxlength="11" autocomplete="tel-national" placeholder="90 00 00 00"></div></div><div class="field"><label for="sd-fCity">Quartier</label><input id="sd-fCity" maxlength="80" placeholder="Ex. Bè, Adidogomé"></div></div>
 <fieldset class="field pi-cat" aria-describedby="sd-fCatAide"><legend>Formation</legend><div class="pi-cats" id="sd-fCat"><label class="rcm on"><input type="radio" name="fCat" value="Permis B" checked><span><b>Permis voiture</b><small>J'apprends à conduire</small></span></label><label class="rcm"><input type="radio" name="fCat" value="Remise à niveau"><span><b>Remise à niveau</b><small>J'ai déjà le permis</small></span></label></div><small class="f-aide" id="sd-fCatAide">Ton tarif (étudiant ou non) se choisit ensuite, dans le lien envoyé sur WhatsApp.</small></fieldset>
-<p class="pi-parline" id="sd-fParLine" hidden>Parrain : <b id="sd-fParTxt"></b></p>
+<div class="pi-par"><p class="pi-parline" id="sd-fParLine" hidden><span>Ton parrain</span><b id="sd-fParTxt"></b></p><button type="button" class="pi-parbtn" id="sd-fParBtn">Quelqu'un t'a parlé de SODAF&nbsp;? <u>Ajoute ton parrain</u></button><div class="pi-parbox" id="sd-fParBox" hidden><label for="sd-fParIn">Numéro de téléphone de ton parrain</label><div class="tel"><span>+228</span><input id="sd-fParIn" inputmode="numeric" maxlength="11" placeholder="90 00 00 00" autocomplete="off"></div><small>Il reçoit 2 000 F quand tu t'inscris chez SODAF.</small></div></div>
 <div class="field"><label for="sd-fMsg">Message (non obligatoire)</label><textarea id="sd-fMsg" placeholder="Une question, une contrainte d'horaire…"></textarea></div>
 <p id="sd-fErr" class="pi-err" hidden>Indique ton nom, tes prénoms et ton numéro à 8 chiffres (après le +228).</p>
 <button class="btn btn-green pi-go" type="submit" id="sd-send">Envoyer ma pré-inscription</button>
@@ -3161,7 +3161,7 @@ function init(root) {
     const okForm = nf.length >= 2 && pr.length >= 2 && digits.length === 8;
     $("#sd-fErr").hidden = okForm;
     if (!okForm) return;
-    lastPayload = { nom: name, nom_famille: nf, prenoms: pr, telephone: phone, formation: fCatVal(), quartier: $("#sd-fCity").value.trim(), message: $("#sd-fMsg").value.trim(), parrain: parGet() ? "+228" + parGet() : "", source: "Site web" };
+    lastPayload = { nom: name, nom_famille: nf, prenoms: pr, telephone: phone, formation: fCatVal(), quartier: $("#sd-fCity").value.trim(), message: $("#sd-fMsg").value.trim(), parrain: parGet() || parNorm($("#sd-fParIn").value) ? "+228" + parGet() : "", source: "Site web" };
     const waText = "Bonjour SODAF, je souhaite m'inscrire.\nNom : " + name + "\nTéléphone : " + phone + "\nFormation : " + lastPayload.formation + "\nQuartier : " + (lastPayload.quartier || "—") + (lastPayload.parrain ? "\nParrain : " + lastPayload.parrain : "") + (lastPayload.message ? "\nMessage : " + lastPayload.message : "");
     submitInscription(lastPayload, waText);
   });
@@ -3169,7 +3169,10 @@ function init(root) {
   // Lien d'un parrain (#parrainage-90123456) : ouvre la pré-inscription ; son numéro est retenu 30 jours sur le téléphone de la personne,
   // puis ajouté tout seul à sa pré-inscription (ligne « Parrain : … », non modifiable).
   const parGet = () => { const v = S.get("parrain", null); return v && v.t && Date.now() - (v.at || 0) < 30 * 864e5 ? v.t : ""; };
-  const parShow = () => { const t = parGet(); $("#sd-fParLine").hidden = !t; $("#sd-fParTxt").textContent = t ? "+228 " + telFmt(t) : ""; };
+  const parShow = () => { const t = parGet(); $("#sd-fParLine").hidden = !t; $("#sd-fParTxt").textContent = t ? "+228 " + telFmt(t) : ""; $("#sd-fParBtn").hidden = !!t || !$("#sd-fParBox").hidden; if (t) $("#sd-fParBox").hidden = true; };
+  // Sans lien de parrain : une ligne verte à toucher ouvre la case du numéro (25 oct.) ; sinon le client passe directement à l'envoi
+  $("#sd-fParBtn").addEventListener("click", () => { $("#sd-fParBtn").hidden = true; $("#sd-fParBox").hidden = false; $("#sd-fParIn").focus(); });
+  $("#sd-fParIn").addEventListener("input", (e) => { let d = e.target.value.replace(/\D/g, ""); if (d.length > 8 && d.startsWith("228")) d = d.slice(3); e.target.value = d.slice(0, 8).replace(/(\d{2})(?=\d)/g, "$1 "); });
   function parRecu(code) { const t = parNorm(code); if (t) S.set("parrain", { t, at: Date.now() }); parShow(); }
   const parNorm = (v) => { let d = String(v || "").replace(/\D/g, ""); if (d.length > 8 && d.startsWith("228")) d = d.slice(3); return d.length === 8 ? d : ""; };
   const telFmt = (d) => d.replace(/(\d{2})(?=\d)/g, "$1 ");
