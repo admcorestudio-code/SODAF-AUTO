@@ -1524,7 +1524,7 @@ ${HEAD("Formations", "Nos formations et tarifs", "Chaque formule comprend le cod
 <div class="grid g3">
 <div class="card offer star"><span class="tag y">Recommandée</span><h3>Formation complète</h3><div class="cat">55 000 F</div><p>À ton rythme. Pour apprendre à conduire en partant de zéro.</p><ul><li>12 séances de conduite de 2 h</li><li>12 cours de code en salle, 2 par semaine</li><li>Évaluation au 10e bloc, mécanique et secourisme</li></ul><div class="price"><b>+ 5 000 F d'inscription</b><a class="btn btn-green btn-sm" href="#inscription" data-cat="Permis B">Choisir</a></div></div>
 <div class="card offer etu"><span class="tag">Étudiants · 18 ans et plus</span><h3>Tarif étudiant</h3><div class="cat">30 000 F</div><p>La formation complète à prix étudiant.</p><ul><li>Même programme que la formation complète</li><li>Carte d'étudiant de l'année et carte d'identité</li><li>Parrainé par un ami ? Il reçoit 2 000 F</li></ul><div class="price"><b>+ 5 000 F d'inscription</b><a class="btn btn-line btn-sm" href="#inscription" data-cat="Permis B" data-msg="Je suis étudiant (18 ans et plus).">Choisir</a></div></div>
-<div class="card offer"><span class="tag">Sait conduire, sans permis</span><h3>Formule rapide</h3><div class="cat">35 000 F</div><p>À ton rythme. Pour ceux qui savent déjà tenir un volant.</p><ul><li>6 séances de conduite de 2 h</li><li>12 cours de code en salle, 2 par semaine</li><li>Entretien mécanique et secourisme</li></ul><div class="price"><b>+ 5 000 F d'inscription</b><a class="btn btn-line btn-sm" href="#inscription" data-cat="Permis B">Choisir</a></div></div>
+<div class="card offer rapide"><span class="tag">Sait conduire, sans permis</span><h3>Formule rapide</h3><div class="cat">35 000 F</div><p>À ton rythme. Pour ceux qui savent déjà tenir un volant.</p><ul><li>6 séances de conduite de 2 h</li><li>12 cours de code en salle, 2 par semaine</li><li>Entretien mécanique et secourisme</li></ul><div class="price"><b>+ 5 000 F d'inscription</b><a class="btn btn-line btn-sm" href="#inscription" data-cat="Permis B">Choisir</a></div></div>
 </div>
 <div class="card alacarte" style="margin-top:18px"><p class="eyebrow">À la carte</p>
 <div class="acrow"><div><b>Formation théorique seule</b><span> · code, mécanique et secourisme, sans conduite</span></div><strong>25 000 F</strong></div>
@@ -6862,6 +6862,14 @@ header.top{background:rgba(255,255,255,.96)}
 #sodaf-root .offer.etu .price{border-top-color:rgba(30,127,194,.28)}
 #sodaf-root .offer.etu .price b{color:#2F4B60}
 #sodaf-root .offer.etu .btn-line{background:#1E7FC2;color:#fff;border-color:#1E7FC2}
+#sodaf-root .offer.rapide{background:linear-gradient(165deg,#FFF1F0 0%,#FBD5D2 100%);border:2px solid #F2A19A;box-shadow:0 26px 50px -30px rgba(185,28,28,.5)}
+#sodaf-root .offer.rapide .tag{background:#C62828;color:#fff}
+#sodaf-root .offer.rapide h3{color:#6B1414}
+#sodaf-root .offer.rapide .cat{color:#B71C1C}
+#sodaf-root .offer.rapide p,#sodaf-root .offer.rapide li{color:#5A2E2B}
+#sodaf-root .offer.rapide .price{border-top-color:rgba(198,40,40,.28)}
+#sodaf-root .offer.rapide .price b{color:#5A2E2B}
+#sodaf-root .offer.rapide .btn-line{background:#C62828;color:#fff;border-color:#C62828}
 #sodaf-root .insc-step .rcm.etu{background:#EAF6FE;border-color:#9ED1F3}
 #sodaf-root .insc-step .rcm.etu.on{background:#D3EBFB;border-color:#1E7FC2}
 #sodaf-root .insc-step .rcm.etu em{color:#0E5E96}
