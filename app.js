@@ -1425,7 +1425,7 @@ const HTML = `
 <a class="logo" href="#accueil" aria-label="SODAF, accueil">${LOGO("#14171C", "word")}<small class="logo-sub">Auto-école · Togo</small></a>
 <button class="burger" id="sd-burger" aria-expanded="false">Menu</button>
 <nav class="main" id="sd-nav">
-<a href="#accueil" data-nav="accueil">Accueil</a><a href="#formations" data-nav="formations">Formations et tarifs</a><a href="#cours" data-nav="cours">Cours</a><a href="#panneaux" data-nav="panneaux">Panneaux</a><a href="#quiz" data-nav="quiz">Quiz</a><a href="#devoirs" data-nav="devoirs">Devoirs</a><a href="#outils" data-nav="outils">Outils</a><a href="#parrainage" data-nav="parrainage">Parrainage</a><a href="#tirage" data-nav="tirage" class="navtir">Tirage au sort</a><a href="/equipe/" target="sodaf-equipe" class="navteam">Espace équipe</a>
+<a href="#accueil" data-nav="accueil">Accueil</a><a href="#formations" data-nav="formations">Formations et tarifs</a><a href="#cours" data-nav="cours">Cours</a><a href="#panneaux" data-nav="panneaux">Panneaux</a><a href="#quiz" data-nav="quiz">Quiz</a><a href="#devoirs" data-nav="devoirs">Devoirs</a><a href="#outils" data-nav="outils">Outils</a><a href="#tirage" data-nav="tirage" class="navtir">Tirage au sort</a><a href="/equipe/" target="sodaf-equipe" class="navteam">Espace équipe</a>
 </nav>
 <a class="btn btn-green btn-sm" href="/equipe/" target="sodaf-equipe"><span class="lg">Espace équipe</span><span class="sm">Équipe</span></a>
 </div></header>
@@ -1523,7 +1523,7 @@ ${HEAD("Formations", "Nos formations et tarifs", "Chaque formule comprend le cod
 <div class="sec-head"><div><p class="eyebrow">Permis B · voiture</p><h2>Choisis ta formule</h2></div><p>D'abord le code en salle, jusqu'à la notion théorique de conduite (cours 1 à 9). Ensuite la conduite, à ton rythme : 4 élèves dans la voiture, chacun conduit à son tour.</p></div>
 <div class="grid g3">
 <div class="card offer star"><span class="tag y">Recommandée</span><h3>Formation complète</h3><div class="cat">55 000 F</div><p>À ton rythme. Pour apprendre à conduire en partant de zéro.</p><ul><li>12 séances de conduite de 2 h</li><li>12 cours de code en salle, 2 par semaine</li><li>Évaluation au 10e bloc, mécanique et secourisme</li></ul><div class="price"><b>+ 5 000 F d'inscription</b><a class="btn btn-green btn-sm" href="#inscription" data-cat="Permis B">Choisir</a></div></div>
-<div class="card offer etu"><span class="tag">Étudiants · 18 ans et plus</span><h3>Tarif étudiant</h3><div class="cat">30 000 F</div><p>La formation complète à prix étudiant.</p><ul><li>Même programme que la formation complète</li><li>Carte d'étudiant de l'année et carte d'identité</li><li>Parrainé par un ami ? Il reçoit 2 000 F</li></ul><div class="price"><b>+ 5 000 F d'inscription</b><a class="btn btn-line btn-sm" href="#inscription" data-cat="Permis B" data-msg="Je suis étudiant (18 ans et plus).">Choisir</a></div></div>
+<div class="card offer etu"><span class="tag">Étudiants · 18 ans et plus</span><h3>Tarif étudiant</h3><div class="cat">30 000 F</div><p>La formation complète à prix étudiant.</p><ul><li>Même programme que la formation complète</li><li>Carte d'étudiant de l'année et carte d'identité</li></ul><div class="price"><b>+ 5 000 F d'inscription</b><a class="btn btn-line btn-sm" href="#inscription" data-cat="Permis B" data-msg="Je suis étudiant (18 ans et plus).">Choisir</a></div></div>
 <div class="card offer rapide"><span class="tag">Sait conduire, sans permis</span><h3>Formule rapide</h3><div class="cat">35 000 F</div><p>À ton rythme. Pour ceux qui savent déjà tenir un volant.</p><ul><li>6 séances de conduite de 2 h</li><li>12 cours de code en salle, 2 par semaine</li><li>Entretien mécanique et secourisme</li></ul><div class="price"><b>+ 5 000 F d'inscription</b><a class="btn btn-line btn-sm" href="#inscription" data-cat="Permis B">Choisir</a></div></div>
 </div>
 <div class="card alacarte" style="margin-top:18px"><p class="eyebrow">À la carte</p>
@@ -1534,13 +1534,13 @@ ${HEAD("Formations", "Nos formations et tarifs", "Chaque formule comprend le cod
 <p style="margin-top:14px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px"><a class="btn btn-line btn-sm" href="/fiche-renseignement-sodaf.pdf" download>Télécharger la fiche des tarifs (PDF)</a><span style="color:var(--muted);font-size:.92rem">Une page A4, à imprimer ou à partager.</span></p>
 </div>
 <div class="wrap sec">
-<div class="sec-head"><div><p class="eyebrow">Autres formations</p><h2>Remise à niveau et parrainage</h2></div><p>Remise à niveau à prix fixe. Parrainage : ouvert à tous.</p></div>
+<div class="sec-head"><div><p class="eyebrow">Autres formations</p><h2>Remise à niveau</h2></div><p>Pour ceux qui ont déjà le permis. Prix fixe, tout compris.</p></div>
 <div class="grid g2">
 <div class="card offer"><span class="tag">Déjà titulaire</span><h3>Remise à niveau</h3><div class="cat">25 000 F</div><p>Tu as ton permis mais tu n'as pas conduit depuis longtemps ? On te remet en confiance.</p><ul><li>4 blocs de conduite de 2 h, évaluation comprise</li><li>Leçons ciblées : ville, route, circulation dense</li><li>Rappel des règles du code</li></ul><div class="price"><b>Tout compris, sans frais d'inscription</b><a class="btn btn-line btn-sm" href="#inscription" data-cat="Remise à niveau">Choisir</a></div></div>
 <!-- Formation entreprise retirée du site le 17 oct. 2026 (une seule voiture, places limitées) : à remettre avec l'expansion.
 <div class="card offer"><span class="tag">Sociétés, ONG</span><h3>Formation entreprise</h3><p>Pour former vos chauffeurs, selon vos horaires.</p><ul><li>Conduite préventive</li><li>Vérification du véhicule chaque matin</li><li>Secourisme routier et constat amiable</li></ul><div class="price"><b>Sur devis</b><a class="btn btn-line btn-sm" href="#inscription" data-cat="Formation entreprise">Demander un devis</a></div></div>
 -->
-<div class="card offer"><span class="tag">Pour tout le monde</span><h3>Parrainage</h3><div class="cat">2 000 F</div><p>Pour chaque personne que tu amènes et qui s'inscrit chez SODAF, étudiant ou pas.</p><ul><li>La personne donne ton numéro de téléphone à l'inscription</li><li>Tu reçois 2 000 F par Mixx by Yas ou Moov Money, dès qu'il a son reçu</li><li>3 clients : un t-shirt SODAF · 5 clients : une séance offerte</li></ul><div class="price"><b>Sans limite</b><a class="btn btn-line btn-sm" href="#parrainage">Parrainer un proche</a></div></div>
+<!-- Carte « Parrainage » retirée du site public le 25 oct. 2026 : on en parle aux élèves une fois inscrits (page #parrainage, par lien). -->
 </div>
 </div>
 <div class="wrap sec">
@@ -2314,7 +2314,7 @@ ${HEAD("Pré-inscription", "Rejoins SODAF", "Envoie ta demande en une minute : e
 <div class="pat-lane" aria-hidden="true"></div>
 <footer class="site"><div class="wrap"><div class="cols">
 <div><a class="logo flogo" href="#accueil" aria-label="SODAF, accueil">${LOGO("#FFFFFF", "ws")}</a><p class="fslogan">L'art de conduire, la force de réussir.</p><p style="margin-top:8px;max-width:40ch">Code, secourisme, mécanique et conduite, en salle et en ligne.</p></div>
-<div><h4>Apprendre</h4><a href="#formations">Formations et tarifs</a><a href="#parrainage">Parrainage</a><a href="#cours">Les cours</a><a href="#quiz">Le quiz</a><a href="#devoirs">Les devoirs</a><a href="#outils">Les outils</a><a href="#classe" class="fcls">Mode classe <span>Projection</span></a></div>
+<div><h4>Apprendre</h4><a href="#formations">Formations et tarifs</a><a href="#cours">Les cours</a><a href="#quiz">Le quiz</a><a href="#devoirs">Les devoirs</a><a href="#outils">Les outils</a><a href="#classe" class="fcls">Mode classe <span>Projection</span></a></div>
 <div><h4>Secrétariat</h4><span class="phone">72 54 41 66</span><p class="faddr">412 Avenue Akei, Tokoin Tamé, Lomé<br>(en face de la caisse)</p><p class="faddr">Secrétariat : lun – ven 8 h – 12 h 30 et 14 h 30 – 18 h<br>Samedi 8 h – 12 h · Dimanche fermé</p><a href="https://www.google.com/maps/search/?api=1&query=6.168785%2C1.225462" target="_blank" rel="noopener">Itinéraire Google Maps</a><a href="#inscription">Pré-inscription</a></div>
 </div><div class="legal"><span>© 2026 SODAF Auto-École · Togo · <a href="/equipe/" target="sodaf-equipe" class="teamlink">Espace équipe</a></span><span>Powered by ADM Core</span></div></div></footer>
 
