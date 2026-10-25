@@ -6512,9 +6512,9 @@ function init(root) {
     };
     if (done) { show(done); return; }
     // 25 oct. : capture d'écran du SMS Mixx obligatoire (remplace la référence et le numéro)
-    const insCap = () => '<div class="insc-cap"><p class="insc-cap-t">Prends une capture d\'écran du SMS</p>' +
+    const insCap = () => '<div class="insc-cap"><p class="insc-cap-t">Prends une capture d\'écran du SMS (ou une photo)</p>' +
       '<div class="insc-cap-row"><figure class="insc-cap-ex" aria-label="Exemple de capture"><span class="insc-cap-tag">Exemple officiel</span><div class="insc-cap-ph"><div class="insc-cap-bar"><b>Mixx by Yas</b><small>SMS</small></div><div class="insc-cap-bub">Paiement de <mark>' + "5 000 F" + '</mark> à <mark>' + escI(d.n || "ADM CORE") + '</mark> effectué.<br>Réf : <mark>MP2410XX.XXXX</mark><br>Le 25/10 à 10:42</div></div><figcaption>On doit bien voir : le <b>montant</b>, le nom <b>' + escI(d.n || "ADM CORE") + '</b> et la <b>référence</b>.</figcaption></figure>' +
-      '<div class="insc-cap-go"><div class="insc-cap-prev" id="sd-inCapPrev" hidden></div><label class="btn btn-green btn-sm" for="sd-inCapF" id="sd-inCapBtn">Ajouter ma capture</label><input type="file" id="sd-inCapF" accept="image/*" class="insc-file"><small>Obligatoire pour valider le paiement Mixx.</small></div></div></div>';
+      '<div class="insc-cap-go"><div class="insc-cap-prev" id="sd-inCapPrev" hidden></div><div class="insc-cap-btns"><label class="btn btn-green btn-sm" for="sd-inCapF" id="sd-inCapBtn">Charger ma capture</label><label class="btn btn-line btn-sm" for="sd-inCapC" id="sd-inCapCam">Prendre une photo</label></div><input type="file" id="sd-inCapF" accept="image/*" class="insc-file"><input type="file" id="sd-inCapC" accept="image/*" capture="environment" class="insc-file"><small>Obligatoire pour valider le paiement Mixx.</small></div></div></div>';
     box.innerHTML = '<form class="insc-form" id="sd-inForm" novalidate>' +
       '<div class="insc-hello"><p class="eyebrow">Dossier d\'inscription</p><h2>Bonjour ' + escI(d.p) + '</h2><p class="insc-meta"><span>N° client <b>SO' + d.i + '</b></span><span>' + escI(d.f) + '</span></p><ol class="insc-steps" aria-label="Les 4 étapes"><li>Formule</li><li>Identité</li><li>Photo</li><li>Paiement</li></ol></div>' +
       '<fieldset class="insc-step"><legend><i>1</i>Ta formule</legend>' +
@@ -6533,13 +6533,13 @@ function init(root) {
       '<label class="insc-accord"><input type="checkbox" id="sd-inPhOk"><span>J\'accepte que SODAF garde ma photo pour me reconnaître pendant ma formation.</span></label></fieldset>' +
       '<fieldset class="insc-step"><legend><i>4</i>Ton paiement</legend><p class="insc-sub">Comment veux-tu payer ?</p><div class="insc-cards insc-two insc-pay">' +
       '<label class="rcm on"><input type="radio" name="inM" value="agence" checked><span><b>À l\'agence</b><small>En espèces, au 412 Avenue Akei, Tokoin Tamé</small></span></label>' +
-      '<label class="rcm' + (mixxOk ? "" : " off") + '"><input type="radio" name="inM" value="mixx"' + (mixxOk ? "" : " disabled") + '><span><b>Par Mixx by Yas (T-Money)</b><small>' + (mixxOk ? "Depuis ton téléphone, sans te déplacer" : MIXX_MAINT ? "En maintenance : pour l'instant, paie à l'agence" : "Bientôt disponible : pour l'instant, paie à l'agence") + "</small></span></label></div>" +
+      '<label class="rcm' + (mixxOk ? "" : " off") + '"><input type="radio" name="inM" value="mixx"' + (mixxOk ? "" : " disabled") + '><span><b>Par Mixx by Yas (T-Money)</b><small>' + (mixxOk ? "Depuis ton téléphone, ou dans un point de dépôt Mixx" : MIXX_MAINT ? "En maintenance : pour l'instant, paie à l'agence" : "Bientôt disponible : pour l'instant, paie à l'agence") + "</small></span></label></div>" +
       (MIXX_MARCHAND(d.m)
-        ? '<div class="insc-mixx mx" id="sd-inMixx" hidden><p class="mx-k">Paie <b id="sd-inAmt"></b> avec Mixx</p>' +
+        ? '<div class="insc-mixx mx" id="sd-inMixx" hidden><p class="mx-k">Paie <b id="sd-inAmt"></b> avec Mixx</p><div class="mx-2f"><p><b>Tu as Mixx sur ton téléphone ?</b> Paie toi-même avec le code ci-dessous.</p><p><b>Pas de Mixx ?</b> Va dans un <b>point de dépôt Mixx by Yas</b> (au bord de la route) et montre ce code : l\'agent fait le paiement pour toi.</p></div>' +
           '<div class="mx-code" id="sd-inUssd"></div>' +
           '<div class="mx-acts">' + (MIXX_IOS ? "" : '<a class="btn btn-green" id="sd-inPay" href="#">Payer avec Mixx</a>') + '<button class="btn ' + (MIXX_IOS ? "btn-green" : "btn-line") + '" type="button" id="sd-inCopy">Copier</button></div><p id="sd-inCopyOk" hidden></p>' +
-          "<ol>" + (MIXX_IOS ? "<li>Touche <b>Copier</b>, ouvre ton clavier d'appel, colle et appelle.</li>" : "<li>Touche <b>Payer avec Mixx</b>, puis le bouton vert d'appel.</li>") + "<li>Tape ton code secret Mixx." + (d.n ? " Nom affiché : <b>" + escI(d.n) + "</b>." : "") + "</li><li>Fais une <b>capture d'écran</b> du SMS de paiement reçu, et ajoute-la ci-dessous.</li></ol>" + insCap() + "</div>"
-        : '<div class="insc-mixx" id="sd-inMixx" hidden><ol><li>Sur ton téléphone, envoie <b id="sd-inAmt"></b> par Mixx by Yas au <b>' + escI(d.m) + "</b>" + (d.n ? " (" + escI(d.n) + ")" : "") + ".</li><li>Motif : <b>SO" + d.i + "</b></li><li>Fais une <b>capture d'écran</b> du SMS de paiement reçu, et ajoute-la ci-dessous.</li></ol>" + insCap() + "</div>") +
+          "<ol>" + (MIXX_IOS ? "<li>Touche <b>Copier</b>, ouvre ton clavier d'appel, colle et appelle.</li>" : "<li>Touche <b>Payer avec Mixx</b>, puis le bouton vert d'appel.</li>") + "<li>Tape ton code secret Mixx." + (d.n ? " Nom affiché : <b>" + escI(d.n) + "</b>." : "") + "</li><li>Prends une <b>capture d'écran</b> du SMS de paiement. Au point de dépôt : prends en <b>photo</b> le SMS sur le téléphone de l'agent.</li></ol>" + insCap() + "</div>"
+        : '<div class="insc-mixx" id="sd-inMixx" hidden><ol><li>Sur ton téléphone, envoie <b id="sd-inAmt"></b> par Mixx by Yas au <b>' + escI(d.m) + "</b>" + (d.n ? " (" + escI(d.n) + ")" : "") + ".</li><li>Motif : <b>SO" + d.i + "</b></li><li>Prends une <b>capture d'écran</b> du SMS de paiement. Au point de dépôt : prends en <b>photo</b> le SMS sur le téléphone de l'agent.</li></ol>" + insCap() + "</div>") +
       "</fieldset>" +
       (exam ? '<p class="insc-note">À la fin de ta formation : <b>35&nbsp;000&nbsp;F</b> pour l\'inscription à l\'examen d\'État et tes papiers (carte d\'identité, acte de naissance, 2 photos). SODAF dépose ton dossier ; l\'État t\'envoie ensuite la date et le lieu par message.</p>' : "") +
       '<p class="insc-err" id="sd-inErr" hidden></p><button class="btn btn-green insc-go" type="submit" id="sd-inGo">Valider mon inscription</button><p class="insc-safe">Après ton paiement, ton reçu officiel arrive sur WhatsApp.</p></form>';
@@ -6582,11 +6582,12 @@ function init(root) {
         clearTimeout(b._t); b._t = setTimeout(() => { b.textContent = "Copier"; b.classList.remove("is-ok"); code.classList.remove("copied"); }, 4000); }
       else { try { const r = document.createRange(); r.selectNodeContents(code); const s = getSelection(); s.removeAllRanges(); s.addRange(r); } catch (x) {} nt.innerHTML = "La copie automatique ne marche pas ici : <b>appuie longtemps sur le code</b> pour le copier."; nt.className = "mx-ok ko"; nt.hidden = false; } });
     let phBlob = null, capBlob = null;
-    if ($("#sd-inCapF")) $("#sd-inCapF").addEventListener("change", async (e) => {
+    const capLire = async (e) => {
       const f = e.target.files && e.target.files[0]; if (!f) return;
-      try { capBlob = await photoCompresse(f, 1600, false); const u = URL.createObjectURL(capBlob); $("#sd-inCapPrev").innerHTML = '<img src="' + u + '" alt="Ta capture"><span>Capture ajoutée</span>'; $("#sd-inCapPrev").hidden = false; $("#sd-inCapBtn").textContent = "Changer la capture"; $("#sd-inCapBtn").classList.replace("btn-green", "btn-line"); $("#sd-inErr").hidden = true; }
-      catch (x) { capBlob = null; const er = $("#sd-inErr"); er.textContent = "Cette capture n'a pas pu être lue. Choisis une autre image."; er.hidden = false; }
-    });
+      try { capBlob = await photoCompresse(f, 1600, false); const u = URL.createObjectURL(capBlob); $("#sd-inCapPrev").innerHTML = '<img src="' + u + '" alt="Ta capture"><span>Capture ajoutée</span>'; $("#sd-inCapPrev").hidden = false; $("#sd-inCapBtn").textContent = "Changer la capture"; $("#sd-inCapBtn").classList.replace("btn-green", "btn-line"); $("#sd-inCapCam").textContent = "Reprendre la photo"; $("#sd-inErr").hidden = true; }
+      catch (x) { capBlob = null; const er = $("#sd-inErr"); er.textContent = "Cette image n'a pas pu être lue. Charge une autre capture ou reprends la photo."; er.hidden = false; }
+    };
+    ["#sd-inCapF", "#sd-inCapC"].forEach((s) => { if ($(s)) $(s).addEventListener("change", capLire); });
     $("#sd-inPhF").addEventListener("change", async (e) => {
       const f = e.target.files && e.target.files[0]; if (!f) return;
       try { phBlob = await photoCompresse(f); const u = URL.createObjectURL(phBlob); $("#sd-inPh").innerHTML = '<img src="' + u + '" alt="Ta photo">'; $("#sd-inPh").classList.add("on"); $("#sd-inPhBtn").textContent = "Reprendre la photo"; $("#sd-inPhBtn").classList.replace("btn-green", "btn-line"); }
@@ -7517,6 +7518,9 @@ html.code-verrou article.ch.verrou>:not(header):not(.lock-cta){display:none!impo
 #sodaf-root .mx-acts .btn.is-ok{background:#0A5A40;border-color:#0A5A40;color:#fff;box-shadow:0 0 0 3px rgba(10,90,64,.18)}
 #sodaf-root .mx-ok{margin:-4px 0 12px!important;padding:9px 12px;border-radius:8px;background:var(--green-soft);border:1px solid #BFDCCF;color:#1F4D3B;font-size:.86rem;line-height:1.45}
 #sodaf-root .mx-ok.ko{background:#FFF4EC;border-color:#F3C9A8;color:#7A3410}
+#sodaf-root .mx-2f{display:grid;gap:6px;margin:0 0 12px;padding:10px 12px;border-radius:8px;background:#fff;border:1px solid #EAD9A0;font-size:.86rem;line-height:1.45;color:#3D444D}
+#sodaf-root .mx-2f p{margin:0!important}
+#sodaf-root .insc-cap-btns{display:flex;flex-wrap:wrap;gap:8px}
 #sodaf-root .insc-cap{margin-top:14px;padding-top:14px;border-top:1px dashed #E0C97A}
 #sodaf-root .insc-cap-t{margin:0 0 10px!important;font:700 .76rem/1.3 var(--f-ui);letter-spacing:.07em;text-transform:uppercase;color:#4A535D}
 #sodaf-root .insc-cap-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
