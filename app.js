@@ -6507,15 +6507,15 @@ function init(root) {
     };
     if (done) { show(done); return; }
     box.innerHTML = '<form class="insc-form" id="sd-inForm" novalidate>' +
-      '<div class="insc-hello"><p class="eyebrow">N° client SO' + d.i + ' · ' + escI(d.f) + '</p><h2>Bonjour ' + escI(d.p) + '</h2><p>Quatre petites étapes et ton inscription est faite.</p></div>' +
+      '<div class="insc-hello"><p class="eyebrow">Dossier d\'inscription</p><h2>Bonjour ' + escI(d.p) + '</h2><p class="insc-meta"><span>N° client <b>SO' + d.i + '</b></span><span>' + escI(d.f) + '</span></p><ol class="insc-steps" aria-label="Les 4 étapes"><li>Formule</li><li>Identité</li><li>Photo</li><li>Paiement</li></ol></div>' +
       '<fieldset class="insc-step"><legend><i>1</i>Ta formule</legend>' +
       (askEtu ? '<p class="insc-sub">Es-tu étudiant(e) ?</p><div class="insc-cards insc-two insc-etuq"><label class="rcm"><input type="radio" name="inE" value="non"><span><b>Non, je ne suis pas étudiant(e)</b><small>Tarif normal</small></span></label><label class="rcm etu"><input type="radio" name="inE" value="oui"><span><b>Oui, je suis étudiant(e)</b><small>Tarif étudiant</small></span></label></div><div class="insc-div insc-fq" role="separator" hidden></div>' +
         (() => { const fe = forms.find((f) => /étudiant/i.test(f[0])); return fe ? '<div class="insc-etuline" hidden><span>Ta formation</span><b>Formation complète · tarif étudiant</b><em>' + fmtF(fe[1]) + '</em><small>12 cours de code en salle · 12 séances de conduite de 2 h, à ton rythme</small></div>' : ""; })() : "") +
       '<p class="insc-sub insc-fq"' + (askEtu ? " hidden" : "") + '>Choisis ta formation</p><div class="insc-cards insc-fl"' + (askEtu ? " hidden" : "") + ">" + forms.map((f, k) => '<label class="rcm' + (un ? " on" : "") + (/étudiant/i.test(f[0]) ? " etu" : "") + '" data-etu="' + (/étudiant/i.test(f[0]) ? 1 : 0) + '"><input type="radio" name="inF" value="' + k + '"' + (un ? " checked" : "") + "><span><b>" + escI(nomF(f[0])) + "</b><small>" + escI(descF(f)) + "</small></span><em>" + fmtF(f[1]) + "</em></label>").join("") + "</div>" +
       '<div class="insc-payq"' + (un ? "" : " hidden") + '><div class="insc-div" role="separator"></div><p class="insc-sub">Combien paies-tu maintenant ?</p>' +
-      '<div class="insc-cards insc-two insc-pay"><label class="rcm on"><input type="radio" name="inP" value="moitie" checked><span><b>Je paie la moitié maintenant</b><small>Le reste dans les 2 semaines</small></span><em data-p="moitie"></em></label><label class="rcm"><input type="radio" name="inP" value="total"><span><b>Je paie tout maintenant</b><small>Formation soldée, plus rien à payer</small></span><em data-p="total"></em></label><label class="rcm insc-only"><input type="radio" name="inP" value="inscription"><span><b>Je paie seulement l\'inscription</b><small>Tu es inscrit(e) et tu as tout le code en ligne. Une fois inscrit(e), tu as 2 mois pour commencer à payer ta formation.</small></span><em data-p="inscription"></em></label></div>' +
+      '<div class="insc-cards insc-two insc-pay"><label class="rcm on"><input type="radio" name="inP" value="moitie" checked><span><b>Je paie la moitié maintenant</b><small>Le reste dans les 2 semaines</small></span><em data-p="moitie"></em></label><label class="rcm"><input type="radio" name="inP" value="total"><span><b>Je paie tout maintenant</b><small>Formation soldée, plus rien à payer</small></span><em data-p="total"></em></label><label class="rcm insc-only"><input type="radio" name="inP" value="inscription"><span><b>Je paie seulement l\'inscription</b><small>Tout le code en ligne tout de suite. Tu as 2 mois pour commencer à payer ta formation.</small></span><em data-p="inscription"></em></label></div>' +
       '<p class="insc-sum" id="sd-inSum"></p></div></fieldset>' +
-      '<fieldset class="insc-step"><legend><i>2</i>Tes informations</legend><p class="insc-sub">Vérifie que c\'est bien toi. Une erreur ? Écris au secrétariat sur WhatsApp.</p><div class="insc-grid">' +
+      '<fieldset class="insc-step"><legend><i>2</i>Tes informations</legend><p class="insc-sub insc-help">Vérifie que c\'est bien toi. Une erreur ? Écris au secrétariat sur WhatsApp.</p><div class="insc-grid">' +
       '<div class="field"><label for="sd-inNom">Nom</label><input id="sd-inNom" autocomplete="family-name" maxlength="60" value="' + escI(d.nf || "") + '"' + (d.nf ? " readonly" : "") + '></div><div class="field"><label for="sd-inPre">Prénoms</label><input id="sd-inPre" autocomplete="given-name" maxlength="80" value="' + escI(d.pr || d.nc || d.p || "") + '"' + (d.pr || d.nc || d.p ? " readonly" : "") + '></div>' +
       '<div class="field"><label for="sd-inTel">Téléphone / WhatsApp</label><div class="tel"><span>+228</span><input id="sd-inTel" inputmode="numeric" maxlength="11" value="' + escI(String(d.t || "").replace(/\D/g, "").replace(/^228/, "").replace(/(\d{2})(?=\d)/g, "$1 ")) + '"' + (String(d.t || "").replace(/\D/g, "").length >= 8 ? " readonly" : "") + '></div></div><div class="field"><label for="sd-inQ">Quartier</label><input id="sd-inQ" maxlength="80" placeholder="Ex. Bè, Adidogomé" value="' + escI(d.q || "") + '"' + (d.q ? " readonly" : "") + '></div>' +
       "</div></fieldset>" +
@@ -6535,7 +6535,7 @@ function init(root) {
       '<div class="insc-grid"><div class="field"><label for="sd-inMt">Numéro qui a payé</label><div class="tel"><span>+228</span><input id="sd-inMt" inputmode="numeric" maxlength="11" placeholder="90 00 00 00"></div></div><div class="field"><label for="sd-inMr">Référence de la transaction (SMS)</label><input id="sd-inMr" maxlength="60" placeholder="Ex. MP2410…"></div></div></div>') +
       "</fieldset>" +
       (exam ? '<p class="insc-note">À la fin de ta formation : <b>35&nbsp;000&nbsp;F</b> pour l\'inscription à l\'examen d\'État et tes papiers (carte d\'identité, acte de naissance, 2 photos). SODAF dépose ton dossier ; l\'État t\'envoie ensuite la date et le lieu par message.</p>' : "") +
-      '<p class="insc-err" id="sd-inErr" hidden></p><button class="btn btn-green insc-go" type="submit" id="sd-inGo">Valider mon inscription</button></form>';
+      '<p class="insc-err" id="sd-inErr" hidden></p><button class="btn btn-green insc-go" type="submit" id="sd-inGo">Valider mon inscription</button><p class="insc-safe">Après ton paiement, ton reçu officiel arrive sur WhatsApp.</p></form>';
     const form = $("#sd-inForm");
     const val = () => { const c = form.querySelector("[name=inF]:checked"); if (!c) return null; const f = forms[+c.value], p = form.querySelector("[name=inP]:checked").value; return { f, p, ins: f[3] === undefined ? 5000 : f[3], a: (f[3] === undefined ? 5000 : f[3]) + (p === "total" ? f[1] : p === "inscription" ? 0 : f[1] / 2) }; };
     // 24 oct. : une question à la fois. Oui → tarif étudiant directement (pas de case à cocher) ; Non → formation complète ou formule rapide.
@@ -6551,10 +6551,15 @@ function init(root) {
       form.querySelectorAll(".rcm").forEach((l) => l.classList.toggle("on", l.querySelector("input").checked));
       $("#sd-inMixx").hidden = form.querySelector("[name=inM]:checked").value !== "mixx";
       form.querySelector(".insc-payq").hidden = !v;
-      if (!v) { form.querySelector('[data-p="moitie"]').textContent = "—"; form.querySelector('[data-p="total"]').textContent = "—"; $("#sd-inSum").innerHTML = '<span class="insc-sumrow"><span>À payer maintenant</span><b>—</b></span><span>' + (askEtu && !form.querySelector("[name=inE]:checked") ? "Réponds d'abord : es-tu étudiant(e) ?" : "Choisis ta formation.") + "</span>"; $("#sd-inAmt").textContent = "—"; return; }
+      if (!v) { form.querySelector('[data-p="moitie"]').textContent = "—"; form.querySelector('[data-p="total"]').textContent = "—"; $("#sd-inSum").innerHTML = '<span class="insc-sh">Récapitulatif</span><span class="insc-tot"><span>À payer maintenant</span><b>—</b></span><span class="insc-reste">' + (askEtu && !form.querySelector("[name=inE]:checked") ? "Réponds d'abord : es-tu étudiant(e) ?" : "Choisis ta formation.") + "</span>"; $("#sd-inAmt").textContent = "—"; return; }
       form.querySelector('[data-p="moitie"]').textContent = fmtF(v.ins + v.f[1] / 2); form.querySelector('[data-p="total"]').textContent = fmtF(v.ins + v.f[1]); form.querySelector('[data-p="inscription"]').textContent = fmtF(v.ins);
       { const io = form.querySelector(".insc-only"); io.hidden = !v.ins; if (!v.ins && v.p === "inscription") { form.querySelector('[name=inP][value=moitie]').checked = true; return upd(); } }
-      $("#sd-inSum").innerHTML = '<span class="insc-sumrow"><span>À payer maintenant</span><b>' + fmtF(v.a) + "</b></span><span>" + (v.ins ? "Droit d'inscription " + fmtF(v.ins).replace(/ /g, "&nbsp;") : /remise/i.test(v.f[0]) ? "Inscription comprise" : "Inscription offerte") + (v.p === "inscription" ? " : tu es inscrit(e)" : " + " + (v.p === "total" ? "toute la formation" : "la moitié de la formation")) + "</span>" + (v.p === "inscription" ? '<span class="insc-reste">Pour commencer les cours en salle et la conduite : <b>' + fmtF(v.f[1] / 2) + "</b> (la moitié). Tu as 2 mois pour commencer à payer. En attendant, tout le code en ligne est à toi.</span>" : v.p === "moitie" ? '<span class="insc-reste">Reste à payer dans les 2 semaines : <b>' + fmtF(v.f[1] / 2) + "</b>. Pas de conduite avant.</span>" : '<span class="insc-reste">Formation soldée : plus rien à payer ensuite</span>');
+      { const nb = (x) => fmtF(x).replace(/ /g, "&nbsp;"), rl = (a, b) => '<span class="insc-rl"><span>' + a + "</span><b>" + b + "</b></span>";
+        $("#sd-inSum").innerHTML = '<span class="insc-sh">Récapitulatif</span>' +
+          rl("Droit d'inscription", v.ins ? nb(v.ins) : /remise/i.test(v.f[0]) ? "Compris" : "Offert") +
+          (v.p === "inscription" ? "" : rl(v.p === "total" ? "Formation · tout" : "Formation · la moitié", nb(v.p === "total" ? v.f[1] : v.f[1] / 2))) +
+          '<span class="insc-tot"><span>À payer maintenant</span><b>' + nb(v.a) + "</b></span>" +
+          '<span class="insc-reste">' + (v.p === "inscription" ? "Pour commencer les cours en salle et la conduite : <b>" + nb(v.f[1] / 2) + "</b> (la moitié). Tu as 2 mois pour commencer à payer. En attendant, tout le code en ligne est à toi." : v.p === "moitie" ? "Reste à payer dans les 2 semaines : <b>" + nb(v.f[1] / 2) + "</b>. Pas de conduite avant." : "Formation soldée : plus rien à payer ensuite.") + "</span>"; }
       $("#sd-inAmt").textContent = fmtF(v.a);
       if (/étudiant/i.test(v.f[0])) $("#sd-inSum").insertAdjacentHTML("beforeend", '<span class="insc-etunote">À l\'agence, montre ta <b>carte d\'étudiant</b> et ta <b>carte d\'identité</b> : sans elles, c\'est le tarif normal.</span>');
       if ($("#sd-inUssd")) { $("#sd-inUssd").textContent = MIXX_USSD(d.m, v.a); if ($("#sd-inPay")) $("#sd-inPay").href = MIXX_TEL(d.m, v.a); }
@@ -7432,6 +7437,63 @@ html.code-verrou article.ch.verrou>:not(header):not(.lock-cta){display:none!impo
 .insc-etunote b{font:inherit;font-weight:700;color:inherit}
 .insc-etuline{display:grid;grid-template-columns:1fr auto;gap:2px 12px;margin:14px 0 0;padding:14px 16px;border-radius:14px;background:#E8F2FF;border:1.5px solid #9CC3F5}.insc-etuline[hidden]{display:none}.insc-etuline span{grid-column:1/-1;font:700 .74rem var(--f-ui);text-transform:uppercase;letter-spacing:.06em;color:#1F5FAE}.insc-etuline b{font:800 1.05rem var(--f-ui)}.insc-etuline em{font:800 1.1rem var(--f-ui);font-style:normal;white-space:nowrap}.insc-etuline small{grid-column:1/-1;color:var(--muted);font-size:.86rem}.insc-payq[hidden]{display:none}.insc-cards [hidden],.insc-fq[hidden],.insc-fl[hidden]{display:none!important}
 @media (max-width:520px){#sodaf-root .insc-step{padding:20px 14px 16px}#sodaf-root .insc-step .rcm{padding:12px 13px}}
+/* Lien d'inscription, version pro (25 oct. 2026). Une couleur par question : étudiant = bleu, formation = vert, paiement = orange. */
+#sodaf-root .insc-form{gap:16px;max-width:720px}
+#sodaf-root .insc-form .insc-hello{padding:22px 22px 18px;border:1px solid #DCE0E5;border-radius:12px;background:#fff}
+#sodaf-root .insc-form .insc-hello .eyebrow{margin:0!important;font:700 .74rem/1.2 var(--f-ui);letter-spacing:.1em;text-transform:uppercase;color:#6B7480}
+#sodaf-root .insc-form .insc-hello h2{margin:6px 0 0;font-size:1.65rem}
+#sodaf-root .insc-form .insc-meta{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0!important}
+#sodaf-root .insc-form .insc-meta span{padding:4px 10px;border-radius:6px;background:#F1F3F5;border:1px solid #E3E6EA;font:500 .82rem var(--f-ui);color:#3D444D}
+#sodaf-root .insc-form .insc-meta b{font-weight:700;color:#15191E}
+#sodaf-root .insc-steps{list-style:none;counter-reset:st;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:18px 0 0;padding:16px 0 0;border-top:1px solid #E8EBEE}
+#sodaf-root .insc-steps li{counter-increment:st;display:flex;flex-direction:column;gap:6px;font:600 .8rem var(--f-ui);color:#4A535D;min-width:0}
+#sodaf-root .insc-steps li::before{content:counter(st);display:grid;place-items:center;width:24px;height:24px;border-radius:6px;background:#15191E;color:#fff;font:700 .76rem var(--f-ui)}
+#sodaf-root .insc-form .insc-step{padding:0 20px 20px;border:1px solid #DCE0E5;border-radius:12px;box-shadow:none;background:#fff;overflow:hidden}
+#sodaf-root .insc-form .insc-step>legend{float:left;box-sizing:border-box;width:calc(100% + 40px);margin:0 -20px 18px;padding:14px 20px;display:flex;align-items:center;gap:12px;background:#F7F8FA;border-bottom:1px solid #E8EBEE;font:700 1.02rem var(--f-ui);color:#15191E}
+#sodaf-root .insc-form .insc-step>legend i{width:26px;height:26px;border-radius:6px;background:#15191E;font-size:.8rem}
+#sodaf-root .insc-form .insc-step>*:not(legend){clear:both}
+#sodaf-root .insc-form .insc-sub{margin:0 0 10px!important;font:700 .76rem/1.3 var(--f-ui);letter-spacing:.07em;text-transform:uppercase;color:#4A535D}
+#sodaf-root .insc-form .insc-div{height:1px;margin:20px 0 18px;background:#E8EBEE}
+#sodaf-root .insc-form .insc-cards{gap:8px}
+#sodaf-root .insc-form .insc-step .rcm{display:grid;grid-template-columns:20px minmax(0,1fr) auto;column-gap:12px;row-gap:0;align-items:start;padding:14px 16px;border-radius:10px;border:1px solid #DCE0E5;background:#fff;box-shadow:none;transition:border-color .15s,background .15s}
+#sodaf-root .insc-form .insc-step .rcm:hover{border-color:#AEB6BF}
+#sodaf-root .insc-form .insc-step .rcm input{grid-column:1;grid-row:1;margin:1px 0 0}
+#sodaf-root .insc-form .insc-step .rcm span{grid-column:2;grid-row:1}
+#sodaf-root .insc-form .insc-step .rcm b{font:650 .98rem/1.35 var(--f-ui);color:#15191E}
+#sodaf-root .insc-form .insc-step .rcm small{margin-top:3px;font-size:.84rem;line-height:1.45;color:#6B7480}
+#sodaf-root .insc-form .insc-step .rcm em{grid-column:3;grid-row:1;margin:0;text-align:right;font:700 1.02rem/1.35 var(--f-ui);font-variant-numeric:tabular-nums;color:#15191E}
+#sodaf-root .insc-form .insc-step .rcm em:empty{display:none}
+#sodaf-root .insc-form .insc-step .rcm.etu{background:#fff;border-color:#DCE0E5}
+#sodaf-root .insc-form .insc-step .rcm.off{opacity:.55;background:#F7F8FA}
+#sodaf-root .insc-form .insc-etuq .rcm.on{border-color:#1F6FB2;background:#EEF5FC;box-shadow:inset 0 0 0 1px #1F6FB2}
+#sodaf-root .insc-form .insc-etuq .rcm input{accent-color:#1F6FB2}
+#sodaf-root .insc-form .insc-fl .rcm.on{border-color:var(--green);background:var(--green-soft);box-shadow:inset 0 0 0 1px var(--green)}
+#sodaf-root .insc-form .insc-fl .rcm input{accent-color:var(--green)}
+#sodaf-root .insc-form .insc-pay .rcm.on{border-color:#C2410C;background:#FFF4EC;box-shadow:inset 0 0 0 1px #C2410C}
+#sodaf-root .insc-form .insc-pay .rcm input{accent-color:#C2410C}
+#sodaf-root .insc-form .insc-pay .rcm.on em{color:#9A3412}
+@media (min-width:480px){#sodaf-root .insc-form .insc-etuq{grid-template-columns:1fr 1fr}}
+#sodaf-root .insc-form .insc-pay{grid-template-columns:1fr}
+#sodaf-root .insc-form .insc-sub.insc-help{font:400 .88rem/1.5 var(--f-ui);letter-spacing:0;text-transform:none;color:#5B6670}
+#sodaf-root .insc-form .insc-etuline{margin:14px 0 0;padding:14px 16px;border-radius:10px;background:var(--green-soft);border:1px solid var(--green);box-shadow:inset 0 0 0 1px var(--green)}
+#sodaf-root .insc-form .insc-etuline span{color:var(--green);letter-spacing:.07em}
+#sodaf-root .insc-form .insc-etuline b{font:650 .98rem var(--f-ui)}
+#sodaf-root .insc-form .insc-etuline em{font:700 1.02rem var(--f-ui);font-variant-numeric:tabular-nums}
+#sodaf-root .insc-form .insc-sum{display:flex;flex-direction:column;gap:0;margin-top:18px!important;padding:0;border:1px solid #DCE0E5;border-radius:10px;background:#fff;overflow:hidden}
+#sodaf-root .insc-form .insc-sum>.insc-sh{padding:10px 16px;background:#F7F8FA;border-bottom:1px solid #E8EBEE;font:700 .72rem var(--f-ui);letter-spacing:.09em;text-transform:uppercase;color:#6B7480}
+#sodaf-root .insc-form .insc-sum>.insc-rl{display:flex;justify-content:space-between;gap:12px;padding:10px 16px;border-bottom:1px solid #F0F2F4;font-size:.92rem;color:#3D444D}
+#sodaf-root .insc-form .insc-sum>.insc-rl b{font-weight:600;color:#15191E;font-variant-numeric:tabular-nums;white-space:nowrap}
+#sodaf-root .insc-form .insc-sum>.insc-tot{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:14px 16px 10px;font-size:1rem;font-weight:700;color:#15191E}
+#sodaf-root .insc-form .insc-sum>.insc-tot b{font:800 1.4rem var(--f-ui);font-variant-numeric:tabular-nums;color:var(--green);white-space:nowrap}
+#sodaf-root .insc-form .insc-sum>.insc-reste{display:block;padding:0 16px 14px;font-size:.85rem;line-height:1.5;color:#5B6670}
+#sodaf-root .insc-form .insc-sum>.insc-etunote{margin:0 16px 14px}
+#sodaf-root .insc-form .insc-ph{width:88px;height:88px;margin:4px}
+#sodaf-root .insc-form .insc-phtx p{font-size:.9rem}
+#sodaf-root .insc-form .insc-accord{margin-top:16px;padding-top:14px;border-top:1px solid #E8EBEE;font-size:.9rem;color:#3D444D}
+#sodaf-root .insc-form .insc-note{margin:0;padding:12px 14px;background:#F7F8FA;border:1px solid #E8EBEE;border-left:3px solid #15191E;border-radius:8px;font-size:.86rem;line-height:1.55;color:#4A535D}
+#sodaf-root .insc-form .insc-go{align-self:stretch;justify-content:center;text-align:center;padding:16px;border-radius:10px;font:700 1.02rem var(--f-ui)}
+#sodaf-root .insc-form .insc-safe{margin:-6px 0 0!important;text-align:center;font-size:.82rem;color:#6B7480}
+@media (max-width:520px){#sodaf-root .insc-form .insc-step{padding:0 14px 16px}#sodaf-root .insc-form .insc-step>legend{width:calc(100% + 28px);margin:0 -14px 16px;padding:13px 14px}#sodaf-root .insc-form .insc-step .rcm{padding:13px 13px}#sodaf-root .insc-form .insc-hello{padding:18px 16px 16px}}
 /* Page Pré-inscription : formulaire + panneau contact sombre */
 #sodaf-root .pi{grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:22px;align-items:start}
 #sodaf-root .pi-form{padding:26px 26px 22px;border-radius:18px;border:1px solid #DDE1E5;box-shadow:0 18px 40px -26px rgba(21,25,30,.28)}
