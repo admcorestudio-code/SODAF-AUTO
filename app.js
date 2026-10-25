@@ -1563,7 +1563,7 @@ ${HEAD("Formations", "Nos formations et tarifs", "Chaque formule comprend le cod
 <div class="wrap sec"><div class="grid g3">
 <div class="card soft"><p class="eyebrow">Paiement</p><h3 style="margin-top:10px">En 2 tranches</h3><p style="margin-top:8px">La moitié à l'inscription, le reste dès que possible (avant ta première séance de conduite). Un reçu pour chaque paiement.</p><div class="pills"><span>Espèces</span><span>Mixx by Yas (T-Money)</span></div></div>
 <div class="card soft"><p class="eyebrow">Dossier à fournir</p><h3 style="margin-top:10px">Pour l'examen, en fin de formation</h3><ul style="margin:8px 0 0;padding-left:1.1em;color:var(--muted)"><li>Acte de naissance</li><li>Photocopie de la carte d'identité</li><li>2 photos d'identité, format passeport</li></ul><p style="margin-top:10px;font-size:.92rem"><b>Examen d'État</b> : dépôt de 35&nbsp;000&nbsp;F pour l'inscription à l'examen final, à régler à la fin de la formation, en plus du prix de la formation. SODAF dépose ton dossier ; l'État t'envoie ensuite un message avec la date de ton examen, à passer à SOTOPLA.</p></div>
-<div class="card soft"><p class="eyebrow">Bon à savoir</p><h3 style="margin-top:10px">Des règles claires</h3><ul style="margin:8px 0 0;padding-left:1.1em;color:var(--muted)"><li>Le droit d'inscription n'est pas remboursable.</li><li>Tu ne peux pas venir à ta séance de conduite ? Préviens la veille avant 18 h : rien n'est perdu. Sans prévenir : rattrapage seulement le mercredi, et au 4e rendez-vous manqué, 3 000 F pour débloquer ta conduite.</li><li>Conduite : du lundi au samedi de 7 h 30 à 9 h 30 et de 10 h à 12 h, et de 15 h 45 à 17 h 45 en semaine. Jusqu'à 3 séances par semaine, tout est à faire dans les 3 mois.</li><li>Secrétariat : du lundi au vendredi de 8 h à 12 h 30 et de 14 h 30 à 18 h, le samedi de 8 h à 12 h.</li></ul></div>
+<div class="card soft"><p class="eyebrow">Bon à savoir</p><h3 style="margin-top:10px">Des règles claires</h3><ul style="margin:8px 0 0;padding-left:1.1em;color:var(--muted)"><li>Le droit d'inscription n'est pas remboursable.</li><li>Tu ne peux pas venir à ta séance de conduite ? Préviens la veille avant 18 h : rien n'est perdu. Sans prévenir : rattrapage seulement le mercredi, et au 4e rendez-vous manqué, 3 000 F pour débloquer ta conduite.</li><li>Conduite : du lundi au samedi de 7 h 30 à 9 h 30 et de 10 h à 12 h, et de 15 h 45 à 17 h 45 en semaine. Jusqu'à 3 séances par semaine, tout est à faire dans les 3 mois.</li><li>Secrétariat : du lundi au vendredi de 7 h 30 à 12 h 30 et de 14 h 30 à 18 h, le samedi de 7 h 30 à 12 h et de 13 h 30 à 17 h.</li></ul></div>
 </div></div>
 <div class="wrap sec" id="formations-docs" style="padding-top:0"><div class="sec-head"><div><p class="eyebrow">À télécharger</p><h2>Fiche et planning</h2></div><p>À imprimer, à garder sur ton téléphone ou à envoyer à un proche.</p></div>
 <div class="card doc doc-cover"><img class="cover" src="/apercu-fiche.jpg" alt="Aperçu de la fiche de renseignement SODAF" width="120" height="170" loading="lazy"><div><span class="tag">PDF · 1 page A4</span><h3 style="margin-top:8px">Fiche de renseignement</h3><p>Toutes les formules et leurs prix, le dossier à fournir et les règles de l'auto-école. À imprimer ou à envoyer à un proche.</p>
@@ -1907,6 +1907,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="tm-top"><div><p class="eyebrow" id="sd-tmRole">Espace équipe SODAF</p><h2 id="sd-tmHello">Bonjour</h2><p class="tm-today" id="sd-tmToday"></p></div><div class="tm-acc"><a class="tm-visio" id="sd-tmVisio" href="https://meet.google.com/new" target="_blank" rel="noopener" title="Ouvrir une visio Google Meet"><span class="tv-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="14" height="12" rx="3"/><path d="M16 10.5l5.2-3.2a.6.6 0 0 1 .8.5v8.4a.6.6 0 0 1-.8.5L16 13.5z"/></svg><i class="tv-live"></i></span><span class="tv-tx"><b>Visio</b><small>Google Meet</small></span></a><a class="tm-visio-inv" id="sd-tmVisioWa" target="_blank" rel="noopener" hidden>Inviter l'équipe</a><button class="linkbtn" type="button" id="sd-teamOut">Se déconnecter</button></div></div>
 <div id="sd-tmToast" class="tm-toast" hidden></div>
 <div class="tm-tabs" role="tablist" id="sd-tmTabs">
+<button role="tab" data-t="plan" aria-selected="false"><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M7 14h3M14 14h3M7 18h3"/></svg></i><b>Planning</b><small>Qui est où, chaque jour</small></button>
 <button role="tab" data-t="msg" aria-selected="false"><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 10.5h7M8.5 14h4.5"/></svg></i><b>Messages</b><small>Canaux de l'équipe</small><em class="tm-badge" id="sd-msBadge" hidden></em></button>
 <div class="tm-sep" role="presentation"><span>Espace de travail</span></div>
 <button role="tab" data-t="taf" aria-selected="false"><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 9l1.5 1.5L12 8M8 15l1.5 1.5L12 14M14.5 9.5H17M14.5 15.5H17"/></svg></i><b>À faire</b><small id="sd-tfSub">Tâches à faire</small><em class="tm-badge" id="sd-tfBadge" hidden></em></button>
@@ -1916,7 +1917,6 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <button role="tab" data-t="mon" aria-selected="false"><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/><path d="M12 14.5V21M9.6 11.2 3.5 9.5M14.4 11.2l6.1-1.7"/></svg></i><b>Moniteur</b><small>Code en salle, conduite</small></button>
 <button role="tab" data-t="mec" aria-selected="false" hidden><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.2L3 17.8V21h3.2l6.3-6.3a4 4 0 0 0 5.2-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/></svg></i><b>Mécanique</b><small>Voiture, atelier, contrôle</small><em class="tm-badge" id="sd-mcBadge" hidden></em></button>
 <button role="tab" data-t="com" aria-selected="false" hidden><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg></i><b>Communication</b><small>Vidéos, statuts, pub</small><em class="tm-badge" id="sd-comBadge" hidden></em></button>
-<button role="tab" data-t="plan" aria-selected="false"><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M7 14h3M14 14h3M7 18h3"/></svg></i><b>Planning</b><small>Qui est où, chaque jour</small></button>
 <button role="tab" data-t="docs" aria-selected="false"><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></i><b>Documents</b><small>Carte, cachet, QR, affiches</small></button>
 </div>
 <div class="tm-pane" data-pane="sec" role="tabpanel">
@@ -2138,7 +2138,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <!-- Adresse de l'entreprise : TOUJOURS en dernier dans Documents (consigne du propriétaire, 13 oct. 2026). Les nouveaux documents s'ajoutent au-dessus, dans .entgrid. -->
 <div class="card soc-addr" id="sd-socAddr"><div class="soc-txt"><p class="eyebrow">Adresse de l'entreprise</p><h3>SODAF Auto-École</h3>
 <p class="soc-l"><b>412 Avenue Akei, Tokoin Tamé</b><br>En face de la caisse<br>Lomé, Togo</p>
-<p class="soc-meta"><span>GPS : 6.168785, 1.225462</span><span>Tél. et WhatsApp : +228 72 54 41 66</span><span>Lun – ven 8 h – 12 h 30 et 14 h 30 – 18 h · Sam 8 h – 12 h</span></p>
+<p class="soc-meta"><span>GPS : 6.168785, 1.225462</span><span>Tél. et WhatsApp : +228 72 54 41 66</span><span>Lun – ven 7 h 30 – 12 h 30 et 14 h 30 – 18 h · Sam 7 h 30 – 12 h et 13 h 30 – 17 h</span></p>
 <div class="acts"><a class="btn btn-green btn-sm" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=6.168785%2C1.225462">Itinéraire Google Maps</a><a class="btn btn-wa btn-sm" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent("SODAF Auto-École\n412 Avenue Akei, Tokoin Tamé (en face de la caisse), Lomé, Togo\nTél. : +228 72 54 41 66\nItinéraire : https://www.google.com/maps/search/?api=1&query=6.168785%2C1.225462")}">Envoyer l'adresse sur WhatsApp</a><button class="btn btn-line btn-sm" type="button" data-copyaddr>Copier l'adresse</button></div></div>
 <div class="soc-map"><iframe title="Carte : SODAF Auto-École, Tokoin Tamé, Lomé" src="about:blank" data-src="https://www.google.com/maps?q=6.168785,1.225462&z=17&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div></div>
 </div>
@@ -2305,7 +2305,7 @@ ${HEAD("Pré-inscription", "Rejoins SODAF", "Envoie ta demande en une minute : e
 <div class="pi-btns"><a class="btn btn-yellow btn-sm" href="tel:+22872544166">Appeler</a><a class="btn btn-wa btn-sm" href="${WA}" target="_blank" rel="noopener">WhatsApp</a><button class="pi-copy" type="button" data-copy="+228 72 54 41 66">Copier le numéro</button></div>
 <div class="pi-sep" aria-hidden="true"></div>
 <p class="pi-k">Nous trouver</p><p class="pi-addr">412 Avenue Akei, Tokoin Tamé, Lomé</p><p class="pi-sub">En face de la caisse</p>
-<dl class="pi-hours"><div><dt>Lundi – vendredi</dt><dd>8 h – 12 h 30<br>14 h 30 – 18 h</dd></div><div><dt>Samedi</dt><dd>8 h – 12 h</dd></div><div><dt>Dimanche</dt><dd>Fermé</dd></div><div><dt>Conduite</dt><dd>Dès 7 h 30, sur rendez-vous</dd></div></dl>
+<dl class="pi-hours"><div><dt>Lundi – vendredi</dt><dd>7 h 30 – 12 h 30<br>14 h 30 – 18 h</dd></div><div><dt>Samedi</dt><dd>7 h 30 – 12 h<br>13 h 30 – 17 h</dd></div><div><dt>Dimanche</dt><dd>Fermé</dd></div><div><dt>Conduite</dt><dd>Dès 7 h 30, sur rendez-vous</dd></div></dl>
 <p class="pi-note">Pendant la pause, écris-nous sur WhatsApp : on te répond au retour.</p>
 <a class="pi-map" href="https://www.google.com/maps/search/?api=1&query=6.168785%2C1.225462" target="_blank" rel="noopener">Ouvrir l'itinéraire dans Google Maps</a>
 </div>
@@ -2320,7 +2320,7 @@ ${HEAD("Pré-inscription", "Rejoins SODAF", "Envoie ta demande en une minute : e
 <footer class="site"><div class="wrap"><div class="cols">
 <div><a class="logo flogo" href="#accueil" aria-label="SODAF, accueil">${LOGO("#FFFFFF", "ws")}</a><p class="fslogan">L'art de conduire, la force de réussir.</p><p style="margin-top:8px;max-width:40ch">Code, secourisme, mécanique et conduite, en salle et en ligne.</p></div>
 <div><h4>Apprendre</h4><a href="#formations">Formations et tarifs</a><a href="#cours">Les cours</a><a href="#quiz">Le quiz</a><a href="#devoirs">Les devoirs</a><a href="#outils">Les outils</a><a href="#classe" class="fcls">Mode classe <span>Projection</span></a></div>
-<div><h4>Secrétariat</h4><span class="phone">72 54 41 66</span><p class="faddr">412 Avenue Akei, Tokoin Tamé, Lomé<br>(en face de la caisse)</p><p class="faddr">Secrétariat : lun – ven 8 h – 12 h 30 et 14 h 30 – 18 h<br>Samedi 8 h – 12 h · Dimanche fermé</p><a href="https://www.google.com/maps/search/?api=1&query=6.168785%2C1.225462" target="_blank" rel="noopener">Itinéraire Google Maps</a><a href="#inscription">Pré-inscription</a></div>
+<div><h4>Secrétariat</h4><span class="phone">72 54 41 66</span><p class="faddr">412 Avenue Akei, Tokoin Tamé, Lomé<br>(en face de la caisse)</p><p class="faddr">Secrétariat : lun – ven 7 h 30 – 12 h 30 et 14 h 30 – 18 h<br>Samedi 7 h 30 – 12 h et 13 h 30 – 17 h · Dimanche fermé</p><a href="https://www.google.com/maps/search/?api=1&query=6.168785%2C1.225462" target="_blank" rel="noopener">Itinéraire Google Maps</a><a href="#inscription">Pré-inscription</a></div>
 </div><div class="legal"><span>© 2026 SODAF Auto-École · Togo · <a href="/equipe/" target="sodaf-equipe" class="teamlink">Espace équipe</a></span><span>Powered by ADM Core</span></div></div></footer>
 
 <a class="wa-float" href="${WA}?text=${encodeURIComponent("Bonjour SODAF !")}" target="_blank" rel="noopener" aria-label="Écrire à SODAF sur WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 2s.8 2.3.9 2.5c.1.2 1.6 2.5 4 3.5 1.5.6 2 .7 2.8.6.4-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.2-.2-.4-.3z"/></svg>WhatsApp</a>
@@ -4176,7 +4176,7 @@ function init(root) {
     const dFr = (d) => (d ? dOnly(d).toLocaleDateString("fr-FR", { day: "numeric", month: "short" }) : "");
     const dLong = (d) => (d ? dOnly(d).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" }) : "");
     const ITI = "https://www.google.com/maps/search/?api=1&query=6.168785%2C1.225462";
-    const AGENCE = "*OÙ NOUS TROUVER*\n412 Avenue Akei, Tokoin Tamé (en face de la caisse)\nLun – ven : 8 h – 12 h 30 et 14 h 30 – 18 h · Sam : 8 h – 12 h\nItinéraire : " + ITI;
+    const AGENCE = "*OÙ NOUS TROUVER*\n412 Avenue Akei, Tokoin Tamé (en face de la caisse)\nLun – ven : 7 h 30 – 12 h 30 et 14 h 30 – 18 h · Sam : 7 h 30 – 12 h et 13 h 30 – 17 h\nItinéraire : " + ITI;
     const EXDU = (x) => 35000 - (+x.examen_remise || 0); // dépôt d'examen à payer, remise déduite (max 5 000 F, migration 0043)
     const mixxMsg = (amt, motif) => MIXX_MARCHAND(CFG.mixx_numero)
       ? "par *Mixx by Yas* : compose\n```" + MIXX_USSD(CFG.mixx_numero, amt) + "```\npuis tape ton code secret Mixx" + (CFG.mixx_nom ? " (nom affiché : " + CFG.mixx_nom + ")" : "") + ". Envoie-nous ensuite la capture du SMS ici."
@@ -6090,7 +6090,8 @@ function init(root) {
     const plQui = (d) => (PL.j[iso(d)] ? PL.j[iso(d)].qui : plRegle(d));
     const PL_NOM = { secretariat: "Secrétariat", gerant: "Gérante", admin: "Direction", ferme: "Agence fermée" };
     const plPrenom = (role) => { const p = PL.prof.find((x) => x.role === role && x.actif !== false); const n = p && p.nom ? String(p.nom).replace(/\s*SODAF\s*/i, "").trim() : ""; return n && n.toLowerCase() !== (ROLE_NOM[role] || "").toLowerCase() ? n : ""; };
-    const plHeures = (w) => (w === 5 ? "8 h – 12 h, puis l'atelier jusqu'à 17 h" : "8 h – 12 h 30 et 14 h 30 – 18 h");
+    // Heures de l'agence (25 oct.) : tout le monde à 7 h 30, comme la première conduite ; pause de midi ; samedi après-midi avec la mécanicienne (13 h 30)
+    const plHeures = (w) => (w === 5 ? "7 h 30 – 12 h et 13 h 30 – 17 h" : "7 h 30 – 12 h 30 et 14 h 30 – 18 h");
     // Ce que fait chaque personne un jour donné
     function plJour(role, d) {
       const w = (d.getDay() + 6) % 7, q = plQui(d), sam = w === 5, mer = w === 2;
@@ -6104,7 +6105,7 @@ function init(root) {
         l.push(["Code en salle", mer ? "14 h 30 : rattrapage et examen blanc" : "14 h 30 – 15 h 30", ""], ["Conduite", "15 h 45 – 17 h 45" + (mer ? " (rattrapages d'abord)" : ""), ""], ["Code du soir", mer ? "18 h : rattrapage et examen blanc" : "18 h – 19 h", ""]);
         return l;
       }
-      if (role === "mecanicienne") return sam ? [["Contrôle de la voiture", "13 h 30", ""], ["Atelier mécanique des élèves", "14 h – 15 h 30", ""]] : [];
+      if (role === "mecanicienne") return sam ? [["Arrivée : contrôle de la voiture", "13 h 30 – 14 h", ""], ["Atelier mécanique des élèves", "14 h – 15 h 30", ""], ["Départ", "16 h (17 h le 1er samedi du mois ou un jour d'entretien)", ""]] : [];
       if (role === "ambassadeur") return [];
       return [];
     }
@@ -6561,7 +6562,7 @@ function init(root) {
     return '<div class="insc-find"><div class="insc-map"><iframe title="Plan : SODAF Auto-École" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=6.168785,1.225462&z=17&output=embed"></iframe></div>' +
       '<div class="insc-addr"><p class="eyebrow">Nous trouver</p><h3>SODAF Auto-École</h3><p class="insc-big">412 Avenue Akei, Tokoin Tamé, Lomé</p><p><b>Repère :</b> en face de la caisse.</p>' +
       '<a class="btn btn-green" href="' + MAPS + '" target="_blank" rel="noopener">Ouvrir l\'itinéraire dans Google Maps</a>' +
-      '<ul class="insc-list"><li><b>Bureau</b> : lundi – vendredi 8 h – 12 h 30 et 14 h 30 – 18 h · samedi 8 h – 12 h</li><li><b>Téléphone et WhatsApp</b> : <a href="tel:+22872544166">+228 72 54 41 66</a></li>' +
+      '<ul class="insc-list"><li><b>Bureau</b> : lundi – vendredi 7 h 30 – 12 h 30 et 14 h 30 – 18 h · samedi 7 h 30 – 12 h et 13 h 30 – 17 h</li><li><b>Téléphone et WhatsApp</b> : <a href="tel:+22872544166">+228 72 54 41 66</a></li>' +
       (aPayer ? "<li><b>À apporter</b> : " + fmtF(aPayer) + " en espèces</li>" : "") +
       "</ul></div></div>";
   }
@@ -8235,7 +8236,7 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 #sodaf-root.app-mode .tm-tabs{display:grid;grid-template-columns:1fr 1fr;gap:0;padding:0;overflow:hidden}
 #sodaf-root.app-mode .tm-tabs button{width:auto;min-width:0;justify-content:flex-start;flex-wrap:nowrap;gap:8px;padding:11px 10px;border-radius:0;box-shadow:inset -1px -1px 0 rgba(255,255,255,.1)}
 #sodaf-root.app-mode .tm-tabs button b{font-size:.92rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-#sodaf-root.app-mode .tm-tabs button[data-t="msg"]{grid-column:1/-1}
+#sodaf-root.app-mode .tm-tabs button[data-t="msg"],#sodaf-root.app-mode .tm-tabs button[data-t="plan"]{grid-column:1/-1}
 #sodaf-root.app-mode .tm-tabs button .tm-ic{width:26px;height:26px}
 #sodaf-root.app-mode .tm-tabs button:has(.tm-badge:not([hidden])){padding-right:34px}
 #sodaf-root.app-mode .tm-tabs button[aria-selected="true"]{background:rgba(255,255,255,.12)}

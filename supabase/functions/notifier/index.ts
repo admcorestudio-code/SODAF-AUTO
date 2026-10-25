@@ -153,7 +153,7 @@ Deno.serve(async (req) => {
     roles = [p.qui];
     const j = new Date(p.jour + "T12:00:00Z"), jour = j.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" });
     const sam = j.getUTCDay() === 6;
-    note = { title: "Demain, tu tiens l'agence", body: jour.replace(/^./, (c) => c.toUpperCase()) + " : " + (p.note ? p.note : "le secrétariat a cours") + ". Agence " + (sam ? "8 h – 12 h, puis l'atelier jusqu'à 17 h." : "8 h – 12 h 30 et 14 h 30 – 18 h."), url: "/equipe/?onglet=plan", tag: "agence-" + p.jour };
+    note = { title: "Demain, tu tiens l'agence", body: jour.replace(/^./, (c) => c.toUpperCase()) + " : " + (p.note ? p.note : "le secrétariat a cours") + ". Agence " + (sam ? "7 h 30 – 12 h et 13 h 30 – 17 h (la mécanicienne arrive à 13 h 30)." : "7 h 30 – 12 h 30 et 14 h 30 – 18 h."), url: "/equipe/?onglet=plan", tag: "agence-" + p.jour };
   } else if (p.type === "geotest") {
     return json({ ip: p.ip || null, lieu: await geo(p.ip || "") }); // contrôle technique (secret obligatoire), aucune écriture
   } else if (p.type === "test") {
