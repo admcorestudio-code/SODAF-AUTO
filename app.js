@@ -8023,6 +8023,16 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 #sodaf-root [data-pane="taf"] .tf-b[disabled]{opacity:.4;box-shadow:none}
 #sodaf-root [data-pane="taf"] .tf-plus{color:var(--tfm)}
 .tf-numx{font-weight:500;color:var(--tfm,#6B7480)}
+/* Défilement (25 oct. : « si je défile dans les catégories, il n'y a que ça qui doit bouger ») :
+   sur ordinateur, le menu de gauche et la liste des élèves restent en place et défilent seuls ; le reste défile avec la page. */
+@media (min-width:900px){
+#sodaf-root .pc-list{position:sticky;top:86px;max-height:calc(100vh - 100px);display:flex;flex-direction:column;overflow-y:auto;overscroll-behavior:contain}
+#sodaf-root .pc-list>*{flex-shrink:0}
+#sodaf-root .pc-list>.pc-items{flex:1 1 auto;flex-shrink:1;min-height:140px;max-height:none;overflow-y:auto;overscroll-behavior:contain}
+}
+@media (min-width:1100px){
+#sodaf-root.app-mode #sd-teamPanel>.tm-tabs{max-height:calc(100vh - 100px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+}
 /* Planning de l'équipe (25 oct.) */
 .tm-tabs button[data-t="plan"][aria-selected="true"]{border-color:var(--ink);border-top-color:var(--ink);background:var(--soft)}
 .pl-sem{display:flex;gap:6px;margin:0 0 10px}#sodaf-root .pl-sem button{all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:.6em 1em;border:1px solid #E3E6EA;border-radius:10px;background:#fff;font:700 .9rem var(--f-ui);color:#15191E}#sodaf-root .pl-sem button[aria-selected="true"]{background:#15191E;border-color:#15191E;color:#fff}
