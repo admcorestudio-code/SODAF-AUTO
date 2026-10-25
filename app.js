@@ -4197,7 +4197,7 @@ function init(root) {
           tip("Pas disponible : « Pas de souci, je vous rappelle plutôt le matin ou l'après-midi ? » puis choisis quand rappeler.") + "</li>" +
         "<li><b>L'essentiel</b>" + say(x.formation === "Remise à niveau" ? "Vous reprenez la conduite avec un moniteur, jusqu'à être à l'aise." : "Chez nous, vous apprenez le code en salle et sur notre site. Puis la conduite avec un moniteur, jusqu'à l'examen.") + "</li>" +
         (voiture ? "<li><b>La formation et le prix</b>" + say("Vous savez déjà un peu conduire ? Vous êtes étudiant ?") +
-          say("La formation complète : 55 000 F. Si vous savez déjà conduire, la formule rapide : 35 000 F. Pour les étudiants : 30 000 F. L'inscription : 5 000 F. Chaque formation peut se payer en deux tranches.") +
+          say("La formation complète : <b>55 000 F</b>.<br>Si vous savez déjà conduire, la formule rapide : <b>35 000 F</b>.<br>Pour les étudiants : <b>30 000 F</b>.<br>L'inscription : <b>5 000 F</b>.<br>Chaque formation peut se payer en deux tranches.") +
           tip("Complète : 12 cours de code, 12 séances de conduite. Rapide : 6 séances de conduite. Étudiant : carte d'étudiant à montrer.") + "</li>" +
           "<li><b>Commencer avec 5 000 F</b>" + say("Pas encore tout l'argent ? Pas de problème. Payez d'abord les 5 000 F d'inscription. Vous apprenez tout de suite le code sur notre site : cours, quiz, examens blancs. Et vous payez la formation quand vous êtes prêt, dans les deux mois.") +
           tip("Pour commencer les cours : 1re tranche (complète 27 500 F · rapide 17 500 F · étudiant 15 000 F). Après 2 mois, l'inscription est à repayer.") + "</li>"
