@@ -4091,7 +4091,7 @@ function init(root) {
     const gLibre = (x) => GROUPES.filter((g) => g.actif && (!x || !!g.soir === !!x.code_soir)).sort((a, b) => a.ordre - b.ordre).find((g) => occ(g.id) < g.places);
     const attente = () => eleves.filter((x) => enCode(x) && !x.groupe_code);
     const gPlein = () => { const a = GROUPES.filter((g) => g.actif); return !a.length || a.every((g) => occ(g.id) >= g.places); };
-    const hCode = () => { const m = GROUPES.filter((g) => g.actif && parseInt(g.heure, 10) < 12); return "deux fois par semaine, l'après-midi à 14 h 30" + (m.length ? " ou le matin à " + gHeure(m[0]) : ""); };
+    const hCode = () => { const m = GROUPES.filter((g) => g.actif && parseInt(g.heure, 10) < 12); return "deux fois par semaine, l'après-midi à 14 h 30" + (m.length ? " ou le matin à " + gHeure(m[0]) : "") + (GROUPES.some((g) => g.actif && g.soir) ? ", et le soir à 18 h pour ceux qui travaillent" : ""); };
     // ---- Séances de conduite par formule (calculées depuis les reçus, comme dans la base)
     // ---- Conduite à ton rythme (22 oct.) : feu vert après les cours 1 à 9 en salle (parties A à F du manuel), jusqu'à 3 séances par semaine, 3 mois (prolongeables)
     const lundiDe = (j) => { const t = new Date(String(j).slice(0, 10) + "T12:00:00"); t.setDate(t.getDate() - ((t.getDay() + 6) % 7)); return iso(t); };
@@ -4135,7 +4135,7 @@ function init(root) {
     const jours = (d) => Math.floor((Date.now() - new Date(d)) / 864e5);
     const dosAge = (x) => { const b = x.web && x.web.le > (x.dossier_envoye_le || "") ? x.web.le : x.dossier_envoye_le; return jours(x.dossier_relance_le && x.dossier_relance_le > b ? x.dossier_relance_le : b); };
     const agence = (x) => x.web && x.web.mode === "agence";
-    const msgDossier = (x) => "Bonjour " + prenom(x) + " 😊\n\nComme promis, voici ton dossier d'inscription SODAF Auto-École.\n\n*TON DOSSIER*\n• N° Client : " + CODE(x) + "\n• Formation : " + (x.formation || "à préciser") + "\n• Prix : " + (PRIXM[x.formation] || "voir autosodaf.com") + "\n• Droit d'inscription : " + (INSM[x.formation] || "5 000 F") + "\n\n✍️ *Finalise ton inscription en ligne (2 minutes) :*\n" + inscLink(x) + "\nTu choisis ta formule, puis tu paies à l'agence ou par Mixx by Yas. Tu reçois ensuite ton reçu officiel sur WhatsApp.\n\n📍 412 Avenue Akei, Tokoin Tamé (en face de la caisse)\n\nDes questions ? Réponds simplement à ce message.\nL'équipe SODAF · L'art de conduire, la force de réussir.";
+    const msgDossier = (x) => "Bonjour " + prenom(x) + " 😊\n\nComme promis, voici ton dossier d'inscription SODAF Auto-École.\n\n*TON DOSSIER*\n• N° Client : " + CODE(x) + "\n• Formation : " + (x.formation || "à préciser") + "\n• Prix : " + (PRIXM[x.formation] || "voir autosodaf.com") + "\n• Droit d'inscription : " + (INSM[x.formation] || "5 000 F") + "\n\n✍️ *Finalise ton inscription en ligne (2 minutes) :*\n" + inscLink(x) + "\nTu choisis ta formule, puis tu paies à l'agence ou par Mixx by Yas. Tu reçois ensuite ton reçu officiel sur WhatsApp.\n" + (/^(Permis B|Tarif étudiant)$/.test(x.formation || "") ? "\n*Pas encore tout l'argent ?* Inscris-toi avec seulement 5 000 F : tout le code de la route en ligne, tout de suite (cours, quiz, examens blancs). Ta formation, tu la paies quand tu es prêt(e), dans les 2 mois.\n" : "") + "\n📍 412 Avenue Akei, Tokoin Tamé (en face de la caisse)\n\nDes questions ? Réponds simplement à ce message.\nL'équipe SODAF · L'art de conduire, la force de réussir.";
     const newJeton = () => { const a = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789", r = new Uint32Array(10); crypto.getRandomValues(r); return [...r].map((n) => a[n % a.length]).join(""); };
     const jetonOf = (x) => x.jeton || (x._jeton = x._jeton || newJeton());
     const inscLink = (x) => "https://autosodaf.com/#inscrire-" + x.id + "-" + jetonOf(x);
@@ -4191,17 +4191,25 @@ function init(root) {
     const ORAL = { "Permis B": "le permis voiture", "Tarif étudiant": "le permis voiture au tarif étudiant", "Gagnant du tirage": "ta formation du tirage au sort", "Permis A": "le permis moto", "Pack A + B": "le permis moto et voiture", "Remise à niveau": "la remise à niveau", "Formation entreprise": "la formation de vos chauffeurs" };
     const script = (x) => {
       const exam = /Permis|Pack|étudiant|tirage/i.test(x.formation || ""), f = ORAL[x.formation] || "le permis";
+      const voiture = /^(Permis B|Tarif étudiant)$/.test(x.formation || ""), remise = x.formation === "Remise à niveau", tirage = x.formation === "Gagnant du tirage";
       return '<ol class="sc">' +
         "<li><b>Saluer</b>" + say("Bonjour, ici SODAF Auto-École. Je vous appelle suite à votre <span class=\"nobr\">pré-inscription</span> pour " + esc(f) + ". Vous avez une petite minute ?") +
           tip("Pas disponible : « Pas de souci, je vous rappelle plutôt le matin ou l'après-midi ? » puis choisis quand rappeler.") + "</li>" +
         "<li><b>L'essentiel</b>" + say(x.formation === "Remise à niveau" ? "On reprend la conduite avec vous, à votre rythme, avec un moniteur, jusqu'à ce que vous soyez à l'aise au volant." : "Chez nous, vous apprenez le code en salle et aussi sur notre site, puis la conduite avec un moniteur. On vous accompagne jusqu'à l'examen.") + "</li>" +
-        "<li><b>Conclure</b>" + say("Je vous envoie tout de suite sur WhatsApp les prix, notre adresse et le lien pour vous inscrire. L'inscription se fait en deux minutes, depuis votre téléphone. Et si vous avez une question, n'hésitez pas : écrivez-nous ou appelez-nous. À très vite chez SODAF !") +
+        (voiture ? "<li><b>La formation et le prix</b>" + say("Vous savez déjà un peu conduire ? Vous êtes étudiant ?") +
+          say("La formation complète, c'est 55 000 F. Si vous savez déjà conduire, la formule rapide, c'est 35 000 F. Et pour les étudiants, c'est 30 000 F. L'inscription, c'est 5 000 F. Vous pouvez payer en deux fois : la moitié pour commencer, le reste dans les deux semaines.") +
+          tip("Complète : 12 cours de code en salle et 12 séances de conduite de 2 h. Rapide : 6 séances de conduite. Étudiant : formation complète, carte d'étudiant à présenter.") + "</li>" +
+          "<li><b>Commencer avec 5 000 F</b>" + say("Et si vous n'avez pas encore tout l'argent, pas de souci : vous pouvez vous inscrire dès aujourd'hui avec seulement 5 000 F. Vous êtes inscrit chez SODAF, et tout le code de la route est à vous sur notre site : les cours, les quiz corrigés, la révision des panneaux, les devoirs et les examens blancs, quand vous voulez. Vous apprenez à votre rythme. Et quand vous êtes prêt, vous payez la moitié de votre formation pour commencer les cours en salle et la conduite. Vous avez deux mois pour ça.") +
+          tip("La moitié pour commencer : complète 27 500 F · rapide 17 500 F · étudiant 15 000 F. Après 2 mois sans payer la moitié, l'inscription de 5 000 F est à repayer.") + "</li>"
+        : remise ? "<li><b>Le prix</b>" + say("La remise à niveau, c'est 25 000 F, tout compris : quatre séances de conduite de 2 h, sans frais d'inscription.") + "</li>"
+        : tirage ? "<li><b>Le prix</b>" + say("Comme gagnant du tirage, votre formation est à 15 000 F, et l'inscription est offerte.") + "</li>" : "") +
+        "<li><b>Conclure</b>" + say("Je vous envoie tout de suite sur WhatsApp le récapitulatif, notre adresse et le lien pour vous inscrire. L'inscription se fait en deux minutes, depuis votre téléphone. Et si vous avez une question, n'hésitez pas : écrivez-nous ou appelez-nous. À très vite chez SODAF !") +
           tip("Intéressé ou il veut réfléchir : touche « Envoyer le lien d'inscription » (en haut). Pas intéressé : « Plus tard » ou « Rétractation ».") + "</li></ol>" +
         '<details class="pc-more"><summary>S\'il pose une question</summary>' +
-        tip("<b>Le prix :</b> on n'en parle pas au téléphone. « Tout est dans le message WhatsApp que je vous envoie juste après, avec les différentes formules. »") +
+        (voiture || remise || tirage ? "" : tip("<b>Le prix :</b> « Tout est dans le message WhatsApp que je vous envoie juste après, avec les différentes formules. »")) +
         tip("<b>Les papiers :</b> « Rien à apporter pour commencer. Les papiers, c'est à la fin, pour l'examen. »") +
         (exam ? tip("<b>L'examen :</b> « C'est nous qui déposons votre dossier à la fin de la formation, et l'État vous envoie la date par message. »") : "") +
-        tip("<b>Les cours :</b> « Le code, c'est en petit groupe de 6, " + hCode() + ", et tout est aussi sur notre site. La conduite, c'est par séances d'une heure. »") +
+        tip("<b>Les cours :</b> « Le code, c'est en petit groupe de 6, " + hCode() + ", et tout est aussi sur notre site. La conduite, c'est par séances de 2 h, à votre rythme. »") +
         tip("<b>L'adresse :</b> « On est au 412 avenue Akei, à Tokoin Tamé, en face de la caisse. Le bureau est ouvert en semaine de 8 h à 18 h, avec une pause à midi, et le samedi matin. »") + "</details>";
     };
     const ago = (d) => { const m = Math.round((Date.now() - new Date(d)) / 60000); return m < 60 ? "il y a " + Math.max(m, 1) + " min" : m < 1440 ? "il y a " + Math.round(m / 60) + " h" : "il y a " + Math.round(m / 1440) + " j"; };
