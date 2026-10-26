@@ -1965,17 +1965,17 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <button data-s="depenses" aria-selected="false" hidden>Demandes à la gérante</button>
 <button data-s="auj" aria-selected="false" hidden>Aujourd'hui</button>
 <button data-s="aide" aria-selected="false">Mode d'emploi</button>
-<button class="tm-newins" type="button" id="sd-insNew"><span class="ni-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="M19 8v6M16 11h6"/></svg></span><span class="ni-txt"><b>Nouvelle inscription</b><small>Client au bureau</small></span></button>
+<button class="tm-newins" type="button" id="sd-insNew"><span class="ni-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="M19 8v6M16 11h6"/></svg></span><span class="ni-txt"><b>Nouvelle pré-inscription</b><small>Client au bureau ou au téléphone</small></span></button>
 <button class="tm-waprospect" type="button" id="sd-waNew"><span class="wp-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg></span><span class="ni-txt"><b>Client venu de WhatsApp</b><small>Script d'appel</small></span></button>
 </div>
 <div class="ins-ov" id="sd-waOv" hidden><div class="ins-box wa-box" role="dialog" aria-labelledby="sd-waH">
 <div class="ins-hd"><div><p class="eyebrow" style="margin:0">Il nous a écrit sur WhatsApp</p><h3 id="sd-waH">Script d'appel <span class="wa-first">· Appelle-le tout de suite (appel normal ou appel WhatsApp)</span></h3></div><button class="ins-x" type="button" id="sd-waX" aria-label="Fermer">×</button></div>
 <div class="wa-grid"><div class="pc-script" id="sd-waScript"></div>
-<div class="wa-end"><div class="wa-col"><p class="wa-k">Il est intéressé</p><button class="btn btn-green" type="button" id="sd-waIns">L'inscrire</button><small>Ouvre « Nouvelle inscription » (provenance WhatsApp).</small></div>
+<div class="wa-end"><div class="wa-col"><p class="wa-k">Il est intéressé</p><button class="btn btn-green" type="button" id="sd-waIns">Le pré-inscrire</button><small>Ouvre « Nouvelle pré-inscription » (provenance WhatsApp). Il sera inscrit quand il aura payé.</small></div>
 <div class="wa-col"><p class="wa-k">Il ne décroche pas</p><p class="wa-help">Un seul message, avec l'image des tarifs.</p><button class="btn btn-wa" type="button" id="sd-waShare" hidden>Envoyer l'image + le message</button><div id="sd-waNoShare"><div class="tel"><span>+228</span><input id="sd-waT" inputmode="numeric" maxlength="11" placeholder="90 00 00 00" aria-label="Son numéro WhatsApp"></div><button class="btn btn-wa" type="button" id="sd-waMsg">Envoyer le message</button><a class="linkbtn" href="/doc-img/fiche-sodaf/fiche-sodaf.jpg" download="tarifs-sodaf.jpg" target="_blank" rel="noopener">Télécharger l'image des tarifs</a><small>Puis joins l'image dans la conversation.</small></div><span class="tm-err" id="sd-waErr"></span></div></div></div>
 </div></div>
 <div class="ins-ov" id="sd-insOv" hidden><form class="ins-box" id="sd-insForm" novalidate>
-<div class="ins-hd"><div><p class="eyebrow" style="margin:0">Au bureau</p><h3>Nouvelle inscription</h3></div><button class="ins-x" type="button" id="sd-insX" aria-label="Fermer">×</button></div>
+<div class="ins-hd"><div><p class="eyebrow" style="margin:0">Au bureau ou au téléphone</p><h3>Nouvelle pré-inscription</h3></div><button class="ins-x" type="button" id="sd-insX" aria-label="Fermer">×</button></div>
 <fieldset class="ins-step"><legend><i>1</i>Le client</legend>
 <div class="row2"><div class="field"><label for="sd-insN">Nom</label><input id="sd-insN" autocomplete="off" placeholder="ex. AGBEKO"></div><div class="field"><label for="sd-insP">Prénoms</label><input id="sd-insP" autocomplete="off" placeholder="ex. Yao Koffi"></div></div>
 <div class="row2"><div class="field"><label for="sd-insT">Téléphone (WhatsApp)</label><div class="tel"><span>+228</span><input id="sd-insT" inputmode="numeric" maxlength="11" placeholder="90 00 00 00"></div></div><div class="field"><label for="sd-insQ">Quartier</label><input id="sd-insQ" autocomplete="off" placeholder="ex. Bè, Agoè, Tokoin"></div></div>
@@ -4259,7 +4259,7 @@ function init(root) {
         : remise ? "<li><b>Le prix</b>" + say("La remise à niveau : 25 000 F, tout compris.") + "</li>"
         : tirage ? "<li><b>Le prix</b>" + say("Vous avez gagné le tirage : votre formation est à 15 000 F. L'inscription est offerte.") + "</li>" : "") +
         "<li><b>Conclure</b>" + (wa ? say("Je prends votre nom et votre prénom, et je vous envoie le lien sur WhatsApp pour vous inscrire. Merci, et à bientôt chez SODAF !") +
-          tip("Intéressé ou il veut réfléchir : touche « L'inscrire » en bas. Pas intéressé : ferme la fenêtre, rien n'est enregistré.") : say("Je vous envoie le lien sur WhatsApp pour vous inscrire. Merci, et à bientôt chez SODAF !") +
+          tip("Intéressé ou il veut réfléchir : touche « Le pré-inscrire » en bas. Pas intéressé : ferme la fenêtre, rien n'est enregistré.") : say("Je vous envoie le lien sur WhatsApp pour vous inscrire. Merci, et à bientôt chez SODAF !") +
           tip("Intéressé ou il veut réfléchir : touche « Envoyer le lien d'inscription » (en haut). Pas intéressé : « Plus tard » ou « Rétractation ».")) + "</li></ol>" +
         '<details class="pc-more"><summary>S\'il pose une question</summary>' +
         (voiture || remise || tirage ? "" : tip("<b>Le prix :</b> « Tout est dans le message WhatsApp que je vous envoie juste après, avec les différentes formules. »")) +
@@ -4833,7 +4833,7 @@ function init(root) {
     const insOpen = () => { insX = null; $("#sd-insForm").reset(); $("#sd-insErr").textContent = ""; $("#sd-insDone").hidden = true; $$("#sd-insForm .ins-step, #sd-insForm .ins-ft").forEach((el) => (el.hidden = false)); $("#sd-insOv").hidden = false; document.body.style.overflow = "hidden"; setTimeout(() => $("#sd-insN").focus(), 50); };
     const insClose = () => { $("#sd-insOv").hidden = true; document.body.style.overflow = ""; if (insX) { sub("eleves"); pcStage = etapeOf(insX); S.set("pcStage", pcStage); pcSel = insX.id; renderList(); } insX = null; };
     $("#sd-insNew").addEventListener("click", insOpen);
-    // ---- Client venu de WhatsApp (pas pré-inscrit) : script d'appel, puis « L'inscrire » ou un seul message avec l'image des tarifs
+    // ---- Client venu de WhatsApp (pas pré-inscrit) : script d'appel, puis « Le pré-inscrire » ou un seul message avec l'image des tarifs
     const WA_IMG = "/doc-img/fiche-sodaf/fiche-sodaf.jpg";
     const waTxt = "Bonjour, ici SODAF Auto-École. Merci pour votre message.\n\nNous avons essayé de vous appeler. Voici nos formations et nos prix. Vous pouvez commencer avec seulement 5 000 F d'inscription.\n\nÀ quel moment pouvons-nous vous rappeler ?\n\nautosodaf.com";
     let waFile = null;
@@ -4874,18 +4874,18 @@ function init(root) {
       err.textContent = ""; $("#sd-insGo").disabled = true;
       const body = { nom, nom_famille: nf, prenoms: pr, telephone: "+228" + tel, quartier: q || null, formation: $("#sd-insFo").value, source: "bureau", provenance: src, statut: "Contacté", accueil_le: new Date().toISOString(), jeton: newJeton() };
       if ($("#sd-insPar").value.trim()) body.parrain = $("#sd-insPar").value.trim();
-      const r = await run(() => DB.q("eleves", { method: "POST", body, prefer: "return=representation" }), "Client enregistré");
+      const r = await run(() => DB.q("eleves", { method: "POST", body, prefer: "return=representation" }), "Client pré-inscrit");
       $("#sd-insGo").disabled = false;
       if (!r || !Array.isArray(r) || !r[0]) return;
       await loadEleves(true);
       insX = eleves.find((y) => y.id === r[0].id) || r[0];
       $$("#sd-insForm .ins-step, #sd-insForm .ins-ft").forEach((el) => (el.hidden = true));
       const n = waNum(insX.telephone);
-      $("#sd-insDone").innerHTML = '<div class="ins-ok"><span class="ins-check">✓</span><div><b>' + esc(insX.nom) + " est enregistré</b><small>N° client " + CODE(insX) + " · " + esc(insX.formation || "") + '</small></div></div><p class="ins-sum">Envoie-lui maintenant le lien pour finaliser son inscription. Il choisira sa formule et sa façon de payer, à son rythme.</p><div class="ins-acts"><a class="btn btn-wa wl-btn" target="_blank" rel="noopener" id="sd-insSend" href="https://wa.me/228' + n + "?text=" + encodeURIComponent(msgDossier(insX)) + '">Envoyer le lien d\'inscription sur WhatsApp ↗</a><button class="linkbtn" type="button" id="sd-insLater">Plus tard : le garder dans les appels</button></div>';
+      $("#sd-insDone").innerHTML = '<div class="ins-ok"><span class="ins-check">✓</span><div><b>' + esc(insX.nom) + " est pré-inscrit</b><small>N° client " + CODE(insX) + " · " + esc(insX.formation || "") + '</small></div></div><p class="ins-sum">Envoie-lui maintenant le lien pour finaliser son inscription. Il choisira sa formule et sa façon de payer, à son rythme.</p><div class="ins-acts"><a class="btn btn-wa wl-btn" target="_blank" rel="noopener" id="sd-insSend" href="https://wa.me/228' + n + "?text=" + encodeURIComponent(msgDossier(insX)) + '">Envoyer le lien d\'inscription sur WhatsApp ↗</a><button class="linkbtn" type="button" id="sd-insLater">Plus tard : le garder dans les appels</button></div>';
       $("#sd-insDone").hidden = false;
       $("#sd-insSend").addEventListener("click", async () => {
         const x = insX; if (!x) return;
-        if (await patchEl(x, { dossier_envoye_le: new Date().toISOString(), dossier_relance_le: null, dossier_relances: 0, rappel: null }, "Lien envoyé : paiement en attente", ["Étape", "Inscription au bureau : lien d'inscription envoyé (paiement en attente)"])) { setTimeout(insClose, 300); }
+        if (await patchEl(x, { dossier_envoye_le: new Date().toISOString(), dossier_relance_le: null, dossier_relances: 0, rappel: null }, "Lien envoyé : paiement en attente", ["Étape", "Pré-inscription au bureau : lien d'inscription envoyé (paiement en attente)"])) { setTimeout(insClose, 300); }
       });
       $("#sd-insLater").addEventListener("click", insClose);
     });
