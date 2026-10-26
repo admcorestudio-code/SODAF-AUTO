@@ -4711,7 +4711,7 @@ function init(root) {
         pcEquipe(x);
       }
     }
-    const conFutur = () => DB.q("creneaux_conduite?select=id,jour,heure,equipe,place,eleve_id,statut,bloc&bloc=not.is.null&jour=gt." + iso(new Date()) + "&order=jour.asc&limit=4000").catch(() => []);
+    const conFutur = () => DB.q("creneaux_conduite?select=id,jour,heure,equipe,place,eleve_id,statut,bloc,note&bloc=not.is.null&jour=gt." + iso(new Date()) + "&order=jour.asc&limit=4000").catch(() => []);
     async function pcEquipe(x) {
       const box = $("#sd-pcEq"); if (!box) return;
       const rows = await conFutur(); if (pcSel !== x.id) return;
@@ -4732,7 +4732,8 @@ function init(root) {
       if (exp) return fin(DIR() ? "Prolonge d'un mois s'il a une vraie raison, puis réserve." : "Pour continuer, la gérante peut prolonger son délai d'un mois depuis sa fiche.");
       if (!x.feuVert) return fin("Il pourra réserver dès qu'il aura suivi les cours qui manquent (rattrapage du code le mercredi à 14 h 30).");
       if (plein(x) && !x.dus) return fin("Toutes ses séances sont faites ou réservées. Séance en plus : 3 000 F (reçu « Une séance de conduite en plus »).");
-      const SL = {}; rows.forEach((c) => { if (c.statut === "Libre" && !c.eleve_id && c.jour > td && c.jour <= lim && !expire(x, c.jour)) { const k = c.jour + "|" + c.heure; (SL[k] = SL[k] || { jour: c.jour, heure: c.heure, bloc: c.bloc, ids: [] }).ids.push(c.id); } });
+      const uniK = new Set(rows.filter((c) => !c.eleve_id && (c.note || "").startsWith("À l'unité : ") && c.statut !== "Annulé").map((c) => c.jour + "|" + c.heure)); // séance à l'unité : pas d'élèves dans ce bloc (26 oct.)
+      const SL = {}; rows.forEach((c) => { if (c.statut === "Libre" && !c.eleve_id && !uniK.has(c.jour + "|" + c.heure) && c.jour > td && c.jour <= lim && !expire(x, c.jour)) { const k = c.jour + "|" + c.heure; (SL[k] = SL[k] || { jour: c.jour, heure: c.heure, bloc: c.bloc, ids: [] }).ids.push(c.id); } });
       const list = Object.values(SL).sort((a, b) => (a.jour === b.jour ? hmin(a.heure) - hmin(b.heure) : a.jour < b.jour ? -1 : 1));
       const deja = new Set(rows.filter((c) => c.eleve_id === x.id && c.statut === "Réservé").map((c) => c.jour + "|" + c.heure));
       const why = (sl) => deja.has(sl.jour + "|" + sl.heure) ? "déjà inscrit à cette séance" : nbSem(x, sl.jour) >= 3 ? "déjà 3 séances cette semaine" : plein(x) && sl.bloc !== "mercredi" ? "rattrapage seulement le mercredi" : sl.bloc === "mercredi" && !merLibre(sl.jour) && !x.absents ? "rattrapages d'abord (jusqu'au mardi 18 h)" : "";
@@ -5011,6 +5012,8 @@ function init(root) {
     // Séance à l'unité (26 oct.) : personne non inscrite, 1 h de conduite, 10 000 F. Elle prend 2 places d'une séance (≈ 1 h sur les 2 h).
     //   Pas de fiche élève : la place garde eleve_id vide, statut Réservé, note « À l'unité : Nom · 90 00 00 00 ».
     const UNI = "À l'unité : ", isUni = (c) => !c.eleve_id && (c.note || "").startsWith(UNI);
+    const uniBloc = (c, all) => all.some((z) => isUni(z) && z.jour === c.jour && z.heure === c.heure && z.statut !== "Annulé"); // le bloc est déjà « à l'unité »
+    const uniForm = '<p class="cd-unih"><b>Séance à l\'unité</b> · 1 h de conduite · 10 000 F, payée avant de monter. On ne mélange pas avec les élèves : le bloc de 2 h sert à 2 clients à l\'unité au plus.</p><input class="cd-un" placeholder="Nom et prénom" autocomplete="off" aria-label="Nom et prénom"><div class="tel"><span>+228</span><input class="cd-ut" inputmode="numeric" maxlength="11" placeholder="90 00 00 00" aria-label="Téléphone"></div><button type="button" class="btn btn-green btn-sm" data-unigo>Réserver</button><span class="tm-err cd-ue"></span>';
     const uniIds = (c, all) => all.filter((z) => isUni(z) && z.jour === c.jour && z.heure === c.heure && z.note === c.note).map((z) => z.id);
     async function loadDay() {
       $("#sd-cdDay").textContent = longDay(cdDay).replace(/^./, (c) => c.toUpperCase()) + (cdDay === iso(new Date()) ? " (aujourd'hui)" : "");
@@ -5032,7 +5035,11 @@ function init(root) {
       const rowHtml = (c) => {
         if (isUni(c)) { const ids = uniIds(c, r); if (c.id !== Math.min.apply(null, ids.map(Number))) return ""; // une seule ligne pour les 2 places (26 oct.)
           const who = c.note.slice(UNI.length), t = (who.match(/(\d[\d ]{6,})$/) || [""])[0].replace(/\D/g, "");
-          return '<div class="tm-row cd-uni st-' + c.statut.normalize("NFD").replace(/[^a-z]/gi, "").toLowerCase() + '" data-id="' + c.id + '" data-uni="' + uniIds(c, r).join(",") + '"><div class="tm-time">' + esc(c.heure) + '</div><div class="tm-main"><b class="cd-unib">Séance à l\'unité · 1 h · 10 000 F</b><span>' + esc(who) + '</span><small>Il conduit 1 h : ça prend 2 des 4 places de la séance (il reste 2 places d\'élèves sur l\'autre heure). Payée avant de monter (reçu « Séance à l\'unité »).</small></div><div class="tm-acts"><select data-cs aria-label="Statut">' + ["Réservé", "Fait", "Absent"].map((t) => "<option" + (t === c.statut ? " selected" : "") + ">" + t + "</option>").join("") + "</select>" + (t.length === 8 ? '<a class="linkbtn" target="_blank" rel="noopener" href="https://wa.me/228' + t + '">WhatsApp ↗</a>' : "") + '<button class="linkbtn" type="button" data-unilib>Libérer les places</button></div></div>'; }
+          return '<div class="tm-row cd-uni st-' + c.statut.normalize("NFD").replace(/[^a-z]/gi, "").toLowerCase() + '" data-id="' + c.id + '" data-uni="' + uniIds(c, r).join(",") + '"><div class="tm-time">' + esc(c.heure) + '</div><div class="tm-main"><b class="cd-unib">Séance à l\'unité · 1 h · 10 000 F</b><span>' + esc(who) + '</span><small>Il conduit 1 h. Ce bloc de 2 h est réservé aux séances à l\'unité : l\'autre heure sert à un 2e client à l\'unité, sinon de repos. Payée avant de monter (reçu « Séance à l\'unité »).</small></div><div class="tm-acts"><select data-cs aria-label="Statut">' + ["Réservé", "Fait", "Absent"].map((t) => "<option" + (t === c.statut ? " selected" : "") + ">" + t + "</option>").join("") + "</select>" + (t.length === 8 ? '<a class="linkbtn" target="_blank" rel="noopener" href="https://wa.me/228' + t + '">WhatsApp ↗</a>' : "") + '<button class="linkbtn" type="button" data-unilib>Libérer les places</button></div></div>'; }
+        if (!c.eleve_id && c.statut === "Libre" && uniBloc(c, r)) { // places restantes d'un bloc à l'unité : pas d'élèves ici, une seule ligne pour l'heure restante
+          const fl = r.filter((z) => !z.eleve_id && z.statut === "Libre" && z.jour === c.jour && z.heure === c.heure).map((z) => +z.id);
+          if (+c.id !== Math.min.apply(null, fl)) return "";
+          return '<div class="tm-row cd-uni st-libre" data-id="' + c.id + '"><div class="tm-time">' + esc(c.heure) + '</div><div class="tm-main"><button type="button" class="cd-pick" data-pick data-uni-seul><span>L\'autre heure : libre pour une 2e séance à l\'unité</span><small>Sinon, elle sert de repos au moniteur</small></button></div><div class="tm-acts"></div></div>'; }
         const el = eleves.find((x) => x.id === c.eleve_id), n = el ? waNum(el.telephone) : "";
         const conf = el && n && c.statut === "Réservé" ? "https://wa.me/228" + n + "?text=" + encodeURIComponent(msgSeance(el, c)) : "";
         const rap = el && n && c.statut === "Réservé" && c.jour === tomorrow ? "https://wa.me/228" + n + "?text=" + encodeURIComponent(msgRappelSeance(el, c)) : "";
@@ -5146,6 +5153,7 @@ function init(root) {
       const pk = e.target.closest("[data-pick]");
       if (pk) { const main = pk.parentElement, old = main.querySelector(".cd-pp"); if (old) { old.remove(); return; }
         $$("#sd-cdList .cd-pp").forEach((x) => x.remove());
+        if (pk.hasAttribute("data-uni-seul")) { const pp = document.createElement("div"); pp.className = "cd-pp"; pp.innerHTML = uniForm; main.appendChild(pp); pp.querySelector(".cd-un").focus(); return; }
         const sel = main.querySelector("[data-el]"), opts = [...sel.options].filter((o) => o.value);
         const pp = document.createElement("div"); pp.className = "cd-pp";
         pp.innerHTML = '<input type="search" class="cd-pq" placeholder="Rechercher : nom ou SO12" autocomplete="off" aria-label="Rechercher un élève"><div class="cd-pl">' + opts.map((o) => '<button type="button" data-opt="' + o.value + '"' + (o.disabled ? " disabled" : "") + "><span>" + esc(o.textContent) + "</span><small>SO" + o.value + "</small></button>").join("") + '</div><p class="cd-pvide" hidden>Aucun élève trouvé.</p>';
@@ -5153,13 +5161,15 @@ function init(root) {
         if (!/Rattrapage/.test(pk.textContent)) pp.insertAdjacentHTML("beforeend", '<button type="button" class="cd-unibtn" data-uniopen><b>Séance à l\'unité · 10 000 F</b><small>Personne non inscrite · 1 h de conduite (2 places)</small></button>');
         main.appendChild(pp); if (pp.querySelector(".cd-pq")) pp.querySelector(".cd-pq").focus(); return; }
       if (e.target.closest("[data-uniopen]")) { const pp = e.target.closest(".cd-pp");
-        pp.innerHTML = '<p class="cd-unih"><b>Séance à l\'unité</b> · 1 h de conduite · 10 000 F, payée avant de monter. Prend 2 des 4 places (il reste 2 places d\'élèves).</p><input class="cd-un" placeholder="Nom et prénom" autocomplete="off" aria-label="Nom et prénom"><div class="tel"><span>+228</span><input class="cd-ut" inputmode="numeric" maxlength="11" placeholder="90 00 00 00" aria-label="Téléphone"></div><button type="button" class="btn btn-green btn-sm" data-unigo>Réserver</button><span class="tm-err cd-ue"></span>';
+        pp.innerHTML = uniForm;
         pp.querySelector(".cd-un").focus(); return; }
       const ug = e.target.closest("[data-unigo]");
       if (ug) { const pp = ug.closest(".cd-pp"), nom = pp.querySelector(".cd-un").value.trim().replace(/\s+/g, " "), t = pp.querySelector(".cd-ut").value.replace(/\D/g, ""), er = pp.querySelector(".cd-ue");
         if (nom.length < 3) { er.textContent = "Écris son nom."; return; } if (t.length !== 8) { er.textContent = "Numéro à 8 chiffres."; return; } er.textContent = "";
         confirmBtn(ug, async () => {
           const id = ug.closest("[data-id]").dataset.id, me0 = await run(() => DB.q("creneaux_conduite?select=id,jour,heure&id=eq." + id)); if (!me0 || !me0[0]) return;
+          const occ = await run(() => DB.q("creneaux_conduite?select=id&jour=eq." + me0[0].jour + "&heure=eq." + encodeURIComponent(me0[0].heure) + "&eleve_id=not.is.null&statut=in." + encodeURIComponent("(Réservé,Fait)"))); if (!occ) return;
+          if (occ.length) { toast("Il y a déjà des élèves dans cette séance. On ne mélange pas : choisis une séance vide.", true); return; }
           const lib = await run(() => DB.q("creneaux_conduite?select=id&jour=eq." + me0[0].jour + "&heure=eq." + encodeURIComponent(me0[0].heure) + "&statut=eq.Libre&eleve_id=is.null&order=place.asc")); if (!lib) return;
           const ids = [+id].concat(lib.map((z) => z.id).filter((z) => z !== +id)).slice(0, 2);
           if (ids.length < 2 || !lib.some((z) => z.id === +id)) { toast("Il faut 2 places libres : il conduit 1 h, la moitié de la séance.", true); return; }
