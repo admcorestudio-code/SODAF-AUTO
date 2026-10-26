@@ -967,6 +967,10 @@ box-shadow:0 5px 0 #054030,0 14px 26px -10px rgba(6,64,45,.75),inset 0 1px 0 rgb
 .pc-callnow{padding-bottom:14px;margin-bottom:14px;border-bottom:2px solid var(--ink)}
 .tm-newins{margin:6px 6px 10px auto;align-self:center}
 .tm-waprospect{margin:6px 6px 10px 0;align-self:center}
+.cd-uni{background:#FFF8E6}.cd-unib{display:block;color:#8A5A00;font-size:.85rem}.cd-uni .tm-main span{display:block;font-weight:600}
+#sodaf-root .cd-unibtn{display:flex;flex-direction:column;align-items:flex-start;width:100%;margin-top:8px;padding:10px 12px;border:1.5px dashed #D9A400;border-radius:10px;background:#FFF8E6;color:#5C3D00;cursor:pointer;font:inherit;text-align:left}
+#sodaf-root .cd-unibtn small{color:#7A5A1A}
+.cd-unih{margin:0 0 8px;font-size:.9rem}.cd-pp .cd-un{width:100%;margin-bottom:8px}.cd-pp .tel{margin-bottom:8px}
 #sodaf-root .tm-waprospect{display:inline-flex;align-items:center;gap:10px;padding:7px 18px 7px 7px;border-radius:999px;border:2px solid #1FA855;background:#fff;color:#0E2A4E;cursor:pointer;font:inherit;box-shadow:0 4px 12px rgba(14,42,78,.12)}
 #sodaf-root .tm-waprospect:hover{background:#F0FAF4}
 #sodaf-root .tm-waprospect:focus-visible{outline:3px solid #1FA855;outline-offset:3px}
@@ -2032,7 +2036,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <label class="rcm" data-k="full"><input type="radio" name="motif" value="full"><span><b>Déjà inscrit : il paie tout</b><small>Toute la formation : formation soldée</small></span><em data-amt></em></label>
 <label class="rcm" data-k="rest"><input type="radio" name="motif" value="rest"><span><b>Il paie le reste</b><small>2e moitié de la formation, avant sa 1re séance de conduite</small></span><em data-amt></em></label>
 <label class="rcm" data-k="examen"><input type="radio" name="motif" value="examen"><span><b>Le dépôt pour l'examen d'État</b><small>Inscription à l'examen final, 35&nbsp;000&nbsp;F</small></span><em data-amt></em></label>
-<label class="rcm" data-k="seance"><input type="radio" name="motif" value="seance"><span><b>Une séance de conduite en plus</b><small>2 h, sur une place libre · 3&nbsp;000&nbsp;F</small></span><em data-amt></em></label><label class="rcm" data-k="deblocage"><input type="radio" name="motif" value="deblocage"><span><b>Déblocage de la conduite</b><small>4 rendez-vous manqués sans prévenir · 3&nbsp;000&nbsp;F</small></span><em data-amt></em></label>
+<label class="rcm" data-k="unite"><input type="radio" name="motif" value="unite"><span><b>Séance à l'unité (personne non inscrite)</b><small>1 h de conduite, payée avant de monter · 10&nbsp;000&nbsp;F</small></span><em data-amt></em></label><label class="rcm" data-k="seance"><input type="radio" name="motif" value="seance"><span><b>Une séance de conduite en plus</b><small>2 h, sur une place libre · 3&nbsp;000&nbsp;F</small></span><em data-amt></em></label><label class="rcm" data-k="deblocage"><input type="radio" name="motif" value="deblocage"><span><b>Déblocage de la conduite</b><small>4 rendez-vous manqués sans prévenir · 3&nbsp;000&nbsp;F</small></span><em data-amt></em></label>
 <label class="rcm" data-k="autre"><input type="radio" name="motif" value="autre"><span><b>Autre paiement</b><small>Tu écris toi-même le motif et le montant</small></span><em></em></label>
 <input id="sd-rcOther" placeholder="Motif, ex. Droit d'inscription seul, 2 séances en plus…" hidden>
 </fieldset>
@@ -2865,7 +2869,7 @@ function init(root) {
     const price = () => +(F.f.selectedOptions[0].dataset.p || 0);
     const insFee = () => { const v = F.f.selectedOptions[0].dataset.i; return v === undefined ? 5000 : +v; };
     const mk = () => (form.querySelector("input[name=motif]:checked") || {}).value || "autre";
-    const MOTIF = { "ins-half": "Droit d'inscription + 1re moitié de la formation", "ins-full": "Droit d'inscription + formation complète", rest: "2e moitié de la formation (solde)", "ins-only": "Droit d'inscription seul", half: "1re moitié de la formation", full: "Toute la formation", seance: "Séance de conduite supplémentaire", deblocage: "Déblocage de la conduite (rendez-vous manqués)", examen: "Dépôt pour l'inscription à l'examen d'État" };
+    const MOTIF = { "ins-half": "Droit d'inscription + 1re moitié de la formation", "ins-full": "Droit d'inscription + formation complète", rest: "2e moitié de la formation (solde)", "ins-only": "Droit d'inscription seul", half: "1re moitié de la formation", full: "Toute la formation", seance: "Séance de conduite supplémentaire", unite: "Séance de conduite à l'unité (1 h)", deblocage: "Déblocage de la conduite (rendez-vous manqués)", examen: "Dépôt pour l'inscription à l'examen d'État" };
     const motifText = () => mk() === "autre" ? (F.other.value.trim() || "Autre paiement") : MOTIF[mk()];
     function calc(k, p) {
       if (k === "ins-half") return p ? [insFee() + p / 2, p / 2] : null;
@@ -2875,6 +2879,7 @@ function init(root) {
       if (k === "half") return p ? [p / 2, p / 2] : null;
       if (k === "full") return p ? [p, 0] : null;
       if (k === "deblocage") return [3000, ""];
+      if (k === "unite") return [10000, ""];
       if (k === "seance") return [3000, ""]; // 3 000 F depuis le 20 oct. (avant : 5 000 F) ; 2 000 F essayé puis abandonné le 22 oct.
       if (k === "examen") return [35000, ""];
       return ["", ""];
@@ -2893,6 +2898,7 @@ function init(root) {
       F.rest.value = c[1] === "" ? "" : Math.round(c[1]);
       F.restBox.hidden = !(k === "ins-half" || k === "ins-full" || k === "rest");
       F.other.hidden = k !== "autre";
+      F.f.closest(".field").hidden = k === "unite";
       form.querySelectorAll(".rcm").forEach((l) => l.classList.toggle("on", l.querySelector("input").checked));
     }
     F.f.addEventListener("change", suggest); form.querySelectorAll("input[name=motif]").forEach((r) => r.addEventListener("change", () => { suggest(); if (mk() === "autre") F.other.focus(); })); suggest();
@@ -3029,7 +3035,7 @@ function init(root) {
       const no = String(now.getFullYear()).slice(2) + pad(now.getMonth() + 1) + pad(now.getDate()) + "-" + pad(now.getHours()) + pad(now.getMinutes()) + "-" + pad(Math.floor(Math.random() * 100));
       const MO = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
       const d = {
-        no, eleve, tel: tel ? tel.replace(/(\d{2})(?=\d)/g, "$1 ") : "", formation: F.f.value, prix: price(), motif: motifText(), montant,
+        no, eleve, tel: tel ? tel.replace(/(\d{2})(?=\d)/g, "$1 ") : "", formation: mk() === "unite" ? "Séance à l'unité" : F.f.value, prix: mk() === "unite" ? 10000 : price(), motif: motifText(), montant,
         mode: String(fd.get("mode")), reste: F.restBox.hidden || F.rest.value === "" ? "" : +F.rest.value, note: String(fd.get("note") || "").trim(),
         faitpar: "Le secrétariat", dateTxt: "Le " + now.getDate() + (now.getDate() === 1 ? "er" : "") + " " + MO[now.getMonth()] + " " + now.getFullYear() + " à " + now.getHours() + " h " + pad(now.getMinutes()),
         iso: now.getFullYear() + "-" + pad(now.getMonth() + 1) + "-" + pad(now.getDate()),
@@ -3054,7 +3060,8 @@ function init(root) {
         return "Bonjour " + eleve.split(" ")[0] + ",\n\nTu es *inscrit(e) chez SODAF Auto-École*. Merci !\n\n*TON REÇU*\n• N° : " + no + "\n• Montant : " + sp(montant) + "\n• Motif : Droit d'inscription\n\nVoir et télécharger ton reçu :\n" + lk +
           "\n\n*TON CODE EN LIGNE*\nTous les cours, les quiz et les examens blancs sont ouverts pour toi" + (acc ? " :\n" + acc : " sur autosodaf.com, rubrique Code (ton n° client : SO" + ($("#sd-rcEid").value || "") + ").") +
           "\n\n*POUR COMMENCER LES COURS*\nCode en salle et conduite : paie au moins la moitié de ta formation" + (d.prix ? " (" + sp(d.prix / 2) + ")" : "") + " avant le *" + lim + "*. Après, l'inscription n'est plus valable." + SIGN; };
-      const msg = isEx ? mkEx(link) : isIns ? mkIns(link) : mkMsg(link);
+      const mkUni = (lk) => "Bonjour " + eleve.split(" ")[0] + ",\n\nMerci pour ton paiement. Voici ton *reçu SODAF Auto-École*.\n\n*TON REÇU*\n• N° : " + no + "\n• Montant : " + sp(montant) + "\n• Motif : " + d.motif + "\n• Payé ✓\n\nVoir et télécharger ton reçu :\n" + lk + "\n\nBonne séance de conduite ! Si tu veux aller plus loin, demande-nous la formation au permis." + SIGN;
+      const msg = isEx ? mkEx(link) : isIns ? mkIns(link) : mk() === "unite" ? mkUni(link) : mkMsg(link);
       const wa = $("#sd-rcWa");
       wa.href = tel ? "https://wa.me/228" + tel + "?text=" + encodeURIComponent(msg) : "https://wa.me/?text=" + encodeURIComponent(msg);
       wa.textContent = tel ? "Envoyer sur WhatsApp à " + eleve.split(" ")[0] : "Envoyer sur WhatsApp (choisir le contact)";
@@ -4258,6 +4265,7 @@ function init(root) {
         (voiture || remise || tirage ? "" : tip("<b>Le prix :</b> « Tout est dans le message WhatsApp que je vous envoie juste après, avec les différentes formules. »")) +
         tip("<b>Les papiers :</b> « Rien à apporter pour commencer. Les papiers, c'est à la fin, pour l'examen. »") +
         (exam ? tip("<b>L'examen :</b> « C'est nous qui déposons votre dossier à la fin de la formation, et l'État vous envoie la date par message. »") : "") +
+        tip("<b>Il veut juste conduire une fois :</b> « Pas de souci : une séance à l'unité, 1 heure de conduite avec le moniteur, 10 000 F, payée avant de monter. »") +
         tip("<b>Les cours :</b> « Le code, c'est en petit groupe de 6, " + hCode() + ", et tout est aussi sur notre site. La conduite, c'est par séances de 2 h, à votre rythme. »") +
         tip("<b>L'adresse :</b> « On est au 412 avenue Akei, à Tokoin Tamé, en face de la caisse. Le bureau est ouvert en semaine de 7 h 30 à 18 h, avec une pause de 12 h 30 à 14 h 30, et le samedi de 7 h 30 à 17 h. »") + "</details>";
     };
@@ -4902,6 +4910,10 @@ function init(root) {
 
     // ---- Planning conduite
     const CST = ["Libre", "Réservé", "Fait", "Absent", "Annulé"];
+    // Séance à l'unité (26 oct.) : personne non inscrite, 1 h de conduite, 10 000 F. Elle prend 2 places d'une séance (≈ 1 h sur les 2 h).
+    //   Pas de fiche élève : la place garde eleve_id vide, statut Réservé, note « À l'unité : Nom · 90 00 00 00 ».
+    const UNI = "À l'unité : ", isUni = (c) => !c.eleve_id && (c.note || "").startsWith(UNI);
+    const uniIds = (c, all) => all.filter((z) => isUni(z) && z.jour === c.jour && z.heure === c.heure && z.note === c.note).map((z) => z.id);
     async function loadDay() {
       $("#sd-cdDay").textContent = longDay(cdDay).replace(/^./, (c) => c.toUpperCase()) + (cdDay === iso(new Date()) ? " (aujourd'hui)" : "");
       const [r, fe] = await Promise.all([run(() => DB.q("creneaux_conduite?select=*&jour=eq." + cdDay)), run(() => DB.q("jours_feries?select=*&jour=eq." + cdDay))]);
@@ -4920,6 +4932,8 @@ function init(root) {
       const pret = (x, c) => x.feuVert && !doit(x) && !x.bloque && (!plein(x) || ratOk(x, c)) && nbSem(x, c.jour) < 3 && !expire(x, c.jour) && !ici(x, c);
       const cdListe = (c) => actifs.filter(conduit).sort((a, b) => (pret(b, c) ? 1 : 0) - (pret(a, c) ? 1 : 0) || (c.bloc === "mercredi" ? (b.absents ? 1 : 0) - (a.absents ? 1 : 0) : 0));
       const rowHtml = (c) => {
+        if (isUni(c)) { const who = c.note.slice(UNI.length), t = (who.match(/(\d[\d ]{6,})$/) || [""])[0].replace(/\D/g, "");
+          return '<div class="tm-row cd-uni st-' + c.statut.normalize("NFD").replace(/[^a-z]/gi, "").toLowerCase() + '" data-id="' + c.id + '" data-uni="' + uniIds(c, r).join(",") + '"><div class="tm-time">' + esc(c.heure) + '</div><div class="tm-main"><b class="cd-unib">Séance à l\'unité · 1 h · 10 000 F</b><span>' + esc(who) + '</span><small>Payée avant de monter (reçu « Séance à l\'unité »)</small></div><div class="tm-acts"><select data-cs aria-label="Statut">' + ["Réservé", "Fait", "Absent"].map((t) => "<option" + (t === c.statut ? " selected" : "") + ">" + t + "</option>").join("") + "</select>" + (t.length === 8 ? '<a class="linkbtn" target="_blank" rel="noopener" href="https://wa.me/228' + t + '">WhatsApp ↗</a>' : "") + '<button class="linkbtn" type="button" data-unilib>Libérer les places</button></div></div>'; }
         const el = eleves.find((x) => x.id === c.eleve_id), n = el ? waNum(el.telephone) : "";
         const conf = el && n && c.statut === "Réservé" ? "https://wa.me/228" + n + "?text=" + encodeURIComponent(msgSeance(el, c)) : "";
         const rap = el && n && c.statut === "Réservé" && c.jour === tomorrow ? "https://wa.me/228" + n + "?text=" + encodeURIComponent(msgRappelSeance(el, c)) : "";
@@ -4930,7 +4944,7 @@ function init(root) {
       grp.sort((x, y) => hmin(x.h) - hmin(y.h)); grp.forEach((g) => g.rows.sort((x, y) => (x.place || 0) - (y.place || 0)));
       $("#sd-cdList").innerHTML = grp.length ? grp.map((g) => {
         if (!g.bloc) return rowHtml(g.rows[0]);
-        const q = eqOf(g.eq), pris = g.rows.filter((c) => c.eleve_id && c.statut !== "Annulé").length;
+        const q = eqOf(g.eq), pris = g.rows.filter((c) => (c.eleve_id || isUni(c)) && c.statut !== "Annulé").length;
         const sous = g.bloc === "mercredi" ? "Rattrapage et séances en plus · " + (merLibre(g.rows[0].jour) ? "places libres ouvertes aux séances en plus (3 000 F)" : "réservé aux rattrapages jusqu'au mardi 18 h") : "Séance de conduite · 4 places";
         return '<div class="cd-bloc' + (g.bloc === "mercredi" ? " cd-mer" : "") + '"><div class="cd-bh"><b>' + esc(plage(g.h)) + "</b><span>" + esc(sous) + "</span><em>" + pris + "/" + g.rows.length + "</em></div>" + g.rows.map(rowHtml).join("") + "</div>";
       }).join("") : '<p class="tm-empty">Pas de conduite ce jour-là (dimanche ou jour férié).</p>';
@@ -5037,7 +5051,26 @@ function init(root) {
         const pp = document.createElement("div"); pp.className = "cd-pp";
         pp.innerHTML = '<input type="search" class="cd-pq" placeholder="Rechercher : nom ou SO12" autocomplete="off" aria-label="Rechercher un élève"><div class="cd-pl">' + opts.map((o) => '<button type="button" data-opt="' + o.value + '"' + (o.disabled ? " disabled" : "") + "><span>" + esc(o.textContent) + "</span><small>SO" + o.value + "</small></button>").join("") + '</div><p class="cd-pvide" hidden>Aucun élève trouvé.</p>';
         if (!opts.length) pp.innerHTML = '<p class="cd-pvide">' + "Aucun élève disponible." + "</p>";
+        if (!/Rattrapage/.test(pk.textContent)) pp.insertAdjacentHTML("beforeend", '<button type="button" class="cd-unibtn" data-uniopen><b>Séance à l\'unité · 10 000 F</b><small>Personne non inscrite · 1 h de conduite (2 places)</small></button>');
         main.appendChild(pp); if (pp.querySelector(".cd-pq")) pp.querySelector(".cd-pq").focus(); return; }
+      if (e.target.closest("[data-uniopen]")) { const pp = e.target.closest(".cd-pp");
+        pp.innerHTML = '<p class="cd-unih"><b>Séance à l\'unité</b> · 1 h de conduite · 10 000 F, payée avant de monter</p><input class="cd-un" placeholder="Nom et prénom" autocomplete="off" aria-label="Nom et prénom"><div class="tel"><span>+228</span><input class="cd-ut" inputmode="numeric" maxlength="11" placeholder="90 00 00 00" aria-label="Téléphone"></div><button type="button" class="btn btn-green btn-sm" data-unigo>Réserver</button><span class="tm-err cd-ue"></span>';
+        pp.querySelector(".cd-un").focus(); return; }
+      const ug = e.target.closest("[data-unigo]");
+      if (ug) { const pp = ug.closest(".cd-pp"), nom = pp.querySelector(".cd-un").value.trim().replace(/\s+/g, " "), t = pp.querySelector(".cd-ut").value.replace(/\D/g, ""), er = pp.querySelector(".cd-ue");
+        if (nom.length < 3) { er.textContent = "Écris son nom."; return; } if (t.length !== 8) { er.textContent = "Numéro à 8 chiffres."; return; } er.textContent = "";
+        confirmBtn(ug, async () => {
+          const id = ug.closest("[data-id]").dataset.id, me0 = await run(() => DB.q("creneaux_conduite?select=id,jour,heure&id=eq." + id)); if (!me0 || !me0[0]) return;
+          const lib = await run(() => DB.q("creneaux_conduite?select=id&jour=eq." + me0[0].jour + "&heure=eq." + encodeURIComponent(me0[0].heure) + "&statut=eq.Libre&eleve_id=is.null&order=place.asc")); if (!lib) return;
+          const ids = [+id].concat(lib.map((z) => z.id).filter((z) => z !== +id)).slice(0, 2);
+          if (ids.length < 2 || !lib.some((z) => z.id === +id)) { toast("Il faut 2 places libres dans cette séance (1 h de conduite).", true); return; }
+          const ok = await run(() => DB.q("creneaux_conduite?id=in.(" + ids.join(",") + ")", { method: "PATCH", body: { statut: "Réservé", note: UNI + nom + " · " + t.replace(/(\d{2})(?=\d)/g, "$1 "), confirme_le: null, rappel_le: null, modifie_le: new Date().toISOString() }, prefer: "return=minimal" }), "Séance à l'unité réservée : fais le reçu de 10 000 F avant qu'il monte");
+          if (ok) loadDay(); });
+        return; }
+      const ul = e.target.closest("[data-unilib]");
+      if (ul) { confirmBtn(ul, async () => { const ids = ul.closest("[data-uni]").dataset.uni;
+        const ok = await run(() => DB.q("creneaux_conduite?id=in.(" + ids + ")", { method: "PATCH", body: { statut: "Libre", note: null, confirme_le: null, rappel_le: null, modifie_le: new Date().toISOString() }, prefer: "return=minimal" }), "Places libérées");
+        if (ok) loadDay(); }); return; }
       const op = e.target.closest("[data-opt]");
       if (op && !op.disabled) {
         if (!op.dataset.armed) { op.dataset.armed = 1; op.classList.add("armed"); const sp = op.querySelector("small"), av = sp.textContent; sp.textContent = "Confirmer ? touche encore";
@@ -5058,7 +5091,7 @@ function init(root) {
       if (e.target.matches("[data-el]")) { const v = e.target.value; body = { eleve_id: v ? +v : null, statut: v ? "Réservé" : "Libre", confirme_le: null, rappel_le: null, modifie_le: new Date().toISOString() }; }
       else if (e.target.matches("[data-cs]")) body = { statut: e.target.value, modifie_le: new Date().toISOString() };
       if (!body) return;
-      await run(() => DB.q("creneaux_conduite?id=eq." + id, { method: "PATCH", body, prefer: "return=minimal" }), "Planning enregistré");
+      await run(() => DB.q("creneaux_conduite?" + (row.dataset.uni ? "id=in.(" + row.dataset.uni + ")" : "id=eq." + id), { method: "PATCH", body, prefer: "return=minimal" }), "Planning enregistré");
       await loadEleves(true); loadDay();
     });
     $("#sd-cdCloseBtn").addEventListener("click", () => { $("#sd-cdCloseForm").hidden = false; $("#sd-cdWhy").value = ""; $("#sd-cdWhy").focus(); });
@@ -6390,11 +6423,12 @@ function init(root) {
           });
         }
       }
-      const c = await run(() => DB.q("creneaux_conduite?select=*&jour=eq." + today + "&eleve_id=not.is.null"));
+      const c0 = await run(() => DB.q("creneaux_conduite?select=*&jour=eq." + today)), uniM = (x) => !x.eleve_id && (x.note || "").startsWith("À l'unité : ");
+      const c = c0 && c0.filter((x, i) => x.eleve_id || (uniM(x) && c0.findIndex((y) => uniM(y) && y.heure === x.heure && y.note === x.note) === i)).map((x) => uniM(x) ? Object.assign({}, x, { uni: c0.filter((y) => uniM(y) && y.heure === x.heure && y.note === x.note).map((y) => y.id).join(",") }) : x);
       if ($("#sd-secAujSum") && s0 && c) { const nc = s0.filter((x) => x.jour === today && (!x.groupe || eleves.some((y) => y.groupe_code === x.groupe && enCode(y) && !susp(y) && cycleOk(y)))), af = nc.filter((x) => x.statut !== "Fait").length, rs = c.filter((x) => x.statut === "Réservé").length; $("#sd-secAujSum").textContent = (nc.length ? nc.length + " cours de code" + (af ? " (" + af + " appel" + (af > 1 ? "s" : "") + " à faire)" : " · appel fait") : "Pas de cours de code") + " · " + (c.length ? c.length + " séance" + (c.length > 1 ? "s" : "") + " de conduite" + (rs ? " (" + rs + " à venir)" : "") : "pas de conduite"); }
       if (c) {
         c.sort((a, b) => hmin(a.heure) - hmin(b.heure));
-        const mRow = (x) => { const el = eleves.find((y) => y.id === x.eleve_id) || { nom: "Élève", quota: null }; const num = el.quota ? (el.faits || 0) + (el.perdus || 0) + (x.statut === "Fait" ? 0 : 1) : 0, ea = el.quota ? Math.max(1, el.quota - 2) : 0, aEval = el.quota && !el.evaluation && (el.faits || 0) >= ea && x.statut === "Fait"; return '<div class="tm-row" data-id="' + x.id + '"><div class="tm-time">' + (x.rang ? '<b class="mc-rang">' + x.rang + (x.rang === 1 ? "er" : "e") + "</b><small>au volant</small>" : esc(x.heure)) + '</div>' + (el.id ? phAvatar(el, "ph-md") : "") + '<div class="tm-main"><b>' + (el.id ? '<button type="button" class="ms-el" data-goel="' + el.id + '">' + esc(el.nom) + "</button>" : esc(el.nom)) + (el.quota ? ' <em class="se-num' + (num >= ea ? " hot" : "") + '">Séance ' + Math.min(num, el.quota) + "/" + el.quota + (num === 1 ? " · 1re fois au volant" : num === ea && !el.evaluation ? " · évaluation" : num >= el.quota ? " · dernière" : "") + "</em>" : "") + "</b><span>" + esc(x.statut) + (el.evaluation ? " · " + (el.evaluation === "pret" ? "jugé prêt pour l'examen" : "séances en plus conseillées") : "") + '</span>' + contactEl(el) + (aEval ? '<div class="se-mev"><span>Évaluation : est-il prêt pour l\'examen ?</span><button class="btn btn-green btn-sm" type="button" data-mev="pret" data-el="' + el.id + '">Prêt pour l\'examen</button><button class="btn btn-line btn-sm" type="button" data-mev="plus" data-el="' + el.id + '">Il lui faut des séances en plus</button></div>' : "") + '<input data-note placeholder="Note sur les progrès" value="' + esc(x.note || "") + '"></div><div class="tm-acts"><button class="btn btn-green btn-sm" type="button" data-set="Fait">Fait</button><button class="btn btn-line btn-sm" type="button" data-set="Absent">Absent</button></div></div>'; };
+        const mRow = (x) => { const uw = x.uni ? x.note.slice("À l'unité : ".length) : "", ut = (uw.match(/(\d[\d ]{6,})$/) || [""])[0].replace(/\D/g, ""); const el = eleves.find((y) => y.id === x.eleve_id) || (x.uni ? { nom: "Séance à l'unité · " + uw.replace(/\s*·\s*[\d ]+$/, "") + " (1 h)", quota: null, telephone: ut ? "+228" + ut : "" } : { nom: "Élève", quota: null }); const num = el.quota ? (el.faits || 0) + (el.perdus || 0) + (x.statut === "Fait" ? 0 : 1) : 0, ea = el.quota ? Math.max(1, el.quota - 2) : 0, aEval = el.quota && !el.evaluation && (el.faits || 0) >= ea && x.statut === "Fait"; return '<div class="tm-row"' + (x.uni ? ' data-uni="' + x.uni + '"' : "") + ' data-id="' + x.id + '"><div class="tm-time">' + (x.rang ? '<b class="mc-rang">' + x.rang + (x.rang === 1 ? "er" : "e") + "</b><small>au volant</small>" : esc(x.heure)) + '</div>' + (el.id ? phAvatar(el, "ph-md") : "") + '<div class="tm-main"><b>' + (el.id ? '<button type="button" class="ms-el" data-goel="' + el.id + '">' + esc(el.nom) + "</button>" : esc(el.nom)) + (el.quota ? ' <em class="se-num' + (num >= ea ? " hot" : "") + '">Séance ' + Math.min(num, el.quota) + "/" + el.quota + (num === 1 ? " · 1re fois au volant" : num === ea && !el.evaluation ? " · évaluation" : num >= el.quota ? " · dernière" : "") + "</em>" : "") + "</b><span>" + esc(x.statut) + (el.evaluation ? " · " + (el.evaluation === "pret" ? "jugé prêt pour l'examen" : "séances en plus conseillées") : "") + '</span>' + contactEl(el) + (aEval ? '<div class="se-mev"><span>Évaluation : est-il prêt pour l\'examen ?</span><button class="btn btn-green btn-sm" type="button" data-mev="pret" data-el="' + el.id + '">Prêt pour l\'examen</button><button class="btn btn-line btn-sm" type="button" data-mev="plus" data-el="' + el.id + '">Il lui faut des séances en plus</button></div>' : "") + '<input data-note' + (x.uni ? ' type="hidden"' : "") + ' placeholder="Note sur les progrès" value="' + esc(x.note || "") + '"></div><div class="tm-acts"><button class="btn btn-green btn-sm" type="button" data-set="Fait">Fait</button><button class="btn btn-line btn-sm" type="button" data-set="Absent">Absent</button></div></div>'; };
         const mg = []; c.forEach((x) => { const k = x.bloc ? x.heure + "|" + x.bloc : "x" + x.id; let g = mg.find((y) => y.k === k); if (!g) mg.push((g = { k, h: x.heure, bloc: x.bloc, eq: x.equipe, rows: [] })); g.rows.push(x); });
         mg.sort((p, q) => hmin(p.h) - hmin(q.h));
         $("#sd-mcList").innerHTML = mg.length ? mg.map((g) => {
@@ -6412,7 +6446,7 @@ function init(root) {
       const ev = e.target.closest("[data-mev]");
       if (ev) { const el = eleves.find((y) => y.id === +ev.dataset.el); if (el) { const v = ev.dataset.mev; await run(() => DB.q("eleves?id=eq." + el.id, { method: "PATCH", body: { evaluation: v, evaluation_le: new Date().toISOString() }, prefer: "return=minimal" }), v === "pret" ? "Noté : prêt pour l'examen" : "Noté : séances en plus conseillées"); await addSuivi(el, "Note", v === "pret" ? "Évaluation (moniteur) : prêt pour l'examen" : "Évaluation (moniteur) : séances en plus conseillées"); await loadEleves(true); loadMon(); } return; }
       const b = e.target.closest("[data-set]"); if (!b) return; const row = b.closest("[data-id]");
-      await run(() => DB.q("creneaux_conduite?id=eq." + row.dataset.id, { method: "PATCH", body: { statut: b.dataset.set, note: row.querySelector("[data-note]").value.trim() || null, modifie_le: new Date().toISOString() }, prefer: "return=minimal" }), "Séance : " + b.dataset.set);
+      await run(() => DB.q("creneaux_conduite?" + (row.dataset.uni ? "id=in.(" + row.dataset.uni + ")" : "id=eq." + row.dataset.id), { method: "PATCH", body: { statut: b.dataset.set, note: row.querySelector("[data-note]").value.trim() || null, modifie_le: new Date().toISOString() }, prefer: "return=minimal" }), "Séance : " + b.dataset.set);
       await loadEleves(true); loadMon();
     });
 
