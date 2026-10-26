@@ -998,6 +998,7 @@ box-shadow:0 5px 0 #054030,0 14px 26px -10px rgba(6,64,45,.75),inset 0 1px 0 rgb
 .wa-col small{color:#5A6570;font-size:.78rem}
 .wa-k{margin:0;font:700 .76rem var(--f-body);letter-spacing:.06em;text-transform:uppercase;color:#3D444D}
 .wa-help{margin:0;font-size:.88rem}
+#sodaf-root .wa-box .wa-paste{display:block;margin-top:4px;padding:8px 10px;border-radius:10px;background:#F0FAF4;border:1px solid #CBEBD7;color:#14532D;font-weight:500;font-size:.85rem}
 #sd-waNoShare{display:flex;flex-direction:column;gap:8px;align-items:flex-start;width:100%}
 #sd-waNoShare[hidden]{display:none}
 #sd-waNoShare .tel{width:100%}
@@ -4839,7 +4840,7 @@ function init(root) {
     let waFile = null;
     const waOpen = async () => {
       $("#sd-waScript").innerHTML = script({ formation: "Permis B" }, true);
-      $("#sd-waErr").textContent = ""; $("#sd-waT").value = "";
+      $("#sd-waErr").textContent = ""; $("#sd-waT").value = ""; // (remis à zéro à chaque ouverture)
       $("#sd-waOv").hidden = false; document.body.style.overflow = "hidden"; $("#sd-waOv").scrollTop = 0;
       if (!waFile && navigator.canShare) {
         try { const b = await (await fetch(WA_IMG)).blob(); const f = new File([b], "tarifs-sodaf.jpg", { type: "image/jpeg" }); if (navigator.canShare({ files: [f], text: "x" })) waFile = f; } catch (_) {}
@@ -4853,7 +4854,11 @@ function init(root) {
     document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("#sd-waOv").hidden) waClose(); });
     $("#sd-waIns").addEventListener("click", () => { waClose(); insOpen(); $("#sd-insSrc").value = "whatsapp"; });
     $("#sd-waShare").addEventListener("click", (e) => confirmBtn(e.currentTarget, async () => {
-      try { await navigator.share({ files: [waFile], text: waTxt }); } catch (_) {}
+      // Ordinateur (WhatsApp Desktop) : le texte partait avant l'image. On copie le texte et on partage l'image seule : il se colle en légende, sous l'image (26 oct.).
+      const mob = /Android|iPhone|iPad/i.test(navigator.userAgent);
+      try { navigator.clipboard && navigator.clipboard.writeText(waTxt).catch(() => {}); } catch (_) {}
+      if (!mob) $("#sd-waErr").innerHTML = '<span class="wa-paste">Le message est copié. Dans WhatsApp, choisis le client, puis <b>colle le message dans la légende</b> de l\'image (Ctrl + V) avant d\'envoyer.</span>';
+      try { await navigator.share(mob ? { files: [waFile], text: waTxt } : { files: [waFile] }); } catch (_) {}
     }));
     $("#sd-waMsg").addEventListener("click", (e) => {
       const t = $("#sd-waT").value.replace(/\D/g, "");
