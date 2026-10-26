@@ -4872,7 +4872,7 @@ function init(root) {
       if (tel.length !== 8) { err.textContent = "Numéro de téléphone à 8 chiffres."; return; }
       if (!src) { err.textContent = "Choisis comment il nous a connus."; return; }
       err.textContent = ""; $("#sd-insGo").disabled = true;
-      const body = { nom, nom_famille: nf, prenoms: pr, telephone: "+228" + tel, quartier: q || null, formation: $("#sd-insFo").value, source: "bureau", provenance: src, statut: "Contacté", accueil_le: new Date().toISOString(), jeton: newJeton() };
+      const body = { nom, nom_famille: nf, prenoms: pr, telephone: "+228" + tel, quartier: q || null, formation: $("#sd-insFo").value, source: "bureau", provenance: src, statut: "Contacté", accueil_le: new Date().toISOString(), dossier_envoye_le: new Date().toISOString(), dossier_relances: 0, jeton: newJeton() }; // pré-inscrit au bureau ou au téléphone : directement en « Paiement en attente » (26 oct.)
       if ($("#sd-insPar").value.trim()) body.parrain = $("#sd-insPar").value.trim();
       const r = await run(() => DB.q("eleves", { method: "POST", body, prefer: "return=representation" }), "Client pré-inscrit");
       $("#sd-insGo").disabled = false;
@@ -4881,7 +4881,7 @@ function init(root) {
       insX = eleves.find((y) => y.id === r[0].id) || r[0];
       $$("#sd-insForm .ins-step, #sd-insForm .ins-ft").forEach((el) => (el.hidden = true));
       const n = waNum(insX.telephone);
-      $("#sd-insDone").innerHTML = '<div class="ins-ok"><span class="ins-check">✓</span><div><b>' + esc(insX.nom) + " est pré-inscrit</b><small>N° client " + CODE(insX) + " · " + esc(insX.formation || "") + '</small></div></div><p class="ins-sum">Envoie-lui maintenant le lien pour finaliser son inscription. Il choisira sa formule et sa façon de payer, à son rythme.</p><div class="ins-acts"><a class="btn btn-wa wl-btn" target="_blank" rel="noopener" id="sd-insSend" href="https://wa.me/228' + n + "?text=" + encodeURIComponent(msgDossier(insX)) + '">Envoyer le lien d\'inscription sur WhatsApp ↗</a><button class="linkbtn" type="button" id="sd-insLater">Plus tard : le garder dans les appels</button></div>';
+      $("#sd-insDone").innerHTML = '<div class="ins-ok"><span class="ins-check">✓</span><div><b>' + esc(insX.nom) + " est pré-inscrit</b><small>N° client " + CODE(insX) + " · " + esc(insX.formation || "") + '</small></div></div><p class="ins-sum">Il est dans <b style="font-size:inherit">Paiement en attente</b>. Envoie-lui maintenant le lien : il choisira sa formule et sa façon de payer. Il sera inscrit dès qu\'il aura payé.</p><div class="ins-acts"><a class="btn btn-wa wl-btn" target="_blank" rel="noopener" id="sd-insSend" href="https://wa.me/228' + n + "?text=" + encodeURIComponent(msgDossier(insX)) + '">Envoyer le lien d\'inscription sur WhatsApp ↗</a><button class="linkbtn" type="button" id="sd-insLater">Fermer</button></div>';
       $("#sd-insDone").hidden = false;
       $("#sd-insSend").addEventListener("click", async () => {
         const x = insX; if (!x) return;
