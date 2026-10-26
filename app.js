@@ -978,16 +978,26 @@ box-shadow:0 5px 0 #054030,0 14px 26px -10px rgba(6,64,45,.75),inset 0 1px 0 rgb
 #sodaf-root .ins-box.wa-box .ins-x{background:#F1F3F2;color:var(--ink)}
 #sodaf-root .ins-box.wa-box .tel{border:1.5px solid #C9D0D6;background:#fff}
 #sodaf-root .ins-box.wa-box input{border:0}
-.wa-first{margin:0 0 16px;padding:10px 14px;border-radius:12px;background:#F0FAF4;border:1px solid #CBEBD7}
-.wa-end{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px;padding-top:16px;border-top:1px solid #E3E6E8}
-.wa-col{display:flex;flex-direction:column;gap:8px;align-items:flex-start;padding:14px;border:1px solid #E3E6E8;border-radius:14px}
-.wa-col small{color:#5A6570}
-.wa-k{margin:0;font:700 .82rem var(--f-body);letter-spacing:.06em;text-transform:uppercase;color:#3D444D}
-.wa-help{margin:0;font-size:.95rem}
+#sodaf-root .ins-box.wa-box{max-width:1180px;padding:14px 18px}
+#sodaf-root .wa-box .ins-hd{margin-bottom:10px}#sodaf-root .wa-box .ins-hd h3{font-size:1.25rem}
+.wa-first{font:500 .9rem var(--f-body);color:#4A5560}
+#sd-waOv{padding-top:2vh}.wa-grid{display:grid;grid-template-columns:1fr 240px;gap:18px;align-items:start}
+.wa-box .pc-script{font-size:.92rem;line-height:1.4}
+#sodaf-root .wa-box .sc{display:block;columns:3 230px;column-gap:18px}#sodaf-root .wa-box .sc li{break-inside:avoid;margin-bottom:10px}
+.wa-box .sc li{padding-left:32px}.wa-box .sc li::before{width:22px;height:22px;font-size:.75rem}
+.wa-box .sc li>b{margin:2px 0 4px;font-size:.74rem}
+#sodaf-root .wa-box .sc-say{padding:6px 10px!important;margin:0 0 5px!important;font-size:.88rem!important;line-height:1.38!important}
+#sodaf-root .wa-box .sc-tip{font-size:.76rem;margin:0 0 4px!important;line-height:1.35}
+.wa-box .pc-more{margin-top:8px}
+.wa-end{display:flex;flex-direction:column;gap:10px}
+.wa-col{display:flex;flex-direction:column;gap:7px;align-items:flex-start;padding:12px;border:1px solid #E3E6E8;border-radius:14px}
+.wa-col small{color:#5A6570;font-size:.78rem}
+.wa-k{margin:0;font:700 .76rem var(--f-body);letter-spacing:.06em;text-transform:uppercase;color:#3D444D}
+.wa-help{margin:0;font-size:.88rem}
 #sd-waNoShare{display:flex;flex-direction:column;gap:8px;align-items:flex-start;width:100%}
 #sd-waNoShare[hidden]{display:none}
 #sd-waNoShare .tel{width:100%}
-@media (max-width:600px){.wa-end{grid-template-columns:1fr}#sodaf-root .tm-waprospect{width:100%;margin:0 0 10px;justify-content:center}}
+@media (max-width:900px){.wa-grid{grid-template-columns:1fr}#sodaf-root .wa-box .sc{columns:1}.wa-first{display:block}}@media (max-width:600px){#sodaf-root .tm-waprospect{width:100%;margin:0 0 10px;justify-content:center}}
 #sodaf-root .tm-newins{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:10px;padding:7px 18px 7px 7px;border-radius:999px;border:2px solid var(--yellow);background:linear-gradient(135deg,#0E2A4E 0%,#1A4A85 100%);color:#fff;cursor:pointer;font:inherit;box-shadow:0 0 0 4px rgba(242,177,0,.18),0 8px 20px rgba(14,42,78,.35),inset 0 1px 0 rgba(255,255,255,.18);transition:transform .15s ease,box-shadow .15s ease}
 #sodaf-root .tm-newins:hover{transform:translateY(-1px);box-shadow:0 0 0 6px rgba(242,177,0,.25),0 12px 26px rgba(14,42,78,.45),inset 0 1px 0 rgba(255,255,255,.18)}
 #sodaf-root .tm-newins:active{transform:translateY(1px);box-shadow:0 0 0 3px rgba(242,177,0,.25),inset 0 3px 8px rgba(0,0,0,.4)}
@@ -1955,11 +1965,10 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <button class="tm-waprospect" type="button" id="sd-waNew"><span class="wp-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg></span><span class="ni-txt"><b>Client venu de WhatsApp</b><small>Script d'appel</small></span></button>
 </div>
 <div class="ins-ov" id="sd-waOv" hidden><div class="ins-box wa-box" role="dialog" aria-labelledby="sd-waH">
-<div class="ins-hd"><div><p class="eyebrow" style="margin:0">Il nous a écrit sur WhatsApp</p><h3 id="sd-waH">Script d'appel</h3></div><button class="ins-x" type="button" id="sd-waX" aria-label="Fermer">×</button></div>
-<p class="wa-first"><b>Appelle-le tout de suite</b> (appel normal ou appel WhatsApp), puis suis le script.</p>
-<div class="pc-script" id="sd-waScript"></div>
+<div class="ins-hd"><div><p class="eyebrow" style="margin:0">Il nous a écrit sur WhatsApp</p><h3 id="sd-waH">Script d'appel <span class="wa-first">· Appelle-le tout de suite (appel normal ou appel WhatsApp)</span></h3></div><button class="ins-x" type="button" id="sd-waX" aria-label="Fermer">×</button></div>
+<div class="wa-grid"><div class="pc-script" id="sd-waScript"></div>
 <div class="wa-end"><div class="wa-col"><p class="wa-k">Il est intéressé</p><button class="btn btn-green" type="button" id="sd-waIns">L'inscrire</button><small>Ouvre « Nouvelle inscription » (provenance WhatsApp).</small></div>
-<div class="wa-col"><p class="wa-k">Il ne décroche pas</p><p class="wa-help">Un seul message, avec l'image des tarifs.</p><button class="btn btn-wa" type="button" id="sd-waShare" hidden>Envoyer l'image + le message</button><div id="sd-waNoShare"><div class="tel"><span>+228</span><input id="sd-waT" inputmode="numeric" maxlength="11" placeholder="90 00 00 00" aria-label="Son numéro WhatsApp"></div><button class="btn btn-wa" type="button" id="sd-waMsg">Envoyer le message</button><a class="linkbtn" href="/doc-img/fiche-sodaf/fiche-sodaf.jpg" download="tarifs-sodaf.jpg" target="_blank" rel="noopener">Télécharger l'image des tarifs</a><small>Puis joins l'image dans la conversation.</small></div><span class="tm-err" id="sd-waErr"></span></div></div>
+<div class="wa-col"><p class="wa-k">Il ne décroche pas</p><p class="wa-help">Un seul message, avec l'image des tarifs.</p><button class="btn btn-wa" type="button" id="sd-waShare" hidden>Envoyer l'image + le message</button><div id="sd-waNoShare"><div class="tel"><span>+228</span><input id="sd-waT" inputmode="numeric" maxlength="11" placeholder="90 00 00 00" aria-label="Son numéro WhatsApp"></div><button class="btn btn-wa" type="button" id="sd-waMsg">Envoyer le message</button><a class="linkbtn" href="/doc-img/fiche-sodaf/fiche-sodaf.jpg" download="tarifs-sodaf.jpg" target="_blank" rel="noopener">Télécharger l'image des tarifs</a><small>Puis joins l'image dans la conversation.</small></div><span class="tm-err" id="sd-waErr"></span></div></div></div>
 </div></div>
 <div class="ins-ov" id="sd-insOv" hidden><form class="ins-box" id="sd-insForm" novalidate>
 <div class="ins-hd"><div><p class="eyebrow" style="margin:0">Au bureau</p><h3>Nouvelle inscription</h3></div><button class="ins-x" type="button" id="sd-insX" aria-label="Fermer">×</button></div>
