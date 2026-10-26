@@ -983,6 +983,40 @@ box-shadow:0 5px 0 #054030,0 14px 26px -10px rgba(6,64,45,.75),inset 0 1px 0 rgb
 #sodaf-root .ins-box.wa-box .tel{border:1.5px solid #C9D0D6;background:#fff}
 #sodaf-root .ins-box.wa-box input{border:0}
 #sodaf-root .ins-box.wa-box{max-width:1180px;padding:14px 18px}
+#sodaf-root .tm-present{border-color:var(--yellow)}
+#sodaf-root .tm-present .pr-ico{background:var(--yellow);color:#0E2A4E}
+.pr-ov{position:fixed;inset:0;z-index:9600;background:linear-gradient(160deg,#0E2A4E 0%,#133A6C 100%);color:#fff;display:flex;flex-direction:column;padding:4vh 5vw}
+.pr-ov[hidden]{display:none}
+#sodaf-root .pr-x{position:absolute;top:18px;right:18px;border:0;background:rgba(255,255,255,.14);color:#fff;width:44px;height:44px;border-radius:50%;font-size:1.6rem;cursor:pointer;line-height:1}
+.pr-slide{flex:1;display:flex;flex-direction:column;justify-content:center;max-width:1000px;margin:0 auto;width:100%;cursor:pointer}
+#sodaf-root .pr-eye{margin:0 0 10px;font:700 .95rem var(--f-body);letter-spacing:.14em;text-transform:uppercase;color:var(--yellow)}
+#sodaf-root .pr-slide h2{margin:0 0 18px;font:700 clamp(2rem,5vw,3.4rem)/1.1 var(--f-display);color:#fff}
+#sodaf-root .pr-big{margin:0 0 8px;font:600 clamp(1.3rem,3vw,1.9rem)/1.3 var(--f-display);color:#fff}
+.pr-sub{margin:10px 0 0;font-size:clamp(1rem,2vw,1.25rem);color:#D6E2F2}
+.pr-steps{display:flex;flex-direction:column;gap:clamp(12px,2.5vh,26px)}
+.pr-steps>div{display:grid;grid-template-columns:52px 1fr;grid-template-rows:auto auto;column-gap:16px;align-items:center}
+.pr-steps i{grid-row:1/3;width:52px;height:52px;border-radius:50%;background:var(--yellow);color:#0E2A4E;display:grid;place-items:center;font:700 1.4rem var(--f-display);font-style:normal}
+.pr-steps b{font:700 clamp(1.2rem,2.6vw,1.7rem) var(--f-display)}
+.pr-steps span{grid-column:2;font-size:clamp(1rem,2vw,1.25rem);color:#D6E2F2;line-height:1.45}
+.pr-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:20px}
+.pr-card{position:relative;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.22);border-radius:16px;padding:18px 16px;display:flex;flex-direction:column;gap:4px}
+.pr-card em{position:absolute;top:-11px;left:14px;background:var(--yellow);color:#0E2A4E;font:700 .72rem var(--f-body);letter-spacing:.06em;text-transform:uppercase;font-style:normal;padding:3px 10px;border-radius:999px}
+.pr-card.pr-reco{border-color:var(--yellow);background:rgba(242,177,0,.14)}
+.pr-card b{font:700 clamp(1rem,1.8vw,1.2rem) var(--f-display)}
+.pr-card strong{font:700 clamp(1.5rem,3vw,2.1rem) var(--f-display);color:var(--yellow)}
+.pr-card span{font-size:clamp(.85rem,1.5vw,.98rem);color:#D6E2F2;line-height:1.4}
+#sodaf-root .pr-list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:clamp(10px,2vh,18px)}
+#sodaf-root .pr-list li{list-style:none}#sodaf-root .pr-list li::marker{content:""}
+#sodaf-root .pr-list li{position:relative;padding-left:34px;font-size:clamp(1.1rem,2.3vw,1.45rem);line-height:1.45;color:#ECF2F9}
+.pr-list li::before{content:"";position:absolute;left:0;top:.45em;width:14px;height:14px;border-radius:50%;background:var(--yellow)}
+#sodaf-root .pr-list b{color:#fff}
+.pr-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:3vh}
+#sodaf-root .pr-btn{border:2px solid rgba(255,255,255,.4);background:none;color:#fff;border-radius:999px;padding:12px 26px;font:600 1.05rem var(--f-body);cursor:pointer}
+#sodaf-root .pr-btn.pr-next{background:var(--yellow);border-color:var(--yellow);color:#0E2A4E;font-weight:700}
+.pr-dots{display:flex;gap:10px}
+#sodaf-root .pr-dot{width:12px;height:12px;border-radius:50%;border:0;background:rgba(255,255,255,.3);cursor:pointer;padding:0}
+#sodaf-root .pr-dot.on{background:var(--yellow)}
+@media (max-width:600px){.pr-ov{padding:12px 16px 16px}.pr-steps>div{grid-template-columns:40px 1fr}.pr-steps i{width:40px;height:40px;font-size:1.1rem}#sodaf-root .pr-btn{padding:10px 16px;font-size:.95rem}}
 #sodaf-root .wa-box .ins-hd{margin-bottom:10px}#sodaf-root .wa-box .ins-hd h3{font-size:1.25rem}
 .wa-first{font:500 .9rem var(--f-body);color:#4A5560}
 #sd-waOv{padding-top:2vh}.wa-grid{display:grid;grid-template-columns:1fr 240px;gap:18px;align-items:start}
@@ -1971,6 +2005,12 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <button data-s="aide" aria-selected="false">Mode d'emploi</button>
 <button class="tm-newins" type="button" id="sd-insNew"><span class="ni-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="M19 8v6M16 11h6"/></svg></span><span class="ni-txt"><b>Nouvelle pré-inscription</b><small>Client au bureau</small></span></button>
 <button class="tm-waprospect" type="button" id="sd-waNew"><span class="wp-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg></span><span class="ni-txt"><b>Client venu de WhatsApp</b><small>Script d'appel</small></span></button>
+<button class="tm-waprospect tm-present" type="button" id="sd-prNew"><span class="wp-ico pr-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M12 17v4M8 21h8"/></svg></span><span class="ni-txt"><b>Présentation client</b><small>À montrer à l'agence</small></span></button>
+</div>
+<div class="pr-ov" id="sd-prOv" hidden role="dialog" aria-label="Présentation client">
+<button class="pr-x" type="button" id="sd-prX" aria-label="Fermer">×</button>
+<div class="pr-slide" id="sd-prSlide"></div>
+<div class="pr-nav"><button class="pr-btn" type="button" id="sd-prPrev">‹ Précédent</button><div class="pr-dots" id="sd-prDots"></div><button class="pr-btn pr-next" type="button" id="sd-prNext">Suivant ›</button></div>
 </div>
 <div class="ins-ov" id="sd-waOv" hidden><div class="ins-box wa-box" role="dialog" aria-labelledby="sd-waH">
 <div class="ins-hd"><div><p class="eyebrow" style="margin:0">Il nous a écrit sur WhatsApp</p><h3 id="sd-waH">Script d'appel <span class="wa-first">· Appelle-le tout de suite (appel normal ou appel WhatsApp)</span></h3></div><button class="ins-x" type="button" id="sd-waX" aria-label="Fermer">×</button></div>
@@ -4864,6 +4904,31 @@ function init(root) {
     };
     const waClose = () => { $("#sd-waOv").hidden = true; document.body.style.overflow = ""; };
     $("#sd-waNew").addEventListener("click", waOpen);
+    // ---- Présentation client (26 oct.) : diaporama plein écran à montrer à l'agence, pour expliquer sans chercher les documents
+    const prSlides = () => [
+      '<p class="pr-eye">Bienvenue chez</p><h2>SODAF Auto-École</h2><p class="pr-big">L\'art de conduire, la force de réussir.</p><p class="pr-sub">Voici comment se passe ta formation, en 5 écrans.</p>',
+      '<p class="pr-eye">1 · Comment ça se passe</p><div class="pr-steps"><div><i>1</i><b>Le code</b><span>12 cours en salle, en petit groupe de 6. Et tout le code sur autosodaf.com : cours, quiz, examens blancs.</span></div><div><i>2</i><b>La conduite</b><span>Des séances de 2 h avec le moniteur, à ton rythme, jusqu\'à 3 par semaine.</span></div><div><i>3</i><b>L\'examen</b><span>Nous déposons ton dossier, et l\'État t\'envoie la date par message.</span></div></div>',
+      '<p class="pr-eye">2 · Nos formations et nos prix</p><div class="pr-cards"><div class="pr-card pr-reco"><em>Recommandée</em><b>Formation complète</b><strong>55 000 F</strong><span>Pour apprendre depuis zéro · 12 séances de conduite</span></div><div class="pr-card"><b>Formule rapide</b><strong>35 000 F</strong><span>Tu sais déjà tenir un volant · 6 séances</span></div><div class="pr-card"><b>Tarif étudiant</b><strong>30 000 F</strong><span>Carte d\'étudiant + carte d\'identité · 12 séances</span></div><div class="pr-card"><b>Remise à niveau</b><strong>25 000 F</strong><span>Tu as déjà le permis · 4 séances · tout compris</span></div></div><p class="pr-sub">+ Droit d\'inscription : 5 000 F, payé une seule fois (compris dans la remise à niveau).</p>',
+      '<p class="pr-eye">3 · Pas encore tout l\'argent ?</p><h2>Commence avec 5 000 F</h2><ul class="pr-list"><li>Tu paies d\'abord l\'inscription : <b>5 000 F</b>.</li><li>Tu apprends <b>tout de suite</b> le code en ligne : cours, quiz, examens blancs.</li><li>Tu as <b>2 mois</b> pour commencer à payer ta formation.</li><li>Chaque formation peut se payer en <b>deux tranches</b>. La conduite commence quand ta formation est soldée.</li></ul>',
+      '<p class="pr-eye">4 · Les horaires</p><div class="pr-steps"><div><i>·</i><b>Le code en salle</b><span>2 cours par semaine, ' + hCode() + '.</span></div><div><i>·</i><b>La conduite</b><span>Lundi → samedi : 7 h 30 – 9 h 30 et 10 h – 12 h. Lundi → vendredi : 15 h 45 – 17 h 45.</span></div><div><i>·</i><b>L\'agence</b><span>Lun – ven : 7 h 30 – 12 h 30 et 14 h 30 – 18 h · Sam : 7 h 30 – 12 h et 13 h 30 – 17 h.</span></div></div>',
+      '<p class="pr-eye">5 · Pour t\'inscrire</p><ul class="pr-list"><li><b>Rien à apporter aujourd\'hui</b> : on te pré-inscrit en 2 minutes.</li><li>Tu reçois ton lien sur WhatsApp, ou on fait tout ensemble ici. Paiement ' + payWhere() + '.</li><li>Un <b>reçu officiel</b> à chaque paiement.</li><li>Les papiers (carte d\'identité, acte de naissance, 2 photos), c\'est à la fin, pour l\'examen (dépôt : 35 000 F).</li></ul><p class="pr-big">Des questions ? On est là.</p>',
+    ];
+    let prIdx = 0, PR = [];
+    const prShow = (i) => { prIdx = Math.max(0, Math.min(PR.length - 1, i));
+      $("#sd-prSlide").innerHTML = PR[prIdx];
+      $("#sd-prDots").innerHTML = PR.map((_, k) => '<button type="button" class="pr-dot' + (k === prIdx ? " on" : "") + '" data-prgo="' + k + '" aria-label="Écran ' + (k + 1) + '"></button>').join("");
+      $("#sd-prPrev").style.visibility = prIdx === 0 ? "hidden" : "visible";
+      $("#sd-prNext").textContent = prIdx === PR.length - 1 ? "Terminer" : "Suivant ›"; };
+    const prOpen = () => { PR = prSlides(); $("#sd-prOv").hidden = false; document.body.style.overflow = "hidden"; prShow(0); };
+    const prClose = () => { $("#sd-prOv").hidden = true; document.body.style.overflow = ""; };
+    $("#sd-prNew").addEventListener("click", prOpen);
+    $("#sd-prX").addEventListener("click", prClose);
+    $("#sd-prPrev").addEventListener("click", () => prShow(prIdx - 1));
+    $("#sd-prNext").addEventListener("click", () => { if (prIdx === PR.length - 1) prClose(); else prShow(prIdx + 1); });
+    $("#sd-prOv").addEventListener("click", (e) => { const d = e.target.closest("[data-prgo]"); if (d) prShow(+d.dataset.prgo); });
+    $("#sd-prSlide").addEventListener("click", () => { if (prIdx < PR.length - 1) prShow(prIdx + 1); });
+    document.addEventListener("keydown", (e) => { if ($("#sd-prOv").hidden) return;
+      if (e.key === "Escape") prClose(); else if (e.key === "ArrowRight" || e.key === " ") prShow(prIdx + 1); else if (e.key === "ArrowLeft") prShow(prIdx - 1); });
     $("#sd-waX").addEventListener("click", waClose);
     $("#sd-waOv").addEventListener("click", (e) => { if (e.target.id === "sd-waOv") waClose(); const f = e.target.closest("[data-wafmt]"); if (f) { waFmt = f.dataset.wafmt; waMaj(); } });
     document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("#sd-waOv").hidden) waClose(); });
