@@ -998,6 +998,9 @@ box-shadow:0 5px 0 #054030,0 14px 26px -10px rgba(6,64,45,.75),inset 0 1px 0 rgb
 .wa-col small{color:#5A6570;font-size:.78rem}
 .wa-k{margin:0;font:700 .76rem var(--f-body);letter-spacing:.06em;text-transform:uppercase;color:#3D444D}
 .wa-help{margin:0;font-size:.88rem}
+.wa-fmt{display:inline-flex;border:1.5px solid #1FA855;border-radius:999px;overflow:hidden}
+#sodaf-root .wa-fmt button{border:0;background:#fff;color:#14532D;padding:5px 16px;font:600 .85rem var(--f-body);cursor:pointer}
+#sodaf-root .wa-fmt button[aria-pressed="true"]{background:#1FA855;color:#fff}
 #sodaf-root .wa-box .wa-paste{display:block;margin-top:4px;padding:8px 10px;border-radius:10px;background:#F0FAF4;border:1px solid #CBEBD7;color:#14532D;font-weight:500;font-size:.85rem}
 #sd-waNoShare{display:flex;flex-direction:column;gap:8px;align-items:flex-start;width:100%}
 #sd-waNoShare[hidden]{display:none}
@@ -1973,7 +1976,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="ins-hd"><div><p class="eyebrow" style="margin:0">Il nous a écrit sur WhatsApp</p><h3 id="sd-waH">Script d'appel <span class="wa-first">· Appelle-le tout de suite (appel normal ou appel WhatsApp)</span></h3></div><button class="ins-x" type="button" id="sd-waX" aria-label="Fermer">×</button></div>
 <div class="wa-grid"><div class="pc-script" id="sd-waScript"></div>
 <div class="wa-end"><div class="wa-col"><p class="wa-k">Il est intéressé</p><button class="btn btn-green" type="button" id="sd-waIns">Le pré-inscrire</button><small>Ouvre « Nouvelle pré-inscription » (provenance WhatsApp). Il sera inscrit quand il aura payé.</small></div>
-<div class="wa-col"><p class="wa-k">Il ne décroche pas</p><p class="wa-help">Un seul message, avec l'image des tarifs.</p><button class="btn btn-wa" type="button" id="sd-waShare" hidden>Envoyer l'image + le message</button><div id="sd-waNoShare"><div class="tel"><span>+228</span><input id="sd-waT" inputmode="numeric" maxlength="11" placeholder="90 00 00 00" aria-label="Son numéro WhatsApp"></div><button class="btn btn-wa" type="button" id="sd-waMsg">Envoyer le message</button><a class="linkbtn" href="/doc-img/fiche-sodaf/fiche-sodaf.jpg" download="tarifs-sodaf.jpg" target="_blank" rel="noopener">Télécharger l'image des tarifs</a><small>Puis joins l'image dans la conversation.</small></div><span class="tm-err" id="sd-waErr"></span></div></div></div>
+<div class="wa-col"><p class="wa-k">Il ne décroche pas</p><p class="wa-help">Un seul message, avec la fiche des tarifs (image ou PDF).</p><button class="btn btn-wa" type="button" id="sd-waShare" hidden>Envoyer l'image + le message</button><div class="wa-fmt" role="group" aria-label="Que joindre ?"><button type="button" data-wafmt="img" aria-pressed="true">Image</button><button type="button" data-wafmt="pdf" aria-pressed="false">PDF</button></div><div id="sd-waNoShare"><div class="tel"><span>+228</span><input id="sd-waT" inputmode="numeric" maxlength="11" placeholder="90 00 00 00" aria-label="Son numéro WhatsApp"></div><button class="btn btn-wa" type="button" id="sd-waMsg">Ouvrir sa conversation</button></div><span class="tm-err" id="sd-waErr"></span></div></div></div>
 </div></div>
 <div class="ins-ov" id="sd-insOv" hidden><form class="ins-box" id="sd-insForm" novalidate>
 <div class="ins-hd"><div><p class="eyebrow" style="margin:0">Au bureau</p><h3>Nouvelle pré-inscription</h3></div><button class="ins-x" type="button" id="sd-insX" aria-label="Fermer">×</button></div>
@@ -4837,34 +4840,59 @@ function init(root) {
     // ---- Client venu de WhatsApp (pas pré-inscrit) : script d'appel, puis « Le pré-inscrire » ou un seul message avec l'image des tarifs
     const WA_IMG = "/doc-img/fiche-sodaf/fiche-sodaf.jpg";
     const waTxt = "Bonjour, ici SODAF Auto-École. Merci pour votre message.\n\nNous avons essayé de vous appeler. Voici nos formations et nos prix. Vous pouvez commencer avec seulement 5 000 F d'inscription.\n\nÀ quel moment pouvons-nous vous rappeler ?\n\nautosodaf.com";
-    let waFile = null;
+    // Il ne décroche pas : un seul message avec la fiche des tarifs, en image ou en PDF (26 oct.).
+    //   Téléphone : partage du téléphone (fichier + texte ensemble).
+    //   Ordinateur : le partage de Windows envoyait le texte avant l'image. On ouvre sa conversation avec le message déjà écrit,
+    //   et le fichier est prêt (image copiée : Ctrl + V ; PDF téléchargé : on le glisse) → il part avec le message en légende.
+    const WA_PDF = "/fiche-renseignement-sodaf.pdf", waMob = /Android|iPhone|iPad/i.test(navigator.userAgent);
+    let waFmt = "img";
+    const waF = {};
+    const waFichier = async (k) => { if (waF[k] !== undefined) return waF[k]; waF[k] = null;
+      try { const b = await (await fetch(k === "pdf" ? WA_PDF : WA_IMG)).blob(); const f = new File([b], k === "pdf" ? "tarifs-sodaf.pdf" : "tarifs-sodaf.jpg", { type: k === "pdf" ? "application/pdf" : "image/jpeg" }); if (navigator.canShare && navigator.canShare({ files: [f], text: "x" })) waF[k] = f; } catch (_) {}
+      return waF[k]; };
+    const waMaj = async () => {
+      $$("[data-wafmt]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.wafmt === waFmt)));
+      $("#sd-waShare").textContent = waFmt === "pdf" ? "Envoyer le PDF + le message" : "Envoyer l'image + le message";
+      const ok = waMob && (await waFichier(waFmt));
+      $("#sd-waShare").hidden = !ok; $("#sd-waNoShare").hidden = !!ok; $("#sd-waErr").textContent = "";
+    };
     const waOpen = async () => {
       $("#sd-waScript").innerHTML = script({ formation: "Permis B" }, true);
-      $("#sd-waErr").textContent = ""; $("#sd-waT").value = ""; // (remis à zéro à chaque ouverture)
+      $("#sd-waErr").textContent = ""; $("#sd-waT").value = "";
       $("#sd-waOv").hidden = false; document.body.style.overflow = "hidden"; $("#sd-waOv").scrollTop = 0;
-      if (!waFile && navigator.canShare) {
-        try { const b = await (await fetch(WA_IMG)).blob(); const f = new File([b], "tarifs-sodaf.jpg", { type: "image/jpeg" }); if (navigator.canShare({ files: [f], text: "x" })) waFile = f; } catch (_) {}
-      }
-      $("#sd-waShare").hidden = !waFile; $("#sd-waNoShare").hidden = !!waFile;
+      waMaj();
     };
     const waClose = () => { $("#sd-waOv").hidden = true; document.body.style.overflow = ""; };
     $("#sd-waNew").addEventListener("click", waOpen);
     $("#sd-waX").addEventListener("click", waClose);
-    $("#sd-waOv").addEventListener("click", (e) => { if (e.target.id === "sd-waOv") waClose(); });
+    $("#sd-waOv").addEventListener("click", (e) => { if (e.target.id === "sd-waOv") waClose(); const f = e.target.closest("[data-wafmt]"); if (f) { waFmt = f.dataset.wafmt; waMaj(); } });
     document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("#sd-waOv").hidden) waClose(); });
     $("#sd-waIns").addEventListener("click", () => { waClose(); insOpen(); $("#sd-insSrc").value = "whatsapp"; });
     $("#sd-waShare").addEventListener("click", (e) => confirmBtn(e.currentTarget, async () => {
-      // Ordinateur (WhatsApp Desktop) : le texte partait avant l'image. On copie le texte et on partage l'image seule : il se colle en légende, sous l'image (26 oct.).
-      const mob = /Android|iPhone|iPad/i.test(navigator.userAgent);
-      try { navigator.clipboard && navigator.clipboard.writeText(waTxt).catch(() => {}); } catch (_) {}
-      if (!mob) $("#sd-waErr").innerHTML = '<span class="wa-paste">Le message est copié. Dans WhatsApp, choisis le client, puis <b>colle le message dans la légende</b> de l\'image (Ctrl + V) avant d\'envoyer.</span>';
-      try { await navigator.share(mob ? { files: [waFile], text: waTxt } : { files: [waFile] }); } catch (_) {}
+      e.currentTarget && 0; $("#sd-waShare").classList.remove("armed"); $("#sd-waShare").textContent = waFmt === "pdf" ? "Envoyer le PDF + le message" : "Envoyer l'image + le message";
+      try { await navigator.share({ files: [waF[waFmt]], text: waTxt }); } catch (_) {}
     }));
+    const waAide = (t) => { $("#sd-waErr").innerHTML = '<span class="wa-paste">' + t + "</span>"; };
     $("#sd-waMsg").addEventListener("click", (e) => {
       const t = $("#sd-waT").value.replace(/\D/g, "");
       if (t.length !== 8) { $("#sd-waErr").textContent = "Écris son numéro (8 chiffres)."; return; }
       $("#sd-waErr").textContent = "";
-      confirmBtn(e.currentTarget, () => window.open("https://wa.me/228" + t + "?text=" + encodeURIComponent(waTxt), "_blank", "noopener"));
+      const bt = e.currentTarget;
+      confirmBtn(bt, () => {
+        bt.textContent = "Ouvrir sa conversation"; bt.classList.remove("armed");
+        if (waFmt === "img") {
+          let copie = false;
+          try { if (window.ClipboardItem && navigator.clipboard && navigator.clipboard.write) {
+            const png = fetch(WA_IMG).then((r) => r.blob()).then((b) => createImageBitmap(b)).then((im) => new Promise((ok) => { const c = document.createElement("canvas"); c.width = im.width; c.height = im.height; c.getContext("2d").drawImage(im, 0, 0); c.toBlob(ok, "image/png"); }));
+            navigator.clipboard.write([new ClipboardItem({ "image/png": png })]).catch(() => waAide("L'image n'a pas pu être copiée. <a href=\"" + WA_IMG + "\" download=\"tarifs-sodaf.jpg\">Télécharge-la</a> et glisse-la dans sa conversation : le message écrit passe en légende."));
+            copie = true; } } catch (_) {}
+          waAide(copie ? "Sa conversation s'ouvre avec le message <b>déjà écrit</b>. Clique dans la zone du message et fais <b>Ctrl + V</b> : l'image s'ajoute, avec le message en légende. Puis Envoyer." : "Sa conversation s'ouvre avec le message déjà écrit. <a href=\"" + WA_IMG + "\" download=\"tarifs-sodaf.jpg\">Télécharge l'image</a> et glisse-la dans la conversation : le message passe en légende. Puis Envoyer.");
+        } else {
+          const a = document.createElement("a"); a.href = WA_PDF; a.download = "tarifs-sodaf.pdf"; document.body.appendChild(a); a.click(); a.remove();
+          waAide("Le PDF est téléchargé. Sa conversation s'ouvre avec le message <b>déjà écrit</b>. <b>Glisse le PDF</b> (en bas du navigateur ou dans Téléchargements) dans la conversation : le message passe en légende. Puis Envoyer.");
+        }
+        window.open("https://wa.me/228" + t + "?text=" + encodeURIComponent(waTxt), "_blank", "noopener");
+      });
     });
     $("#sd-insX").addEventListener("click", insClose);
     $("#sd-insOv").addEventListener("click", (e) => { if (e.target.id === "sd-insOv") insClose(); });
