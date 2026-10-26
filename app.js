@@ -1976,7 +1976,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="ins-hd"><div><p class="eyebrow" style="margin:0">Il nous a écrit sur WhatsApp</p><h3 id="sd-waH">Script d'appel <span class="wa-first">· Appelle-le tout de suite (appel normal ou appel WhatsApp)</span></h3></div><button class="ins-x" type="button" id="sd-waX" aria-label="Fermer">×</button></div>
 <div class="wa-grid"><div class="pc-script" id="sd-waScript"></div>
 <div class="wa-end"><div class="wa-col"><p class="wa-k">Il est intéressé</p><button class="btn btn-green" type="button" id="sd-waIns">Le pré-inscrire</button><small>Ouvre « Nouvelle pré-inscription » (provenance WhatsApp). Il sera inscrit quand il aura payé.</small></div>
-<div class="wa-col"><p class="wa-k">Il ne décroche pas</p><p class="wa-help">Un seul message, avec la fiche des tarifs (image ou PDF).</p><button class="btn btn-wa" type="button" id="sd-waShare" hidden>Envoyer l'image + le message</button><div class="wa-fmt" role="group" aria-label="Que joindre ?"><button type="button" data-wafmt="img" aria-pressed="true">Image</button><button type="button" data-wafmt="pdf" aria-pressed="false">PDF</button></div><div id="sd-waNoShare"><div class="tel"><span>+228</span><input id="sd-waT" inputmode="numeric" maxlength="11" placeholder="90 00 00 00" aria-label="Son numéro WhatsApp"></div><button class="btn btn-wa" type="button" id="sd-waMsg">Ouvrir sa conversation</button></div><span class="tm-err" id="sd-waErr"></span></div></div></div>
+<div class="wa-col"><p class="wa-k">Il ne décroche pas</p><p class="wa-help">Un seul message, avec l'image des tarifs.</p><button class="btn btn-wa" type="button" id="sd-waShare" hidden>Envoyer l'image + le message</button><div id="sd-waNoShare"><div class="tel"><span>+228</span><input id="sd-waT" inputmode="numeric" maxlength="11" placeholder="90 00 00 00" aria-label="Son numéro WhatsApp"></div><button class="btn btn-wa" type="button" id="sd-waMsg">Ouvrir sa conversation</button></div><span class="tm-err" id="sd-waErr"></span></div></div></div>
 </div></div>
 <div class="ins-ov" id="sd-insOv" hidden><form class="ins-box" id="sd-insForm" novalidate>
 <div class="ins-hd"><div><p class="eyebrow" style="margin:0">Au bureau</p><h3>Nouvelle pré-inscription</h3></div><button class="ins-x" type="button" id="sd-insX" aria-label="Fermer">×</button></div>
@@ -4845,7 +4845,7 @@ function init(root) {
     //   Ordinateur : le partage de Windows envoyait le texte avant l'image. On ouvre sa conversation avec le message déjà écrit,
     //   et le fichier est prêt (image copiée : Ctrl + V ; PDF téléchargé : on le glisse) → il part avec le message en légende.
     const WA_PDF = "/fiche-renseignement-sodaf.pdf", waMob = /Android|iPhone|iPad/i.test(navigator.userAgent);
-    let waFmt = "img";
+    let waFmt = "img"; // image seulement (décision du 26 oct. : pas de choix à faire)
     const waF = {};
     const waFichier = async (k) => { if (waF[k] !== undefined) return waF[k]; waF[k] = null;
       try { const b = await (await fetch(k === "pdf" ? WA_PDF : WA_IMG)).blob(); const f = new File([b], k === "pdf" ? "tarifs-sodaf.pdf" : "tarifs-sodaf.jpg", { type: k === "pdf" ? "application/pdf" : "image/jpeg" }); if (navigator.canShare && navigator.canShare({ files: [f], text: "x" })) waF[k] = f; } catch (_) {}
