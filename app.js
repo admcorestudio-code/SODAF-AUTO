@@ -966,6 +966,28 @@ box-shadow:0 5px 0 #054030,0 14px 26px -10px rgba(6,64,45,.75),inset 0 1px 0 rgb
 .pc-rv .pc-konote{margin-bottom:8px}
 .pc-callnow{padding-bottom:14px;margin-bottom:14px;border-bottom:2px solid var(--ink)}
 .tm-newins{margin:6px 6px 10px auto;align-self:center}
+.tm-waprospect{margin:6px 6px 10px 0;align-self:center}
+#sodaf-root .tm-waprospect{display:inline-flex;align-items:center;gap:10px;padding:7px 18px 7px 7px;border-radius:999px;border:2px solid #1FA855;background:#fff;color:#0E2A4E;cursor:pointer;font:inherit;box-shadow:0 4px 12px rgba(14,42,78,.12)}
+#sodaf-root .tm-waprospect:hover{background:#F0FAF4}
+#sodaf-root .tm-waprospect:focus-visible{outline:3px solid #1FA855;outline-offset:3px}
+#sodaf-root .tm-waprospect .wp-ico{width:30px;height:30px;border-radius:50%;background:#1FA855;color:#fff;display:grid;place-items:center;flex:none}
+#sodaf-root .tm-waprospect small{color:#4A5560}
+#sodaf-root .ins-box.wa-box{background:#fff;color:var(--ink)}
+#sodaf-root .ins-box.wa-box .eyebrow{color:#14843F}
+#sodaf-root .ins-box.wa-box .ins-hd h3{color:var(--ink)}
+#sodaf-root .ins-box.wa-box .ins-x{background:#F1F3F2;color:var(--ink)}
+#sodaf-root .ins-box.wa-box .tel{border:1.5px solid #C9D0D6;background:#fff}
+#sodaf-root .ins-box.wa-box input{border:0}
+.wa-first{margin:0 0 16px;padding:10px 14px;border-radius:12px;background:#F0FAF4;border:1px solid #CBEBD7}
+.wa-end{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px;padding-top:16px;border-top:1px solid #E3E6E8}
+.wa-col{display:flex;flex-direction:column;gap:8px;align-items:flex-start;padding:14px;border:1px solid #E3E6E8;border-radius:14px}
+.wa-col small{color:#5A6570}
+.wa-k{margin:0;font:700 .82rem var(--f-body);letter-spacing:.06em;text-transform:uppercase;color:#3D444D}
+.wa-help{margin:0;font-size:.95rem}
+#sd-waNoShare{display:flex;flex-direction:column;gap:8px;align-items:flex-start;width:100%}
+#sd-waNoShare[hidden]{display:none}
+#sd-waNoShare .tel{width:100%}
+@media (max-width:600px){.wa-end{grid-template-columns:1fr}#sodaf-root .tm-waprospect{width:100%;margin:0 0 10px;justify-content:center}}
 #sodaf-root .tm-newins{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:10px;padding:7px 18px 7px 7px;border-radius:999px;border:2px solid var(--yellow);background:linear-gradient(135deg,#0E2A4E 0%,#1A4A85 100%);color:#fff;cursor:pointer;font:inherit;box-shadow:0 0 0 4px rgba(242,177,0,.18),0 8px 20px rgba(14,42,78,.35),inset 0 1px 0 rgba(255,255,255,.18);transition:transform .15s ease,box-shadow .15s ease}
 #sodaf-root .tm-newins:hover{transform:translateY(-1px);box-shadow:0 0 0 6px rgba(242,177,0,.25),0 12px 26px rgba(14,42,78,.45),inset 0 1px 0 rgba(255,255,255,.18)}
 #sodaf-root .tm-newins:active{transform:translateY(1px);box-shadow:0 0 0 3px rgba(242,177,0,.25),inset 0 3px 8px rgba(0,0,0,.4)}
@@ -1930,7 +1952,15 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <button data-s="auj" aria-selected="false" hidden>Aujourd'hui</button>
 <button data-s="aide" aria-selected="false">Mode d'emploi</button>
 <button class="tm-newins" type="button" id="sd-insNew"><span class="ni-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="M19 8v6M16 11h6"/></svg></span><span class="ni-txt"><b>Nouvelle inscription</b><small>Client au bureau</small></span></button>
+<button class="tm-waprospect" type="button" id="sd-waNew"><span class="wp-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg></span><span class="ni-txt"><b>Client venu de WhatsApp</b><small>Script d'appel</small></span></button>
 </div>
+<div class="ins-ov" id="sd-waOv" hidden><div class="ins-box wa-box" role="dialog" aria-labelledby="sd-waH">
+<div class="ins-hd"><div><p class="eyebrow" style="margin:0">Il nous a écrit sur WhatsApp</p><h3 id="sd-waH">Script d'appel</h3></div><button class="ins-x" type="button" id="sd-waX" aria-label="Fermer">×</button></div>
+<p class="wa-first"><b>Appelle-le tout de suite</b> (appel normal ou appel WhatsApp), puis suis le script.</p>
+<div class="pc-script" id="sd-waScript"></div>
+<div class="wa-end"><div class="wa-col"><p class="wa-k">Il est intéressé</p><button class="btn btn-green" type="button" id="sd-waIns">L'inscrire</button><small>Ouvre « Nouvelle inscription » (provenance WhatsApp).</small></div>
+<div class="wa-col"><p class="wa-k">Il ne décroche pas</p><p class="wa-help">Un seul message, avec l'image des tarifs.</p><button class="btn btn-wa" type="button" id="sd-waShare" hidden>Envoyer l'image + le message</button><div id="sd-waNoShare"><div class="tel"><span>+228</span><input id="sd-waT" inputmode="numeric" maxlength="11" placeholder="90 00 00 00" aria-label="Son numéro WhatsApp"></div><button class="btn btn-wa" type="button" id="sd-waMsg">Envoyer le message</button><a class="linkbtn" href="/doc-img/fiche-sodaf/fiche-sodaf.jpg" download="tarifs-sodaf.jpg" target="_blank" rel="noopener">Télécharger l'image des tarifs</a><small>Puis joins l'image dans la conversation.</small></div><span class="tm-err" id="sd-waErr"></span></div></div>
+</div></div>
 <div class="ins-ov" id="sd-insOv" hidden><form class="ins-box" id="sd-insForm" novalidate>
 <div class="ins-hd"><div><p class="eyebrow" style="margin:0">Au bureau</p><h3>Nouvelle inscription</h3></div><button class="ins-x" type="button" id="sd-insX" aria-label="Fermer">×</button></div>
 <fieldset class="ins-step"><legend><i>1</i>Le client</legend>
@@ -4198,28 +4228,29 @@ function init(root) {
     const tip = (t) => '<p class="sc-tip">' + t + "</p>";
     // Nom de la formation tel qu'on le dit au téléphone (pas le nom administratif)
     const ORAL = { "Permis B": "le permis voiture", "Tarif étudiant": "le permis voiture au tarif étudiant", "Gagnant du tirage": "ta formation du tirage au sort", "Permis A": "le permis moto", "Pack A + B": "le permis moto et voiture", "Remise à niveau": "la remise à niveau", "Formation entreprise": "la formation de vos chauffeurs" };
-    const script = (x) => {
+    const script = (x, wa) => {
       const exam = /Permis|Pack|étudiant|tirage/i.test(x.formation || ""), f = ORAL[x.formation] || "le permis";
       const voiture = /^(Permis B|Tarif étudiant)$/.test(x.formation || ""), remise = x.formation === "Remise à niveau", tirage = x.formation === "Gagnant du tirage";
       return '<ol class="sc">' +
-        "<li><b>Saluer</b>" + say("Bonjour, ici SODAF Auto-École. Vous vous êtes <span class=\"nobr\">pré-inscrit</span> pour " + esc(f) + ". Vous avez une minute ?") +
+        "<li><b>Saluer</b>" + say(wa || x.provenance === "whatsapp" ? "Bonjour, ici SODAF Auto-École. Vous nous avez écrit sur WhatsApp pour " + (wa ? "le permis" : esc(f)) + ". Vous avez une minute ?" : "Bonjour, ici SODAF Auto-École. Vous vous êtes <span class=\"nobr\">pré-inscrit</span> pour " + esc(f) + ". Vous avez une minute ?") +
           tip("Pas disponible : « Pas de souci, je vous rappelle plutôt le matin ou l'après-midi ? » puis choisis quand rappeler.") + "</li>" +
         "<li><b>L'essentiel</b>" + say(x.formation === "Remise à niveau" ? "Vous reprenez la conduite avec un moniteur, jusqu'à être à l'aise." : "Chez nous, vous apprenez le code en salle et sur notre site. Puis la conduite avec un moniteur, jusqu'à l'examen.") + "</li>" +
         (voiture ? "<li><b>La formation et le prix</b>" + say("Vous savez déjà un peu conduire ? Vous êtes étudiant ?") +
           say("La formation complète : <b>55 000 F</b>.<br>Si vous savez déjà conduire, la formule rapide : <b>35 000 F</b>.<br>Pour les étudiants : <b>30 000 F</b>.<br>L'inscription : <b>5 000 F</b>.<br>Chaque formation peut se payer en deux tranches.") +
-          tip("Complète : 12 cours de code, 12 séances de conduite. Rapide : 6 séances de conduite. Étudiant : carte d'étudiant à montrer.") + "</li>" +
+          tip("Complète : 12 cours de code, 12 séances de conduite. Rapide : 6 séances de conduite. Étudiant : carte d'étudiant à montrer." + (wa ? " Il a déjà le permis : remise à niveau, 25 000 F tout compris." : "")) + "</li>" +
           "<li><b>Commencer avec 5 000 F</b>" + say("Par contre, si vous n'avez pas encore tout l'argent, pas de problème.<br>Payez d'abord les <b>5 000 F</b> d'inscription.<br>Vous apprenez tout de suite le code sur notre site : cours, quiz, examens blancs.<br>Une fois inscrit, vous avez deux mois pour commencer à payer la formation.") +
           tip("Pour commencer les cours : 1re tranche (complète 27 500 F · rapide 17 500 F · étudiant 15 000 F). Après 2 mois, l'inscription est à repayer.") + "</li>"
         : remise ? "<li><b>Le prix</b>" + say("La remise à niveau : 25 000 F, tout compris.") + "</li>"
         : tirage ? "<li><b>Le prix</b>" + say("Vous avez gagné le tirage : votre formation est à 15 000 F. L'inscription est offerte.") + "</li>" : "") +
-        "<li><b>Conclure</b>" + say("Je vous envoie le lien sur WhatsApp pour vous inscrire. Merci, et à bientôt chez SODAF !") +
-          tip("Intéressé ou il veut réfléchir : touche « Envoyer le lien d'inscription » (en haut). Pas intéressé : « Plus tard » ou « Rétractation ».") + "</li></ol>" +
+        "<li><b>Conclure</b>" + (wa ? say("Je prends votre nom et votre prénom, et je vous envoie le lien sur WhatsApp pour vous inscrire. Merci, et à bientôt chez SODAF !") +
+          tip("Intéressé ou il veut réfléchir : touche « L'inscrire » en bas. Pas intéressé : ferme la fenêtre, rien n'est enregistré.") : say("Je vous envoie le lien sur WhatsApp pour vous inscrire. Merci, et à bientôt chez SODAF !") +
+          tip("Intéressé ou il veut réfléchir : touche « Envoyer le lien d'inscription » (en haut). Pas intéressé : « Plus tard » ou « Rétractation ».")) + "</li></ol>" +
         '<details class="pc-more"><summary>S\'il pose une question</summary>' +
         (voiture || remise || tirage ? "" : tip("<b>Le prix :</b> « Tout est dans le message WhatsApp que je vous envoie juste après, avec les différentes formules. »")) +
         tip("<b>Les papiers :</b> « Rien à apporter pour commencer. Les papiers, c'est à la fin, pour l'examen. »") +
         (exam ? tip("<b>L'examen :</b> « C'est nous qui déposons votre dossier à la fin de la formation, et l'État vous envoie la date par message. »") : "") +
         tip("<b>Les cours :</b> « Le code, c'est en petit groupe de 6, " + hCode() + ", et tout est aussi sur notre site. La conduite, c'est par séances de 2 h, à votre rythme. »") +
-        tip("<b>L'adresse :</b> « On est au 412 avenue Akei, à Tokoin Tamé, en face de la caisse. Le bureau est ouvert en semaine de 8 h à 18 h, avec une pause à midi, et le samedi matin. »") + "</details>";
+        tip("<b>L'adresse :</b> « On est au 412 avenue Akei, à Tokoin Tamé, en face de la caisse. Le bureau est ouvert en semaine de 7 h 30 à 18 h, avec une pause de 12 h 30 à 14 h 30, et le samedi de 7 h 30 à 17 h. »") + "</details>";
     };
     const ago = (d) => { const m = Math.round((Date.now() - new Date(d)) / 60000); return m < 60 ? "il y a " + Math.max(m, 1) + " min" : m < 1440 ? "il y a " + Math.round(m / 60) + " h" : "il y a " + Math.round(m / 1440) + " j"; };
     let pcStage = S.get("pcStage", "accueil"), pcSel = null, pcFeed = [];
@@ -4785,6 +4816,34 @@ function init(root) {
     const insOpen = () => { insX = null; $("#sd-insForm").reset(); $("#sd-insErr").textContent = ""; $("#sd-insDone").hidden = true; $$("#sd-insForm .ins-step, #sd-insForm .ins-ft").forEach((el) => (el.hidden = false)); $("#sd-insOv").hidden = false; document.body.style.overflow = "hidden"; setTimeout(() => $("#sd-insN").focus(), 50); };
     const insClose = () => { $("#sd-insOv").hidden = true; document.body.style.overflow = ""; if (insX) { sub("eleves"); pcStage = etapeOf(insX); S.set("pcStage", pcStage); pcSel = insX.id; renderList(); } insX = null; };
     $("#sd-insNew").addEventListener("click", insOpen);
+    // ---- Client venu de WhatsApp (pas pré-inscrit) : script d'appel, puis « L'inscrire » ou un seul message avec l'image des tarifs
+    const WA_IMG = "/doc-img/fiche-sodaf/fiche-sodaf.jpg";
+    const waTxt = "Bonjour, ici SODAF Auto-École. Merci pour votre message.\n\nNous avons essayé de vous appeler. Voici nos formations et nos prix. Vous pouvez commencer avec seulement 5 000 F d'inscription.\n\nÀ quel moment pouvons-nous vous rappeler ?\n\nautosodaf.com";
+    let waFile = null;
+    const waOpen = async () => {
+      $("#sd-waScript").innerHTML = script({ formation: "Permis B" }, true);
+      $("#sd-waErr").textContent = ""; $("#sd-waT").value = "";
+      $("#sd-waOv").hidden = false; document.body.style.overflow = "hidden"; $("#sd-waOv").scrollTop = 0;
+      if (!waFile && navigator.canShare) {
+        try { const b = await (await fetch(WA_IMG)).blob(); const f = new File([b], "tarifs-sodaf.jpg", { type: "image/jpeg" }); if (navigator.canShare({ files: [f], text: "x" })) waFile = f; } catch (_) {}
+      }
+      $("#sd-waShare").hidden = !waFile; $("#sd-waNoShare").hidden = !!waFile;
+    };
+    const waClose = () => { $("#sd-waOv").hidden = true; document.body.style.overflow = ""; };
+    $("#sd-waNew").addEventListener("click", waOpen);
+    $("#sd-waX").addEventListener("click", waClose);
+    $("#sd-waOv").addEventListener("click", (e) => { if (e.target.id === "sd-waOv") waClose(); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("#sd-waOv").hidden) waClose(); });
+    $("#sd-waIns").addEventListener("click", () => { waClose(); insOpen(); $("#sd-insSrc").value = "whatsapp"; });
+    $("#sd-waShare").addEventListener("click", (e) => confirmBtn(e.currentTarget, async () => {
+      try { await navigator.share({ files: [waFile], text: waTxt }); } catch (_) {}
+    }));
+    $("#sd-waMsg").addEventListener("click", (e) => {
+      const t = $("#sd-waT").value.replace(/\D/g, "");
+      if (t.length !== 8) { $("#sd-waErr").textContent = "Écris son numéro (8 chiffres)."; return; }
+      $("#sd-waErr").textContent = "";
+      confirmBtn(e.currentTarget, () => window.open("https://wa.me/228" + t + "?text=" + encodeURIComponent(waTxt), "_blank", "noopener"));
+    });
     $("#sd-insX").addEventListener("click", insClose);
     $("#sd-insOv").addEventListener("click", (e) => { if (e.target.id === "sd-insOv") insClose(); });
     document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("#sd-insOv").hidden) insClose(); });
@@ -7044,6 +7103,7 @@ html:has(#sodaf-root.app-mode),body:has(#sodaf-root.app-mode){background:#ECEFEE
 #sodaf-root.app-mode .tm-subnav button[data-s]:hover{background:#F1F3F2;color:var(--ink)}
 #sodaf-root.app-mode .tm-subnav button[data-s][aria-selected="true"]{background:var(--asph);color:#fff}
 #sodaf-root.app-mode .tm-subnav .tm-newins{margin:0 0 0 auto}
+#sodaf-root.app-mode .tm-subnav .tm-waprospect{margin:0 0 0 8px}
 /* Étapes du parcours */
 #sodaf-root.app-mode .pc-stages{background:#F6F8F7;border-bottom-color:#DFE4E2}
 #sodaf-root.app-mode .pc-stages button{border-color:#DFE4E2}
