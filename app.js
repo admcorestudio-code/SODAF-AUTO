@@ -1053,6 +1053,21 @@ box-shadow:0 5px 0 #054030,0 14px 26px -10px rgba(6,64,45,.75),inset 0 1px 0 rgb
 .pr-ctaArr{flex:none;width:clamp(46px,5vw,58px);aspect-ratio:1;border-radius:50%;background:#0E2A4E;color:var(--yellow);display:grid;place-items:center}
 @media (prefers-reduced-motion:reduce){#sodaf-root .pr-cta::after{animation:none;display:none}}
 .pr-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:2vh}
+.rcv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-bottom:22px}
+#sodaf-root .rcv-tile{display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:20px;border-radius:18px;border:2px solid #E3E6E8;background:#fff;cursor:pointer;font:inherit;text-align:left;box-shadow:0 8px 20px rgba(14,42,78,.08);transition:transform .15s ease,box-shadow .15s ease}
+#sodaf-root .rcv-tile:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(14,42,78,.14)}
+#sodaf-root .rcv-tile:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+.rcv-tile b{font:700 1.3rem var(--f-display);color:var(--ink)}
+.rcv-tile small{color:#5A6570;line-height:1.45;font-size:.92rem}
+.rcv-ico{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:#0E2A4E;color:var(--yellow);flex:none}
+#sodaf-root .rcv-tile.rcv-pres{background:linear-gradient(160deg,#0E2A4E 0%,#1A4A85 100%);border-color:var(--yellow)}
+.rcv-pres b{color:#fff}.rcv-pres small{color:#C9D8EA}
+.rcv-pres .rcv-ico{background:var(--yellow);color:#0E2A4E}
+.rcv-ecrow{display:flex;flex-wrap:wrap;gap:16px;align-items:center}
+.rcv-ecctl{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+#sd-ecState{font-weight:600;color:#3D444D;min-width:150px}
+.ec-mode .pr-nav,.ec-mode .pr-x{display:none!important}
+.ec-mode .pr-ov{padding-bottom:104px}
 #sodaf-root .pr-step{font:600 .95rem var(--f-body);color:#9FB4CD}
 #sodaf-root .pr-btn{border:2px solid rgba(233,240,248,.4);background:none;color:#E9F0F8;border-radius:999px;padding:12px 26px;font:600 1.05rem var(--f-body);cursor:pointer}
 #sodaf-root .pr-btn.pr-next{background:var(--yellow);border-color:var(--yellow);color:#0E2A4E;font-weight:700;padding:12px 34px}
@@ -2044,15 +2059,13 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <p class="tm-role">Accueil des élèves, inscriptions, paiements, réservations de conduite et messages WhatsApp.</p>
 <div class="tm-subnav" id="sd-secNav" role="tablist">
 <button data-s="eleves" aria-selected="true">Parcours élèves <span class="tm-count" id="sd-cntNew"></span></button>
+<button data-s="recevoir" aria-selected="false">Accueil client</button>
 <button data-s="conduite" aria-selected="false">Planning conduite</button>
 <button data-s="paiements" aria-selected="false">Paiements et reçus</button>
 <button data-s="devoirs" aria-selected="false" hidden>Devoirs</button>
 <button data-s="depenses" aria-selected="false" hidden>Demandes à la gérante</button>
 <button data-s="auj" aria-selected="false" hidden>Aujourd'hui</button>
 <button data-s="aide" aria-selected="false">Mode d'emploi</button>
-<button class="tm-newins" type="button" id="sd-insNew"><span class="ni-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="M19 8v6M16 11h6"/></svg></span><span class="ni-txt"><b>Nouvelle pré-inscription</b><small>Client au bureau</small></span></button>
-<button class="tm-waprospect" type="button" id="sd-waNew"><span class="wp-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg></span><span class="ni-txt"><b>Client venu de WhatsApp</b><small>Script d'appel</small></span></button>
-<button class="tm-waprospect tm-present" type="button" id="sd-prNew"><span class="wp-ico pr-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M12 17v4M8 21h8"/></svg></span><span class="ni-txt"><b>Présentation client</b><small>À montrer à l'agence</small></span></button>
 </div>
 <div class="pr-ov" id="sd-prOv" hidden role="dialog" aria-label="Présentation client">
 <button class="pr-x" type="button" id="sd-prX" aria-label="Fermer">×</button>
@@ -2077,6 +2090,20 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="ins-ft"><p class="ins-sum">Il recevra sur WhatsApp le lien pour finaliser son inscription lui-même : choix de la formule, puis paiement à l'agence ou par Mixx.</p><span class="tm-err" id="sd-insErr"></span><button class="btn btn-green" type="submit" id="sd-insGo">Enregistrer</button></div>
 <div class="ins-done" id="sd-insDone" hidden></div>
 </form></div>
+<section class="tm-sec" data-s="recevoir" hidden>
+<div class="tm-sub"><div><p class="eyebrow">Un client arrive</p><h3>Accueil client</h3></div><p>Tout pour recevoir un client : la présentation à lui montrer, sa pré-inscription, et le script pour ceux qui écrivent sur WhatsApp.</p></div>
+<div class="rcv-grid">
+<button type="button" class="rcv-tile rcv-pres" id="sd-prNew"><span class="rcv-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M12 17v4M8 21h8"/></svg></span><b>Présentation client</b><small>Les 10 écrans qui donnent envie : le trajet, les prix, les 5 000 F pour commencer.</small></button>
+<button type="button" class="rcv-tile" id="sd-insNew"><span class="rcv-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="M19 8v6M16 11h6"/></svg></span><b>Nouvelle pré-inscription</b><small>Client au bureau : son nom, son numéro, et son lien part sur WhatsApp.</small></button>
+<button type="button" class="rcv-tile" id="sd-waNew"><span class="rcv-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg></span><b>Client venu de WhatsApp</b><small>Le script d'appel, puis sa pré-inscription ou un message avec l'image des tarifs.</small></button>
+</div>
+<div class="card rcv-ec" id="sd-ecCard">
+<p class="eyebrow">Le petit écran face au client</p><h3 style="margin:2px 0 8px">Écran client</h3>
+<p style="margin:0 0 14px">Branche le 2e écran au PC (touche Windows + P, choisis « Étendre »). Touche « Ouvrir l'écran client », glisse la fenêtre sur l'écran du client (touche Windows + Maj + flèche droite), et pilote la présentation d'ici : ton écran à toi reste sur ton travail.</p>
+<div class="rcv-ecrow"><button class="btn btn-green" type="button" id="sd-ecOpen">Ouvrir l'écran client</button>
+<div class="rcv-ecctl"><button class="btn btn-line btn-sm" type="button" id="sd-ecPrev">‹ Précédent</button><span id="sd-ecState">Écran fermé</span><button class="btn btn-line btn-sm" type="button" id="sd-ecNext">Suivant ›</button><button class="linkbtn" type="button" id="sd-ecClose">Fermer la présentation</button></div></div>
+</div>
+</section>
 <section class="tm-sec" data-s="eleves">
 <div class="pc-search"><label class="pc-sbox"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="sd-pcQ" type="search" placeholder="Rechercher un client : N° client (SO12), téléphone ou nom" autocomplete="off"></label></div>
 <div class="pc" id="sd-pc">
@@ -3371,7 +3398,7 @@ function init(root) {
     const pick = (t) => { if (AMB() && !["com", "msg", "docs", "taf", "plan"].includes(t)) t = "com"; if (t === "com" && me && !AMB() && !DIR()) t = "sec"; if (t === "sec" && me && me.role === "moniteur") t = "mon"; if (t === "mon" && me && me.role === "gerant") t = "ger"; if (t === "mon" && me && me.role === "secretariat") t = "sec"; tabs.forEach((b) => b.setAttribute("aria-selected", b.dataset.t === t)); panes.forEach((p) => (p.hidden = p.dataset.pane !== t)); try { S.set("tmTab", t); } catch (e) {} placePlanning(t); if (t === "mon" || (t === "sec" && $("#sd-secAuj"))) loadMon(); if (t === "dir") loadDir(); if (t === "ger") grCharger(); if (t === "com") comCharger(); if (t === "mec") mcCharger(); if (t === "taf") tfCharger(); if (t === "plan") plCharger(); msVoirFil(false); if (t === "msg") { MS.repere = {}; MS.forceBas = true; msRender(); msNotifBox(); if (!isWide()) setTimeout(() => $(".ms-wrap").scrollIntoView({ block: "start" }), 60); } };
     tabs.forEach((b) => b.addEventListener("click", () => pick(b.dataset.t)));
     const subs = $$("#sd-secNav button[data-s]"), secs = $$(".tm-sec");
-    const LOAD = { eleves: () => loadEleves(), conduite: () => loadDay(), paiements: () => loadPay(), devoirs: () => loadDev(), depenses: () => depEquipe(), aide: () => {}, auj: () => loadMon() };
+    const LOAD = { recevoir: () => {}, eleves: () => loadEleves(), conduite: () => loadDay(), paiements: () => loadPay(), devoirs: () => loadDev(), depenses: () => depEquipe(), aide: () => {}, auj: () => loadMon() };
     { const ps = $('section.tm-sec[data-s="paiements"]'), rc = $("#equipe-recu"); if (ps && rc) { ps.insertBefore(rc, ps.firstChild); rc.style.marginBottom = "26px"; } } // 21 oct. : « Faire un reçu » en haut, « Reçus faits » en dessous
     const sub = (k) => { if (k === "paiements" && me && me.role === "moniteur") { toast("Les reçus sont faits par le secrétariat ou la direction."); return; } subs.forEach((b) => b.setAttribute("aria-selected", b.dataset.s === k)); secs.forEach((x) => { if (x === cdSec && cdSec.parentNode !== cdHome.p) return; x.hidden = x.dataset.s !== k; }); LOAD[k](); };
     subs.forEach((b) => b.addEventListener("click", () => sub(b.dataset.s)));
@@ -4985,15 +5012,34 @@ function init(root) {
       $("#sd-prPrev").style.visibility = prIdx === 0 ? "hidden" : "visible";
       $("#sd-prNext").textContent = prIdx === PR.length - 1 ? "Terminer" : "Suivant ›";
       const pc = 5 + (prIdx / (PR.length - 1)) * 78;
-      $("#sd-prCar").style.left = pc + "%"; $("#sd-prTrail").style.width = "calc(" + pc + "% + 40px)"; };
+      $("#sd-prCar").style.left = pc + "%"; $("#sd-prTrail").style.width = "calc(" + pc + "% + 40px)";
+      if (EC_MODE && ecBC) try { ecBC.postMessage({ a: "state", i: prIdx, n: PR.length }); } catch (_) {} };
     const prOpen = () => { PR = prSlides(); $("#sd-prOv").hidden = false; document.body.style.overflow = "hidden"; prShow(0); };
-    const prClose = () => { $("#sd-prOv").hidden = true; document.body.style.overflow = ""; };
+    const prClose = () => { if (EC_MODE) { try { ecBC && ecBC.postMessage({ a: "bye" }); } catch (_) {} window.close(); return; } $("#sd-prOv").hidden = true; document.body.style.overflow = ""; };
+    // ---- Écran client (27 oct.) : un 2e écran face au client, piloté depuis le PC du secrétariat (fenêtre /equipe/?ecran=client + BroadcastChannel)
+    const ecBC = "BroadcastChannel" in window ? new BroadcastChannel("sodaf-ecran-client") : null;
+    const EC_MODE = new URLSearchParams(location.search).get("ecran") === "client";
+    if (EC_MODE) { document.documentElement.classList.add("ec-mode");
+      const t = setInterval(() => { if (!$("#sd-teamPanel").hidden) { clearInterval(t); prOpen(); } }, 400);
+      window.addEventListener("beforeunload", () => { try { ecBC && ecBC.postMessage({ a: "bye" }); } catch (_) {} }); }
+    if (ecBC) ecBC.onmessage = (ev) => { const m = ev.data || {};
+      if (EC_MODE) { if (m.a === "open" && $("#sd-prOv").hidden) prOpen(); else if (m.a === "go") prShow(prIdx + m.d); else if (m.a === "close") prClose(); }
+      else { const st = $("#sd-ecState");
+        if (m.a === "state" && st) st.textContent = "Il voit l'écran " + (m.i + 1) + " sur " + m.n;
+        if (m.a === "bye" && st) st.textContent = "Écran fermé";
+        if (m.a === "insReq") { insOpen(); $("#sd-insSrc").value = "agence"; toast("Il est prêt : pré-inscris-le"); } } };
+    let ecWin = null;
+    $("#sd-ecOpen") && $("#sd-ecOpen").addEventListener("click", () => { if (!ecBC) { toast("Ce navigateur ne permet pas l'écran client.", true); return; }
+      ecWin = window.open("/equipe/?ecran=client", "sodafEcranClient"); if (ecWin) ecWin.focus(); });
+    $("#sd-ecPrev") && $("#sd-ecPrev").addEventListener("click", () => ecBC && ecBC.postMessage({ a: "go", d: -1 }));
+    $("#sd-ecNext") && $("#sd-ecNext").addEventListener("click", () => { if (ecBC) { ecBC.postMessage({ a: "open" }); ecBC.postMessage({ a: "go", d: 1 }); } });
+    $("#sd-ecClose") && $("#sd-ecClose").addEventListener("click", () => ecBC && ecBC.postMessage({ a: "close" }));
     $("#sd-prNew").addEventListener("click", prOpen);
     $("#sd-prX").addEventListener("click", prClose);
     $("#sd-prPrev").addEventListener("click", () => prShow(prIdx - 1));
     $("#sd-prNext").addEventListener("click", () => { if (prIdx === PR.length - 1) prClose(); else prShow(prIdx + 1); });
     $("#sd-prSlide").addEventListener("click", (e) => {
-      if (e.target.closest("[data-prins]")) { prClose(); insOpen(); $("#sd-insSrc").value = "agence"; return; } // il est prêt : on le pré-inscrit tout de suite
+      if (e.target.closest("[data-prins]")) { if (EC_MODE) { if (ecBC) ecBC.postMessage({ a: "insReq" }); return; } prClose(); insOpen(); $("#sd-insSrc").value = "agence"; return; } // il est prêt : on le pré-inscrit tout de suite
       if (prIdx < PR.length - 1) prShow(prIdx + 1); });
     document.addEventListener("keydown", (e) => { if ($("#sd-prOv").hidden) return;
       if (e.key === "Escape") prClose(); else if (e.key === "ArrowRight" || e.key === " ") prShow(prIdx + 1); else if (e.key === "ArrowLeft") prShow(prIdx - 1); });
