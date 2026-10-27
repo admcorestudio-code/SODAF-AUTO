@@ -5004,7 +5004,9 @@ function init(root) {
     };
     const prI = (k) => '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + prIco[k] + "</svg>";
     const prWeek = () => { const J = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"];
-      const ap = (d) => GROUPES.some((g) => g.actif && !g.soir && (g.jours || []).includes(d)), so = (d) => GROUPES.some((g) => g.actif && g.soir && (g.jours || []).includes(d));
+      // Si les groupes ne sont pas encore chargés (ouverture juste après la connexion), on montre le planning standard plutôt que des cases vides
+      const GS = GROUPES && GROUPES.length ? GROUPES : [{ actif: true, soir: false, jours: [1, 4] }, { actif: true, soir: false, jours: [2, 5] }, { actif: true, soir: true, jours: [1, 4] }, { actif: true, soir: true, jours: [2, 5] }];
+      const ap = (d) => GS.some((g) => g.actif && !g.soir && (g.jours || []).includes(d)), so = (d) => GS.some((g) => g.actif && g.soir && (g.jours || []).includes(d));
       const cell = (t, k) => t ? '<span class="pw-c ' + k + '">' + t + "</span>" : '<span class="pw-v"></span>';
       const row = (lab, f) => '<div class="pw-l">' + lab + "</div>" + [1, 2, 3, 4, 5, 6].map(f).join("");
       return '<div class="pr-week pr-in"><div class="pw-l"></div>' + J.map((j) => '<div class="pw-h">' + j + "</div>").join("") +
@@ -5024,7 +5026,7 @@ function init(root) {
             '<h2 class="pr-h pr-in">Tes horaires, toute la semaine</h2>' + prWeek() + '<p class="pr-note pr-in"><b style="color:#FFE9B3">Jaune</b> : la conduite (séances de 2 h, jusqu\'à 3 par semaine, à ton rythme) · <b>Blanc</b> : le code, l\'après-midi ou le soir, comme tu veux. Agence : lundi à vendredi 7 h 30 – 18 h, samedi 7 h 30 – 17 h.</p>',      '<h2 class="pr-mega pr-in">On y va ?</h2><p class="pr-lede pr-in">Rien à apporter aujourd\'hui : ton nom, ton numéro, et c\'est parti. Tu reçois ton dossier sur WhatsApp, avec ton inscription à faire directement dessus, et un reçu officiel dès ton premier paiement. Paiement ' + payWhere() + '.</p><button type="button" class="pr-cta pr-in" data-prins><span class="pr-ctaTxt"><b>Commencer mon dossier maintenant</b><small>Pré-inscription en 2 minutes, ici, au bureau</small></span><span class="pr-ctaArr" aria-hidden="true"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></span></button><p class="pr-note pr-in">412 avenue Akei, Tokoin Tamé, en face de la caisse.</p>',
     ];
     let prIdx = 0, PR = [];
-    const prShow = (i) => { prIdx = Math.max(0, Math.min(PR.length - 1, i));
+    const prShow = (i) => { PR = prSlides(); prIdx = Math.max(0, Math.min(PR.length - 1, i)); // écrans reconstruits à chaque affichage : horaires et prix toujours à jour
       const st = $("#sd-prSlide"); st.innerHTML = PR[prIdx]; st.scrollTop = 0;
       $$("#sd-prSlide .pr-in").forEach((el, k) => (el.style.animationDelay = 60 + k * 110 + "ms"));
       $("#sd-prStep").textContent = "Écran " + (prIdx + 1) + " sur " + PR.length;
