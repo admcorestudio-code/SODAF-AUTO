@@ -1043,6 +1043,15 @@ box-shadow:0 5px 0 #054030,0 14px 26px -10px rgba(6,64,45,.75),inset 0 1px 0 rgb
 #sodaf-root .pr-list li::marker{content:""}
 #sodaf-root .pr-list li::before{content:"";position:absolute;left:0;top:.42em;width:14px;height:14px;border-radius:50%;background:var(--yellow)}
 #sodaf-root .pr-list b{color:#FFE9B3}
+#sodaf-root .pr-cta{position:relative;overflow:hidden;display:flex;justify-content:space-between;align-items:center;gap:clamp(16px,2.5vw,28px);margin-top:clamp(18px,3.5vh,34px);border:0;border-radius:20px;background:linear-gradient(115deg,#FFD042 0%,var(--yellow) 55%,#E09E00 100%);color:#0E2A4E;padding:clamp(16px,2.8vh,24px) clamp(22px,3vw,38px);cursor:pointer;text-align:left;box-shadow:0 0 0 3px rgba(242,177,0,.3),0 18px 44px rgba(242,177,0,.3),0 10px 24px rgba(4,10,18,.5);transition:transform .15s ease,box-shadow .15s ease}
+#sodaf-root .pr-cta:hover{transform:translateY(-2px);box-shadow:0 0 0 5px rgba(242,177,0,.4),0 24px 54px rgba(242,177,0,.4),0 12px 28px rgba(4,10,18,.5)}
+#sodaf-root .pr-cta:active{transform:translateY(1px)}
+#sodaf-root .pr-cta:focus-visible{outline:3px solid #fff;outline-offset:3px}
+#sodaf-root .pr-cta::after{content:"";position:absolute;top:0;left:-70%;width:45%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.5),transparent);transform:skewX(-20deg);animation:niShine 3.2s ease-in-out infinite}
+.pr-ctaTxt b{display:block;font:800 clamp(1.4rem,3vw,2.1rem)/1.1 "Barlow Condensed",var(--f-display)}
+.pr-ctaTxt small{display:block;margin-top:3px;font:600 clamp(.92rem,1.6vw,1.05rem) var(--f-body);color:#4A3A05}
+.pr-ctaArr{flex:none;width:clamp(46px,5vw,58px);aspect-ratio:1;border-radius:50%;background:#0E2A4E;color:var(--yellow);display:grid;place-items:center}
+@media (prefers-reduced-motion:reduce){#sodaf-root .pr-cta::after{animation:none;display:none}}
 .pr-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:2vh}
 #sodaf-root .pr-step{font:600 .95rem var(--f-body);color:#9FB4CD}
 #sodaf-root .pr-btn{border:2px solid rgba(233,240,248,.4);background:none;color:#E9F0F8;border-radius:999px;padding:12px 26px;font:600 1.05rem var(--f-body);cursor:pointer}
@@ -4966,7 +4975,7 @@ function init(root) {
       '<h2 class="pr-h pr-in">Tes outils, en salle et sur ton téléphone</h2><div class="pr-split pr-tools"><div class="pr-shots pr-in"><img src="/couverture-manuel.jpg" alt="Le manuel SODAF" loading="lazy"><img src="/videos/priorites-poster.jpg" alt="Un cours en vidéo" loading="lazy"></div><ul class="pr-list pr-toolsList"><li class="pr-in">Le <b>manuel SODAF</b>, écrit pour nos cours, du démarrage à l\'examen.</li><li class="pr-in">Tout le code sur <b>autosodaf.com</b> : cours, quiz, examens blancs, panneaux.</li><li class="pr-in">Des <b>cours en vidéo</b> pour réviser où tu veux, quand tu veux.</li><li class="pr-in">Tes <b>devoirs corrigés</b> après chaque cours, directement sur le site.</li></ul></div>',
       '<h2 class="pr-h pr-in">Chaque mois, une formation à gagner</h2><div class="pr-split"><div class="pr-ticket pr-in"><small>Tirage du mois</small><b>15 000 F</b><span>la formation complète, inscription offerte</span></div><div class="pr-splitTxt"><ul class="pr-list"><li class="pr-in">Inscris-toi <b>gratuitement</b> au tirage sur autosodaf.com, du 2 au 30 du mois.</li><li class="pr-in">Tirage <b>en direct sur TikTok</b>, le 1er du mois à 20 h.</li><li class="pr-in"><b>2 gagnants</b> chaque mois. Peut-être toi.</li></ul></div></div>',
       '<h2 class="pr-h pr-in">Tes horaires</h2><div class="pr-hours"><div class="pr-in"><span class="pr-node">' + prI("book") + '</span><div><b>Le code</b><span>2 cours par semaine, ' + hCode() + '.</span></div></div><div class="pr-in"><span class="pr-node">' + prI("wheel") + '</span><div><b>La conduite</b><span>Lundi à samedi : 7 h 30 à 9 h 30 et 10 h à 12 h. Lundi à vendredi : 15 h 45 à 17 h 45.</span></div></div><div class="pr-in"><span class="pr-node">' + prI("sun") + '</span><div><b>L\'agence</b><span>Lundi à vendredi : 7 h 30 à 18 h, pause de 12 h 30 à 14 h 30. Samedi : 7 h 30 à 17 h.</span></div></div></div>',
-      '<h2 class="pr-mega pr-in">On y va ?</h2><p class="pr-lede pr-in">On te pré-inscrit en 2 minutes, sans rien à apporter aujourd\'hui. Tu reçois ton dossier sur WhatsApp, et un reçu officiel dès ton premier paiement. Paiement ' + payWhere() + '.</p><p class="pr-note pr-in">412 avenue Akei, Tokoin Tamé, en face de la caisse.</p>',
+      '<h2 class="pr-mega pr-in">On y va ?</h2><p class="pr-lede pr-in">Rien à apporter aujourd\'hui : ton nom, ton numéro, et c\'est parti. Tu reçois ton dossier sur WhatsApp, et un reçu officiel dès ton premier paiement. Paiement ' + payWhere() + '.</p><button type="button" class="pr-cta pr-in" data-prins><span class="pr-ctaTxt"><b>Commencer mon dossier maintenant</b><small>Pré-inscription en 2 minutes, ici, au bureau</small></span><span class="pr-ctaArr" aria-hidden="true"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></span></button><p class="pr-note pr-in">412 avenue Akei, Tokoin Tamé, en face de la caisse.</p>',
     ];
     let prIdx = 0, PR = [];
     const prShow = (i) => { prIdx = Math.max(0, Math.min(PR.length - 1, i));
@@ -4983,7 +4992,9 @@ function init(root) {
     $("#sd-prX").addEventListener("click", prClose);
     $("#sd-prPrev").addEventListener("click", () => prShow(prIdx - 1));
     $("#sd-prNext").addEventListener("click", () => { if (prIdx === PR.length - 1) prClose(); else prShow(prIdx + 1); });
-    $("#sd-prSlide").addEventListener("click", () => { if (prIdx < PR.length - 1) prShow(prIdx + 1); });
+    $("#sd-prSlide").addEventListener("click", (e) => {
+      if (e.target.closest("[data-prins]")) { prClose(); insOpen(); $("#sd-insSrc").value = "agence"; return; } // il est prêt : on le pré-inscrit tout de suite
+      if (prIdx < PR.length - 1) prShow(prIdx + 1); });
     document.addEventListener("keydown", (e) => { if ($("#sd-prOv").hidden) return;
       if (e.key === "Escape") prClose(); else if (e.key === "ArrowRight" || e.key === " ") prShow(prIdx + 1); else if (e.key === "ArrowLeft") prShow(prIdx - 1); });
     $("#sd-waX").addEventListener("click", waClose);
