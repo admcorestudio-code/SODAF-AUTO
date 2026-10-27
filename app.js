@@ -3418,7 +3418,7 @@ function init(root) {
     const pick = (t) => { if (AMB() && !["com", "msg", "docs", "taf", "plan"].includes(t)) t = "com"; if (t === "com" && me && !AMB() && !DIR()) t = "sec"; if (t === "sec" && me && me.role === "moniteur") t = "mon"; if (t === "mon" && me && me.role === "gerant") t = "ger"; if (t === "mon" && me && me.role === "secretariat") t = "sec"; tabs.forEach((b) => b.setAttribute("aria-selected", b.dataset.t === t)); panes.forEach((p) => (p.hidden = p.dataset.pane !== t)); try { S.set("tmTab", t); } catch (e) {} placePlanning(t); if (t === "mon" || (t === "sec" && $("#sd-secAuj"))) loadMon(); if (t === "dir") loadDir(); if (t === "ger") grCharger(); if (t === "com") comCharger(); if (t === "mec") mcCharger(); if (t === "taf") tfCharger(); if (t === "plan") plCharger(); msVoirFil(false); if (t === "msg") { MS.repere = {}; MS.forceBas = true; msRender(); msNotifBox(); if (!isWide()) setTimeout(() => $(".ms-wrap").scrollIntoView({ block: "start" }), 60); } };
     tabs.forEach((b) => b.addEventListener("click", () => pick(b.dataset.t)));
     const subs = $$("#sd-secNav button[data-s]"), secs = $$(".tm-sec");
-    const LOAD = { recevoir: () => {}, eleves: () => loadEleves(), conduite: () => loadDay(), paiements: () => loadPay(), devoirs: () => loadDev(), depenses: () => depEquipe(), aide: () => {}, auj: () => loadMon() };
+    const LOAD = { recevoir: () => { if (window.__ecRender) window.__ecRender(); }, eleves: () => loadEleves(), conduite: () => loadDay(), paiements: () => loadPay(), devoirs: () => loadDev(), depenses: () => depEquipe(), aide: () => {}, auj: () => loadMon() };
     { const ps = $('section.tm-sec[data-s="paiements"]'), rc = $("#equipe-recu"); if (ps && rc) { ps.insertBefore(rc, ps.firstChild); rc.style.marginBottom = "26px"; } } // 21 oct. : « Faire un reçu » en haut, « Reçus faits » en dessous
     const sub = (k) => { if (k === "paiements" && me && me.role === "moniteur") { toast("Les reçus sont faits par le secrétariat ou la direction."); return; } subs.forEach((b) => b.setAttribute("aria-selected", b.dataset.s === k)); secs.forEach((x) => { if (x === cdSec && cdSec.parentNode !== cdHome.p) return; x.hidden = x.dataset.s !== k; }); LOAD[k](); };
     subs.forEach((b) => b.addEventListener("click", () => sub(b.dataset.s)));
@@ -5054,21 +5054,30 @@ function init(root) {
       const t = setInterval(() => { if (!$("#sd-teamPanel").hidden) { clearInterval(t); prOpen(); } }, 400);
       window.addEventListener("beforeunload", () => { try { ecBC && ecBC.postMessage({ a: "bye" }); } catch (_) {} }); }
     if (ecBC) ecBC.onmessage = (ev) => { const m = ev.data || {};
-      if (EC_MODE) { if (m.a === "open" && $("#sd-prOv").hidden) prOpen(); else if (m.a === "go") prShow(prIdx + m.d); else if (m.a === "close") prShow(0); }
-      else { const st = $("#sd-ecState");
-        if (m.a === "state" && st) { st.textContent = "Il voit l'écran " + (m.i + 1) + " sur " + m.n;
-          const v = $("#sd-ecView"); if (v) { v.hidden = false; $("#sd-ecViewK").textContent = "Ce qu'il voit en ce moment (écran " + (m.i + 1) + " sur " + m.n + ") : lis-le-lui en expliquant."; // le secrétariat lit la même chose que le client
-            const sc = $("#sd-ecScale"), fr = sc.parentElement, mi = prSlides();
-            sc.innerHTML = '<div class="pr-ov ec-static"><div class="pr-stage">' + (mi[m.i] || "") + "</div></div>";
-            const k = Math.max(0.2, Math.min(1, fr.clientWidth / 1100)); sc.style.transform = "scale(" + k + ")"; fr.style.height = Math.round(640 * k) + "px"; } }
-        if (m.a === "bye" && st) { st.textContent = "Écran fermé"; const v = $("#sd-ecView"); if (v) v.hidden = true; }
+      if (EC_MODE) { if (m.a === "open" && $("#sd-prOv").hidden) prOpen(); else if (m.a === "go") prShow(prIdx + m.d); else if (m.a === "set") prShow(m.i); else if (m.a === "close") prShow(0); }
+      else {
+        if (m.a === "state") { ecOn = true; ecIdx = m.i; ecRender(); }
+        if (m.a === "bye") { ecOn = false; ecRender(); }
         if (m.a === "insReq") { insOpen(); $("#sd-insSrc").value = "agence"; toast("Il est prêt : pré-inscris-le"); } } };
-    let ecWin = null;
+    let ecWin = null, ecIdx = 0, ecOn = false;
+    // L'aperçu du bas est toujours affiché : le secrétariat le fait défiler ici, et l'écran mural suit quand il est ouvert (27 oct.)
+    function ecRender() {
+      const v = $("#sd-ecView"); if (!v) return;
+      const mi = prSlides(); ecIdx = Math.max(0, Math.min(mi.length - 1, ecIdx));
+      v.hidden = false;
+      $("#sd-ecViewK").textContent = "Écran " + (ecIdx + 1) + " sur " + mi.length + " : lis-le-lui en expliquant.";
+      const st = $("#sd-ecState"); if (st) st.textContent = ecOn ? "Le client le voit sur son écran" : "Écran client fermé : aperçu seulement";
+      const sc = $("#sd-ecScale"), fr = sc.parentElement;
+      sc.innerHTML = '<div class="pr-ov ec-static"><div class="pr-stage">' + (mi[ecIdx] || "") + "</div></div>";
+      const k = Math.max(0.2, Math.min(1, fr.clientWidth / 1100)); sc.style.transform = "scale(" + k + ")"; fr.style.height = Math.round(640 * k) + "px";
+    }
+    window.__ecRender = ecRender;
+    const ecGo = (i) => { ecIdx = i; ecRender(); if (ecBC) try { ecBC.postMessage({ a: "set", i: ecIdx }); } catch (_) {} };
     $("#sd-ecOpen") && $("#sd-ecOpen").addEventListener("click", () => { if (!ecBC) { toast("Ce navigateur ne permet pas l'écran client.", true); return; }
       ecWin = window.open("/equipe/?ecran=client", "sodafEcranClient"); if (ecWin) ecWin.focus(); });
-    $("#sd-ecPrev") && $("#sd-ecPrev").addEventListener("click", () => ecBC && ecBC.postMessage({ a: "go", d: -1 }));
-    $("#sd-ecNext") && $("#sd-ecNext").addEventListener("click", () => { if (ecBC) { ecBC.postMessage({ a: "open" }); ecBC.postMessage({ a: "go", d: 1 }); } });
-    $("#sd-ecClose") && $("#sd-ecClose").addEventListener("click", () => ecBC && ecBC.postMessage({ a: "close" }));
+    $("#sd-ecPrev") && $("#sd-ecPrev").addEventListener("click", () => ecGo(ecIdx - 1));
+    $("#sd-ecNext") && $("#sd-ecNext").addEventListener("click", () => ecGo(ecIdx + 1));
+    $("#sd-ecClose") && $("#sd-ecClose").addEventListener("click", () => ecGo(0));
     { const b = $("#sd-prNew"); if (b) b.addEventListener("click", prOpen); } // la tuile a été retirée le 27 oct. : la présentation se lance par « Ouvrir l'écran client »
     $("#sd-prX").addEventListener("click", prClose);
     $("#sd-prPrev").addEventListener("click", () => prShow(prIdx - 1));
