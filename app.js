@@ -1077,6 +1077,8 @@ box-shadow:0 5px 0 #054030,0 14px 26px -10px rgba(6,64,45,.75),inset 0 1px 0 rgb
 .rcv-pres .rcv-ico{background:var(--yellow);color:#0E2A4E}
 .rcv-ecrow{display:flex;flex-wrap:wrap;gap:16px;align-items:center}
 .rcv-ecctl{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.ec-tip{margin-top:14px;font-size:.92rem;color:#3D444D}
+.ec-tip summary{cursor:pointer;font-weight:600;color:var(--green)}
 .ec-view{margin-top:16px}
 .ec-viewk{margin:0 0 8px;font:600 .9rem var(--f-body);color:#3D444D}
 .ec-frame{overflow:hidden;border-radius:14px;border:1px solid #E3E6E8;box-shadow:0 10px 24px rgba(14,42,78,.14);pointer-events:none;max-width:680px}
@@ -2119,6 +2121,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <p style="margin:0 0 14px">Branche le 2e écran au PC (touche Windows + P, choisis « Étendre »). Touche « Ouvrir l'écran client », glisse la fenêtre sur l'écran du client (touche Windows + Maj + flèche droite), et pilote la présentation d'ici : ton écran à toi reste sur ton travail.</p>
 <div class="rcv-ecrow"><button class="btn btn-green" type="button" id="sd-ecOpen">Ouvrir l'écran client</button>
 <div class="rcv-ecctl"><button class="btn btn-line btn-sm" type="button" id="sd-ecPrev">‹ Précédent</button><span id="sd-ecState">Écran fermé</span><button class="btn btn-line btn-sm" type="button" id="sd-ecNext">Suivant ›</button><button class="linkbtn" type="button" id="sd-ecClose">Fermer la présentation</button></div></div>
+<details class="ec-tip"><summary>Visiter le site avec lui (immersion)</summary><p style="margin:8px 0 0">Touche <b>Windows + P</b> → <b>« Dupliquer »</b> : ton écran s\'affiche aussi chez lui. Ouvre autosodaf.com en plein écran (touche <b>F11</b>) et fais la visite avec ta souris, sans te lever. Ensuite : F11 pour sortir, puis Windows + P → <b>« Étendre »</b> pour revenir à la présentation pilotée.</p></details>
 <div class="ec-view" id="sd-ecView" hidden><p class="ec-viewk" id="sd-ecViewK"></p><div class="ec-frame"><div class="ec-scale" id="sd-ecScale"></div></div></div>
 </div>
 </section>
