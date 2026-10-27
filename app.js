@@ -2060,10 +2060,10 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <button data-s="recevoir" aria-selected="true">Accueil client</button>
 <button data-s="eleves" aria-selected="false">Parcours élèves <span class="tm-count" id="sd-cntNew"></span></button>
 <button data-s="conduite" aria-selected="false">Planning conduite</button>
+<button data-s="auj" aria-selected="false" hidden>Aujourd'hui</button>
 <button data-s="paiements" aria-selected="false">Faire un reçu ?</button>
 <button data-s="devoirs" aria-selected="false" hidden>Devoirs</button>
 <button data-s="depenses" aria-selected="false" hidden>Demandes à la gérante</button>
-<button data-s="auj" aria-selected="false" hidden>Aujourd'hui</button>
 <button data-s="aide" aria-selected="false">Mode d'emploi</button>
 </div>
 <div class="pr-ov" id="sd-prOv" hidden role="dialog" aria-label="Présentation client">
