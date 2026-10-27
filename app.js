@@ -6629,9 +6629,10 @@ function init(root) {
             $("#sd-mcBody .mc-plan").insertAdjacentHTML("afterend", '<div class="mc-dev"><div class="mc-ah"><b>Devoir ' + dvP.l + " : qui l'a fait&nbsp;?</b><span>" + faits + " sur " + act.length + '</span></div><div class="mc-devl">' + lig.map(([x, r]) => '<div class="' + (r ? "ok" : "ko") + '"><span>' + esc(x.nom) + "</span><b>" + (r ? "Fait · " + r.note + "/" + r.sur : "Pas fait") + "</b></div>").join("") + "</div></div>");
           }
           // Chacun ses tâches (27 oct.) : l'appel est fait par le moniteur (la direction peut dépanner). Les autres regardent.
-          if (!["moniteur", "admin"].includes((me || {}).role)) {
+          if (!["moniteur", "admin"].includes((me || {}).role)) { // le secrétariat et la gérante voient seulement qui vient : pas d'appel, pas de programme, pas de « Cours rattrapé » (27 oct.)
             $$("#sd-mcBody [data-pe], #sd-mcBody select, #sd-mcBody input").forEach((el) => (el.disabled = true));
-            $$("#sd-mcBody .tm-formact, #sd-mcBody .mc-nt").forEach((el) => el.remove());
+            $$("#sd-mcBody .tm-formact, #sd-mcBody .mc-nt, #sd-mcBody .mc-plan, #sd-mcBody .mc-dev").forEach((el) => el.remove());
+            const th = $("#sd-mcTheme"); if (th && th.closest(".field")) th.closest(".field").remove();
             const inst = $("#sd-mcBody .mc-appel .tm-note"); if (inst) inst.textContent = "L'appel est fait par le moniteur, en salle. Tu vois ici qui est présent.";
           }
           $$("#sd-mcBody [data-pe]").forEach((c) => c.addEventListener("change", async () => {
