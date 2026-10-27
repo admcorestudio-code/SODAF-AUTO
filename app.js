@@ -1052,6 +1052,18 @@ box-shadow:0 5px 0 #054030,0 14px 26px -10px rgba(6,64,45,.75),inset 0 1px 0 rgb
 .pr-ctaTxt small{display:block;margin-top:3px;font:600 clamp(.92rem,1.6vw,1.05rem) var(--f-body);color:#4A3A05}
 .pr-ctaArr{flex:none;width:clamp(46px,5vw,58px);aspect-ratio:1;border-radius:50%;background:#0E2A4E;color:var(--yellow);display:grid;place-items:center}
 @media (prefers-reduced-motion:reduce){#sodaf-root .pr-cta::after{animation:none;display:none}}
+.pr-week{display:grid;grid-template-columns:minmax(92px,auto) repeat(6,1fr);gap:7px;align-items:stretch;margin-top:6px}
+.pw-h{font:700 clamp(.9rem,1.6vw,1.15rem) "Barlow Condensed",var(--f-display);letter-spacing:.04em;text-align:center;color:#9FB4CD;align-self:end}
+.pw-l{display:flex;flex-direction:column;justify-content:center;font:700 clamp(.82rem,1.4vw,.98rem) var(--f-body);color:#E9F0F8;line-height:1.2}
+.pw-l small{color:#9FB4CD;font-weight:600;font-size:clamp(.66rem,1.1vw,.78rem)}
+.pw-c{display:flex;align-items:center;justify-content:center;text-align:center;border-radius:10px;padding:clamp(8px,1.6vh,13px) 3px;font:700 clamp(.74rem,1.4vw,.95rem) var(--f-body)}
+.pw-c.c{background:var(--yellow);color:#0E2A4E}
+.pw-c.k{background:#E9F0F8;color:#0E2A4E}
+.pw-c.r{border:1.5px dashed rgba(242,177,0,.75);color:#FFE9B3;font-size:clamp(.66rem,1.2vw,.82rem)}
+.pw-v{border-radius:10px;border:1px dashed rgba(233,240,248,.14)}
+.pr-fb{position:absolute;inset:0;z-index:6;background:rgba(8,21,38,.9);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center}
+.pr-fb b{font:800 clamp(2.2rem,5vw,3.6rem) "Barlow Condensed",var(--f-display);color:var(--yellow)}
+.pr-fb span{font:600 clamp(1.1rem,2.2vw,1.5rem) var(--f-body);color:#E9F0F8}
 .pr-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:2vh}
 .rcv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-bottom:22px}
 #sodaf-root .rcv-tile{display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:20px;border-radius:18px;border:2px solid #E3E6E8;background:#fff;cursor:pointer;font:inherit;text-align:left;box-shadow:0 8px 20px rgba(14,42,78,.08);transition:transform .15s ease,box-shadow .15s ease}
@@ -1077,7 +1089,7 @@ box-shadow:0 5px 0 #054030,0 14px 26px -10px rgba(6,64,45,.75),inset 0 1px 0 rgb
 .pr-line-on{width:0;opacity:.95;transition:width .7s cubic-bezier(.3,.7,.3,1)}
 .pr-car{position:absolute;left:5%;top:50%;transform:translate(-20px,-76%);transition:left .7s cubic-bezier(.3,.7,.3,1);filter:drop-shadow(0 6px 10px rgba(0,0,0,.5))}
 @media (prefers-reduced-motion:reduce){.pr-in{animation:none}.pr-car,.pr-line-on{transition:none}}
-@media (max-width:700px){.pr-ov{padding:56px 18px 96px}.pr-trust{grid-template-columns:1fr}.pr-road{height:76px}.pr-car svg{width:96px;height:33px}.pr-node{width:46px;height:46px}.pr-route li:not(:last-child)::before{left:22px;top:50px}#sodaf-root .pr-btn{padding:10px 16px;font-size:.95rem}#sodaf-root .pr-step{display:none}.pr-split{gap:18px}.pr-limit{margin:0 auto}.pr-shots{margin:0 auto}.pr-shots img{width:34vw}.pr-ticket{margin:0 auto}}
+@media (max-width:700px){.pr-ov{padding:56px 18px 96px}.pr-week{grid-template-columns:minmax(64px,auto) repeat(6,1fr);gap:4px}.pw-l{font-size:.68rem}.pw-l small{font-size:.58rem}.pw-c{font-size:.6rem;padding:7px 1px;border-radius:7px}.pw-c.r{font-size:.5rem}.pr-trust{grid-template-columns:1fr}.pr-road{height:76px}.pr-car svg{width:96px;height:33px}.pr-node{width:46px;height:46px}.pr-route li:not(:last-child)::before{left:22px;top:50px}#sodaf-root .pr-btn{padding:10px 16px;font-size:.95rem}#sodaf-root .pr-step{display:none}.pr-split{gap:18px}.pr-limit{margin:0 auto}.pr-shots{margin:0 auto}.pr-shots img{width:34vw}.pr-ticket{margin:0 auto}}
 #sodaf-root .wa-box .ins-hd{margin-bottom:10px}#sodaf-root .wa-box .ins-hd h3{font-size:1.25rem}
 .wa-first{font:500 .9rem var(--f-body);color:#4A5560}
 #sd-waOv{padding-top:2vh}.wa-grid{display:grid;grid-template-columns:1fr 240px;gap:18px;align-items:start}
@@ -4991,6 +5003,16 @@ function init(root) {
       sun: '<circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5 5l2.1 2.1M16.9 16.9L19 19M19 5l-2.1 2.1M7.1 16.9L5 19"/>',
     };
     const prI = (k) => '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + prIco[k] + "</svg>";
+    const prWeek = () => { const J = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"];
+      const ap = (d) => GROUPES.some((g) => g.actif && !g.soir && (g.jours || []).includes(d)), so = (d) => GROUPES.some((g) => g.actif && g.soir && (g.jours || []).includes(d));
+      const cell = (t, k) => t ? '<span class="pw-c ' + k + '">' + t + "</span>" : '<span class="pw-v"></span>';
+      const row = (lab, f) => '<div class="pw-l">' + lab + "</div>" + [1, 2, 3, 4, 5, 6].map(f).join("");
+      return '<div class="pr-week pr-in"><div class="pw-l"></div>' + J.map((j) => '<div class="pw-h">' + j + "</div>").join("") +
+        row("Conduite<small>7 h 30 – 9 h 30</small>", () => cell("7 h 30", "c")) +
+        row("Conduite<small>10 h – 12 h</small>", () => cell("10 h", "c")) +
+        row("Code<small>14 h 30 – 15 h 30</small>", (d) => d === 3 ? cell("Rattrapage", "r") : cell(ap(d) ? "14 h 30" : "", "k")) +
+        row("Conduite<small>15 h 45 – 17 h 45</small>", (d) => d === 6 ? cell("", "") : d === 3 ? cell("Rattrapage", "r") : cell("15 h 45", "c")) +
+        row("Code du soir<small>18 h – 19 h</small>", (d) => d === 3 ? cell("Rattrapage", "r") : cell(so(d) ? "18 h" : "", "k")) + "</div>"; };
     const prSlides = () => [
       '<p class="pr-tag pr-in">SODAF Auto-École · Lomé</p><h2 class="pr-mega pr-in">L\'art de conduire,<br>la force de réussir.</h2><p class="pr-lede pr-in">Le code, la conduite, l\'examen : on t\'emmène jusqu\'au permis, étape par étape.</p><div class="pr-chips"><span class="pr-in">Petits groupes de 6</span><span class="pr-in">Voiture à double pédales : le moniteur garde le contrôle</span><span class="pr-in">Ton dossier suivi en ligne</span></div>',
       '<h2 class="pr-h pr-in">Le trajet jusqu\'au permis</h2><ol class="pr-route"><li class="pr-in"><span class="pr-node">' + prI("book") + '</span><div><b>Le code</b><span>12 cours en salle, en groupe de 6. Et tout le code sur autosodaf.com : cours, quiz, examens blancs.</span></div></li><li class="pr-in"><span class="pr-node">' + prI("wheel") + '</span><div><b>La conduite</b><span>Des séances de 2 h avec le moniteur, jusqu\'à 3 par semaine, à ton rythme.</span></div></li><li class="pr-in"><span class="pr-node">' + prI("flag") + '</span><div><b>L\'examen</b><span>Nous déposons ton dossier, et l\'État t\'envoie ta date par message.</span></div></li></ol>',
@@ -4999,8 +5021,7 @@ function init(root) {
       '<div class="pr-split"><div class="pr-limit pr-in"><b>5 000</b><small>francs</small></div><div class="pr-splitTxt"><h2 class="pr-h pr-in">Commence doucement</h2><ul class="pr-list"><li class="pr-in">Tu t\'inscris avec <b>5 000 F</b>, c\'est tout.</li><li class="pr-in">Le code en ligne s\'ouvre pour toi <b>tout de suite</b>.</li><li class="pr-in">Tu as <b>2 mois</b> pour commencer à payer ta formation, en deux tranches si tu veux.</li><li class="pr-in">La conduite démarre quand ta formation est soldée.</li></ul></div></div>',
       '<h2 class="pr-h pr-in">Tu es entre de bonnes mains</h2><div class="pr-trust"><div class="pr-in"><span class="pr-node">' + prI("shield") + '</span><div><b>Voiture à double commande</b><span>Le moniteur a ses propres pédales et son propre frein : si tu te trompes, il reprend la voiture aussitôt. Tu ne risques rien.</span></div></div><div class="pr-in"><span class="pr-node">' + prI("wheel") + '</span><div><b>Un moniteur qui t\'évalue</b><span>Il suit tes progrès séance après séance et te dit quand tu es prêt pour l\'examen.</span></div></div><div class="pr-in"><span class="pr-node">' + prI("recu") + '</span><div><b>Un reçu officiel à chaque paiement</b><span>Ton argent est tracé, du premier franc au dernier.</span></div></div><div class="pr-in"><span class="pr-node">' + prI("tel") + '</span><div><b>Tout ton parcours sur ton téléphone</b><span>Cours, quiz, dossier, reçus : tout te suit sur autosodaf.com et WhatsApp.</span></div></div></div>',
       '<h2 class="pr-h pr-in">Tes outils, en salle et sur ton téléphone</h2><div class="pr-split pr-tools"><div class="pr-shots pr-in"><img src="/couverture-manuel.jpg" alt="Le manuel SODAF" loading="lazy"><img src="/videos/priorites-poster.jpg" alt="Un cours en vidéo" loading="lazy"></div><ul class="pr-list pr-toolsList"><li class="pr-in">Le <b>manuel SODAF</b>, écrit pour nos cours, du démarrage à l\'examen.</li><li class="pr-in">Tout le code sur <b>autosodaf.com</b> : cours, quiz, examens blancs, panneaux.</li><li class="pr-in">Des <b>cours en vidéo</b> pour réviser où tu veux, quand tu veux.</li><li class="pr-in">Tes <b>devoirs corrigés</b> après chaque cours, directement sur le site.</li></ul></div>',
-            '<h2 class="pr-h pr-in">Tes horaires</h2><div class="pr-hours"><div class="pr-in"><span class="pr-node">' + prI("book") + '</span><div><b>Le code</b><span>2 cours par semaine : l\'après-midi à 14 h 30' + (GROUPES.some((g) => g.actif && g.soir) ? ', ou le soir à 18 h — tu choisis ce qui t\'arrange' : '') + '. Et le mercredi : rattrapage et examen blanc.</span></div></div><div class="pr-in"><span class="pr-node">' + prI("wheel") + '</span><div><b>La conduite</b><span>Lundi à samedi : 7 h 30 à 9 h 30 et 10 h à 12 h. Lundi à vendredi : 15 h 45 à 17 h 45.</span></div></div><div class="pr-in"><span class="pr-node">' + prI("sun") + '</span><div><b>L\'agence</b><span>Lundi à vendredi : 7 h 30 à 18 h, pause de 12 h 30 à 14 h 30. Samedi : 7 h 30 à 17 h.</span></div></div></div>',
-      '<h2 class="pr-mega pr-in">On y va ?</h2><p class="pr-lede pr-in">Rien à apporter aujourd\'hui : ton nom, ton numéro, et c\'est parti. Tu reçois ton dossier sur WhatsApp, et un reçu officiel dès ton premier paiement. Paiement ' + payWhere() + '.</p><button type="button" class="pr-cta pr-in" data-prins><span class="pr-ctaTxt"><b>Commencer mon dossier maintenant</b><small>Pré-inscription en 2 minutes, ici, au bureau</small></span><span class="pr-ctaArr" aria-hidden="true"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></span></button><p class="pr-note pr-in">412 avenue Akei, Tokoin Tamé, en face de la caisse.</p>',
+            '<h2 class="pr-h pr-in">Tes horaires, toute la semaine</h2>' + prWeek() + '<p class="pr-note pr-in"><b style="color:#FFE9B3">Jaune</b> : la conduite (séances de 2 h, jusqu\'à 3 par semaine, à ton rythme) · <b>Blanc</b> : le code, l\'après-midi ou le soir, comme tu veux. Agence : lundi à vendredi 7 h 30 – 18 h, samedi 7 h 30 – 17 h.</p>',      '<h2 class="pr-mega pr-in">On y va ?</h2><p class="pr-lede pr-in">Rien à apporter aujourd\'hui : ton nom, ton numéro, et c\'est parti. Tu reçois ton dossier sur WhatsApp, avec ton inscription à faire directement dessus, et un reçu officiel dès ton premier paiement. Paiement ' + payWhere() + '.</p><button type="button" class="pr-cta pr-in" data-prins><span class="pr-ctaTxt"><b>Commencer mon dossier maintenant</b><small>Pré-inscription en 2 minutes, ici, au bureau</small></span><span class="pr-ctaArr" aria-hidden="true"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></span></button><p class="pr-note pr-in">412 avenue Akei, Tokoin Tamé, en face de la caisse.</p>',
     ];
     let prIdx = 0, PR = [];
     const prShow = (i) => { prIdx = Math.max(0, Math.min(PR.length - 1, i));
@@ -5037,7 +5058,11 @@ function init(root) {
     $("#sd-prPrev").addEventListener("click", () => prShow(prIdx - 1));
     $("#sd-prNext").addEventListener("click", () => { if (prIdx === PR.length - 1) prClose(); else prShow(prIdx + 1); });
     $("#sd-prSlide").addEventListener("click", (e) => {
-      if (e.target.closest("[data-prins]")) { if (EC_MODE) { if (ecBC) ecBC.postMessage({ a: "insReq" }); return; } prClose(); insOpen(); $("#sd-insSrc").value = "agence"; return; } // il est prêt : on le pré-inscrit tout de suite
+      if (e.target.closest("[data-prins]")) {
+        if (EC_MODE) { if (ecBC) ecBC.postMessage({ a: "insReq" });
+          if (!$("#sd-prOv .pr-fb")) { const fb = document.createElement("div"); fb.className = "pr-fb"; fb.innerHTML = "<b>C'est parti !</b><span>Le secrétariat prépare ton dossier.</span>"; $("#sd-prOv").appendChild(fb); setTimeout(() => fb.remove(), 2800); }
+          return; }
+        prClose(); insOpen(); $("#sd-insSrc").value = "agence"; return; } // il est prêt : on le pré-inscrit tout de suite
       if (prIdx < PR.length - 1) prShow(prIdx + 1); });
     document.addEventListener("keydown", (e) => { if ($("#sd-prOv").hidden) return;
       if (e.key === "Escape") prClose(); else if (e.key === "ArrowRight" || e.key === " ") prShow(prIdx + 1); else if (e.key === "ArrowLeft") prShow(prIdx - 1); });
