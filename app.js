@@ -1077,6 +1077,12 @@ box-shadow:0 5px 0 #054030,0 14px 26px -10px rgba(6,64,45,.75),inset 0 1px 0 rgb
 .rcv-pres .rcv-ico{background:var(--yellow);color:#0E2A4E}
 .rcv-ecrow{display:flex;flex-wrap:wrap;gap:16px;align-items:center}
 .rcv-ecctl{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.ec-view{margin-top:16px}
+.ec-viewk{margin:0 0 8px;font:600 .9rem var(--f-body);color:#3D444D}
+.ec-frame{overflow:hidden;border-radius:14px;border:1px solid #E3E6E8;box-shadow:0 10px 24px rgba(14,42,78,.14);pointer-events:none;max-width:680px}
+.ec-scale{width:1100px;transform-origin:top left}
+#sodaf-root .pr-ov.ec-static{position:relative;inset:auto;z-index:auto;display:block;width:1100px;height:640px;padding:46px 64px;overflow:hidden}
+.ec-static .pr-stage{cursor:default;max-width:none;height:100%;display:flex;flex-direction:column;justify-content:center;overflow:hidden}
 #sd-ecState{font-weight:600;color:#3D444D;min-width:150px}
 .ec-mode .pr-x{display:none!important} /* sur l'écran client : les boutons Précédent / Suivant restent, seule la croix est cachée (27 oct.) */
 #sodaf-root .pr-step{font:600 .95rem var(--f-body);color:#9FB4CD}
@@ -2113,6 +2119,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <p style="margin:0 0 14px">Branche le 2e écran au PC (touche Windows + P, choisis « Étendre »). Touche « Ouvrir l'écran client », glisse la fenêtre sur l'écran du client (touche Windows + Maj + flèche droite), et pilote la présentation d'ici : ton écran à toi reste sur ton travail.</p>
 <div class="rcv-ecrow"><button class="btn btn-green" type="button" id="sd-ecOpen">Ouvrir l'écran client</button>
 <div class="rcv-ecctl"><button class="btn btn-line btn-sm" type="button" id="sd-ecPrev">‹ Précédent</button><span id="sd-ecState">Écran fermé</span><button class="btn btn-line btn-sm" type="button" id="sd-ecNext">Suivant ›</button><button class="linkbtn" type="button" id="sd-ecClose">Fermer la présentation</button></div></div>
+<div class="ec-view" id="sd-ecView" hidden><p class="ec-viewk" id="sd-ecViewK"></p><div class="ec-frame"><div class="ec-scale" id="sd-ecScale"></div></div></div>
 </div>
 </section>
 <section class="tm-sec" data-s="eleves" hidden>
@@ -5046,8 +5053,12 @@ function init(root) {
     if (ecBC) ecBC.onmessage = (ev) => { const m = ev.data || {};
       if (EC_MODE) { if (m.a === "open" && $("#sd-prOv").hidden) prOpen(); else if (m.a === "go") prShow(prIdx + m.d); else if (m.a === "close") prClose(); }
       else { const st = $("#sd-ecState");
-        if (m.a === "state" && st) st.textContent = "Il voit l'écran " + (m.i + 1) + " sur " + m.n;
-        if (m.a === "bye" && st) st.textContent = "Écran fermé";
+        if (m.a === "state" && st) { st.textContent = "Il voit l'écran " + (m.i + 1) + " sur " + m.n;
+          const v = $("#sd-ecView"); if (v) { v.hidden = false; $("#sd-ecViewK").textContent = "Ce qu'il voit en ce moment (écran " + (m.i + 1) + " sur " + m.n + ") : lis-le-lui en expliquant."; // le secrétariat lit la même chose que le client
+            const sc = $("#sd-ecScale"), fr = sc.parentElement, mi = prSlides();
+            sc.innerHTML = '<div class="pr-ov ec-static"><div class="pr-stage">' + (mi[m.i] || "") + "</div></div>";
+            const k = Math.max(0.2, Math.min(0.6, fr.clientWidth / 1100)); sc.style.transform = "scale(" + k + ")"; fr.style.height = Math.round(640 * k) + "px"; } }
+        if (m.a === "bye" && st) { st.textContent = "Écran fermé"; const v = $("#sd-ecView"); if (v) v.hidden = true; }
         if (m.a === "insReq") { insOpen(); $("#sd-insSrc").value = "agence"; toast("Il est prêt : pré-inscris-le"); } } };
     let ecWin = null;
     $("#sd-ecOpen") && $("#sd-ecOpen").addEventListener("click", () => { if (!ecBC) { toast("Ce navigateur ne permet pas l'écran client.", true); return; }
