@@ -985,19 +985,20 @@ box-shadow:0 5px 0 #054030,0 14px 26px -10px rgba(6,64,45,.75),inset 0 1px 0 rgb
 #sodaf-root .ins-box.wa-box{max-width:1180px;padding:14px 18px}
 #sodaf-root .tm-present{border-color:var(--yellow)}
 #sodaf-root .tm-present .pr-ico{background:var(--yellow);color:#0E2A4E}
-.pr-ov{position:fixed;inset:0;z-index:9600;background:linear-gradient(180deg,#10345F 0%,#0A1C33 62%,#081526 100%);color:#E9F0F8;display:flex;flex-direction:column;padding:3vh 5vw 118px}
+.pr-ov{--pg:clamp(20px,3.6vh,36px);position:fixed;inset:0;z-index:9600;background:linear-gradient(180deg,#10345F 0%,#0A1C33 62%,#081526 100%);color:#E9F0F8;display:flex;flex-direction:column;padding:3vh 5vw 118px}
 .pr-ov[hidden]{display:none}
 #sodaf-root .pr-x{position:absolute;top:16px;right:16px;z-index:5;border:0;background:rgba(233,240,248,.14);color:#E9F0F8;width:44px;height:44px;border-radius:50%;font-size:1.6rem;cursor:pointer;line-height:1}
-.pr-stage{flex:1;display:flex;flex-direction:column;justify-content:center;max-width:1020px;margin:0 auto;width:100%;cursor:pointer;overflow:auto;min-height:0}
+.pr-stage{flex:1;display:flex;flex-direction:column;justify-content:flex-start;max-width:1020px;margin:0 auto;width:100%;cursor:pointer;overflow:auto;min-height:0}
+.pr-inner{margin:auto 0;width:100%}
 @keyframes prIn{from{opacity:0;transform:translateX(-26px)}to{opacity:1;transform:none}}
 .pr-in{animation:prIn .55s cubic-bezier(.2,.7,.2,1) both}
-#sodaf-root .pr-tag{margin:0 0 6px;font:600 1rem var(--f-body);color:#9FB4CD}
+#sodaf-root .pr-ov .pr-tag{margin:0 0 12px;font:600 1rem var(--f-body);color:#9FB4CD}
 #sodaf-root .pr-stage h2{color:#fff}
-.pr-mega{margin:0 0 16px;font:800 clamp(2.8rem,8vw,5.8rem)/1 "Barlow Condensed",var(--f-display);letter-spacing:.015em}
-.pr-h{margin:0 0 clamp(14px,3vh,28px);font:800 clamp(2.1rem,5vw,3.4rem)/1.02 "Barlow Condensed",var(--f-display);letter-spacing:.015em}
+#sodaf-root .pr-ov .pr-mega{margin:0 0 calc(var(--pg)*.8);font:800 clamp(2.8rem,8vw,5.8rem)/1.02 "Barlow Condensed",var(--f-display);letter-spacing:.015em}
+#sodaf-root .pr-ov .pr-h{margin:0 0 var(--pg);font:800 clamp(2.1rem,5vw,3.4rem)/1.05 "Barlow Condensed",var(--f-display);letter-spacing:.015em}
 #sodaf-root .pr-lede{margin:0;font:500 clamp(1.15rem,2.4vw,1.6rem)/1.45 var(--f-body);color:#C9D8EA;max-width:34em}
-#sodaf-root .pr-note{margin:clamp(10px,2vh,18px) 0 0;font-size:clamp(1rem,1.9vw,1.2rem);color:#C9D8EA}
-.pr-chips{display:flex;flex-wrap:wrap;gap:12px;margin-top:clamp(16px,3.5vh,34px)}
+#sodaf-root .pr-ov .pr-note{margin:var(--pg) 0 0;font-size:clamp(1rem,1.9vw,1.2rem);color:#C9D8EA;line-height:1.5}
+.pr-chips{display:flex;flex-wrap:wrap;gap:12px;margin-top:var(--pg)}
 .pr-chips span{border:2px dashed rgba(242,177,0,.75);border-radius:12px;padding:10px 16px;font:600 clamp(.95rem,1.8vw,1.15rem) var(--f-body);color:#FFE9B3}
 .pr-node{width:54px;height:54px;flex:none;border-radius:50%;background:#11325C;border:2.5px solid var(--yellow);color:var(--yellow);display:grid;place-items:center}
 .pr-route{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:clamp(14px,3vh,30px)}
@@ -1008,7 +1009,7 @@ box-shadow:0 5px 0 #054030,0 14px 26px -10px rgba(6,64,45,.75),inset 0 1px 0 rgb
 .pr-route span+div span,.pr-route li>div>span,.pr-trust>div>div>span,.pr-hours>div>div>span{font-size:clamp(1rem,2vw,1.25rem);line-height:1.45;color:#C9D8EA}
 .pr-trust,.pr-hours{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,3vh,30px) 36px}
 .pr-hours{grid-template-columns:1fr}
-.pr-signs{display:grid;grid-template-columns:repeat(auto-fit,minmax(176px,1fr));gap:14px;margin-top:18px}
+.pr-signs{display:grid;grid-template-columns:repeat(auto-fit,minmax(176px,1fr));gap:14px;margin-top:22px}
 .pr-sign strong.pr-ask{font-size:clamp(1.15rem,1.9vw,1.5rem);line-height:1.15;padding:6px 0 4px;white-space:normal}
 .pr-sign{position:relative;background:#11325C;border:3px solid var(--yellow);border-radius:16px;padding:18px 16px 16px;display:flex;flex-direction:column;gap:3px;box-shadow:0 14px 24px rgba(4,10,18,.45)}
 .pr-sign em{position:absolute;top:-13px;left:14px;background:#fff;color:#0E2A4E;font:700 .74rem var(--f-body);letter-spacing:.05em;font-style:normal;padding:4px 11px;border-radius:999px}
@@ -1022,7 +1023,7 @@ box-shadow:0 5px 0 #054030,0 14px 26px -10px rgba(6,64,45,.75),inset 0 1px 0 rgb
 .pr-split{display:flex;align-items:center;gap:clamp(24px,5vw,60px);flex-wrap:wrap}
 .pr-nums{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
 .pr-nums>div{background:#11325C;border-radius:16px;padding:clamp(16px,2.5vh,26px) 18px;border:1px solid rgba(233,240,248,.12)}
-.pr-nums.pr-max{grid-template-columns:repeat(2,minmax(160px,260px));margin-bottom:clamp(14px,3vh,26px)}
+.pr-nums.pr-max{grid-template-columns:repeat(2,minmax(160px,260px));margin-bottom:var(--pg)}
 .pr-nums.pr-max b{color:#fff}.pr-nums.pr-max b::after{content:" max";font-size:.4em;color:var(--yellow);letter-spacing:.04em}
 #sodaf-root .pr-pay{margin:0;padding:0;list-style:none;counter-reset:pay;display:flex;flex-direction:column;gap:clamp(10px,2vh,18px)}
 #sodaf-root .pr-pay li{list-style:none;counter-increment:pay;position:relative;padding-left:52px}
@@ -1055,7 +1056,7 @@ box-shadow:0 5px 0 #054030,0 14px 26px -10px rgba(6,64,45,.75),inset 0 1px 0 rgb
 #sodaf-root .pr-list li::marker{content:""}
 #sodaf-root .pr-list li::before{content:"";position:absolute;left:0;top:.42em;width:14px;height:14px;border-radius:50%;background:var(--yellow)}
 #sodaf-root .pr-list b{color:#FFE9B3}
-#sodaf-root .pr-cta{position:relative;overflow:hidden;display:flex;width:100%;justify-content:space-between;align-items:center;gap:clamp(16px,2.5vw,28px);margin-top:clamp(18px,3.5vh,34px);border:0;border-radius:20px;background:linear-gradient(115deg,#FFD042 0%,var(--yellow) 55%,#E09E00 100%);color:#0E2A4E;padding:clamp(16px,2.8vh,24px) clamp(22px,3vw,38px);cursor:pointer;text-align:left;box-shadow:0 0 0 3px rgba(242,177,0,.3),0 18px 44px rgba(242,177,0,.3),0 10px 24px rgba(4,10,18,.5);transition:transform .15s ease,box-shadow .15s ease}
+#sodaf-root .pr-cta{position:relative;overflow:hidden;display:flex;width:100%;justify-content:space-between;align-items:center;gap:clamp(16px,2.5vw,28px);margin-top:var(--pg);border:0;border-radius:20px;background:linear-gradient(115deg,#FFD042 0%,var(--yellow) 55%,#E09E00 100%);color:#0E2A4E;padding:clamp(16px,2.8vh,24px) clamp(22px,3vw,38px);cursor:pointer;text-align:left;box-shadow:0 0 0 3px rgba(242,177,0,.3),0 18px 44px rgba(242,177,0,.3),0 10px 24px rgba(4,10,18,.5);transition:transform .15s ease,box-shadow .15s ease}
 #sodaf-root .pr-cta:hover{transform:translateY(-2px);box-shadow:0 0 0 5px rgba(242,177,0,.4),0 24px 54px rgba(242,177,0,.4),0 12px 28px rgba(4,10,18,.5)}
 #sodaf-root .pr-cta:active{transform:translateY(1px)}
 #sodaf-root .pr-cta:focus-visible{outline:3px solid #fff;outline-offset:3px}
@@ -1109,6 +1110,7 @@ box-shadow:0 5px 0 #054030,0 14px 26px -10px rgba(6,64,45,.75),inset 0 1px 0 rgb
 .pr-line-on{width:0;opacity:.95;transition:width .7s cubic-bezier(.3,.7,.3,1)}
 .pr-car{position:absolute;left:5%;top:50%;transform:translate(-20px,-76%);transition:left .7s cubic-bezier(.3,.7,.3,1);filter:drop-shadow(0 6px 10px rgba(0,0,0,.5))}
 @media (prefers-reduced-motion:reduce){.pr-in{animation:none}.pr-car,.pr-line-on{transition:none}}
+@media (min-width:1600px) and (min-height:860px){.pr-stage{zoom:1.32;max-width:1080px}.pr-nav{zoom:1.15}.pr-road{height:110px}.pr-car svg{width:160px;height:54px}}
 @media (max-width:700px){.pr-ov{padding:56px 18px 96px}.pr-week{grid-template-columns:minmax(64px,auto) repeat(6,1fr);gap:4px}.pw-l{font-size:.68rem}.pw-l small{font-size:.58rem}.pw-c{font-size:.6rem;padding:7px 1px;border-radius:7px}.pw-c.r{font-size:.5rem}.pr-trust{grid-template-columns:1fr}.pr-road{height:76px}.pr-car svg{width:96px;height:33px}.pr-node{width:46px;height:46px}.pr-route li:not(:last-child)::before{left:22px;top:50px}#sodaf-root .pr-btn{padding:10px 16px;font-size:.95rem}#sodaf-root .pr-step{display:none}.pr-split{gap:18px}.pr-limit{margin:0 auto}.pr-shots{margin:0 auto}.pr-shots img{width:34vw}.pr-ticket{margin:0 auto}}
 #sodaf-root .wa-box .ins-hd{margin-bottom:10px}#sodaf-root .wa-box .ins-hd h3{font-size:1.25rem}
 .wa-first{font:500 .9rem var(--f-body);color:#4A5560}
@@ -5050,7 +5052,7 @@ function init(root) {
       // 2 · Le trajet
       '<h2 class="pr-h pr-in">Le trajet jusqu\'au permis</h2><ol class="pr-route"><li class="pr-in"><span class="pr-node">' + prI("book") + '</span><div><b>Le code</b><span>12 cours en salle, en groupe de 6. Et tout le code de la route sur autosodaf.com : cours, quiz, examens blancs.</span></div></li><li class="pr-in"><span class="pr-node">' + prI("wheel") + '</span><div><b>La conduite</b><span>Des séances de 2 h avec le moniteur, en groupe de 4. Jusqu\'à 3 séances possibles par semaine, à ton rythme.</span></div></li><li class="pr-in"><span class="pr-node">' + prI("flag") + '</span><div><b>L\'examen</b><span>On dépose ton dossier à SOTOPLA pour que tu passes l\'examen. SOTOPLA t\'envoie ensuite un message avec le lieu et la date.</span></div></li></ol>',
       // 3 · Les groupes = un maximum
-      '<h2 class="pr-h pr-in">« Groupe de 6 », « groupe de 4 » : c\'est un maximum</h2><div class="pr-nums pr-max"><div class="pr-in"><b>6</b><span>au plus par cours de code</span></div><div class="pr-in"><b>4</b><span>au plus par séance de conduite</span></div></div><p class="pr-lede pr-in">Certains jours tu seras seul avec le moniteur, d\'autres jours à 2 ou 3. Mais jamais plus que la limite : chacun a sa place, et le moniteur a du temps pour chacun.</p>',
+      '<h2 class="pr-h pr-in">Groupe de 6, groupe de 4 : c\'est un maximum</h2><div class="pr-nums pr-max"><div class="pr-in"><b>6</b><span>au plus par cours de code</span></div><div class="pr-in"><b>4</b><span>au plus par séance de conduite</span></div></div><p class="pr-lede pr-in">Certains jours tu seras seul avec le moniteur, d\'autres jours à 2 ou 3. Mais jamais plus que la limite : chacun a sa place, et le moniteur a du temps pour chacun.</p>',
       // 4 · En chiffres
       '<h2 class="pr-h pr-in">SODAF, en chiffres</h2><div class="pr-nums"><div class="pr-in"><b>12</b><span>cours de code, du démarrage à l\'examen blanc</span></div><div class="pr-in"><b>2 h</b><span>par séance de conduite avec le moniteur</span></div><div class="pr-in"><b>3</b><span>séances de conduite possibles par semaine</span></div><div class="pr-in"><b>24 h</b><span>pour recevoir ton accès au code en ligne après ton paiement</span></div></div>',
       // 5 · Les formules
@@ -5070,7 +5072,7 @@ function init(root) {
     ];
     let prIdx = 0, PR = [];
     const prShow = (i) => { PR = prSlides(); prIdx = Math.max(0, Math.min(PR.length - 1, i)); // écrans reconstruits à chaque affichage : horaires et prix toujours à jour
-      const st = $("#sd-prSlide"); st.innerHTML = PR[prIdx]; st.scrollTop = 0;
+      const st = $("#sd-prSlide"); st.innerHTML = '<div class="pr-inner">' + PR[prIdx] + "</div>"; st.scrollTop = 0;
       $$("#sd-prSlide .pr-in").forEach((el, k) => (el.style.animationDelay = 60 + k * 110 + "ms"));
       $("#sd-prStep").textContent = "Écran " + (prIdx + 1) + " sur " + PR.length;
       $("#sd-prPrev").style.visibility = prIdx === 0 ? "hidden" : "visible";
@@ -5102,7 +5104,7 @@ function init(root) {
       $("#sd-ecViewK").textContent = "Écran " + (ecIdx + 1) + " sur " + mi.length + " : lis-le-lui en expliquant.";
       const st = $("#sd-ecState"); if (st) st.textContent = ecOn ? "Le client le voit sur son écran" : "Écran client fermé : aperçu seulement";
       const sc = $("#sd-ecScale"), fr = sc.parentElement;
-      sc.innerHTML = '<div class="pr-ov ec-static"><div class="pr-stage">' + (mi[ecIdx] || "") + "</div></div>";
+      sc.innerHTML = '<div class="pr-ov ec-static"><div class="pr-stage"><div class="pr-inner">' + (mi[ecIdx] || "") + "</div></div></div>";
       const k = Math.max(0.2, Math.min(1, fr.clientWidth / 1100)); sc.style.transform = "scale(" + k + ")"; fr.style.height = Math.round(640 * k) + "px";
     }
     window.__ecRender = ecRender;
