@@ -1066,8 +1066,7 @@ box-shadow:0 5px 0 #054030,0 14px 26px -10px rgba(6,64,45,.75),inset 0 1px 0 rgb
 .rcv-ecrow{display:flex;flex-wrap:wrap;gap:16px;align-items:center}
 .rcv-ecctl{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 #sd-ecState{font-weight:600;color:#3D444D;min-width:150px}
-.ec-mode .pr-nav,.ec-mode .pr-x{display:none!important}
-.ec-mode .pr-ov{padding-bottom:104px}
+.ec-mode .pr-x{display:none!important} /* sur l'écran client : les boutons Précédent / Suivant restent, seule la croix est cachée (27 oct.) */
 #sodaf-root .pr-step{font:600 .95rem var(--f-body);color:#9FB4CD}
 #sodaf-root .pr-btn{border:2px solid rgba(233,240,248,.4);background:none;color:#E9F0F8;border-radius:999px;padding:12px 26px;font:600 1.05rem var(--f-body);cursor:pointer}
 #sodaf-root .pr-btn.pr-next{background:var(--yellow);border-color:var(--yellow);color:#0E2A4E;font-weight:700;padding:12px 34px}
