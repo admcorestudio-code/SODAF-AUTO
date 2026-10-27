@@ -6628,6 +6628,12 @@ function init(root) {
             const lig = act.map((x) => [x, trouve(x)]), faits = lig.filter((l) => l[1]).length;
             $("#sd-mcBody .mc-plan").insertAdjacentHTML("afterend", '<div class="mc-dev"><div class="mc-ah"><b>Devoir ' + dvP.l + " : qui l'a fait&nbsp;?</b><span>" + faits + " sur " + act.length + '</span></div><div class="mc-devl">' + lig.map(([x, r]) => '<div class="' + (r ? "ok" : "ko") + '"><span>' + esc(x.nom) + "</span><b>" + (r ? "Fait · " + r.note + "/" + r.sur : "Pas fait") + "</b></div>").join("") + "</div></div>");
           }
+          // Chacun ses tâches (27 oct.) : l'appel est fait par le moniteur (la direction peut dépanner). Les autres regardent.
+          if (!["moniteur", "admin"].includes((me || {}).role)) {
+            $$("#sd-mcBody [data-pe], #sd-mcBody select, #sd-mcBody input").forEach((el) => (el.disabled = true));
+            $$("#sd-mcBody .tm-formact, #sd-mcBody .mc-nt").forEach((el) => el.remove());
+            const inst = $("#sd-mcBody .mc-appel .tm-note"); if (inst) inst.textContent = "L'appel est fait par le moniteur, en salle. Tu vois ici qui est présent.";
+          }
           $$("#sd-mcBody [data-pe]").forEach((c) => c.addEventListener("change", async () => {
             const eid = +c.dataset.pe;
             if (c.checked) await run(() => DB.q("presences", { method: "POST", body: { seance_id: se.id, eleve_id: eid }, prefer: "return=minimal,resolution=ignore-duplicates" }));
@@ -6659,6 +6665,7 @@ function init(root) {
           const q = eqOf(g.eq), fini = ord.filter((x) => x.statut !== "Réservé").length;
           return '<div class="cd-bloc mc-bloc' + (g.bloc === "mercredi" ? " cd-mer" : "") + '"><div class="cd-bh"><b>' + esc(plage(g.h)) + "</b><span>" + esc(g.bloc === "mercredi" ? "Rattrapage et séances en plus" : "Séance de conduite") + " · " + n + " élève" + (n > 1 ? "s" : "") + " · ordre de passage</span><em>" + fini + "/" + n + "</em></div>" + ord.map(mRow).join("") + '<p class="mc-tip">10 min de préparation, environ 25 min au volant chacun, 10 min de bilan. L\'ordre change à chaque bloc.</p></div>';
         }).join("") : '<p class="tm-empty">Aucune séance réservée aujourd\'hui.</p>';
+        if (!["moniteur", "admin"].includes((me || {}).role)) { $$("#sd-mcList [data-set]").forEach((b) => b.remove()); $$("#sd-mcList [data-note]").forEach((el) => (el.disabled = true)); $$("#sd-mcList .se-mev").forEach((el) => el.remove()); } // Fait / Absent et évaluation : le moniteur
       }
     }
     $("#sd-mcCode").addEventListener("click", (e) => { const b = e.target.closest("[data-mses]"); if (b) { monIdx = +b.dataset.mses; loadMon(); } });
