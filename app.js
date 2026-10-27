@@ -2058,10 +2058,10 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="tm-pane" data-pane="sec" role="tabpanel">
 <p class="tm-role">Accueil des élèves, inscriptions, paiements, réservations de conduite et messages WhatsApp.</p>
 <div class="tm-subnav" id="sd-secNav" role="tablist">
-<button data-s="recevoir" aria-selected="false">Accueil client</button>
-<button data-s="eleves" aria-selected="true">Parcours élèves <span class="tm-count" id="sd-cntNew"></span></button>
+<button data-s="recevoir" aria-selected="true">Accueil client</button>
+<button data-s="eleves" aria-selected="false">Parcours élèves <span class="tm-count" id="sd-cntNew"></span></button>
 <button data-s="conduite" aria-selected="false">Planning conduite</button>
-<button data-s="paiements" aria-selected="false">Paiements et reçus</button>
+<button data-s="paiements" aria-selected="false">Faire un reçu ?</button>
 <button data-s="devoirs" aria-selected="false" hidden>Devoirs</button>
 <button data-s="depenses" aria-selected="false" hidden>Demandes à la gérante</button>
 <button data-s="auj" aria-selected="false" hidden>Aujourd'hui</button>
@@ -2090,7 +2090,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="ins-ft"><p class="ins-sum">Il recevra sur WhatsApp le lien pour finaliser son inscription lui-même : choix de la formule, puis paiement à l'agence ou par Mixx.</p><span class="tm-err" id="sd-insErr"></span><button class="btn btn-green" type="submit" id="sd-insGo">Enregistrer</button></div>
 <div class="ins-done" id="sd-insDone" hidden></div>
 </form></div>
-<section class="tm-sec" data-s="recevoir" hidden>
+<section class="tm-sec" data-s="recevoir">
 <div class="tm-sub"><div><p class="eyebrow">Un client arrive</p><h3>Accueil client</h3></div><p>Tout pour recevoir un client : la présentation à lui montrer, sa pré-inscription, et le script pour ceux qui écrivent sur WhatsApp.</p></div>
 <div class="rcv-grid">
 <button type="button" class="rcv-tile rcv-pres" id="sd-prNew"><span class="rcv-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M12 17v4M8 21h8"/></svg></span><b>Présentation client</b><small>Les 10 écrans qui donnent envie : le trajet, les prix, les 5 000 F pour commencer.</small></button>
@@ -2104,7 +2104,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="rcv-ecctl"><button class="btn btn-line btn-sm" type="button" id="sd-ecPrev">‹ Précédent</button><span id="sd-ecState">Écran fermé</span><button class="btn btn-line btn-sm" type="button" id="sd-ecNext">Suivant ›</button><button class="linkbtn" type="button" id="sd-ecClose">Fermer la présentation</button></div></div>
 </div>
 </section>
-<section class="tm-sec" data-s="eleves">
+<section class="tm-sec" data-s="eleves" hidden>
 <div class="pc-search"><label class="pc-sbox"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="sd-pcQ" type="search" placeholder="Rechercher un client : N° client (SO12), téléphone ou nom" autocomplete="off"></label></div>
 <div class="pc" id="sd-pc">
 <div class="pc-list">
@@ -4217,7 +4217,7 @@ function init(root) {
       if (DIR()) grCharger(); // pastilles de la gérance dès l'ouverture
       tfCharger(); // pastille « À faire »
       pick(t0);
-      if (AMB()) comCharger(); else sub("eleves");
+      if (AMB()) comCharger(); else sub("recevoir"); // le Secrétariat s'ouvre sur « Accueil client » (27 oct.)
       await msInit();
       { const g = new URLSearchParams(location.search).get("gerance"); if (g && DIR()) { history.replaceState(null, "", location.pathname + location.hash); pick("ger"); grOnglet(g); setTimeout(() => $("#sd-gr").scrollIntoView({ block: "start" }), 300); } }
       { const o = new URLSearchParams(location.search).get("onglet"); if (o && $('#sd-tmTabs [data-t="' + o + '"]') && !$('#sd-tmTabs [data-t="' + o + '"]').hidden) { history.replaceState(null, "", location.pathname + location.hash); pick(o); } }
