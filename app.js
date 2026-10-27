@@ -2112,7 +2112,6 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <section class="tm-sec" data-s="recevoir">
 <div class="tm-sub"><div><p class="eyebrow">Un client arrive</p><h3>Accueil client</h3></div><p>Tout pour recevoir un client : la présentation à lui montrer, sa pré-inscription, et le script pour ceux qui écrivent sur WhatsApp.</p></div>
 <div class="rcv-grid">
-<button type="button" class="rcv-tile rcv-pres" id="sd-prNew"><span class="rcv-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M12 17v4M8 21h8"/></svg></span><b>Présentation client</b><small>À dérouler devant lui : le trajet, les prix, les 5 000 F pour commencer.</small></button>
 <button type="button" class="rcv-tile" id="sd-insNew"><span class="rcv-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="M19 8v6M16 11h6"/></svg></span><b>Nouvelle pré-inscription</b><small>Client au bureau : son nom, son numéro, et son lien part sur WhatsApp.</small></button>
 <button type="button" class="rcv-tile" id="sd-waNew"><span class="rcv-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg></span><b>Client venu de WhatsApp</b><small>Le script d'appel, puis sa pré-inscription ou un message avec l'image des tarifs.</small></button>
 </div>
@@ -5069,7 +5068,7 @@ function init(root) {
     $("#sd-ecPrev") && $("#sd-ecPrev").addEventListener("click", () => ecBC && ecBC.postMessage({ a: "go", d: -1 }));
     $("#sd-ecNext") && $("#sd-ecNext").addEventListener("click", () => { if (ecBC) { ecBC.postMessage({ a: "open" }); ecBC.postMessage({ a: "go", d: 1 }); } });
     $("#sd-ecClose") && $("#sd-ecClose").addEventListener("click", () => ecBC && ecBC.postMessage({ a: "close" }));
-    $("#sd-prNew").addEventListener("click", prOpen);
+    { const b = $("#sd-prNew"); if (b) b.addEventListener("click", prOpen); } // la tuile a été retirée le 27 oct. : la présentation se lance par « Ouvrir l'écran client »
     $("#sd-prX").addEventListener("click", prClose);
     $("#sd-prPrev").addEventListener("click", () => prShow(prIdx - 1));
     $("#sd-prNext").addEventListener("click", () => { if (prIdx === PR.length - 1) prClose(); else prShow(prIdx + 1); });
