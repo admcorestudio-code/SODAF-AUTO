@@ -1081,7 +1081,7 @@ box-shadow:0 5px 0 #054030,0 14px 26px -10px rgba(6,64,45,.75),inset 0 1px 0 rgb
 .ec-tip summary{cursor:pointer;font-weight:600;color:var(--green)}
 .ec-view{margin-top:16px}
 .ec-viewk{margin:0 0 8px;font:600 .9rem var(--f-body);color:#3D444D}
-.ec-frame{overflow:hidden;border-radius:14px;border:1px solid #E3E6E8;box-shadow:0 10px 24px rgba(14,42,78,.14);pointer-events:none;max-width:680px}
+.ec-frame{overflow:hidden;border-radius:14px;border:1px solid #E3E6E8;box-shadow:0 10px 24px rgba(14,42,78,.14);pointer-events:none;width:100%}
 .ec-scale{width:1100px;transform-origin:top left}
 #sodaf-root .pr-ov.ec-static{position:relative;inset:auto;z-index:auto;display:block;width:1100px;height:640px;padding:46px 64px;overflow:hidden}
 .ec-static .pr-stage{cursor:default;max-width:none;height:100%;display:flex;flex-direction:column;justify-content:center;overflow:hidden}
@@ -2117,9 +2117,9 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 </div>
 <div class="card rcv-ec" id="sd-ecCard">
 <p class="eyebrow">Le petit écran face au client</p><h3 style="margin:2px 0 8px">Écran client</h3>
-<p style="margin:0 0 14px">Branche le 2e écran au PC (touche Windows + P, choisis « Étendre »). Touche « Ouvrir l'écran client », glisse la fenêtre sur l'écran du client (touche Windows + Maj + flèche droite), et pilote la présentation d'ici : ton écran à toi reste sur ton travail.</p>
+<p style="margin:0 0 14px">Branche le 2e écran au PC (touche Windows + P, choisis « Étendre »). Touche « Ouvrir l'écran client », glisse la fenêtre sur l'écran du client (touche Windows + Maj + flèche droite), et pilote la présentation d'ici : ton écran à toi reste sur ton travail. <b>La fenêtre peut rester allumée toute la journée</b> : « Terminer » et « Revenir au début » la ramènent au premier écran pour le client suivant (tout seul après 5 minutes sans activité).</p>
 <div class="rcv-ecrow"><button class="btn btn-green" type="button" id="sd-ecOpen">Ouvrir l'écran client</button>
-<div class="rcv-ecctl"><button class="btn btn-line btn-sm" type="button" id="sd-ecPrev">‹ Précédent</button><span id="sd-ecState">Écran fermé</span><button class="btn btn-line btn-sm" type="button" id="sd-ecNext">Suivant ›</button><button class="linkbtn" type="button" id="sd-ecClose">Fermer la présentation</button></div></div>
+<div class="rcv-ecctl"><button class="btn btn-line btn-sm" type="button" id="sd-ecPrev">‹ Précédent</button><span id="sd-ecState">Écran fermé</span><button class="btn btn-line btn-sm" type="button" id="sd-ecNext">Suivant ›</button><button class="linkbtn" type="button" id="sd-ecClose">Revenir au début</button></div></div>
 <details class="ec-tip"><summary>Visiter le site avec lui (immersion)</summary><p style="margin:8px 0 0">Touche <b>Windows + P</b> → <b>« Dupliquer »</b> : ton écran s\'affiche aussi chez lui. Ouvre autosodaf.com en plein écran (touche <b>F11</b>) et fais la visite avec ta souris, sans te lever. Ensuite : F11 pour sortir, puis Windows + P → <b>« Étendre »</b> pour revenir à la présentation pilotée.</p></details>
 <div class="ec-view" id="sd-ecView" hidden><p class="ec-viewk" id="sd-ecViewK"></p><div class="ec-frame"><div class="ec-scale" id="sd-ecScale"></div></div></div>
 </div>
@@ -5043,6 +5043,7 @@ function init(root) {
       $("#sd-prNext").textContent = prIdx === PR.length - 1 ? "Terminer" : "Suivant ›";
       const pc = 5 + (prIdx / (PR.length - 1)) * 78;
       $("#sd-prCar").style.left = pc + "%"; $("#sd-prTrail").style.width = "calc(" + pc + "% + 40px)";
+      if (EC_MODE) { clearTimeout(prShow._idle); if (prIdx > 0) prShow._idle = setTimeout(() => prShow(0), 300000); } // 5 min sans toucher : retour au 1er écran, prêt pour le client suivant
       if (EC_MODE && ecBC) try { ecBC.postMessage({ a: "state", i: prIdx, n: PR.length }); } catch (_) {} };
     const prOpen = () => { PR = prSlides(); $("#sd-prOv").hidden = false; document.body.style.overflow = "hidden"; prShow(0); };
     const prClose = () => { if (EC_MODE) { try { ecBC && ecBC.postMessage({ a: "bye" }); } catch (_) {} window.close(); return; } $("#sd-prOv").hidden = true; document.body.style.overflow = ""; };
@@ -5053,13 +5054,13 @@ function init(root) {
       const t = setInterval(() => { if (!$("#sd-teamPanel").hidden) { clearInterval(t); prOpen(); } }, 400);
       window.addEventListener("beforeunload", () => { try { ecBC && ecBC.postMessage({ a: "bye" }); } catch (_) {} }); }
     if (ecBC) ecBC.onmessage = (ev) => { const m = ev.data || {};
-      if (EC_MODE) { if (m.a === "open" && $("#sd-prOv").hidden) prOpen(); else if (m.a === "go") prShow(prIdx + m.d); else if (m.a === "close") prClose(); }
+      if (EC_MODE) { if (m.a === "open" && $("#sd-prOv").hidden) prOpen(); else if (m.a === "go") prShow(prIdx + m.d); else if (m.a === "close") prShow(0); }
       else { const st = $("#sd-ecState");
         if (m.a === "state" && st) { st.textContent = "Il voit l'écran " + (m.i + 1) + " sur " + m.n;
           const v = $("#sd-ecView"); if (v) { v.hidden = false; $("#sd-ecViewK").textContent = "Ce qu'il voit en ce moment (écran " + (m.i + 1) + " sur " + m.n + ") : lis-le-lui en expliquant."; // le secrétariat lit la même chose que le client
             const sc = $("#sd-ecScale"), fr = sc.parentElement, mi = prSlides();
             sc.innerHTML = '<div class="pr-ov ec-static"><div class="pr-stage">' + (mi[m.i] || "") + "</div></div>";
-            const k = Math.max(0.2, Math.min(0.6, fr.clientWidth / 1100)); sc.style.transform = "scale(" + k + ")"; fr.style.height = Math.round(640 * k) + "px"; } }
+            const k = Math.max(0.2, Math.min(1, fr.clientWidth / 1100)); sc.style.transform = "scale(" + k + ")"; fr.style.height = Math.round(640 * k) + "px"; } }
         if (m.a === "bye" && st) { st.textContent = "Écran fermé"; const v = $("#sd-ecView"); if (v) v.hidden = true; }
         if (m.a === "insReq") { insOpen(); $("#sd-insSrc").value = "agence"; toast("Il est prêt : pré-inscris-le"); } } };
     let ecWin = null;
@@ -5071,16 +5072,16 @@ function init(root) {
     { const b = $("#sd-prNew"); if (b) b.addEventListener("click", prOpen); } // la tuile a été retirée le 27 oct. : la présentation se lance par « Ouvrir l'écran client »
     $("#sd-prX").addEventListener("click", prClose);
     $("#sd-prPrev").addEventListener("click", () => prShow(prIdx - 1));
-    $("#sd-prNext").addEventListener("click", () => { if (prIdx === PR.length - 1) prClose(); else prShow(prIdx + 1); });
+    $("#sd-prNext").addEventListener("click", () => { if (prIdx === PR.length - 1) { if (EC_MODE) prShow(0); else prClose(); } else prShow(prIdx + 1); }); // écran client : « Terminer » revient au début, la fenêtre reste allumée
     $("#sd-prSlide").addEventListener("click", (e) => {
       if (e.target.closest("[data-prins]")) {
         if (EC_MODE) { if (ecBC) ecBC.postMessage({ a: "insReq" });
-          if (!$("#sd-prOv .pr-fb")) { const fb = document.createElement("div"); fb.className = "pr-fb"; fb.innerHTML = "<b>C'est parti !</b><span>Le secrétariat prépare ton dossier.</span>"; $("#sd-prOv").appendChild(fb); setTimeout(() => fb.remove(), 2800); }
+          if (!$("#sd-prOv .pr-fb")) { const fb = document.createElement("div"); fb.className = "pr-fb"; fb.innerHTML = "<b>C'est parti !</b><span>Le secrétariat prépare ton dossier.</span>"; $("#sd-prOv").appendChild(fb); setTimeout(() => { fb.remove(); prShow(0); }, 2800); }
           return; }
         prClose(); insOpen(); $("#sd-insSrc").value = "agence"; return; } // il est prêt : on le pré-inscrit tout de suite
       if (prIdx < PR.length - 1) prShow(prIdx + 1); });
     document.addEventListener("keydown", (e) => { if ($("#sd-prOv").hidden) return;
-      if (e.key === "Escape") prClose(); else if (e.key === "ArrowRight" || e.key === " ") prShow(prIdx + 1); else if (e.key === "ArrowLeft") prShow(prIdx - 1); });
+      if (e.key === "Escape") { if (EC_MODE) prShow(0); else prClose(); } else if (e.key === "ArrowRight" || e.key === " ") prShow(prIdx + 1); else if (e.key === "ArrowLeft") prShow(prIdx - 1); });
     $("#sd-waX").addEventListener("click", waClose);
     $("#sd-waOv").addEventListener("click", (e) => { if (e.target.id === "sd-waOv") waClose(); const f = e.target.closest("[data-wafmt]"); if (f) { waFmt = f.dataset.wafmt; waMaj(); } });
     document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("#sd-waOv").hidden) waClose(); });
