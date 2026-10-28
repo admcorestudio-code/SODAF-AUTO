@@ -1698,12 +1698,6 @@ ${HEAD("Formations", "Nos formations et tarifs", "Chaque formule comprend le cod
 <div class="card offer etu"><span class="tag">Étudiants · 18 ans et plus</span><h3>Tarif étudiant</h3><div class="cat">30 000 F</div><p>La formation complète à prix étudiant.</p><ul><li>Même programme que la formation complète</li><li>Carte d'étudiant de l'année et carte d'identité</li></ul><div class="price"><b>+ 5 000 F d'inscription</b><a class="btn btn-line btn-sm" href="#inscription" data-cat="Permis B" data-msg="Je suis étudiant (18 ans et plus).">Choisir</a></div></div>
 <div class="card offer rapide"><span class="tag">Sait conduire, sans permis</span><h3>Formule rapide</h3><div class="cat">35 000 F</div><p>À ton rythme. Pour ceux qui savent déjà tenir un volant.</p><ul><li>6 séances de conduite de 2 h</li><li>12 cours de code en salle, 2 par semaine</li><li>Entretien mécanique et secourisme</li></ul><div class="price"><b>+ 5 000 F d'inscription</b><a class="btn btn-line btn-sm" href="#inscription" data-cat="Permis B">Choisir</a></div></div>
 </div>
-<div class="card alacarte" style="margin-top:18px"><p class="eyebrow">À la carte</p>
-<div class="acrow"><div><b>Formation théorique seule</b><span> · code, mécanique et secourisme, sans conduite</span></div><strong>25 000 F</strong></div>
-<div class="acrow"><div><b>Séance de conduite en plus</b><span> · si tu n'es pas encore prêt pour l'examen : 2 h, on t'appelle dès qu'une place se libère</span></div><strong>3 000 F</strong></div>
-<div class="acrow"><div><b>Dépôt pour l'examen du permis</b><span> · à la fin de la formation, en plus du prix de la formule</span></div><strong>35 000 F</strong></div>
-</div>
-<p style="margin-top:14px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px"><a class="btn btn-line btn-sm" href="/fiche-renseignement-sodaf.pdf" download>Télécharger la fiche des tarifs (PDF)</a><span style="color:var(--muted);font-size:.92rem">Une page A4, à imprimer ou à partager.</span></p>
 </div>
 <div class="wrap sec">
 <div class="sec-head"><div><p class="eyebrow">Autres formations</p><h2>Remise à niveau, formation privée</h2></div><p>Tu as déjà le permis ? Ou tu veux apprendre seul avec le moniteur ? Prix fixes.</p></div>
@@ -1715,6 +1709,12 @@ ${HEAD("Formations", "Nos formations et tarifs", "Chaque formule comprend le cod
 -->
 <!-- Carte « Parrainage » retirée du site public le 25 oct. 2026 : on en parle aux élèves une fois inscrits (page #parrainage, par lien). -->
 </div>
+<div class="card alacarte" style="margin-top:22px"><p class="eyebrow">À la carte, en plus de ta formule</p>
+<div class="acrow"><div><b>Formation théorique seule</b><span> · code, mécanique et secourisme, sans conduite</span></div><strong>25 000 F</strong></div>
+<div class="acrow"><div><b>Séance de conduite en plus</b><span> · si tu n'es pas encore prêt pour l'examen : 2 h, on t'appelle dès qu'une place se libère</span></div><strong>3 000 F</strong></div>
+<div class="acrow"><div><b>Dépôt pour l'examen du permis</b><span> · à la fin de la formation, en plus du prix de la formule</span></div><strong>35 000 F</strong></div>
+</div>
+<p style="margin-top:14px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px"><a class="btn btn-line btn-sm" href="/fiche-renseignement-sodaf.pdf" download>Télécharger la fiche des tarifs (PDF)</a><span style="color:var(--muted);font-size:.92rem">Une page A4, à imprimer ou à partager.</span></p>
 </div>
 <div class="wrap sec">
 <div class="sec-head"><div><p class="eyebrow">Ta semaine à SODAF</p><h2>Comment se passe la formation</h2></div><p>Tu révises sur le site quand tu veux. En salle, le moniteur explique, corrige et t'entraîne pour l'examen.</p></div>
