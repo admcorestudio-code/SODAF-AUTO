@@ -1597,7 +1597,7 @@ const HTML = `
 <a class="logo" href="#accueil" aria-label="SODAF, accueil">${LOGO("#14171C", "word")}<small class="logo-sub">Auto-école · Togo</small></a>
 <button class="burger" id="sd-burger" aria-expanded="false">Menu</button>
 <nav class="main" id="sd-nav">
-<a href="#accueil" data-nav="accueil">Accueil</a><a href="#formations" data-nav="formations">Formations et tarifs</a><a href="#cours" data-nav="cours">Cours</a><a href="#panneaux" data-nav="panneaux">Panneaux</a><a href="#quiz" data-nav="quiz">Quiz</a><a href="#devoirs" data-nav="devoirs">Devoirs</a><a href="#outils" data-nav="outils">Outils</a><a href="#tirage" data-nav="tirage" class="navtir">Tirage au sort</a><a href="/equipe/" target="sodaf-equipe" class="navteam">Espace équipe</a>
+<a href="#accueil" data-nav="accueil">Accueil</a><a href="#formations" data-nav="formations">Formations et tarifs</a><a href="#cours" data-nav="cours">Cours</a><a href="#panneaux" data-nav="panneaux">Panneaux</a><a href="#quiz" data-nav="quiz">Quiz</a><a href="#devoirs" data-nav="devoirs">Devoirs &amp; Examen</a><a href="#tirage" data-nav="tirage" class="navtir">Tirage au sort</a><a href="/equipe/" target="sodaf-equipe" class="navteam">Espace équipe</a>
 </nav>
 <a class="btn btn-green btn-sm" href="/equipe/" target="sodaf-equipe"><span class="lg">Espace équipe</span><span class="sm">Équipe</span></a>
 </div></header>
@@ -1615,7 +1615,7 @@ const HTML = `
 <a class="ap-tile" href="#quiz"><i aria-hidden="true">✅</i><b>Le quiz</b><span>Séries corrigées, comme à l'examen</span></a>
 <a class="ap-tile" href="#devoirs"><i aria-hidden="true">📝</i><b>Le devoir</b><span>Le devoir de la semaine, envoyé au moniteur</span></a>
 <a class="ap-tile" href="#cours-priorites"><i aria-hidden="true">🎬</i><b>Vidéo</b><span>Qui passe en premier ? (1 min)</span></a>
-<a class="ap-tile" href="#outils"><i aria-hidden="true">🧰</i><b>Les outils</b><span>Distance de freinage, vérifications</span></a>
+<a class="ap-tile" href="#accueil-outils"><i aria-hidden="true">🧰</i><b>Les outils</b><span>Distance de freinage, vérifications</span></a>
 </div>
 <div class="ap-contact"><h3>Une question sur le code ou tes séances ?</h3><p>Le secrétariat répond en semaine de 8 h à 18 h, le samedi matin.</p><div class="acts"><a class="btn btn-wa btn-sm" target="_blank" rel="noopener" href="${WA}">Écrire sur WhatsApp</a><a class="btn btn-line btn-sm" href="tel:+22872544166">Appeler</a><a class="btn btn-line btn-sm" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=6.168785%2C1.225462">Itinéraire</a></div></div>
 </div>
@@ -1686,6 +1686,17 @@ const HTML = `
 <div class="card doc"><div class="file">CA</div><div><span class="tag">Accident</span><h3 style="margin-top:8px">Constat amiable</h3><p>Remplis-le sur place, ne signe que ce qui est exact, garde ton exemplaire.</p><div class="acts"><a class="btn btn-line btn-sm" href="#cours-secourisme">En savoir plus</a></div></div></div>
 </div>
 </div>
+<div class="wrap sec" id="accueil-outils"><div class="sec-head"><div><p class="eyebrow">Outils du conducteur</p><h2>Dans ta poche</h2></div><p>Les calculs du manuel, la vérification du matin et les numéros d'urgence.</p></div></div>
+<div class="wrap sec"><div class="card"><p class="eyebrow">Calculateur</p><h3 style="margin:10px 0 18px">Distance d'arrêt</h3><div class="calc">
+<div><div class="speed"><span id="sd-spv">50</span> <small>km/h</small></div><label for="sd-speed" style="font-size:.9rem;color:var(--muted)">Choisis ta vitesse</label><input id="sd-speed" type="range" min="20" max="130" step="10" value="50"><p style="margin-top:12px;color:var(--muted)" id="sd-spText"></p></div>
+<div class="bars">
+<div><div class="lbl"><span>Route sèche</span><b id="sd-dDry"></b></div><div class="track"><i class="re" id="sd-bDryR"></i><i class="fr" id="sd-bDryF"></i></div></div>
+<div><div class="lbl"><span>Route mouillée</span><b id="sd-dWet"></b></div><div class="track"><i class="re" id="sd-bWetR"></i><i class="frw" id="sd-bWetF"></i></div></div>
+<div class="legend"><span style="--c:var(--yellow)">Réaction (1 s)</span><span style="--c:var(--green)">Freinage sec</span><span style="--c:var(--blue)">Freinage mouillé</span></div>
+</div></div></div></div>
+<div class="wrap sec" id="accueil-outils-check"><div class="card"><div class="sec-head" style="margin-bottom:14px"><div><p class="eyebrow">Avant de partir</p><h3 style="margin-top:10px">Vérification du matin · <span id="sd-ckCount">0</span>/12</h3></div><button class="btn btn-line btn-sm" id="sd-ckReset">Tout décocher</button></div><div class="check" id="sd-check"></div></div></div>
+<div class="wrap sec" id="accueil-outils-urgence"><div class="sec-head"><div><p class="eyebrow">Urgences · Togo</p><h2>Les numéros qui sauvent</h2></div><p>En cas d'accident : Protéger, Alerter, Secourir.</p></div>
+<div class="sos"><div><span>Police, depuis un portable</span><b>161</b><button data-copy="161">Copier</button></div><div><span>Police, depuis un fixe</span><b>117</b><button data-copy="117">Copier</button></div><div><span>Gendarmerie</span><b>172</b><button data-copy="172">Copier</button></div><div><span>Sapeurs-pompiers</span><b>118</b><button data-copy="118">Copier</button></div></div></div>
 <div class="wrap sec"><div class="band">${ZEBRA}<div style="position:relative"><h2 style="font-size:clamp(1.8rem,4vw,2.5rem)">Prêt à prendre le volant ?</h2><p>Pré-inscris-toi en une minute. Le secrétariat te répond sur WhatsApp pour fixer ton premier cours.</p></div><a class="btn btn-green" style="position:relative" href="#inscription">Me pré-inscrire</a></div></div>
 </section>
 
@@ -1752,7 +1763,7 @@ ${HEAD("Manuel officiel SODAF", "Les cours", "Tout ce qui est enseigné en salle
 <div class="wrap" style="margin-top:22px"><div class="card doc doc-cover"><img class="cover" src="/couverture-manuel.jpg" alt="Couverture du manuel de l'élève conducteur SODAF" width="120" height="160" loading="lazy"><div><span class="tag">Manuel officiel · 34 pages</span><h3 style="margin-top:8px">Manuel de l'élève conducteur</h3><p>Code, secourisme et mécanique, en 7 parties :</p>
 <ol class="toc-list"><li><a href="#cours-signalisation">Le code de la route</a></li><li><a href="#cours-intersections">Les intersections</a></li><li><a href="#cours-priorites">Les règles de priorité</a></li><li><a href="#cours-secourisme">Le secourisme routier</a></li><li><a href="#cours-assurance">L'assurance automobile</a></li><li><a href="#cours-conduite">Notions de conduite</a></li><li><a href="#cours-mecanique">Mécanique automobile</a></li></ol>
 <div class="acts"><a class="btn btn-green btn-sm" href="#cours-signalisation">Commencer la lecture</a><a class="btn btn-line btn-sm inscrit-only" target="_blank" rel="noopener" href="${WA}?text=${encodeURIComponent("Bonjour SODAF, je souhaite recevoir le manuel de l'élève en PDF.")}">Recevoir le PDF sur WhatsApp</a></div></div></div></div>
-<div class="wrap lock-top"><div class="lock-cta lock-ban"><p class="eyebrow">Réservé aux inscrits SODAF</p><h3>Les 2 premiers chapitres sont offerts. Tu veux tout le code de la route&nbsp;?</h3><p>Inscris-toi chez SODAF pour <b>5&nbsp;000&nbsp;F</b> : tous les cours, les quiz et les examens blancs sont à toi, tout de suite. Une fois inscrit(e), tu as 2 mois pour commencer à payer ta formation.</p><div class="acts"><a class="btn btn-green btn-sm" href="#inscription">Je m'inscris pour 5 000 F</a><button class="btn btn-line btn-sm" type="button" data-unlock>Déjà inscrit ? Débloquer</button></div></div></div>
+<div class="wrap lock-top"><div class="lock-cta lock-ban"><p class="eyebrow">Réservé aux inscrits SODAF</p><h3>Les 2 premiers chapitres sont offerts. Tu veux tout le code de la route&nbsp;?</h3><p>Inscris-toi chez SODAF pour <b>5&nbsp;000&nbsp;F</b> : tous les cours, les quiz et les examens blancs sont à toi dès ton paiement validé à l'agence, sous 24 h. Une fois inscrit(e), tu as 2 mois pour commencer à payer ta formation.</p><div class="acts"><a class="btn btn-green btn-sm" href="#inscription">Je m'inscris pour 5 000 F</a><button class="btn btn-line btn-sm" type="button" data-unlock>Déjà inscrit ? Débloquer</button></div></div></div>
 <div class="wrap course"><aside class="toc" id="sd-toc" aria-label="Chapitres"></aside><div>
 
 <article class="ch" id="cours-signalisation" data-part="A · Code de la route" data-title="Le code et les signalisations">
@@ -1916,7 +1927,7 @@ ${HEAD("Manuel officiel SODAF", "Les cours", "Tout ce qui est enseigné en salle
 <h4>L'action P.A.S.</h4>
 <p>Si les secours sont déjà là, ne t'arrête pas. Si l'accident vient d'arriver devant toi :</p>
 <div class="mnemo pas"><div>${PAS_ICO.p}<b>Protéger</b>Gare-toi en sécurité. Coupe le contact des véhicules, interdis de fumer. Triangle et feux de détresse.</div><div>${PAS_ICO.a}<b>Alerter</b>Appelle : nature de l'accident, nombre de blessés, véhicules, lieu exact, incendie éventuel.</div><div>${PAS_ICO.s}<b>Secourir</b>Position latérale de sécurité (PLS). Comprime les plaies qui saignent.</div></div>
-<p><a href="#outils-urgence">Numéros d'urgence du Togo</a></p>
+<p><a href="#accueil-outils-urgence">Numéros d'urgence du Togo</a></p>
 </article>
 
 <article class="ch" id="cours-assurance" data-part="E · Assurance" data-title="L'assurance automobile">
@@ -1954,7 +1965,7 @@ ${HEAD("Manuel officiel SODAF", "Les cours", "Tout ce qui est enseigné en salle
 <tr><td>Freinage</td><td>Suit le carré de la vitesse</td><td>Vitesse × 2 → freinage × 4</td></tr>
 <tr><td>Route mouillée</td><td>Freinage doublé</td><td>Charge lourde : plus long</td></tr>
 </tbody></table></div>
-<p><a href="#outils">Essaie le calculateur</a></p>
+<p><a href="#accueil-outils">Essaie le calculateur</a></p>
 </article>
 
 <article class="ch" id="cours-stationnement" data-part="F · Conduite" data-title="Arrêt et stationnement">
@@ -1996,7 +2007,7 @@ ${HEAD("Manuel officiel SODAF", "Les cours", "Tout ce qui est enseigné en salle
 
 <article class="ch" id="cours-tableau" data-part="G · Mécanique" data-title="Contrôles et tableau de bord">
 <header><div><p class="eyebrow">Partie G</p><h2>Contrôles et tableau de bord</h2></div></header>
-<p>Chaque matin, vérifie 12 points. <a href="#outils-check">Ouvrir la check-list</a></p>
+<p>Chaque matin, vérifie 12 points. <a href="#accueil-outils-check">Ouvrir la check-list</a></p>
 <h4>Lot de bord</h4>
 <p>Cric, clé démonte-roue, roue de secours, tournevis, extincteur, trousse de secours, triangle.</p>
 <h4>Documents de bord</h4>
@@ -2029,27 +2040,15 @@ ${HEAD("Révision", "Les panneaux", "Les principaux panneaux du code, classés p
 
 <section class="page" data-page="quiz" hidden>
 ${HEAD("Entraînement", "Le quiz SODAF", "Questions tirées du manuel, avec l'explication et le chapitre à relire. Objectif examen : 35 sur 40.")}
-<div class="wrap sec"><div id="sd-quizLock" hidden><div class="lock-cta"><p class="eyebrow">Réservé aux inscrits SODAF</p><h3>Tu veux la série de 20 et l'examen blanc de 40&nbsp;?</h3><p>Inscris-toi chez SODAF pour <b>5&nbsp;000&nbsp;F</b> : tous les cours, les quiz et les examens blancs sont à toi, tout de suite. Une fois inscrit(e), tu as 2 mois pour commencer à payer ta formation.</p><div class="acts"><a class="btn btn-green btn-sm" href="#inscription">Je m'inscris pour 5 000 F</a><button class="btn btn-line btn-sm" type="button" data-unlock>Déjà inscrit ? Débloquer</button></div></div></div><a class="devlink" href="#devoirs"><b>Devoir de la semaine</b><span>Fais le devoir noté envoyé au moniteur →</span></a><p class="qbest" id="sd-qbest" hidden></p><div class="modes" id="sd-modes"><button data-n="10" class="on">Série rapide · 10</button><button data-n="20">Série moyenne · 20</button><button data-n="40">Examen blanc · 40</button></div><div class="quiz card" id="sd-quiz"></div></div>
+<div class="wrap sec"><div id="sd-quizLock" hidden><div class="lock-cta"><p class="eyebrow">Réservé aux inscrits SODAF</p><h3>Tu veux la série de 20 et l'examen blanc de 40&nbsp;?</h3><p>Inscris-toi chez SODAF pour <b>5&nbsp;000&nbsp;F</b> : tous les cours, les quiz et les examens blancs sont à toi dès ton paiement validé à l'agence, sous 24 h. Une fois inscrit(e), tu as 2 mois pour commencer à payer ta formation.</p><div class="acts"><a class="btn btn-green btn-sm" href="#inscription">Je m'inscris pour 5 000 F</a><button class="btn btn-line btn-sm" type="button" data-unlock>Déjà inscrit ? Débloquer</button></div></div></div><a class="devlink" href="#devoirs"><b>Devoir de la semaine</b><span>Fais le devoir noté envoyé au moniteur →</span></a><p class="qbest" id="sd-qbest" hidden></p><div class="modes" id="sd-modes"><button data-n="10" class="on">Série rapide · 10</button><button data-n="20">Série moyenne · 20</button><button data-n="40">Examen blanc · 40</button></div><div class="quiz card" id="sd-quiz"></div></div>
 </section>
 
 <section class="page" data-page="devoirs" hidden>
-${HEAD("Devoirs", "Le devoir de la semaine", "Un devoir après chaque cours de code en salle : 10 questions sur le thème du cours. Ton résultat part directement au moniteur, et la correction se fait au début du cours suivant.")}
-<div class="wrap sec"><div class="lock-only"><div class="lock-cta"><p class="eyebrow">Réservé aux inscrits SODAF</p><h3>Tu veux faire les devoirs du moniteur&nbsp;?</h3><p>Inscris-toi chez SODAF pour <b>5&nbsp;000&nbsp;F</b> : tous les cours, les quiz et les examens blancs sont à toi, tout de suite. Une fois inscrit(e), tu as 2 mois pour commencer à payer ta formation.</p><div class="acts"><a class="btn btn-green btn-sm" href="#inscription">Je m'inscris pour 5 000 F</a><button class="btn btn-line btn-sm" type="button" data-unlock>Déjà inscrit ? Débloquer</button></div></div></div><div id="sd-dev"></div></div>
+${HEAD("Devoirs &amp; Examen", "Ton entraînement, noté", "Deux choses bien distinctes : le devoir de la semaine, envoyé au moniteur, et l'examen blanc, qui te met dans les conditions du jour J.")}
+<div class="wrap sec" id="devoirs-devoir"><div class="sec-head"><div><p class="eyebrow">1 · Le devoir</p><h2>Le devoir de la semaine</h2></div><p>Un devoir après chaque cours de code en salle : 10 questions sur le thème du cours. Ton résultat part directement au moniteur, et la correction se fait au début du cours suivant.</p></div><div class="lock-only"><div class="lock-cta"><p class="eyebrow">Réservé aux inscrits SODAF</p><h3>Tu veux faire les devoirs du moniteur&nbsp;?</h3><p>Inscris-toi chez SODAF pour <b>5&nbsp;000&nbsp;F</b> : tous les cours, les quiz et les examens blancs sont à toi dès ton paiement validé à l'agence, sous 24 h. Une fois inscrit(e), tu as 2 mois pour commencer à payer ta formation.</p><div class="acts"><a class="btn btn-green btn-sm" href="#inscription">Je m'inscris pour 5 000 F</a><button class="btn btn-line btn-sm" type="button" data-unlock>Déjà inscrit ? Débloquer</button></div></div></div><div id="sd-dev"></div></div>
+<div class="wrap sec" id="devoirs-examen"><div class="sec-head"><div><p class="eyebrow">2 · L'examen</p><h2>L'examen blanc</h2></div><p>Comme le jour de l'examen : 40 questions, sans aide. Il faut 35 bonnes réponses sur 40. Refais-le autant de fois que tu veux.</p></div><div class="grid g3 exam-cards"><div class="card soft"><p class="eyebrow">Le principe</p><h3 style="margin-top:10px">40 questions, comme à SOTOPLA</h3><p style="margin-top:8px">Les questions sont tirées de tout le manuel, dans le désordre. À la fin, tu vois tes erreurs, avec l'explication et le chapitre à relire.</p></div><div class="card soft"><p class="eyebrow">L'objectif</p><h3 style="margin-top:10px">35 sur 40</h3><p style="margin-top:8px">En dessous, tu n'es pas encore prêt : relis les chapitres indiqués et recommence. Au-dessus, deux fois de suite : tu peux y aller.</p></div><div class="card soft"><p class="eyebrow">Le conseil</p><h3 style="margin-top:10px">Au calme, d'une traite</h3><p style="margin-top:8px">Mets-toi dans les conditions : pas de pause, pas de manuel à côté, 20 minutes devant toi.</p></div></div><p style="margin-top:16px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px"><a class="btn btn-green" href="#quiz-examen">Commencer l'examen blanc</a><span style="color:var(--muted);font-size:.92rem">Réservé aux inscrits. Les séries de 10 et 20 pour s'entraîner sont dans le Quiz.</span></p></div>
 </section>
 
-<section class="page" data-page="outils" hidden>
-${HEAD("Outils du conducteur", "Dans ta poche", "Les calculs du manuel, la vérification du matin et les numéros d'urgence.")}
-<div class="wrap sec"><div class="card"><p class="eyebrow">Calculateur</p><h3 style="margin:10px 0 18px">Distance d'arrêt</h3><div class="calc">
-<div><div class="speed"><span id="sd-spv">50</span> <small>km/h</small></div><label for="sd-speed" style="font-size:.9rem;color:var(--muted)">Choisis ta vitesse</label><input id="sd-speed" type="range" min="20" max="130" step="10" value="50"><p style="margin-top:12px;color:var(--muted)" id="sd-spText"></p></div>
-<div class="bars">
-<div><div class="lbl"><span>Route sèche</span><b id="sd-dDry"></b></div><div class="track"><i class="re" id="sd-bDryR"></i><i class="fr" id="sd-bDryF"></i></div></div>
-<div><div class="lbl"><span>Route mouillée</span><b id="sd-dWet"></b></div><div class="track"><i class="re" id="sd-bWetR"></i><i class="frw" id="sd-bWetF"></i></div></div>
-<div class="legend"><span style="--c:var(--yellow)">Réaction (1 s)</span><span style="--c:var(--green)">Freinage sec</span><span style="--c:var(--blue)">Freinage mouillé</span></div>
-</div></div></div></div>
-<div class="wrap sec" id="outils-check"><div class="card"><div class="sec-head" style="margin-bottom:14px"><div><p class="eyebrow">Avant de partir</p><h3 style="margin-top:10px">Vérification du matin · <span id="sd-ckCount">0</span>/12</h3></div><button class="btn btn-line btn-sm" id="sd-ckReset">Tout décocher</button></div><div class="check" id="sd-check"></div></div></div>
-<div class="wrap sec" id="outils-urgence"><div class="sec-head"><div><p class="eyebrow">Urgences · Togo</p><h2>Les numéros qui sauvent</h2></div><p>En cas d'accident : Protéger, Alerter, Secourir.</p></div>
-<div class="sos"><div><span>Police, depuis un portable</span><b>161</b><button data-copy="161">Copier</button></div><div><span>Police, depuis un fixe</span><b>117</b><button data-copy="117">Copier</button></div><div><span>Gendarmerie</span><b>172</b><button data-copy="172">Copier</button></div><div><span>Sapeurs-pompiers</span><b>118</b><button data-copy="118">Copier</button></div></div></div>
-</section>
 
 
 
@@ -2519,7 +2518,7 @@ ${HEAD("Pré-inscription", "Rejoins SODAF", "Envoie ta demande en une minute : e
 <div class="pat-lane" aria-hidden="true"></div>
 <footer class="site"><div class="wrap"><div class="cols">
 <div><a class="logo flogo" href="#accueil" aria-label="SODAF, accueil">${LOGO("#FFFFFF", "ws")}</a><p class="fslogan">L'art de conduire, la force de réussir.</p><p style="margin-top:8px;max-width:40ch">Code, secourisme, mécanique et conduite, en salle et en ligne.</p></div>
-<div><h4>Apprendre</h4><a href="#formations">Formations et tarifs</a><a href="#cours">Les cours</a><a href="#quiz">Le quiz</a><a href="#devoirs">Les devoirs</a><a href="#outils">Les outils</a><a href="#classe" class="fcls">Mode classe <span>Projection</span></a></div>
+<div><h4>Apprendre</h4><a href="#formations">Formations et tarifs</a><a href="#cours">Les cours</a><a href="#quiz">Le quiz</a><a href="#devoirs">Devoirs et examen blanc</a><a href="#accueil-outils">Les outils</a><a href="#classe" class="fcls">Mode classe <span>Projection</span></a></div>
 <div><h4>Secrétariat</h4><span class="phone">72 54 41 66</span><p class="faddr">412 Avenue Akei, Tokoin Tamé, Lomé<br>(en face de la caisse, près de la pharmacie Yembla)</p><p class="faddr">Secrétariat : lun – ven 7 h 30 – 12 h 30 et 14 h 30 – 18 h<br>Samedi 7 h 30 – 12 h et 13 h 30 – 17 h · Dimanche fermé</p><a href="https://www.google.com/maps/search/?api=1&query=6.168785%2C1.225462" target="_blank" rel="noopener">Itinéraire Google Maps</a><a href="#inscription">Pré-inscription</a></div>
 </div><div class="legal"><span>© 2026 SODAF Auto-École · Togo · <a href="/equipe/" target="sodaf-equipe" class="teamlink">Espace équipe</a></span><span>Powered by ADM Core</span></div></div></footer>
 
@@ -7295,6 +7294,7 @@ function init(root) {
     codeVerrou();
     if (!APP && (location.hash === "#documents" || location.hash.startsWith("#equipe"))) { location.replace("/equipe/" + (location.hash.startsWith("#equipe-") ? location.hash : "")); return; }
     const h = (location.hash || (APP ? "#equipe" : ELEVE ? "#appli" : "#accueil")).slice(1);
+    if (h === "outils" || h.startsWith("outils-")) { location.replace("#accueil-" + h); return; } // la page Outils est au bas de l'accueil depuis le 28 oct.
     let p = h.split("-")[0]; if (!pages.includes(p)) p = APP ? "equipe" : ELEVE ? "appli" : "accueil";
     if (!APP && !ELEVE && p === "appli") p = "accueil";
     // Application élève installée : un lien reçu (inscription, parrainage, tirage) s'ouvre directement ici.
@@ -7312,7 +7312,7 @@ function init(root) {
     $$("section.page").forEach((s) => (s.hidden = s.dataset.page !== p));
     $$("#sd-nav [data-nav]").forEach((a) => a.classList.toggle("on", a.dataset.nav === p));
     nav.classList.remove("open"); burger.setAttribute("aria-expanded", "false");
-    if (p === "quiz") showBest();
+    if (p === "quiz") { showBest(); if (h === "quiz-examen") { const b = $('#sd-modes [data-n="40"]'); if (b && !b.classList.contains("on")) b.click(); } }
     if (p === "classe") requestAnimationFrame(() => cls.open(h.split("-")[1]));
     if (p === "cours") requestAnimationFrame(() => requestAnimationFrame(spy));
     let target = null; try { target = p === "inscription" ? null : h.includes("-") && p !== "recu" && p !== "inscrire" ? root.querySelector("#" + h) : null; } catch (e) {}
