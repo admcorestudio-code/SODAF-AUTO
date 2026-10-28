@@ -1597,7 +1597,7 @@ const HTML = `
 <a class="logo" href="#accueil" aria-label="SODAF, accueil">${LOGO("#14171C", "word")}<small class="logo-sub">Auto-école · Togo</small></a>
 <button class="burger" id="sd-burger" aria-expanded="false">Menu</button>
 <nav class="main" id="sd-nav">
-<a href="#accueil" data-nav="accueil">Accueil</a><a href="#formations" data-nav="formations">Formations et tarifs</a><a href="#cours" data-nav="cours">Cours</a><a href="#panneaux" data-nav="panneaux">Panneaux</a><a href="#quiz" data-nav="quiz">Quiz</a><a href="#devoirs" data-nav="devoirs">Devoirs &amp; Examen</a><a href="#tirage" data-nav="tirage" class="navtir">Tirage au sort</a><a href="/equipe/" target="sodaf-equipe" class="navteam">Espace équipe</a>
+<a href="#accueil" data-nav="accueil">Accueil</a><a href="#formations" data-nav="formations">Formations</a><a href="#cours" data-nav="cours">Cours</a><a href="#panneaux" data-nav="panneaux">Panneaux</a><a href="#quiz" data-nav="quiz">Quiz</a><a href="#devoirs" data-nav="devoirs">Devoirs &amp; Examen</a><a href="#tirage" data-nav="tirage" class="navtir">Tirage au sort</a><a href="/equipe/" target="sodaf-equipe" class="navteam">Espace équipe</a>
 </nav>
 <a class="btn btn-green btn-sm" href="/equipe/" target="sodaf-equipe"><span class="lg">Espace équipe</span><span class="sm">Équipe</span></a>
 </div></header>
