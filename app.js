@@ -1714,7 +1714,6 @@ ${HEAD("Formations", "Nos formations et tarifs", "Chaque formule comprend le cod
 <div class="acrow"><div><b>Séance de conduite en plus</b><span> · si tu n'es pas encore prêt pour l'examen : 2 h, on t'appelle dès qu'une place se libère</span></div><strong>3 000 F</strong></div>
 <div class="acrow"><div><b>Dépôt pour l'examen du permis</b><span> · à la fin de la formation, en plus du prix de la formule</span></div><strong>35 000 F</strong></div>
 </div>
-<p style="margin-top:14px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px"><a class="btn btn-line btn-sm" href="/fiche-renseignement-sodaf.pdf" download>Télécharger la fiche des tarifs (PDF)</a><span style="color:var(--muted);font-size:.92rem">Une page A4, à imprimer ou à partager.</span></p>
 </div>
 <div class="wrap sec">
 <div class="sec-head"><div><p class="eyebrow">Ta semaine à SODAF</p><h2>Comment se passe la formation</h2></div><p>Tu révises sur le site quand tu veux. En salle, le moniteur explique, corrige et t'entraîne pour l'examen.</p></div>
@@ -1733,7 +1732,8 @@ ${HEAD("Formations", "Nos formations et tarifs", "Chaque formule comprend le cod
 </div>
 <div class="card prog-pub" id="sd-progPub" style="margin-top:18px"></div>
 </div>
-<div class="wrap sec"><div class="grid g3">
+<div class="wrap sec"><p style="margin:0 0 16px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px"><a class="btn btn-line btn-sm" href="/fiche-renseignement-sodaf.pdf" download>Télécharger la fiche des tarifs (PDF)</a><span style="color:var(--muted);font-size:.92rem">Une page A4, à imprimer ou à partager.</span></p>
+<div class="grid g3">
 <div class="card soft"><p class="eyebrow">Paiement</p><h3 style="margin-top:10px">En 2 tranches</h3><p style="margin-top:8px">La moitié à l'inscription, le reste dès que possible (avant ta première séance de conduite). Un reçu pour chaque paiement.</p><div class="pills"><span>Espèces</span><span>Mixx by Yas (T-Money)</span></div></div>
 <div class="card soft"><p class="eyebrow">Dossier à fournir</p><h3 style="margin-top:10px">Pour l'examen, en fin de formation</h3><ul style="margin:8px 0 0;padding-left:1.1em;color:var(--muted)"><li>Acte de naissance</li><li>Photocopie de la carte d'identité</li><li>2 photos d'identité, format passeport</li></ul><p style="margin-top:10px;font-size:.92rem"><b>Examen du permis</b> : dépôt de 35&nbsp;000&nbsp;F pour l'inscription à l'examen final, à régler à la fin de la formation, en plus du prix de la formation. SODAF dépose ton dossier à SOTOPLA ; SOTOPLA t'envoie ensuite un message avec le lieu et la date de ton examen.</p></div>
 <div class="card soft"><p class="eyebrow">Bon à savoir</p><h3 style="margin-top:10px">Des règles claires</h3><ul style="margin:8px 0 0;padding-left:1.1em;color:var(--muted)"><li>Le droit d'inscription n'est pas remboursable.</li><li>Tu ne peux pas venir à ta séance de conduite ? Préviens la veille avant 18 h : rien n'est perdu. Sans prévenir : rattrapage seulement le mercredi, et au 4e rendez-vous manqué, 3 000 F pour débloquer ta conduite.</li><li>Conduite : du lundi au samedi de 7 h 30 à 9 h 30 et de 10 h à 12 h, et de 15 h 45 à 17 h 45 en semaine. Jusqu'à 3 séances par semaine, tout est à faire dans les 3 mois.</li><li>Secrétariat : du lundi au vendredi de 7 h 30 à 12 h 30 et de 14 h 30 à 18 h, le samedi de 7 h 30 à 12 h et de 13 h 30 à 17 h.</li></ul></div>
