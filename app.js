@@ -1009,7 +1009,8 @@ box-shadow:0 5px 0 #054030,0 14px 26px -10px rgba(6,64,45,.75),inset 0 1px 0 rgb
 .pr-route span+div span,.pr-route li>div>span,.pr-trust>div>div>span,.pr-hours>div>div>span{font-size:clamp(1rem,2vw,1.25rem);line-height:1.45;color:#C9D8EA}
 .pr-trust,.pr-hours{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,3vh,30px) 36px}
 .pr-hours{grid-template-columns:1fr}
-.pr-signs{display:grid;grid-template-columns:repeat(auto-fit,minmax(176px,1fr));gap:14px;margin-top:22px}
+.pr-signs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px 16px;margin-top:22px} /* 28 oct. : 3 par ligne, 2 lignes égales */
+@media (max-width:620px){.pr-signs{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .pr-sign strong.pr-ask{font-size:clamp(1.15rem,1.9vw,1.5rem);line-height:1.15;padding:6px 0 4px;white-space:normal}
 .pr-sign{position:relative;background:#11325C;border:3px solid var(--yellow);border-radius:16px;padding:18px 16px 16px;display:flex;flex-direction:column;gap:3px;box-shadow:0 14px 24px rgba(4,10,18,.45)}
 .pr-sign em{position:absolute;top:-13px;left:14px;background:#fff;color:#0E2A4E;font:700 .74rem var(--f-body);letter-spacing:.05em;font-style:normal;padding:4px 11px;border-radius:999px}
