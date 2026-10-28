@@ -2364,26 +2364,27 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 </div>
 </section>
 
-<section class="page tir cz" data-page="tirage" hidden>
-<div class="cz-hero"><div class="wrap cz-in">
-<p class="cz-k">SODAF Auto-École · Tirage au sort étudiant · En direct sur TikTok</p>
-<div class="cz-machine">
+<section class="page tir cz tn" data-page="tirage" hidden>
+<div class="cz-hero tn-hero"><div class="tn-beam tn-b1" aria-hidden="true"></div><div class="tn-beam tn-b2" aria-hidden="true"></div><div class="tn-stars" aria-hidden="true"></div>
+<div class="wrap cz-in">
+<p class="tn-livepill"><span class="cz-dot" aria-hidden="true"></span><span>En direct sur TikTok&nbsp;· <span class="sd-tirDay">1er</span>, 20&nbsp;h</span></p>
+<div class="cz-machine tn-machine">
 <div class="cz-bulbs" aria-hidden="true"></div>
 <p class="cz-jp">Jackpot étudiant</p>
 <div class="cz-reels" role="img" aria-label="15 000 F"><span class="cz-reel"><span class="cz-strip"><i>0</i><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i><i>0</i><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i><i>0</i><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i></span></span><span class="cz-reel"><span class="cz-strip"><i>0</i><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i><i>0</i><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i><i>0</i><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i></span></span><span class="cz-reel"><span class="cz-strip"><i>0</i><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i><i>0</i><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i><i>0</i><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i></span></span><span class="cz-reel"><span class="cz-strip"><i>0</i><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i><i>0</i><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i><i>0</i><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i></span></span><span class="cz-reel"><span class="cz-strip"><i>0</i><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i><i>0</i><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i><i>0</i><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i></span></span><span class="cz-f">F</span></div>
 <p class="cz-sub">Ta formation complète au permis B <span>au lieu de 60&nbsp;000&nbsp;F</span></p>
 <div class="cz-bulbs cz-b2" aria-hidden="true"></div>
 </div>
-<h1 class="cz-h">Ton permis à <b>15&nbsp;000&nbsp;F</b>. Deux gagnants chaque mois.</h1>
-<div class="cz-ctas"><a class="btn cz-btn" href="#tirage-jouer" data-tirgo>Je tente ma chance</a><span class="cz-free">Gratuit · 1 minute · inscription offerte aux gagnants</span></div>
-<div class="cz-board">
+<h1 class="cz-h tn-h">Ton permis à <b>15&nbsp;000&nbsp;F</b>.<br>Deux gagnants chaque mois.</h1>
+<div class="cz-ctas"><a class="btn cz-btn tn-cta" href="#tirage-jouer" data-tirgo>Je tente ma chance</a><span class="cz-free">Gratuit · 1 minute · réservé aux étudiants</span></div>
+<div class="cz-board tn-board">
 <div class="cz-cell cz-clock"><span class="cz-lab" id="sd-tirClockLab">Tirage en direct dans</span><div class="tir-cd" id="sd-tirCd"><div><b>--</b><span>j</span></div><div><b>--</b><span>h</span></div><div><b>--</b><span>min</span></div><div><b>--</b><span>s</span></div></div></div>
 <div class="cz-cell"><span class="cz-lab">Inscrits ce mois-ci</span><b class="cz-big" id="sd-tirN">…</b></div>
 <div class="cz-cell"><span class="cz-lab">Gagnants</span><b class="cz-big">2</b></div>
 </div>
 </div></div>
 
-<div class="cz-live"><div class="wrap cz-livein"><span class="cz-dot" aria-hidden="true"></span><p><b>Le tirage se joue en direct sur TikTok.</b> Le live commence à <b>19&nbsp;h</b>, les gagnants sont tirés à <b>20&nbsp;h</b> le <span class="sd-tirDay">1er</span>. Abonne-toi pour ne pas le rater.</p><a class="btn cz-tk" id="sd-tirTk" href="#" target="_blank" rel="noopener" hidden>Suivre SODAF sur TikTok</a></div></div>
+<div class="tn-ticker" aria-hidden="true"><div class="tn-tk"><span>2 gagnants chaque mois</span><span>Ton permis à 15 000 F</span><span>Participation gratuite</span><span>Tirage en direct sur TikTok</span><span>Inscription offerte</span><span>T-shirt SODAF</span><span>2 gagnants chaque mois</span><span>Ton permis à 15 000 F</span><span>Participation gratuite</span><span>Tirage en direct sur TikTok</span><span>Inscription offerte</span><span>T-shirt SODAF</span></div></div>
 
 <div class="wrap sec cz-body">
 <div class="cz-sh"><p class="cz-k2">Le lot</p><h2>Plus de 60&nbsp;000&nbsp;F de valeur. Tu paies 15&nbsp;000&nbsp;F.</h2></div>
@@ -2394,13 +2395,36 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="cz-chip"><span class="cz-cv">Offert</span><b>T-shirt SODAF</b><small>Réservé aux gagnants</small></div>
 <div class="cz-chip"><span class="cz-cv">Priorité</span><b>Tes horaires</b><small>Tu réserves tes séances en premier</small></div>
 </div>
-
 </div>
+
+<div class="tn-day"><div class="wrap tn-dayin">
+<div class="tn-daytxt">
+<p class="cz-k2">Le jour J</p><h2>Comment ça se passe, en direct</h2>
+<ol class="tn-tl">
+<li><b>19 h</b><div><strong>Le live commence</strong><span>Sur le TikTok de SODAF. Tout le monde peut regarder, commenter, encourager.</span></div></li>
+<li><b>20 h</b><div><strong>Le tirage</strong><span>L'ordinateur fait défiler tous les inscrits du mois et s'arrête sur 2 noms, au hasard, devant tout le monde.</span></div></li>
+<li><b>Après</b><div><strong>On t'appelle</strong><span>Si c'est toi, tu reçois l'appel et le message WhatsApp le soir même. Tu passes à l'agence sous 48 h avec ta carte d'étudiant.</span></div></li>
+</ol>
+<p class="tn-daynote">Pas de tirage dans l'ombre : les noms défilent à l'écran, le résultat tombe en direct.</p>
+<a class="btn cz-tk" id="sd-tirTk" href="#" target="_blank" rel="noopener" hidden>Suivre SODAF sur TikTok</a>
+</div>
+<div class="tn-phone" aria-live="polite">
+<div class="tn-ph-top"><span class="tn-live"><i aria-hidden="true"></i>EN DIRECT</span><span class="tn-ph-who">SODAF Auto-École</span><span class="tn-ph-v" id="sd-tdViewers">1 240</span></div>
+<div class="tn-ph-screen">
+<p class="tn-ph-k">Tirage du <span class="sd-tirDay">1er</span></p>
+<div class="tn-drum" id="sd-tdName">?</div>
+<p class="tn-ph-sub" id="sd-tdSub">Touche le bouton pour voir une démonstration.</p>
+<div class="tn-feed" id="sd-tdFeed"></div>
+</div>
+<button class="btn cz-btn tn-demo" type="button" data-tirdemo>Voir comment ça se passe</button>
+</div>
+</div></div>
 
 <div class="cz-road" id="tirage-jouer">
 <div class="cz-zebra" aria-hidden="true"></div>
 <div class="wrap cz-play">
 <div class="tir-formcol">
+<div class="tn-ticket" id="sd-tpv" aria-hidden="true"><div class="tn-tkl"><p class="cz-k">Ton ticket</p><b id="sd-tpvNum">N° ????</b><span id="sd-tpvName">Ton nom s'écrit ici</span><small id="sd-tpvUni">Ton université</small></div><div class="tn-tkr"><span>Tirage le <span class="sd-tirDay">1er</span></span><b>15 000 F</b></div></div>
 <form class="tir-form cz-form" id="sd-tirForm" novalidate>
 <div class="tir-fh cz-fh"><div><p class="cz-k">Participation gratuite</p><h2>Je tente ma chance</h2><p id="sd-tirFormSub">Une seule participation par numéro et par mois.</p></div><div class="cz-sign" aria-hidden="true"><b>15 000</b><span>F</span></div></div>
 <div class="cz-st"><span class="cz-km" aria-hidden="true">1</span><div class="cz-stb"><p class="cz-stt">Qui es-tu ?</p>
@@ -2435,7 +2459,6 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 </div>
 
 <div class="wrap sec cz-body cz-after">
-
 <div class="cz-sh"><p class="cz-k2">Questions</p><h2>Ce qu'on nous demande</h2></div>
 <div class="tir-faq">
 <details><summary>C'est vraiment gratuit ?</summary><p>Oui. Participer ne coûte rien. Seuls les 2 gagnants paient 15 000 F, s'ils veulent faire leur formation.</p></details>
@@ -2456,6 +2479,8 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <li>Les informations et la photo de la carte servent uniquement à organiser le tirage. Elles ne sont jamais publiées ni transmises.</li>
 </ol></details>
 </div>
+<div class="tn-sticky" id="sd-tnSticky" hidden><div><b>Ton permis à 15 000 F</b><span>Gratuit · 1 minute</span></div><a class="btn cz-btn" href="#tirage-jouer" data-tirgo>Je tente ma chance</a></div>
+<canvas class="tn-confetti" id="sd-tnConf" hidden></canvas>
 </section>
 
 <section class="page" data-page="parrainage" hidden>
@@ -7144,11 +7169,44 @@ function init(root) {
     return { ouvert, fin };
   }
   async function tirPage() {
-    tirRouleaux(); if (TIKTOK) { const tk = $("#sd-tirTk"); tk.href = TIKTOK; tk.hidden = false; }
+    tirRouleaux(); tnInit(); if (TIKTOK) { const tk = $("#sd-tirTk"); tk.href = TIKTOK; tk.hidden = false; }
     clearInterval(TIR.t); tirHorloge(); TIR.t = setInterval(() => { if ($('section.page[data-page="tirage"]').hidden) { clearInterval(TIR.t); return; } tirHorloge(); }, 1000);
     try { const r = await DB.q("rpc/tirage_infos", { method: "POST", body: {}, anon: true }); TIR.infos = r; $("#sd-tirN").textContent = r && r.participants != null ? r.participants : "—"; if (r && r.ouvert === false) tirFerme(); } catch (e) { $("#sd-tirN").textContent = "—"; }
     if (!tirOuvert()) tirFerme();
     const deja = S.get("tirTicket", null); if (deja && deja.c === (TIR.infos && TIR.infos.campagne)) tirTicket(deja.n, true, deja.qui);
+  }
+  // ---- Nuit du tirage (28 oct.) : ticket qui se remplit en direct, démo du tirage, barre collante, confettis
+  const TN = { init: false, demo: null, conf: null };
+  const TN_NOMS = ["Kossi A.", "Afi M.", "Yao K.", "Akouvi D.", "Komlan T.", "Edem S.", "Sena B.", "Mawuli G.", "Ayélé L.", "Koffi N.", "Dzifa E.", "Essi F.", "Kodjo R.", "Abra W.", "Sélom P.", "Mensah V."];
+  const TN_MSG = ["Je suis là", "Bonne chance à tous", "Allez SODAF", "On attend le nom", "Moi j'ai le ticket 0042", "Mon frère est inscrit", "Vite le tirage", "Lomé représente", "C'est mon mois", "Premier live que je regarde"];
+  function tnInit() {
+    if (TN.init) return; TN.init = true;
+    const maj = () => { const n = ($("#sd-tirNom").value.trim().toUpperCase() + " " + $("#sd-tirPre").value.trim()).trim(), u = $("#sd-tirUniv").value.trim();
+      $("#sd-tpvName").textContent = n || "Ton nom s'écrit ici"; $("#sd-tpvUni").textContent = u || "Ton université"; $("#sd-tpv").classList.toggle("on", !!n); };
+    ["sd-tirNom", "sd-tirPre", "sd-tirUniv"].forEach((id) => $("#" + id).addEventListener("input", maj));
+    $("[data-tirdemo]").addEventListener("click", tnDemo);
+    if ("IntersectionObserver" in window) { let heroOut = false, formIn = false; const bar = $("#sd-tnSticky"), upd = () => { bar.hidden = !(heroOut && !formIn); const wf = $(".wa-float"); if (wf) wf.classList.toggle("tn-under", !bar.hidden); };
+      new IntersectionObserver((es) => { heroOut = !es[0].isIntersecting; upd(); }, { threshold: 0 }).observe($(".tn-cta"));
+      new IntersectionObserver((es) => { formIn = es[0].isIntersecting; upd(); }, { threshold: 0.05 }).observe($("#tirage-jouer")); }
+  }
+  function tnDemo() {
+    if (TN.demo) return; const nm = $("#sd-tdName"), sub = $("#sd-tdSub"), feed = $("#sd-tdFeed"), btn = $("[data-tirdemo]"), vw = $("#sd-tdViewers");
+    btn.disabled = true; btn.textContent = "Tirage en cours…"; feed.innerHTML = ""; nm.classList.remove("win"); sub.textContent = "L'ordinateur fait défiler les inscrits…";
+    const pool = TN_NOMS.slice().sort(() => Math.random() - .5), g = [pool[0], pool[1]]; let i = 0, t0 = Date.now(), k = 0;
+    const bulle = () => { const d = document.createElement("div"); d.className = "tn-msg"; d.innerHTML = "<b>" + TN_NOMS[Math.floor(Math.random() * TN_NOMS.length)].split(" ")[0] + "</b> " + TN_MSG[k++ % TN_MSG.length]; feed.appendChild(d); while (feed.children.length > 4) feed.firstChild.remove(); vw.textContent = (1240 + Math.floor((Date.now() - t0) / 90)).toLocaleString("fr-FR"); };
+    const tour = (fin, cb) => { const step = () => { const el = Date.now() - t0; if (el < fin) { nm.textContent = TN_NOMS[i++ % TN_NOMS.length]; if (Math.random() < .35) bulle(); setTimeout(step, 60 + Math.pow(el / fin, 3) * 520); } else cb(); }; step(); };
+    TN.demo = true;
+    tour(3200, () => { nm.textContent = g[0]; nm.classList.add("win"); sub.textContent = "Premier gagnant : " + g[0] + " !"; tnConfetti($(".tn-ph-screen"));
+      setTimeout(() => { nm.classList.remove("win"); t0 = Date.now(); sub.textContent = "Et le deuxième…";
+        tour(2600, () => { nm.textContent = g[1]; nm.classList.add("win"); sub.textContent = "Deuxième gagnant : " + g[1] + " ! On les appelle tout de suite."; tnConfetti($(".tn-ph-screen"));
+          setTimeout(() => { btn.disabled = false; btn.textContent = "Revoir la démo"; TN.demo = null; sub.textContent = "Ceci est une démonstration : le vrai tirage, c'est le " + $(".sd-tirDay").textContent + " à 20 h."; }, 1800); }); }, 2200); });
+  }
+  function tnConfetti(dans) {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const cv = $("#sd-tnConf"), r = (dans || document.body).getBoundingClientRect(); cv.hidden = false; cv.width = innerWidth; cv.height = innerHeight;
+    const x = cv.getContext("2d"), P = []; for (let i = 0; i < 90; i++) P.push({ x: r.left + r.width / 2, y: r.top + r.height * .45, vx: (Math.random() - .5) * 14, vy: -Math.random() * 12 - 4, s: 5 + Math.random() * 6, c: ["#F6C232", "#FFFFFF", "#FF2D55", "#2FB673"][i % 4], a: Math.random() * 6 });
+    const t0 = Date.now(); const go = () => { x.clearRect(0, 0, cv.width, cv.height); P.forEach((p) => { p.vy += .35; p.x += p.vx; p.y += p.vy; p.a += .2; x.save(); x.translate(p.x, p.y); x.rotate(p.a); x.fillStyle = p.c; x.fillRect(-p.s / 2, -p.s / 2, p.s, p.s * .6); x.restore(); });
+      if (Date.now() - t0 < 2200) requestAnimationFrame(go); else { x.clearRect(0, 0, cv.width, cv.height); cv.hidden = true; } }; go();
   }
   function tirFerme() {
     const c = tirCampagne(); $("#sd-tirForm").hidden = true; const box = $("#sd-tirClosed"); box.hidden = false;
@@ -7158,7 +7216,7 @@ function init(root) {
     TIR.dl = { n, qui: qui || null };
     const c = tirCampagne(), num = String(n).padStart(4, "0"), url = location.origin + "/#tirage";
     const msg = "Jackpot étudiant SODAF : le permis à 15 000 F au lieu de 60 000 F. 2 gagnants tirés au sort en direct sur TikTok le 1er " + TMOIS[c.m] + " à 20 h. C'est gratuit, inscris-toi ici : " + url;
-    $("#sd-tirForm").hidden = true; const box = $("#sd-tirDone"); box.hidden = false;
+    $("#sd-tirForm").hidden = true; const box = $("#sd-tirDone"); box.hidden = false; { const pv = $("#sd-tpv"); if (pv) { pv.classList.add("on"); $("#sd-tpvNum").textContent = "N° " + num; if (qui) { $("#sd-tpvName").textContent = (qui.nom + " " + qui.pre).trim(); $("#sd-tpvUni").textContent = qui.uni || ""; } } if (!deja) setTimeout(() => tnConfetti($("#sd-tpv")), 250); }
     box.innerHTML = '<div class="tir-myticket"><div class="mt-l"><p class="cz-k">Ton ticket</p><b>N° ' + num + '</b><span>Tirage le 1er ' + TMOIS[c.m] + ' à 20 h, en direct sur TikTok</span></div><div class="mt-r"><span>' + (deja ? "Tu es déjà inscrit ce mois-ci" : "Participation enregistrée") + '</span><b>Bonne chance</b></div></div>' +
       '<p class="tir-donep">Suis le live sur TikTok le jour du tirage. On t\'appelle et on t\'écrit aussi sur WhatsApp si tu gagnes. Plus tes amis jouent, plus on parle de SODAF dans ton université : partage le tirage.</p>' +
       '<div class="tir-dl"><button class="btn cz-btn" type="button" data-tirdl><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>Télécharger mon ticket</button><small>Garde-le dans ta galerie : il sert de preuve le jour du tirage.</small></div>' +
@@ -7822,6 +7880,67 @@ html{scrollbar-gutter:stable}
 #sodaf-root .tir-dl{display:grid;justify-items:center;gap:8px;margin-top:18px;text-align:center}#sodaf-root .tir-dl .cz-btn{width:100%;justify-content:center;gap:10px}#sodaf-root .tir-dl small{color:#9AA5B0;font-size:.84rem}
 #sodaf-root .cz-alt{color:#14181D}#sodaf-root .cz-altg b{color:#1A1408}
 @media (max-width:980px){#sodaf-root .cz-chips{grid-template-columns:repeat(3,minmax(0,1fr))}#sodaf-root .cz-play{grid-template-columns:1fr}}
+/* ---- Nuit du tirage (28 oct.) ---- */
+#sodaf-root .tn-hero{min-height:calc(100svh - 66px);display:flex;align-items:center;padding:34px 0 48px}
+#sodaf-root .tn-beam{position:absolute;top:-30%;width:42vw;height:160%;pointer-events:none;background:linear-gradient(180deg,rgba(246,194,50,.16),rgba(246,194,50,0) 70%);transform-origin:50% 0;filter:blur(2px);opacity:.9}
+#sodaf-root .tn-b1{left:4%;transform:rotate(-16deg);animation:tnBeam 9s ease-in-out infinite alternate}
+#sodaf-root .tn-b2{right:4%;transform:rotate(16deg);animation:tnBeam 11s ease-in-out infinite alternate-reverse}
+@keyframes tnBeam{from{transform:rotate(-20deg)}to{transform:rotate(-6deg)}}
+#sodaf-root .tn-stars{position:absolute;inset:0;pointer-events:none;background:radial-gradient(1.5px 1.5px at 12% 18%,rgba(255,255,255,.7),transparent 60%),radial-gradient(1.5px 1.5px at 78% 12%,rgba(255,255,255,.6),transparent 60%),radial-gradient(1px 1px at 55% 30%,rgba(255,255,255,.5),transparent 60%),radial-gradient(1.5px 1.5px at 30% 60%,rgba(255,255,255,.4),transparent 60%),radial-gradient(1px 1px at 90% 55%,rgba(255,255,255,.5),transparent 60%),radial-gradient(1px 1px at 68% 80%,rgba(255,255,255,.35),transparent 60%)}
+#sodaf-root .tn-livepill{display:inline-flex;align-items:center;gap:9px;margin:0;padding:8px 16px;border-radius:999px;border:1px solid rgba(255,45,85,.6);background:rgba(255,45,85,.12);color:#fff;font:700 .8rem var(--f-ui);letter-spacing:.05em;text-transform:uppercase;text-align:center;max-width:100%}
+#sodaf-root .tn-livepill>span{line-height:1.3}
+#sodaf-root .tn-machine{box-shadow:0 0 0 1px rgba(246,194,50,.35),0 30px 80px rgba(0,0,0,.6),0 0 90px rgba(246,194,50,.25);animation:tnGlow 3.2s ease-in-out infinite}
+@keyframes tnGlow{0%,100%{box-shadow:0 0 0 1px rgba(246,194,50,.35),0 30px 80px rgba(0,0,0,.6),0 0 60px rgba(246,194,50,.18)}50%{box-shadow:0 0 0 1px rgba(246,194,50,.6),0 30px 80px rgba(0,0,0,.6),0 0 120px rgba(246,194,50,.38)}}
+#sodaf-root .tn-h{font-size:clamp(2.2rem,6vw,4.2rem)}
+#sodaf-root .tn-cta{font-size:1.15rem;padding:16px 34px;animation:tnPulse 2.4s ease-in-out infinite}
+@keyframes tnPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+#sodaf-root .tn-ticker{overflow:hidden;background:var(--cz-gold);color:#141005;border-top:3px solid #141005;border-bottom:3px solid #141005}
+#sodaf-root .tn-tk{display:flex;gap:0;width:max-content;animation:tnTick 28s linear infinite}
+#sodaf-root .tn-tk span{padding:10px 26px;font:800 .9rem var(--f-ui);letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}
+#sodaf-root .tn-tk span::after{content:"·";margin-left:26px;opacity:.5}
+@keyframes tnTick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+#sodaf-root .tn-day{background:linear-gradient(180deg,#07090B,#0B1A14 60%,#07090B);color:var(--cz-ink);padding:64px 0}
+#sodaf-root .tn-dayin{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center}
+#sodaf-root .tn-daytxt h2{color:#fff;font-size:clamp(1.9rem,4vw,2.8rem);margin:8px 0 22px}
+#sodaf-root .tn-tl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:18px}
+#sodaf-root .tn-tl li{display:grid;grid-template-columns:76px 1fr;gap:16px;align-items:start}
+#sodaf-root .tn-tl b{font:800 1.5rem var(--f-display);color:var(--cz-gold);line-height:1.1}
+#sodaf-root .tn-tl strong{display:block;color:#fff;font:700 1.15rem var(--f-display);margin-bottom:3px}
+#sodaf-root .tn-tl span{color:var(--cz-mut);line-height:1.5}
+#sodaf-root .tn-daynote{margin:22px 0 14px;padding:12px 16px;border-left:3px solid var(--cz-gold);color:#EAE6D9;background:rgba(246,194,50,.08);border-radius:0 12px 12px 0}
+#sodaf-root .tn-phone{justify-self:center;width:min(100%,340px);background:#0C0F12;border:10px solid #1C232A;border-radius:38px;padding:14px 12px 16px;box-shadow:0 40px 90px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.06);display:flex;flex-direction:column;gap:12px}
+#sodaf-root .tn-ph-top{display:flex;align-items:center;gap:10px;font:600 .78rem var(--f-ui);color:#C9D0D6}
+#sodaf-root .tn-live{display:inline-flex;align-items:center;gap:6px;background:#FF2D55;color:#fff;padding:3px 9px;border-radius:6px;font:800 .7rem var(--f-ui);letter-spacing:.08em}
+#sodaf-root .tn-live i{width:6px;height:6px;border-radius:50%;background:#fff;animation:tnBlink 1s steps(2) infinite}
+@keyframes tnBlink{to{opacity:.2}}
+#sodaf-root .tn-ph-who{flex:1}#sodaf-root .tn-ph-v{opacity:.8}#sodaf-root .tn-ph-v::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#C9D0D6;margin-right:5px;vertical-align:middle;opacity:.6}
+#sodaf-root .tn-ph-screen{position:relative;min-height:330px;border-radius:22px;background:radial-gradient(400px 220px at 50% 0,rgba(246,194,50,.22),transparent 70%),linear-gradient(180deg,#141A20,#07090B);padding:22px 14px 14px;display:flex;flex-direction:column;align-items:center;text-align:center;overflow:hidden}
+#sodaf-root .tn-ph-k{margin:0;font:800 .72rem var(--f-ui);letter-spacing:.16em;text-transform:uppercase;color:var(--cz-gold)}
+#sodaf-root .tn-drum{margin:18px 0 10px;min-height:66px;display:grid;place-items:center;padding:10px 18px;border-radius:14px;background:#fff;color:#111;font:800 1.7rem var(--f-display);min-width:200px;transition:transform .2s ease,background .3s ease}
+#sodaf-root .tn-drum.win{background:var(--cz-gold);transform:scale(1.08);box-shadow:0 0 40px rgba(246,194,50,.6)}
+#sodaf-root .tn-ph-sub{margin:0;font-size:.9rem;color:#C9D0D6;min-height:2.6em}
+#sodaf-root .tn-feed{margin-top:auto;width:100%;display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+#sodaf-root .tn-msg{background:rgba(255,255,255,.1);color:#fff;padding:6px 10px;border-radius:12px;font-size:.8rem;text-align:left;animation:tnUp .35s ease both}
+#sodaf-root .tn-msg b{color:var(--cz-gold);margin-right:4px}
+@keyframes tnUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+#sodaf-root .tn-demo{width:100%;justify-content:center}
+#sodaf-root .tn-ticket{display:flex;justify-content:space-between;align-items:stretch;gap:14px;margin-bottom:16px;padding:16px 18px;border-radius:18px;background:linear-gradient(135deg,#1C232A,#0F1316);border:2px dashed rgba(246,194,50,.45);color:#fff;opacity:.75;transition:opacity .3s ease,box-shadow .3s ease}
+#sodaf-root .tn-ticket.on{opacity:1;border-style:solid;box-shadow:0 0 40px rgba(246,194,50,.25)}
+#sodaf-root .tn-tkl b{display:block;font:800 2rem var(--f-display);line-height:1;margin:4px 0 6px}
+#sodaf-root .tn-tkl span{display:block;font:700 1.05rem var(--f-display)}
+#sodaf-root .tn-tkl small{display:block;color:var(--cz-mut);margin-top:2px}
+#sodaf-root .tn-tkr{display:flex;flex-direction:column;justify-content:center;align-items:flex-end;text-align:right;border-left:1px dashed rgba(255,255,255,.2);padding-left:14px}
+#sodaf-root .tn-tkr span{font-size:.8rem;color:var(--cz-mut)}#sodaf-root .tn-tkr b{font:800 1.5rem var(--f-display);color:var(--cz-gold)}
+#sodaf-root .tn-sticky{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:rgba(7,9,11,.94);backdrop-filter:blur(8px);border-top:2px solid var(--cz-gold);color:#fff}
+#sodaf-root .tn-sticky[hidden]{display:none}
+#sodaf-root .wa-float.tn-under{transform:translateY(-78px)}
+#sodaf-root .tn-sticky b{display:block;font:800 1rem var(--f-display)}#sodaf-root .tn-sticky span{font-size:.78rem;color:var(--cz-mut)}
+#sodaf-root .tn-sticky .cz-btn{padding:11px 18px;white-space:nowrap}
+#sodaf-root .tn-confetti{position:fixed;inset:0;z-index:70;pointer-events:none}
+#sodaf-root .tn-confetti[hidden]{display:none}
+@media (min-width:900px){#sodaf-root .tn-sticky{display:none}}
+@media (max-width:900px){#sodaf-root .tn-dayin{grid-template-columns:1fr;gap:30px}#sodaf-root .tn-beam{width:70vw}}
+@media (prefers-reduced-motion:reduce){#sodaf-root .tn-beam,#sodaf-root .tn-machine,#sodaf-root .tn-cta,#sodaf-root .tn-tk{animation:none}}
 @media (max-width:600px){#sodaf-root .cz-hero{padding:30px 0 40px}#sodaf-root .cz-machine{padding:16px 10px 12px;border-radius:20px}#sodaf-root .cz-reels{gap:5px}#sodaf-root .cz-board{grid-template-columns:1fr 1fr}#sodaf-root .cz-clock{grid-column:1/-1}#sodaf-root .cz .tir-cd div{min-width:0;flex:1}#sodaf-root .cz-chips{grid-template-columns:repeat(2,minmax(0,1fr))}#sodaf-root .cz-c1{grid-column:1/-1}#sodaf-root .cz .tir-form,#sodaf-root .cz .tir-done,#sodaf-root .cz .tir-closed{padding:20px 16px}#sodaf-root .cz-btn{width:100%;justify-content:center}}
 @media (prefers-reduced-motion:reduce){#sodaf-root .cz-bulbs,#sodaf-root .cz-btn::after,#sodaf-root .cz-dot{animation:none}}
 /* ===== Tirage au sort étudiant : asphalte, marquage jaune, ticket gagnant ===== */
