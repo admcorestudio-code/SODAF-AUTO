@@ -2,7 +2,8 @@
 // Appelée uniquement par la base (déclencheurs de la migration 0028) avec un secret partagé.
 // Types : message (canal), preinscription (formulaire du site), inscription (finalisée en ligne), connexion (lieu + alerte nouvel appareil), test (bouton « Tester »), geotest (contrôle du lieu),
 // gérance : demande, demande_equipe (équipe → gérante), demande_reponse, decision, decision_avis, rapport, rapport_rappel (dimanche 18 h).
-// reçus : annulation (demande du secrétariat → gérante ; réponse → secrétariat).
+// reçus : annulation (demande du secrétariat → direction ; réponse → secrétariat).
+// 30 oct. (0085) : plus de gérante. Rapport → secrétariat ; prix à trouver et refus → la personne de la tâche.
 // planning : agence (0080, veille à 18 h : qui remplace le secrétariat).
 // mécanique : entretien (jeudi 9 h, entretiens à prévoir samedi, liste calculée par prive.entretiens_a_prevoir).
 // À faire (0062, 0063, 0072 : la facture termine la tâche) : tache (quoi : nouvelle, prix, accord, refus, argent, pas_recu, numero_bon, faite, relance).
@@ -113,7 +114,7 @@ Deno.serve(async (req) => {
     const c = r.chiffres || {};
     note = { title: "Rapport de la semaine du " + new Date(r.semaine).toLocaleDateString("fr-FR", { day: "numeric", month: "long", timeZone: "UTC" }), body: (c.encaisse != null ? milliers(c.encaisse) + " F encaissés" : "Rapport reçu") + (c.inscriptions != null ? " · " + c.inscriptions + " inscription" + (c.inscriptions > 1 ? "s" : "") : ""), url: "/equipe/?gerance=rapports", tag: "rap-" + p.id };
   } else if (p.type === "rapport_rappel") {
-    roles = ["gerant"];
+    roles = ["secretariat"];
     note = { title: "Rapport de la semaine", body: "Les chiffres sont prêts. Ajoute tes remarques et envoie le rapport à la direction.", url: "/equipe/?gerance=rapports", tag: "rap-rappel" };
   } else if (p.type === "entretien") {
     const l = Array.isArray(p.liste) ? p.liste : [];
@@ -124,23 +125,23 @@ Deno.serve(async (req) => {
   } else if (p.type === "annulation") {
     const [r] = await sql`select numero, eleve_nom, montant, annul_dem_motif from public.paiements where id = ${p.id ?? 0}`;
     if (!r) return json({ envoyes: 0, raison: "reçu introuvable" });
-    roles = ["gerant"];
+    roles = ["admin"];
     const corps = "Reçu n° " + r.numero + " · " + r.eleve_nom + " · " + milliers(r.montant) + " F. Raison : " + (r.annul_dem_motif || "");
     note = { title: "Annulation de reçu à confirmer", body: corps.length > 180 ? corps.slice(0, 177) + "…" : corps, url: "/equipe/?gerance=recus", tag: "annul-" + p.id };
   } else if (p.type === "annulation_reponse") {
     const [r] = await sql`select numero, eleve_nom, annule, annul_refus_motif, annul_dem_par from public.paiements where id = ${p.id ?? 0}`;
     if (!r || !r.annul_dem_par) return json({ envoyes: 0, raison: "reçu introuvable" });
     seulement = r.annul_dem_par;
-    note = { title: r.annule ? "Reçu annulé · " + r.numero : "Annulation refusée · " + r.numero, body: r.annule ? r.eleve_nom + " : la gérante a confirmé. Refais le bon reçu." : r.eleve_nom + " : le reçu reste valable." + (r.annul_refus_motif ? " " + r.annul_refus_motif : ""), url: "/equipe/", tag: "annul-" + p.id };
+    note = { title: r.annule ? "Reçu annulé · " + r.numero : "Annulation refusée · " + r.numero, body: r.annule ? r.eleve_nom + " : la direction a confirmé. Refais le bon reçu." : r.eleve_nom + " : le reçu reste valable." + (r.annul_refus_motif ? " " + r.annul_refus_motif : ""), url: "/equipe/", tag: "annul-" + p.id };
   } else if (p.type === "tache") {
     const [t] = await sql`select t.titre, t.carburant, t.montant, t.paye_montant, t.paye_moyen, t.pas_recu_note, t.accord_note, t.par, t.pour, pp.role as pour_role, pa.role as par_role
                             from public.taches t join public.profils pp on pp.id = t.pour join public.profils pa on pa.id = t.par where t.id = ${p.id ?? 0}`;
     if (!t) return json({ envoyes: 0, raison: "tâche introuvable" });
     const court = (x: string) => (x.length > 180 ? x.slice(0, 177) + "…" : x), url = "/equipe/?onglet=taf", tag = "tache-" + p.id, qui = ROLE[t.pour_role] || "Équipe";
     if (p.quoi === "nouvelle") { seulement = t.pour; note = { title: "Nouvelle tâche · " + (t.par_role === "admin" ? "de la direction" : t.par_role === "gerant" ? "de la gérante" : "du " + (ROLE[t.par_role] || "équipe").toLowerCase()), body: court(t.titre), url, tag }; }
-    else if (p.quoi === "prix") { roles = ["gerant"]; note = { title: "Prix à trouver", body: court(t.titre + " · Trouve le prix et le devis, puis envoie-les à la direction."), url, tag }; }
+    else if (p.quoi === "prix") { seulement = t.pour; note = { title: "Prix à trouver", body: court(t.titre + " · Trouve le prix et le devis, puis envoie-les à la direction."), url, tag }; }
     else if (p.quoi === "accord") { roles = ["admin"]; note = { title: "Prix trouvé : " + milliers(t.montant) + " F", body: court(t.titre + " · Accorde ou refuse."), url, tag }; }
-    else if (p.quoi === "refus") { roles = ["gerant"]; note = { title: "Refusé par la direction", body: court(t.titre + (t.accord_note ? " · " + t.accord_note : "")), url, tag }; }
+    else if (p.quoi === "refus") { seulement = t.pour; note = { title: "Refusé par la direction", body: court(t.titre + (t.accord_note ? " · " + t.accord_note : "")), url, tag }; }
     else if (p.quoi === "argent") { seulement = t.pour; note = { title: "Argent envoyé : " + milliers(t.paye_montant) + " F", body: court(t.titre + (t.carburant ? " · Fais le plein, puis touche « Fait »." : " · Une fois fait (achat, travaux…), ajoute la facture : c'est terminé.")), url, tag }; }
     else if (p.quoi === "pas_recu") { roles = ["admin"]; note = { title: "Argent pas reçu · " + qui, body: court(t.titre + (t.pas_recu_note ? " · " + t.pas_recu_note : "")), url, tag }; }
     else if (p.quoi === "faite") { seulement = t.par; note = { title: "Tâche faite · " + qui, body: court(t.titre), url, tag }; }
