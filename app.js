@@ -4273,7 +4273,7 @@ function init(root) {
       $('#sd-tmTabs [data-t="com"]').hidden = !(DIR() || AMB()); $('#sd-tmTabs [data-t="mon"]').hidden = AMB() || me.role === "gerant"; { const vb = $('.mn-tabs [data-mnp="voit"]'); if (vb) vb.hidden = me.role !== "moniteur"; let k0 = null; try { k0 = localStorage.getItem("sodaf.mn.ong"); } catch (e) {} mnOnglet(k0 || "auj"); } $('#sd-tmTabs [data-t="mec"]').hidden = AMB(); // Communication : l'Ambassadeur, la gérante, la direction
       { const tf = $("#sd-tfSub"); if (tf) tf.textContent = me.role === "admin" ? "Tâches et paiements" : me.role === "gerant" ? "Tâches de l'équipe" : "Tes tâches"; }
       $('#sd-tmTabs [data-t="ger"]').hidden = !GES(); { const gt = $('#sd-tmTabs [data-t="ger"]'); gt.querySelector("small").textContent = me.role === "secretariat" ? "Rapport, frais, tirage, parrainage" : me.role === "admin" ? "Dépenses, reçus, rapport, parrains" : "Demandes, décisions, rapport"; } // onglet Gestion
-      $("#sd-grRole").textContent = me.role === "gerant" ? "Ton espace de gérante : demande l'accord de la direction, note tes décisions, envoie ton rapport de la semaine. Tu as aussi les chiffres de l'agence, les reçus et le moniteur." : me.role === "secretariat" ? "Ce que tu envoies à la direction : le rapport de la semaine (samedi ou dimanche) et les petits frais. Tu vérifies aussi le gagnant du tirage et tu paies les parrains." : "Les dépenses à accorder, les reçus à annuler, le rapport du secrétariat et l'argent des parrains.";
+      $("#sd-grRole").textContent = me.role === "gerant" ? "Ton espace de gérante : demande l'accord de la direction, note tes décisions, envoie ton rapport de la semaine. Tu as aussi les chiffres de l'agence, les reçus et le moniteur." : me.role === "secretariat" ? "Ce que tu envoies à la direction : le rapport de la semaine (chaque samedi) et les petits frais. Tu vérifies aussi le gagnant du tirage et tu paies les parrains." : "Les dépenses à accorder, les reçus à annuler, le rapport du secrétariat et l'argent des parrains.";
       { const sec = $("#sd-drSec"); if (sec) sec.hidden = me.role !== "admin"; } // comptes et sécurité : direction seulement
       { const rl = $('.tm-pane[data-pane="dir"] .tm-role'); if (rl) rl.textContent = me.role === "gerant" ? "Vue d'ensemble de l'auto-école, mise à jour à chaque ouverture. Visible par la direction et toi." : "Vue d'ensemble de l'auto-école, mise à jour à chaque ouverture. Visible par la direction."; }
       $('#sd-tmTabs [data-t="sec"]').hidden = me.role === "moniteur" || AMB(); // la gérante voit de nouveau le secrétariat (22 oct.) : elle remplace le secrétariat quand il est en cours // le moniteur a son espace : cours, conduite, réservations, messages
@@ -5613,7 +5613,7 @@ function init(root) {
     async function grCharger() {
       const box = $("#sd-gr"); if (!box || !GES()) return; box.hidden = false;
       const g = me.role === "gerant", sc = me.role === "secretariat";
-      $("#sd-grIntro").textContent = g ? "Une dépense : demande l'accord. Envoie ton rapport le week-end. Un problème : écris à la direction dans Messages." : sc ? "Le rapport part chez la direction le samedi ou le dimanche. Les petits frais se notent le jour même." : "Les dépenses à accorder, les reçus à annuler, le rapport du secrétariat et l'argent des parrains.";
+      $("#sd-grIntro").textContent = g ? "Une dépense : demande l'accord. Envoie ton rapport le week-end. Un problème : écris à la direction dans Messages." : sc ? "Le rapport de la semaine part chez la direction chaque samedi. Les petits frais se notent le jour même." : "Les dépenses à accorder, les reçus à annuler, le rapport du secrétariat et l'argent des parrains.";
       $("#sd-grTitre").textContent = sc ? "Gestion de l'agence" : "Gestion";
       $('#sd-gr [data-gr="demandes"]').hidden = sc; $('#sd-gr [data-gr="frais"]').hidden = !sc;
       if (sc && !$("#sd-frSlot").contains($("#sd-frais"))) $("#sd-frSlot").appendChild($("#sd-frais")); // petits frais : un onglet à part pour le secrétariat
@@ -5718,14 +5718,14 @@ function init(root) {
         if (neuve) { $("#sd-grRapChiffres").innerHTML = '<p class="tm-empty">Calcul des chiffres…</p>'; $("#sd-grRapTx").value = ""; try { const t = localStorage.getItem("sodaf.gr.brouillon." + l); if (t) $("#sd-grRapTx").value = t; } catch (e) {} }
         GR.ch = await grChiffres(l); if (GR.semaine !== l) return; $("#sd-grRapChiffres").innerHTML = grChHtml(GR.ch, true);
         const ouv = grOuvert(l), sam = dOf(grLuPlus(l, 5)), dim = dOf(grLuPlus(l, 6)), btn = $("#sd-grRapSend");
-        btn.disabled = !ouv; btn.textContent = ouv ? "Envoyer le rapport" : "Envoi samedi ou dimanche";
+        btn.disabled = !ouv; btn.textContent = ouv ? "Envoyer le rapport" : "Envoi samedi " + sam.getDate();
         $("#sd-grRapNote").textContent = ouv ? "" : "Tu peux déjà écrire tes remarques.";
       }
       const sem = grSemaines().slice().reverse().filter((w) => w !== cur || grEnvoye(w)), byS = {}; GR.rap.forEach((r) => (byS[r.semaine] = r));
       GR.rap.filter((r) => r.semaine < RAP_DEBUT || r.semaine > cur).forEach((r) => sem.includes(r.semaine) || sem.push(r.semaine)); sem.sort().reverse();
       $("#sd-grRapList").innerHTML = sem.length ? sem.map((w) => { const r = byS[w];
         if (!r) return '<div class="gr-it gr-miss" data-sem="' + w + '"><div class="gr-hd"><b>Semaine ' + esc(grSemTxt(w)) + '</b><em class="gr-st non">' + (g ? "Pas envoyé" : "Pas reçu") + "</em></div>" + (g ? '<button type="button" class="btn btn-sm btn-green" data-pick="' + w + '">Envoyer</button>' : "") + "</div>";
-        const tard = r.envoye_le && new Date(r.envoye_le) >= new Date(grLuPlus(w, 7) + "T00:00:00Z");
+        const tard = r.envoye_le && new Date(r.envoye_le) >= new Date(grLuPlus(w, 6) + "T00:00:00Z"); // 30 oct. : le rapport part chaque samedi ; dès le dimanche, il est en retard
         return '<details class="gr-it gr-arch' + (!g && !r.lu_le ? " att" : "") + '" data-sem="' + w + '"' + (!g && !r.lu_le ? " open" : "") + '><summary class="gr-hd"><b>Semaine ' + esc(grSemTxt(w)) + '</b><span class="gr-sts">' + (tard ? '<em class="gr-st att">En retard</em>' : "") + '<em class="gr-st ' + (r.lu_le ? "oui" : "neu") + '">' + (r.lu_le ? "Lu" : g ? "Envoyé" : "Nouveau") + "</em></span></summary><small>Envoyé " + esc(grQuand(r.envoye_le)) + '</small><div class="gr-ch">' + grChHtml(r.chiffres || {}, false) + "</div>" + (r.texte ? "<p>" + esc(r.texte) + "</p>" : "") + "</details>"; }).join("")
         : '<p class="tm-empty">' + (g ? "Aucun rapport envoyé pour l'instant." : "Aucun rapport reçu pour l'instant.") + "</p>";
       grCalRender();
@@ -5737,9 +5737,9 @@ function init(root) {
     // Bandeau de la semaine du rapport : grandes dates, numéro de semaine, échéance du dimanche 18 h
     const grNumSem = (l) => { const d = dOf(l); d.setDate(d.getDate() + 3); const j1 = new Date(d.getFullYear(), 0, 4, 12); return 1 + Math.round(((d - j1) / 864e5 - 3 + (j1.getDay() + 6) % 7) / 7); };
     function grSemBan(l) {
-      const a = dOf(l), b = dOf(grLuPlus(l, 6)), sam = dOf(grLuPlus(l, 5)), late = l < grLundi(new Date());
+      const a = dOf(l), b = dOf(grLuPlus(l, 6)), sam = dOf(grLuPlus(l, 5)), late = l < grLundi(new Date()) || iso(new Date()) > grLuPlus(l, 5);
       const mo = (d) => d.toLocaleDateString("fr-FR", { month: "long" }), dates = a.getMonth() === b.getMonth() ? a.getDate() + " – " + b.getDate() + " " + mo(b) : a.getDate() + " " + mo(a) + " – " + b.getDate() + " " + mo(b);
-      const q = late ? ["gsb-late", "En retard", "Envoie-le maintenant"] : grOuvert(l) ? ["gsb-now", "Aujourd'hui", "Envoie ton rapport"] : ["", "Envoi", "Samedi " + sam.getDate() + " ou dimanche " + b.getDate()];
+      const q = late ? ["gsb-late", "En retard", "Envoie-le maintenant"] : grOuvert(l) ? ["gsb-now", "Aujourd'hui", "Envoie ton rapport"] : ["", "À envoyer", "Samedi " + sam.getDate()];
       return '<div class="gsb-l"><span class="gsb-k">Semaine ' + grNumSem(l) + '</span><b class="gsb-d">' + dates + '</b></div><div class="gsb-r ' + q[0] + '"><span class="gsb-k">' + q[1] + "</span><b>" + q[2] + "</b></div>";
     }
     // Calendrier sous le rapport : semaine du rapport en jaune, aujourd'hui en vert, semaines déjà envoyées en vert clair
@@ -5752,7 +5752,7 @@ function init(root) {
       const debut = new Date(m); debut.setDate(1 - ((m.getDay() + 6) % 7));
       let cells = "";
       for (let i = 0; i < 42; i++) {
-        const d = new Date(debut); d.setDate(debut.getDate() + i); const k = iso(d), lu = grLundi(d), we = d.getDay() === 0 || d.getDay() === 6;
+        const d = new Date(debut); d.setDate(debut.getDate() + i); const k = iso(d), lu = grLundi(d), we = d.getDay() === 6; // jour d'envoi : le samedi seulement
         if (i === 35 && d.getMonth() !== mois) break;
         const c = ["gc-d"]; let t = "", data = "";
         if (d.getMonth() !== mois) c.push("gc-out");
@@ -5766,7 +5766,7 @@ function init(root) {
       }
       const tit = m.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
       box.innerHTML = '<div class="gc-hd"><button type="button" class="gc-nav" data-calm="-1" aria-label="Mois précédent">‹</button><b>' + tit.charAt(0).toUpperCase() + tit.slice(1) + '</b><button type="button" class="gc-nav" data-calm="1" aria-label="Mois suivant">›</button>' + (GR.calM ? '<button type="button" class="gc-back" data-calm="0">Revenir</button>' : "") + '</div><div class="gc-grid">' + ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"].map((x) => '<span class="gc-w">' + x + "</span>").join("") + cells +
-        '</div><div class="gc-leg"><span><i class="gc-k gc-k-wk"></i>La semaine</span><span><i class="gc-k gc-k-env"></i>Jours d\'envoi</span><span><i class="gc-k gc-k-today"></i>Aujourd\'hui</span><span><i class="gc-k gc-k-sent"></i>Envoyé</span>' + (miss.size ? '<span><i class="gc-k gc-k-miss"></i>Pas envoyé</span>' : "") + "</div>";
+        '</div><div class="gc-leg"><span><i class="gc-k gc-k-wk"></i>La semaine</span><span><i class="gc-k gc-k-env"></i>Jour d\'envoi (samedi)</span><span><i class="gc-k gc-k-today"></i>Aujourd\'hui</span><span><i class="gc-k gc-k-sent"></i>Envoyé</span>' + (miss.size ? '<span><i class="gc-k gc-k-miss"></i>Pas envoyé</span>' : "") + "</div>";
     }
     $("#sd-grCal") && $("#sd-grCal").addEventListener("click", (e) => {
       const n = e.target.closest("[data-calm]"); if (n) { GR.calM = n.dataset.calm === "0" ? 0 : (GR.calM || 0) + +n.dataset.calm; grCalRender(); return; }
@@ -6580,7 +6580,7 @@ function init(root) {
     });
     $("#sd-grRapTx").addEventListener("input", () => { try { if (GR.semaine) localStorage.setItem("sodaf.gr.brouillon." + GR.semaine, $("#sd-grRapTx").value); } catch (e) {} }); // brouillon gardé sur ce téléphone
     $("#sd-grRapSend").addEventListener("click", async () => {
-      const b = $("#sd-grRapSend"); if (!GR.semaine) return; if (!grOuvert(GR.semaine)) { toast("Le rapport s'envoie le samedi ou le dimanche."); return; } b.disabled = true;
+      const b = $("#sd-grRapSend"); if (!GR.semaine) return; if (!grOuvert(GR.semaine)) { toast("Le rapport s'envoie le samedi."); return; } b.disabled = true;
       const ch = await grChiffres(GR.semaine);
       const r = await run(() => DB.q("rapports", { method: "POST", body: { semaine: GR.semaine, chiffres: ch, texte: $("#sd-grRapTx").value.trim() }, prefer: "return=minimal" }).then(() => true), "Rapport envoyé à la direction");
       b.disabled = false; if (r) { try { localStorage.removeItem("sodaf.gr.brouillon." + GR.semaine); } catch (e) {} $("#sd-grRapTx").value = ""; GR.choix = null; GR.vue = null; grCharger(); }
