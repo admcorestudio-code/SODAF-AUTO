@@ -2267,7 +2267,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="tm-pane" data-pane="com" role="tabpanel" hidden>
 <p class="tm-role" id="sd-comRole"></p>
 <div class="card com-guide" id="sd-comGuide"><div class="cg-hd"><p class="eyebrow">Comment ça marche</p><button type="button" class="btn btn-sm btn-line" data-goms>Écrire à la direction</button></div><ol class="cg-steps"><li><i>1</i><b>Préparer</b><span>La vidéo, le statut ou la pub.</span></li><li><i>2</i><b>Faire valider</b><span>Envoie-la à la direction dans Messages.</span></li><li><i>3</i><b>Publier</b><span>Dès qu'elle dit « c'est bon ».</span></li><li><i>4</i><b>Noter ici</b><span>Le lien, juste en dessous.</span></li></ol></div>
-<div class="card com-card"><div class="gr-semban" id="sd-comSem"></div><div class="com-prog" id="sd-comProg"></div><form id="sd-comForm" class="com-form" hidden novalidate><h4 class="gr-h4">Noter une publication</h4><div class="com-types" role="radiogroup"><button type="button" role="radio" data-ct="TikTok" aria-checked="true">TikTok</button><button type="button" role="radio" data-ct="Statut WhatsApp" aria-checked="false">Statut WhatsApp</button><button type="button" role="radio" data-ct="Atelier filmé" aria-checked="false">Atelier filmé</button><button type="button" role="radio" data-ct="Pub étudiants" aria-checked="false">Pub étudiants</button><button type="button" role="radio" data-ct="Live du tirage" aria-checked="false">Live du tirage</button><button type="button" role="radio" data-ct="Autre" aria-checked="false">Autre</button></div><div class="field"><label for="sd-comLien">Lien (si en ligne)</label><input id="sd-comLien" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://www.tiktok.com/…"></div><div class="field"><label for="sd-comNote">Note (facultatif)</label><input id="sd-comNote" maxlength="300" autocomplete="off" placeholder="ex. Campus de Lomé, 40 flyers"></div><button type="submit" class="btn btn-sm btn-green">Noter</button></form></div>
+<div class="card com-card" id="sd-ctCard" hidden><p class="eyebrow">Live TikTok du 1er du mois</p><h3 class="tm-h3">Tirage au sort</h3><p class="tm-note" style="margin:0 0 12px!important">Pendant le live : ouvre le grand écran, puis touche « Tirer un gagnant » devant la caméra. Le secrétariat vérifie ensuite la carte d'étudiant. Pas valide : tu tires un autre gagnant.</p><div class="tr-stats" id="sd-ctStats"></div><div class="tr-act"><button type="button" class="btn tir-btn" id="sd-ctGo">Tirer un gagnant</button><button type="button" class="btn btn-line btn-sm" id="sd-ctScreen">Grand écran pour la vidéo</button></div><div id="sd-ctList" class="ct-list"></div></div><div class="card com-card"><div class="gr-semban" id="sd-comSem"></div><div class="com-prog" id="sd-comProg"></div><form id="sd-comForm" class="com-form" hidden novalidate><h4 class="gr-h4">Noter une publication</h4><div class="com-types" role="radiogroup"><button type="button" role="radio" data-ct="TikTok" aria-checked="true">TikTok</button><button type="button" role="radio" data-ct="Statut WhatsApp" aria-checked="false">Statut WhatsApp</button><button type="button" role="radio" data-ct="Atelier filmé" aria-checked="false">Atelier filmé</button><button type="button" role="radio" data-ct="Pub étudiants" aria-checked="false">Pub étudiants</button><button type="button" role="radio" data-ct="Live du tirage" aria-checked="false">Live du tirage</button><button type="button" role="radio" data-ct="Autre" aria-checked="false">Autre</button></div><div class="field"><label for="sd-comLien">Lien (si en ligne)</label><input id="sd-comLien" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://www.tiktok.com/…"></div><div class="field"><label for="sd-comNote">Note (facultatif)</label><input id="sd-comNote" maxlength="300" autocomplete="off" placeholder="ex. Campus de Lomé, 40 flyers"></div><button type="submit" class="btn btn-sm btn-green">Noter</button></form></div>
 <div class="card com-card com-tafc"><p class="eyebrow">Tâches</p><h3 class="tm-h3">Dans l'onglet « À faire »</h3><p class="tm-note">Les tâches de l'Ambassadeur sont maintenant avec celles de toute l'équipe.</p><button type="button" class="btn btn-sm btn-line" data-gotaf>Ouvrir « À faire »</button></div>
 <div class="card com-card"><p class="eyebrow">Ce mois-ci</p><h3 class="tm-h3">Les résultats</h3><div id="sd-comRes"></div></div>
 <div class="card com-card"><p class="eyebrow">Historique</p><h3 class="tm-h3">Publications</h3><div id="sd-comList" class="com-list"></div></div>
@@ -5787,11 +5787,12 @@ function init(root) {
       grBadges();
     }
     // Grand écran : les prénoms défilent, puis le gagnant s'affiche (pour la vidéo du tirage)
-    async function trSuspense(gagnant) {
+    async function trSuspense(gagnant, camp, liste) {
+      liste = liste || GR.tir || []; camp = camp || $("#sd-trCamp").value;
       const ov = document.createElement("div"); ov.className = "tr-ov"; ov.innerHTML = '<div class="tr-ovin"><p class="tir-k">SODAF · Tirage au sort étudiant</p><p class="tr-ovname" id="sd-trName">…</p><p class="tr-ovsub" id="sd-trSub">Tirage en cours</p><button type="button" class="btn btn-line tr-ovx">Fermer</button></div>';
       document.getElementById("sodaf-root").appendChild(ov); ov.querySelector(".tr-ovx").addEventListener("click", () => ov.remove());
-      const noms = (GR.tir || []).map((x) => x.prenoms + " " + x.nom.charAt(0) + "."), el = ov.querySelector("#sd-trName");
-      if (!gagnant) { el.textContent = (GR.tir || []).length + " participants"; ov.querySelector("#sd-trSub").textContent = "Tirage du 1er " + trNomMois($("#sd-trCamp").value); return; }
+      const noms = liste.map((x) => x.prenoms + " " + x.nom.charAt(0) + "."), el = ov.querySelector("#sd-trName");
+      if (!gagnant) { el.textContent = liste.length + " participants"; ov.querySelector("#sd-trSub").textContent = "Tirage du 1er " + trNomMois(camp); return; }
       const reduit = matchMedia("(prefers-reduced-motion: reduce)").matches;
       for (let i = 0, d = 50; !reduit && i < 34 && noms.length; i++, d *= 1.07) { el.textContent = noms[Math.floor(Math.random() * noms.length)]; await new Promise((r) => setTimeout(r, d)); }
       el.textContent = gagnant.prenoms + " " + gagnant.nom; el.classList.add("win"); ov.querySelector("#sd-trSub").textContent = gagnant.universite + " · à vérifier avant l'annonce";
@@ -5807,7 +5808,7 @@ function init(root) {
       const tk = e.target.closest("[data-trok]"); if (tk) { const bx = tk.closest("[data-tr]"), ok = tk.dataset.trok === "1"; bx.querySelectorAll("button").forEach((b) => (b.disabled = true));
         const r = await run(() => DB.q("rpc/tirage_decider", { method: "POST", body: { p_id: +bx.dataset.tr, p_valide: ok, p_note: bx.querySelector("input").value.trim() || null } }).then(() => true), ok ? "Gagnant validé" : "Refusé : on tire un autre gagnant");
         if (!r) { bx.querySelectorAll("button").forEach((b) => (b.disabled = false)); return; }
-        await trCharger(); if (!ok && !$("#sd-trGo").disabled) $("#sd-trGo").click(); return; }
+        await trCharger(); if (!ok && DIR() && !$("#sd-trGo").disabled) $("#sd-trGo").click(); return; }
     });
     $("#sd-gr").addEventListener("click", async (e) => {
       const t = e.target.closest("[data-gr]"); if (t) { grOnglet(t.dataset.gr); if (me.role === "gerant") { if (t.dataset.gr === "demandes") grMarquer("dem", GR.dem.filter((d) => d.statut !== "attente").map((d) => d.id)); if (t.dataset.gr === "decisions") grMarquer("dec", GR.dec.filter((d) => d.avis).map((d) => d.id)); grBadges(); } return; }
@@ -6175,7 +6176,32 @@ function init(root) {
     const COM_OBJ = [["TikTok", 3, "Vidéos TikTok"], ["Statut WhatsApp", 7, "Statuts WhatsApp"], ["Atelier filmé", 1, "Atelier du samedi"], ["Pub étudiants", 2, "Pub étudiants"], ["Live du tirage", 1, "Live du tirage"]];
     const COM = { a: [], t: [] };
     const comLive = (l) => { for (let i = 0; i < 7; i++) if (dOf(grLuPlus(l, i)).getDate() === 1) return true; return false; }; // semaine du tirage (le 1er du mois)
+    // ---- Tirage pendant le live (30 oct.) : l'Ambassadeur tire, le secrétariat vérifie la carte (rpc tirage_live : prénom + initiale, sans téléphone ni carte)
+    const CT = { camp: null, l: [], t: null };
+    async function ctCharger() {
+      const card = $("#sd-ctCard"); if (!card) return; card.hidden = !AMB(); if (!AMB()) return;
+      const d = new Date(), cur = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0"), live = (c) => DB.q("rpc/tirage_live", { method: "POST", body: { p_campagne: c } }).catch(() => null);
+      let camp = trCampActuelle(), l = null;
+      if (d.getDate() <= 10) { const lc = await live(cur); if (lc && lc.length && lc.filter((x) => x.statut === "valide").length < 2) { camp = cur; l = lc; } } // le 1er du mois (et les jours suivants si un gagnant manque) : le tirage du mois en cours
+      if (!l) l = await live(camp);
+      if (!l) { $("#sd-ctStats").innerHTML = ""; $("#sd-ctList").innerHTML = '<p class="tm-empty">Le tirage n\'est pas disponible pour l\'instant.</p>'; $("#sd-ctGo").disabled = true; return; }
+      CT.camp = camp; CT.l = l;
+      const ok = l.filter((x) => x.statut === "valide").length, att = l.filter((x) => x.statut === "gagnant").length;
+      $("#sd-ctStats").innerHTML = "<div><b>" + l.length + "</b><span>participants · tirage du 1er " + trNomMois(camp) + "</span></div><div><b>" + ok + " / 2</b><span>gagnants validés</span></div>";
+      const go = $("#sd-ctGo"); go.disabled = ok >= 2 || att > 0 || !l.some((x) => x.statut === "inscrit");
+      go.textContent = ok >= 2 ? "Les 2 gagnants sont validés" : att ? "Le secrétariat vérifie la carte" : !l.some((x) => x.statut === "inscrit") ? "Plus personne à tirer" : "Tirer un gagnant";
+      const tires = l.filter((x) => x.statut !== "inscrit").sort((a, b) => (a.tire_le < b.tire_le ? 1 : -1));
+      $("#sd-ctList").innerHTML = tires.length ? tires.map((x) => '<div class="tr-win st-' + x.statut + '"><div class="tr-who"><em class="gr-st ' + { gagnant: "att", valide: "oui", refuse: "non" }[x.statut] + '">' + { gagnant: "Carte à vérifier (secrétariat)", valide: "Gagnant validé", refuse: "Pas valide : tire un autre gagnant" }[x.statut] + "</em><b>" + esc(x.prenoms + " " + x.nom + ".") + "</b><span>" + esc(x.universite) + "</span><small>Tiré " + esc(grQuand(x.tire_le)) + "</small></div></div>").join("") : '<p class="tm-empty">Aucun gagnant tiré pour ce mois.</p>';
+      clearTimeout(CT.t); CT.t = setTimeout(() => { if (!$('.tm-pane[data-pane="com"]').hidden) ctCharger(); }, 15000); // suit la vérification du secrétariat pendant le live
+    }
+    $("#sd-ctScreen") && $("#sd-ctScreen").addEventListener("click", () => trSuspense(null, CT.camp, CT.l));
+    $("#sd-ctGo") && $("#sd-ctGo").addEventListener("click", async () => {
+      const b = $("#sd-ctGo"); b.disabled = true;
+      const id = await run(() => DB.q("rpc/tirage_tirer", { method: "POST", body: { p_campagne: CT.camp } }));
+      if (id) { await ctCharger(); const g = CT.l.find((x) => x.id === id); await trSuspense(g ? { ...g, nom: g.nom + "." } : null, CT.camp, CT.l); } else b.disabled = false;
+    });
     async function comCharger() {
+      ctCharger();
       const prog = $("#sd-comProg"); if (!prog || !me || !(AMB() || DIR())) return;
       const l = grLundi(new Date()), fin = grLuPlus(l, 6), now = new Date(), m0 = iso(new Date(now.getFullYear(), now.getMonth(), 1)), amb = AMB();
       $("#sd-comRole").textContent = amb ? "Note chaque vidéo, statut ou pub. La direction suit ta semaine." : "La semaine de l'Ambassadeur. Valide ses vidéos dans Messages, donne-lui des tâches dans « À faire ».";
