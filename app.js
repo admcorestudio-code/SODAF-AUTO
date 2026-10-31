@@ -1648,7 +1648,7 @@ const HTML = `
 <div class="pb-item"><span>Paiement</span><b>En 2 tranches</b></div>
 <a class="btn btn-green" href="#formations">Voir tous les tarifs</a>
 </div></div>
-<div class="wrap"><a class="tirband" href="#tirage"><span class="tb-k">Jackpot étudiant</span><span class="tb-t">Ton permis à <b>15&nbsp;000&nbsp;F</b> au lieu de 60&nbsp;000&nbsp;F</span><span class="tb-s">2 gagnants chaque mois · tirage en direct sur TikTok · participation gratuite</span><span class="tb-go">Je tente ma chance</span></a></div>
+<div class="wrap"><a class="tirband" href="#tirage"><span class="tb-k">Jackpot étudiant</span><span class="tb-t">Ton permis à <b>15&nbsp;000&nbsp;F</b> au lieu de 60&nbsp;000&nbsp;F</span><span class="tb-s">2 gagnants chaque mois · gagnants annoncés sur TikTok · participation gratuite</span><span class="tb-go">Je tente ma chance</span></a></div>
 
 <div class="band-soft"><div class="wrap">
 <div class="sec-head"><div><p class="eyebrow">Le code de la route</p><h2>4 signalisations à maîtriser</h2></div><p>Tout le code repose sur elles. Touche une carte pour ouvrir le cours.</p></div>
@@ -2270,12 +2270,12 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="am-sortie" id="sd-amSortie"><div class="am-sk"><span>Sorties à deux · à ne jamais manquer</span><b>LUNDI</b><i>et</i><b>JEUDI</b></div><p>Les deux ambassadeurs ensemble : universités, lycées, marchés. Relations parle aux gens, Contenu filme.</p><div class="am-next" id="sd-amNext"></div></div>
 <div class="card com-card am-pubs" id="sd-amPubs"></div>
 <div class="gr-tabs am-tabs" role="tablist"><button type="button" role="tab" data-amp="terrain" aria-selected="true">Ambassadeur Relations</button><button type="button" role="tab" data-amp="digital" aria-selected="false">Ambassadeur Contenu</button><button type="button" role="tab" data-amp="res" aria-selected="false">Résultats</button></div>
-<div class="am-pane" data-ampane="terrain"><div class="card am-hero am-t"><p class="eyebrow">Ambassadeur Relations</p><h3 class="tm-h3">Les gens et les affiches</h3><ul class="am-miss"><li><b>Mercredi et vendredi</b><span>À l'agence quand le secrétaire a cours : accueil, renseignements, inscriptions avec le QR code.</span></li><li><b>Le 1er du mois</b><span>Live TikTok et tirage au sort (juste en dessous).</span></li><li><b>Pendant les sorties</b><span>Toi, tu parles aux gens, tu donnes les affiches, les flyers et le QR code.</span></li><li><b>Affiches</b><span>Tu crées les affiches (Canva) pour les publications et les sorties. Fais-les valider par la direction dans Messages.</span></li><li><b>Publier tes affiches</b><span>Toi-même, sur TikTok obligatoirement (et Instagram). Plus les gens les voient, plus ils appellent.</span></li><li><b>Noter chaque publication</b><span>Ici en bas : l'affiche + le lien TikTok. Elle est rangée dans Documents et publicité.</span></li></ul></div>
-<div class="card com-card" id="sd-ctCard" hidden><p class="eyebrow">Live TikTok du 1er du mois</p><h3 class="tm-h3">Tirage au sort</h3><p class="tm-note" style="margin:0 0 12px!important">Pendant le live : ouvre le grand écran, puis touche « Tirer un gagnant » devant la caméra. Le secrétariat vérifie ensuite la carte d'étudiant. Pas valide : tu tires un autre gagnant.</p><div class="tr-stats" id="sd-ctStats"></div><div class="tr-act"><button type="button" class="btn tir-btn" id="sd-ctGo">Tirer un gagnant</button><button type="button" class="btn btn-line btn-sm" id="sd-ctScreen">Grand écran pour la vidéo</button></div><div id="sd-ctList" class="ct-list"></div></div><div class="card com-card"><div class="gr-semban" data-amsem></div><p class="am-objt">Objectifs de la semaine</p><p class="am-objn">Le compteur avance tout seul à chaque fois que tu notes. Il repart à zéro chaque lundi.</p><div class="com-prog" id="sd-amProgT"></div><div data-amform="t"></div></div></div>
+<div class="am-pane" data-ampane="terrain"><div class="card am-hero am-t"><p class="eyebrow">Ambassadeur Relations</p><h3 class="tm-h3">Les gens et les affiches</h3><ul class="am-miss"><li><b>Mercredi et vendredi</b><span>À l'agence quand le secrétaire a cours : accueil, renseignements, inscriptions avec le QR code.</span></li><li><b>1er samedi du mois, 20 h</b><span>Tirage au sort à l'agence, filmé (juste en dessous). Puis la vidéo sur TikTok.</span></li><li><b>Pendant les sorties</b><span>Toi, tu parles aux gens, tu donnes les affiches, les flyers et le QR code. Fais-les s'abonner au TikTok de SODAF devant toi.</span></li><li><b>Affiches</b><span>Tu crées les affiches (Canva) pour les publications et les sorties. Fais-les valider par la direction dans Messages.</span></li><li><b>Publier tes affiches</b><span>Toi-même, sur TikTok obligatoirement (et Instagram). Plus les gens les voient, plus ils appellent.</span></li><li><b>Noter chaque publication</b><span>Ici en bas : l'affiche + le lien TikTok. Elle est rangée dans Documents et publicité.</span></li></ul></div>
+<div class="card com-card" id="sd-ctCard" hidden><p class="eyebrow">Premier samedi du mois, 20 h, à l'agence</p><h3 class="tm-h3">Tirage au sort</h3><p class="tm-note" style="margin:0 0 12px!important">Filme l'écran avec l'Osmo, en une seule prise : ouvre le grand écran, puis touche « Tirer les 2 gagnants ». Les 2 noms sortent l'un après l'autre. Publie la vidéo sur TikTok. Le secrétariat vérifie ensuite les cartes d'étudiant ; une carte pas valide : tu tires un remplaçant (filmé aussi).</p><div class="tr-stats" id="sd-ctStats"></div><div class="tr-act"><button type="button" class="btn tir-btn" id="sd-ctGo">Tirer les 2 gagnants</button><button type="button" class="btn btn-line btn-sm" id="sd-ctScreen">Grand écran pour la vidéo</button></div><div id="sd-ctList" class="ct-list"></div></div><div class="card com-card"><div class="gr-semban" data-amsem></div><p class="am-objt">Objectifs de la semaine</p><p class="am-objn">Le compteur avance tout seul à chaque fois que tu notes. Il repart à zéro chaque lundi.</p><div class="com-prog" id="sd-amProgT"></div><div data-amform="t"></div></div></div>
 <div class="am-pane" data-ampane="digital" hidden><div class="card am-hero am-d"><p class="eyebrow">Ambassadeur Contenu</p><h3 class="tm-h3">Les vidéos</h3><ul class="am-miss"><li><b>Pendant les sorties</b><span>Toi, tu filmes avec l'Osmo Pocket et tu prends les photos pendant que ton binôme parle aux gens.</span></li><li><b>Filmer</b><span>Tout ce qui est vidéo, c'est toi : sorties, atelier du samedi, élèves, agence.</span></li><li><b>Monter</b><span>Sur le PC (CapCut). Garde toujours les vidéos d'origine.</span></li><li><b>Faire valider</b><span>Envoie la vidéo à la direction dans Messages. Publie dès qu'elle dit « c'est bon ».</span></li><li><b>Publier tes vidéos</b><span>Toi-même, sur TikTok obligatoirement (et Instagram).</span></li><li><b>Pubs payantes</b><span>Facebook Ads (Meta) : propose le texte, les personnes visées et le budget. La direction valide et paie.</span></li><li><b>Répondre</b><span>Aux commentaires et aux messages, chaque jour.</span></li><li><b>Noter chaque publication</b><span>Ici en bas : la vidéo + le lien TikTok. Elle est rangée dans Documents et publicité.</span></li></ul></div>
 <div class="card com-guide" id="sd-comGuide"><div class="cg-hd"><p class="eyebrow">Comment ça marche</p><button type="button" class="btn btn-sm btn-line" data-goms>Écrire à la direction</button></div><ol class="cg-steps"><li><i>1</i><b>Préparer</b><span>La vidéo, le statut ou la pub.</span></li><li><i>2</i><b>Faire valider</b><span>Envoie-la à la direction dans Messages.</span></li><li><i>3</i><b>Publier</b><span>Dès qu'elle dit « c'est bon ».</span></li><li><i>4</i><b>Noter ici</b><span>Le lien, juste en dessous.</span></li></ol></div>
 <div class="card com-card"><div class="gr-semban" data-amsem></div><p class="am-objt">Objectifs de la semaine</p><p class="am-objn">Le compteur avance tout seul à chaque fois que tu notes. Il repart à zéro chaque lundi.</p><div class="com-prog" id="sd-amProgD"></div><div data-amform="d"></div></div></div>
-<div class="am-pane" data-ampane="res" hidden><div class="card com-card"><p class="eyebrow">Ensemble</p><h3 class="tm-h3">Les deux apprennent tout</h3><p class="tm-note">Le 1er de chaque mois, vous changez de rôle. La veille, 15 minutes ensemble pour se passer le relais : pubs en cours, contacts à rappeler, vidéos pas finies.</p><ul class="am-learn"><li>Filmer avec l'Osmo Pocket</li><li>Monter sur le PC (CapCut)</li><li>Faire un live TikTok</li><li>Préparer une pub Facebook ou Instagram</li><li>Parler aux étudiants sur le terrain</li></ul></div>
+<div class="am-pane" data-ampane="res" hidden><div class="card com-card"><p class="eyebrow">Ensemble</p><h3 class="tm-h3">Les deux apprennent tout</h3><p class="tm-note">Le 1er de chaque mois, vous changez de rôle. La veille, 15 minutes ensemble pour se passer le relais : pubs en cours, contacts à rappeler, vidéos pas finies.</p><ul class="am-learn"><li>Filmer avec l'Osmo Pocket</li><li>Monter sur le PC (CapCut)</li><li>Filmer le tirage du premier samedi du mois</li><li>Préparer une pub Facebook ou Instagram</li><li>Parler aux étudiants sur le terrain</li></ul></div>
 <div class="card com-card com-tafc"><p class="eyebrow">Tâches</p><h3 class="tm-h3">Dans l'onglet « À faire »</h3><p class="tm-note">Les tâches des ambassadeurs sont avec celles de toute l'équipe.</p><button type="button" class="btn btn-sm btn-line" data-gotaf>Ouvrir « À faire »</button></div>
 <div class="card com-card"><p class="eyebrow">Ce mois-ci</p><h3 class="tm-h3">Les résultats</h3><div id="sd-comRes"></div></div>
 <div class="card com-card"><p class="eyebrow">Historique</p><h3 class="tm-h3">Tout ce qui a été noté</h3><div id="sd-comList" class="com-list"></div></div>
@@ -2383,7 +2383,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <section class="page tir cz tn" data-page="tirage" hidden>
 <div class="cz-hero tn-hero"><div class="tn-beam tn-b1" aria-hidden="true"></div><div class="tn-beam tn-b2" aria-hidden="true"></div><div class="tn-stars" aria-hidden="true"></div>
 <div class="wrap cz-in">
-<p class="tn-livepill"><span class="cz-dot" aria-hidden="true"></span><span>En direct sur TikTok&nbsp;· <span class="sd-tirDay">1er</span>, 20&nbsp;h</span></p>
+<p class="tn-livepill"><span class="cz-dot" aria-hidden="true"></span><span>Gagnants annoncés sur TikTok&nbsp;· <span class="sd-tirDay">1er</span>, 20&nbsp;h</span></p>
 <div class="cz-machine tn-machine">
 <div class="cz-bulbs" aria-hidden="true"></div>
 <p class="cz-jp">Jackpot étudiant</p>
@@ -2394,13 +2394,13 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <h1 class="cz-h tn-h">Ton permis à <b>15&nbsp;000&nbsp;F</b>.<br>Deux gagnants chaque mois.</h1>
 <div class="cz-ctas"><a class="btn cz-btn tn-cta" href="#tirage-jouer" data-tirgo>Je tente ma chance</a><span class="cz-free">Gratuit · 1 minute · réservé aux étudiants</span></div>
 <div class="cz-board tn-board">
-<div class="cz-cell cz-clock"><span class="cz-lab" id="sd-tirClockLab">Tirage en direct dans</span><div class="tir-cd" id="sd-tirCd"><div><b>--</b><span>j</span></div><div><b>--</b><span>h</span></div><div><b>--</b><span>min</span></div><div><b>--</b><span>s</span></div></div></div>
+<div class="cz-cell cz-clock"><span class="cz-lab" id="sd-tirClockLab">Tirage dans</span><div class="tir-cd" id="sd-tirCd"><div><b>--</b><span>j</span></div><div><b>--</b><span>h</span></div><div><b>--</b><span>min</span></div><div><b>--</b><span>s</span></div></div></div>
 <div class="cz-cell"><span class="cz-lab">Inscrits ce mois-ci</span><b class="cz-big" id="sd-tirN">…</b></div>
 <div class="cz-cell"><span class="cz-lab">Gagnants</span><b class="cz-big">2</b></div>
 </div>
 </div></div>
 
-<div class="tn-ticker" aria-hidden="true"><div class="tn-tk"><span>2 gagnants chaque mois</span><span>Ton permis à 15 000 F</span><span>Participation gratuite</span><span>Tirage en direct sur TikTok</span><span>Inscription offerte</span><span>T-shirt SODAF</span><span>2 gagnants chaque mois</span><span>Ton permis à 15 000 F</span><span>Participation gratuite</span><span>Tirage en direct sur TikTok</span><span>Inscription offerte</span><span>T-shirt SODAF</span></div></div>
+<div class="tn-ticker" aria-hidden="true"><div class="tn-tk"><span>2 gagnants chaque mois</span><span>Ton permis à 15 000 F</span><span>Participation gratuite</span><span>Abonne-toi à SODAF sur TikTok</span><span>Inscription offerte</span><span>T-shirt SODAF</span><span>2 gagnants chaque mois</span><span>Ton permis à 15 000 F</span><span>Participation gratuite</span><span>Abonne-toi à SODAF sur TikTok</span><span>Inscription offerte</span><span>T-shirt SODAF</span></div></div>
 
 <div class="wrap sec cz-body">
 <div class="cz-sh"><p class="cz-k2">Le lot</p><h2>Plus de 60&nbsp;000&nbsp;F de valeur. Tu paies 15&nbsp;000&nbsp;F.</h2></div>
@@ -2415,17 +2415,17 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 
 <div class="tn-day"><div class="wrap tn-dayin">
 <div class="tn-daytxt">
-<p class="cz-k2">Le jour J</p><h2>Comment ça se passe, en direct</h2>
+<p class="cz-k2">Le jour J</p><h2>Comment ça se passe</h2>
 <ol class="tn-tl">
-<li><b>19 h</b><div><strong>Le live commence</strong><span>Sur le TikTok de SODAF. Tout le monde peut regarder, commenter, encourager.</span></div></li>
-<li><b>20 h</b><div><strong>Le tirage</strong><span>L'ordinateur fait défiler tous les inscrits du mois et s'arrête sur 2 noms, au hasard, devant tout le monde.</span></div></li>
+<li><b>20 h</b><div><strong>Le tirage, à l'agence</strong><span>L'ordinateur fait défiler tous les inscrits du mois et s'arrête sur 2 noms, au hasard. Tout est filmé, en une seule prise.</span></div></li>
+<li><b>Juste après</b><div><strong>La vidéo sur TikTok</strong><span>Publiée sur le TikTok de SODAF (@autoecole.sodaf.tg). Abonne-toi pour voir les gagnants en premier.</span></div></li>
 <li><b>Après</b><div><strong>On t'appelle</strong><span>Si c'est toi, tu reçois l'appel et le message WhatsApp le soir même. Tu passes à l'agence sous 48 h avec ta carte d'étudiant.</span></div></li>
 </ol>
-<p class="tn-daynote">Pas de tirage dans l'ombre : les noms défilent à l'écran, le résultat tombe en direct.</p>
-<a class="btn cz-tk" id="sd-tirTk" href="#" target="_blank" rel="noopener" hidden>Suivre SODAF sur TikTok</a>
+<p class="tn-daynote">Pas de tirage dans l'ombre : tout est filmé sans coupure, et la vidéo est publiée sur TikTok le soir même.</p>
+<a class="btn cz-tk" id="sd-tirTk" href="#" target="_blank" rel="noopener" hidden>S'abonner à SODAF sur TikTok</a>
 </div>
 <div class="tn-phone" aria-live="polite">
-<div class="tn-ph-top"><span class="tn-live"><i aria-hidden="true"></i>EN DIRECT</span><span class="tn-ph-who">SODAF Auto-École</span><span class="tn-ph-v" id="sd-tdViewers">1 240</span></div>
+<div class="tn-ph-top"><span class="tn-live"><i aria-hidden="true"></i>TIRAGE FILMÉ</span><span class="tn-ph-who">SODAF Auto-École</span><span class="tn-ph-v" id="sd-tdViewers">1 240</span></div>
 <div class="tn-ph-screen">
 <p class="tn-ph-k">Tirage du <span class="sd-tirDay">1er</span></p>
 <div class="tn-drum" id="sd-tdName">?</div>
@@ -2466,7 +2466,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="tir-closed" id="sd-tirClosed" hidden></div>
 </div>
 <aside class="cz-side">
-<ol class="cz-steps"><li><b>Tu t'inscris ici</b><span>Une minute, avec la photo de ta carte d'étudiant.</span></li><li><b>Tirage en direct le <span class="sd-tirDay">1er</span></b><span>Sur TikTok à 20 h. L'ordinateur tire 2 gagnants au hasard.</span></li><li><b>Tu passes à l'agence</b><span>Sous 48 h, avec ta carte d'étudiant et ta carte d'identité.</span></li></ol>
+<ol class="cz-steps"><li><b>Tu t'inscris ici</b><span>Une minute, avec la photo de ta carte d'étudiant.</span></li><li><b>Tirage le <span class="sd-tirDay">1er</span> à 20 h</b><span>L'ordinateur tire 2 gagnants au hasard. La vidéo est publiée sur le TikTok de SODAF : abonne-toi.</span></li><li><b>Tu passes à l'agence</b><span>Sous 48 h, avec ta carte d'étudiant et ta carte d'identité.</span></li></ol>
 <div class="cz-alt"><b>Pas le temps d'attendre ?</b><p>Le tarif étudiant : formation complète à <b>30 000 F</b>, inscription à 5 000 F, sans tirage.</p><a class="btn btn-line btn-sm" href="#inscription">Je me pré-inscris</a></div>
 <div class="cz-alt cz-altg"><b>Parrainage : 2 000 F pour toi</b><p>Pour chaque personne que tu amènes et qui s'inscrit chez SODAF, étudiant ou pas.</p></div>
 </aside>
@@ -2479,16 +2479,16 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="tir-faq">
 <details><summary>C'est vraiment gratuit ?</summary><p>Oui. Participer ne coûte rien. Seuls les 2 gagnants paient 15 000 F, s'ils veulent faire leur formation.</p></details>
 <details><summary>J'ai déjà le permis, ou je n'ai pas encore 18 ans</summary><p>Tu peux offrir ton lot à un proche de 18 ans ou plus qui n'a pas le permis. Il fait alors la formation au tarif étudiant, 30 000 F.</p></details>
-<details><summary>Comment je saurai si j'ai gagné ?</summary><p>Suis le live sur TikTok le 1er du mois : il commence à 19 h, le tirage est à 20 h. On t'appelle et on t'écrit aussi sur WhatsApp le jour même.</p></details>
-<details><summary>Je n'ai pas gagné. Je peux rejouer ?</summary><p>Oui, chaque mois. Les inscriptions rouvrent le 2 du mois pour le tirage suivant.</p></details>
+<details><summary>Comment je saurai si j'ai gagné ?</summary><p>Abonne-toi au TikTok de SODAF (@autoecole.sodaf.tg) : la vidéo du tirage y est publiée le premier samedi du mois, juste après le tirage de 20 h. Si tu gagnes, on t'appelle et on t'écrit aussi sur WhatsApp le soir même.</p></details>
+<details><summary>Je n'ai pas gagné. Je peux rejouer ?</summary><p>Oui, chaque mois. Les inscriptions pour le tirage suivant rouvrent le lendemain du tirage.</p></details>
 <details><summary>Pourquoi la photo de ma carte ?</summary><p>Le tirage est réservé aux étudiants. On vérifie la carte des gagnants avant d'annoncer leur nom. Si elle ne correspond pas, on tire un autre gagnant.</p></details>
-<details><summary>Le tirage est-il honnête ?</summary><p>Oui. L'ordinateur tire au hasard parmi tous les inscrits du mois, en direct sur TikTok, devant tout le monde.</p></details>
+<details><summary>Le tirage est-il honnête ?</summary><p>Oui. L'ordinateur tire au hasard parmi tous les inscrits du mois. Le tirage est filmé à l'agence en une seule prise, sans coupure, et la vidéo est publiée sur le TikTok de SODAF.</p></details>
 </div>
 <details class="tir-rules"><summary>Règlement du tirage</summary><ol>
 <li>Le tirage est organisé chaque mois par SODAF Auto-École, 412 Avenue Akei, Tokoin Tamé, Lomé. La participation est gratuite et sans obligation d'achat.</li>
 <li>Il est réservé aux étudiants de 18 ans ou plus, inscrits dans une université ou une école pour l'année en cours.</li>
-<li>Inscriptions du 2 au 30 du mois (en février : jusqu'au dernier jour). Une seule participation par numéro de téléphone et par mois.</li>
-<li>Le 1er du mois suivant à 20 h, 2 gagnants sont tirés au hasard par l'ordinateur, en direct sur le compte TikTok de SODAF.</li>
+<li>Inscriptions tous les jours, jusqu'à la veille du tirage à minuit. Une seule participation par numéro de téléphone et par mois.</li>
+<li>Le premier samedi de chaque mois à 20 h, 2 gagnants sont tirés au hasard par l'ordinateur, à l'agence. Le tirage est filmé et la vidéo est publiée sur le compte TikTok de SODAF.</li>
 <li>Chaque gagnant présente à l'agence, sous 48 h, sa carte d'étudiant de l'année et sa carte d'identité. Si les informations ne correspondent pas, ou sans nouvelles sous 48 h, un autre gagnant est tiré.</li>
 <li>Le lot : la formation complète permis B à 15 000 F au lieu de 55 000 F, l'inscription offerte (5 000 F), une séance de conduite en plus, un t-shirt SODAF et la priorité sur les horaires de conduite.</li>
 <li>Le lot est valable 3 mois. Il peut être cédé une fois à un proche de 18 ans ou plus sans permis, qui paie alors 30 000 F. Il ne peut pas être échangé contre de l'argent.</li>
@@ -5785,14 +5785,16 @@ function init(root) {
       const s = e.target.closest("[data-gosem]"); if (s) { const it = document.querySelector('#sd-grRapList [data-sem="' + s.dataset.gosem + '"]'); if (it) { if (it.tagName === "DETAILS") it.open = true; it.scrollIntoView({ behavior: "smooth", block: "center" }); it.classList.add("gr-flash"); setTimeout(() => it.classList.remove("gr-flash"), 1600); } }
     });
     // ---- Tirage au sort (direction et gérante) : 2 gagnants validés par mois
-    const trCampActuelle = () => { const d = new Date(), m = (d.getUTCMonth() + 1) % 12, y = d.getUTCMonth() === 11 ? d.getUTCFullYear() + 1 : d.getUTCFullYear(); return y + "-" + String(m + 1).padStart(2, "0"); };
+    const trSam = (y, m) => 1 + ((6 - new Date(Date.UTC(y, m, 1)).getUTCDay() + 7) % 7); // premier samedi du mois (m de 0 à 11)
+    const trCampActuelle = () => { const d = new Date(); let y = d.getUTCFullYear(), m = d.getUTCMonth(); if (d.getUTCDate() > trSam(y, m)) { m = (m + 1) % 12; if (m === 0) y++; } return y + "-" + String(m + 1).padStart(2, "0"); };
+    const trJour = (c) => { const [y, m] = c.split("-").map(Number), j = trSam(y, m - 1); return "samedi " + j + (j === 1 ? "er" : "") + " " + trNomMois(c); };
     const trNomMois = (c) => { const [y, m] = c.split("-"); return ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"][+m - 1] + " " + y; };
     async function trCharger() {
       const sel = $("#sd-trCamp"); if (!sel) return;
       const tous = await DB.q("tirage_participants?select=*&order=id.asc&limit=5000").catch(() => null);
       if (!tous) { $("#sd-trWin").innerHTML = '<p class="tm-empty">Le tirage au sort n\'est pas encore activé dans la base.</p>'; $("#sd-trGo").disabled = true; return; }
       GR.tirTous = tous; const camps = [...new Set([trCampActuelle(), ...tous.map((x) => x.campagne)])].sort().reverse(), v = sel.value || trCampActuelle();
-      sel.innerHTML = camps.map((c) => '<option value="' + c + '"' + (c === v ? " selected" : "") + ">Tirage du 1er " + trNomMois(c) + "</option>").join(""); trRender();
+      sel.innerHTML = camps.map((c) => '<option value="' + c + '"' + (c === v ? " selected" : "") + ">Tirage du " + trJour(c) + "</option>").join(""); trRender();
     }
     function trRender() {
       const c = $("#sd-trCamp").value, L = (GR.tirTous || []).filter((x) => x.campagne === c); GR.tir = L;
@@ -5814,7 +5816,7 @@ function init(root) {
       const ov = document.createElement("div"); ov.className = "tr-ov"; ov.innerHTML = '<div class="tr-ovin"><p class="tir-k">SODAF · Tirage au sort étudiant</p><p class="tr-ovname" id="sd-trName">…</p><p class="tr-ovsub" id="sd-trSub">Tirage en cours</p><button type="button" class="btn btn-line tr-ovx">Fermer</button></div>';
       document.getElementById("sodaf-root").appendChild(ov); ov.querySelector(".tr-ovx").addEventListener("click", () => ov.remove());
       const noms = liste.map((x) => x.prenoms + " " + x.nom.charAt(0) + "."), el = ov.querySelector("#sd-trName");
-      if (!gagnant) { el.textContent = liste.length + " participants"; ov.querySelector("#sd-trSub").textContent = "Tirage du 1er " + trNomMois(camp); return; }
+      if (!gagnant) { el.textContent = liste.length + " participants"; ov.querySelector("#sd-trSub").textContent = "Tirage du " + trJour(camp); return; }
       const reduit = matchMedia("(prefers-reduced-motion: reduce)").matches;
       for (let i = 0, d = 50; !reduit && i < 34 && noms.length; i++, d *= 1.07) { el.textContent = noms[Math.floor(Math.random() * noms.length)]; await new Promise((r) => setTimeout(r, d)); }
       el.textContent = gagnant.prenoms + " " + gagnant.nom; el.classList.add("win"); ov.querySelector("#sd-trSub").textContent = gagnant.universite + " · à vérifier avant l'annonce";
@@ -6273,30 +6275,37 @@ function init(root) {
         const r = await run(() => DB.q("rpc/amb_rotation_regler", { method: "POST", body: { p_terrain: t, p_digital: d } }).then(() => true), "Rotation enregistrée"); if (r) { AM.ong = null; amCharger(); } });
     });
     const COM = { a: [], t: [] };
-    const comLive = (l) => { for (let i = 0; i < 7; i++) if (dOf(grLuPlus(l, i)).getDate() === 1) return true; return false; }; // semaine du tirage (le 1er du mois)
+    const comLive = (l) => { for (let i = 0; i < 7; i++) { const d = dOf(grLuPlus(l, i)); if (d.getDay() === 6 && d.getDate() <= 7) return true; } return false; }; // semaine du tirage (premier samedi du mois)
     // ---- Tirage pendant le live (30 oct.) : l'Ambassadeur tire, le secrétariat vérifie la carte (rpc tirage_live : prénom + initiale, sans téléphone ni carte)
     const CT = { camp: null, l: [], t: null };
     async function ctCharger() {
       const card = $("#sd-ctCard"); if (!card) return; card.hidden = !AMB(); if (!AMB()) return; // l'Ambassadeur Terrain fait le live ; l'autre voit aussi la carte (secours)
       const d = new Date(), cur = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0"), live = (c) => DB.q("rpc/tirage_live", { method: "POST", body: { p_campagne: c } }).catch(() => null);
       let camp = trCampActuelle(), l = null;
-      if (d.getDate() <= 10) { const lc = await live(cur); if (lc && lc.length && lc.filter((x) => x.statut === "valide").length < 2) { camp = cur; l = lc; } } // le 1er du mois (et les jours suivants si un gagnant manque) : le tirage du mois en cours
+      if (d.getDate() >= trSam(d.getFullYear(), d.getMonth()) && d.getDate() <= trSam(d.getFullYear(), d.getMonth()) + 10) { const lc = await live(cur); if (lc && lc.length && lc.filter((x) => x.statut === "valide").length < 2) { camp = cur; l = lc; } } // le 1er du mois (et les jours suivants si un gagnant manque) : le tirage du mois en cours
       if (!l) l = await live(camp);
       if (!l) { $("#sd-ctStats").innerHTML = ""; $("#sd-ctList").innerHTML = '<p class="tm-empty">Le tirage n\'est pas disponible pour l\'instant.</p>'; $("#sd-ctGo").disabled = true; return; }
       CT.camp = camp; CT.l = l;
       const ok = l.filter((x) => x.statut === "valide").length, att = l.filter((x) => x.statut === "gagnant").length;
-      $("#sd-ctStats").innerHTML = "<div><b>" + l.length + "</b><span>participants · tirage du 1er " + trNomMois(camp) + "</span></div><div><b>" + ok + " / 2</b><span>gagnants validés</span></div>";
-      const go = $("#sd-ctGo"); go.disabled = ok >= 2 || att > 0 || !l.some((x) => x.statut === "inscrit");
-      go.textContent = ok >= 2 ? "Les 2 gagnants sont validés" : att ? "Le secrétariat vérifie la carte" : !l.some((x) => x.statut === "inscrit") ? "Plus personne à tirer" : "Tirer un gagnant";
+      $("#sd-ctStats").innerHTML = "<div><b>" + l.length + "</b><span>participants · tirage du " + trJour(camp) + "</span></div><div><b>" + ok + " / 2</b><span>gagnants validés</span></div>";
+      const go = $("#sd-ctGo"), reste = 2 - ok - att; CT.reste = reste; go.disabled = reste <= 0 || !l.some((x) => x.statut === "inscrit");
+      go.textContent = ok >= 2 ? "Les 2 gagnants sont validés" : reste <= 0 ? "Le secrétariat vérifie les cartes" : !l.some((x) => x.statut === "inscrit") ? "Plus personne à tirer" : reste === 2 ? "Tirer les 2 gagnants" : "Tirer un remplaçant";
       const tires = l.filter((x) => x.statut !== "inscrit").sort((a, b) => (a.tire_le < b.tire_le ? 1 : -1));
       $("#sd-ctList").innerHTML = tires.length ? tires.map((x) => '<div class="tr-win st-' + x.statut + '"><div class="tr-who"><em class="gr-st ' + { gagnant: "att", valide: "oui", refuse: "non" }[x.statut] + '">' + { gagnant: "Carte à vérifier (secrétariat)", valide: "Gagnant validé", refuse: "Pas valide : tire un autre gagnant" }[x.statut] + "</em><b>" + esc(x.prenoms + " " + x.nom + ".") + "</b><span>" + esc(x.universite) + "</span><small>Tiré " + esc(grQuand(x.tire_le)) + "</small></div></div>").join("") : '<p class="tm-empty">Aucun gagnant tiré pour ce mois.</p>';
       clearTimeout(CT.t); CT.t = setTimeout(() => { if (!$('.tm-pane[data-pane="com"]').hidden) ctCharger(); }, 15000); // suit la vérification du secrétariat pendant le live
     }
     $("#sd-ctScreen") && $("#sd-ctScreen").addEventListener("click", () => trSuspense(null, CT.camp, CT.l));
     $("#sd-ctGo") && $("#sd-ctGo").addEventListener("click", async () => {
-      const b = $("#sd-ctGo"); b.disabled = true;
-      const id = await run(() => DB.q("rpc/tirage_tirer", { method: "POST", body: { p_campagne: CT.camp } }));
-      if (id) { await ctCharger(); const g = CT.l.find((x) => x.id === id); await trSuspense(g ? { ...g, nom: g.nom + "." } : null, CT.camp, CT.l); } else b.disabled = false;
+      const b = $("#sd-ctGo"); b.disabled = true; const n = Math.max(1, CT.reste || 1), liste = CT.l.slice(), noms = [];
+      for (let i = 0; i < n; i++) { // 31 oct. : les 2 gagnants d'un coup, devant la caméra
+        const id = await run(() => DB.q("rpc/tirage_tirer", { method: "POST", body: { p_campagne: CT.camp } })); if (!id) break;
+        await ctCharger(); const g = CT.l.find((x) => x.id === id); if (!g) break; noms.push(g.prenoms + " " + g.nom + ".");
+        document.querySelectorAll(".tr-ov").forEach((o) => o.remove()); await trSuspense({ ...g, nom: g.nom + "." }, CT.camp, liste);
+        const sub = document.querySelector(".tr-ov #sd-trSub"); if (sub) sub.textContent = (n > 1 ? (i === 0 ? "1er gagnant" : "2e gagnant") + " · " : "") + g.universite;
+        if (i < n - 1) await new Promise((r) => setTimeout(r, 3500));
+      }
+      if (noms.length > 1) { const sub = document.querySelector(".tr-ov #sd-trSub"); if (sub) sub.textContent = "Les gagnants : " + noms.join(" et "); }
+      ctCharger();
     });
     async function comCharger() {
       ctCharger();
@@ -7337,16 +7346,18 @@ function init(root) {
     st.forEach((e, i) => { e.style.transition = reduit ? "none" : "transform " + (1.4 + i * 0.35) + "s cubic-bezier(.12,.75,.15,1)"; e.style.transform = "translateY(calc(-" + (20 + cible[i]) + " * var(--rh)))"; });
   }
   const TMOIS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
-  const tirCampagne = () => { const d = new Date(); return { y: d.getUTCMonth() === 11 ? d.getUTCFullYear() + 1 : d.getUTCFullYear(), m: (d.getUTCMonth() + 1) % 12 }; }; // Lomé = UTC
-  const tirFinJ = (y, m) => Math.min(30, new Date(Date.UTC(y, m + 1, 0)).getUTCDate()); // dernier jour d'inscription : le 30 (février : le dernier jour)
-  const tirOuvert = () => { const d = new Date(), j = d.getUTCDate(); return j >= 2 && j <= tirFinJ(d.getUTCFullYear(), d.getUTCMonth()); };
+  // 31 oct. 2026 : tirage le PREMIER SAMEDI du mois à 20 h (règle aussi dans la base : prive.tirage_jour). Lomé = UTC.
+  const tirSam = (y, m) => 1 + ((6 - new Date(Date.UTC(y, m, 1)).getUTCDay() + 7) % 7);
+  const tirCampagne = () => { const d = new Date(), y = d.getUTCFullYear(), m = d.getUTCMonth(); if (d.getUTCDate() <= tirSam(y, m)) return { y, m, j: tirSam(y, m) }; const ny = m === 11 ? y + 1 : y, nm = (m + 1) % 12; return { y: ny, m: nm, j: tirSam(ny, nm) }; };
+  const tirJourTxt = (c) => "samedi " + c.j + (c.j === 1 ? "er" : "") + " " + TMOIS[c.m];
+  const tirOuvert = () => { const d = new Date(); return d.getUTCDate() !== tirSam(d.getUTCFullYear(), d.getUTCMonth()); };
   function tirHorloge() {
-    const c = tirCampagne(), tirage = Date.UTC(c.y, c.m, 1, 20, 0, 0), fin = Date.UTC(c.m === 0 ? c.y - 1 : c.y, c.m - 1 < 0 ? 11 : c.m - 1, tirFinJ(c.m === 0 ? c.y - 1 : c.y, c.m - 1 < 0 ? 11 : c.m - 1), 23, 59, 59), now = Date.now();
+    const c = tirCampagne(), tirage = Date.UTC(c.y, c.m, c.j, 20, 0, 0), fin = Date.UTC(c.y, c.m, c.j - 1, 23, 59, 59), now = Date.now();
     const ouvert = tirOuvert(), cible = tirage, ms = Math.max(0, cible - now), d = Math.floor(ms / 864e5), h = Math.floor(ms / 36e5) % 24, mi = Math.floor(ms / 6e4) % 60, se = Math.floor(ms / 1e3) % 60;
     const b = $$("#sd-tirCd b"); if (b.length === 4) [d, h, mi, se].forEach((v, i) => (b[i].textContent = String(v).padStart(2, "0")));
-    const mois = TMOIS[c.m];
-    $$(".sd-tirDay").forEach((e) => (e.textContent = "1er " + mois)); $("#sd-tirClockLab").textContent = "Tirage le 1er " + mois + " à 20 h, dans";
-    $("#sd-tirFormSub").textContent = "Inscriptions jusqu'au " + new Date(fin).getUTCDate() + " " + TMOIS[(c.m + 11) % 12] + " à minuit. Une seule participation par numéro.";
+    const jt = tirJourTxt(c), fd = new Date(fin);
+    $$(".sd-tirDay").forEach((e) => (e.textContent = jt)); $("#sd-tirClockLab").textContent = "Tirage le " + jt + " à 20 h, dans";
+    $("#sd-tirFormSub").textContent = "Inscriptions jusqu'au " + ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"][fd.getUTCDay()] + " " + fd.getUTCDate() + " " + TMOIS[fd.getUTCMonth()] + " à minuit. Une seule participation par numéro.";
     return { ouvert, fin };
   }
   async function tirPage() {
@@ -7391,15 +7402,15 @@ function init(root) {
   }
   function tirFerme() {
     const c = tirCampagne(); $("#sd-tirForm").hidden = true; const box = $("#sd-tirClosed"); box.hidden = false;
-    box.innerHTML = '<p class="cz-k2">Inscriptions fermées</p><h2>Tirage le 1er ' + TMOIS[c.m] + '</h2><p>Les inscriptions pour le tirage suivant rouvrent le 2 du mois. Reviens tenter ta chance.</p>';
+    box.innerHTML = '<p class="cz-k2">Inscriptions fermées</p><h2>Tirage aujourd\'hui à 20 h</h2><p>Les inscriptions pour le tirage suivant rouvrent demain. La vidéo du tirage sera sur le TikTok de SODAF ce soir.</p>';
   }
   function tirTicket(n, deja, qui) {
     TIR.dl = { n, qui: qui || null };
     const c = tirCampagne(), num = String(n).padStart(4, "0"), url = location.origin + "/#tirage";
-    const msg = "Jackpot étudiant SODAF : le permis à 15 000 F au lieu de 60 000 F. 2 gagnants tirés au sort en direct sur TikTok le 1er " + TMOIS[c.m] + " à 20 h. C'est gratuit, inscris-toi ici : " + url;
+    const msg = "Jackpot étudiant SODAF : le permis à 15 000 F au lieu de 60 000 F. 2 gagnants tirés au sort le " + tirJourTxt(c) + " à 20 h, annoncés sur le TikTok de SODAF. C'est gratuit, inscris-toi ici : " + url;
     $("#sd-tirForm").hidden = true; const box = $("#sd-tirDone"); box.hidden = false; { const pv = $("#sd-tpv"); if (pv) { pv.classList.add("on"); $("#sd-tpvNum").textContent = "N° " + num; if (qui) { $("#sd-tpvName").textContent = (qui.nom + " " + qui.pre).trim(); $("#sd-tpvUni").textContent = qui.uni || ""; } } if (!deja) setTimeout(() => tnConfetti($("#sd-tpv")), 250); }
-    box.innerHTML = '<div class="tir-myticket"><div class="mt-l"><p class="cz-k">Ton ticket</p><b>N° ' + num + '</b><span>Tirage le 1er ' + TMOIS[c.m] + ' à 20 h, en direct sur TikTok</span></div><div class="mt-r"><span>' + (deja ? "Tu es déjà inscrit ce mois-ci" : "Participation enregistrée") + '</span><b>Bonne chance</b></div></div>' +
-      '<p class="tir-donep">Suis le live sur TikTok le jour du tirage. On t\'appelle et on t\'écrit aussi sur WhatsApp si tu gagnes. Plus tes amis jouent, plus on parle de SODAF dans ton université : partage le tirage.</p>' +
+    box.innerHTML = '<div class="tir-myticket"><div class="mt-l"><p class="cz-k">Ton ticket</p><b>N° ' + num + '</b><span>Tirage le ' + tirJourTxt(c) + ' à 20 h · gagnants annoncés sur TikTok</span></div><div class="mt-r"><span>' + (deja ? "Tu es déjà inscrit ce mois-ci" : "Participation enregistrée") + '</span><b>Bonne chance</b></div></div>' +
+      '<p class="tir-donep">Abonne-toi au TikTok de SODAF (@autoecole.sodaf.tg) : la vidéo du tirage y est publiée. On t\'appelle et on t\'écrit aussi sur WhatsApp si tu gagnes. Plus tes amis jouent, plus on parle de SODAF dans ton université : partage le tirage.</p>' +
       '<div class="tir-dl"><button class="btn cz-btn" type="button" data-tirdl><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>Télécharger mon ticket</button><small>Garde-le dans ta galerie : il sert de preuve le jour du tirage.</small></div>' +
       '<div class="tir-share"><a class="btn btn-wa" target="_blank" rel="noopener" href="https://wa.me/?text=' + encodeURIComponent(msg) + '">Partager sur WhatsApp</a><button class="btn btn-line" type="button" data-copy="' + escHtml(url) + '">Copier le lien</button></div>';
   }
@@ -7446,9 +7457,9 @@ function init(root) {
     if (qui && qui.uni) T(qui.uni.slice(0, 44), cx + 70, cy + 446, F(500, 36, "Figtree"), "#AEB6BF");
     const c = tirCampagne();
     T("TIRAGE AU SORT", cx + 70, cut + 82, F(800, 28), "#8E99A4", "left", 6);
-    T("1er " + TMOIS[c.m] + " " + c.y, cx + 70, cut + 156, F(800, 58), "#FFFFFF");
-    T("à 20 h, en direct sur TikTok", cx + 70, cut + 222, F(700, 40), "#F2B705");
-    x.fillStyle = "#FF2D55"; x.beginPath(); x.arc(cx + 82, cut + 276, 11, 0, 7); x.fill(); T("Le live commence à 19 h", cx + 106, cut + 288, F(500, 32, "Figtree"), "#C9D0D6");
+    T(("Samedi " + c.j + (c.j === 1 ? "er" : "") + " " + TMOIS[c.m]), cx + 70, cut + 156, F(800, 58), "#FFFFFF");
+    T("à 20 h · gagnants sur TikTok", cx + 70, cut + 222, F(700, 40), "#F2B705");
+    x.fillStyle = "#FF2D55"; x.beginPath(); x.arc(cx + 82, cut + 276, 11, 0, 7); x.fill(); T("Abonne-toi : @autoecole.sodaf.tg", cx + 106, cut + 288, F(500, 32, "Figtree"), "#C9D0D6");
     T("Participation enregistrée · gratuite", cx + 70, cut + 362, F(600, 28, "Figtree"), "#6F7A85");
     const sx = cx + cw - 140, sy = cut + 236; x.fillStyle = "#fff"; x.beginPath(); x.arc(sx, sy, 92, 0, 7); x.fill(); x.strokeStyle = "#D7263D"; x.lineWidth = 20; x.beginPath(); x.arc(sx, sy, 76, 0, 7); x.stroke();
     T("15 000", sx, sy + 4, F(800, 34), "#111", "center", -1); T("F", sx, sy + 38, F(800, 22), "#111", "center");
