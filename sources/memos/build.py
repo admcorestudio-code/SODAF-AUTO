@@ -3,7 +3,7 @@
 import html, pathlib
 ICI = pathlib.Path(__file__).parent
 LOGO = (ICI / "logo.svg.html").read_text(encoding="utf-8")
-MOIS = "octobre 2026"
+MOIS = "novembre 2026"
 
 def e(t):  # texte simple, avec **gras**
     t = html.escape(t, quote=False)
@@ -11,7 +11,7 @@ def e(t):  # texte simple, avec **gras**
     return "".join(("<b>" + p + "</b>") if i % 2 else p for i, p in enumerate(parts))
 
 PRIX = [("Formation complète", "55 000 F"), ("Formule rapide", "35 000 F"), ("Tarif étudiant", "30 000 F"),
-        ("Corps habillés", "50 000 F"), ("Formation privée", "85 000 F"), ("Remise à niveau", "25 000 F"),
+        ("Formation privée", "85 000 F"), ("Remise à niveau", "25 000 F"),
         ("Code seul", "25 000 F"), ("Séance en plus", "3 000 F"), ("Dépôt d'examen", "35 000 F")]
 PRIX_NOTE = ("Inscription **5 000 F** pour toutes les formules (remise à niveau : comprise ; gagnant du tirage : offerte). "
              "Paiement en 2 fois : la moitié, puis le reste dès que possible. **Prix fixes**, aucune remise.")
@@ -93,10 +93,10 @@ SEC = page("Secrétariat", "Le secrétariat, étape par étape",
     "Formule ou prix : tu ne changes jamais. Fiche → « Le client s'est trompé de formule ? ».",
     "Besoin d'argent (voiture, agence) : **Demandes à la gérante**. Pas le prix ? Coche **Montant inconnu**.",
   ]) +
-  puces("Les tarifs spéciaux", [
+  puces("Les cas particuliers", [
     "**Étudiant** : carte d'étudiant de l'année + carte d'identité. Sinon, tarif normal.",
-    "**Corps habillés** : carte professionnelle + carte d'identité. Conseille gentiment de venir en civil si possible (pas obligé).",
-    "« Pourquoi ils paient moins ? » : « Un petit geste de 5 000 F pour ceux qui servent le pays, comme pour les étudiants. » Puis propose la formule qui lui va.",
+    "**Corps habillés** : même prix que tout le monde. Conseille gentiment de venir en civil si possible (pas obligé).",
+    "**Formation privée** : 85 000 F, 1 h seul avec le moniteur, code en particulier.",
   ]),
   prix() + regle(REGLES))
 
@@ -125,7 +125,7 @@ GER = page("Gérante", "La gérante, au quotidien",
   ]) +
   puces("La direction décide", [
     "Toute dépense : elle **accorde et paie** en un geste, puis la facture termine la tâche.",
-    "Les prix : fixes, **aucune remise**. Réductions seulement : étudiant, corps habillés, parrainage, tirage.",
+    "Les prix : fixes, **aucune remise**. Réductions seulement : étudiant, parrainage, tirage.",
   ]) +
   puces("L'Ambassadeur", [
     "Il t'envoie ses vidéos dans **Messages → Gérante ↔ Ambassadeur** : réponds « c'est bon » ou « change ça ».",
@@ -134,7 +134,7 @@ GER = page("Gérante", "La gérante, au quotidien",
   ]) +
   puces("Les tarifs spéciaux", [
     "**Étudiant** 30 000 F : carte d'étudiant + carte d'identité.",
-    "**Corps habillés** 50 000 F : carte professionnelle + carte d'identité. « Un petit geste pour ceux qui servent le pays. »",
+    "**Corps habillés** : même prix que tout le monde ; une pub faite pour eux (« votre permis à votre rythme »).",
     "**Formation privée** 85 000 F : 1 h seul en voiture, code en particulier.",
   ]),
   prix() + regle(REGLES))
@@ -209,7 +209,7 @@ AMB = page("Ambassadeur", "L'Ambassadeur, l'image de SODAF",
     "**Commence avec 5 000 F** : le code en ligne s'ouvre, puis 2 mois pour payer la formation.",
     "Petits groupes : **6 au plus** en salle, **4 au plus** dans la voiture, double pédales.",
     "Code le soir à 18 h pour ceux qui travaillent. Conduite à ton rythme.",
-    "Étudiants **30 000 F**. Corps habillés **50 000 F** : « un geste pour ceux qui servent le pays ».",
+    "Étudiants **30 000 F**. Corps habillés : « votre permis, à votre rythme » (gardes, missions).",
     "Le tirage au sort étudiant, chaque mois, en direct sur TikTok.",
   ]) +
   puces("Ce qu'on ne dit pas", [

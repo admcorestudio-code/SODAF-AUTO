@@ -26,7 +26,7 @@ h1{margin:4px 0 0;font:800 27px/1.1 Outfit,Figtree,sans-serif;letter-spacing:-.0
 .pc li::marker{color:#0B6E4F}
 .neg .pc li::marker{color:#BF3328}
 .neg h3{color:#9B2A20}
-.pxs{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));border:1.2px solid #D5D9DE;border-radius:10px;overflow:hidden}
+.pxs{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));border:1.2px solid #D5D9DE;border-radius:10px;overflow:hidden}
 .px{padding:5px 6px;border-right:1px solid #E3E6E9;display:flex;flex-direction:column;gap:1px}
 .px:last-child{border-right:0}
 .px span{font-size:9.6px;color:#4A525C;line-height:1.2}
