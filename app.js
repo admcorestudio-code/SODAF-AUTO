@@ -7403,6 +7403,7 @@ function init(root) {
 
   // ---- Tirage au sort étudiant : compte à rebours, compteur, participation avec photo de la carte
   const TIR = { blob: null, t: 0, infos: null };
+  const TKSVG = '<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M12.53.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>';
   const TIKTOK = "https://www.tiktok.com/@autoecole.sodaf.tg"; // compte TikTok de SODAF (28 oct. 2026) : le bouton « Suivre » de la page du tirage et le lien du pied de page
   // Rouleaux de la machine : ils tournent puis s'arrêtent sur 1 5 0 0 0
   function tirRouleaux() {
@@ -7476,7 +7477,8 @@ function init(root) {
     const msg = "Jackpot étudiant SODAF : le permis à 15 000 F au lieu de 60 000 F. 2 gagnants tirés au sort le " + tirJourTxt(c) + " à 20 h, annoncés sur le TikTok de SODAF. C'est gratuit, inscris-toi ici : " + url;
     $("#sd-tirForm").hidden = true; const box = $("#sd-tirDone"); box.hidden = false; { const pv = $("#sd-tpv"); if (pv) { pv.classList.add("on"); $("#sd-tpvNum").textContent = "N° " + num; if (qui) { $("#sd-tpvName").textContent = (qui.nom + " " + qui.pre).trim(); $("#sd-tpvUni").textContent = qui.uni || ""; } } if (!deja) setTimeout(() => tnConfetti($("#sd-tpv")), 250); }
     box.innerHTML = '<div class="tir-myticket"><div class="mt-l"><p class="cz-k">Ton ticket</p><b>N° ' + num + '</b><span>Tirage le ' + tirJourTxt(c) + ' à 20 h · gagnants annoncés sur TikTok</span></div><div class="mt-r"><span>' + (deja ? "Tu es déjà inscrit ce mois-ci" : "Participation enregistrée") + '</span><b>Bonne chance</b></div></div>' +
-      '<p class="tir-donep">Abonne-toi au TikTok de SODAF (@autoecole.sodaf.tg) : la vidéo du tirage y est publiée. On t\'appelle et on t\'écrit aussi sur WhatsApp si tu gagnes. Plus tes amis jouent, plus on parle de SODAF dans ton université : partage le tirage.</p>' +
+      (TIKTOK ? '<div class="tir-tkc"><span class="tir-tkic" aria-hidden="true">' + TKSVG + '</span><div class="tir-tkt"><p class="cz-k">Ne rate pas le tirage</p><b>Abonne-toi à SODAF sur TikTok</b><span>La vidéo du tirage y sort le soir même, avec les 2 gagnants. Le bouton ouvre ton application TikTok.</span></div><a class="btn tir-tkb" href="' + TIKTOK + '" target="_blank" rel="noopener">' + TKSVG + 'S\'abonner sur TikTok</a></div>' : '') +
+      '<p class="tir-donep">On t\'appelle et on t\'écrit aussi sur WhatsApp si tu gagnes. Plus tes amis jouent, plus on parle de SODAF dans ton université : partage le tirage.</p>' +
       '<div class="tir-dl"><button class="btn cz-btn" type="button" data-tirdl><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>Télécharger mon ticket</button><small>Garde-le dans ta galerie : il sert de preuve le jour du tirage.</small></div>' +
       '<div class="tir-share"><a class="btn btn-wa" target="_blank" rel="noopener" href="https://wa.me/?text=' + encodeURIComponent(msg) + '">Partager sur WhatsApp</a><button class="btn btn-line" type="button" data-copy="' + escHtml(url) + '">Copier le lien</button></div>';
   }
@@ -8130,6 +8132,15 @@ html{scrollbar-gutter:stable}
 #sodaf-root .cz-form .tir-go{margin-top:14px}
 #sodaf-root .cz-fnote{margin:10px 0 0;text-align:center;font-size:.8rem;color:#8E99A4}
 #sodaf-root .cz .tir-donep{color:#C9D0D6}
+#sodaf-root .tir-tkc{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px 14px;align-items:center;margin-top:16px;padding:16px;border-radius:16px;background:linear-gradient(135deg,#101418,#1B1F26);border:1.5px solid rgba(255,255,255,.14);box-shadow:-3px -3px 0 rgba(37,244,238,.55),3px 3px 0 rgba(254,44,85,.55)}
+#sodaf-root .tir-tkic{width:50px;height:50px;border-radius:14px;background:#000;color:#fff;display:grid;place-items:center;filter:drop-shadow(-2px -2px 0 #25F4EE) drop-shadow(2px 2px 0 #FE2C55)}
+#sodaf-root .tir-tkic svg{width:26px;height:26px}
+#sodaf-root .tir-tkt .cz-k{margin:0 0 2px;color:#25F4EE}
+#sodaf-root .tir-tkt b{display:block;color:#fff;font-size:1.08rem;line-height:1.25}
+#sodaf-root .tir-tkt span{display:block;margin-top:4px;color:#AEB6BF;font-size:.88rem;line-height:1.4}
+#sodaf-root .tir-tkb{grid-column:1/-1;width:100%;justify-content:center;gap:10px;background:#fff;color:#000;font-weight:800;border:0;min-height:52px;font-size:1.02rem;text-decoration:none}
+#sodaf-root .tir-tkb:hover{background:#F2F2EE}
+#sodaf-root .tir-tkb svg{width:20px;height:20px}
 #sodaf-root .cz .tir-done .btn-line{background:transparent;color:#fff;border-color:rgba(255,255,255,.35)}#sodaf-root .cz .tir-done .btn-line:hover{border-color:#fff}
 #sodaf-root .cz .tir-closed h2{color:#fff}#sodaf-root .cz .tir-closed p:not(.cz-k2){color:#AEB6BF}#sodaf-root .cz .tir-closed .cz-k2{color:#F2B705}
 #sodaf-root .cz-altg{background:#F2B705}#sodaf-root .cz-altg p{color:#3A2E05}
