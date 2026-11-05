@@ -686,6 +686,22 @@ a.teamtile.hl{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
 .tm-pane[data-pane="ger"] .tm-role{border-left-color:#6B4FA0}
 .tm-tabs button{position:relative}
 .tm-pane[data-pane="dir"] .tm-role{border-left-color:var(--blue)}
+/* 5 nov. : Gestion repliable en haut de Direction */
+.dr-ges{margin:0 0 18px;border:1.5px solid #D9CFEC;border-radius:18px;background:#fff;overflow:hidden;box-shadow:0 1px 0 rgba(20,23,28,.04)}
+.dr-ges>summary{list-style:none;display:flex;align-items:center;gap:14px;padding:14px 18px;cursor:pointer;background:linear-gradient(90deg,#F4EFFB,#fff 70%);user-select:none}
+.dr-ges>summary::-webkit-details-marker{display:none}
+.dr-ges>summary:hover{background:linear-gradient(90deg,#EDE5F8,#fff 75%)}
+.dr-ges>summary:focus-visible{outline:3px solid #6B4FA0;outline-offset:-3px}
+.dr-gi{flex:none;width:44px;height:44px;border-radius:13px;background:#6B4FA0;color:#fff;display:grid;place-items:center}
+.dr-gt{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}.dr-gt b{font:800 1.08rem/1.2 Outfit,sans-serif;color:var(--ink)}.dr-gt small{font-size:.86rem;color:var(--muted)}
+.dr-gn{flex:none;font:700 .8rem/1 Outfit,sans-serif;font-style:normal;background:#C2410C;color:#fff;border-radius:999px;padding:6px 10px}
+.dr-gc{flex:none;width:34px;height:34px;border-radius:50%;border:1.5px solid #D9CFEC;display:grid;place-items:center;color:#6B4FA0;transition:transform .2s}
+.dr-ges[open]>summary .dr-gc{transform:rotate(180deg)}
+.dr-ges[open]>summary{border-bottom:1.5px solid #EEE8F7}
+#sd-drGesBody{padding:14px 14px 4px}
+#sd-drGesBody>.gr-card{border:0;box-shadow:none;padding:0;margin:0;background:transparent}
+#sd-drGesBody>.gr-card>.eyebrow,#sd-drGesBody #sd-grTitre{display:none}
+@media (max-width:560px){.dr-ges>summary{padding:12px 14px;gap:11px}.dr-gi{width:38px;height:38px}.dr-gt small{font-size:.8rem}#sd-drGesBody{padding:12px 10px 2px}}
 .tm-drmonth{font:700 1.15rem var(--f-display);flex:1}
 .tm-dr div{position:relative}
 .tm-dr div.hl{background:var(--ink);color:#fff}
@@ -2287,6 +2303,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 </div>
 <div class="tm-pane" data-pane="dir" role="tabpanel" hidden>
 <p class="tm-role">Vue d'ensemble de l'auto-école, mise à jour à chaque ouverture. Visible seulement par la direction.</p>
+<details class="dr-ges" id="sd-drGes" hidden><summary><i class="dr-gi" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l2 2 4-4"/><path d="M4 5h16v11a2 2 0 0 1-2 2H9l-5 3z"/></svg></i><span class="dr-gt"><b>Gestion</b><small id="sd-drGesSub">Dépenses, reçus, rapports, parrains et leur historique</small></span><em class="dr-gn" id="sd-drGesN" hidden></em><span class="dr-gc" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></summary><div id="sd-drGesBody"></div></details>
 <div class="tm-bar"><b id="sd-drMonth" class="tm-drmonth"></b><button class="linkbtn" type="button" id="sd-drReload">Actualiser</button></div>
 <div class="tm-stats tm-dr" id="sd-drStats"></div>
 <div class="grid g2 tm-mon" style="margin-top:18px">
@@ -3509,7 +3526,16 @@ function init(root) {
       if (t === "mon") { const slot = $("#sd-mnPlanSlot"); if (cdSec.parentNode !== slot) slot.appendChild(cdSec); cdSec.hidden = false; (eleves.length ? Promise.resolve() : loadEleves(true)).then(() => loadDay()); }
       else if (cdSec.parentNode !== cdHome.p) { cdHome.p.insertBefore(cdSec, cdHome.n); const on = $('#sd-secNav button[aria-selected="true"]'); cdSec.hidden = !on || on.dataset.s !== "conduite"; }
     };
-    const pick = (t) => { if (AMB() && !["com", "pub", "msg", "docs", "taf", "plan"].includes(t)) t = "com"; if (t === "pub" && me && !pubVoit()) t = "docs"; if (t === "com" && me && !AMB() && !DIR()) t = "sec"; if (t === "sec" && me && me.role === "moniteur") t = "mon"; if (t === "mon" && me && me.role === "gerant") t = "ger"; if (t === "mon" && me && me.role === "secretariat") t = "sec"; tabs.forEach((b) => b.setAttribute("aria-selected", b.dataset.t === t)); panes.forEach((p) => (p.hidden = p.dataset.pane !== t)); try { S.set("tmTab", t); } catch (e) {} placePlanning(t); if (t === "mon" || (t === "sec" && $("#sd-secAuj"))) loadMon(); if (t === "dir") loadDir(); if (t === "ger") grCharger(); if (t === "com") comCharger(); if (t === "mec") mcCharger(); if (t === "taf") tfCharger(); if (t === "plan") plCharger(); if (t === "pub") pubCharger(); if (t === "mat") mtCharger(); msVoirFil(false); if (t === "msg") { MS.repere = {}; MS.forceBas = true; msRender(); msNotifBox(); if (!isWide()) setTimeout(() => $(".ms-wrap").scrollIntoView({ block: "start" }), 60); } };
+    // 5 nov. : pour la direction, la Gestion est un bloc repliable tout en haut de Direction (plus d'onglet à part)
+    const gesDansDir = (ouvrir) => {
+      const d = $("#sd-drGes"), body = $("#sd-drGesBody"), src = $('.tm-pane[data-pane="ger"]'); if (!d || !body || !src) return;
+      if (!d.dataset.pret) { d.dataset.pret = 1; [...src.children].forEach((c) => { if (c.id !== "sd-grRole") body.appendChild(c); });
+        d.addEventListener("toggle", () => { try { localStorage.setItem("sodaf.dr.ges", d.open ? "1" : ""); } catch (e) {} }); try { d.open = localStorage.getItem("sodaf.dr.ges") === "1"; } catch (e) {} }
+      d.hidden = false; if (ouvrir) d.open = true;
+      const compte = () => { const n = $$("#sd-gr > .gr-tabs .gr-badge").filter((b) => !b.hidden && !b.closest("[hidden]")).reduce((a, b) => a + (parseInt(b.textContent, 10) || 0), 0), e = $("#sd-drGesN"); if (e) { e.textContent = n + " à voir"; e.hidden = !n; } };
+      Promise.resolve(grCharger()).then(compte, compte); setTimeout(compte, 2500);
+    };
+    const pick = (t) => { let gesOuv = false; if (t === "ger" && me && me.role === "admin") { t = "dir"; gesOuv = true; } if (AMB() && !["com", "pub", "msg", "docs", "taf", "plan"].includes(t)) t = "com"; if (t === "pub" && me && !pubVoit()) t = "docs"; if (t === "com" && me && !AMB() && !DIR()) t = "sec"; if (t === "sec" && me && me.role === "moniteur") t = "mon"; if (t === "mon" && me && me.role === "gerant") t = "ger"; if (t === "mon" && me && me.role === "secretariat") t = "sec"; tabs.forEach((b) => b.setAttribute("aria-selected", b.dataset.t === t)); panes.forEach((p) => (p.hidden = p.dataset.pane !== t)); try { S.set("tmTab", t); } catch (e) {} placePlanning(t); if (t === "mon" || (t === "sec" && $("#sd-secAuj"))) loadMon(); if (t === "dir") { loadDir(); if (me && me.role === "admin") gesDansDir(gesOuv); } if (t === "ger") grCharger(); if (t === "com") comCharger(); if (t === "mec") mcCharger(); if (t === "taf") tfCharger(); if (t === "plan") plCharger(); if (t === "pub") pubCharger(); if (t === "mat") mtCharger(); msVoirFil(false); if (t === "msg") { MS.repere = {}; MS.forceBas = true; msRender(); msNotifBox(); if (!isWide()) setTimeout(() => $(".ms-wrap").scrollIntoView({ block: "start" }), 60); } };
     tabs.forEach((b) => b.addEventListener("click", () => pick(b.dataset.t)));
     const subs = $$("#sd-secNav button[data-s]"), secs = $$(".tm-sec");
     const LOAD = { recevoir: () => { if (window.__ecRender) window.__ecRender(); }, eleves: () => loadEleves(), conduite: () => loadDay(), paiements: () => loadPay(), devoirs: () => loadDev(), depenses: () => depEquipe(), aide: () => {}, auj: () => loadMon() };
@@ -4325,7 +4351,7 @@ function init(root) {
       dirTab.querySelector("b").textContent = me.role === "gerant" ? "Chiffres" : "Direction"; dirTab.querySelector("small").textContent = me.role === "gerant" ? "Vue d'ensemble de l'agence" : "Chiffres du mois, à surveiller";
       $('#sd-tmTabs [data-t="com"]').hidden = !(DIR() || AMB()); $('#sd-tmTabs [data-t="pub"]').hidden = !pubVoit(); $('#sd-tmTabs [data-t="mat"]').hidden = AMB(); $('#sd-tmTabs [data-t="mon"]').hidden = AMB() || me.role === "gerant"; { const vb = $('.mn-tabs [data-mnp="voit"]'); if (vb) vb.hidden = me.role !== "moniteur"; let k0 = null; try { k0 = localStorage.getItem("sodaf.mn.ong"); } catch (e) {} mnOnglet(k0 || "auj"); } $('#sd-tmTabs [data-t="mec"]').hidden = AMB(); // Communication : l'Ambassadeur, la gérante, la direction
       { const tf = $("#sd-tfSub"); if (tf) tf.textContent = me.role === "admin" ? "Tâches et paiements" : me.role === "gerant" ? "Tâches de l'équipe" : "Tes tâches"; }
-      $('#sd-tmTabs [data-t="ger"]').hidden = !GES(); { const gt = $('#sd-tmTabs [data-t="ger"]'); gt.querySelector("small").textContent = me.role === "secretariat" ? "Rapport, frais, tirage, parrainage" : me.role === "admin" ? "Dépenses, reçus, rapport, parrains" : "Demandes, décisions, rapport"; } // onglet Gestion
+      $('#sd-tmTabs [data-t="ger"]').hidden = !GES() || me.role === "admin"; /* 5 nov. : la direction a la Gestion en haut de Direction (repliable) */ { const gt = $('#sd-tmTabs [data-t="ger"]'); gt.querySelector("small").textContent = me.role === "secretariat" ? "Rapport, frais, tirage, parrainage" : me.role === "admin" ? "Dépenses, reçus, rapport, parrains" : "Demandes, décisions, rapport"; } // onglet Gestion
       $("#sd-grRole").textContent = me.role === "gerant" ? "Ton espace de gérante : demande l'accord de la direction, note tes décisions, envoie ton rapport de la semaine. Tu as aussi les chiffres de l'agence, les reçus et le moniteur." : me.role === "secretariat" ? "Ce que tu envoies à la direction : le rapport de la semaine (chaque samedi) et les petits frais. Tu vérifies aussi le gagnant du tirage et tu paies les parrains." : "Les dépenses à accorder, les reçus à annuler, le rapport du secrétariat et l'argent des parrains.";
       { const sec = $("#sd-drSec"); if (sec) sec.hidden = me.role !== "admin"; } // comptes et sécurité : direction seulement
       { const rl = $('.tm-pane[data-pane="dir"] .tm-role'); if (rl) rl.textContent = me.role === "gerant" ? "Vue d'ensemble de l'auto-école, mise à jour à chaque ouverture. Visible par la direction et toi." : "Vue d'ensemble de l'auto-école, mise à jour à chaque ouverture. Visible par la direction."; }
