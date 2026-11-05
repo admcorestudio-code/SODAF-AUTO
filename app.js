@@ -5688,7 +5688,7 @@ function init(root) {
     // Carte d'une demande de dépense : même présentation partout (réception, historique, mes demandes)
     function depCarte(d, o) {
       const role = (GR.prof && GR.prof[d.auteur]) || (d.auteur === me.id ? me.role : ""), st = o.st;
-      const pcs = (d.devis ? '<button type="button" class="btn btn-line btn-sm dq-pc" data-dep="' + esc(d.devis) + '">Voir le devis</button>' : "") + (d.facture ? '<button type="button" class="btn btn-line btn-sm dq-pc" data-dep="' + esc(d.facture) + '">Voir la facture</button>' : "");
+      const pcs = (d.devis ? '<button type="button" class="btn btn-line btn-sm dq-pc" data-dep="' + esc(d.devis) + '">' + (d.materiel_id ? "Voir la photo du modèle" : "Voir le devis") + "</button>" : "") + (d.facture ? '<button type="button" class="btn btn-line btn-sm dq-pc" data-dep="' + esc(d.facture) + '">Voir la facture</button>' : "");
       return '<article class="dq dq-' + st[0] + '"><header class="dq-top"><span class="dq-role dq-r-' + (role || "x") + '">' + (ROLE_NOM[role] || "Équipe") + '</span><span class="dq-kind">' + (d.nature === "Carburant" ? "Essence en plus" : d.materiel_id ? "Commande de matériel" : d.voiture ? "Dépense · voiture" : "Dépense · agence") + '</span><span class="dq-when">' + esc(grQuand(d.le)) + "</span></header>" +
         '<div class="dq-mid"><b class="dq-mt' + (d.montant == null ? " dq-inc" : "") + '">' + (d.montant == null ? "Montant inconnu" : F(d.montant)) + '</b><em class="dq-st">' + st[1] + "</em></div>" +
         '<p class="dq-tx">' + esc(String(d.texte || "").replace(/^\[TEST\]\s*/, "")) + (/^\[TEST\]/.test(d.texte || "") ? ' <span class="dq-test">TEST</span>' : "") + "</p>" +
@@ -6304,6 +6304,7 @@ function init(root) {
       $("#sd-mtCats").innerHTML = ["Tout", ...MT_CATS].map((k) => { const n = k === "Tout" ? L.length : L.filter((x) => x.categorie === k).length; return '<button type="button" role="tab" data-mtc="' + k + '" aria-selected="' + (MT.cat === k) + '">' + k + (n ? " <em>" + n + "</em>" : "") + "</button>"; }).join("");
       const V = (MT.cat === "Tout" ? L : L.filter((x) => x.categorie === MT.cat)).slice().sort((a, b) => mtAlerte(b) - mtAlerte(a) || a.nom.localeCompare(b.nom, "fr"));
       $("#sd-mtList").innerHTML = V.length ? V.map(mtCarte).join("") : '<p class="tm-empty">' + (L.length ? "Rien dans cette catégorie." : DIR() ? "Aucun objet pour l'instant. Touche « Ajouter un objet » pour commencer : cahiers, ordinateur, chaises, voiture, caméra…" : "Aucun objet pour l'instant. La direction remplit la liste.") + "</p>";
+      mtVignettes();
       const C = MT.c; $("#sd-mtCmd").innerHTML = C.length ? C.map(mtCmdCarte).join("") : '<p class="tm-empty">Aucune commande pour l\'instant.</p>';
       mtOnglet(MT.ong);
     }
@@ -6311,17 +6312,23 @@ function init(root) {
       const cmd = mtEnCours(x.id), al = [];
       if (mtBas(x)) al.push(x.quantite === 0 ? "Plus en stock" : "Il en reste " + x.quantite + " (alerte à " + x.seuil + ")");
       const prix = x.prix == null ? '<b class="mt-inc">Prix pas noté</b>' : "<b>" + F(x.prix) + "</b><small>" + (x.prix_par === "unite" ? "l'unité" + (x.quantite > 1 ? " · en tout " + F(mtValeur(x)) : "") : "pour le tout") + "</small>";
-      return '<article class="mt-it' + (al.length ? " mt-al" : "") + '" data-mt="' + x.id + '"><div class="mt-h"><b>' + esc(x.nom) + '</b><span class="mt-cat">' + esc(x.categorie) + "</span></div>" +
+      return '<article class="mt-it' + (al.length ? " mt-al" : "") + (x.photo ? " mt-hasph" : "") + '" data-mt="' + x.id + '">' + (x.photo ? '<button type="button" class="mt-ph" data-dep="' + esc(x.photo) + '" aria-label="Voir la photo : ' + esc(x.nom) + '"><img data-mtph="' + esc(x.photo) + '" alt=""></button>' : "") + '<div class="mt-h"><b>' + esc(x.nom) + '</b><span class="mt-cat">' + esc(x.categorie) + "</span></div>" +
         '<div class="mt-row"><div><span>Quantité</span><b>' + milliers(x.quantite) + "</b></div><div><span>Prix</span>" + prix + "</div><div><span>État</span><em class=\"mt-et et-" + x.etat + '">' + MT_ET[x.etat] + "</em></div></div>" +
         (al.length ? '<p class="mt-alt">' + al.join(" · ") + "</p>" : "") + (x.note ? '<p class="mt-note">' + esc(x.note) + "</p>" : "") +
         (cmd ? '<p class="mt-enc">Commande en cours : × ' + cmd.materiel_qte + " · " + mtStatut(cmd)[1] + "</p>" : "") +
         '<div class="mt-act">' + (mtPeutCmd() && !cmd ? '<button type="button" class="btn btn-sm btn-green" data-mtgo="cmd">Commander</button>' : "") + (mtPeutCmd() ? '<button type="button" class="btn btn-sm btn-line" data-mtgo="maj">Quantité et état</button>' : "") + (DIR() ? '<button type="button" class="btn btn-sm btn-line" data-mtgo="edit">Modifier</button>' : "") + '</div><div class="mt-slot"></div></article>';
     }
+    async function mtVignettes() {
+      const im = $$("#sd-mtList img[data-mtph]"), paths = [...new Set(im.map((x) => x.dataset.mtph))]; if (!paths.length) return;
+      try { const r = await fetch(SB_URL + "/storage/v1/object/sign/depenses", { method: "POST", headers: { apikey: SB_KEY, Authorization: "Bearer " + (await DB.token()), "Content-Type": "application/json" }, body: JSON.stringify({ expiresIn: 3600, paths }) });
+        if (!r.ok) return; const u = {}; (await r.json()).forEach((y) => { if (y.signedURL) u[y.path] = SB_URL + "/storage/v1" + y.signedURL; }); im.forEach((x) => { if (u[x.dataset.mtph]) x.src = u[x.dataset.mtph]; }); } catch (e) {}
+    }
+    const mtPhotoHtml = (lab, aide) => '<div class="field"><label>' + lab + '</label><div class="cf-pick"><label class="btn btn-line btn-sm">Choisir une photo<input type="file" class="mt-file" accept="image/*" hidden></label><span class="cf-nom mt-fnom">Aucune photo</span></div>' + (aide ? '<p class="mt-aide">' + aide + "</p>" : "") + "</div>";
     function mtStatut(c) { return c.statut === "refusee" ? ["non", "Refusée"] : c.statut === "accordee" ? (c.materiel_recu_le ? ["oui", "Reçue, ajoutée au stock"] : ["att", "Accordée : à acheter"]) : ["att", "Chez la direction"]; }
     function mtCmdCarte(c) {
       const st = mtStatut(c), m = MT.l.find((x) => x.id === c.materiel_id);
       return '<article class="mt-cmd st-' + st[0] + '" data-mtcmd="' + c.id + '"><div class="mt-h"><b>' + esc(m ? m.nom : String(c.texte || "").replace(/^Matériel : /, "").split(" × ")[0]) + " × " + c.materiel_qte + '</b><em class="gr-st ' + st[0] + '">' + st[1] + "</em></div><p>" + esc(((t) => { const m2 = t.match(/× \d+ \(([^)]*)\)(?: : ([\s\S]*))?$/); return m2 ? "Raison : " + m2[1] + (m2[2] ? " · " + m2[2] : "") : t; })(String(c.texte || ""))) + "</p><small>" + (c.montant ? F(c.montant) : "Prix inconnu") + " · demandée " + esc(grQuand(c.le)) + "</small>" + (c.reponse ? '<p class="dq-rep">« ' + esc(c.reponse) + " »</p>" : "") +
-        (c.statut === "accordee" && !c.materiel_recu_le && GES() ? '<div class="mt-act"><button type="button" class="btn btn-sm btn-green" data-mtrecu>Reçu : ajouter au stock</button></div>' : "") + "</article>";
+        (c.photo ? '<div class="mt-act"><button type="button" class="btn btn-sm btn-line" data-dep="' + esc(c.photo) + '">Voir la photo du modèle</button></div>' : "") + (c.statut === "accordee" && !c.materiel_recu_le && GES() ? '<div class="mt-act"><button type="button" class="btn btn-sm btn-green" data-mtrecu>Reçu : ajouter au stock</button></div>' : "") + "</article>";
     }
     function mtForm(card, kind) {
       const slot = card.querySelector(".mt-slot"), x = MT.l.find((y) => y.id === +card.dataset.mt) || null;
@@ -6329,7 +6336,7 @@ function init(root) {
       const chips = (name, opts, cur) => '<div class="mt-chips" data-name="' + name + '">' + opts.map((o) => '<button type="button" data-v="' + o[0] + '" aria-pressed="' + (o[0] === cur) + '">' + o[1] + "</button>").join("") + "</div>";
       if (kind === "cmd") {
         const r0 = x.etat === "casse" ? "Cassé" : x.etat === "manquant" ? "Manquant" : mtBas(x) ? "Stock bas" : "Autre", q0 = mtBas(x) && x.seuil ? Math.max(1, x.seuil * 2 - x.quantite) : 1;
-        slot.innerHTML = '<form class="mt-f" novalidate><h4 class="gr-h4">Commander : ' + esc(x.nom) + '</h4><div class="mt-fr"><div class="field"><label>Combien ?</label><input class="mt-q" inputmode="numeric" autocomplete="off" value="' + q0 + '"></div><div class="field"><label>Pourquoi ?</label>' + chips("raison", [["Manquant", "Manquant"], ["Cassé", "Cassé"], ["Stock bas", "Presque fini"], ["Autre", "Autre"]], r0) + '</div></div><div class="field"><label>Un mot (facultatif)</label><input class="mt-n" maxlength="200" autocomplete="off" placeholder="ex. pour les nouveaux élèves de lundi"></div><p class="mt-est"></p><div class="mt-act"><button type="submit" class="btn btn-sm btn-green">Envoyer la commande</button><button type="button" class="btn btn-sm btn-line" data-mtx>Annuler</button></div></form>';
+        slot.innerHTML = '<form class="mt-f" novalidate><h4 class="gr-h4">Commander : ' + esc(x.nom) + '</h4><div class="mt-fr"><div class="field"><label>Combien ?</label><input class="mt-q" inputmode="numeric" autocomplete="off" value="' + q0 + '"></div><div class="field"><label>Pourquoi ?</label>' + chips("raison", [["Manquant", "Manquant"], ["Cassé", "Cassé"], ["Stock bas", "Presque fini"], ["Autre", "Autre"]], r0) + '</div></div><div class="field"><label>Un mot (facultatif)</label><input class="mt-n" maxlength="200" autocomplete="off" placeholder="ex. pour les nouveaux élèves de lundi"></div>' + mtPhotoHtml("Photo du modèle (facultatif)", x.photo ? "La photo de l\'objet part déjà avec la commande. Ajoutes-en une autre seulement si le modèle est différent." : "Si tu as un modèle, prends-le en photo : la personne qui achète saura exactement quoi chercher.") + '<p class="mt-est"></p><div class="mt-act"><button type="submit" class="btn btn-sm btn-green">Envoyer la commande</button><button type="button" class="btn btn-sm btn-line" data-mtx>Annuler</button></div></form>';
         const f = slot.querySelector("form"), est = () => { const q = +(f.querySelector(".mt-q").value.replace(/\D/g, "")) || 0; f.querySelector(".mt-est").innerHTML = x.prix ? "Montant : <b>" + F(x.prix_par === "unite" ? x.prix * q : x.prix) + "</b>" + (x.prix_par === "unite" ? " (" + q + " × " + F(x.prix) + ")" : "") : "Prix pas noté : la direction le complètera."; };
         f.querySelector(".mt-q").addEventListener("input", est); est();
       } else if (kind === "maj") {
@@ -6342,26 +6349,29 @@ function init(root) {
           '<div class="field"><label>Ce prix est…</label>' + chips("par", [["unite", "Le prix d'une seule pièce"], ["total", "Le prix de tout (lot, machine…)"]], v.prix_par) + "</div>" +
           '<div class="mt-fr"><div class="field"><label>État</label>' + chips("etat", Object.entries(MT_ET), v.etat) + '</div><div class="field"><label>Alerte quand il en reste (facultatif)</label><input class="mt-s" inputmode="numeric" autocomplete="off" value="' + (v.seuil == null ? "" : v.seuil) + '" placeholder="ex. 10"></div></div>' +
           '<div class="field"><label>Note (facultatif)</label><input class="mt-n" maxlength="300" autocomplete="off" value="' + esc(v.note || "") + '" placeholder="ex. fourni par l\'imprimerie de Tokoin"></div>' +
+          mtPhotoHtml(v.photo ? "Photo du modèle (en changer)" : "Photo du modèle (facultatif)", "Elle part avec chaque commande de cet objet.") +
           '<div class="mt-act"><button type="submit" class="btn btn-sm btn-green">' + (x ? "Enregistrer" : "Ajouter") + '</button><button type="button" class="btn btn-sm btn-line" data-mtx>Annuler</button>' + (x ? '<button type="button" class="btn btn-sm mt-ret" data-mtret>Retirer de la liste</button>' : "") + "</div></form>";
       }
       const fi = slot.querySelector("input"); if (fi && kind !== "cmd") fi.focus();
     }
     const mtChip = (f, n) => { const b = f.querySelector('[data-name="' + n + '"] [aria-pressed="true"]'); return b ? b.dataset.v : null; };
     const mtNum = (el) => { const t = el.value.replace(/\D/g, ""); return t === "" ? null : +t; };
+    async function mtPhoto(f) { const i = f.querySelector(".mt-file"), fl = i && i.files && i.files[0]; if (!fl) return null; if (!/^image\//.test(fl.type)) throw new Error("Choisis une image (photo)"); try { return await depEnvoyer(fl, "materiel"); } catch (e) { throw new Error("La photo n'a pas pu être envoyée"); } }
     async function mtEnvoyer(f, card) {
       const kind = f.parentNode.dataset.k, id = card && card.dataset.mt ? +card.dataset.mt : null, b = f.querySelector("[type=submit]");
       if (kind === "cmd") { const q = mtNum(f.querySelector(".mt-q")); if (!q) { toast("Écris combien il en faut", true); return; }
-        confirmBtn(b, async () => { b.disabled = true; const r = await run(() => DB.q("rpc/materiel_commander", { method: "POST", body: { p_id: id, p_quantite: q, p_raison: mtChip(f, "raison") || "Autre", p_note: f.querySelector(".mt-n").value.trim() || null } }).then(() => true), "Commande envoyée à la direction"); b.disabled = false; if (r) mtCharger(); }); return; }
+        confirmBtn(b, async () => { b.disabled = true; const r = await run(async () => { const ph = await mtPhoto(f); await DB.q("rpc/materiel_commander", { method: "POST", body: { p_id: id, p_quantite: q, p_raison: mtChip(f, "raison") || "Autre", p_note: f.querySelector(".mt-n").value.trim() || null, p_photo: ph } }); return true; }, "Commande envoyée à la direction"); b.disabled = false; if (r) mtCharger(); }); return; }
       if (kind === "maj") { const q = mtNum(f.querySelector(".mt-q")); if (q == null) { toast("Écris la quantité", true); return; }
         confirmBtn(b, async () => { b.disabled = true; const r = await run(() => DB.q("rpc/materiel_maj", { method: "POST", body: { p_id: id, p_quantite: q, p_etat: mtChip(f, "etat") || "bon" } }).then(() => true), "Enregistré"); b.disabled = false; if (r) mtCharger(); }); return; }
       const nom = f.querySelector(".mt-nom").value.trim().replace(/\s+/g, " "), q = mtNum(f.querySelector(".mt-q"));
       if (nom.length < 2) { toast("Écris le nom de l'objet", true); return; } if (q == null) { toast("Écris la quantité", true); return; }
       const body = { nom, categorie: mtChip(f, "cat") || "Agence", quantite: q, prix: mtNum(f.querySelector(".mt-p")), prix_par: mtChip(f, "par") || "unite", etat: mtChip(f, "etat") || "bon", seuil: mtNum(f.querySelector(".mt-s")), note: f.querySelector(".mt-n").value.trim() || null };
-      confirmBtn(b, async () => { b.disabled = true; const r = await run(() => (id ? DB.q("materiel?id=eq." + id, { method: "PATCH", body, prefer: "return=minimal" }) : DB.q("materiel", { method: "POST", body, prefer: "return=minimal" })).then(() => true), id ? "Objet modifié" : "Objet ajouté"); b.disabled = false; if (r) { if (!id) $("#sd-mtNew").innerHTML = ""; mtCharger(); } });
+      confirmBtn(b, async () => { b.disabled = true; const r = await run(async () => { const ph = await mtPhoto(f); if (ph) body.photo = ph; await (id ? DB.q("materiel?id=eq." + id, { method: "PATCH", body, prefer: "return=minimal" }) : DB.q("materiel", { method: "POST", body, prefer: "return=minimal" })); return true; }, id ? "Objet modifié" : "Objet ajouté"); b.disabled = false; if (r) { if (!id) $("#sd-mtNew").innerHTML = ""; mtCharger(); } });
     }
     { const mp = $('.tm-pane[data-pane="mat"]'); if (mp) {
       mp.addEventListener("click", (e) => {
         const t = e.target.closest(".mt-tabs [data-mtp]"); if (t) { mtOnglet(t.dataset.mtp); return; }
+        const dp = e.target.closest("[data-dep]"); if (dp) { depOuvrir(dp.dataset.dep); return; }
         const c = e.target.closest("[data-mtc]"); if (c) { MT.cat = c.dataset.mtc; mtRender(); return; }
         const ch = e.target.closest(".mt-chips [data-v]"); if (ch) { ch.parentNode.querySelectorAll("[data-v]").forEach((x) => x.setAttribute("aria-pressed", x === ch)); return; }
         if (e.target.closest("#sd-mtAdd")) { const box = $("#sd-mtNew"); if (box.firstChild) { box.innerHTML = ""; return; } box.innerHTML = '<article class="mt-it mt-newit"><div class="mt-slot"></div></article>'; mtForm(box.firstChild, "edit"); box.scrollIntoView({ block: "nearest" }); return; }
@@ -6370,6 +6380,7 @@ function init(root) {
         const rt = e.target.closest("[data-mtret]"); if (rt) { const id = +rt.closest("[data-mt]").dataset.mt; confirmBtn(rt, async () => { const r = await run(() => DB.q("materiel?id=eq." + id, { method: "PATCH", body: { actif: false }, prefer: "return=minimal" }).then(() => true), "Retiré de la liste"); if (r) mtCharger(); }); return; }
         const rc = e.target.closest("[data-mtrecu]"); if (rc) { const id = +rc.closest("[data-mtcmd]").dataset.mtcmd; confirmBtn(rc, async () => { rc.disabled = true; const r = await run(() => DB.q("rpc/materiel_recu", { method: "POST", body: { p_demande: id } }).then(() => true), "Ajouté au stock"); rc.disabled = false; if (r) mtCharger(); }); }
       });
+      mp.addEventListener("change", (e) => { const i = e.target.closest(".mt-file"); if (!i) return; const fl = i.files[0], n = i.closest(".field").querySelector(".mt-fnom"); n.textContent = fl ? fl.name : "Aucune photo"; });
       mp.addEventListener("submit", (e) => { const f = e.target.closest(".mt-f"); if (!f) return; e.preventDefault(); mtEnvoyer(f, f.closest("[data-mt]")); });
     } }
     async function amCharger() {
@@ -6641,7 +6652,7 @@ function init(root) {
       if (!t.argent) return "";
       if (t.par === t.pour) return t.facture ? '<div class="tf-pcs"><button type="button" class="tf-pc" data-tfdoc="' + esc(t.facture) + '"><i></i>Ticket</button></div>' : "";
       const p = (lab, path, att) => path ? '<button type="button" class="tf-pc" data-tfdoc="' + esc(path) + '"><i></i>' + lab + "</button>" : '<span class="tf-pc tf-pc-x"><i></i>' + lab + (att ? " : " + att : "") + "</span>";
-      return '<div class="tf-pcs">' + p("Devis", t.devis, t.carburant ? "essence" : "") + p("Reçu", t.paye_recu, "") + (t.carburant ? "" : p("Facture", t.facture, "")) + "</div>";
+      return '<div class="tf-pcs">' + (/^Matériel : /.test(t.titre || "") ? (t.devis ? p("Photo du modèle", t.devis, "") : "") : p("Devis", t.devis, t.carburant ? "essence" : "")) + p("Reçu", t.paye_recu, "") + (t.carburant ? "" : p("Facture", t.facture, "")) + "</div>";
     }
     function tfCarte(t, vue, dedans) { // dedans : ouverte dans une ligne de la liste (le titre et le montant sont déjà sur la ligne)
       const st = tfEtat(t), today = iso(new Date()), late = !TF_FIN.includes(t.etape) && t.pour_le && t.pour_le < today, test = /^\[TEST\]/.test(t.titre || "");
@@ -6733,7 +6744,7 @@ function init(root) {
       const pour = p.role === "admin" ? (TF.prof.find((y) => y.role === "gerant" && y.actif !== false) || {}).id : d.auteur, num = TF.num[pour];
       return '<article class="tf tf-att" data-dm="' + d.id + '"><p class="tf-sub">Demande ' + (p.role ? "du " + esc((ROLE_NOM[p.role] || "").toLowerCase()) : "de l'équipe") + "" + " · " + esc(grQuand(d.le)) + (d.voiture ? " · pour la voiture" : "") + "</p>" +
         '<p class="tf-etat"><i></i>' + (d.nature === "Carburant" ? "Essence en plus : à accorder" : "Dépense : à accorder") + "</p>" +
-        (d.devis ? '<div class="tf-pcs"><button type="button" class="tf-pc" data-tfdoc="' + esc(d.devis) + '"><i></i>Devis</button></div>' : "") +
+        (d.devis ? '<div class="tf-pcs"><button type="button" class="tf-pc" data-tfdoc="' + esc(d.devis) + '"><i></i>' + (d.materiel_id ? "Photo du modèle" : "Devis") + "</button></div>" : "") +
         '<div class="tf-act"><p class="tf-act-k">Ce que tu dois faire</p><p class="tf-act-t">Si c\'est bon : envoie l\'argent et joins le reçu</p><p class="tf-act-s">C\'est accordé et payé en un seul geste. Ensuite, il ajoute la facture et c\'est fini.</p>' +
           '<input class="tf-note" maxlength="300" placeholder="Un mot (facultatif)" aria-label="Un mot"><div class="tf-pay">' +
           (num ? '<div class="tf-num"><span>Envoie à</span><b>' + tfTel(num) + "</b><small>Compare avec le numéro tapé dans Mixx avant de valider.</small></div>" : '<p class="tf-act-ko">Numéro Mixx pas encore enregistré : « Numéros Mixx de l\'équipe », en bas.</p>') +
@@ -9021,20 +9032,20 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 .mt-st{margin:0 0 14px}.mt-st .mt-hot b{color:#B3261E}
 .mt-tabs{margin:0 0 12px}.mt-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin:0 0 12px}.mt-cats{margin:0}
 .mt-cats em,.mt-tabs em{font-style:normal;opacity:.7;font-weight:600}
-.mt-list,.mt-cmds{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;align-items:start}
+.mt-list,.mt-cmds{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:12px;align-items:start}
 .mt-it,.mt-cmd{background:#fff;border:1px solid #E3E7EC;border-radius:16px;padding:16px;display:grid;gap:10px}
 .mt-it.mt-al{border-color:#E8B4AE;box-shadow:inset 4px 0 0 #D7263D}
 .mt-newit{margin:0 0 12px;border:2px solid #0B6E4F}
 .mt-h{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline;justify-content:space-between}.mt-h b{font-size:17px;line-height:1.25}
 .mt-cat{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#5B6470;background:#F1F3F5;border-radius:999px;padding:2px 9px}
-.mt-row{display:grid;grid-template-columns:minmax(64px,.7fr) minmax(120px,1.7fr) minmax(84px,1fr);gap:8px}.mt-row b{white-space:nowrap}.mt-row>div{background:#F6F7F9;border-radius:10px;padding:8px 10px;display:grid;gap:2px}
+.mt-row{display:grid;grid-template-columns:minmax(0,.75fr) minmax(0,1.6fr) minmax(0,1fr);gap:8px}.mt-row>div{min-width:0}.mt-row b{white-space:nowrap}.mt-row>div{background:#F6F7F9;border-radius:10px;padding:8px 10px;display:grid;gap:2px}
 .mt-row span{font-size:12px;color:#5B6470}.mt-row b{font-size:16px}.mt-row small{font-size:12px;color:#5B6470;line-height:1.3}.mt-inc{color:#8E99A4!important;font-weight:600!important;font-size:14px!important}
 .mt-et{font-style:normal;font-weight:700;font-size:14px}.et-bon{color:#0B6E4F}.et-use{color:#B26A00}.et-casse,.et-manquant{color:#B3261E}
 .mt-alt{margin:0;padding:8px 10px;border-radius:10px;background:#FDF3F1;color:#B3261E;font-weight:700;font-size:14px}
 .mt-note{margin:0;color:#3D4652;font-size:14px}.mt-enc{margin:0;padding:8px 10px;border-radius:10px;background:#FFF6DB;color:#5C4600;font-weight:600;font-size:14px}
 .mt-act{display:flex;flex-wrap:wrap;gap:8px}.mt-ret{background:transparent;color:#B3261E;border:1px solid #E8B4AE}
 .mt-slot:empty{display:none}.mt-f{display:grid;gap:10px;border-top:1px dashed #D5DAE0;padding-top:12px}.mt-f .gr-h4{margin:0}
-.mt-newit .mt-f{border-top:0;padding-top:0}.mt-fr .field:has(.mt-chips){grid-column:1/-1}.mt-fr{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.mt-newit .mt-f{border-top:0;padding-top:0}.mt-it,.mt-cmd{min-width:0}.mt-ph{all:unset;box-sizing:border-box;cursor:zoom-in;display:block;width:100%;min-width:0;border-radius:12px;overflow:hidden;background:#F1F3F5;aspect-ratio:16/9}.mt-ph img{width:100%;height:100%;object-fit:cover;display:block}.mt-ph img:not([src]){visibility:hidden}.mt-aide{margin:4px 0 0;font-size:13px;color:#5B6470}.mt-fr .field:has(.mt-chips){grid-column:1/-1}.mt-fr{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
 .mt-chips{display:flex;flex-wrap:wrap;gap:6px}.mt-chips button{all:unset;cursor:pointer;padding:.5em .85em;border-radius:999px;border:1px solid #D5DAE0;background:#fff;font-weight:600;font-size:14px}
 .mt-chips button[aria-pressed="true"]{background:#15191E;border-color:#15191E;color:#fff}.mt-chips button:focus-visible{outline:2px solid #F2B705;outline-offset:2px}
 .mt-est{margin:0;font-size:15px}.mt-cmd p{margin:0;color:#3D4652;font-size:14px}.mt-cmd small{color:#5B6470}
