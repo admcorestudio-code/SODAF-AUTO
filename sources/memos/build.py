@@ -74,7 +74,7 @@ SEC = page("Secrétariat", "Le secrétariat, étape par étape",
     ("Les appels", "Pré-inscrit du site : **Envoyer l'accueil**. Appelle avec le script : les prix, puis « commencer avec 5 000 F ». Il hésite ? Pré-inscris-le quand même pendant l'appel."),
     ("Le lien d'inscription", "**Envoyer le lien d'inscription** : il choisit sa formule et combien il paie. Relance tous les 5 jours (4 au plus)."),
     ("Le reçu", "Il paie en espèces : **Formation payée ? Faire le reçu**, puis envoie-le. 5 000 F = inscrit, le code en ligne s'ouvre. La moitié = code en salle. Tout = conduite."),
-    ("Le code", "Il reçoit tout seul une place dans un groupe de 6 : **Envoyer ses horaires**. Cours raté : **Rattraper dans un autre groupe**, ou le mercredi."),
+    ("Le code", "Il reçoit tout seul une place dans un groupe de 6 : **Envoyer ses horaires**. Cours raté : il le revoit au tour suivant du programme et révise sur le site."),
     ("Le solde", "À 3 semaines dans son groupe : rappel en rouge, en haut. À 1 mois sans paiement : place au code suspendue. Pas de conduite avant le solde."),
     ("La conduite", "Feu vert après les cours 1 à 9. Fiche → **Conduite** → **Réserver une séance** (3 par semaine au plus), puis **Envoyer ses séances**."),
     ("L'examen", "**Passer à l'examen** (message des papiers). Dossier complet + 35 000 F : reçu. Bordereau signé, **Lot déposé**, puis **Permis obtenu** ou **À repasser**."),
@@ -83,7 +83,7 @@ SEC = page("Secrétariat", "Le secrétariat, étape par étape",
     "Séances de 2 h, 4 places : **7 h 30**, **10 h** (lundi → samedi), **15 h 45** (lundi → vendredi).",
     "Beaucoup d'inscriptions ? Regarde d'abord l'onglet **Places libres**.",
     "Il prévient **la veille avant 18 h** : remets sa place sur « Place libre ». Rien n'est compté.",
-    "Pas venu sans prévenir : le moniteur met **Absent**. Rattrapage gratuit **mercredi 15 h 45**. Au 4e : conduite bloquée (3 000 F).",
+    "Pas venu sans prévenir : le moniteur met **Absent**. La séance n'est pas comptée : il en réserve une autre. Au 4e : conduite bloquée (3 000 F).",
     "**Formation privée** : 1 h, seul avec le moniteur, sur une séance **vide**. Il prend 2 places.",
     "**Séance à l'unité** : client non inscrit, 1 h, **10 000 F** payés avant de monter.",
   ]) +
@@ -143,15 +143,13 @@ GER = page("Gérante", "La gérante, au quotidien",
 MON = page("Moniteur", "Le moniteur, sur son téléphone",
   "Ouvre autosodaf.com/equipe. Ton onglet Moniteur a 5 parties : Aujourd'hui, Code en salle, Planning conduite, Essence et voiture, Mode d'emploi.",
   etapes("Un cours de code (salle de 6)", [
-    ("Au début", "Mode classe → **Corriger le devoir** du cours d'avant."),
     ("L'appel", "Coche les présents, puis **Valider les présences** : le cours compte."),
-    ("La leçon", "Mode classe → **Leçon**, puis **Quiz**. Le thème du jour s'affiche (12 cours en boucle)."),
-    ("À la fin", "Rappelle le devoir du site, à faire avant le cours suivant."),
+    ("La leçon", "Mode classe → **Leçon**. Le thème du jour s'affiche (12 cours en boucle)."),
+    ("À la fin", "Mode classe → **Examen** : le quiz d'examen du cours (questions SOTOPLA)."),
   ]) +
   lignes("Les horaires du code", [
     ("Groupe A", "lundi et jeudi, 14 h 30"), ("Groupe B", "mardi et vendredi, 14 h 30"),
     ("Groupe F", "lundi et jeudi, 18 h (soir)"), ("Groupe G", "mardi et vendredi, 18 h (soir)"),
-    ("Mercredi", "14 h 30 et 18 h : rattrapage du code et examen blanc"),
   ]) +
   puces("Essence et voiture", [
     "**Ajouter un plein** : montant, compteur, photo du compteur. Toi seul ajoutes les pleins.",
@@ -167,7 +165,7 @@ MON = page("Moniteur", "Le moniteur, sur son téléphone",
   ]) +
   lignes("Les horaires de conduite", [
     ("7 h 30 – 9 h 30", "lundi → samedi"), ("10 h – 12 h", "lundi → samedi"),
-    ("15 h 45 – 17 h 45", "lundi → vendredi (mercredi : rattrapages d'abord)"),
+    ("15 h 45 – 17 h 45", "lundi → vendredi"),
     ("12 h – 14 h 30", "repos (heures chaudes)"),
   ]) +
   puces("Les cas spéciaux", [
@@ -178,9 +176,9 @@ MON = page("Moniteur", "Le moniteur, sur son téléphone",
   semaine("Ta semaine", [
     ("7 h 30 – 9 h 30", ["Conduite"] * 6),
     ("10 h – 12 h", ["Conduite"] * 6),
-    ("14 h 30", ["Code · groupe A", "Code · groupe B", "Rattrapage du code + examen blanc", "Code · groupe A", "Code · groupe B", "Voiture : contrôle et atelier"]),
-    ("15 h 45 – 17 h 45", ["Conduite", "Conduite", "Rattrapages de conduite", "Conduite", "Conduite", "—"]),
-    ("18 h – 19 h", ["Code · groupe F", "Code · groupe G", "Rattrapage du code + examen blanc", "Code · groupe F", "Code · groupe G", "—"]),
+    ("14 h 30", ["Code · groupe A", "Code · groupe B", "—", "Code · groupe A", "Code · groupe B", "Voiture : contrôle et atelier"]),
+    ("15 h 45 – 17 h 45", ["Conduite", "Conduite", "Conduite", "Conduite", "Conduite", "—"]),
+    ("18 h – 19 h", ["Code · groupe F", "Code · groupe G", "—", "Code · groupe F", "Code · groupe G", "—"]),
   ], "Un groupe sans élève n'a pas cours : ta page Aujourd'hui montre seulement ce qui a lieu. Midi – 14 h 30 : repos.") +
   regle("**À retenir.** Note chaque cours et chaque séance **le jour même** : c'est ce qui permet de suivre les élèves. "
         "Messages : écris @ puis la personne, ou SO12 pour ouvrir la fiche d'un élève. Ton mot de passe ne se donne à personne."))
