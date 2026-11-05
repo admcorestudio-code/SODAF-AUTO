@@ -2091,7 +2091,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <button role="tab" data-t="mon" aria-selected="false"><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/><path d="M12 14.5V21M9.6 11.2 3.5 9.5M14.4 11.2l6.1-1.7"/></svg></i><b>Moniteur</b><small>Code en salle, conduite</small></button>
 <button role="tab" data-t="mec" aria-selected="false" hidden><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.2L3 17.8V21h3.2l6.3-6.3a4 4 0 0 0 5.2-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/></svg></i><b>Mécanique</b><small>Voiture, atelier, contrôle</small><em class="tm-badge" id="sd-mcBadge" hidden></em></button>
 <button role="tab" data-t="com" aria-selected="false" hidden><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg></i><b>Ambassadeurs</b><small>Relations et Contenu</small><em class="tm-badge" id="sd-comBadge" hidden></em></button><button role="tab" data-t="pub" aria-selected="false" hidden><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="9.5" cy="8.5" r="2"/><path d="M20 14.5l-4.5-4.5L4 20.5"/></svg></i><b>Publicité</b><small>Affiches et vidéos</small></button>
-<button role="tab" data-t="docs" aria-selected="false"><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></i><b>Documents</b><small>Carte, cachet, QR, affiches</small></button>
+<button role="tab" data-t="docs" aria-selected="false"><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></i><b>Documents</b><small>Carte, cachet, QR, affiches</small></button><button role="tab" data-t="mat" aria-selected="false"><i class="tm-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8.5 12 3.5 3 8.5v7l9 5 9-5z"/><path d="M3 8.5l9 5 9-5M12 13.5v7"/></svg></i><b>Matériel</b><small>Ce qu'on possède, prix, commandes</small><em class="tm-badge" id="sd-mtBadge" hidden></em></button>
 </div>
 <div class="tm-pane" data-pane="sec" role="tabpanel">
 <p class="tm-role">Accueil des élèves, inscriptions, paiements, réservations de conduite et messages WhatsApp.</p>
@@ -2356,6 +2356,13 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <p class="soc-meta"><span>GPS : 6.168785, 1.225462</span><span>Tél. et WhatsApp : +228 72 54 41 66</span><span>Lun – ven 7 h 30 – 12 h 30 et 14 h 30 – 18 h · Sam 7 h 30 – 12 h et 13 h 30 – 17 h</span></p>
 <div class="acts"><a class="btn btn-green btn-sm" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=6.168785%2C1.225462">Itinéraire Google Maps</a><a class="btn btn-wa btn-sm" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent("SODAF Auto-École\n412 Avenue Akei, Tokoin Tamé (en face de la caisse, près de la pharmacie Yembla), Lomé, Togo\nTél. : +228 72 54 41 66\nItinéraire : https://www.google.com/maps/search/?api=1&query=6.168785%2C1.225462")}">Envoyer l'adresse sur WhatsApp</a><button class="btn btn-line btn-sm" type="button" data-copyaddr>Copier l'adresse</button></div></div>
 <div class="soc-map"><iframe title="Carte : SODAF Auto-École, Tokoin Tamé, Lomé" src="about:blank" data-src="https://www.google.com/maps?q=6.168785,1.225462&z=17&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div></div>
+</div>
+<div class="tm-pane" data-pane="mat" role="tabpanel" hidden>
+<p class="tm-role">Tout ce que possède SODAF et ce que ça coûte. Un objet manque, est cassé ou presque fini : touche « Commander ». La commande part à la direction, comme une dépense.</p>
+<div class="mt-stats" id="sd-mtStats"></div>
+<div class="gr-tabs mt-tabs" role="tablist"><button type="button" role="tab" data-mtp="liste" aria-selected="true">Le matériel</button><button type="button" role="tab" data-mtp="cmd" aria-selected="false">Commandes <em class="gr-badge" id="sd-mtNC" hidden></em></button></div>
+<div class="mt-pane" data-mtpane="liste"><div class="mt-bar"><div class="gr-tabs mt-cats" id="sd-mtCats" role="tablist"></div><button type="button" class="btn btn-sm btn-green" id="sd-mtAdd" hidden>Ajouter un objet</button></div><div id="sd-mtNew"></div><div class="mt-list" id="sd-mtList"><p class="tm-empty">Chargement…</p></div></div>
+<div class="mt-pane" data-mtpane="cmd" hidden><div class="mt-cmds" id="sd-mtCmd"></div></div>
 </div>
 </div>
 </div>
@@ -3475,7 +3482,7 @@ function init(root) {
       if (t === "mon") { const slot = $("#sd-mnPlanSlot"); if (cdSec.parentNode !== slot) slot.appendChild(cdSec); cdSec.hidden = false; (eleves.length ? Promise.resolve() : loadEleves(true)).then(() => loadDay()); }
       else if (cdSec.parentNode !== cdHome.p) { cdHome.p.insertBefore(cdSec, cdHome.n); const on = $('#sd-secNav button[aria-selected="true"]'); cdSec.hidden = !on || on.dataset.s !== "conduite"; }
     };
-    const pick = (t) => { if (AMB() && !["com", "pub", "msg", "docs", "taf", "plan"].includes(t)) t = "com"; if (t === "pub" && me && !pubVoit()) t = "docs"; if (t === "com" && me && !AMB() && !DIR()) t = "sec"; if (t === "sec" && me && me.role === "moniteur") t = "mon"; if (t === "mon" && me && me.role === "gerant") t = "ger"; if (t === "mon" && me && me.role === "secretariat") t = "sec"; tabs.forEach((b) => b.setAttribute("aria-selected", b.dataset.t === t)); panes.forEach((p) => (p.hidden = p.dataset.pane !== t)); try { S.set("tmTab", t); } catch (e) {} placePlanning(t); if (t === "mon" || (t === "sec" && $("#sd-secAuj"))) loadMon(); if (t === "dir") loadDir(); if (t === "ger") grCharger(); if (t === "com") comCharger(); if (t === "mec") mcCharger(); if (t === "taf") tfCharger(); if (t === "plan") plCharger(); if (t === "pub") pubCharger(); msVoirFil(false); if (t === "msg") { MS.repere = {}; MS.forceBas = true; msRender(); msNotifBox(); if (!isWide()) setTimeout(() => $(".ms-wrap").scrollIntoView({ block: "start" }), 60); } };
+    const pick = (t) => { if (AMB() && !["com", "pub", "msg", "docs", "taf", "plan"].includes(t)) t = "com"; if (t === "pub" && me && !pubVoit()) t = "docs"; if (t === "com" && me && !AMB() && !DIR()) t = "sec"; if (t === "sec" && me && me.role === "moniteur") t = "mon"; if (t === "mon" && me && me.role === "gerant") t = "ger"; if (t === "mon" && me && me.role === "secretariat") t = "sec"; tabs.forEach((b) => b.setAttribute("aria-selected", b.dataset.t === t)); panes.forEach((p) => (p.hidden = p.dataset.pane !== t)); try { S.set("tmTab", t); } catch (e) {} placePlanning(t); if (t === "mon" || (t === "sec" && $("#sd-secAuj"))) loadMon(); if (t === "dir") loadDir(); if (t === "ger") grCharger(); if (t === "com") comCharger(); if (t === "mec") mcCharger(); if (t === "taf") tfCharger(); if (t === "plan") plCharger(); if (t === "pub") pubCharger(); if (t === "mat") mtCharger(); msVoirFil(false); if (t === "msg") { MS.repere = {}; MS.forceBas = true; msRender(); msNotifBox(); if (!isWide()) setTimeout(() => $(".ms-wrap").scrollIntoView({ block: "start" }), 60); } };
     tabs.forEach((b) => b.addEventListener("click", () => pick(b.dataset.t)));
     const subs = $$("#sd-secNav button[data-s]"), secs = $$(".tm-sec");
     const LOAD = { recevoir: () => { if (window.__ecRender) window.__ecRender(); }, eleves: () => loadEleves(), conduite: () => loadDay(), paiements: () => loadPay(), devoirs: () => loadDev(), depenses: () => depEquipe(), aide: () => {}, auj: () => loadMon() };
@@ -4283,7 +4290,7 @@ function init(root) {
       show(true);
       const dirTab = $('#sd-tmTabs [data-t="dir"]'); dirTab.hidden = !DIR(); // direction et gérante
       dirTab.querySelector("b").textContent = me.role === "gerant" ? "Chiffres" : "Direction"; dirTab.querySelector("small").textContent = me.role === "gerant" ? "Vue d'ensemble de l'agence" : "Chiffres du mois, à surveiller";
-      $('#sd-tmTabs [data-t="com"]').hidden = !(DIR() || AMB()); $('#sd-tmTabs [data-t="pub"]').hidden = !(DIR() || AMB()); $('#sd-tmTabs [data-t="mon"]').hidden = AMB() || me.role === "gerant"; { const vb = $('.mn-tabs [data-mnp="voit"]'); if (vb) vb.hidden = me.role !== "moniteur"; let k0 = null; try { k0 = localStorage.getItem("sodaf.mn.ong"); } catch (e) {} mnOnglet(k0 || "auj"); } $('#sd-tmTabs [data-t="mec"]').hidden = AMB(); // Communication : l'Ambassadeur, la gérante, la direction
+      $('#sd-tmTabs [data-t="com"]').hidden = !(DIR() || AMB()); $('#sd-tmTabs [data-t="pub"]').hidden = !(DIR() || AMB()); $('#sd-tmTabs [data-t="mat"]').hidden = AMB(); $('#sd-tmTabs [data-t="mon"]').hidden = AMB() || me.role === "gerant"; { const vb = $('.mn-tabs [data-mnp="voit"]'); if (vb) vb.hidden = me.role !== "moniteur"; let k0 = null; try { k0 = localStorage.getItem("sodaf.mn.ong"); } catch (e) {} mnOnglet(k0 || "auj"); } $('#sd-tmTabs [data-t="mec"]').hidden = AMB(); // Communication : l'Ambassadeur, la gérante, la direction
       { const tf = $("#sd-tfSub"); if (tf) tf.textContent = me.role === "admin" ? "Tâches et paiements" : me.role === "gerant" ? "Tâches de l'équipe" : "Tes tâches"; }
       $('#sd-tmTabs [data-t="ger"]').hidden = !GES(); { const gt = $('#sd-tmTabs [data-t="ger"]'); gt.querySelector("small").textContent = me.role === "secretariat" ? "Rapport, frais, tirage, parrainage" : me.role === "admin" ? "Dépenses, reçus, rapport, parrains" : "Demandes, décisions, rapport"; } // onglet Gestion
       $("#sd-grRole").textContent = me.role === "gerant" ? "Ton espace de gérante : demande l'accord de la direction, note tes décisions, envoie ton rapport de la semaine. Tu as aussi les chiffres de l'agence, les reçus et le moniteur." : me.role === "secretariat" ? "Ce que tu envoies à la direction : le rapport de la semaine (chaque samedi) et les petits frais. Tu vérifies aussi le gagnant du tirage et tu paies les parrains." : "Les dépenses à accorder, les reçus à annuler, le rapport du secrétariat et l'argent des parrains.";
@@ -5682,7 +5689,7 @@ function init(root) {
     function depCarte(d, o) {
       const role = (GR.prof && GR.prof[d.auteur]) || (d.auteur === me.id ? me.role : ""), st = o.st;
       const pcs = (d.devis ? '<button type="button" class="btn btn-line btn-sm dq-pc" data-dep="' + esc(d.devis) + '">Voir le devis</button>' : "") + (d.facture ? '<button type="button" class="btn btn-line btn-sm dq-pc" data-dep="' + esc(d.facture) + '">Voir la facture</button>' : "");
-      return '<article class="dq dq-' + st[0] + '"><header class="dq-top"><span class="dq-role dq-r-' + (role || "x") + '">' + (ROLE_NOM[role] || "Équipe") + '</span><span class="dq-kind">' + (d.nature === "Carburant" ? "Essence en plus" : d.voiture ? "Dépense · voiture" : "Dépense · agence") + '</span><span class="dq-when">' + esc(grQuand(d.le)) + "</span></header>" +
+      return '<article class="dq dq-' + st[0] + '"><header class="dq-top"><span class="dq-role dq-r-' + (role || "x") + '">' + (ROLE_NOM[role] || "Équipe") + '</span><span class="dq-kind">' + (d.nature === "Carburant" ? "Essence en plus" : d.materiel_id ? "Commande de matériel" : d.voiture ? "Dépense · voiture" : "Dépense · agence") + '</span><span class="dq-when">' + esc(grQuand(d.le)) + "</span></header>" +
         '<div class="dq-mid"><b class="dq-mt' + (d.montant == null ? " dq-inc" : "") + '">' + (d.montant == null ? "Montant inconnu" : F(d.montant)) + '</b><em class="dq-st">' + st[1] + "</em></div>" +
         '<p class="dq-tx">' + esc(String(d.texte || "").replace(/^\[TEST\]\s*/, "")) + (/^\[TEST\]/.test(d.texte || "") ? ' <span class="dq-test">TEST</span>' : "") + "</p>" +
         
@@ -6274,6 +6281,97 @@ function init(root) {
         "<figcaption><b>" + esc(x.note || (x.format === "affiche" ? "Affiche" : "Vidéo")) + "</b><span>" + dOf(x.jour).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }) + " · " + esc(amNom(x.auteur)) + '</span><span class="pub-acts">' + (x.lien ? '<a class="linkbtn" target="_blank" rel="noopener" href="' + esc(x.lien) + '">TikTok ↗</a>' : "") + (urls[i] ? '<a class="linkbtn" href="' + esc(urls[i]) + "&download=" + encodeURIComponent(x.fichier.nom || "sodaf") + '">Télécharger</a>' : "") + "</span></figcaption></figure>").join("");
     }
     $(".pub-tabs") && $(".pub-tabs").addEventListener("click", (e) => { const b = e.target.closest("[data-pbp]"); if (b) { PUB.ong = b.dataset.pbp; pubRender(); } });
+    // ---- Matériel (5 nov.) : ce que possède SODAF, combien ça coûte, et les commandes (tables materiel + demandes.materiel_id, migrations 0096-0097)
+    //      Une commande = une demande de dépense (direction, puis tâche « payer »). Jamais de suppression : « Retirer de la liste ».
+    const MT = { l: [], c: [], cat: "Tout", ong: "liste", ok: false };
+    const MT_CATS = ["Agence", "Voiture", "Élèves", "Communication"], MT_ET = { bon: "Bon état", use: "Usé", casse: "Cassé", manquant: "Manquant" };
+    const mtPeutCmd = () => !!me && ["admin", "gerant", "secretariat", "moniteur"].includes(me.role);
+    const mtValeur = (x) => (x.prix ? (x.prix_par === "unite" ? x.prix * x.quantite : x.prix) : 0);
+    const mtBas = (x) => x.seuil != null && x.quantite <= x.seuil;
+    const mtAlerte = (x) => x.etat === "casse" || x.etat === "manquant" || mtBas(x);
+    const mtEnCours = (id) => MT.c.find((c) => c.materiel_id === id && (c.statut === "attente" || (c.statut === "accordee" && !c.materiel_recu_le)));
+    async function mtCharger() {
+      const [l, c] = await Promise.all([DB.q("materiel?select=*&actif=eq.true&order=nom.asc").catch(() => null), DB.q("rpc/materiel_commandes", { method: "POST", body: {} }).catch(() => [])]);
+      if (!l) { $("#sd-mtList").innerHTML = '<p class="tm-empty">Le matériel n\'est pas encore activé dans la base.</p>'; return; }
+      MT.l = l; MT.c = c || []; MT.ok = true; $("#sd-mtAdd").hidden = !DIR(); mtRender();
+    }
+    function mtOnglet(k) { MT.ong = k; $$(".mt-tabs [data-mtp]").forEach((b) => b.setAttribute("aria-selected", b.dataset.mtp === k)); $$("[data-mtpane]").forEach((p) => (p.hidden = p.dataset.mtpane !== k)); }
+    function mtRender() {
+      const L = MT.l, al = L.filter(mtAlerte), cours = MT.c.filter((c) => c.statut === "attente" || (c.statut === "accordee" && !c.materiel_recu_le)), val = L.reduce((n, x) => n + mtValeur(x), 0);
+      const T = (k, v, cl) => '<div class="' + (cl || "") + '"><span>' + k + "</span><b>" + v + "</b></div>";
+      $("#sd-mtStats").innerHTML = '<div class="tm-stats tm-dr mt-st">' + T("Objets", L.length) + T("Valeur du matériel", F(val)) + T("À commander", al.length, al.length ? "mt-hot" : "") + T("Commandes en cours", cours.length) + "</div>";
+      const nc = $("#sd-mtNC"); nc.textContent = cours.length; nc.hidden = !cours.length; const bd = $("#sd-mtBadge"); if (bd) { bd.textContent = al.length; bd.hidden = !al.length; }
+      $("#sd-mtCats").innerHTML = ["Tout", ...MT_CATS].map((k) => { const n = k === "Tout" ? L.length : L.filter((x) => x.categorie === k).length; return '<button type="button" role="tab" data-mtc="' + k + '" aria-selected="' + (MT.cat === k) + '">' + k + (n ? " <em>" + n + "</em>" : "") + "</button>"; }).join("");
+      const V = (MT.cat === "Tout" ? L : L.filter((x) => x.categorie === MT.cat)).slice().sort((a, b) => mtAlerte(b) - mtAlerte(a) || a.nom.localeCompare(b.nom, "fr"));
+      $("#sd-mtList").innerHTML = V.length ? V.map(mtCarte).join("") : '<p class="tm-empty">' + (L.length ? "Rien dans cette catégorie." : DIR() ? "Aucun objet pour l'instant. Touche « Ajouter un objet » pour commencer : cahiers, ordinateur, chaises, voiture, caméra…" : "Aucun objet pour l'instant. La direction remplit la liste.") + "</p>";
+      const C = MT.c; $("#sd-mtCmd").innerHTML = C.length ? C.map(mtCmdCarte).join("") : '<p class="tm-empty">Aucune commande pour l\'instant.</p>';
+      mtOnglet(MT.ong);
+    }
+    function mtCarte(x) {
+      const cmd = mtEnCours(x.id), al = [];
+      if (mtBas(x)) al.push(x.quantite === 0 ? "Plus en stock" : "Il en reste " + x.quantite + " (alerte à " + x.seuil + ")");
+      const prix = x.prix == null ? '<b class="mt-inc">Prix pas noté</b>' : "<b>" + F(x.prix) + "</b><small>" + (x.prix_par === "unite" ? "l'unité" + (x.quantite > 1 ? " · en tout " + F(mtValeur(x)) : "") : "pour le tout") + "</small>";
+      return '<article class="mt-it' + (al.length ? " mt-al" : "") + '" data-mt="' + x.id + '"><div class="mt-h"><b>' + esc(x.nom) + '</b><span class="mt-cat">' + esc(x.categorie) + "</span></div>" +
+        '<div class="mt-row"><div><span>Quantité</span><b>' + milliers(x.quantite) + "</b></div><div><span>Prix</span>" + prix + "</div><div><span>État</span><em class=\"mt-et et-" + x.etat + '">' + MT_ET[x.etat] + "</em></div></div>" +
+        (al.length ? '<p class="mt-alt">' + al.join(" · ") + "</p>" : "") + (x.note ? '<p class="mt-note">' + esc(x.note) + "</p>" : "") +
+        (cmd ? '<p class="mt-enc">Commande en cours : × ' + cmd.materiel_qte + " · " + mtStatut(cmd)[1] + "</p>" : "") +
+        '<div class="mt-act">' + (mtPeutCmd() && !cmd ? '<button type="button" class="btn btn-sm btn-green" data-mtgo="cmd">Commander</button>' : "") + (mtPeutCmd() ? '<button type="button" class="btn btn-sm btn-line" data-mtgo="maj">Quantité et état</button>' : "") + (DIR() ? '<button type="button" class="btn btn-sm btn-line" data-mtgo="edit">Modifier</button>' : "") + '</div><div class="mt-slot"></div></article>';
+    }
+    function mtStatut(c) { return c.statut === "refusee" ? ["non", "Refusée"] : c.statut === "accordee" ? (c.materiel_recu_le ? ["oui", "Reçue, ajoutée au stock"] : ["att", "Accordée : à acheter"]) : ["att", "Chez la direction"]; }
+    function mtCmdCarte(c) {
+      const st = mtStatut(c), m = MT.l.find((x) => x.id === c.materiel_id);
+      return '<article class="mt-cmd st-' + st[0] + '" data-mtcmd="' + c.id + '"><div class="mt-h"><b>' + esc(m ? m.nom : String(c.texte || "").replace(/^Matériel : /, "").split(" × ")[0]) + " × " + c.materiel_qte + '</b><em class="gr-st ' + st[0] + '">' + st[1] + "</em></div><p>" + esc(((t) => { const m2 = t.match(/× \d+ \(([^)]*)\)(?: : ([\s\S]*))?$/); return m2 ? "Raison : " + m2[1] + (m2[2] ? " · " + m2[2] : "") : t; })(String(c.texte || ""))) + "</p><small>" + (c.montant ? F(c.montant) : "Prix inconnu") + " · demandée " + esc(grQuand(c.le)) + "</small>" + (c.reponse ? '<p class="dq-rep">« ' + esc(c.reponse) + " »</p>" : "") +
+        (c.statut === "accordee" && !c.materiel_recu_le && GES() ? '<div class="mt-act"><button type="button" class="btn btn-sm btn-green" data-mtrecu>Reçu : ajouter au stock</button></div>' : "") + "</article>";
+    }
+    function mtForm(card, kind) {
+      const slot = card.querySelector(".mt-slot"), x = MT.l.find((y) => y.id === +card.dataset.mt) || null;
+      if (slot.dataset.k === kind) { slot.innerHTML = ""; slot.dataset.k = ""; return; } slot.dataset.k = kind;
+      const chips = (name, opts, cur) => '<div class="mt-chips" data-name="' + name + '">' + opts.map((o) => '<button type="button" data-v="' + o[0] + '" aria-pressed="' + (o[0] === cur) + '">' + o[1] + "</button>").join("") + "</div>";
+      if (kind === "cmd") {
+        const r0 = x.etat === "casse" ? "Cassé" : x.etat === "manquant" ? "Manquant" : mtBas(x) ? "Stock bas" : "Autre", q0 = mtBas(x) && x.seuil ? Math.max(1, x.seuil * 2 - x.quantite) : 1;
+        slot.innerHTML = '<form class="mt-f" novalidate><h4 class="gr-h4">Commander : ' + esc(x.nom) + '</h4><div class="mt-fr"><div class="field"><label>Combien ?</label><input class="mt-q" inputmode="numeric" autocomplete="off" value="' + q0 + '"></div><div class="field"><label>Pourquoi ?</label>' + chips("raison", [["Manquant", "Manquant"], ["Cassé", "Cassé"], ["Stock bas", "Presque fini"], ["Autre", "Autre"]], r0) + '</div></div><div class="field"><label>Un mot (facultatif)</label><input class="mt-n" maxlength="200" autocomplete="off" placeholder="ex. pour les nouveaux élèves de lundi"></div><p class="mt-est"></p><div class="mt-act"><button type="submit" class="btn btn-sm btn-green">Envoyer la commande</button><button type="button" class="btn btn-sm btn-line" data-mtx>Annuler</button></div></form>';
+        const f = slot.querySelector("form"), est = () => { const q = +(f.querySelector(".mt-q").value.replace(/\D/g, "")) || 0; f.querySelector(".mt-est").innerHTML = x.prix ? "Montant : <b>" + F(x.prix_par === "unite" ? x.prix * q : x.prix) + "</b>" + (x.prix_par === "unite" ? " (" + q + " × " + F(x.prix) + ")" : "") : "Prix pas noté : la direction le complètera."; };
+        f.querySelector(".mt-q").addEventListener("input", est); est();
+      } else if (kind === "maj") {
+        slot.innerHTML = '<form class="mt-f" novalidate><h4 class="gr-h4">Quantité et état</h4><div class="mt-fr"><div class="field"><label>Quantité</label><input class="mt-q" inputmode="numeric" autocomplete="off" value="' + x.quantite + '"></div><div class="field"><label>État</label>' + chips("etat", Object.entries(MT_ET), x.etat) + '</div></div><div class="mt-act"><button type="submit" class="btn btn-sm btn-green">Enregistrer</button><button type="button" class="btn btn-sm btn-line" data-mtx>Annuler</button></div></form>';
+      } else {
+        const v = x || { nom: "", categorie: MT.cat !== "Tout" ? MT.cat : "Agence", quantite: 1, prix: null, prix_par: "unite", etat: "bon", seuil: null, note: "" };
+        slot.innerHTML = '<form class="mt-f" novalidate><h4 class="gr-h4">' + (x ? "Modifier : " + esc(x.nom) : "Nouvel objet") + '</h4><div class="field"><label>Nom</label><input class="mt-nom" maxlength="80" autocomplete="off" value="' + esc(v.nom) + '" placeholder="ex. Cahier SODAF"></div>' +
+          '<div class="field"><label>Catégorie</label>' + chips("cat", MT_CATS.map((c) => [c, c]), v.categorie) + "</div>" +
+          '<div class="mt-fr"><div class="field"><label>Quantité</label><input class="mt-q" inputmode="numeric" autocomplete="off" value="' + v.quantite + '"></div><div class="field"><label>Prix (F)</label><input class="mt-p" inputmode="numeric" autocomplete="off" value="' + (v.prix == null ? "" : v.prix) + '" placeholder="ex. 1 500"></div></div>' +
+          '<div class="field"><label>Ce prix est…</label>' + chips("par", [["unite", "Le prix d'une seule pièce"], ["total", "Le prix de tout (lot, machine…)"]], v.prix_par) + "</div>" +
+          '<div class="mt-fr"><div class="field"><label>État</label>' + chips("etat", Object.entries(MT_ET), v.etat) + '</div><div class="field"><label>Alerte quand il en reste (facultatif)</label><input class="mt-s" inputmode="numeric" autocomplete="off" value="' + (v.seuil == null ? "" : v.seuil) + '" placeholder="ex. 10"></div></div>' +
+          '<div class="field"><label>Note (facultatif)</label><input class="mt-n" maxlength="300" autocomplete="off" value="' + esc(v.note || "") + '" placeholder="ex. fourni par l\'imprimerie de Tokoin"></div>' +
+          '<div class="mt-act"><button type="submit" class="btn btn-sm btn-green">' + (x ? "Enregistrer" : "Ajouter") + '</button><button type="button" class="btn btn-sm btn-line" data-mtx>Annuler</button>' + (x ? '<button type="button" class="btn btn-sm mt-ret" data-mtret>Retirer de la liste</button>' : "") + "</div></form>";
+      }
+      const fi = slot.querySelector("input"); if (fi && kind !== "cmd") fi.focus();
+    }
+    const mtChip = (f, n) => { const b = f.querySelector('[data-name="' + n + '"] [aria-pressed="true"]'); return b ? b.dataset.v : null; };
+    const mtNum = (el) => { const t = el.value.replace(/\D/g, ""); return t === "" ? null : +t; };
+    async function mtEnvoyer(f, card) {
+      const kind = f.parentNode.dataset.k, id = card && card.dataset.mt ? +card.dataset.mt : null, b = f.querySelector("[type=submit]");
+      if (kind === "cmd") { const q = mtNum(f.querySelector(".mt-q")); if (!q) { toast("Écris combien il en faut", true); return; }
+        confirmBtn(b, async () => { b.disabled = true; const r = await run(() => DB.q("rpc/materiel_commander", { method: "POST", body: { p_id: id, p_quantite: q, p_raison: mtChip(f, "raison") || "Autre", p_note: f.querySelector(".mt-n").value.trim() || null } }).then(() => true), "Commande envoyée à la direction"); b.disabled = false; if (r) mtCharger(); }); return; }
+      if (kind === "maj") { const q = mtNum(f.querySelector(".mt-q")); if (q == null) { toast("Écris la quantité", true); return; }
+        confirmBtn(b, async () => { b.disabled = true; const r = await run(() => DB.q("rpc/materiel_maj", { method: "POST", body: { p_id: id, p_quantite: q, p_etat: mtChip(f, "etat") || "bon" } }).then(() => true), "Enregistré"); b.disabled = false; if (r) mtCharger(); }); return; }
+      const nom = f.querySelector(".mt-nom").value.trim().replace(/\s+/g, " "), q = mtNum(f.querySelector(".mt-q"));
+      if (nom.length < 2) { toast("Écris le nom de l'objet", true); return; } if (q == null) { toast("Écris la quantité", true); return; }
+      const body = { nom, categorie: mtChip(f, "cat") || "Agence", quantite: q, prix: mtNum(f.querySelector(".mt-p")), prix_par: mtChip(f, "par") || "unite", etat: mtChip(f, "etat") || "bon", seuil: mtNum(f.querySelector(".mt-s")), note: f.querySelector(".mt-n").value.trim() || null };
+      confirmBtn(b, async () => { b.disabled = true; const r = await run(() => (id ? DB.q("materiel?id=eq." + id, { method: "PATCH", body, prefer: "return=minimal" }) : DB.q("materiel", { method: "POST", body, prefer: "return=minimal" })).then(() => true), id ? "Objet modifié" : "Objet ajouté"); b.disabled = false; if (r) { if (!id) $("#sd-mtNew").innerHTML = ""; mtCharger(); } });
+    }
+    { const mp = $('.tm-pane[data-pane="mat"]'); if (mp) {
+      mp.addEventListener("click", (e) => {
+        const t = e.target.closest(".mt-tabs [data-mtp]"); if (t) { mtOnglet(t.dataset.mtp); return; }
+        const c = e.target.closest("[data-mtc]"); if (c) { MT.cat = c.dataset.mtc; mtRender(); return; }
+        const ch = e.target.closest(".mt-chips [data-v]"); if (ch) { ch.parentNode.querySelectorAll("[data-v]").forEach((x) => x.setAttribute("aria-pressed", x === ch)); return; }
+        if (e.target.closest("#sd-mtAdd")) { const box = $("#sd-mtNew"); if (box.firstChild) { box.innerHTML = ""; return; } box.innerHTML = '<article class="mt-it mt-newit"><div class="mt-slot"></div></article>'; mtForm(box.firstChild, "edit"); box.scrollIntoView({ block: "nearest" }); return; }
+        const g = e.target.closest("[data-mtgo]"); if (g) { mtForm(g.closest("[data-mt]"), g.dataset.mtgo); return; }
+        if (e.target.closest("[data-mtx]")) { const sl = e.target.closest(".mt-slot"); if (sl.closest(".mt-newit")) $("#sd-mtNew").innerHTML = ""; else { sl.innerHTML = ""; sl.dataset.k = ""; } return; }
+        const rt = e.target.closest("[data-mtret]"); if (rt) { const id = +rt.closest("[data-mt]").dataset.mt; confirmBtn(rt, async () => { const r = await run(() => DB.q("materiel?id=eq." + id, { method: "PATCH", body: { actif: false }, prefer: "return=minimal" }).then(() => true), "Retiré de la liste"); if (r) mtCharger(); }); return; }
+        const rc = e.target.closest("[data-mtrecu]"); if (rc) { const id = +rc.closest("[data-mtcmd]").dataset.mtcmd; confirmBtn(rc, async () => { rc.disabled = true; const r = await run(() => DB.q("rpc/materiel_recu", { method: "POST", body: { p_demande: id } }).then(() => true), "Ajouté au stock"); rc.disabled = false; if (r) mtCharger(); }); }
+      });
+      mp.addEventListener("submit", (e) => { const f = e.target.closest(".mt-f"); if (!f) return; e.preventDefault(); mtEnvoyer(f, f.closest("[data-mt]")); });
+    } }
     async function amCharger() {
       const [rot, pr] = await Promise.all([DB.q("amb_rotation?select=*").catch(() => null), DB.q("profils?select=id,nom,role,actif&role=eq.ambassadeur").catch(() => [])]);
       AM.rot = rot && rot[0] ? rot[0] : null; AM.ambs = (pr || []).filter((x) => x.actif !== false && x.role === "ambassadeur").sort((x, y) => String(x.id).localeCompare(String(y.id)));
@@ -8920,6 +9018,28 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 .tr-q{margin:6px 0 0;font-weight:600;font-size:.9rem}
 .tr-all{margin-top:14px}.tr-all summary{cursor:pointer;font-weight:700}
 .tr-alllist{display:grid;gap:4px;margin-top:8px;max-height:360px;overflow:auto}.tr-alllist div{display:flex;gap:10px;align-items:baseline;padding:6px 0;border-bottom:1px solid var(--line);font-size:.88rem}.tr-alllist span{color:var(--muted);flex:1}.tr-alllist em{font-style:normal;font-size:.78rem;font-weight:700}
+.mt-st{margin:0 0 14px}.mt-st .mt-hot b{color:#B3261E}
+.mt-tabs{margin:0 0 12px}.mt-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin:0 0 12px}.mt-cats{margin:0}
+.mt-cats em,.mt-tabs em{font-style:normal;opacity:.7;font-weight:600}
+.mt-list,.mt-cmds{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;align-items:start}
+.mt-it,.mt-cmd{background:#fff;border:1px solid #E3E7EC;border-radius:16px;padding:16px;display:grid;gap:10px}
+.mt-it.mt-al{border-color:#E8B4AE;box-shadow:inset 4px 0 0 #D7263D}
+.mt-newit{margin:0 0 12px;border:2px solid #0B6E4F}
+.mt-h{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline;justify-content:space-between}.mt-h b{font-size:17px;line-height:1.25}
+.mt-cat{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#5B6470;background:#F1F3F5;border-radius:999px;padding:2px 9px}
+.mt-row{display:grid;grid-template-columns:minmax(64px,.7fr) minmax(120px,1.7fr) minmax(84px,1fr);gap:8px}.mt-row b{white-space:nowrap}.mt-row>div{background:#F6F7F9;border-radius:10px;padding:8px 10px;display:grid;gap:2px}
+.mt-row span{font-size:12px;color:#5B6470}.mt-row b{font-size:16px}.mt-row small{font-size:12px;color:#5B6470;line-height:1.3}.mt-inc{color:#8E99A4!important;font-weight:600!important;font-size:14px!important}
+.mt-et{font-style:normal;font-weight:700;font-size:14px}.et-bon{color:#0B6E4F}.et-use{color:#B26A00}.et-casse,.et-manquant{color:#B3261E}
+.mt-alt{margin:0;padding:8px 10px;border-radius:10px;background:#FDF3F1;color:#B3261E;font-weight:700;font-size:14px}
+.mt-note{margin:0;color:#3D4652;font-size:14px}.mt-enc{margin:0;padding:8px 10px;border-radius:10px;background:#FFF6DB;color:#5C4600;font-weight:600;font-size:14px}
+.mt-act{display:flex;flex-wrap:wrap;gap:8px}.mt-ret{background:transparent;color:#B3261E;border:1px solid #E8B4AE}
+.mt-slot:empty{display:none}.mt-f{display:grid;gap:10px;border-top:1px dashed #D5DAE0;padding-top:12px}.mt-f .gr-h4{margin:0}
+.mt-newit .mt-f{border-top:0;padding-top:0}.mt-fr .field:has(.mt-chips){grid-column:1/-1}.mt-fr{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.mt-chips{display:flex;flex-wrap:wrap;gap:6px}.mt-chips button{all:unset;cursor:pointer;padding:.5em .85em;border-radius:999px;border:1px solid #D5DAE0;background:#fff;font-weight:600;font-size:14px}
+.mt-chips button[aria-pressed="true"]{background:#15191E;border-color:#15191E;color:#fff}.mt-chips button:focus-visible{outline:2px solid #F2B705;outline-offset:2px}
+.mt-est{margin:0;font-size:15px}.mt-cmd p{margin:0;color:#3D4652;font-size:14px}.mt-cmd small{color:#5B6470}
+.mt-cmd.st-att{box-shadow:inset 4px 0 0 #E8A317}.mt-cmd.st-oui{box-shadow:inset 4px 0 0 #0B6E4F}.mt-cmd.st-non{box-shadow:inset 4px 0 0 #B3261E}
+@media (max-width:600px){.mt-list,.mt-cmds{grid-template-columns:1fr}.mt-bar{align-items:stretch}.mt-bar .btn{width:100%;justify-content:center}}
 .am-roles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 14px}
 .am-rc{all:unset;box-sizing:border-box;cursor:pointer;position:relative;display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center;padding:14px 16px;min-height:78px;border-radius:16px;background:#fff;border:2px solid #E3E7EC;color:#15191E;transition:background .15s,border-color .15s,transform .15s}
 .am-rc:hover{border-color:#C9D0D6}.am-rc:active{transform:translateY(1px)}.am-rc:focus-visible{outline:3px solid #F2B705;outline-offset:2px}
