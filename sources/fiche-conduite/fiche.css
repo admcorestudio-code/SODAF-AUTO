@@ -1,0 +1,45 @@
+@font-face{font-family:Figtree;src:url("file://FONTS/Figtree.ttf");font-weight:300 900}
+@font-face{font-family:Outfit;src:url("file://FONTS/Outfit.ttf");font-weight:100 900}
+@page{size:794px 1123px;margin:0}
+body{margin:0;background:#fff;color:#14171C;font-family:Figtree,'Segoe UI',sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.page{width:794px;height:1123px;box-sizing:border-box;padding:28px 44px 0;display:flex;flex-direction:column;gap:10px;overflow:hidden;page-break-after:always;break-after:page;position:relative;font-size:11.5px;line-height:1.38}
+.page:last-child{page-break-after:auto;break-after:auto}
+.page::before{content:"";position:absolute;left:0;top:0;bottom:0;width:10px;background:var(--c)}
+header{display:flex;justify-content:space-between;align-items:center;gap:20px;padding-bottom:10px;border-bottom:1.5px solid #14171C}
+.lg{display:flex;align-items:center;gap:12px}.lg svg{height:30px!important}
+.ae{padding-left:12px;border-left:1px solid #C9CDD2;font:600 10.5px/1.3 Outfit,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#4A525C}
+.hd{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.hd .k{font:800 23px/1 Outfit,sans-serif;letter-spacing:-.01em;text-transform:uppercase}
+.hd .f{font:700 13px Outfit,sans-serif;background:var(--c);color:var(--t);padding:4px 12px;border-radius:999px;letter-spacing:.02em}
+.top{display:grid;grid-template-columns:1fr 168px;gap:16px;align-items:stretch;margin-top:4px}
+.who{display:flex;flex-direction:column;gap:12px;justify-content:center}
+.ln{display:flex;align-items:flex-end;gap:8px;flex:1;min-width:0}
+.ln span{font:600 10.5px Outfit,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#4A525C;white-space:nowrap;padding-bottom:2px}
+.ln b{font:700 13px Figtree,sans-serif;color:#14171C;padding-bottom:1px}
+.ln i{flex:1;border-bottom:1.2px solid #14171C;height:20px}
+.ln2{display:flex;gap:18px}
+.tot{border:2px solid var(--c);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 8px;text-align:center}
+.tk{font:800 26px/1 Outfit,sans-serif;color:#14171C}
+.td{font:600 12px Outfit,sans-serif;color:#4A525C;margin-top:2px}
+.tf{display:flex;align-items:flex-end;gap:6px;margin-top:10px;font:700 13px Outfit,sans-serif}
+.tf b{display:inline-block;width:38px;border-bottom:1.5px solid #14171C;height:22px}
+.prec{margin:0;font-size:11.5px;color:#3D444D}
+.cases{display:flex;flex-direction:column;gap:5px}
+.cl{font:600 10px Outfit,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#4A525C}
+.cg{display:grid;gap:6px;grid-template-columns:repeat(13,minmax(0,1fr))}
+.cs{height:34px;border:1.5px solid var(--c);border-radius:8px;position:relative}
+.cs i{position:absolute;left:5px;top:3px;font:700 9.5px Outfit,sans-serif;font-style:normal;color:#8A929B}
+table{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:2px}
+th{font:700 10px Outfit,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--t);background:var(--c);text-align:left;padding:7px 8px;border:1px solid var(--c)}
+th small{display:block;font:500 9px Figtree,sans-serif;letter-spacing:0;text-transform:none;opacity:.85}
+th.no{width:34px;text-align:center}th.dt{width:84px}th.hrh{width:118px}th.sg{width:104px}
+td{border:1px solid #B9C0C7;height:var(--h);padding:0 6px;vertical-align:middle}
+td.no{text-align:center;font:700 12px Outfit,sans-serif;color:#14171C;background:#F4F5F7}
+td.hr{font:500 10.5px Figtree,sans-serif;color:#8A929B}
+td.hr{position:relative}td.hr span{position:absolute;bottom:6px}td.hr span:nth-child(1){left:7px}td.hr span:nth-child(2){left:62px}
+tr.sep td{height:22px;border-left:0;border-right:0;font:700 10px Outfit,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#4A525C;padding-top:8px;vertical-align:bottom}
+tr.px td.no{background:#fff;color:#8A929B}
+.rg{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:auto}
+.rg div{border-top:3px solid var(--c);padding-top:6px;display:flex;flex-direction:column;gap:2px}
+.rg b{font:700 12px Outfit,sans-serif}.rg span{font-size:10.8px;color:#3D444D}
+footer{display:flex;justify-content:space-between;gap:12px;border-top:1px solid #D5DAE0;padding:9px 0 16px;font-size:10px;color:#4A525C;margin-top:4px}
