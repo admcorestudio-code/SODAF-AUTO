@@ -696,23 +696,25 @@ a.teamtile.hl{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
 .tm-tabs button{position:relative}
 .tm-pane[data-pane="dir"] .tm-role{border-left-color:var(--blue)}
 /* 5 nov. : Direction en onglets ; listes courtes qui se déroulent */
-.dr-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px;padding:6px;background:#fff;border:1.5px solid var(--line);border-radius:16px}
-.dr-tabs button{flex:1 1 auto;min-height:44px;padding:8px 16px;border-radius:11px;border:0;background:transparent;font:700 .95rem var(--f-body);color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap}
-.dr-tabs button:hover{background:var(--soft)}
-.dr-tabs button[aria-selected="true"]{background:var(--blue);color:#fff}
-.dr-tabs button[data-drt="ges"][aria-selected="true"]{background:#6B4FA0}
+.dr-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 20px;padding:6px;border-radius:18px;background:linear-gradient(180deg,#E6E9ED,#EEF0F3);box-shadow:inset 0 2px 4px rgba(20,23,28,.10),inset 0 -1px 0 rgba(255,255,255,.9)}
+.dr-tabs button{position:relative;flex:1 1 auto;min-height:48px;padding:8px 16px;border-radius:13px;border:0;background:transparent;font:700 .95rem var(--f-body);color:#3D444D;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:9px;white-space:nowrap;transition:background .18s,color .18s,box-shadow .18s,transform .12s}
+.dr-ic{display:grid;place-items:center;width:30px;height:30px;border-radius:9px;background:#fff;color:#14171C;box-shadow:0 1px 2px rgba(20,23,28,.12),inset 0 -2px 0 rgba(20,23,28,.06);transition:background .18s,color .18s}
+.dr-tabs button:hover{background:rgba(255,255,255,.75);color:#14171C;box-shadow:0 1px 2px rgba(20,23,28,.08)}
+.dr-tabs button:active{transform:translateY(1px)}
+.dr-tabs button[aria-selected="true"]{color:#fff;background:linear-gradient(180deg,#2A3038 0%,#14171C 100%);box-shadow:0 8px 18px -6px rgba(20,23,28,.55),0 2px 4px rgba(20,23,28,.25),inset 0 1px 0 rgba(255,255,255,.14),inset 0 -3px 0 #F2B705}
+.dr-tabs button[aria-selected="true"] .dr-ic{background:linear-gradient(180deg,#FFD24A,#F2B705);color:#14171C;box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 2px 6px rgba(242,183,5,.35)}
 .dr-tabs button:focus-visible{outline:3px solid #F2B705;outline-offset:2px}
-.dr-tn{font-style:normal;font:800 .75rem/1 Outfit,sans-serif;background:#C2410C;color:#fff;border-radius:999px;padding:4px 7px}
+.dr-tn{font-style:normal;font:800 .72rem/1 Outfit,sans-serif;background:linear-gradient(180deg,#E8590C,#C2410C);color:#fff;border-radius:999px;padding:4px 7px;box-shadow:0 1px 3px rgba(194,65,12,.4),inset 0 1px 0 rgba(255,255,255,.3)}
 [data-drp="mat"] .tm-pane{display:block}
 .dr-fold .tm-row.dr-x{display:none}
 .dr-fold.open .tm-row.dr-x{display:flex;animation:drIn .18s ease-out}
 @media (hover:hover) and (pointer:fine){.dr-fold:hover .tm-row.dr-x{display:flex;animation:drIn .18s ease-out}}
 @keyframes drIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
-.dr-more{margin-top:10px;width:100%;min-height:40px;border:1.5px dashed var(--line);border-radius:10px;background:transparent;font:700 .9rem var(--f-body);color:var(--blue);cursor:pointer}
+.dr-more{margin-top:10px;width:100%;min-height:40px;border:1.5px dashed var(--line);border-radius:10px;background:transparent;font:700 .9rem var(--f-body);color:#14171C;cursor:pointer}
 .dr-more:hover{background:var(--soft)}
 @media (hover:hover) and (pointer:fine){.dr-fold:not(.open):hover .dr-more{visibility:hidden}}
 .tm-pane[data-pane="dir"] .grid.tm-mon{align-items:start}
-@media (max-width:560px){.dr-tabs button{flex:1 1 40%;padding:8px 10px;font-size:.88rem}}
+@media (max-width:560px){.dr-tabs button{flex:1 1 40%;padding:8px 10px;font-size:.86rem;gap:7px}.dr-ic{width:26px;height:26px;border-radius:8px}}
 /* 5 nov. : Gestion repliable en haut de Direction */
 .dr-ges{margin:0 0 18px;border:1.5px solid #D9CFEC;border-radius:18px;background:#fff;overflow:hidden;box-shadow:0 1px 0 rgba(20,23,28,.04)}
 .dr-ges>summary{list-style:none;display:flex;align-items:center;gap:14px;padding:14px 18px;cursor:pointer;background:linear-gradient(90deg,#F4EFFB,#fff 70%);user-select:none}
@@ -2330,7 +2332,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 </div>
 <div class="tm-pane" data-pane="dir" role="tabpanel" hidden>
 <p class="tm-role">Vue d'ensemble de l'auto-école, mise à jour à chaque ouverture. Visible seulement par la direction.</p>
-<div class="dr-tabs" role="tablist" aria-label="Direction"><button type="button" role="tab" data-drt="vue" aria-selected="true">Vue d'ensemble</button><button type="button" role="tab" data-drt="ges" aria-selected="false" hidden>Gestion<em class="dr-tn" id="sd-drGesN" hidden></em></button><button type="button" role="tab" data-drt="chif" aria-selected="false">Chiffres</button><button type="button" role="tab" data-drt="mat" aria-selected="false" hidden>Matériel<em class="dr-tn" id="sd-drMatN" hidden></em></button><button type="button" role="tab" data-drt="cpt" aria-selected="false" hidden>Comptes de l'équipe</button></div>
+<div class="dr-tabs" role="tablist" aria-label="Direction"><button type="button" role="tab" data-drt="vue" aria-selected="true"><i class="dr-ic"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/></svg></i><span>Vue d'ensemble</span></button><button type="button" role="tab" data-drt="ges" aria-selected="false" hidden><i class="dr-ic"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l2 2 4-4"/><path d="M4 5h16v11a2 2 0 0 1-2 2H9l-5 3z"/></svg></i><span>Gestion</span><em class="dr-tn" id="sd-drGesN" hidden></em></button><button type="button" role="tab" data-drt="chif" aria-selected="false"><i class="dr-ic"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></i><span>Chiffres</span></button><button type="button" role="tab" data-drt="mat" aria-selected="false" hidden><i class="dr-ic"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg></i><span>Matériel</span><em class="dr-tn" id="sd-drMatN" hidden></em></button><button type="button" role="tab" data-drt="cpt" aria-selected="false" hidden><i class="dr-ic"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18.5 14.8c1.6.8 2.6 2.6 3 5.2"/></svg></i><span>Comptes de l'équipe</span></button></div>
 <div data-drp="vue">
 <div class="tm-bar"><b id="sd-drMonth" class="tm-drmonth"></b><button class="linkbtn" type="button" id="sd-drReload">Actualiser</button></div>
 <div class="tm-stats tm-dr" id="sd-drStats"></div>
