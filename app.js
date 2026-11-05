@@ -7150,11 +7150,8 @@ function init(root) {
         const se = ses[monIdx], picker = ses.length > 1 ? '<div class="gc-ses">' + ses.map((x, i) => '<button type="button" class="btn btn-sm ' + (i === monIdx ? "btn-green" : "btn-line") + '" data-mses="' + i + '">' + esc(x.groupe ? (gOf(x.groupe) || { nom: "Groupe " + x.groupe }).nom : "Rattrapage") + " · " + esc(x.heure.split(" – ")[0]) + "</button>").join("") + "</div>" : "";
         if (!se) { $("#sd-mcTitle").textContent = "Aucune séance prévue"; $("#sd-mcBody").innerHTML = ""; }
         else if (se.jour !== today) {
-          // 5 nov. : pas de cours aujourd'hui → on annonce seulement le prochain cours ; l'appel se fait le jour même (avant, la liste d'appel du prochain cours s'affichait)
-          const nb = eleves.filter((y) => enCode(y) && !susp(y)).length;
-          $("#sd-mcTitle").textContent = "Pas de cours de code aujourd'hui";
-          $("#sd-mcBody").innerHTML = '<div class="mc-next"><span class="mc-nk">Prochain cours</span><b>' + esc(longDay(se.jour)) + '</b><ul>' + ses.map((x) => "<li>" + esc(x.groupe ? (gOf(x.groupe) || { nom: "Groupe " + x.groupe }).nom + (bIdx(x.theme) >= 0 ? " · cours " + (bIdx(x.theme) + 1) + " : " + x.theme : "") : "Rattrapage et examen blanc") + " · " + esc(x.heure) + "</li>").join("") + "</ul>" +
-            (nb ? "" : "<p>Aucun élève au code pour l'instant.</p>") + '<p class="mc-nn">L\'appel des présents se fait ce jour-là, au début du cours.</p></div>';
+          // 5 nov. : pas de cours aujourd'hui → rien d'autre (le rattrapage ou le cours s'affichera le jour même)
+          $("#sd-mcTitle").textContent = "Pas de cours de code aujourd'hui"; $("#sd-mcBody").innerHTML = "";
         }
         else {
           const pr = await run(() => DB.q("presences?select=eleve_id&seance_id=eq." + se.id)) || [];
