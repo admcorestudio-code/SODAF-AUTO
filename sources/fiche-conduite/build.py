@@ -16,7 +16,7 @@ FORMULES = [
 ROWS_TOTAL = 16  # séances de la formule + lignes « séance en plus » pour remplir la page
 
 def page(k, nom, n, duree, coul, txt, prec):
-    plus = max(2, min(6, ROWS_TOTAL - n)); h = min(46, 590 // (n + plus))
+    plus = max(2, min(6, ROWS_TOTAL - n)); h = min(44, 540 // (n + plus))
     cases = "".join(f'<span class="cs"><i>{i}</i></span>' for i in range(1, n + 1))
     lignes = "".join(f'<tr><td class="no">{i}</td><td></td><td class="hr"><span>de</span><span>à</span></td><td></td><td></td><td></td></tr>' for i in range(1, n + 1))
     lignes += f'<tr class="sep"><td colspan="6">Séances en plus (payées au secrétariat avant la séance)</td></tr>'
@@ -24,7 +24,8 @@ def page(k, nom, n, duree, coul, txt, prec):
     seance = "séance" + ("s" if n > 1 else "")
     return f'''<section class="page" style="--c:{coul};--t:{txt};--h:{h}px">
 <header><div class="lg">{LOGO}<span class="ae">Auto-école · Lomé</span></div>
-<div class="hd"><span class="k">Fiche de conduite</span><span class="f">{html.escape(nom)}</span></div></header>
+<div class="hd"><span class="k">Fiche de conduite</span></div></header>
+<div class="band"><span class="bf">{html.escape(nom)}</span><span class="bs">{n} {seance} de {duree}</span></div>
 <div class="top">
 <div class="who">
 <div class="ln"><span>Nom et prénoms</span><i></i></div>
