@@ -316,6 +316,7 @@ a.teamtile em{font-style:normal;font-weight:700;color:var(--green);margin-top:8p
 .cls-opt b{font:700 1rem var(--f-mono);width:40px;height:40px;border-radius:8px;display:grid;place-items:center;background:var(--soft);flex-shrink:0}
 .cls-opt.good{border-color:var(--green);background:var(--green-soft)}
 .cls-opt.good b{background:var(--green);color:#fff}
+.cls-sotimg{background:#fff;border-radius:16px;padding:12px;display:flex;justify-content:center}.cls-sotimg img{width:100%;max-height:430px;object-fit:contain}.cls-hint{margin-top:14px;font-size:1.05rem;color:var(--muted)}
 .cls-opt.dim{opacity:.45}
 .cls-exp{margin-top:18px;border-left:5px solid var(--green);background:var(--soft);border-radius:0 12px 12px 0;padding:14px 18px;font-size:1.1rem}
 .cls-sign{text-align:center}
@@ -401,6 +402,11 @@ article.ch p+p{margin-top:10px}
 .opt .k{font:700 .82rem var(--f-mono);width:28px;height:28px;border-radius:6px;display:grid;place-items:center;background:var(--soft);flex-shrink:0}
 .opt.good{border-color:var(--green);background:var(--green-soft)}
 .opt.bad{border-color:var(--red);background:var(--red-soft)}
+.opt[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}.opt[aria-pressed="true"] .k{background:var(--ink);color:#fff}
+.qhint{margin:-10px 0 14px!important;font-size:.88rem;color:var(--muted)}
+.qimg{margin:0 0 16px;display:flex;justify-content:center;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px}.qimg img{max-width:100%;max-height:300px;object-fit:contain;border-radius:6px}
+.qcours{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin:-4px 0 16px}.qcours label{font-weight:600;font-size:.92rem}.qcours select{min-width:240px;max-width:100%}.qcours.verrou{opacity:.6}
+.result .big.ko{color:var(--red)}
 .explain{margin-top:16px;padding:14px 16px;border-radius:10px;background:var(--soft)}
 .explain b{display:block;margin-bottom:4px}
 .qactions{display:flex;justify-content:space-between;gap:12px;margin-top:18px;flex-wrap:wrap}
@@ -2041,14 +2047,14 @@ ${HEAD("Révision", "Les panneaux", "Les principaux panneaux du code, classés p
 </section>
 
 <section class="page" data-page="quiz" hidden>
-${HEAD("Entraînement", "Le quiz SODAF", "Questions tirées du manuel, avec l'explication et le chapitre à relire. Objectif examen : 35 sur 40.")}
-<div class="wrap sec"><div id="sd-quizLock" hidden><div class="lock-cta"><p class="eyebrow">Réservé aux inscrits SODAF</p><h3>Tu veux la série de 20 et l'examen blanc de 40&nbsp;?</h3><p>Inscris-toi chez SODAF pour <b>5&nbsp;000&nbsp;F</b> : tous les cours, les quiz et les examens blancs sont à toi dès ton paiement validé à l'agence, sous 24 h. Une fois inscrit(e), tu as 2 mois pour commencer à payer ta formation.</p><div class="acts"><a class="btn btn-green btn-sm" href="#inscription">Je m'inscris pour 5 000 F</a><button class="btn btn-line btn-sm" type="button" data-unlock>Déjà inscrit ? Débloquer</button></div></div></div><a class="devlink" href="#devoirs"><b>Devoir de la semaine</b><span>Fais le devoir noté envoyé au moniteur →</span></a><p class="qbest" id="sd-qbest" hidden></p><div class="modes" id="sd-modes"><button data-n="10" class="on">Série rapide · 10</button><button data-n="20">Série moyenne · 20</button><button data-n="40">Examen blanc · 40</button></div><div class="quiz card" id="sd-quiz"></div></div>
+${HEAD("Entraînement", "Le quiz SODAF", "Les questions du manuel d'examen (SOTOPLA), avec la correction et l'explication. Une ou plusieurs bonnes réponses : coche-les toutes. Objectif examen : 35 sur 40.")}
+<div class="wrap sec"><div id="sd-quizLock" hidden><div class="lock-cta"><p class="eyebrow">Réservé aux inscrits SODAF</p><h3>Tu veux la série de 20 et l'examen blanc de 40&nbsp;?</h3><p>Inscris-toi chez SODAF pour <b>5&nbsp;000&nbsp;F</b> : tous les cours, les quiz et les examens blancs sont à toi dès ton paiement validé à l'agence, sous 24 h. Une fois inscrit(e), tu as 2 mois pour commencer à payer ta formation.</p><div class="acts"><a class="btn btn-green btn-sm" href="#inscription">Je m'inscris pour 5 000 F</a><button class="btn btn-line btn-sm" type="button" data-unlock>Déjà inscrit ? Débloquer</button></div></div></div><a class="devlink" href="#devoirs"><b>Devoir de la semaine</b><span>Fais le devoir noté envoyé au moniteur →</span></a><p class="qbest" id="sd-qbest" hidden></p><div class="modes" id="sd-modes"><button data-n="10" class="on">Série rapide · 10</button><button data-n="20">Série moyenne · 20</button><button data-n="40">Examen blanc · 40</button></div><div class="qcours"><label for="sd-qCours">S'entraîner sur un cours</label><select id="sd-qCours"></select></div><div class="quiz card" id="sd-quiz"></div></div>
 </section>
 
 <section class="page" data-page="devoirs" hidden>
 ${HEAD("Devoirs &amp; Examen", "Ton entraînement, noté", "Deux choses bien distinctes : le devoir de la semaine, envoyé au moniteur, et l'examen blanc, qui te met dans les conditions du jour J.")}
 <div class="wrap sec" id="devoirs-devoir"><div class="sec-head"><div><p class="eyebrow">1 · Le devoir</p><h2>Le devoir de la semaine</h2></div><p>Un devoir après chaque cours de code en salle : 10 questions sur le thème du cours. Ton résultat part directement au moniteur, et la correction se fait au début du cours suivant.</p></div><div class="lock-only"><div class="lock-cta"><p class="eyebrow">Réservé aux inscrits SODAF</p><h3>Tu veux faire les devoirs du moniteur&nbsp;?</h3><p>Inscris-toi chez SODAF pour <b>5&nbsp;000&nbsp;F</b> : tous les cours, les quiz et les examens blancs sont à toi dès ton paiement validé à l'agence, sous 24 h. Une fois inscrit(e), tu as 2 mois pour commencer à payer ta formation.</p><div class="acts"><a class="btn btn-green btn-sm" href="#inscription">Je m'inscris pour 5 000 F</a><button class="btn btn-line btn-sm" type="button" data-unlock>Déjà inscrit ? Débloquer</button></div></div></div><div id="sd-dev"></div></div>
-<div class="wrap sec" id="devoirs-examen"><div class="sec-head"><div><p class="eyebrow">2 · L'examen</p><h2>L'examen blanc</h2></div><p>Comme le jour de l'examen : 40 questions, sans aide. Il faut 35 bonnes réponses sur 40. Refais-le autant de fois que tu veux.</p></div><div class="grid g3 exam-cards"><div class="card soft"><p class="eyebrow">Le principe</p><h3 style="margin-top:10px">40 questions, comme à SOTOPLA</h3><p style="margin-top:8px">Les questions sont tirées de tout le manuel, dans le désordre. À la fin, tu vois tes erreurs, avec l'explication et le chapitre à relire.</p></div><div class="card soft"><p class="eyebrow">L'objectif</p><h3 style="margin-top:10px">35 sur 40</h3><p style="margin-top:8px">En dessous, tu n'es pas encore prêt : relis les chapitres indiqués et recommence. Au-dessus, deux fois de suite : tu peux y aller.</p></div><div class="card soft"><p class="eyebrow">Le conseil</p><h3 style="margin-top:10px">Au calme, d'une traite</h3><p style="margin-top:8px">Mets-toi dans les conditions : pas de pause, pas de manuel à côté, 20 minutes devant toi.</p></div></div><p style="margin-top:16px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px"><a class="btn btn-green" href="#quiz-examen">Commencer l'examen blanc</a><span style="color:var(--muted);font-size:.92rem">Réservé aux inscrits. Les séries de 10 et 20 pour s'entraîner sont dans le Quiz.</span></p></div>
+<div class="wrap sec" id="devoirs-examen"><div class="sec-head"><div><p class="eyebrow">2 · L'examen</p><h2>L'examen blanc</h2></div><p>Comme le jour de l'examen : 40 questions, sans aide. Il faut 35 bonnes réponses sur 40. Refais-le autant de fois que tu veux.</p></div><div class="grid g3 exam-cards"><div class="card soft"><p class="eyebrow">Le principe</p><h3 style="margin-top:10px">40 questions, comme à SOTOPLA</h3><p style="margin-top:8px">Les questions sont tirées du manuel d'examen utilisé à SOTOPLA, dans le désordre. À la fin, tu vois tes erreurs, avec l'explication et le chapitre à relire.</p></div><div class="card soft"><p class="eyebrow">L'objectif</p><h3 style="margin-top:10px">35 sur 40</h3><p style="margin-top:8px">En dessous, tu n'es pas encore prêt : relis les chapitres indiqués et recommence. Au-dessus, deux fois de suite : tu peux y aller.</p></div><div class="card soft"><p class="eyebrow">Le conseil</p><h3 style="margin-top:10px">Au calme, d'une traite</h3><p style="margin-top:8px">Mets-toi dans les conditions : pas de pause, pas de manuel à côté, 20 minutes devant toi.</p></div></div><p style="margin-top:16px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px"><a class="btn btn-green" href="#quiz-examen">Commencer l'examen blanc</a><span style="color:var(--muted);font-size:.92rem">Réservé aux inscrits. Les séries de 10 et 20 pour s'entraîner sont dans le Quiz.</span></p></div>
 </section>
 
 
@@ -2297,7 +2303,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <p class="tm-role">Cours de code en salle, séances de conduite et progression des élèves.</p>
 <div class="gr-tabs mk-tabs mn-tabs" role="tablist"><button type="button" role="tab" data-mnp="auj" aria-selected="true">Aujourd'hui</button><button type="button" role="tab" data-mnp="code" aria-selected="false">Code en salle</button><button type="button" role="tab" data-mnp="cond" aria-selected="false">Planning conduite</button><button type="button" role="tab" data-mnp="voit" aria-selected="false" hidden>Essence et voiture</button><button type="button" role="tab" data-mnp="aide" aria-selected="false">Mode d'emploi</button></div>
 <div data-mnpane="code" hidden>
-<div class="tm-week card"><div class="tm-wk-head"><div><p class="eyebrow">Cette semaine</p><h3 id="sd-tmTheme">Thème</h3></div><div class="mc-launch"><a class="mc-cta" href="#classe-lecon"><i aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="13" rx="2"/><path d="M12 16v4M8 21h8"/><path d="M10 7.5l4 2.5-4 2.5z" fill="currentColor"/></svg></i><span><b>Mode classe</b><small id="sd-mcCtaSub">Projeter le cours du jour au tableau</small></span></a><div class="mc-quick" id="sd-mcQuick"><a href="#classe-lecon">Leçon</a><a href="#classe-devoir">Correction du devoir</a><a href="#classe-quiz">Quiz</a></div></div></div>
+<div class="tm-week card"><div class="tm-wk-head"><div><p class="eyebrow">Cette semaine</p><h3 id="sd-tmTheme">Thème</h3></div><div class="mc-launch"><a class="mc-cta" href="#classe-lecon"><i aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="13" rx="2"/><path d="M12 16v4M8 21h8"/><path d="M10 7.5l4 2.5-4 2.5z" fill="currentColor"/></svg></i><span><b>Mode classe</b><small id="sd-mcCtaSub">Projeter le cours du jour au tableau</small></span></a><div class="mc-quick" id="sd-mcQuick"><a href="#classe-lecon">Leçon</a><a href="#classe-devoir">Correction du devoir</a><a href="#classe-quiz">Quiz</a><a href="#classe-examen">Questions d'examen</a></div></div></div>
 <div class="tm-days" id="sd-tmDays"></div></div>
 <details class="card tm-prog" id="sd-tmProgBox"><summary><span><b>Programme du code en salle</b><small>12 cours en 6 semaines, puis on recommence</small></span><em>Voir le programme</em></summary><div id="sd-tmProg"></div></details>
 <div class="teamgrid" style="margin-top:16px">
@@ -2374,7 +2380,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="cls" id="sd-cls">
 <div class="cls-top">
 <div class="cls-brand">${LOGO("#14171C", "word")}<span>Mode classe</span></div>
-<div class="cls-tabs" role="tablist" id="sd-clsTabs"><button role="tab" data-m="lecon" aria-selected="true">Leçon</button><button role="tab" data-m="quiz" aria-selected="false">Quiz</button><button role="tab" data-m="devoir" aria-selected="false">Devoir</button><button role="tab" data-m="panneaux" aria-selected="false">Panneaux</button><button role="tab" data-m="situations" aria-selected="false">Situations</button></div>
+<div class="cls-tabs" role="tablist" id="sd-clsTabs"><button role="tab" data-m="lecon" aria-selected="true">Leçon</button><button role="tab" data-m="quiz" aria-selected="false">Quiz</button><button role="tab" data-m="examen" aria-selected="false">Examen</button><button role="tab" data-m="devoir" aria-selected="false">Devoir</button><button role="tab" data-m="panneaux" aria-selected="false">Panneaux</button><button role="tab" data-m="situations" aria-selected="false">Situations</button></div>
 <label class="sr-only" for="sd-clsSel">Choix</label><select id="sd-clsSel"></select>
 <span class="cls-count" id="sd-clsCount"></span>
 <button class="btn btn-line btn-sm" type="button" id="sd-clsFs">Plein écran</button>
@@ -2743,6 +2749,12 @@ const DEV = [
 ["Lequel fait partie du lot de bord ?",["Le triangle","Le permis","La carte grise","La radio"],0,"Lot de bord : cric, clé démonte-roue, roue de secours, tournevis, extincteur, trousse de secours, triangle.","cours-tableau"],
 ["Lequel est un document de bord ?",["La carte grise","L'extincteur","Le cric","La roue de secours"],0,"Documents : carte grise, attestation d'assurance, permis, pièce d'identité.","cours-tableau"]] },
 ];
+// Banque SOTOPLA (5 nov.) : les questions du manuel d'examen (DGTT 2011) dont la réponse est sûre, chargées à la demande.
+// Format : { n, q, c: [choix], r: [indices des bonnes réponses], e: explication, k: cours SODAF 1 à 10, ch: chapitre du manuel, im: image }
+// Source : sources/banque-sotopla (build.py). Une ou plusieurs bonnes réponses par question.
+let SOT = null, SOTp = null;
+const sotCharger = () => SOTp || (SOTp = fetch("/data/sotopla.json?v=1").then((r) => (r.ok ? r.json() : Promise.reject())).then((d) => (SOT = d)).catch(() => { SOTp = null; return null; }));
+const SOT_IMG = "/data/sotopla-img/", LETT = "ABCDEFGH";
 // Programme du code en salle : 12 cours en boucle sur 6 semaines (2 par semaine), le même pour tous les groupes.
 // Cours 1 à 10 = les 10 thèmes (1 devoir par cours, A à J) ; cours 11 = révision générale ; cours 12 = examen blanc.
 // Même calcul que la base (prive.cours_boucle) : semaine k → 1er jour du groupe = cours 2k+1, 2e jour = cours 2k+2.
@@ -2947,30 +2959,45 @@ function init(root) {
   let quiz = { n: 10, list: [], i: 0, score: 0, answered: false, miss: [] };
   const shuffle = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
   const chTitle = (id) => { const c = root.querySelector("#" + id); return c ? c.dataset.title : ""; };
-  function startQuiz(n) { quiz = { n, list: shuffle(Q).slice(0, Math.min(n, Q.length)), i: 0, score: 0, answered: false, miss: [] }; renderQ(); }
+  // 5 nov. : le quiz tire ses questions de la banque SOTOPLA (plusieurs réponses possibles : on coche puis on valide) ; sinon l'ancienne liste Q
+  const qNorm = (q) => ({ q: q[0], c: q[1], r: [q[2]], e: q[3], ch: q[4], v: q[5] || null });
+  async function startQuiz(n) {
+    qEl.innerHTML = '<p class="tm-empty">Chargement des questions…</p>';
+    await sotCharger();
+    const cs = $("#sd-qCours"), k = cs && n !== 40 ? +cs.value || 0 : 0;
+    const pool = SOT ? (k ? SOT.filter((x) => x.k === k) : SOT) : Q.map(qNorm);
+    quiz = { n, k, list: shuffle(pool).slice(0, Math.min(n, pool.length)), i: 0, score: 0, answered: false, miss: [], pick: new Set() }; renderQ();
+  }
   function renderQ() {
     const q = quiz.list[quiz.i], n = quiz.list.length;
     if (!q) return renderResult();
-    qEl.innerHTML = '<div class="qbar"><span>Question ' + (quiz.i + 1) + " / " + n + "</span><span>Score " + quiz.score + '</span></div><div class="progress"><i style="width:' + (quiz.i / n) * 100 + '%"></i></div>' + optsHTML(q) + '<div id="sd-exp"></div>';
-    quiz.answered = false;
-    qEl.querySelectorAll(".opt").forEach((b) => b.addEventListener("click", () => answer(+b.dataset.k)));
+    quiz.answered = false; quiz.pick = new Set();
+    const vis = q.im ? '<div class="qimg"><img src="' + SOT_IMG + q.im + '" alt="Image de la question" loading="lazy"></div>' : q.v ? qVisual([0, 0, 0, 0, 0, q.v]) : "";
+    qEl.innerHTML = '<div class="qbar"><span>Question ' + (quiz.i + 1) + " / " + n + (quiz.k ? " · Cours " + quiz.k : quiz.n === 40 ? " · Examen blanc" : "") + "</span><span>Score " + quiz.score + '</span></div><div class="progress"><i style="width:' + (quiz.i / n) * 100 + '%"></i></div>' +
+      vis + '<p class="qtext">' + escHtml(q.q) + '</p><p class="qhint">Une ou plusieurs bonnes réponses : coche-les, puis valide.</p><div class="opts">' + q.c.map((o, j) => '<button type="button" class="opt" data-k="' + j + '" aria-pressed="false"><span class="k">' + LETT[j] + "</span><span>" + escHtml(o) + "</span></button>").join("") + "</div>" +
+      '<div class="qactions"><span></span><button type="button" class="btn btn-green" id="sd-qOk" disabled>Valider</button></div><div id="sd-exp"></div>';
+    qEl.querySelectorAll(".opt").forEach((b) => b.addEventListener("click", () => { if (quiz.answered) return; const j = +b.dataset.k; if (quiz.pick.has(j)) quiz.pick.delete(j); else quiz.pick.add(j); b.setAttribute("aria-pressed", quiz.pick.has(j)); qEl.querySelector("#sd-qOk").disabled = !quiz.pick.size; }));
+    qEl.querySelector("#sd-qOk").addEventListener("click", answer);
   }
-  function answer(k) {
-    if (quiz.answered) return; quiz.answered = true;
-    const q = quiz.list[quiz.i], ok = k === q[2];
+  function answer() {
+    if (quiz.answered || !quiz.pick.size) return; quiz.answered = true;
+    const q = quiz.list[quiz.i], ok = q.r.length === quiz.pick.size && q.r.every((j) => quiz.pick.has(j));
     if (ok) quiz.score++; else quiz.miss.push(q);
-    qEl.querySelectorAll(".opt").forEach((b) => { b.disabled = true; const kk = +b.dataset.k; if (kk === q[2]) b.classList.add("good"); else if (kk === k) b.classList.add("bad"); });
-    const last = quiz.i === quiz.list.length - 1;
-    qEl.querySelector("#sd-exp").innerHTML = '<div class="explain"><b>' + (ok ? "Bonne réponse." : "Pas tout à fait.") + "</b>" + q[3] + ' <a href="#' + q[4] + '">Relire : ' + chTitle(q[4]) + '</a></div><div class="qactions"><span></span><button class="btn btn-green" id="sd-nextQ">' + (last ? "Voir mon résultat" : "Question suivante") + "</button></div>";
-    const nb = qEl.querySelector("#sd-nextQ"); nb.addEventListener("click", () => { quiz.i++; renderQ(); }); nb.focus();
+    qEl.querySelectorAll(".opt").forEach((b) => { b.disabled = true; const j = +b.dataset.k; if (q.r.includes(j)) b.classList.add("good"); else if (quiz.pick.has(j)) b.classList.add("bad"); });
+    const okB = qEl.querySelector("#sd-qOk"); if (okB) okB.closest(".qactions").remove();
+    const last = quiz.i === quiz.list.length - 1, lt = q.r.map((j) => LETT[j]), rel = q.ch && chTitle(q.ch);
+    qEl.querySelector("#sd-exp").innerHTML = '<div class="explain"><b>' + (ok ? "Bonne réponse." : "Pas tout à fait. " + (lt.length > 1 ? "Les bonnes réponses : " : "La bonne réponse : ") + lt.join(" et ") + ".") + "</b>" + escHtml(q.e) + (rel ? ' <a href="#' + q.ch + '">Relire : ' + rel + "</a>" : "") + '</div><div class="qactions"><span></span><button class="btn btn-green" id="sd-nextQ">' + (last ? "Voir mon résultat" : "Question suivante") + "</button></div>";
+    const nb = qEl.querySelector("#sd-nextQ"); nb.addEventListener("click", () => { quiz.i++; renderQ(); window.scrollTo({ top: qEl.getBoundingClientRect().top + scrollY - 90, behavior: "smooth" }); }); nb.focus({ preventScroll: true });
   }
   function renderResult() {
     const n = quiz.list.length, pct = Math.round((quiz.score / n) * 100);
     const h = S.get("quiz", { best: null, count: 0 }); h.count++; if (h.best === null || pct > h.best) h.best = pct; S.set("quiz", h);
-    const msg = pct >= 88 ? "Niveau examen atteint. Bravo !" : pct >= 70 ? "Bon niveau. Relis les chapitres ci-dessous et recommence." : "Relis les chapitres ci-dessous avant la prochaine série.";
-    const chs = [...new Set(quiz.miss.map((q) => q[4]))];
-    qEl.innerHTML = '<div class="result"><p class="eyebrow" style="justify-content:center">Résultat</p><div class="big">' + quiz.score + "/" + n + '</div><p style="margin-top:8px">' + msg + "</p></div>" +
-      (chs.length ? '<div class="explain" style="margin-top:20px"><b>À relire</b>' + chs.map((c) => '<a href="#' + c + '" style="display:block">' + chTitle(c) + "</a>").join("") + "</div>" : "") +
+    const exam = n === 40 && !quiz.k, ok = exam ? quiz.score >= 35 : pct >= 88;
+    const msg = exam ? (ok ? "Examen réussi : 35 sur 40 ou plus. Refais-le encore une fois pour être sûr(e) !" : "Il faut 35 bonnes réponses sur 40. Relis les cours ci-dessous et recommence.") : pct >= 88 ? "Niveau examen atteint. Bravo !" : pct >= 70 ? "Bon niveau. Relis les cours ci-dessous et recommence." : "Relis les cours ci-dessous avant la prochaine série.";
+    const ks = [...new Set(quiz.miss.map((q) => q.k).filter(Boolean))].sort((a, b) => a - b), chs = [...new Set(quiz.miss.map((q) => q.ch).filter(Boolean))];
+    qEl.innerHTML = '<div class="result"><p class="eyebrow" style="justify-content:center">' + (exam ? "Examen blanc" : "Résultat") + '</p><div class="big' + (exam && !ok ? " ko" : "") + '">' + quiz.score + "/" + n + '</div><p style="margin-top:8px">' + msg + "</p></div>" +
+      (ks.length ? '<div class="explain" style="margin-top:20px"><b>Cours à revoir</b>' + ks.map((k) => '<span style="display:block">Cours ' + k + " · " + escHtml(BOUCLE[k - 1].t) + "</span>").join("") + "</div>" : "") +
+      (chs.length ? '<div class="explain" style="margin-top:12px"><b>À relire dans le manuel</b>' + chs.map((c) => '<a href="#' + c + '" style="display:block">' + chTitle(c) + "</a>").join("") + "</div>" : "") +
       '<div class="qactions" style="justify-content:center"><button class="btn btn-green" id="sd-again">Nouvelle série</button><a class="btn btn-line" href="#cours">Revoir les cours</a></div>';
     qEl.querySelector("#sd-again").addEventListener("click", () => startQuiz(quiz.n));
     showBest();
@@ -2982,6 +3009,7 @@ function init(root) {
     el.innerHTML = "Ton meilleur score : <b>" + h.best + " %</b> · " + h.count + (h.count > 1 ? " séries terminées" : " série terminée") + " · " + (h.best >= 88 ? "niveau examen atteint." : "objectif examen : 88 % (35 sur 40).");
   }
   $$("#sd-modes button").forEach((b) => b.addEventListener("click", () => { $$("#sd-modes button").forEach((x) => x.classList.toggle("on", x === b)); startQuiz(+b.dataset.n); }));
+  { const cs = $("#sd-qCours"); if (cs) { cs.innerHTML = '<option value="">Tous les cours, au hasard</option>' + BOUCLE.slice(0, 10).map((b) => '<option value="' + b.n + '">Cours ' + b.n + " · " + escHtml(b.t) + "</option>").join(""); cs.addEventListener("change", () => { const on = $("#sd-modes .on"), n = on ? +on.dataset.n : 10; startQuiz(n === 40 ? 10 : n); if (n === 40) $$("#sd-modes button").forEach((x) => x.classList.toggle("on", x.dataset.n === "10")); }); } }
   startQuiz(10);
 
   // ---------- Devoirs de la semaine ----------
@@ -7279,6 +7307,10 @@ function init(root) {
         const ids = [...new Set(Q.map((q) => q[4]))];
         sel.innerHTML = '<option value="all:10">10 questions au hasard</option><option value="all:20">20 questions au hasard</option><option value="all:40"' + (BOUCLE[coursDuJour()].n === 12 ? " selected" : "") + '>Examen blanc · 40 questions</option><option value="all:99">Toutes les questions (' + Q.length + ")</option>" +
           ids.map((id) => '<option value="' + id + '">Chapitre : ' + esc(chTitle(id)) + "</option>").join("");
+      } else if (mode === "examen") {
+        const b = BOUCLE[coursDuJour()];
+        sel.innerHTML = BOUCLE.slice(0, 10).map((x) => '<option value="c:' + x.n + '"' + (x.n === b.n ? " selected" : "") + ">Cours " + x.n + " · " + esc(x.t) + (x.n === b.n ? " (cours du jour)" : "") + " · 20 questions</option>").join("") +
+          '<option value="r:20"' + (b.n === 11 ? " selected" : "") + '>Révision · 20 questions de tous les cours</option><option value="e:40"' + (b.n === 12 ? " selected" : "") + ">Examen blanc · 40 questions</option>";
       } else if (mode === "devoir") { const cw = devCorr(); sel.innerHTML = DEV.map((d, k) => '<option value="' + k + '"' + (k === cw ? " selected" : "") + ">Devoir " + d.l + " · " + esc(d.t) + (k === cw ? " (à corriger aujourd'hui)" : "") + "</option>").join(""); }
       else if (mode === "situations") sel.innerHTML = '<option value="all">Toutes les situations (' + SITS.length + ")</option>" + SITS.map((x) => '<option value="' + x.id + '">' + esc(x.t) + "</option>").join("");
       else sel.innerHTML = SIGN_FAMILIES.map(([k, l]) => '<option value="' + k + '">' + esc(l) + "</option>").join("");
@@ -7290,6 +7322,10 @@ function init(root) {
         if (v.startsWith("all:")) items = shuffle(Q).slice(0, +v.split(":")[1]);
         else items = shuffle(Q.filter((q) => q[4] === v));
         items = items.map((q) => ({ q, shown: false })).concat([{ end: true }]);
+      } else if (mode === "examen") {
+        if (!SOT) { stage.innerHTML = '<p class="cls-ask">Chargement des questions d\'examen…</p>'; items = []; sotCharger().then((d) => { if (d && mode === "examen") load(); else if (!d) stage.innerHTML = '<p class="cls-ask">Les questions ne se chargent pas. Vérifie la connexion internet.</p>'; }); return; }
+        const [t, x] = v.split(":"), pool = t === "c" ? SOT.filter((q) => q.k === +x) : SOT;
+        items = shuffle(pool).slice(0, t === "c" ? 20 : +x).map((s2) => ({ s: s2, shown: false })).concat([{ end: true }]);
       } else if (mode === "devoir") items = DEV[+v].q.map((q) => ({ q, shown: false })).concat([{ end: true }]);
       else if (mode === "situations") items = (v === "all" ? SITS : SITS.filter((x) => x.id === v)).map((x) => ({ x, shown: false }));
       else items = shuffle(SIGNS.filter((g) => v === "tous" || g.f === v)).map((g) => ({ g, shown: false }));
@@ -7316,6 +7352,17 @@ function init(root) {
           stage.innerHTML = q[5] ? '<div class="cls-sitwrap">' + (q[5].startsWith("p:") ? '<div class="cls-signq">' + signSVG(q[5].slice(2)) + "</div>" : SCENE(q[5])) + "<div>" + body + "</div></div>" : body;
           revB.hidden = it.shown;
         }
+      } else if (mode === "examen") {
+        const v = sel.value;
+        if (it.end) stage.innerHTML = '<div class="cls-title"><p class="cls-kicker">Fin de la série</p><h1 class="cls-h1">' + (v === "e:40" ? "Fin de l'examen blanc" : "Bravo à tous !") + '</h1><p style="margin-top:16px;font-size:1.2rem;color:var(--muted)">' + (v === "e:40" ? "Chacun compte ses bonnes réponses : il en faut 35 sur 40." : "Reprenez les questions qui ont posé problème. Pour s'entraîner : autosodaf.com → Quiz.") + '</p><div class="cls-bar"></div></div>';
+        else {
+          const q = it.s, sh = it.shown;
+          const body = '<p class="cls-kicker">' + (v.startsWith("c:") ? "Cours " + v.slice(2) + " · " : v === "e:40" ? "Examen blanc · " : "Révision · ") + "Question " + (i + 1) + " / " + (n - 1) + '</p><h2 class="cls-qt">' + esc(q.q) + '</h2><div class="cls-opts">' +
+            q.c.map((o, k) => '<div class="cls-opt' + (sh ? (q.r.includes(k) ? " good" : " dim") : "") + '"><b>' + LETT[k] + "</b><span>" + esc(o) + "</span></div>").join("") + "</div>" +
+            (sh ? '<div class="cls-exp"><b>Réponse ' + q.r.map((k) => LETT[k]).join(" et ") + ".</b> " + esc(q.e) + "</div>" : '<p class="cls-hint">Une ou plusieurs bonnes réponses.</p>');
+          stage.innerHTML = q.im ? '<div class="cls-sitwrap"><div class="cls-sotimg"><img src="' + SOT_IMG + q.im + '" alt="" onload="this.closest(\'.cls-zoom\') && window.dispatchEvent(new Event(\'resize\'))"></div><div>' + body + "</div></div>" : body;
+          revB.hidden = sh;
+        }
       } else if (mode === "situations") {
         const x = it.x;
         stage.innerHTML = '<div class="cls-sitwrap">' + SCENE(x.id) + '<div><p class="cls-kicker">Situation ' + (i + 1) + " / " + n + " · " + esc(x.t) + '</p><h2 class="cls-qt">' + esc(x.q) + "</h2>" +
@@ -7335,7 +7382,7 @@ function init(root) {
           const k = sel.selectedIndex, nx = sel.options[k + 1];
           if (nx) { nextB.textContent = "Fin du chapitre · Chapitre suivant →"; endAction = () => { sel.selectedIndex = k + 1; load(); }; }
           else { nextB.textContent = "Fin du dernier chapitre · Revenir au 1er ↺"; endAction = () => { sel.selectedIndex = 0; load(); }; }
-        } else if (mode === "quiz") { nextB.textContent = "Fin de la série · Nouvelle série ↺"; endAction = load; }
+        } else if (mode === "quiz" || mode === "examen") { nextB.textContent = "Fin de la série · Nouvelle série ↺"; endAction = load; }
         else if (mode === "devoir") { const k = sel.selectedIndex, nx = (k + 1) % DEV.length; nextB.textContent = "Fin du devoir · Devoir " + DEV[nx].l + " →"; endAction = () => { sel.selectedIndex = nx; load(); }; }
         else if (mode === "panneaux") { nextB.textContent = "Fin des panneaux · Mélanger et recommencer ↺"; endAction = load; }
         else { nextB.textContent = "Fin des situations · Recommencer ↺"; endAction = load; }
@@ -7720,6 +7767,7 @@ function init(root) {
     $$("article.ch").forEach((a) => { const lock = v && !CODE_OUVERT.includes(a.id); a.classList.toggle("verrou", lock); const c = a.querySelector(":scope > .lock-cta"); if (lock && !c) { const t = document.createElement("div"); t.innerHTML = $(".lock-only .lock-cta").outerHTML; const card = t.firstChild; card.querySelector("h3").textContent = "Tu veux lire la suite du code ?"; a.querySelector("header").after(card); } if (!lock && c) c.remove(); });
     $$("#sd-toc button[data-id]").forEach((b) => b.classList.toggle("verrou", v && !CODE_OUVERT.includes(b.dataset.id)));
     $$("#sd-modes [data-n]").forEach((b) => b.classList.toggle("verrou", v && +b.dataset.n > 10));
+    { const cs = $("#sd-qCours"); if (cs) { cs.disabled = v; cs.closest(".qcours").classList.toggle("verrou", v); } }
     if (!v && $("#sd-quizLock")) $("#sd-quizLock").hidden = true;
   }
   document.addEventListener("click", (e) => {
