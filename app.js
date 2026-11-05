@@ -2332,7 +2332,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div id="sd-plBox"></div>
 </div>
 <div class="tm-pane" data-pane="pub" role="tabpanel" hidden>
-<p class="tm-role">Visible par la direction et les ambassadeurs.</p>
+<p class="tm-role">Toute l'équipe peut télécharger et partager ces affiches. Seuls les ambassadeurs notent ce qui est publié sur TikTok.</p>
 <div class="dc-pub" id="sd-pub"><div class="tm-sub"><div><p class="eyebrow">Toutes nos créations</p><h3>Publicité</h3></div><p>Les créations prêtes à imprimer ou à partager, puis chaque affiche et chaque vidéo publiée sur TikTok, depuis le début.</p></div><div class="gr-tabs pub-tabs" role="tablist"><button type="button" role="tab" data-pbp="crea" aria-selected="true">Créations <em id="sd-pubNC"></em></button><button type="button" role="tab" data-pbp="affiche" aria-selected="false">Affiches publiées <em id="sd-pubNA"></em></button><button type="button" role="tab" data-pbp="video" aria-selected="false">Vidéos publiées <em id="sd-pubNV"></em></button></div><div class="pub-crea" id="sd-pubCrea"></div><div class="pub-grid" id="sd-pubGrid" hidden></div></div>
 </div>
 <div class="tm-pane" data-pane="docs" role="tabpanel" hidden>
@@ -4290,7 +4290,7 @@ function init(root) {
       show(true);
       const dirTab = $('#sd-tmTabs [data-t="dir"]'); dirTab.hidden = !DIR(); // direction et gérante
       dirTab.querySelector("b").textContent = me.role === "gerant" ? "Chiffres" : "Direction"; dirTab.querySelector("small").textContent = me.role === "gerant" ? "Vue d'ensemble de l'agence" : "Chiffres du mois, à surveiller";
-      $('#sd-tmTabs [data-t="com"]').hidden = !(DIR() || AMB()); $('#sd-tmTabs [data-t="pub"]').hidden = !(DIR() || AMB()); $('#sd-tmTabs [data-t="mat"]').hidden = AMB(); $('#sd-tmTabs [data-t="mon"]').hidden = AMB() || me.role === "gerant"; { const vb = $('.mn-tabs [data-mnp="voit"]'); if (vb) vb.hidden = me.role !== "moniteur"; let k0 = null; try { k0 = localStorage.getItem("sodaf.mn.ong"); } catch (e) {} mnOnglet(k0 || "auj"); } $('#sd-tmTabs [data-t="mec"]').hidden = AMB(); // Communication : l'Ambassadeur, la gérante, la direction
+      $('#sd-tmTabs [data-t="com"]').hidden = !(DIR() || AMB()); $('#sd-tmTabs [data-t="pub"]').hidden = !pubVoit(); $('#sd-tmTabs [data-t="mat"]').hidden = AMB(); $('#sd-tmTabs [data-t="mon"]').hidden = AMB() || me.role === "gerant"; { const vb = $('.mn-tabs [data-mnp="voit"]'); if (vb) vb.hidden = me.role !== "moniteur"; let k0 = null; try { k0 = localStorage.getItem("sodaf.mn.ong"); } catch (e) {} mnOnglet(k0 || "auj"); } $('#sd-tmTabs [data-t="mec"]').hidden = AMB(); // Communication : l'Ambassadeur, la gérante, la direction
       { const tf = $("#sd-tfSub"); if (tf) tf.textContent = me.role === "admin" ? "Tâches et paiements" : me.role === "gerant" ? "Tâches de l'équipe" : "Tes tâches"; }
       $('#sd-tmTabs [data-t="ger"]').hidden = !GES(); { const gt = $('#sd-tmTabs [data-t="ger"]'); gt.querySelector("small").textContent = me.role === "secretariat" ? "Rapport, frais, tirage, parrainage" : me.role === "admin" ? "Dépenses, reçus, rapport, parrains" : "Demandes, décisions, rapport"; } // onglet Gestion
       $("#sd-grRole").textContent = me.role === "gerant" ? "Ton espace de gérante : demande l'accord de la direction, note tes décisions, envoie ton rapport de la semaine. Tu as aussi les chiffres de l'agence, les reçus et le moniteur." : me.role === "secretariat" ? "Ce que tu envoies à la direction : le rapport de la semaine (chaque samedi) et les petits frais. Tu vérifies aussi le gagnant du tirage et tu paies les parrains." : "Les dépenses à accorder, les reçus à annuler, le rapport du secrétariat et l'argent des parrains.";
@@ -6248,7 +6248,7 @@ function init(root) {
     $("#sd-comFich") && $("#sd-comFich").addEventListener("change", (e) => { const f = e.target.files[0] || null; COMF.file = f; $("#sd-comFichNom").textContent = f ? f.name + " · " + (f.size > 1048576 ? (f.size / 1048576).toFixed(1).replace(".", ",") + " Mo" : Math.max(1, Math.round(f.size / 1024)) + " ko") : "Aucun fichier"; });
     // ---- Publicité (31 oct. ; onglet à part dans la liste de gauche depuis le 5 nov.) : bibliothèque des affiches et vidéos publiées (direction et ambassadeurs)
     const PUB = { ok: false, l: [], ong: "crea" };
-    const pubVoit = () => DIR() || AMB();
+    const pubVoit = () => !!me; // toute l'équipe depuis le 5 nov. (migration 0098) ; seuls les ambassadeurs notent une publication
     // 3 nov. : « Créations » = les affiches prêtes (PDF imprimeur + image), avant d'être publiées. Une nouvelle création s'ajoute ici.
     const CREA = [
       { k: "tirage", t: "Tirage au sort étudiant", c: "Étudiants de 18 ans et plus · gratuit, 2 gagnants le premier samedi de chaque mois. Sert tous les mois : la date du tirage s'écrit dans le texte du statut, pas sur l'affiche", o: "Université de Lomé (sorties d'amphis, restaurants et cités universitaires, avec autorisation) ; écoles supérieures privées ; photocopies, cybercafés et kiosques près des campus ; groupes WhatsApp d'étudiants ; statuts WhatsApp de toute l'équipe chaque jour jusqu'à la veille du tirage ; TikTok" },
