@@ -111,7 +111,7 @@ GER = page("Gérante", "La gérante, au quotidien",
   ]) +
   etapes("Tes outils", [
     ("Demandes de l'équipe", "**Transférer** à la direction ou **Refuser**. « Montant inconnu » : trouve le prix et le devis, **Enregistrer le prix**, puis transfère. Tu peux **Proposer un achat**."),
-    ("Carburant et petits frais", "Essence : 2 000 F par séance prévue, 35 000 F par semaine au plus. « Essence en plus » arrive chez toi. Petits frais déjà payés, sans devis : tu les notes."),
+    ("Carburant et petits frais", "Essence : 2 000 F par séance prévue, 35 000 F par semaine au plus. « Essence en plus » arrive chez toi. Petits frais déjà payés, sans devis, 2 000 F au plus : tu les notes. Au-dessus : une demande."),
     ("Reçus", "Demandes d'annulation du secrétariat : **Confirmer l'annulation** ou **Refuser l'annulation**. Toi seule (et la direction) annules un reçu."),
     ("Fiche d'un élève", "**Corriger la formule** après avoir appelé le client (carte d'étudiant ou carte professionnelle vue). **Prolonger d'un mois** quand le délai de 3 mois ne suffit pas."),
     ("Tirage au sort", "**Tirer un gagnant**, vérifie la carte d'étudiant : valide ou pas. Message au gagnant. 2 gagnants par mois."),
