@@ -2306,10 +2306,6 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="tm-week card"><div class="tm-wk-head"><div><p class="eyebrow">Cette semaine</p><h3 id="sd-tmTheme">Thème</h3></div><div class="mc-launch"><a class="mc-cta" href="#classe-lecon"><i aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="13" rx="2"/><path d="M12 16v4M8 21h8"/><path d="M10 7.5l4 2.5-4 2.5z" fill="currentColor"/></svg></i><span><b>Mode classe</b><small id="sd-mcCtaSub">Projeter le cours du jour au tableau</small></span></a><div class="mc-quick" id="sd-mcQuick"><a href="#classe-lecon">Leçon</a><a href="#classe-devoir">Correction du devoir</a><a href="#classe-quiz">Quiz</a><a href="#classe-examen">Questions d'examen</a></div></div></div>
 <div class="tm-days" id="sd-tmDays"></div></div>
 <details class="card tm-prog" id="sd-tmProgBox"><summary><span><b>Programme du code en salle</b><small>12 cours en 6 semaines, puis on recommence</small></span><em>Voir le programme</em></summary><div id="sd-tmProg"></div></details>
-<div class="teamgrid" style="margin-top:16px">
-<a class="card teamtile hl" href="#classe"><b>Mode classe</b><span>Projette les leçons, le devoir, le quiz, les panneaux et les carrefours en salle.</span><em>Lancer la projection →</em></a>
-<a class="card teamtile" href="#devoirs"><b>Devoir de la semaine</b><span>Ce que font les élèves sur le site cette semaine.</span><em>Voir le devoir →</em></a>
-</div>
 </div>
 <div data-mnpane="auj">
 <div class="grid g2 tm-mon">
