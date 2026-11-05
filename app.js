@@ -7149,6 +7149,13 @@ function init(root) {
         if (monIdx >= ses.length) monIdx = 0;
         const se = ses[monIdx], picker = ses.length > 1 ? '<div class="gc-ses">' + ses.map((x, i) => '<button type="button" class="btn btn-sm ' + (i === monIdx ? "btn-green" : "btn-line") + '" data-mses="' + i + '">' + esc(x.groupe ? (gOf(x.groupe) || { nom: "Groupe " + x.groupe }).nom : "Rattrapage") + " · " + esc(x.heure.split(" – ")[0]) + "</button>").join("") + "</div>" : "";
         if (!se) { $("#sd-mcTitle").textContent = "Aucune séance prévue"; $("#sd-mcBody").innerHTML = ""; }
+        else if (se.jour !== today) {
+          // 5 nov. : pas de cours aujourd'hui → on annonce seulement le prochain cours ; l'appel se fait le jour même (avant, la liste d'appel du prochain cours s'affichait)
+          const nb = eleves.filter((y) => enCode(y) && !susp(y)).length;
+          $("#sd-mcTitle").textContent = "Pas de cours de code aujourd'hui";
+          $("#sd-mcBody").innerHTML = '<div class="mc-next"><span class="mc-nk">Prochain cours</span><b>' + esc(longDay(se.jour)) + '</b><ul>' + ses.map((x) => "<li>" + esc(x.groupe ? (gOf(x.groupe) || { nom: "Groupe " + x.groupe }).nom + (bIdx(x.theme) >= 0 ? " · cours " + (bIdx(x.theme) + 1) + " : " + x.theme : "") : "Rattrapage et examen blanc") + " · " + esc(x.heure) + "</li>").join("") + "</ul>" +
+            (nb ? "" : "<p>Aucun élève au code pour l'instant.</p>") + '<p class="mc-nn">L\'appel des présents se fait ce jour-là, au début du cours.</p></div>';
+        }
         else {
           const pr = await run(() => DB.q("presences?select=eleve_id&seance_id=eq." + se.id)) || [];
           const ids = new Set(pr.map((x) => x.eleve_id));
@@ -8127,7 +8134,7 @@ background:radial-gradient(circle at 35% 30%,#fff 0%,#F1F7F4 55%,#D5E7DE 100%);b
 .mc-cta i{display:grid;place-items:center;width:48px;height:48px;border-radius:12px;background:var(--yellow);color:var(--asph);flex-shrink:0}
 .mc-cta b{display:block;font-family:var(--f-display);font-size:1.45rem;line-height:1;letter-spacing:0}
 .mc-cta small{display:block;margin-top:4px;color:#C9CED4;font-size:.86rem}
-.mc-quick{display:grid;gap:8px}
+.mc-next{display:grid;gap:6px;padding:14px 16px;border-radius:12px;background:var(--soft);border:1px solid var(--line)}.mc-nk{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}.mc-next>b{font-size:1.15rem}.mc-next ul{margin:0;padding-left:18px}.mc-next li{margin:2px 0}.mc-next p{margin:0!important}.mc-nn{font-size:.88rem;color:var(--muted)}.mc-quick{display:grid;gap:8px}
 .mc-quick a{display:flex;align-items:center;gap:12px;color:var(--ink)!important;text-decoration:none!important;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:10px 14px}
 .mc-quick a:hover{border-color:var(--ink)}.mc-quick a:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
 .mc-quick i{font:800 .95rem var(--f-display);font-style:normal;width:30px;height:30px;border-radius:999px;display:grid;place-items:center;background:var(--yellow);color:var(--asph);flex-shrink:0}
