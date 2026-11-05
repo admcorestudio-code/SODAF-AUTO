@@ -3528,7 +3528,9 @@ function init(root) {
       let gs = []; try { gs = GROUPES.filter((g) => g.actif); } catch (e) {}
       if (!gs.length) gs = [["C", "11 h", [1, 4]], ["A", "14 h 30", [1, 4]], ["D", "11 h", [2, 5]], ["B", "14 h 30", [2, 5]], ["E", "11 h", [3, 6]]].map(([id, h, j]) => ({ nom: "Groupe " + id, heure: h, jours: j }));
       const etapes = (b) => { const p = (b.n + 10) % 12, d = BOUCLE[p].dv !== null ? "Corrige le devoir " + DEV[BOUCLE[p].dv].l + " (bouton Mode classe → Devoir)." : p === 11 ? "Reviens sur l'examen blanc." : "";
-        return [d, b.dv !== null ? "Projette la leçon (bouton Mode classe) : " + chNoms(b) + "." : b.n === 11 ? "Révision de tous les thèmes avec le quiz (Mode classe → Quiz)." : "Examen blanc de 40 questions (Mode classe → Quiz).", b.dv !== null ? "Donne le devoir " + DEV[b.dv].l + " à faire sur autosodaf.com." : ""].filter(Boolean); };
+        // 5 nov. : la leçon de mécanique (cours 10) est faite à l'atelier du samedi par la mécanicienne ; en salle, le moniteur fait le quiz d'examen
+        return [d, b.n === 10 ? "La leçon de mécanique est faite à l'atelier du samedi (mécanicienne). En salle : le quiz d'examen du cours 10 (Mode classe → Examen)." : b.dv !== null ? "Projette la leçon (bouton Mode classe) : " + chNoms(b) + "." : b.n === 11 ? "Révision de tous les thèmes : Mode classe → Examen → Révision." : "Examen blanc de 40 questions : Mode classe → Examen.",
+          b.dv !== null && b.n !== 10 ? "Fin du cours, environ 30 min : le quiz d'examen du cours " + b.n + " (Mode classe → Examen)." : "", b.dv !== null ? "Donne le devoir " + DEV[b.dv].l + " à faire sur autosodaf.com." : ""].filter(Boolean); };
       let html = "";
       for (let j = 1; j <= 6; j++) {
         const ici = gs.filter((g) => (g.jours || []).includes(j)).map((g) => ({ g, k: (g.jours || []).indexOf(j) })).sort((a, b) => parseInt(a.g.heure, 10) - parseInt(b.g.heure, 10));
@@ -3544,10 +3546,15 @@ function init(root) {
     { const w = devWeek(), n = new Date(), c1 = BOUCLE[w.c[0]], c2 = BOUCLE[w.c[1]];
       $("#sd-tmTheme").textContent = "Semaine " + (w.sem + 1) + " sur 6 · cours " + c1.n + " et " + c2.n;
       $("#sd-tmToday").textContent = "Nous sommes le " + J[n.getDay()] + " " + n.getDate() + " " + M[n.getMonth()] + ". Code en salle : semaine " + (w.sem + 1) + " sur 6 du programme.";
-      const day = (b, quand) => '<a class="tm-day" href="#' + (b.dv === null ? "classe-quiz" : "classe-lecon") + '"><b>Cours ' + b.n + " · " + esc(b.t) + "</b><span>" + quand + " · " + (b.dv !== null ? "chapitres : " + esc(chNoms(b)) : b.n === 11 ? "révision de tous les thèmes" : "examen blanc de 40 questions") + "</span><em>Début : " + debutCours(b.n - 1) + " · Mode classe → " + (b.dv === null ? "Quiz" : "Leçon") + "</em></a>";
+      const day = (b, quand) => '<a class="tm-day" href="#' + (b.dv === null || b.n === 10 ? "classe-examen" : "classe-lecon") + '"><b>Cours ' + b.n + " · " + esc(b.t) + "</b><span>" + quand + " · " + (b.dv !== null ? "chapitres : " + esc(chNoms(b)) : b.n === 11 ? "révision de tous les thèmes" : "examen blanc de 40 questions") + "</span><em>Début : " + debutCours(b.n - 1) + " · Mode classe → " + (b.dv === null || b.n === 10 ? "Examen" : "Leçon puis Examen") + "</em></a>";
       { const k = coursDuJour(), b = BOUCLE[k], dvc = DEV[devCorr()];
         $("#sd-mcCtaSub").textContent = "Cours " + b.n + " : " + b.t;
-        $("#sd-mcQuick").innerHTML = '<a href="#classe-devoir">Corriger le devoir ' + dvc.l + "</a>" + (b.dv !== null ? '<a href="#classe-lecon">Leçon · ' + esc(b.t) + "</a>" : "") + '<a href="#classe-quiz">' + (b.n === 12 ? "Examen blanc · 40 questions" : "Quiz") + "</a>"; }
+        // 5 nov. : une ligne par étape, dans l'ordre du cours ; pas de leçon au cours 10 (mécanique = atelier du samedi)
+        const L = [["#classe-devoir", "Corriger le devoir " + dvc.l, "Au début du cours"]];
+        if (b.dv !== null && b.n !== 10) L.push(["#classe-lecon", "Leçon · " + b.t, "Projeter le cours"]);
+        L.push(["#classe-examen", b.n === 12 ? "Examen blanc · 40 questions" : b.n === 11 ? "Révision · 20 questions" : "Quiz · cours " + b.n, b.n >= 11 ? "Questions d'examen de tous les cours" : "Questions d'examen du cours, environ 30 min"]);
+        $("#sd-mcQuick").innerHTML = L.map((x, j) => '<a href="' + x[0] + '"><i>' + (j + 1) + "</i><span><b>" + esc(x[1]) + "</b><small>" + x[2] + "</small></span></a>").join("") + (b.n === 10 ? '<p class="mc-qn">La leçon de mécanique est faite à l\'atelier du samedi, avec la mécanicienne.</p>' : "");
+        const cta = $(".mc-launch .mc-cta"); if (cta) cta.setAttribute("href", b.dv === null || b.n === 10 ? "#classe-examen" : "#classe-lecon"); }
       tmWeek();
       $("#sd-tmProg").innerHTML = '<p class="tm-note" style="margin:0 0 4px!important">Tous les groupes font le même cours la même semaine. Un élève qui arrive commence au cours du jour : en 6 semaines (son cycle), il a tout vu. Après chaque cours, il fait le devoir du cours sur le site ; on le corrige au début du cours suivant.</p><div class="prog">' + progRows(w.sem, w.monday) + "</div>"; }
 
@@ -8120,9 +8127,12 @@ background:radial-gradient(circle at 35% 30%,#fff 0%,#F1F7F4 55%,#D5E7DE 100%);b
 .mc-cta i{display:grid;place-items:center;width:48px;height:48px;border-radius:12px;background:var(--yellow);color:var(--asph);flex-shrink:0}
 .mc-cta b{display:block;font-family:var(--f-display);font-size:1.45rem;line-height:1;letter-spacing:0}
 .mc-cta small{display:block;margin-top:4px;color:#C9CED4;font-size:.86rem}
-.mc-quick{display:flex;flex-wrap:wrap;gap:6px}
-.mc-quick a{font-size:.84rem;font-weight:600;color:var(--ink)!important;text-decoration:none!important;background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:.3em .8em}
-.mc-quick a:hover{border-color:var(--ink)}
+.mc-quick{display:grid;gap:8px}
+.mc-quick a{display:flex;align-items:center;gap:12px;color:var(--ink)!important;text-decoration:none!important;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:10px 14px}
+.mc-quick a:hover{border-color:var(--ink)}.mc-quick a:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+.mc-quick i{font:800 .95rem var(--f-display);font-style:normal;width:30px;height:30px;border-radius:999px;display:grid;place-items:center;background:var(--yellow);color:var(--asph);flex-shrink:0}
+.mc-quick b{display:block;font-size:1rem;line-height:1.25}.mc-quick small{display:block;font-size:.84rem;color:var(--muted);margin-top:1px}
+.mc-qn{margin:2px 2px 0!important;font-size:.84rem;color:var(--muted)}
 @media (prefers-reduced-motion:reduce){.mc-cta{transition:none}}
 
 /* Messages de l'équipe */
