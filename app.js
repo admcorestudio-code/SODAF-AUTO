@@ -2314,7 +2314,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div data-mnpane="auj">
 <div class="grid g2 tm-mon">
 <div class="card mc-card mc-code" id="sd-mcCode"><div class="mc-band"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2z"/><path d="M22 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"/></svg>Cours de code</div><h3 class="tm-h3" id="sd-mcTitle">Chargement…</h3><div id="sd-mcBody"></div></div>
-<div class="card mc-card mc-drive" id="sd-mcDrive"><div class="mc-band"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/><path d="M12 14v7M10.2 11.2 3.5 9.5M13.8 11.2l6.7-1.7"/></svg>Cours de conduite</div><h3 class="tm-h3">Mes séances d'aujourd'hui</h3><div id="sd-mcList" class="tm-list"></div></div>
+<div class="card mc-card mc-drive" id="sd-mcDrive"><div class="mc-band"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/><path d="M12 14v7M10.2 11.2 3.5 9.5M13.8 11.2l6.7-1.7"/></svg>Cours de conduite</div><h3 class="tm-h3" id="sd-mcDTitle">Mes séances d'aujourd'hui</h3><div id="sd-mcList" class="tm-list"></div></div>
 </div>
 </div>
 <div data-mnpane="voit" hidden><div class="card crb crb-mon" id="sd-crbMon" hidden></div></div>
@@ -6116,6 +6116,7 @@ function init(root) {
       $$('[data-pane="mon"] [data-mnpane]').forEach((c) => (c.hidden = c.dataset.mnpane !== k));
     }
     $(".mn-tabs") && $(".mn-tabs").addEventListener("click", (e) => { const b = e.target.closest("[data-mnp]"); if (b) mnOnglet(b.dataset.mnp); });
+    { const mp = $('.tm-pane[data-pane="mon"]'); mp && mp.addEventListener("click", (e) => { const g = e.target.closest("[data-mngo]"); if (g) { mnOnglet(g.dataset.mngo); mp.scrollIntoView({ behavior: "smooth", block: "start" }); } }); }
     const mkLu = () => { try { return localStorage.getItem("sodaf.mk.ong"); } catch (e) { return null; } };
     function mkOnglet(k) {
       if (k === "ct" && !mcPeutInscrire()) k = "voit"; if (!["voit", "at", "ct"].includes(k)) k = "voit"; MC.ong = k;
@@ -7148,17 +7149,18 @@ function init(root) {
         const ses = s1.filter((x) => x.jour === (s1[0] && s1[0].jour)).sort((a, b) => hmin(a.heure) - hmin(b.heure));
         if (monIdx >= ses.length) monIdx = 0;
         const se = ses[monIdx], picker = ses.length > 1 ? '<div class="gc-ses">' + ses.map((x, i) => '<button type="button" class="btn btn-sm ' + (i === monIdx ? "btn-green" : "btn-line") + '" data-mses="' + i + '">' + esc(x.groupe ? (gOf(x.groupe) || { nom: "Groupe " + x.groupe }).nom : "Rattrapage") + " · " + esc(x.heure.split(" – ")[0]) + "</button>").join("") + "</div>" : "";
-        if (!se) { $("#sd-mcTitle").textContent = "Aucune séance prévue"; $("#sd-mcBody").innerHTML = ""; }
+        if (!se) { $("#sd-mcTitle").hidden = false; $("#sd-mcTitle").textContent = "Aucune séance prévue"; $("#sd-mcBody").innerHTML = ""; }
         else if (se.jour !== today) {
           // 5 nov. : pas de cours aujourd'hui → rien d'autre (le rattrapage ou le cours s'affichera le jour même)
-          $("#sd-mcTitle").textContent = "Pas de cours de code aujourd'hui"; $("#sd-mcBody").innerHTML = "";
+          $("#sd-mcTitle").hidden = true; $("#sd-mcTitle").textContent = "Pas de cours de code aujourd'hui";
+          $("#sd-mcBody").innerHTML = '<div class="mc-empty mc-e-code"><div class="mc-eic"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2z"/><path d="M22 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"/></svg></div><b>Pas de cours de code aujourd\'hui</b><span>La salle est libre. Bon moment pour préparer : le programme de la semaine et les questions d\'examen sont prêts.</span><div class="mc-eacts"><button type="button" class="btn btn-sm btn-line" data-mngo="code">Le programme</button><a class="btn btn-sm mc-ey" href="#classe-examen">Questions d\'examen</a></div></div>';
         }
         else {
           const pr = await run(() => DB.q("presences?select=eleve_id&seance_id=eq." + se.id)) || [];
           const ids = new Set(pr.map((x) => x.eleve_id));
           const rat = se.groupe ? new Set(((await DB.q("code_rattrapages?select=eleve_id&statut=eq.Réservé&seance_id=eq." + se.id).catch(() => [])) || []).map((r) => r.eleve_id)) : new Set();
           const act = eleves.filter((x) => (enCode(x) && !susp(x) && (!se.groupe || (x.groupe_code === se.groupe && cycleOk(x)))) || rat.has(x.id)).sort((a, b) => (rat.has(a.id) ? 1 : 0) - (rat.has(b.id) ? 1 : 0) || a.nom.localeCompare(b.nom, "fr"));
-          $("#sd-mcTitle").textContent = (se.jour === today ? "Aujourd'hui" : "Pas de cours aujourd'hui · prochain cours " + longDay(se.jour)) + " · " + (se.groupe ? (gOf(se.groupe) || { nom: "Groupe " + se.groupe }).nom + " · " : "") + (se.groupe && bIdx(se.theme) >= 0 ? "Cours " + (bIdx(se.theme) + 1) + "/12 : " + se.theme : se.type) + " · " + se.heure + (se.statut === "Fait" ? " ✓" : "");
+          $("#sd-mcTitle").hidden = false; $("#sd-mcTitle").textContent = (se.jour === today ? "Aujourd'hui" : "Pas de cours aujourd'hui · prochain cours " + longDay(se.jour)) + " · " + (se.groupe ? (gOf(se.groupe) || { nom: "Groupe " + se.groupe }).nom + " · " : "") + (se.groupe && bIdx(se.theme) >= 0 ? "Cours " + (bIdx(se.theme) + 1) + "/12 : " + se.theme : se.type) + " · " + se.heure + (se.statut === "Fait" ? " ✓" : "");
           const bi = se.groupe ? bIdx(se.theme) : -1, bo = bi >= 0 ? BOUCLE[bi] : null, lock = se.statut === "Fait" && appelEdit !== se.id;
           $("#sd-mcBody").innerHTML = picker + (se.groupe ? "" : '<p class="tm-note" style="margin:0 0 8px!important">Séance commune : élèves de tous les groupes qui ont manqué un cours ou veulent s\'entraîner. 6 places au maximum. Choisis le cours que tu rattrapes : il compte pour les présents.</p>') +
             (bo ? '<div class="mc-plan"><b>Au programme</b><ol><li><b>Début</b> : ' + debutCours(bi) + (BOUCLE[(bi + 11) % 12].dv !== null ? " (Mode classe → Devoir)" : "") + ".</li><li><b>Cours</b> : " + (bo.dv !== null ? "chapitres " + esc(chNoms(bo)) + " (Mode classe → Leçon)" : bo.n === 11 ? "révision de tous les thèmes : quiz, panneaux, situations" : "examen blanc de 40 questions (Mode classe → Quiz)") + ".</li>" + (bo.dv !== null ? "<li><b>Fin</b> : rappelle le devoir " + DEV[bo.dv].l + " à faire sur autosodaf.com.</li>" : "") + "</ol></div>" : "") +
@@ -7214,7 +7216,8 @@ function init(root) {
           ord.forEach((x, i) => { x.rang = i + 1; });
           const q = eqOf(g.eq), fini = ord.filter((x) => x.statut !== "Réservé").length;
           return '<div class="cd-bloc mc-bloc' + (g.bloc === "mercredi" ? " cd-mer" : "") + '"><div class="cd-bh"><b>' + esc(plage(g.h)) + "</b><span>" + esc(g.bloc === "mercredi" ? "Rattrapage et séances en plus" : "Séance de conduite") + " · " + n + " élève" + (n > 1 ? "s" : "") + " · ordre de passage</span><em>" + fini + "/" + n + "</em></div>" + ord.map(mRow).join("") + '<p class="mc-tip">10 min de préparation, environ 25 min au volant chacun, 10 min de bilan. L\'ordre change à chaque bloc.</p></div>';
-        }).join("") : '<p class="tm-empty">Aucune séance réservée aujourd\'hui.</p>';
+        }).join("") : '<div class="mc-empty mc-e-drive"><div class="mc-eic"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/><path d="M12 14v7M10.2 11.2 3.5 9.5M13.8 11.2l6.7-1.7"/></svg></div><b>Aucune séance de conduite aujourd\'hui</b><span>Les réservations de la semaine sont dans le planning conduite.</span><div class="mc-eacts"><button type="button" class="btn btn-sm btn-line" data-mngo="cond">Planning conduite</button></div></div>';
+        { const dt = $("#sd-mcDTitle"); if (dt) dt.hidden = !mg.length; }
         if (!["moniteur", "admin"].includes((me || {}).role)) { $$("#sd-mcList [data-set]").forEach((b) => b.remove()); $$("#sd-mcList [data-note]").forEach((el) => (el.disabled = true)); $$("#sd-mcList .se-mev").forEach((el) => el.remove()); } // Fait / Absent et évaluation : le moniteur
       }
     }
@@ -8131,6 +8134,14 @@ background:radial-gradient(circle at 35% 30%,#fff 0%,#F1F7F4 55%,#D5E7DE 100%);b
 .mc-cta i{display:grid;place-items:center;width:48px;height:48px;border-radius:12px;background:var(--yellow);color:var(--asph);flex-shrink:0}
 .mc-cta b{display:block;font-family:var(--f-display);font-size:1.45rem;line-height:1;letter-spacing:0}
 .mc-cta small{display:block;margin-top:4px;color:#C9CED4;font-size:.86rem}
+.mc-empty{display:grid;justify-items:center;text-align:center;gap:6px;padding:14px 8px 6px}
+.mc-eic{position:relative;width:68px;height:68px;border-radius:22px;display:grid;place-items:center;margin-bottom:6px}
+.mc-eic::after{content:"";position:absolute;left:8px;right:8px;bottom:-9px;height:4px;border-radius:2px;opacity:.8}
+.mc-e-code .mc-eic{background:#FFF3CC;color:#7A5A00}.mc-e-code .mc-eic::after{background:repeating-linear-gradient(90deg,#F2B100 0 9px,transparent 9px 15px)}
+.mc-e-drive .mc-eic{background:#E3F2EC;color:#0B6E4F}.mc-e-drive .mc-eic::after{background:repeating-linear-gradient(90deg,#0B6E4F 0 9px,transparent 9px 15px)}
+.mc-empty b{font-size:1.12rem;line-height:1.3;margin-top:4px}.mc-empty>span{color:var(--muted);font-size:.92rem;max-width:36ch;line-height:1.45}
+.mc-eacts{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:8px}
+.mc-ey{background:#F2B100;color:#14171C!important;border:0;font-weight:700}.mc-ey:hover{background:#E0A400}
 .mc-next{display:grid;gap:6px;padding:14px 16px;border-radius:12px;background:var(--soft);border:1px solid var(--line)}.mc-nk{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}.mc-next>b{font-size:1.15rem}.mc-next ul{margin:0;padding-left:18px}.mc-next li{margin:2px 0}.mc-next p{margin:0!important}.mc-nn{font-size:.88rem;color:var(--muted)}.mc-quick{display:grid;gap:8px}
 .mc-quick a{display:flex;align-items:center;gap:12px;color:var(--ink)!important;text-decoration:none!important;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:10px 14px}
 .mc-quick a:hover{border-color:var(--ink)}.mc-quick a:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
