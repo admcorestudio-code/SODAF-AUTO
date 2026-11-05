@@ -6039,27 +6039,28 @@ function init(root) {
         return depCarte(d, { st, vue: "equipe", extra: d.statut === "accordee" && d.nature !== "Carburant" && !d.facture ? '<div class="dq-fac dep-facw" data-fac="' + d.id + '"><b>Après l\'achat, ajoute la facture</b>' + pjHtml(true) + "</div>" : "" }); }).join("") : "";
     }
 
-    // ---- Frais (17 oct.) : déplacement, transport, recharge, petit achat ; notés par la gérante, sans devis (table frais, migration 0052)
+    // ---- Frais (17 oct.) : déplacement, transport, recharge, petit achat ; sans devis (table frais, migration 0052). 5 nov. : notés par le secrétariat seulement, 2 000 F au plus, « ce que c'est » obligatoire (0103, 0104)
     const FR_QUOI = ["Déplacement", "Transport", "Recharge", "Petit achat", "Autre"], FR_POUR = ["Moniteur", "Secrétariat", "Ambassadeur", "Mécanicienne", "Direction", "Autre"];
     async function frCharger() {
       const box = $("#sd-frais"); if (!box) return; const l = grLundi(new Date()), now = new Date(), m0 = iso(new Date(now.getFullYear(), now.getMonth(), 1));
       const L = await DB.q("frais?select=*&jour=gte." + (m0 < l ? m0 : l) + "&order=le.desc").catch(() => null);
       if (!L) { box.innerHTML = ""; box.hidden = true; return; } box.hidden = false;
-      const sem = L.filter((f) => f.jour >= l), som = (a) => a.reduce((n, f) => n + f.montant, 0), g = ["gerant", "secretariat", "admin"].includes(me.role);
+      const sem = L.filter((f) => f.jour >= l), som = (a) => a.reduce((n, f) => n + f.montant, 0), g = me.role === "secretariat"; // 5 nov. : seul le secrétariat note les petits frais ; la direction et la gérante les voient
       box.innerHTML = '<div class="crb fr"><div class="crb-hd"><div><span class="crb-k">Petits frais · semaine ' + grNumSem(l) + '</span><b class="crb-big">' + F(som(sem)) + '</b><span class="crb-s">Ce mois : ' + F(som(L.filter((f) => f.jour >= m0))) + "</span></div></div>" +
         (g ? '<details class="crb-add"><summary>Noter un frais</summary><form class="fr-form" novalidate><div class="field"><label>Quoi</label><div class="crb-chips fr-quoi" role="radiogroup">' + FR_QUOI.map((q, i) => '<button type="button" role="radio" aria-checked="' + !i + '" data-q="' + q + '">' + q + "</button>").join("") + '</div></div>' +
           '<div class="crb-row"><div class="field"><label>Pour qui</label><select class="fr-pour">' + FR_POUR.map((x) => "<option>" + x + "</option>").join("") + '</select></div><div class="field"><label>Montant (F) · 2 000 F au plus</label><input class="fr-mt" inputmode="numeric" autocomplete="off" placeholder="ex. 1 000"></div></div><p class="tm-note" style="margin:0 0 10px!important">Plus de 2 000 F : ce n\'est pas un petit frais. Fais une demande de dépense, la direction donne son accord avant l\'achat.</p>' +
-          '<div class="field"><label>Note (facultatif)</label><input class="fr-note" maxlength="300" autocomplete="off" placeholder="ex. Taxi-moto au garage"></div><div class="field"><label>Photo (facultatif)</label>' + pjHtml(false) + '</div><button class="btn btn-green btn-sm" type="submit">Noter le frais</button></form></details>' : "") +
+          '<div class="field"><label>Ce que c\'est (obligatoire)</label><input class="fr-note" maxlength="300" autocomplete="off" placeholder="ex. Taxi-moto aller-retour au garage pour la voiture"></div><div class="field"><label>Photo (facultatif)</label>' + pjHtml(false) + '</div><button class="btn btn-green btn-sm" type="submit">Noter le frais</button></form></details>' : "") +
         (sem.length ? '<div class="crb-list">' + sem.map((f) => '<div class="crb-it fr-it"><span>' + dOf(f.jour).toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" }) + "</span><b>" + F(f.montant) + "</b><span>" + esc(f.quoi) + " · " + esc(f.pour) + (f.note ? " · " + esc(f.note) : "") + "</span>" + (f.photo ? '<button type="button" class="linkbtn" data-dep="' + esc(f.photo) + '">Photo</button>' : "<span></span>") + "</div>").join("") + "</div>" : '<p class="crb-vide">Aucun frais cette semaine.</p>') + "</div>";
       const f = box.querySelector(".fr-form"); if (!f) return;
       f.addEventListener("click", (e) => { const q = e.target.closest("[data-q]"); if (q) f.querySelectorAll("[data-q]").forEach((b) => b.setAttribute("aria-checked", b === q)); });
       f.addEventListener("submit", async (e) => {
         e.preventDefault(); const mt = +(f.querySelector(".fr-mt").value.replace(/\D/g, "")) || 0, pj = f.querySelector(".pj"), b = f.querySelector("[type=submit]");
         if (mt < 100) { toast("Écris le montant", true); f.querySelector(".fr-mt").focus(); return; }
+        if (f.querySelector(".fr-note").value.trim().length < 3) { toast("Écris ce que c'est : à quoi l'argent a servi", true); f.querySelector(".fr-note").focus(); return; }
         if (mt > 2000) { toast("Plus de 2 000 F : ce n'est pas un petit frais. Fais une demande de dépense (accord de la direction).", true); f.querySelector(".fr-mt").focus(); return; } // 5 nov. : plafond 2 000 F (aussi dans la base, 0103)
         b.disabled = true; b.textContent = "Envoi…"; let photo = null;
         if (pj._file) { try { photo = await depEnvoyer(pj._file, "frais"); } catch (er) { toast("La photo n'a pas pu être envoyée", true); b.disabled = false; b.textContent = "Noter le frais"; return; } }
-        const r = await run(() => DB.q("frais", { method: "POST", body: { quoi: f.querySelector('[data-q][aria-checked="true"]').dataset.q, pour: f.querySelector(".fr-pour").value, montant: mt, note: f.querySelector(".fr-note").value.trim() || null, photo }, prefer: "return=minimal" }).then(() => true), "Frais noté");
+        const r = await run(() => DB.q("frais", { method: "POST", body: { quoi: f.querySelector('[data-q][aria-checked="true"]').dataset.q, pour: f.querySelector(".fr-pour").value, montant: mt, note: f.querySelector(".fr-note").value.trim(), photo }, prefer: "return=minimal" }).then(() => true), "Frais noté");
         b.disabled = false; b.textContent = "Noter le frais"; if (r) frCharger();
       });
     }

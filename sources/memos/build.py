@@ -92,6 +92,7 @@ SEC = page("Secrétariat", "Le secrétariat, étape par étape",
     "Reçu faux : **Demander l'annulation** (la gérante décide).",
     "Formule ou prix : tu ne changes jamais. Fiche → « Le client s'est trompé de formule ? ».",
     "Besoin d'argent (voiture, agence) : **Demandes à la gérante**. Pas le prix ? Coche **Montant inconnu**.",
+    "**Petits frais** (taxi-moto, recharge, petit achat, **2 000 F au plus**) : Gestion → **Petits frais**, le jour même, en écrivant ce que c'est. Plus cher : une demande.",
   ]) +
   puces("Les cas particuliers", [
     "**Étudiant** : carte d'étudiant de l'année + carte d'identité. Sinon, tarif normal.",
@@ -111,7 +112,7 @@ GER = page("Gérante", "La gérante, au quotidien",
   ]) +
   etapes("Tes outils", [
     ("Demandes de l'équipe", "**Transférer** à la direction ou **Refuser**. « Montant inconnu » : trouve le prix et le devis, **Enregistrer le prix**, puis transfère. Tu peux **Proposer un achat**."),
-    ("Carburant et petits frais", "Essence : 2 000 F par séance prévue, 35 000 F par semaine au plus. « Essence en plus » arrive chez toi. Petits frais déjà payés, sans devis, 2 000 F au plus : tu les notes. Au-dessus : une demande."),
+    ("Carburant et petits frais", "Essence : 2 000 F par séance prévue, 35 000 F par semaine au plus. « Essence en plus » arrive chez toi. Petits frais (2 000 F au plus) : le secrétariat les note, tu les vois. Au-dessus : une demande."),
     ("Reçus", "Demandes d'annulation du secrétariat : **Confirmer l'annulation** ou **Refuser l'annulation**. Toi seule (et la direction) annules un reçu."),
     ("Fiche d'un élève", "**Corriger la formule** après avoir appelé le client (carte d'étudiant ou carte professionnelle vue). **Prolonger d'un mois** quand le délai de 3 mois ne suffit pas."),
     ("Tirage au sort", "**Tirer un gagnant**, vérifie la carte d'étudiant : valide ou pas. Message au gagnant. 2 gagnants par mois."),
@@ -120,7 +121,7 @@ GER = page("Gérante", "La gérante, au quotidien",
   puces("Tu décides seule", [
     "Le prix d'une demande « montant inconnu ».",
     "L'annulation d'un reçu faux.",
-    "Les petits frais, les tâches sans argent pour l'équipe.",
+    "Les tâches sans argent pour l'équipe.",
     "Corriger une formule, prolonger un délai d'un mois.",
   ]) +
   puces("La direction décide", [
