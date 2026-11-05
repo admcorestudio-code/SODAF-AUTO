@@ -6662,7 +6662,7 @@ function init(root) {
         '<div class="tf-h' + (dedans ? " tf-h-in" : "") + '"><div class="tf-hl"><p class="tf-tx' + (dedans && !/\bSO\d+\b/.test(t.titre || "") ? " tf-tx-in" : "") + '">' + esc(String(t.titre || "").replace(/^\[TEST\]\s*/, "")).replace(/\bSO(\d+)\b/g, (m, n) => eleves.some((y) => y.id === +n) ? '<button type="button" class="ms-el" data-goel="' + n + '">' + m + "</button>" : m) + (test ? ' <span class="dq-test">TEST</span>' : "") + '</p><p class="tf-sub">' + qui + " · T-" + t.id + (t.demande_id ? " · dépense accordée" : "") +
           (t.pour_le && !TF_FIN.includes(t.etape) ? ' · <span class="' + (late ? "tf-retard" : "") + '">' + (late ? "en retard, " : "") + "pour " + tfJour(t.pour_le) + "</span>" : "") + "</p></div>" +
           (t.argent ? '<div class="tf-hr">' + (t.paye_montant || t.montant ? F(t.paye_montant || t.montant) : '<small>' + (t.par === t.pour ? "Prix au retour" : "Prix à trouver") + "</small>") + "</div>" : "") + "</div>" +
-        '<p class="tf-etat"><i></i>' + esc(st[1]) + "</p>" + tfEtapes(t) + tfPieces(t) + tfEnvois(t) +
+        '<p class="tf-etat"><i></i>' + esc(st[1]) + "</p>" + tfEtapes(t) + tfJoint(t) + tfPieces(t) + tfEnvois(t) +
         (t.accord_note && t.etape !== "fait" ? '<p class="tf-rep">Direction : « ' + esc(t.accord_note) + " »</p>" : "") + (t.fait_note ? '<p class="tf-rep">« ' + esc(t.fait_note) + " »</p>" : "") +
         (info ? '<p class="tf-info">' + info + "</p>" : "") + (act ? '<div class="tf-act"><p class="tf-act-k">' + (tfAMoi(t) || t.pour === me.id ? "Ce que tu dois faire" : "Tu peux aussi") + "</p>" + act + "</div>" : "") + ann + "</article>";
     }
@@ -6677,6 +6677,18 @@ function init(root) {
         (trop ? '<p class="tf-act-ko">Envoyé en trop : ' + F(trop) + " (accordé " + F(t.montant) + ")</p>" : "") + "</details>";
     }
     const tfTri = (a, b) => (tfAMoi(b) - tfAMoi(a)) || String(a.pour_le || "9999").localeCompare(String(b.pour_le || "9999")) || String(a.le).localeCompare(String(b.le));
+    // 5 nov. : pièce jointe d'une tâche (document ou image, du téléphone, de l'ordinateur ou de Google Drive) et lien Drive
+    const TF_DOCS = { pdf: "application/pdf", doc: "application/msword", docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document", xls: "application/vnd.ms-excel", xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" };
+    const tfExt = (fl) => (String(fl.name || "").toLowerCase().match(/\.([a-z0-9]+)$/) || [])[1] || "";
+    function tfPieceOk(fl) { const img = /^image\//.test(fl.type), ext = tfExt(fl); if (!img && !TF_DOCS[ext]) return "Choisis une image, un PDF, un Word ou un Excel"; if (!img && fl.size > 10485760) return "Fichier trop lourd (10 Mo au plus)"; return ""; }
+    async function tfPieceEnvoyer(fl) {
+      const img = /^image\//.test(fl.type), ext = img ? "jpg" : tfExt(fl), type = img ? "image/jpeg" : TF_DOCS[ext], blob = img ? await photoCompresse(fl, 1600, false) : fl;
+      if (blob.size > 10485760) throw new Error("Fichier trop lourd (10 Mo au plus)");
+      const path = "taches/" + Date.now() + "-" + Math.random().toString(36).slice(2, 7) + "." + ext;
+      const r = await fetch(SB_URL + "/storage/v1/object/depenses/" + path, { method: "POST", headers: { apikey: SB_KEY, Authorization: "Bearer " + (await DB.token()), "Content-Type": type, "x-upsert": "false" }, body: blob });
+      if (!r.ok) throw new Error("La pièce jointe n'a pas pu être envoyée"); return path;
+    }
+    const tfJoint = (t) => t.piece || t.lien ? '<div class="tf-pcs tf-joint">' + (t.piece ? '<button type="button" class="tf-pc" data-tfdoc="' + esc(t.piece) + '"><i></i>' + esc(t.piece_nom || "Pièce jointe") + "</button>" : "") + (t.lien ? '<a class="tf-pc" href="' + esc(t.lien) + '" target="_blank" rel="noopener"><i></i>' + (/^https:\/\/(drive|docs)\.google\.com\//.test(t.lien) ? "Ouvrir dans Google Drive" : "Ouvrir le lien") + "</a>" : "") + "</div>" : "";
     function tfForm() {
       const box = $("#sd-tfNew"); if (!box) return; if (!DIR()) { box.innerHTML = ""; return; }
       const adm = me.role === "admin", ok = TF.prof.filter((p) => p.actif !== false && (adm || p.id === me.id || ["secretariat", "moniteur", "ambassadeur"].includes(p.role)));
@@ -6685,10 +6697,14 @@ function init(root) {
         '<div class="field"><label>Quoi ?</label><textarea class="tf-tx2" rows="2" maxlength="600" placeholder="ex. Refaire l\'enseigne de l\'agence"></textarea></div>' +
         '<div class="field"><label>Pour qui ?</label><div class="tf-chips" role="radiogroup">' + ok.map((p) => '<button type="button" role="radio" data-tfqui="' + p.id + '" aria-checked="false">' + (p.id === me.id ? "Moi" : esc(ROLE_NOM[p.role] || p.nom)) + "</button>").join("") + "</div></div>" +
         '<div class="field"><label>Pour quand ? (facultatif)</label><input type="date" class="tf-date2"></div>' +
+        '<div class="field tf-pjf"><label>Pièce jointe (facultatif)</label><div class="cf-pick"><label class="btn btn-line btn-sm">Document ou image<input type="file" class="tf-pjin" accept="image/*,application/pdf,.pdf,.doc,.docx,.xls,.xlsx" hidden></label><span class="cf-nom tf-pjn">Aucun fichier</span></div>' +
+          '<small class="tf-aide">Le bouton ouvre aussi Google Drive : sur Android, choisis « Drive » dans la liste ; sur iPhone, « Parcourir » puis Drive. Image, PDF, Word ou Excel, 10 Mo au plus.</small>' +
+          '<input class="tf-lien2" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="ou colle un lien Google Drive : https://drive.google.com/…" aria-label="Lien Google Drive"></div>' +
         (adm ? '<div class="field"><label>Ça coûte de l\'argent ?</label><div class="tf-chips" role="radiogroup"><button type="button" role="radio" data-tfarg="non" aria-checked="true">Non</button><button type="button" role="radio" data-tfarg="oui" aria-checked="false">Oui, je connais le prix</button><button type="button" role="radio" data-tfarg="prix" aria-checked="false">Oui, prix à trouver</button></div>' +
           '<input class="tf-mt2" inputmode="numeric" autocomplete="off" placeholder="Montant (F)" aria-label="Montant" hidden><small class="tf-aide tf-arga" hidden>La personne cherche le prix et le devis. Tu accordes ensuite, puis tu envoies l\'argent.</small><small class="tf-aide tf-argm" hidden>Tu t\'en occupes toi-même : après, tu écris le prix payé et tu joins la facture. Rien ne part aux autres.</small></div>' : '<p class="tf-aide">Une tâche qui coûte de l\'argent : passe par Gérance → Dépenses → « Proposer un achat ».</p>') +
         '<button type="submit" class="btn btn-green">Donner la tâche</button></form></div>';
       const f = box.querySelector(".tf-form");
+      f.querySelector(".tf-pjin").addEventListener("change", (e) => { const fl = e.target.files[0]; f.querySelector(".tf-pjn").textContent = fl ? fl.name + " · " + (fl.size > 1048576 ? (fl.size / 1048576).toFixed(1).replace(".", ",") + " Mo" : Math.max(1, Math.round(fl.size / 1024)) + " ko") : "Aucun fichier"; });
       f.addEventListener("click", (e) => {
         const q = e.target.closest("[data-tfqui]"); if (q) f.querySelectorAll("[data-tfqui]").forEach((b) => b.setAttribute("aria-checked", b === q));
         const a = e.target.closest("[data-tfarg]"); if (a) f.querySelectorAll("[data-tfarg]").forEach((b) => b.setAttribute("aria-checked", b === a));
@@ -6702,9 +6718,12 @@ function init(root) {
         if (tx.length < 3) { toast("Écris la tâche", true); f.querySelector(".tf-tx2").focus(); return; }
         if (!qui) { toast("Choisis pour qui", true); return; }
         if (arg === "oui" && !mt) { toast("Écris le montant (ou choisis « prix à trouver »)", true); f.querySelector(".tf-mt2").focus(); return; }
+        const lien = f.querySelector(".tf-lien2").value.trim(), pjf = f.querySelector(".tf-pjin").files[0] || null;
+        if (lien && !/^https:\/\/\S+$/.test(lien)) { toast("Le lien doit commencer par https://", true); f.querySelector(".tf-lien2").focus(); return; }
+        if (pjf) { const er = tfPieceOk(pjf); if (er) { toast(er, true); return; } }
         confirmBtn(b, async () => {
           b.disabled = true;
-          const r = await run(() => DB.q("rpc/tache_creer", { method: "POST", body: { p_pour: qui.dataset.tfqui, p_titre: tx, p_pour_le: f.querySelector(".tf-date2").value || null, p_argent: arg !== "non", p_montant: arg === "oui" ? mt : null } }), arg === "prix" && qui.dataset.tfqui !== me.id ? "Envoyé : la personne cherche le prix" : qui.dataset.tfqui === me.id ? "Tâche ajoutée pour toi" : "Tâche donnée");
+          const r = await run(async () => { const piece = pjf ? await tfPieceEnvoyer(pjf) : null; return DB.q("rpc/tache_creer", { method: "POST", body: { p_pour: qui.dataset.tfqui, p_titre: tx, p_pour_le: f.querySelector(".tf-date2").value || null, p_argent: arg !== "non", p_montant: arg === "oui" ? mt : null, p_piece: piece, p_piece_nom: pjf ? pjf.name.slice(0, 120) : null, p_lien: lien || null } }); }, arg === "prix" && qui.dataset.tfqui !== me.id ? "Envoyé : la personne cherche le prix" : qui.dataset.tfqui === me.id ? "Tâche ajoutée pour toi" : "Tâche donnée");
           b.disabled = false; if (r !== null) { box.dataset.pret = ""; TF.cat = qui.dataset.tfqui === me.id ? "mes" : "eq"; await tfCharger(); }
         });
       });
@@ -8906,7 +8925,7 @@ details.gr-arch>summary b::before{content:"›";display:inline-block;margin-righ
 #sodaf-root .tf-tabs button.tf-clair[aria-selected="true"]{color:#15191E}#sodaf-root .tf-tabs button.tf-clair[aria-selected="true"]::before{background:#15191E}
 .tf-newc{border-top:4px solid #15191E}.tf-newh{display:none}
 /* Une seule liste (24 oct.) : lignes repliées, on touche pour ouvrir */
-.tf-newbar{margin:0 0 12px}.tf-newbtn{width:100%;padding:.85em 1.2em;font-size:1rem}
+a.tf-pc{text-decoration:none;color:inherit}.tf-pjf .cf-pick{margin-bottom:6px}.tf-pjf .tf-lien2{margin-top:8px}.tf-newbar{margin:0 0 12px}.tf-newbtn{width:100%;padding:.85em 1.2em;font-size:1rem}
 .tf-money{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}.tf-money span{flex:1 1 140px;display:flex;flex-direction:column;gap:2px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font:600 .78rem var(--f-ui);color:var(--muted)}.tf-money b{font:800 1.1rem var(--f-ui);color:var(--ink)}
 .tfs{margin:0 0 18px}.tfs-h{display:flex;align-items:center;gap:6px;margin:0 0 8px;font:800 .78rem var(--f-ui);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}.tfs-moi>.tfs-h{color:#15191E}
 .tfs-fini>summary,.tfs-pli>summary{cursor:pointer;list-style:none}.tfs-fini>summary::-webkit-details-marker,.tfs-pli>summary::-webkit-details-marker{display:none}.tfs-fini>summary::after,.tfs-pli>summary::after{content:"›";margin-left:auto;font-size:1.2rem;transition:transform .15s}.tfs-fini[open]>summary::after,.tfs-pli[open]>summary::after{transform:rotate(90deg)}
