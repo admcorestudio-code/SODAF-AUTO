@@ -7118,9 +7118,8 @@ function init(root) {
         const ses = s1.filter((x) => x.jour === (s1[0] && s1[0].jour)).sort((a, b) => hmin(a.heure) - hmin(b.heure));
         if (monIdx >= ses.length) monIdx = 0;
         const se = ses[monIdx], picker = ses.length > 1 ? '<div class="gc-ses">' + ses.map((x, i) => '<button type="button" class="btn btn-sm ' + (i === monIdx ? "btn-green" : "btn-line") + '" data-mses="' + i + '">' + esc(x.groupe ? (gOf(x.groupe) || { nom: "Groupe " + x.groupe }).nom : "Séance commune") + " · " + esc(x.heure.split(" – ")[0]) + "</button>").join("") + "</div>" : "";
-        if (!se) { $("#sd-mcTitle").hidden = false; $("#sd-mcTitle").textContent = "Aucune séance prévue"; $("#sd-mcBody").innerHTML = ""; }
-        else if (se.jour !== today) {
-          // 5 nov. : pas de cours aujourd'hui → rien d'autre (le rattrapage ou le cours s'affichera le jour même)
+        if (!se || se.jour !== today) {
+          // 5 nov. : pas de cours aujourd'hui (ou aucune séance à venir) → le même écran, rien d'autre
           $("#sd-mcTitle").hidden = true; $("#sd-mcTitle").textContent = "Pas de cours de code aujourd'hui";
           $("#sd-mcBody").innerHTML = '<div class="mc-empty mc-e-code"><div class="mc-eic"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2z"/><path d="M22 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"/></svg></div><b>Pas de cours de code aujourd\'hui</b><span>La salle est libre. Bon moment pour préparer : le programme de la semaine et les questions d\'examen sont prêts.</span><div class="mc-eacts"><button type="button" class="btn btn-sm btn-line" data-mngo="code">Le programme</button><a class="btn btn-sm mc-ey" href="#classe-examen">Questions d\'examen</a></div></div>';
         }
