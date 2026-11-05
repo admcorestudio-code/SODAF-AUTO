@@ -696,15 +696,17 @@ a.teamtile.hl{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
 .tm-tabs button{position:relative}
 .tm-pane[data-pane="dir"] .tm-role{border-left-color:var(--blue)}
 /* 5 nov. : Direction en onglets ; listes courtes qui se déroulent */
-.dr-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 20px;padding:6px;border-radius:18px;background:linear-gradient(180deg,#E6E9ED,#EEF0F3);box-shadow:inset 0 2px 4px rgba(20,23,28,.10),inset 0 -1px 0 rgba(255,255,255,.9)}
-.dr-tabs button{position:relative;flex:1 1 auto;min-height:48px;padding:8px 16px;border-radius:13px;border:0;background:transparent;font:700 .95rem var(--f-body);color:#3D444D;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:9px;white-space:nowrap;transition:background .18s,color .18s,box-shadow .18s,transform .12s}
-.dr-ic{display:grid;place-items:center;width:30px;height:30px;border-radius:9px;background:#fff;color:#14171C;box-shadow:0 1px 2px rgba(20,23,28,.12),inset 0 -2px 0 rgba(20,23,28,.06);transition:background .18s,color .18s}
-.dr-tabs button:hover{background:rgba(255,255,255,.75);color:#14171C;box-shadow:0 1px 2px rgba(20,23,28,.08)}
-.dr-tabs button:active{transform:translateY(1px)}
-.dr-tabs button[aria-selected="true"]{color:#fff;background:linear-gradient(180deg,#2A3038 0%,#14171C 100%);box-shadow:0 8px 18px -6px rgba(20,23,28,.55),0 2px 4px rgba(20,23,28,.25),inset 0 1px 0 rgba(255,255,255,.14),inset 0 -3px 0 #F2B705}
-.dr-tabs button[aria-selected="true"] .dr-ic{background:linear-gradient(180deg,#FFD24A,#F2B705);color:#14171C;box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 2px 6px rgba(242,183,5,.35)}
-.dr-tabs button:focus-visible{outline:3px solid #F2B705;outline-offset:2px}
-.dr-tn{font-style:normal;font:800 .72rem/1 Outfit,sans-serif;background:linear-gradient(180deg,#E8590C,#C2410C);color:#fff;border-radius:999px;padding:4px 7px;box-shadow:0 1px 3px rgba(194,65,12,.4),inset 0 1px 0 rgba(255,255,255,.3)}
+.dr-tabs{display:flex;gap:4px;margin:0 0 22px;padding:0 4px;background:#fff;border:1px solid #DDE1E6;border-radius:12px;overflow-x:auto;scrollbar-width:none}
+.dr-tabs::-webkit-scrollbar{display:none}
+.dr-tabs button{position:relative;flex:0 0 auto;min-height:52px;padding:0 16px;border:0;background:transparent;font:600 .93rem var(--f-body);letter-spacing:.005em;color:#5B6470;cursor:pointer;display:inline-flex;align-items:center;gap:8px;white-space:nowrap;transition:color .15s}
+.dr-tabs button::after{content:"";position:absolute;left:12px;right:12px;bottom:0;height:2px;border-radius:2px 2px 0 0;background:transparent;transition:background .15s}
+.dr-ic{display:inline-flex;color:#8A929B;transition:color .15s}.dr-ic svg{width:17px;height:17px;stroke-width:1.9}
+@media (hover:hover){.dr-tabs button:hover{color:#14171C}.dr-tabs button:not([aria-selected="true"]):hover::after{background:#C9CED4}}
+.dr-tabs button[aria-selected="true"]{color:#14171C;font-weight:700}
+.dr-tabs button[aria-selected="true"]::after{background:#14171C}
+.dr-tabs button[aria-selected="true"] .dr-ic{color:#14171C}
+.dr-tabs button:focus-visible{outline:2px solid #14171C;outline-offset:-4px;border-radius:8px}
+.dr-tn{font-style:normal;font:700 .72rem/1 var(--f-body);background:#B42318;color:#fff;border-radius:999px;min-width:18px;padding:3px 6px;text-align:center}
 [data-drp="mat"] .tm-pane{display:block}
 .dr-fold .tm-row.dr-x{display:none}
 .dr-fold.open .tm-row.dr-x{display:flex;animation:drIn .18s ease-out}
@@ -714,7 +716,7 @@ a.teamtile.hl{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
 .dr-more:hover{background:var(--soft)}
 @media (hover:hover) and (pointer:fine){.dr-fold:not(.open):hover .dr-more{visibility:hidden}}
 .tm-pane[data-pane="dir"] .grid.tm-mon{align-items:start}
-@media (max-width:560px){.dr-tabs button{flex:1 1 40%;padding:8px 10px;font-size:.86rem;gap:7px}.dr-ic{width:26px;height:26px;border-radius:8px}}
+@media (max-width:560px){.dr-tabs{flex-wrap:wrap;overflow:visible;border-radius:10px;padding:2px 4px;gap:0}.dr-tabs button{flex:1 1 45%;justify-content:flex-start;padding:0 10px;min-height:46px;font-size:.88rem}.dr-tabs button::after{left:8px;right:8px}}
 /* 5 nov. : Gestion repliable en haut de Direction */
 .dr-ges{margin:0 0 18px;border:1.5px solid #D9CFEC;border-radius:18px;background:#fff;overflow:hidden;box-shadow:0 1px 0 rgba(20,23,28,.04)}
 .dr-ges>summary{list-style:none;display:flex;align-items:center;gap:14px;padding:14px 18px;cursor:pointer;background:linear-gradient(90deg,#F4EFFB,#fff 70%);user-select:none}
