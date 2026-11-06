@@ -98,7 +98,7 @@ SEC = page("Secrétariat", "Le secrétariat, étape par étape",
     "**Étudiant** : carte d'étudiant de l'année + carte d'identité. Sinon, tarif normal.",
     "**Corps habillés** : même prix que tout le monde. Conseille gentiment de venir en civil si possible (pas obligé).",
     "**Formation privée** : 85 000 F, 1 h seul avec le moniteur, code en particulier.",
-    "**Dimanche**, seulement s'il ne peut venir que ce jour-là : **Groupe H** au code (14 h 30 et 18 h) et conduite. On ne l'annonce pas.",
+    "**Dimanche** (seulement s'il ne peut venir que ce jour-là) : **formation complète ou privée** uniquement. Groupe H au code (14 h 30 et 18 h) et conduite. On ne l'annonce pas.",
   ]),
   prix() + regle(REGLES))
 
