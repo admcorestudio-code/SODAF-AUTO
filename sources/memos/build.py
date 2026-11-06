@@ -57,7 +57,7 @@ def page(role, titre, intro, gauche, droite, bas=""):
 </section>'''
 
 REGLES = ("**Les règles de tous.** Tout bouton qui enregistre ou envoie se confirme en **deux touches**. Rien ne se supprime. "
-          "Au client, on dit « **examen du permis** » (dossier déposé à SOTOPLA). Pas de Mixx pour l'instant (en maintenance) : espèces à l'agence. "
+          "Au client, on dit « **examen du permis** » (dossier déposé à SOTOPLA). Paiement : espèces à l'agence ou **Mixx by Yas** (code marchand 1492996, ADM CORE), toujours avec un reçu. "
           "Ton mot de passe ne se donne à personne.")
 
 # ---------------------------------------------------------------- Secrétariat
@@ -131,7 +131,7 @@ GER = page("Gérante", "La gérante, au quotidien",
   puces("Les ambassadeurs", [
     "Deux rôles qui s'échangent chaque lundi : **Relations** et **Contenu**. Leurs affiches et vidéos sont validées par la direction (Messages).",
     "**Ambassadeurs** : qui est où cette semaine, leurs missions et les **Résultats**.",
-    "À vérifier : pas de Mixx, pas de gain du parrain, « examen du permis ».",
+    "À vérifier : pas de gain du parrain, « examen du permis ».",
   ]) +
   puces("Les tarifs spéciaux", [
     "**Étudiant** 30 000 F : carte d'étudiant + carte d'identité.",
@@ -213,7 +213,7 @@ AMB = page("Ambassadeur", "Les ambassadeurs, l'image de SODAF",
     "Le tirage au sort étudiant, chaque mois, en direct sur TikTok.",
   ]) +
   puces("Ce qu'on ne dit pas", [
-    "Mixx : en maintenance. On paie en espèces à l'agence.",
+    "Une réduction qui n'existe pas : prix fixes (réductions seulement étudiant, parrainage, tirage).",
     "Ce que gagne un parrain (on en parle aux élèves une fois inscrits).",
     "« L'État » : on dit « **examen du permis** ».",
     "Une date de permis promise.",
