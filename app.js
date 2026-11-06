@@ -2302,7 +2302,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 </div>
 <div class="tm-pane" data-pane="mec" role="tabpanel" hidden>
 <p class="tm-role" id="sd-mcRole"></p>
-<div class="gr-tabs mk-tabs" role="tablist"><button type="button" role="tab" data-mkp="voit" aria-selected="true">La voiture<em class="gr-badge" id="sd-mkBVoit" hidden></em></button><button type="button" role="tab" data-mkp="at" aria-selected="false">Atelier du samedi</button><button type="button" role="tab" data-mkp="ct" aria-selected="false">Contrôle avant achat<em class="gr-badge" id="sd-mkBCt" hidden></em></button></div>
+<div class="gr-tabs mk-tabs" role="tablist"><button type="button" role="tab" data-mkp="at" aria-selected="true">Atelier du samedi</button><button type="button" role="tab" data-mkp="voit" aria-selected="false">La voiture<em class="gr-badge" id="sd-mkBVoit" hidden></em></button><button type="button" role="tab" data-mkp="ct" aria-selected="false">Contrôle avant achat<em class="gr-badge" id="sd-mkBCt" hidden></em></button></div>
 <div class="card com-card" data-mkpane="voit"><p class="eyebrow">Carnet</p><h3 class="tm-h3">La voiture</h3><div id="sd-mcVoit"></div></div>
 <div class="card com-card" data-mkpane="voit" data-dir="1" hidden><p class="eyebrow">Direction</p><h3 class="tm-h3">Coût de la voiture</h3><div id="sd-mkCout"><p class="tm-empty">Calcul…</p></div></div>
 <div class="card com-card" data-mkpane="at" hidden><p class="eyebrow">Gratuit pour les élèves</p><h3 class="tm-h3">Atelier du samedi</h3><div id="sd-mcAt"></div></div>
@@ -6162,10 +6162,10 @@ function init(root) {
     }
     $(".mn-tabs") && $(".mn-tabs").addEventListener("click", (e) => { const b = e.target.closest("[data-mnp]"); if (b) mnOnglet(b.dataset.mnp); });
     { const mp = $('.tm-pane[data-pane="mon"]'); mp && mp.addEventListener("click", (e) => { const g = e.target.closest("[data-mngo]"); if (g) { mnOnglet(g.dataset.mngo); mp.scrollIntoView({ behavior: "smooth", block: "start" }); } }); }
-    const mkLu = () => { try { return localStorage.getItem("sodaf.mk.ong"); } catch (e) { return null; } };
+    const mkLu = () => { try { return localStorage.getItem("sodaf.mk.ong2"); } catch (e) { return null; } }; // 5 nov. : Atelier du samedi en premier
     function mkOnglet(k) {
-      if (k === "ct" && !mcPeutInscrire()) k = "voit"; if (!["voit", "at", "ct"].includes(k)) k = "voit"; MC.ong = k;
-      try { localStorage.setItem("sodaf.mk.ong", k); } catch (e) {}
+      if (k === "ct" && !mcPeutInscrire()) k = "voit"; if (!["voit", "at", "ct"].includes(k)) k = "at"; MC.ong = k;
+      try { localStorage.setItem("sodaf.mk.ong2", k); } catch (e) {}
       $$(".mk-tabs [data-mkp]").forEach((b) => b.setAttribute("aria-selected", b.dataset.mkp === k));
       $$('[data-pane="mec"] [data-mkpane]').forEach((c) => (c.hidden = c.dataset.mkpane !== k || (c.dataset.dir && !DIR())));
     }
@@ -6173,12 +6173,12 @@ function init(root) {
     async function mcCharger() {
       const box = $("#sd-mcVoit"); if (!box || !me || AMB()) return;
       const ct = mcPeutInscrire();
-      $("#sd-mcRole").textContent = me.role === "moniteur" ? "La voiture : entretiens à venir, et ce que la mécanicienne a fait." : "La voiture, l'atelier du samedi et le contrôle avant achat.";
+      $("#sd-mcRole").textContent = me.role === "moniteur" ? "La voiture : entretiens à venir, et ce que la mécanicienne a fait." : "L'atelier du samedi, la voiture et le contrôle avant achat.";
       const [e, km, a, c] = await Promise.all([DB.q("entretiens?select=*&order=jour.desc,le.desc&limit=200").catch(() => null), DB.q("carburant?select=km&km=not.is.null&order=km.desc&limit=1").catch(() => []), DB.q("ateliers?select=*&samedi=gte." + iso(new Date(Date.now() - 28 * 864e5)) + "&order=le.asc").catch(() => null), ct ? DB.q("controles?select=*&order=le.desc&limit=200").catch(() => null) : Promise.resolve([])]);
       if (!e || !a) { box.innerHTML = '<p class="tm-empty">La mécanique n\'est pas encore activée dans la base.</p>'; $("#sd-mcAt").innerHTML = ""; $("#sd-mcCt").innerHTML = ""; return; }
       MC.e = e; MC.a = a; MC.c = c || []; MC.km = Math.max(0, ...(km || []).map((x) => x.km || 0), ...e.map((x) => x.km || 0));
       mcVoiture(); mcAtelier(); if (ct) mcControles(); mkCout();
-      $('.mk-tabs [data-mkp="ct"]').hidden = !ct; mkOnglet(MC.ong || mkLu() || "voit");
+      $('.mk-tabs [data-mkp="ct"]').hidden = !ct; mkOnglet(MC.ong || mkLu() || "at");
       { const b = $("#sd-mkBCt"), n = MC.c.filter((x) => ["demande", "paye", "rdv"].includes(x.statut)).length + (DIR() ? MC.c.filter((x) => x.statut === "fait" && !x.part_versee_le).length : 0); b.textContent = n; b.hidden = !n; }
       { const b = $("#sd-mkBVoit"), n = $$("#sd-mcVoit .mk-prev li").length; b.textContent = n; b.hidden = !n; }
       const bd = $("#sd-mcBadge"); if (bd) { const n = DIR() ? MC.c.filter((x) => x.statut === "fait" && !x.part_versee_le).length : 0; bd.textContent = n; bd.hidden = !n; }
