@@ -1,5 +1,5 @@
 # Mémos de l'équipe SODAF (source). Construit memos.html (une page A4 par rôle), puis render.py en fait les PDF et les images.
-# Mis à jour le 28 oct. 2026. Pour changer un texte : modifie ce fichier, puis lance  python3 build.py && python3 render.py
+# Mis à jour le 5 nov. 2026 (3 mémos : secrétariat, moniteur, ambassadeurs). Pour changer un texte : modifie ce fichier, puis lance  python3 build.py && python3 render.py
 import html, pathlib
 ICI = pathlib.Path(__file__).parent
 LOGO = (ICI / "logo.svg.html").read_text(encoding="utf-8")
@@ -74,7 +74,7 @@ SEC = page("Secrétariat", "Le secrétariat, étape par étape",
     ("Les appels", "Pré-inscrit du site : **Envoyer l'accueil**. Appelle avec le script : les prix, puis « commencer avec 5 000 F ». Il hésite ? Pré-inscris-le quand même pendant l'appel."),
     ("Le lien d'inscription", "**Envoyer le lien d'inscription** : il choisit sa formule et combien il paie. Relance tous les 5 jours (4 au plus)."),
     ("Le reçu", "Il paie en espèces : **Formation payée ? Faire le reçu**, puis envoie-le. 5 000 F = inscrit, le code en ligne s'ouvre. La moitié = code en salle. Tout = conduite."),
-    ("Le code", "Il reçoit tout seul une place dans un groupe de 6 : **Envoyer ses horaires**. Cours raté : il le revoit au tour suivant du programme et révise sur le site."),
+    ("Le code", "Il reçoit tout seul une place dans un groupe de 6 : **Envoyer ses horaires**. Cours raté : il vient au **cours ouvert du mercredi** (14 h 30 ou 18 h, sans réserver) ou le revoit au tour suivant."),
     ("Le solde", "À 3 semaines dans son groupe : rappel en rouge, en haut. À 1 mois sans paiement : place au code suspendue. Pas de conduite avant le solde."),
     ("La conduite", "Feu vert après les cours 1 à 9. Fiche → **Conduite** → **Réserver une séance** (3 par semaine au plus), puis **Envoyer ses séances**."),
     ("L'examen", "**Passer à l'examen** (message des papiers). Dossier complet + 35 000 F : reçu. Bordereau signé, **Lot déposé**, puis **Permis obtenu** ou **À repasser**."),
@@ -89,9 +89,9 @@ SEC = page("Secrétariat", "Le secrétariat, étape par étape",
   ]) +
   puces("L'argent", [
     "Espèces seulement. **Un reçu pour chaque franc** encaissé.",
-    "Reçu faux : **Demander l'annulation** (la gérante décide).",
+    "Reçu faux : **Demander l'annulation** (la direction décide).",
     "Formule ou prix : tu ne changes jamais. Fiche → « Le client s'est trompé de formule ? ».",
-    "Besoin d'argent (voiture, agence) : **Demandes à la gérante**. Pas le prix ? Coche **Montant inconnu**.",
+    "Besoin d'argent (voiture, agence) : **Demandes à la direction**. Pas le prix ? Coche **Montant inconnu**, puis trouve le prix et le devis.",
     "**Petits frais** (taxi-moto, recharge, petit achat, **2 000 F au plus**) : Gestion → **Petits frais**, le jour même, en écrivant ce que c'est. Plus cher : une demande.",
   ]) +
   puces("Les cas particuliers", [
@@ -128,9 +128,9 @@ GER = page("Gérante", "La gérante, au quotidien",
     "Toute dépense : elle **accorde et paie** en un geste, puis la facture termine la tâche.",
     "Les prix : fixes, **aucune remise**. Réductions seulement : étudiant, parrainage, tirage.",
   ]) +
-  puces("L'Ambassadeur", [
-    "Il t'envoie ses vidéos dans **Messages → Gérante ↔ Ambassadeur** : réponds « c'est bon » ou « change ça ».",
-    "**Communication** : sa semaine, ses tâches et les **Résultats du mois**.",
+  puces("Les ambassadeurs", [
+    "Deux rôles qui s'échangent chaque lundi : **Relations** et **Contenu**. Leurs affiches et vidéos sont validées par la direction (Messages).",
+    "**Ambassadeurs** : qui est où cette semaine, leurs missions et les **Résultats**.",
     "À vérifier : pas de Mixx, pas de gain du parrain, « examen du permis ».",
   ]) +
   puces("Les tarifs spéciaux", [
@@ -151,10 +151,11 @@ MON = page("Moniteur", "Le moniteur, sur son téléphone",
   lignes("Les horaires du code", [
     ("Groupe A", "lundi et jeudi, 14 h 30"), ("Groupe B", "mardi et vendredi, 14 h 30"),
     ("Groupe F", "lundi et jeudi, 18 h (soir)"), ("Groupe G", "mardi et vendredi, 18 h (soir)"),
+    ("Mercredi", "14 h 30 et 18 h : **cours ouvert à tous**, le cours de la semaine. Fais l'appel."),
   ]) +
   puces("Essence et voiture", [
     "**Ajouter un plein** : montant, compteur, photo du compteur. Toi seul ajoutes les pleins.",
-    "Budget dépassé : **Demander de l'essence en plus** (la gérante décide).",
+    "Budget dépassé : **Demander de l'essence en plus** (la direction décide).",
     "Un problème avec la voiture : **Prévenir le secrétariat**. Il appelle la mécanicienne.",
     "Samedi 13 h 30 : la mécanicienne contrôle la voiture.",
   ]),
@@ -177,28 +178,28 @@ MON = page("Moniteur", "Le moniteur, sur son téléphone",
   semaine("Ta semaine", [
     ("7 h 30 – 9 h 30", ["Conduite"] * 6),
     ("10 h – 12 h", ["Conduite"] * 6),
-    ("14 h 30", ["Code · groupe A", "Code · groupe B", "—", "Code · groupe A", "Code · groupe B", "Voiture : contrôle et atelier"]),
+    ("14 h 30", ["Code · groupe A", "Code · groupe B", "Code · ouvert à tous", "Code · groupe A", "Code · groupe B", "Voiture : contrôle et atelier"]),
     ("15 h 45 – 17 h 45", ["Conduite", "Conduite", "Conduite", "Conduite", "Conduite", "—"]),
-    ("18 h – 19 h", ["Code · groupe F", "Code · groupe G", "—", "Code · groupe F", "Code · groupe G", "—"]),
+    ("18 h – 19 h", ["Code · groupe F", "Code · groupe G", "Code · ouvert à tous", "Code · groupe F", "Code · groupe G", "—"]),
   ], "Un groupe sans élève n'a pas cours : ta page Aujourd'hui montre seulement ce qui a lieu. Midi – 14 h 30 : repos.") +
   regle("**À retenir.** Note chaque cours et chaque séance **le jour même** : c'est ce qui permet de suivre les élèves. "
         "Messages : écris @ puis la personne, ou SO12 pour ouvrir la fiche d'un élève. Ton mot de passe ne se donne à personne."))
 
 # ---------------------------------------------------------------- Ambassadeur
-AMB = page("Ambassadeur", "L'Ambassadeur, l'image de SODAF",
-  "Tu fais connaître SODAF : TikTok, statuts WhatsApp, campus. Ton espace : Communication, À faire, Messages, Documents. Tu ne vois ni les élèves ni l'argent.",
+AMB = page("Ambassadeur", "Les ambassadeurs, l'image de SODAF",
+  "Deux ambassadeurs, deux rôles qui s'échangent chaque lundi : **Relations** (les gens, les affiches, le tirage) et **Contenu** (les vidéos). Ton espace : Ambassadeurs, À faire, Messages, Documents. Tu ne vois ni les élèves ni l'argent.",
   lignes("Ta semaine", [
-    ("TikTok", "**3 vidéos** par semaine sur **@autoecole.sodaf.tg**."),
-    ("WhatsApp", "**1 statut par jour**."),
-    ("Samedi 14 h", "Filme l'**atelier mécanique** (14 h – 15 h 30)."),
-    ("Campus", "**2 actions** pub étudiants (flyers, affiches, discussions)."),
-    ("Le 1er du mois", "**Live du tirage** : en direct dès 19 h, tirage à 20 h."),
+    ("Lundi et jeudi", "**Sorties à deux** : universités, lycées, marchés. Relations parle aux gens, Contenu filme."),
+    ("Lundi matin", "Vous **changez de rôle** : 15 minutes pour se passer le relais."),
+    ("Mercredi et vendredi", "**Relations** : à l'agence quand le secrétariat a cours (accueil, QR code)."),
+    ("1er samedi du mois", "**Tirage au sort** à 20 h à l'agence, filmé pour TikTok."),
+    ("Chaque semaine", "Au moins **une publication chacun** sur **@autoecole.sodaf.tg**."),
   ]) +
   etapes("Chaque publication", [
-    ("Préparer", "La vidéo, le statut ou la pub."),
-    ("Faire valider", "Envoie-la à la gérante : **Messages → Gérante ↔ Ambassadeur**. Elle répond « c'est bon » ou « change ça »."),
-    ("Publier", "Dès que c'est validé. Garde l'original dans ta galerie."),
-    ("Noter", "**Communication → Noter une publication**, avec le lien."),
+    ("Préparer", "Relations : l'affiche (Canva). Contenu : la vidéo (Osmo Pocket, CapCut)."),
+    ("Faire valider", "Envoie-la à la **direction dans Messages**. Elle répond « c'est bon » ou « change ça »."),
+    ("Publier", "Toi-même, sur **TikTok** (et Instagram). Garde l'original."),
+    ("Noter", "**Ambassadeurs → Affiches à publier** ou **Vidéos à publier** : le fichier et le lien."),
   ]) +
   puces("Une personne intéressée", [
     "Réponds poliment, puis donne le **72 54 41 66** (appel ou WhatsApp) ou **autosodaf.com**.",
@@ -219,8 +220,8 @@ AMB = page("Ambassadeur", "L'Ambassadeur, l'image de SODAF",
     "Le visage d'un élève sans son accord.",
   ], "neg") +
   puces("Tes résultats", [
-    "**Communication → Résultats du mois** : contacts venus de TikTok, de toi, du site.",
-    "**À faire** : les tâches que la gérante te donne. Touche « C'est fait » quand c'est fait.",
+    "**Ambassadeurs → Résultats** : la semaine, le mois et l'historique de vos publications.",
+    "**À faire** : les tâches de la direction. Touche « C'est fait » quand c'est fait.",
   ]),
   cartes("Idées de vidéos qui marchent", [
     ("Le site en action", "Un téléphone ouvre autosodaf.com : un cours, le quiz, le dossier. À épingler en haut du profil."),
@@ -234,6 +235,6 @@ AMB = page("Ambassadeur", "L'Ambassadeur, l'image de SODAF",
 CSS = (ICI / "memos.css").read_text(encoding="utf-8")
 doc = ('<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>Mémos de l\'équipe SODAF</title>'
        '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Figtree:wght@400;500;600;700&display=swap">'
-       '<style>' + CSS + '</style></head><body>' + SEC + GER + MON + AMB + '</body></html>')
+       '<style>' + CSS + '</style></head><body>' + SEC + MON + AMB + '</body></html>')  # 5 nov. : plus de gérante depuis le 30 oct. (mémo retiré)
 (ICI / "memos.html").write_text(doc, encoding="utf-8")
-print("memos.html : 4 pages")
+print("memos.html : 3 pages")
