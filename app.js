@@ -2219,10 +2219,8 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 </section>
 <section class="tm-sec" data-s="conduite" hidden>
 <div class="gr-tabs cd-modes" role="tablist"><button type="button" role="tab" data-cdm="jour" aria-selected="true">Planning du jour</button><button type="button" role="tab" data-cdm="pl" aria-selected="false">Places libres</button></div>
-<div id="sd-cdRat" class="cd-rat" hidden></div>
 <div id="sd-cdPl" class="cd-rat" hidden></div>
 <div id="sd-cdJour">
-<details class="card tm-prog cd-eqs" id="sd-eqBox" hidden><summary><span><b>Les équipes de conduite</b><small id="sd-eqSum">4 élèves par équipe, 2 blocs de 2 h par semaine</small></span><em>Voir / replier</em></summary><div id="sd-eqList" class="eq-grid"></div><p class="tm-note" style="margin:10px 0 0!important">Pour placer un élève : ouvre sa fiche (onglet Élèves), bloc « Conduite », puis « Placer dans une équipe ». Ses blocs sont réservés d'un coup, 2 par semaine.</p></details>
 <div class="tm-bar tm-day-nav"><button class="btn btn-line btn-sm" type="button" id="sd-cdPrev">‹ Veille</button><b id="sd-cdDay"></b><button class="btn btn-line btn-sm" type="button" id="sd-cdNext">Lendemain ›</button><button class="linkbtn" type="button" id="sd-cdToday">Aujourd'hui</button></div>
 <div id="sd-cdClosed" class="tm-closed" hidden></div>
 <form id="sd-cdCloseForm" class="card tm-form" hidden novalidate><div class="field"><label for="sd-cdWhy">Pourquoi ce jour est fermé ?</label><input id="sd-cdWhy" maxlength="60" placeholder="Ex. Jour férié, Tabaski, panne de voiture, moniteur malade"></div><p class="tm-note" style="margin:0 0 12px!important">Toutes les séances de conduite et le cours de code de ce jour passent en « Annulé ». Les élèves déjà réservés s'affichent ensuite avec un bouton WhatsApp pour les prévenir.</p><div class="tm-formact"><button class="btn btn-green btn-sm" type="submit">Fermer ce jour</button><button class="linkbtn" type="button" id="sd-cdCloseCancel">Annuler</button></div></form>
@@ -2387,6 +2385,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div data-mnpane="code" hidden>
 <div class="tm-week card"><div class="tm-wk-head"><div><p class="eyebrow">Cette semaine</p><h3 id="sd-tmTheme">Thème</h3></div><div class="mc-launch"><a class="mc-cta" href="#classe-lecon"><i aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="13" rx="2"/><path d="M12 16v4M8 21h8"/><path d="M10 7.5l4 2.5-4 2.5z" fill="currentColor"/></svg></i><span><b>Mode classe</b><small id="sd-mcCtaSub">Projeter le cours du jour au tableau</small></span></a><div class="mc-quick" id="sd-mcQuick"><a href="#classe-lecon">Leçon</a><a href="#classe-examen">Quiz</a><a href="#classe-examen">Questions d'examen</a></div></div></div>
 <div class="tm-days" id="sd-tmDays"></div></div>
+<div class="card cp-card" id="sd-cpBox" hidden><div class="cp-top"><div><p class="eyebrow">Formation privée</p><h3>Cours de code en particulier</h3></div><p>Seul avec l'élève, quand vous convenez. Après chaque cours, note-le ici : on voit où il en est (12 cours).</p></div><div id="sd-cpList"></div></div>
 <details class="card tm-prog" id="sd-tmProgBox"><summary><span><b>Programme du code en salle</b><small>12 cours en 6 semaines, puis on recommence</small></span><em>Voir le programme</em></summary><div id="sd-tmProg"></div></details>
 </div>
 <div data-mnpane="auj">
@@ -2400,7 +2399,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div data-mnpane="aide" hidden>
 <div class="tm-sub"><div><p class="eyebrow">Mode d'emploi</p><h3>Les gestes du moniteur</h3></div></div>
 <div class="grid g2 tm-guides">
-<div class="card soft"><p class="eyebrow">Un cours de code</p><ol class="teamsteps"><li>Ouvre <b>Aujourd'hui</b> : le cours du jour et son programme.</li><li><b>Dimanche</b>, s'il y a des élèves au Groupe H : 2 cours, 14 h 30 le 1er de la semaine et 18 h le 2e. La conduite du dimanche se fait comme un autre jour.</li><li>L'appel : coche les présents, puis <b>Valider les présences</b>. Le cours compte.</li><li><b>Mode classe → Leçon</b> (sauf cours 10 : la mécanique se fait à l'atelier du samedi).</li><li>À la fin, environ 30 min : <b>Mode classe → Examen</b>, le quiz du cours.</li><li><b>Mercredi 14 h 30 et 18 h</b> : cours ouvert à tous. Même appel, le cours compte pour les présents.</li></ol></div>
+<div class="card soft"><p class="eyebrow">Un cours de code</p><ol class="teamsteps"><li>Ouvre <b>Aujourd'hui</b> : le cours du jour et son programme.</li><li><b>Dimanche</b>, s'il y a des élèves au Groupe H : 2 cours, 14 h 30 le 1er de la semaine et 18 h le 2e. La conduite du dimanche se fait comme un autre jour.</li><li>L'appel : coche les présents, puis <b>Valider les présences</b>. Le cours compte.</li><li><b>Mode classe → Leçon</b> (sauf cours 10 : la mécanique se fait à l'atelier du samedi).</li><li>À la fin, environ 30 min : <b>Mode classe → Examen</b>, le quiz du cours.</li><li><b>Mercredi 14 h 30 et 18 h</b> : cours ouvert à tous. Même appel, le cours compte pour les présents.</li><li><b>Formation privée</b> : le code se fait seul avec l'élève. Après chaque cours : <b>Code en salle → Cours de code en particulier → Noter ce cours</b>.</li></ol></div>
 <div class="card soft"><p class="eyebrow">Une séance de conduite</p><ol class="teamsteps"><li><b>Aujourd'hui → Cours de conduite</b> : les élèves de la séance, avec leur photo.</li><li>4 élèves maximum : chacun conduit à son tour, tu commentes.</li><li>Pour chacun, le jour même : <b>Fait</b> ou <b>Absent</b>, et une courte note.</li><li>À la 10e séance : <b>Prêt pour l'examen</b> ou <b>Séances en plus</b>.</li><li>Formation privée : 1 h, seul avec toi.</li></ol></div>
 <div class="card soft"><p class="eyebrow">Essence et voiture</p><ol class="teamsteps"><li><b>Ajouter un plein</b> : montant, compteur, photo du compteur.</li><li>Budget dépassé : <b>Demander de l'essence en plus</b> (la direction décide).</li><li>Un problème avec la voiture : préviens le secrétariat.</li></ol></div>
 </div>
@@ -4472,19 +4471,10 @@ function init(root) {
     const eqJours = (q) => q.jours.map((j) => JNOM[j]).join(" et ");
     const eqLabel = (q) => q.nom + " · " + eqJours(q) + ", " + plage(q.heure);
     const loadEquipes = async () => { const q = await DB.q("equipes_conduite?select=*&order=ordre").catch(() => null); if (q) EQUIPES = q; return EQUIPES; };
-    const eqFutur = () => DB.q("creneaux_conduite?select=id,jour,heure,equipe,place,eleve_id,statut&bloc=eq.equipe&jour=gt." + iso(new Date()) + "&order=jour.asc&limit=3000").catch(() => []);
     // 5 nov. : plus de mercredi réservé aux rattrapages (merLibre toujours vrai)
     const merLibre = () => true; // 5 nov. : plus de mercredi réservé aux rattrapages
     // Ordre de passage au volant : il tourne d'un bloc à l'autre
     const passage = (jour, n) => n ? Math.floor((Date.UTC(+jour.slice(0, 4), +jour.slice(5, 7) - 1, +jour.slice(8, 10)) - Date.UTC(2026, 9, 5)) / 864e5) % n : 0;
-    // État des équipes : élèves à venir et première place libre
-    const eqEtat = (rows) => EQUIPES.map((q) => {
-      const rs = rows.filter((c) => c.equipe === q.id), mem = {};
-      rs.forEach((c) => { if (c.eleve_id && c.statut === "Réservé") { const m = mem[c.eleve_id] || (mem[c.eleve_id] = { id: c.eleve_id, n: 0, de: c.jour, a: c.jour, place: c.place }); m.n++; m.a = c.jour; } });
-      const libres = rs.filter((c) => c.statut === "Libre" && !c.eleve_id), lib = libres.length ? libres[0].jour : null;
-      const auj = new Set(rs.filter((c) => c.jour === (rs[0] && rs[0].jour) && c.statut === "Libre" && !c.eleve_id).map((c) => c.place)).size;
-      return { q, membres: Object.values(mem).sort((a, b) => a.place - b.place), libre: lib, placesDispo: auj };
-    });
     const sansCode = (x) => /Remise à niveau|entreprise|privée/i.test(x.formation || ""); // privée : code en cours particulier, pas de groupe de 6
     const enCode = (x) => etapeOf(x) === "formation" && !sansCode(x) && !x.insSeule;
     const occ = (gid) => eleves.filter((x) => x.groupe_code === gid && enCode(x) && !susp(x) && (!x.groupe_depuis || Date.now() - new Date(x.groupe_depuis) < 42 * 864e5)).length;
@@ -4885,6 +4875,32 @@ function init(root) {
     const archive = (x, motif) => patchEl(x, { statut: "Abandon", archive_motif: motif, archive_le: new Date().toISOString(), rappel: null }, "Dossier archivé : " + motif, ["Étape", "Archivé : " + motif]).then((ok) => ok && nextAfter(x));
 
     // Fiche : cours du programme suivis (présences cochées par le moniteur) et cours manqués (5 nov. : plus de rattrapage)
+    // 6 nov. : formation privée = code en cours particulier, noté cours par cours (rpc cours_particulier_noter, migration 0109)
+    let CP = [];
+    const cpCharger = async () => { const r = await DB.q("seances_code?select=id,jour,heure,theme,note&type=eq.Cours%20particulier&statut=eq.Fait&order=jour.desc&limit=1000").catch(() => null); if (r) CP = r; return CP; };
+    const cpDe = (x) => CP.filter((c) => c.note === "SO" + x.id);
+    const cpHeures = ["7 h 30", "10 h", "12 h", "14 h 30", "15 h 45", "17 h", "18 h"];
+    const cpHtml = (x) => { const mes = cpDe(x), faits = new Set(mes.map((c) => bIdx(c.theme))), nb = faits.size, peut = ["admin", "moniteur", "secretariat"].includes((me || {}).role), ann = ["admin", "moniteur"].includes((me || {}).role);
+      const prochain = BOUCLE.findIndex((b, k) => !faits.has(k));
+      return '<div class="cp-el" data-cpel="' + x.id + '"><div class="cp-h"><b>' + esc(x.nom) + '</b><span>SO' + x.id + " · <strong>" + nb + " cours sur 12</strong>" + (nb >= 12 ? " · programme terminé" : "") + "</span></div>" +
+        '<div class="cp-dots">' + BOUCLE.map((b, k) => '<i class="' + (faits.has(k) ? "ok" : "") + '" title="' + esc(b.n + ". " + b.t) + '">' + b.n + "</i>").join("") + "</div>" +
+        (mes.length ? '<ul class="cp-last">' + mes.slice(0, 3).map((c) => "<li>Cours " + (bIdx(c.theme) + 1) + " · " + esc(c.theme) + " · " + dOf(c.jour).toLocaleDateString("fr-FR", { day: "numeric", month: "short" }) + " · " + esc(String(c.heure).split(" · ")[0]) + (ann ? ' <button type="button" class="linkbtn" data-cpann="' + c.id + '">Erreur : annuler</button>' : "") + "</li>").join("") + "</ul>" : "") +
+        (peut && nb < 12 ? '<div class="cp-form"><select data-cpc aria-label="Cours fait">' + BOUCLE.map((b, k) => '<option value="' + (k + 1) + '"' + (faits.has(k) ? " disabled" : k === prochain ? " selected" : "") + ">" + b.n + ". " + esc(b.t) + (faits.has(k) ? " (fait)" : "") + "</option>").join("") + '</select><input type="date" data-cpj value="' + iso(new Date()) + '" max="' + iso(new Date()) + '" aria-label="Jour du cours"><select data-cph aria-label="Heure">' + cpHeures.map((h) => "<option>" + h + "</option>").join("") + '</select><button type="button" class="btn btn-green btn-sm" data-cpgo>Noter ce cours</button></div>' : "") + "</div>"; };
+    async function cpRender() {
+      const box = $("#sd-cpBox"); if (!box) return;
+      const pv = eleves.filter((x) => ["Inscrit", "En formation"].includes(x.statut) && privEl(x.id) && !x.insSeule);
+      box.hidden = !pv.length; if (!pv.length) return;
+      await cpCharger(); $("#sd-cpList").innerHTML = pv.sort((a, b) => a.nom.localeCompare(b.nom, "fr")).map(cpHtml).join("");
+    }
+    document.addEventListener("click", (e) => {
+      const go = e.target.closest("[data-cpgo]"), an = e.target.closest("[data-cpann]");
+      if (go) { const el = go.closest("[data-cpel]"), id = +el.dataset.cpel, c = +el.querySelector("[data-cpc]").value, j = el.querySelector("[data-cpj]").value, h = el.querySelector("[data-cph]").value;
+        confirmBtn(go, async () => { const ok = await run(() => DB.q("rpc/cours_particulier_noter", { method: "POST", body: { p_eleve: id, p_cours: c, p_jour: j, p_heure: h } }).then(() => true), "Cours " + c + " noté");
+          if (ok) { await cpCharger(); const x = eleves.find((y) => y.id === id); if (x) el.outerHTML = cpHtml(x); } }); }
+      if (an) { const el = an.closest("[data-cpel]"), id = +el.dataset.cpel;
+        confirmBtn(an, async () => { const ok = await run(() => DB.q("rpc/cours_particulier_annuler", { method: "POST", body: { p_id: +an.dataset.cpann } }).then(() => true), "Cours annulé");
+          if (ok) { await cpCharger(); const x = eleves.find((y) => y.id === id); if (x) el.outerHTML = cpHtml(x); } }); }
+    });
     async function fillCours(x) {
       const el = $("#sd-pcCours"); if (!el) return; const vieux = $("#sd-pcCrat"); if (vieux) vieux.remove();
       let pr = null, ss = [];
@@ -4965,7 +4981,7 @@ function init(root) {
             '<div class="tm-formact"><button class="btn btn-green btn-sm" type="button" data-a="' + (insExp ? "rcRins" : "rcHalf") + '">' + (insExp ? "Il se réinscrit et paie la moitié : faire le reçu" : "Il paie la moitié : faire le reçu") + "</button>" + (n && !insExp ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" href="' + wa("Bonjour " + prenom(x) + ",\n\nTu es inscrit(e) chez SODAF Auto-École depuis le " + dFr(x.insd_le).replace(/\.$/, "") + ". Pour commencer les *cours en salle* et la *conduite*, il te reste à payer la *moitié de ta formation : " + F((x.solde || 0) / 2).replace(/[\u202F\u00A0]/g, " ") + "*, avant le *" + dFr(insLim.toISOString()).replace(/\.$/, "") + "*. Après cette date, l'inscription n'est plus valable.\n\nTu peux payer à l'agence (412 Avenue Akei, Tokoin Tamé) ou par Mixx by Yas. En attendant, révise tout le code sur autosodaf.com" + (window.TEAM_ACCES && window.TEAM_ACCES(x.id) ? " : " + window.TEAM_ACCES(x.id) : "") + SIGN) + '">Relancer pour la moitié ↗</a>' : "") + "</div></div>" : "") +
           (due ? '<div class="pc-alert"><b>' + (x.solde ? "Solde à payer : " + F(x.solde) + (ec ? ", avant le " + dFr(ec.toISOString()).replace(/\.$/, "") : "") + "." : "Aucun paiement de formation enregistré.") + "</b> " + (se === "susp" ? "Délai dépassé : sa place au code en salle est suspendue (il révise en ligne). Pas de conduite ni d'examen tant que le solde n'est pas payé." : "Pas de séance de conduite ni de passage à l'examen tant que la formation n'est pas soldée.") + (x.solde ? '<span class="sol-rap">' + (se === "rappel" ? "Rappel à envoyer aujourd'hui (1 semaine avant la date limite)" : se === "attente" ? ((x.solde_rappels || 0) ? "Rappel envoyé" + (x.solde_rappel_le ? " le " + dFr(x.solde_rappel_le) : "") : "Rappel prévu le " + dFr(rapLe(x))) + " · place au code suspendue le " + dFr(ec ? ec.toISOString() : new Date().toISOString()) + " sans paiement" : "Place au code suspendue depuis le " + dFr(ec ? ec.toISOString() : new Date().toISOString())) + "</span>" : "") +
             '<div class="tm-formact"><button class="btn btn-green btn-sm" type="button" data-a="rcSolde">' + (x.solde ? "Solde payé ? Faire le reçu" : "Paiement reçu ? Faire le reçu") + '</button>' + (n && x.solde ? relSolBtn(x, se) : "") + "</div></div>" : "") +
-          (sansCode(x) ? "" : x.insSeule ? '<div class="pc-block"><div class="pc-bh"><b>Cours de code en salle</b><span class="pc-waittag">Après la moitié</span></div><p class="tm-note" style="margin:6px 0 0!important">Il aura sa place dans un groupe dès qu\'il paie la moitié de la formation. En attendant, il révise tout le code en ligne.</p></div>' : '<div class="pc-block"><div class="pc-bh"><b>Cours de code en salle' + (x.groupe_code && gOf(x.groupe_code) ? ' <i class="gb gb-' + x.groupe_code + '">' + esc(gOf(x.groupe_code).nom) + "</i>" : "") + "</b>" + (!x.groupe_code ? '<span class="pc-waittag">Liste d\'attente</span>' : !cycleOk(x) || susp(x) ? "" : x.groupe_msg_le ? '<span class="pc-ok">horaires envoyés ' + ago(x.groupe_msg_le) + "</span>" : '<span class="pc-waittag">Horaires à envoyer</span>') + '</div><div class="gc-pick"><select data-a="groupe" aria-label="Groupe de code">' + (x.groupe_code ? "" : '<option value="" selected disabled>Liste d\'attente</option>') +
+          (sansCode(x) ? (privEl(x.id) && !x.insSeule ? '<div class="pc-block"><div class="pc-bh"><b>Code en cours particulier</b><span class="pc-waittag">Formation privée</span></div><div id="sd-pcPriv"><p class="tm-note">Chargement…</p></div></div>' : "") : x.insSeule ? '<div class="pc-block"><div class="pc-bh"><b>Cours de code en salle</b><span class="pc-waittag">Après la moitié</span></div><p class="tm-note" style="margin:6px 0 0!important">Il aura sa place dans un groupe dès qu\'il paie la moitié de la formation. En attendant, il révise tout le code en ligne.</p></div>' : '<div class="pc-block"><div class="pc-bh"><b>Cours de code en salle' + (x.groupe_code && gOf(x.groupe_code) ? ' <i class="gb gb-' + x.groupe_code + '">' + esc(gOf(x.groupe_code).nom) + "</i>" : "") + "</b>" + (!x.groupe_code ? '<span class="pc-waittag">Liste d\'attente</span>' : !cycleOk(x) || susp(x) ? "" : x.groupe_msg_le ? '<span class="pc-ok">horaires envoyés ' + ago(x.groupe_msg_le) + "</span>" : '<span class="pc-waittag">Horaires à envoyer</span>') + '</div><div class="gc-pick"><select data-a="groupe" aria-label="Groupe de code">' + (x.groupe_code ? "" : '<option value="" selected disabled>Liste d\'attente</option>') +
             GROUPES.slice().sort((a, b) => a.ordre - b.ordre).map((g) => { const o = occ(g.id), mine = g.id === x.groupe_code, full = !mine && o >= g.places, off = !mine && !g.actif, autre = !mine && !g.soir && !g.dimanche && !!x.code_soir, dimNon = !mine && !!g.dimanche && !dimOk(x); return '<option value="' + g.id + '"' + (mine ? " selected" : full || off || autre || dimNon ? " disabled" : "") + ">" + esc(g.nom) + " · " + gJours(g) + " · " + gHeure(g) + " · " + (off ? "fermé" : autre ? "journée (il travaille)" : dimNon ? "formation complète seulement" : o + "/" + g.places + (full ? " (complet)" : g.dimanche ? " · s'il ne peut venir que le dimanche" : g.soir && !x.code_soir ? " · s'il peut venir le soir" : "")) + "</option>"; }).join("") + "</select>" +
             (x.groupe_code && n && gOf(x.groupe_code) ? '<a class="btn ' + (x.groupe_msg_le ? "btn-line" : "btn-wa") + ' btn-sm" target="_blank" rel="noopener" data-a="sendGroupe" href="' + wa(msgGroupe(x)) + '">' + (x.groupe_msg_le ? "Renvoyer ses horaires ↗" : "Envoyer ses horaires ↗") + "</a>" : "") + "</div>" +
             '<label class="pc-soir"><input type="checkbox" data-a="soir"' + (x.code_soir ? " checked" : "") + '> Il travaille la journée : code le soir (18 h – 19 h)</label>' +
@@ -5006,6 +5022,7 @@ function init(root) {
       box.innerHTML = head + info + body + pieces + arch + suivi;
       const id = x.id;
       if (st === "formation" && !sansCode(x)) fillCours(x);
+      if (st === "formation" && privEl(x.id) && !x.insSeule) cpCharger().then(() => { const b = $("#sd-pcPriv"); if (b) b.innerHTML = cpHtml(x); });
       if (st === "formation" || st === "inscrits") {
         const [py, cd] = await Promise.all([run(() => DB.q("paiements?select=*&eleve_id=eq." + id + "&order=cree_le.desc")), run(() => DB.q("creneaux_conduite?select=jour,heure,statut&eleve_id=eq." + id + "&order=jour.desc&limit=60"))]);
         if (pcSel !== id) return;
@@ -5051,12 +5068,6 @@ function init(root) {
       box.innerHTML = h;
       const jr = new Set([...deja].map((k) => k.split("|")[0])), first = [list.findIndex((sl) => !why(sl) && !jr.has(sl.jour)), list.findIndex((sl) => !why(sl))].find((k) => k >= 0); if (first !== undefined) $("#sd-crSel").value = String(first);
     }
-    function eqForm(x, rows, box) {
-      const et = eqEtat(rows), dfr = (d) => dOf(d).toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
-      const opts = et.map((e) => { const libre = e.membres.filter((m) => m.id !== x.id).length < e.q.places; return '<option value="' + e.q.id + '"' + (e.libre ? "" : " disabled") + ">" + esc(e.q.nom + " · " + eqJours(e.q) + " · " + plage(e.q.heure)) + (e.libre ? (libre ? " · place libre dès le " : " · prochaine place le ") + dfr(e.libre) : " · complète") + "</option>"; }).join("");
-      box.innerHTML = '<div class="pc-eqform"><label for="sd-eqSel">Placer dans une équipe de conduite</label><div class="pc-eqrow"><select id="sd-eqSel">' + opts + '</select><button class="btn btn-green btn-sm" type="button" data-eqgo>Placer</button></div><small>Ses ' + (x.quota || 12) + " blocs sont réservés d'un coup, 2 par semaine, à partir de la place libre la plus proche." + (/étudiant/i.test(x.formule || "") ? " Tarif étudiant : un seul étudiant par équipe." : "") + "</small></div>";
-      const first = et.find((e) => e.libre && e.membres.length < e.q.places) || et.find((e) => e.libre); if (first) $("#sd-eqSel").value = first.q.id;
-    }
     $("#sd-pcDetail").addEventListener("click", async (e) => {
       const gp = e.target.closest("[data-goel]"); if (gp) { goEleve(+gp.dataset.goel); return; }
       const x = eleves.find((y) => y.id === pcSel); if (!x) return;
@@ -5067,12 +5078,6 @@ function init(root) {
           let ok = null; for (const id of sl.ids) { const r = await run(() => DB.q("creneaux_conduite?id=eq." + id + "&eleve_id=is.null&statut=eq.Libre", { method: "PATCH", body: { eleve_id: x.id, statut: "Réservé", confirme_le: null, rappel_le: null, modifie_le: new Date().toISOString() }, prefer: "return=representation" })); if (r === null) return; if (r && r.length) { ok = r[0]; break; } }
           if (!ok) { toast("Cette place vient d'être prise. Choisis une autre séance.", true); pcEquipe(x); return; }
           toast("Séance réservée : " + longDay(ok.jour) + " · " + plage(ok.heure)); await loadEleves(true); const y = eleves.find((z) => z.id === x.id); if (y && pcSel === y.id) pcEquipe(y); }); return; }
-      if (e.target.closest("[data-eqchg]")) { const box = $("#sd-pcEq"); eqForm(x, await eqFutur(), box); box.insertAdjacentHTML("beforeend", '<p class="tm-note" style="margin:6px 0 0!important">Ses blocs à venir dans l\'équipe actuelle seront rendus.</p>'); return; }
-      const eo = e.target.closest("[data-eqout]");
-      if (eo) { confirmBtn(eo, async () => { const n = await run(() => DB.q("rpc/equipe_retirer", { method: "POST", body: { p_eleve: x.id } }), "Retiré de l'équipe : blocs à venir rendus"); if (n !== null && n !== undefined) { await loadEleves(true); renderList(); } }); return; }
-      const eg = e.target.closest("[data-eqgo]");
-      if (eg) { const q = +$("#sd-eqSel").value; eg.disabled = true; const r = await run(() => DB.q("rpc/equipe_placer", { method: "POST", body: { p_eleve: x.id, p_equipe: q } })); eg.disabled = false;
-        if (r) { toast("Placé : " + (eqOf(q) || {}).nom + ", " + r.blocs + " blocs réservés"); await loadEleves(true); renderList(); } return; }
       const evb = e.target.closest("[data-ev]");
       if (evb) { const v = evb.dataset.ev; if (await patchEl(x, { evaluation: v, evaluation_le: new Date().toISOString() }, v === "pret" ? "Noté : prêt pour l'examen" : "Noté : séances en plus conseillées", ["Note", v === "pret" ? "Évaluation : prêt pour l'examen" : "Évaluation : séances en plus conseillées"])) renderList(true); return; }
       const a = e.target.closest("[data-a]"), ar = e.target.closest("[data-arch]"), rp = e.target.closest("[data-rappel]");
@@ -5440,15 +5445,13 @@ function init(root) {
         const sous = "Séance de conduite · 4 places";
         return '<div class="cd-bloc' + (g.bloc === "mercredi" ? " cd-mer" : "") + '"><div class="cd-bh"><b>' + esc(plage(g.h)) + "</b><span>" + esc(sous) + "</span><em>" + pris + "/" + g.rows.length + "</em></div>" + g.rows.map(rowHtml).join("") + "</div>";
       }).join("") : '<p class="tm-empty">Pas de conduite ce jour-là (jour férié).</p>';
-      eqOverview();
     }
 
-    // ---- Rattrapages (21 oct.) : une vue à part, « on voit juste les rattrapages : cette semaine c'est complet, la semaine d'après il reste 2 places »
-    //      (5 nov. : plus de bloc « mercredi » ; un bloc manqué se rattrape sur n'importe quelle séance libre.) Dû = blocs manqués (toute absence) − rattrapages déjà réservés ou faits.
-    const RAT = { mode: "jour", dates: [], du: [] };
+    // 6 nov. : plus de vue « Rattrapages » (supprimée le 5 nov.) : Planning du jour ou Places libres
+    let cdModeK = "jour";
     function cdMode(k) {
-      RAT.mode = k; $$(".cd-modes [data-cdm]").forEach((b) => b.setAttribute("aria-selected", b.dataset.cdm === k));
-      $("#sd-cdJour").hidden = k !== "jour"; $("#sd-cdRat").hidden = k !== "rat"; $("#sd-cdPl").hidden = k !== "pl"; if (k === "rat") ratCharger(); if (k === "pl") plCharger();
+      cdModeK = k; $$(".cd-modes [data-cdm]").forEach((b) => b.setAttribute("aria-selected", b.dataset.cdm === k));
+      $("#sd-cdJour").hidden = k !== "jour"; $("#sd-cdPl").hidden = k !== "pl"; if (k === "pl") plCharger();
     }
 
     // ---- Places libres (22 oct.) : « peut-on prendre de nouveaux élèves ? »
@@ -5475,55 +5478,6 @@ function init(root) {
           return '<div class="card pl-w"><div class="cd-rmh"><div><b>Semaine du ' + sd(w) + "</b>" + (w === cette ? "<span>Cette semaine</span>" : "") + "</div>" + (o.l ? '<em class="cd-rok">' + o.l + " libre" + (o.l > 1 ? "s" : "") + " sur " + o.t + "</em>" : '<em class="cd-rko">Complet</em>') + '</div><div class="pl-bar" role="img" aria-label="' + pc + ' % pris"><i style="width:' + pc + '%"></i></div></div>'; }).join("") : '<p class="tm-empty">Aucune séance prévue pour l\'instant.</p>');
     }
     $(".cd-modes") && $(".cd-modes").addEventListener("click", (e) => { const b = e.target.closest("[data-cdm]"); if (b) cdMode(b.dataset.cdm); });
-    const ratJour = (d) => dOf(d).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" }).replace(/^./, (c) => c.toUpperCase());
-    async function ratCharger() {
-      const box = $("#sd-cdRat"); if (!box) return; const td = iso(new Date());
-      const mer = [], abs = await DB.q("creneaux_conduite?select=eleve_id,jour,statut,bloc,note&eleve_id=not.is.null&or=(statut.in.(Absent,Absent%20sans%20pr%C3%A9venir),note.eq.Rattrapage)&limit=3000").catch(() => null);
-      if (!abs) { box.innerHTML = '<p class="tm-empty">Rattrapages indisponibles pour l\'instant.</p>'; return; }
-      const actifs = eleves.filter((x) => ["Inscrit", "En formation"].includes(x.statut)), du = {};
-      abs.forEach((c) => { if (!du[c.eleve_id]) du[c.eleve_id] = { manques: 0, rat: 0, der: null };
-        const d = du[c.eleve_id]; if (c.note === "Rattrapage") { if (["Réservé", "Fait"].includes(c.statut)) d.rat++; } else { d.manques++; if (!d.der || c.jour > d.der) d.der = c.jour; } });
-      RAT.du = actifs.filter((x) => x.dus > 0).map((x) => ({ x, n: x.dus, der: (du[x.id] || {}).der || null })).sort((a, b) => String(a.der).localeCompare(String(b.der)));
-      const dates = [...new Set(mer.map((c) => c.jour))].slice(0, 5); RAT.dates = dates.map((j) => ({ j, rows: mer.filter((c) => c.jour === j) }));
-      const lundi = (d) => { const x = dOf(d); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return iso(x); }, cette = lundi(td);
-      const b = $("#sd-cdRatB"); if (b) { b.textContent = RAT.du.length; b.hidden = !RAT.du.length; }
-      box.innerHTML = '<div class="tf-hero cd-rhero" style="--tfc:#4B3F8F"><i aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg></i><div class="tf-hero-t"><b>Rattrapages</b><span>Gratuit pour un bloc manqué : il réserve une autre séance, n\'importe quel jour où il reste une place.</span></div><div class="tf-hero-n"><b>' + RAT.du.length + "</b><span>à rattraper</span></div></div>" +
-        '<div class="card cd-rdu"><h4 class="gr-h4">À rattraper</h4>' + (RAT.du.length ? RAT.du.map((o) => '<div class="cd-rel"><button type="button" class="ms-el" data-goel="' + o.x.id + '">' + esc(o.x.nom) + "</button><small>SO" + o.x.id + " · " + o.n + " bloc" + (o.n > 1 ? "s" : "") + " manqué" + (o.n > 1 ? "s" : "") + (o.der ? ", le dernier " + dOf(o.der).toLocaleDateString("fr-FR", { day: "numeric", month: "short" }) : "") + "</small></div>").join("") : '<p class="tm-empty">Personne n\'a de bloc à rattraper.</p>') + "</div>" +
-        '<p class="cd-rnote">Touche son nom pour ouvrir sa fiche, puis Conduite → Réserver : la séance choisie remplace gratuitement le bloc manqué.</p>';
-    }
-    $("#sd-cdRat") && $("#sd-cdRat").addEventListener("click", async (e) => {
-      const g = e.target.closest("[data-goel]"); if (g) { goEleve(+g.dataset.goel); return; }
-      const card = e.target.closest("[data-rj]"); if (!card) return; const j = card.dataset.rj, m = RAT.dates.find((x) => x.j === j); if (!m) return;
-      if (e.target.closest("[data-rplacer]")) { const old = card.querySelector(".cd-pp"); if (old) { old.remove(); return; }
-        const deja = new Set(m.rows.map((c) => c.eleve_id).filter(Boolean)), duIds = new Set(RAT.du.map((o) => o.x.id));
-        const liste = RAT.du.filter((o) => !deja.has(o.x.id)).map((o) => [o.x, "Rattrapage · " + o.n + " bloc" + (o.n > 1 ? "s" : "") + " manqué" + (o.n > 1 ? "s" : "")])
-          .concat(merLibre(j) ? eleves.filter((x) => ["Inscrit", "En formation"].includes(x.statut) && x.feuVert && !duIds.has(x.id) && !deja.has(x.id)).sort((a, b) => a.nom.localeCompare(b.nom, "fr")).map((x) => [x, "Séance en plus · 3 000 F"]) : []);
-        const pp = document.createElement("div"); pp.className = "cd-pp";
-        pp.innerHTML = liste.length ? '<input type="search" class="cd-pq" placeholder="Rechercher : nom ou SO12" autocomplete="off" aria-label="Rechercher un élève"><div class="cd-pl">' + liste.map((o) => '<button type="button" data-ropt="' + o[0].id + '"><span>' + esc(o[0].nom) + "</span><small>SO" + o[0].id + " · " + o[1] + "</small></button>").join("") + '</div><p class="cd-pvide" hidden>Aucun élève trouvé.</p>'
-          : '<p class="cd-pvide">' + (merLibre(j) ? "Aucun élève à placer." : "Personne n'a de bloc à rattraper. Les séances en plus s'ouvrent le mardi 18 h.") + "</p>";
-        card.appendChild(pp); const q = pp.querySelector(".cd-pq"); if (q) { q.focus(); q.addEventListener("input", () => cdFiltre(pp)); } return; }
-      const op = e.target.closest("[data-ropt]"); if (!op || op.disabled) return;
-      if (!op.dataset.armed) { op.dataset.armed = 1; op.classList.add("armed"); const sp = op.querySelector("small"), av = sp.textContent; sp.textContent = "Confirmer ? touche encore";
-        setTimeout(() => { if (op.isConnected && op.dataset.armed) { delete op.dataset.armed; op.classList.remove("armed"); sp.textContent = av; } }, 5000); return; }
-      op.disabled = true; const id = +op.dataset.ropt, el = eleves.find((x) => x.id === id), sd = await run(() => soldeFrais(id));
-      if (!sd) { op.disabled = false; return; }
-      if (sd.s === null || sd.s > 0) { toast((el ? el.nom.split(" ")[0] + " : " : "") + (sd.s ? "solde de " + F(sd.s) + " non payé" : "aucun paiement enregistré") + ". Réservation impossible.", true); op.disabled = false; return; }
-      const libre = m.rows.find((c) => !c.eleve_id && c.statut === "Libre"); if (!libre) { toast("Plus de place ce mercredi", true); ratCharger(); return; }
-      const ok = await run(() => DB.q("creneaux_conduite?id=eq." + libre.id + "&eleve_id=is.null", { method: "PATCH", body: { eleve_id: id, statut: "Réservé", confirme_le: null, rappel_le: null, modifie_le: new Date().toISOString() }, prefer: "return=minimal" }).then(() => true), (el ? el.nom.split(" ")[0] : "Élève") + " placé le " + ratJour(j).toLowerCase());
-      if (ok) { await loadEleves(true); ratCharger(); } else op.disabled = false;
-    });
-    async function eqOverview() {
-      const box = $("#sd-eqList"); if (!box) return;
-      if (!EQUIPES.length) await loadEquipes();
-      if (!EQUIPES.length) { $("#sd-eqBox").hidden = true; return; }
-      $("#sd-eqBox").hidden = true; // plus d'équipe fixe depuis le 22 oct.
-      const et = eqEtat(await eqFutur()), dfr = (d) => dOf(d).toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
-      $("#sd-eqSum").textContent = et.reduce((a, e) => a + e.membres.length, 0) + " élèves placés · " + et.filter((e) => e.membres.length < e.q.places).length + " équipes avec une place";
-      box.innerHTML = et.map((e) => '<div class="eq-card"><div class="eq-h"><b>' + esc(e.q.nom) + "</b><span>" + esc(eqJours(e.q)) + " · " + esc(plage(e.q.heure)) + '</span></div><div class="eq-m">' +
-        e.membres.map((m) => { const el = eleves.find((y) => y.id === m.id) || { nom: "Élève " + m.id }; return '<button type="button" class="eq-p" data-goel="' + m.id + '">' + (el.id ? phAvatar(el, "ph-sm") : "") + "<span>" + esc(el.nom) + "<small>" + m.n + " bloc" + (m.n > 1 ? "s" : "") + " · fin " + dfr(m.a) + "</small></span></button>"; }).join("") +
-        (e.membres.length < e.q.places ? '<p class="eq-free">' + (e.q.places - e.membres.length) + " place" + (e.q.places - e.membres.length > 1 ? "s" : "") + " libre" + (e.q.places - e.membres.length > 1 ? "s" : "") + (e.libre ? " dès le " + dfr(e.libre) : "") + "</p>" : e.libre ? '<p class="eq-free">Prochaine place le ' + dfr(e.libre) + "</p>" : '<p class="eq-full">Complète</p>') + "</div></div>").join("");
-    }
-    $("#sd-eqList") && $("#sd-eqList").addEventListener("click", (e) => { const b = e.target.closest("[data-goel]"); if (b) goEleve(+b.dataset.goel); });
     // Place libre : recherche d'un élève (nom ou SO12), puis deux touches pour confirmer (20 oct.)
     const cdNorm = (t) => String(t || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
     const cdFiltre = (pp) => { const q = cdNorm(pp.querySelector(".cd-pq").value.trim()); let n = 0;
@@ -6198,6 +6152,7 @@ function init(root) {
       if (!ok(k)) k = "auj"; try { localStorage.setItem("sodaf.mn.ong", k); } catch (e) {}
       $$(".mn-tabs [data-mnp]").forEach((b) => b.setAttribute("aria-selected", b.dataset.mnp === k));
       $$('[data-pane="mon"] [data-mnpane]').forEach((c) => (c.hidden = c.dataset.mnpane !== k));
+      if (k === "code") cpRender();
     }
     $(".mn-tabs") && $(".mn-tabs").addEventListener("click", (e) => { const b = e.target.closest("[data-mnp]"); if (b) mnOnglet(b.dataset.mnp); });
     { const mp = $('.tm-pane[data-pane="mon"]'); mp && mp.addEventListener("click", (e) => { const g = e.target.closest("[data-mngo]"); if (g) { mnOnglet(g.dataset.mngo); mp.scrollIntoView({ behavior: "smooth", block: "start" }); } }); }
@@ -7240,7 +7195,7 @@ function init(root) {
       if (!me) return;
       if (["moniteur", "secretariat"].includes(me.role)) depEquipe();
       const today = iso(new Date());
-      const s0 = await run(() => DB.q("seances_code?select=*&jour=gte." + today + "&statut=neq.Annulé&order=jour&limit=12"));
+      const s0 = await run(() => DB.q("seances_code?select=*&jour=gte." + today + "&statut=neq.Annulé&type=neq.Cours%20particulier&order=jour&limit=12"));
       if (s0) {
         const rs0 = s0.length ? new Set(((await DB.q("code_rattrapages?select=seance_id&statut=eq.Réservé&seance_id=in.(" + s0.map((x) => x.id).join(",") + ")").catch(() => [])) || []).map((r) => r.seance_id)) : new Set();
         const s1 = eleves.length ? s0.filter((x) => !x.groupe || rs0.has(x.id) || eleves.some((y) => y.groupe_code === x.groupe && enCode(y) && !susp(y) && cycleOk(y))) : s0; // un groupe sans élève (ni rattrapage) : pas de cours à faire
@@ -8196,6 +8151,12 @@ html:has(#sodaf-root.app-mode),body:has(#sodaf-root.app-mode){background:#ECEFEE
 .mc-plan{background:#FFF6D6;border-left:4px solid #E0A400;border-radius:10px;padding:10px 12px;margin:0 0 12px}
 .mc-plan>b{display:block;font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:#6B4E00}.mc-plan ol{margin:4px 0 0;padding-left:1.2em;font-size:.92rem}.mc-plan li{margin:2px 0}
 .pc-cours{margin:8px 0 0!important;font-size:.9rem;color:#3D444D}
+.cp-card{margin-top:16px}.cp-top{display:flex;gap:16px;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;margin-bottom:10px}.cp-top h3{margin:2px 0 0}.cp-top p{margin:0;max-width:440px;color:#59636E;font-size:.9rem}
+.cp-el{border-top:1px solid #E6E8EB;padding:12px 0}.cp-el:first-child{border-top:0}#sd-pcPriv .cp-el{border:0;padding:6px 0 0}#sd-pcPriv .cp-h b{display:none}
+.cp-h{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}.cp-h span{color:#59636E;font-size:.9rem}.cp-h strong{color:#1F2328}
+.cp-dots{display:flex;flex-wrap:wrap;gap:5px;margin:8px 0}.cp-dots i{font-style:normal;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:.78rem;font-weight:700;background:#EEF0F2;color:#59636E}.cp-dots i.ok{background:#14532D;color:#fff}
+.cp-last{margin:0 0 8px;padding-left:18px;font-size:.86rem;color:#3D444D}.cp-last .linkbtn{font-size:.8rem;margin-left:6px}
+.cp-form{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.cp-form select,.cp-form input{padding:8px 10px;border:1px solid #D0D7DE;border-radius:8px;font:inherit;font-size:.9rem;max-width:100%}.cp-form select[data-cpc]{flex:1 1 220px}
 .devwk{margin:0 0 14px!important;color:var(--muted)}.devnow+.devnow{margin-top:-8px}
 
 .mc-appel{border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;margin-top:4px}
