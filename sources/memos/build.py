@@ -14,7 +14,7 @@ PRIX = [("Formation complète", "55 000 F"), ("Formule rapide", "35 000 F"), ("T
         ("Formation privée", "85 000 F"), ("Remise à niveau", "25 000 F"),
         ("Code seul", "25 000 F"), ("Séance en plus", "3 000 F"), ("Dépôt d'examen", "35 000 F")]
 PRIX_NOTE = ("Inscription **5 000 F** pour toutes les formules (remise à niveau : comprise ; gagnant du tirage : offerte). "
-             "Paiement en 2 fois : la moitié, puis le reste dès que possible. **Prix fixes**, aucune remise.")
+             "Paiement en 2 fois : la moitié, puis le reste dès que possible. **Prix fixes** : réductions seulement pour l'étudiant et le tirage.")
 
 def prix():
     cells = "".join('<div class="px"><span>%s</span><b>%s</b></div>' % (e(a), e(b)) for a, b in PRIX)
@@ -53,7 +53,7 @@ def page(role, titre, intro, gauche, droite, bas=""):
 <h1>{e(titre)}</h1><p class="intro">{e(intro)}</p>
 <div class="cols"><div class="col">{gauche}</div><div class="col">{droite}</div></div>
 {bas}
-<footer><span>SODAF Auto-École · 412 Avenue Akei, Tokoin Tamé · +228 72 54 41 66</span><span>Mémo {e(role.lower())} · {MOIS}</span></footer>
+<footer><span>SODAF Auto-École · 412 Avenue Akei, Tokoin Tamé, en face de la caisse · +228 72 54 41 66</span><span>Mémo {e(role.lower())} · {MOIS}</span></footer>
 </section>'''
 
 REGLES = ("**Les règles de tous.** Tout bouton qui enregistre ou envoie se confirme en **deux touches**. Rien ne se supprime. "
@@ -88,7 +88,7 @@ SEC = page("Secrétariat", "Le secrétariat, étape par étape",
     "**Séance à l'unité** : client non inscrit, 1 h, **10 000 F** payés avant de monter.",
   ]) +
   puces("L'argent", [
-    "Espèces seulement. **Un reçu pour chaque franc** encaissé.",
+    "Espèces ou **Mixx by Yas**. **Un reçu pour chaque franc** encaissé.",
     "Reçu faux : **Demander l'annulation** (la direction décide).",
     "Formule ou prix : tu ne changes jamais. Fiche → « Le client s'est trompé de formule ? ».",
     "Besoin d'argent (voiture, agence) : **Demandes à la direction**. Pas le prix ? Coche **Montant inconnu**, puis trouve le prix et le devis.",
@@ -98,6 +98,7 @@ SEC = page("Secrétariat", "Le secrétariat, étape par étape",
     "**Étudiant** : carte d'étudiant de l'année + carte d'identité. Sinon, tarif normal.",
     "**Corps habillés** : même prix que tout le monde. Conseille gentiment de venir en civil si possible (pas obligé).",
     "**Formation privée** : 85 000 F, 1 h seul avec le moniteur, code en particulier.",
+    "**Dimanche**, seulement s'il ne peut venir que ce jour-là : **Groupe H** au code (14 h 30 et 18 h) et conduite. On ne l'annonce pas.",
   ]),
   prix() + regle(REGLES))
 
@@ -207,10 +208,10 @@ AMB = page("Ambassadeur", "Les ambassadeurs, l'image de SODAF",
   ]),
   puces("Ce qu'on dit", [
     "**Commence avec 5 000 F** : le code en ligne s'ouvre, puis 2 mois pour payer la formation.",
-    "Petits groupes : **6 au plus** en salle, **4 au plus** dans la voiture, double pédales.",
-    "Code le soir à 18 h pour ceux qui travaillent. Conduite à ton rythme.",
+    "Petits groupes : **6 élèves maximum** en salle, **4 maximum** en voiture, double pédales.",
+    "Code **l'après-midi ou le soir** (18 h pour ceux qui travaillent). Conduite à ton rythme.",
     "Étudiants **30 000 F**. Corps habillés : « votre permis, à votre rythme » (gardes, missions).",
-    "Le tirage au sort étudiant, chaque mois, en direct sur TikTok.",
+    "Le tirage au sort étudiant, le **premier samedi du mois** : la vidéo des gagnants sur TikTok.",
   ]) +
   puces("Tes résultats", [
     "**Ambassadeurs → Résultats** : la semaine, le mois et l'historique de vos publications.",
