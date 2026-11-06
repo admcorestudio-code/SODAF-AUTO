@@ -212,13 +212,6 @@ AMB = page("Ambassadeur", "Les ambassadeurs, l'image de SODAF",
     "Étudiants **30 000 F**. Corps habillés : « votre permis, à votre rythme » (gardes, missions).",
     "Le tirage au sort étudiant, chaque mois, en direct sur TikTok.",
   ]) +
-  puces("Ce qu'on ne dit pas", [
-    "Une réduction qui n'existe pas : prix fixes (réductions seulement étudiant, parrainage, tirage).",
-    "Ce que gagne un parrain (on en parle aux élèves une fois inscrits).",
-    "« L'État » : on dit « **examen du permis** ».",
-    "Une date de permis promise.",
-    "Le visage d'un élève sans son accord.",
-  ], "neg") +
   puces("Tes résultats", [
     "**Ambassadeurs → Résultats** : la semaine, le mois et l'historique de vos publications.",
     "**À faire** : les tâches de la direction. Touche « C'est fait » quand c'est fait.",
