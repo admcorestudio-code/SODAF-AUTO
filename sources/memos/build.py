@@ -190,7 +190,7 @@ AMB = page("Ambassadeur", "Les ambassadeurs, l'image de SODAF",
   "Deux ambassadeurs, deux rôles qui s'échangent **chaque mois, le 1er lundi** : **Relations** (les gens, les affiches, le tirage, avec la **tablette**) et **Contenu** (les vidéos, avec le **téléphone**) ; le **PC reste à l'agence**, partagé. Tu ne vois ni les élèves ni l'argent.",
   lignes("Ta semaine", [
     ("À l'agence", "**Christian** lun, mer, ven ; **Patrick** mar, jeu, sam. Tu **amènes le secrétariat**, puis la pub auprès des passants."),
-    ("Journée terrain", "**À deux, une fois par semaine** (le jour : en haut de l'onglet) : le matin les commerces, l'après-midi les universités."),
+    ("Journée terrain", "**À deux, mer + ven une semaine sur deux** (le secrétariat a cours) : le matin les commerces, l'après-midi les universités."),
     ("1er lundi du mois", "Vous **changez de rôle** et vous échangez la **tablette** et le **téléphone** : 15 minutes de relais."),
     ("1er samedi du mois", "**Tirage au sort** à 20 h, filmé pour TikTok : **les deux sont là**."),
     ("Chaque semaine", "Au moins **une publication chacun** sur **@autoecole.sodaf.tg**."),
