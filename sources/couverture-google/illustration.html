@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>SODAF · couverture illustrée</title>
+<style>
+@font-face{font-family:"Outfit";src:url(../affiche-tirage-14nov/Outfit.ttf)}
+*{margin:0;padding:0}body{background:#0B0C0E}
+svg{display:block}
+</style></head><body>
+<svg width="1600" height="900" viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
+<defs>
+ <linearGradient id="ciel" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#07080A"/><stop offset=".55" stop-color="#0E1A15"/><stop offset=".78" stop-color="#16362A"/><stop offset="1" stop-color="#0B0C0E"/>
+ </linearGradient>
+ <radialGradient id="halo" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#35D07F" stop-opacity=".55"/><stop offset="1" stop-color="#35D07F" stop-opacity="0"/></radialGradient>
+ <radialGradient id="lune" cx=".4" cy=".4" r=".6"><stop offset="0" stop-color="#F4FFF8"/><stop offset="1" stop-color="#CFE9DA"/></radialGradient>
+ <linearGradient id="carros" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#C9CED6"/></linearGradient>
+ <linearGradient id="vitre" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2A3B35"/><stop offset="1" stop-color="#0F1714"/></linearGradient>
+ <linearGradient id="phare" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FFF6C8" stop-opacity=".55"/><stop offset="1" stop-color="#FFF6C8" stop-opacity="0"/></linearGradient>
+ <linearGradient id="route" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1A1D21"/><stop offset="1" stop-color="#101214"/></linearGradient>
+ <filter id="flou" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="18"/></filter>
+ <filter id="flou2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6"/></filter>
+</defs>
+
+<!-- ciel -->
+<rect width="1600" height="900" fill="url(#ciel)"/>
+<g fill="#FFFFFF" opacity=".55">
+ <circle cx="120" cy="80" r="1.6"/><circle cx="260" cy="150" r="1.2"/><circle cx="420" cy="60" r="1.4"/><circle cx="610" cy="120" r="1"/><circle cx="790" cy="50" r="1.5"/>
+ <circle cx="930" cy="140" r="1.1"/><circle cx="1080" cy="70" r="1.3"/><circle cx="1210" cy="160" r="1"/><circle cx="1380" cy="90" r="1.6"/><circle cx="1520" cy="40" r="1.2"/>
+ <circle cx="350" cy="230" r="1"/><circle cx="700" cy="250" r="1.1"/><circle cx="1000" cy="230" r="1"/><circle cx="1450" cy="220" r="1.1"/>
+</g>
+<circle cx="1290" cy="150" r="46" fill="url(#lune)" opacity=".92"/>
+<circle cx="1290" cy="150" r="90" fill="url(#halo)" opacity=".25"/>
+
+<!-- ville et palmiers (silhouettes) -->
+<g fill="#16241E">
+ <rect x="0" y="470" width="90" height="190"/><rect x="95" y="430" width="70" height="230"/><rect x="170" y="500" width="110" height="160"/>
+ <rect x="560" y="450" width="80" height="210"/><rect x="645" y="410" width="60" height="250"/><rect x="710" y="480" width="120" height="180"/>
+ <rect x="1120" y="440" width="100" height="220"/><rect x="1225" y="490" width="70" height="170"/><rect x="1300" y="420" width="90" height="240"/><rect x="1395" y="470" width="120" height="190"/><rect x="1520" y="440" width="80" height="220"/>
+</g>
+<g fill="#2C5A44" opacity=".9">
+ <rect x="108" y="450" width="10" height="12"/><rect x="128" y="450" width="10" height="12"/><rect x="108" y="480" width="10" height="12"/><rect x="148" y="510" width="10" height="12"/>
+ <rect x="655" y="430" width="9" height="11"/><rect x="675" y="460" width="9" height="11"/><rect x="655" y="490" width="9" height="11"/>
+ <rect x="1315" y="440" width="10" height="12"/><rect x="1345" y="470" width="10" height="12"/><rect x="1315" y="500" width="10" height="12"/><rect x="1140" y="465" width="10" height="12"/>
+</g>
+<!-- palmiers -->
+<g fill="none" stroke="#12201A" stroke-linecap="round">
+ <path d="M400 662 C405 600 398 540 412 470" stroke-width="12"/>
+ <path d="M960 662 C955 610 966 550 952 490" stroke-width="11"/>
+</g>
+<g fill="#12201A">
+ <path d="M412 470 C380 455 350 460 325 485 C360 470 385 472 412 476Z"/><path d="M412 470 C445 450 480 455 505 478 C470 466 440 468 412 476Z"/>
+ <path d="M412 470 C395 440 370 425 340 425 C370 438 390 452 410 474Z"/><path d="M412 470 C430 438 455 425 488 428 C458 440 438 455 414 474Z"/>
+ <path d="M412 470 C410 440 418 418 435 405 C425 425 420 448 414 472Z"/>
+ <path d="M952 490 C920 476 890 480 865 505 C900 490 925 492 952 496Z"/><path d="M952 490 C985 470 1020 475 1045 498 C1010 486 980 488 952 496Z"/>
+ <path d="M952 490 C935 460 910 445 880 445 C910 458 930 472 950 494Z"/><path d="M952 490 C970 458 995 445 1028 448 C998 460 978 475 954 494Z"/>
+</g>
+
+<!-- trottoir et route -->
+<rect x="0" y="660" width="1600" height="26" fill="#1D2024"/>
+<rect x="0" y="686" width="1600" height="214" fill="url(#route)"/>
+<g fill="#35D07F" opacity=".9">
+ <rect x="20" y="786" width="90" height="10" rx="3"/><rect x="190" y="786" width="90" height="10" rx="3"/><rect x="360" y="786" width="90" height="10" rx="3"/><rect x="530" y="786" width="90" height="10" rx="3"/>
+ <rect x="700" y="786" width="90" height="10" rx="3"/><rect x="870" y="786" width="90" height="10" rx="3"/><rect x="1040" y="786" width="90" height="10" rx="3"/>
+ <rect x="1380" y="786" width="90" height="10" rx="3"/><rect x="1550" y="786" width="90" height="10" rx="3"/>
+</g>
+<rect x="0" y="686" width="1600" height="3" fill="#FFFFFF" opacity=".25"/>
+<!-- passage piéton -->
+<g fill="#FFFFFF" opacity=".55">
+ <rect x="1180" y="704" width="20" height="170" rx="2"/><rect x="1220" y="704" width="20" height="170" rx="2"/><rect x="1260" y="704" width="20" height="170" rx="2"/><rect x="1300" y="704" width="20" height="170" rx="2"/>
+</g>
+
+<!-- panneau de priorité -->
+<g transform="translate(250 560)">
+ <rect x="-4" y="0" width="8" height="104" fill="#3A3D44"/>
+ <g transform="translate(0 -6) rotate(45)"><rect x="-34" y="-34" width="68" height="68" rx="4" fill="#FFFFFF"/><rect x="-24" y="-24" width="48" height="48" rx="2" fill="#F2B705"/></g>
+</g>
+
+<!-- feu tricolore -->
+<g transform="translate(1380 420)">
+ <rect x="-7" y="150" width="14" height="96" fill="#2A2C32"/>
+ <circle cx="0" cy="118" r="110" fill="url(#halo)" opacity=".7"/>
+ <rect x="-38" y="0" width="76" height="160" rx="18" fill="#1B1C20" stroke="#2F3138" stroke-width="3"/>
+ <circle cx="0" cy="30" r="20" fill="#3A1517"/><circle cx="0" cy="78" r="20" fill="#3A2E10"/>
+ <circle cx="0" cy="126" r="20" fill="#35D07F"/><circle cx="-5" cy="120" r="7" fill="#DFFFEA" opacity=".8"/>
+ <circle cx="0" cy="126" r="30" fill="#35D07F" opacity=".45" filter="url(#flou2)"/>
+</g>
+
+<!-- voiture d'auto-école -->
+<g transform="translate(400 480) scale(1.18)">
+ <!-- faisceau des phares -->
+ <path d="M532 108 L760 60 L760 170 Z" fill="url(#phare)" opacity=".75"/>
+ <!-- ombre -->
+ <ellipse cx="265" cy="200" rx="290" ry="18" fill="#000" opacity=".55" filter="url(#flou2)"/>
+ <!-- panneau de toit -->
+ <rect x="196" y="-34" width="132" height="34" rx="8" fill="#35D07F"/>
+ <rect x="232" y="0" width="60" height="10" fill="#2A2C32"/>
+ <text x="262" y="-11" text-anchor="middle" font-family="Outfit" font-weight="800" font-size="17" letter-spacing="1.5" fill="#06140C">AUTO-ÉCOLE</text>
+ <!-- carrosserie -->
+ <path d="M10 150 L10 112 C10 96 20 88 38 85 L120 74 L182 22 C192 14 204 10 218 10 L338 10 C352 10 364 15 374 24 L432 74 L500 86 C518 90 530 100 532 118 L534 150 C534 160 526 166 516 166 L28 166 C18 166 10 160 10 150 Z" fill="url(#carros)"/>
+ <!-- bande verte -->
+ <path d="M12 120 L532 120 L533 134 L12 134 Z" fill="#35D07F"/>
+ <!-- vitres -->
+ <path d="M138 76 L192 30 C198 25 205 22 214 22 L262 22 L262 76 Z" fill="url(#vitre)"/>
+ <path d="M274 22 L334 22 C344 22 352 26 359 33 L404 76 L274 76 Z" fill="url(#vitre)"/>
+ <path d="M150 70 L196 32" stroke="#FFFFFF" stroke-opacity=".18" stroke-width="6" stroke-linecap="round"/>
+ <!-- portes et poignées -->
+ <path d="M268 22 L268 160" stroke="#AEB4BE" stroke-width="2"/>
+ <path d="M140 80 L140 160" stroke="#AEB4BE" stroke-width="2"/>
+ <rect x="226" y="92" width="26" height="6" rx="3" fill="#8D949F"/><rect x="352" y="92" width="26" height="6" rx="3" fill="#8D949F"/>
+ <!-- phares -->
+ <path d="M508 96 L528 100 C531 104 532 108 532 112 L506 110 Z" fill="#FFF6C8"/>
+ <rect x="12" y="98" width="16" height="12" rx="3" fill="#D7263D"/>
+ <!-- logo S sur la porte -->
+ <circle cx="330" cy="104" r="0" fill="none"/>
+ <!-- passages de roue -->
+ <path d="M66 166 A52 52 0 0 1 170 166 Z" fill="#0B0C0E"/><path d="M372 166 A52 52 0 0 1 476 166 Z" fill="#0B0C0E"/>
+ <!-- roues -->
+ <g transform="translate(118 160)"><circle r="44" fill="#141518"/><circle r="27" fill="#5A5F68"/><circle r="12" fill="#2A2C32"/><g stroke="#2A2C32" stroke-width="5"><path d="M0 -26V26M-26 0H26"/></g></g>
+ <g transform="translate(424 160)"><circle r="44" fill="#141518"/><circle r="27" fill="#5A5F68"/><circle r="12" fill="#2A2C32"/><g stroke="#2A2C32" stroke-width="5"><path d="M0 -26V26M-26 0H26"/></g></g>
+</g>
+
+<!-- logo discret -->
+<image href="../affiche-tirage-14nov/logo.svg" x="64" y="52" height="40" width="166"/>
+</svg>
+</body></html>
