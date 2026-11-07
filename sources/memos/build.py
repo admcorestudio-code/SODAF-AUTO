@@ -189,9 +189,9 @@ MON = page("Moniteur", "Le moniteur, sur son téléphone",
 AMB = page("Ambassadeur", "Les ambassadeurs, l'image de SODAF",
   "Deux ambassadeurs, deux rôles qui s'échangent chaque lundi : **Relations** (les gens, les affiches, le tirage) et **Contenu** (les vidéos). Ton espace : Ambassadeurs, À faire, Messages, Documents. Tu ne vois ni les élèves ni l'argent.",
   lignes("Ta semaine", [
-    ("Lundi et jeudi", "**Sorties à deux** : universités, lycées, marchés. Relations parle aux gens, Contenu filme."),
+    ("À l'agence", "**Christian** lundi et mercredi, **Patrick** mardi et jeudi : la pub auprès des gens qui passent (flyers, QR code)."),
     ("Lundi matin", "Vous **changez de rôle** : 15 minutes pour se passer le relais."),
-    ("Mercredi et vendredi", "**Relations** : à l'agence quand le secrétariat a cours (accueil, QR code)."),
+    ("Samedi", "Pas besoin de venir, **sauf le jour du tirage**."),
     ("1er samedi du mois", "**Tirage au sort** à 20 h à l'agence, filmé pour TikTok."),
     ("Chaque semaine", "Au moins **une publication chacun** sur **@autoecole.sodaf.tg**."),
   ]) +
