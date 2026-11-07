@@ -42,6 +42,9 @@ const DB = {
 const WA = "https://wa.me/22872544166";
 // Paiement Mixx by Yas (T-Money) sur le code marchand : formule USSD *145*5*montant*code#
 const MIXX_USSD = (code, amt) => "*145*5*" + Math.round(+amt || 0) + "*" + String(code || "").replace(/\D/g, "") + "#";
+// Tirage : le premier samedi du mois à 20 h, sauf report (même liste dans la base : prive.tirage_dates, migration 0114)
+const TIR_REPORT = { "2026-11": 14 }; // 7 nov. 2026 : aucun inscrit, tirage reporté au samedi 14 novembre
+const tirJourDu = (y, m) => TIR_REPORT[y + "-" + String(m + 1).padStart(2, "0")] || 1 + ((6 - new Date(Date.UTC(y, m, 1)).getUTCDay() + 7) % 7); // m de 0 à 11
 const MIXX_TEL = (code, amt) => "tel:" + MIXX_USSD(code, amt).replace(/#/g, "%23");
 const MIXX_MAINT = false; // 20 oct. : Mixx mis en maintenance ; 24 oct. : rouvert (code marchand 1492996 vérifié par le propriétaire). Remettre true pour griser le choix Mixx.
 const MIXX_MARCHAND = (code) => /^\d{5,7}$/.test(String(code || "").replace(/\D/g, "")); // 8 chiffres = ancien numéro de téléphone
@@ -5883,7 +5886,7 @@ function init(root) {
       const s = e.target.closest("[data-gosem]"); if (s) { const it = document.querySelector('#sd-grRapList [data-sem="' + s.dataset.gosem + '"]'); if (it) { if (it.tagName === "DETAILS") it.open = true; it.scrollIntoView({ behavior: "smooth", block: "center" }); it.classList.add("gr-flash"); setTimeout(() => it.classList.remove("gr-flash"), 1600); } }
     });
     // ---- Tirage au sort (direction et gérante) : 2 gagnants validés par mois
-    const trSam = (y, m) => 1 + ((6 - new Date(Date.UTC(y, m, 1)).getUTCDay() + 7) % 7); // premier samedi du mois (m de 0 à 11)
+    const trSam = tirJourDu; // premier samedi du mois, sauf report (m de 0 à 11)
     const trCampActuelle = () => { const d = new Date(); let y = d.getUTCFullYear(), m = d.getUTCMonth(); if (d.getUTCDate() > trSam(y, m)) { m = (m + 1) % 12; if (m === 0) y++; } return y + "-" + String(m + 1).padStart(2, "0"); };
     const trJour = (c) => { const [y, m] = c.split("-").map(Number), j = trSam(y, m - 1); return "samedi " + j + (j === 1 ? "er" : "") + " " + trNomMois(c); };
     const trNomMois = (c) => { const [y, m] = c.split("-"); return ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"][+m - 1] + " " + y; };
@@ -6509,7 +6512,7 @@ function init(root) {
         const r = await run(() => DB.q("rpc/amb_rotation_regler", { method: "POST", body: { p_terrain: t, p_digital: d } }).then(() => true), "Rotation enregistrée"); if (r) { AM.ong = null; amCharger(); } });
     });
     const COM = { a: [], t: [] };
-    const comLive = (l) => { for (let i = 0; i < 7; i++) { const d = dOf(grLuPlus(l, i)); if (d.getDay() === 6 && d.getDate() <= 7) return true; } return false; }; // semaine du tirage (premier samedi du mois)
+    const comLive = (l) => { for (let i = 0; i < 7; i++) { const d = dOf(grLuPlus(l, i)); if (d.getDay() === 6 && d.getDate() === tirJourDu(d.getFullYear(), d.getMonth())) return true; } return false; }; // semaine du tirage (premier samedi du mois)
     // ---- Tirage pendant le live (30 oct.) : l'Ambassadeur tire, le secrétariat vérifie la carte (rpc tirage_live : prénom + initiale, sans téléphone ni carte)
     const CT = { camp: null, l: [], t: null };
     async function ctCharger() {
@@ -7681,7 +7684,7 @@ function init(root) {
   }
   const TMOIS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
   // 31 oct. 2026 : tirage le PREMIER SAMEDI du mois à 20 h (règle aussi dans la base : prive.tirage_jour). Lomé = UTC.
-  const tirSam = (y, m) => 1 + ((6 - new Date(Date.UTC(y, m, 1)).getUTCDay() + 7) % 7);
+  const tirSam = tirJourDu;
   const tirCampagne = () => { const d = new Date(), y = d.getUTCFullYear(), m = d.getUTCMonth(); if (d.getUTCDate() <= tirSam(y, m)) return { y, m, j: tirSam(y, m) }; const ny = m === 11 ? y + 1 : y, nm = (m + 1) % 12; return { y: ny, m: nm, j: tirSam(ny, nm) }; };
   const tirJourTxt = (c) => "samedi " + c.j + (c.j === 1 ? "er" : "") + " " + TMOIS[c.m];
   const tirOuvert = () => { const d = new Date(); return d.getUTCDate() !== tirSam(d.getUTCFullYear(), d.getUTCMonth()); };
