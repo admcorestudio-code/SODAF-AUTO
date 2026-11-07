@@ -187,16 +187,16 @@ MON = page("Moniteur", "Le moniteur, sur son téléphone",
 
 # ---------------------------------------------------------------- Ambassadeur
 AMB = page("Ambassadeur", "Les ambassadeurs, l'image de SODAF",
-  "Deux ambassadeurs, deux rôles qui s'échangent **chaque mois, le 1er lundi** : **Relations** (les gens, les affiches, le tirage, avec le **téléphone SODAF**) et **Contenu** (les vidéos, avec le **PC portable**). Ton espace : Ambassadeurs, À faire, Messages, Documents. Tu ne vois ni les élèves ni l'argent.",
+  "Deux ambassadeurs, deux rôles qui s'échangent **chaque mois, le 1er lundi** : **Relations** (les gens, les affiches, le tirage, avec la **tablette**) et **Contenu** (les vidéos, avec le **téléphone**) ; le **PC reste à l'agence**, partagé. Tu ne vois ni les élèves ni l'argent.",
   lignes("Ta semaine", [
-    ("À l'agence", "**Christian** lundi, mercredi, vendredi ; **Patrick** mardi, jeudi, samedi. Tu **amènes le secrétariat**, puis la pub auprès des passants."),
+    ("À l'agence", "**Christian** lun, mer, ven ; **Patrick** mar, jeu, sam. Tu **amènes le secrétariat**, puis la pub auprès des passants."),
     ("Journée terrain", "**À deux, une fois par semaine** (le jour : en haut de l'onglet) : le matin les commerces, l'après-midi les universités."),
-    ("1er lundi du mois", "Vous **changez de rôle** et vous échangez le **téléphone** et le **PC** : 15 minutes de relais."),
+    ("1er lundi du mois", "Vous **changez de rôle** et vous échangez la **tablette** et le **téléphone** : 15 minutes de relais."),
     ("1er samedi du mois", "**Tirage au sort** à 20 h, filmé pour TikTok : **les deux sont là**."),
     ("Chaque semaine", "Au moins **une publication chacun** sur **@autoecole.sodaf.tg**."),
   ]) +
   etapes("Chaque publication", [
-    ("Préparer", "Relations : l'affiche (Canva, sur le téléphone). Contenu : la vidéo (Osmo Pocket, CapCut sur le PC)."),
+    ("Préparer", "Relations : l'affiche (Canva, tablette). Contenu : la vidéo (Osmo, CapCut)."),
     ("Faire valider", "Envoie-la à la **direction dans Messages**. Elle répond « c'est bon » ou « change ça »."),
     ("Publier", "Toi-même, sur **TikTok** (et Instagram). Garde l'original."),
     ("Noter", "**Ambassadeurs → Affiches à publier** ou **Vidéos à publier** : le fichier et le lien."),
@@ -213,7 +213,7 @@ AMB = page("Ambassadeur", "Les ambassadeurs, l'image de SODAF",
     "Le tirage au sort étudiant, le **premier samedi du mois** : la vidéo des gagnants sur TikTok.",
   ]) +
   puces("Les messages TikTok", [
-    "Contenu répond aux **commentaires et messages chaque jour**, sur le PC (tiktok.com) : **9 h, 13 h et 19 h**.",
+    "Contenu répond aux **commentaires et messages chaque jour**, sur le téléphone SODAF, **dans l'heure** (alertes activées).",
   ]) +
   puces("Tes résultats", [
     "**Ambassadeurs → Résultats** : la semaine, le mois et l'historique de vos publications.",
