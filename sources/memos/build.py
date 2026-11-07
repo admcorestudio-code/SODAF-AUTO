@@ -64,7 +64,7 @@ REGLES = ("**Les règles de tous.** Tout bouton qui enregistre ou envoie se conf
 SEC = page("Secrétariat", "Le secrétariat, étape par étape",
   "Ton espace Secrétariat s'ouvre sur Accueil client. L'outil te dit quoi faire et les messages WhatsApp sont déjà écrits : tu vérifies, puis tu envoies.",
   lignes("Ta journée", [
-    ("7 h 30", "L'ambassadeur de jour t'amène. Ouvre l'agence, puis **À faire**."),
+    ("7 h 30", "**À faire**, puis les **fiches papier** d'hier : appelle chacun."),
     ("Un client au bureau", "**Accueil client** → **Ouvrir l'écran client** (la présentation), puis **Nouvelle pré-inscription**."),
     ("Un client sur WhatsApp", "Appelle-le tout de suite : **Client venu de WhatsApp · Script d'appel**."),
     ("L'après-midi", "**Planning conduite** : **Rappel de la veille** pour les séances de demain."),
@@ -158,6 +158,9 @@ MON = page("Moniteur", "Le moniteur, sur son téléphone",
     "Budget dépassé : **Demander de l'essence en plus** (la direction décide).",
     "Un problème avec la voiture : **Prévenir le secrétariat**. Il appelle la mécanicienne.",
     "Samedi 13 h 30 : la mécanicienne contrôle la voiture.",
+  ]) +
+  puces("Mercredi et vendredi sans secrétariat", [
+    "Une semaine sur deux, l'accueil est fermé. Un visiteur : donne-lui la **fiche de pré-inscription** papier. **Pas d'argent.** Laisse la fiche au bureau.",
   ]),
   etapes("Une séance de conduite (2 h, 4 places)", [
     ("Avant", "**Aujourd'hui** : tes élèves, leur photo et l'ordre de passage. Contrôle rapide de la voiture."),
