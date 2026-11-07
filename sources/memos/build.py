@@ -72,7 +72,7 @@ SEC = page("Secrétariat", "Le secrétariat, étape par étape",
   ]) +
   etapes("Un élève, de A à Z", [
     ("Les appels", "Pré-inscrit du site : **Envoyer l'accueil**. Appelle avec le script : les prix, puis « commencer avec 5 000 F ». Il hésite ? Pré-inscris-le quand même pendant l'appel."),
-    ("Le lien d'inscription", "**Envoyer le lien d'inscription** : il choisit sa formule et combien il paie. Relance tous les 5 jours (4 au plus)."),
+    ("Le lien d'inscription", "**Envoyer le lien d'inscription** : il choisit sa formule et combien il paie. Relance tous les 5 jours (4 au plus), **puis appelle-le**."),
     ("Le reçu", "Il paie en espèces : **Formation payée ? Faire le reçu**, puis envoie-le. 5 000 F = inscrit, le code en ligne s'ouvre. La moitié = code en salle. Tout = conduite."),
     ("Le code", "Il reçoit tout seul une place dans un groupe de 6 : **Envoyer ses horaires**. Cours raté : il le revoit au tour suivant du programme. Il préfère le mercredi ? Choisis le **Groupe C** dans sa fiche."),
     ("Le solde", "À 3 semaines dans son groupe : rappel en rouge, en haut. À 1 mois sans paiement : place au code suspendue. Pas de conduite avant le solde."),

@@ -43,7 +43,7 @@ def page(k, nom, n, duree, coul, txt, prec):
 <div><b>Tu ne peux pas venir ?</b><span>Préviens le secrétariat le plus tôt possible, au 72 54 41 66 (appel ou WhatsApp).</span></div>
 <div><b>Ta fiche, ta preuve</b><span>Garde-la dans ton cahier jusqu'à l'examen. Ne la perds pas : elle compte tes séances.</span></div>
 </div>
-<footer><span><b>SODAF Auto-École</b> · 412 Avenue Akei, Tokoin Tamé, Lomé (en face de la caisse, près de la pharmacie Yembla)</span><span>72 54 41 66 · autosodaf.com</span></footer>
+<footer><span><b>SODAF Auto-École</b> · 412 Avenue Akei, Tokoin Tamé, Lomé (en face de la caisse, près de la pharmacie Yem-Bla)</span><span>72 54 41 66 · autosodaf.com</span></footer>
 </section>'''
 
 CSS = (ICI / "fiche.css").read_text(encoding="utf-8").replace("FONTS", str(ICI / "fonts"))
