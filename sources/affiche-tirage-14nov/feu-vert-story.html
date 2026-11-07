@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>Tirage SODAF · samedi 14 novembre · Feu vert</title>
+<style>
+@font-face{font-family:"Outfit";src:url(Outfit.ttf)}
+@font-face{font-family:"Figtree";src:url(Figtree.ttf)}
+@page{size:210mm 297mm;margin:0}
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--noir:#0B0C0E;--noir2:#141519;--trait:#26282E;--vert:#35D07F;--vert2:#7CF0B0;--gris:#9DA1AB;--blanc:#F6F7F8;--rouge:#FF5A5F;--u:1px}
+body{background:var(--noir)}
+.p{position:relative;overflow:hidden;color:var(--blanc);font-family:"Figtree",sans-serif;
+  background:
+    radial-gradient(60% 38% at 18% 40%,rgba(53,208,127,.16),transparent 70%),
+    radial-gradient(80% 50% at 90% 0%,rgba(255,255,255,.05),transparent 60%),
+    linear-gradient(180deg,#0E1012 0%,var(--noir) 60%)}
+/* fine grille technique */
+.p::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:calc(32 * var(--u)) calc(32 * var(--u));mask-image:linear-gradient(180deg,#000 0%,transparent 70%);pointer-events:none}
+.in{position:relative;height:100%;display:flex;flex-direction:column}
+.top{display:flex;justify-content:space-between;align-items:center}
+.top img{height:calc(34 * var(--u));width:auto;display:block}
+.tag{display:flex;align-items:center;gap:calc(8 * var(--u));font:700 calc(12 * var(--u))/1 "Outfit";letter-spacing:.2em;text-transform:uppercase;color:var(--vert);border:1.5px solid rgba(53,208,127,.55);padding:calc(9 * var(--u)) calc(14 * var(--u));border-radius:999px}
+.tag i{width:calc(7 * var(--u));height:calc(7 * var(--u));border-radius:50%;background:var(--vert);box-shadow:0 0 calc(8 * var(--u)) var(--vert)}
+/* héros */
+.hero{display:grid;grid-template-columns:calc(132 * var(--u)) 1fr;gap:calc(40 * var(--u));align-items:center}
+.feu{position:relative;justify-self:center}
+.boite{position:relative;width:calc(124 * var(--u));padding:calc(13 * var(--u)) calc(12 * var(--u));border-radius:calc(26 * var(--u));
+  background:linear-gradient(180deg,#24262C,#16171B 60%,#111215);box-shadow:inset 0 0 0 calc(2 * var(--u)) #2E3037,inset 0 calc(2 * var(--u)) 0 rgba(255,255,255,.06),0 calc(30 * var(--u)) calc(60 * var(--u)) rgba(0,0,0,.6);display:flex;flex-direction:column;gap:calc(12 * var(--u))}
+.lum{position:relative;width:calc(100 * var(--u));height:calc(100 * var(--u));border-radius:50%;background:#1A1B1F;box-shadow:inset 0 calc(4 * var(--u)) calc(10 * var(--u)) rgba(0,0,0,.8)}
+.lum::before{content:"";position:absolute;left:calc(-4 * var(--u));right:calc(-4 * var(--u));top:calc(-4 * var(--u));bottom:calc(-4 * var(--u));border-radius:50%;border:calc(3 * var(--u)) solid #2C2E35;border-bottom-color:transparent;border-left-color:transparent;transform:rotate(-45deg)}
+.lum::after{content:"";position:absolute;inset:calc(9 * var(--u));border-radius:50%}
+.lum.r::after{background:radial-gradient(circle at 40% 35%,#4A1C1E,#2A1012 70%)}
+.lum.o::after{background:radial-gradient(circle at 40% 35%,#4A3A14,#2A210B 70%)}
+.lum.v::after{background:radial-gradient(circle at 42% 36%,#D9FFE9 0%,var(--vert2) 18%,var(--vert) 48%,#1F9A5A 100%);box-shadow:0 0 calc(24 * var(--u)) rgba(53,208,127,.9),0 0 calc(70 * var(--u)) rgba(53,208,127,.55),0 0 calc(140 * var(--u)) rgba(53,208,127,.3)}
+.mat{width:calc(22 * var(--u));height:calc(34 * var(--u));margin:0 auto;background:linear-gradient(90deg,#15161A,#2A2C32 50%,#15161A);mask-image:linear-gradient(180deg,#000,transparent)}
+.txt .k{font:700 calc(15 * var(--u))/1 "Outfit";letter-spacing:.24em;text-transform:uppercase;color:var(--vert)}
+.txt h1{margin-top:calc(14 * var(--u));font:900 calc(70 * var(--u))/.92 "Outfit";letter-spacing:-.025em;white-space:nowrap}
+.txt h1 span{display:block}
+.quand{margin-top:calc(22 * var(--u));display:flex;align-items:stretch;border:1px solid var(--trait);border-radius:calc(14 * var(--u));overflow:hidden;width:max-content}
+.quand div{padding:calc(12 * var(--u)) calc(18 * var(--u))}
+.quand div+div{border-left:1px solid var(--trait)}
+.quand small{display:block;font:600 calc(11 * var(--u))/1 "Outfit";letter-spacing:.18em;text-transform:uppercase;color:var(--gris)}
+.quand b{display:block;margin-top:calc(6 * var(--u));font:800 calc(26 * var(--u))/1 "Outfit"}
+.quand .h{background:var(--vert);color:#06140C}.quand .h small{color:#0B3B22}
+/* offre */
+.offre{border-top:1px solid var(--trait);padding-top:calc(22 * var(--u))}
+.offre p.a{font:700 calc(26 * var(--u))/1.15 "Outfit"}
+.offre .prix{display:flex;align-items:baseline;gap:calc(18 * var(--u));margin-top:calc(4 * var(--u))}
+.offre .prix b{font:900 calc(74 * var(--u))/1 "Outfit";letter-spacing:-.03em;color:var(--vert);text-shadow:0 0 calc(30 * var(--u)) rgba(53,208,127,.25)}
+.offre .prix span{font:600 calc(17 * var(--u))/1.35 "Figtree";color:var(--gris)}
+.offre .prix s{color:var(--blanc);text-decoration-color:var(--rouge);text-decoration-thickness:2px}
+.lots{margin-top:calc(18 * var(--u));display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--trait);border-radius:calc(14 * var(--u));background:rgba(255,255,255,.02)}
+.lots div{padding:calc(11 * var(--u)) calc(13 * var(--u));font:600 calc(14 * var(--u))/1.3 "Figtree"}
+.lots div+div{border-left:1px solid var(--trait)}
+.lots svg{display:block;width:calc(18 * var(--u));height:calc(18 * var(--u));margin-bottom:calc(7 * var(--u))}
+/* inscription */
+.ins{display:grid;grid-template-columns:auto 1fr;gap:calc(26 * var(--u));align-items:center;background:linear-gradient(135deg,#3BDA88,#2BBF71);color:#05120A;border-radius:calc(22 * var(--u));padding:calc(16 * var(--u)) calc(26 * var(--u)) calc(16 * var(--u)) calc(16 * var(--u));box-shadow:0 calc(20 * var(--u)) calc(50 * var(--u)) rgba(53,208,127,.18)}
+.ins .qr{background:#fff;border-radius:calc(14 * var(--u));padding:calc(11 * var(--u))}
+.ins .qr img{display:block}
+.ins .qr small{display:block;text-align:center;margin-top:calc(6 * var(--u));font:800 calc(10 * var(--u))/1 "Outfit";letter-spacing:.18em;text-transform:uppercase;color:#0B0C0E}
+.ins h2{font:900 calc(32 * var(--u))/1 "Outfit";letter-spacing:-.01em}
+.ins .url{margin-top:calc(8 * var(--u));display:inline-block;font:800 calc(19 * var(--u))/1 "Outfit";background:#05120A;color:var(--vert2);padding:calc(8 * var(--u)) calc(12 * var(--u));border-radius:calc(8 * var(--u))}
+.ins ol{margin-top:calc(12 * var(--u));list-style:none;display:flex;flex-direction:column;gap:calc(5 * var(--u));font:600 calc(15 * var(--u))/1.3 "Figtree"}
+.ins ol b{display:inline-grid;place-items:center;width:calc(19 * var(--u));height:calc(19 * var(--u));border-radius:50%;background:#05120A;color:var(--vert);font:800 calc(11 * var(--u))/1 "Outfit";margin-right:calc(8 * var(--u));vertical-align:1px}
+.cond{font:500 calc(13 * var(--u))/1.55 "Figtree";color:var(--gris)}
+.cond b{color:var(--blanc);font-weight:700}
+.foot{margin-top:auto;display:grid;grid-template-columns:auto 1fr auto;gap:calc(26 * var(--u));align-items:center;border-top:1px solid var(--trait);padding-top:calc(16 * var(--u));font:600 calc(13 * var(--u))/1.35 "Figtree";color:var(--gris)}
+.foot .c{display:flex;align-items:center;gap:calc(10 * var(--u))}
+.foot svg{flex:none;width:calc(30 * var(--u));height:calc(30 * var(--u))}
+.foot b{display:block;font:800 calc(19 * var(--u))/1.1 "Outfit";color:var(--blanc)}
+.foot .r{text-align:right}
+/* formats */
+.a4{width:794px;height:1123px;padding:42px 56px 30px;--u:1px}
+.a4 .in{gap:19px}
+.story{width:1080px;height:1920px;padding:96px 80px 72px;--u:1.36px}
+.story .in{gap:60px}
+.story .hero{grid-template-columns:1fr;justify-items:start;gap:56px}
+.story .hero .feu{justify-self:start}
+.story .feu{display:none}
+.story .lots{grid-template-columns:1fr 1fr}
+.story .lots div:nth-child(3){border-left:0}
+.story .lots div:nth-child(n+3){border-top:1px solid var(--trait)}
+.story .txt h1{font-size:calc(96 * var(--u))}
+.story .lots div{display:flex;align-items:center;gap:calc(10 * var(--u))}.story .lots svg{margin:0}
+.story .foot{grid-template-columns:1fr 1fr}.story .foot .r{display:none}.story .foot b{white-space:nowrap}
+.story .offre .prix b{font-size:calc(88 * var(--u))}
+.story .hfeu{display:flex}
+.hfeu{display:none;gap:calc(14 * var(--u));margin-bottom:calc(30 * var(--u))}
+.hfeu i{width:calc(54 * var(--u));height:calc(54 * var(--u));border-radius:50%;background:#1E1F24;box-shadow:inset 0 0 0 calc(2 * var(--u)) #2E3037}
+.hfeu i.v{background:radial-gradient(circle at 42% 36%,#D9FFE9,var(--vert2) 18%,var(--vert) 50%,#1F9A5A);box-shadow:0 0 calc(24 * var(--u)) rgba(53,208,127,.9),0 0 calc(60 * var(--u)) rgba(53,208,127,.5)}
+</style></head><body><div class="p story"><div class="in">
+<div class="top"><img src="logo.svg" alt="SODAF"><span class="tag"><i></i>Tirage au sort étudiant</span></div>
+<div class="hero">
+ <div class="feu"><div class="boite"><div class="lum r"></div><div class="lum o"></div><div class="lum v"></div></div><div class="mat"></div></div>
+ <div class="txt"><div class="hfeu"><i></i><i></i><i class="v"></i></div><p class="k">Feu vert pour ton permis</p><h1><span>Samedi</span><span>14 novembre</span></h1>
+  <div class="quand"><div class="h"><small>Tirage</small><b>20 h</b></div><div><small>Lieu</small><b>À l'agence SODAF</b></div><div><small>Gagnants</small><b>2</b></div></div></div>
+</div>
+<div class="offre"><p class="a">2 étudiants gagnent leur permis à</p><div class="prix"><b>15&nbsp;000&nbsp;F</b><span>au lieu de <s>60&nbsp;000&nbsp;F</s><br>inscription comprise</span></div>
+<div class="lots"><div><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="10" fill="#35D07F"/><path d="M5.5 10.3l3 3 6-6.3" stroke="#06140C" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Inscription offerte</div><div><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="10" fill="#35D07F"/><path d="M5.5 10.3l3 3 6-6.3" stroke="#06140C" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Une séance de conduite en plus</div><div><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="10" fill="#35D07F"/><path d="M5.5 10.3l3 3 6-6.3" stroke="#06140C" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Le t-shirt SODAF</div><div><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="10" fill="#35D07F"/><path d="M5.5 10.3l3 3 6-6.3" stroke="#06140C" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Priorité sur les horaires</div></div></div>
+<div class="ins"><div class="qr"><img src="qr.svg" alt="QR code autosodaf.com/#tirage" style="width:190px;height:190px"><small>Scanne</small></div>
+<div><h2>Inscris-toi gratuitement</h2><span class="url">autosodaf.com/#tirage</span>
+<ol><li><b>1</b>Tes nom, université et numéro WhatsApp</li><li><b>2</b>La photo de ta carte d'étudiant</li><li><b>3</b>Avant le vendredi 13 novembre à minuit</li></ol></div></div>
+<p class="cond"><b>Étudiants de 18 ans et plus</b>, une participation par numéro. Tirage filmé à l'agence, vidéo publiée le soir même sur TikTok <b>@autoecole.sodaf.tg</b>.</p>
+<div class="foot"><div class="c"><svg viewBox="0 0 30 30"><rect width="30" height="30" rx="9" fill="#1B1D22"/><path d="M11.2 8.5l2 3.3-1.5 1.6a9.5 9.5 0 0 0 4.9 4.9l1.6-1.5 3.3 2-1 2.6c-6.6.4-12.3-5.3-11.9-11.9z" fill="#35D07F"/></svg><div><b>72 54 41 66</b>Appel et WhatsApp</div></div><div class="c"><svg viewBox="0 0 30 30"><rect width="30" height="30" rx="9" fill="#1B1D22"/><path d="M15 7.5a5.6 5.6 0 0 0-5.6 5.6c0 4.2 5.6 9.4 5.6 9.4s5.6-5.2 5.6-9.4A5.6 5.6 0 0 0 15 7.5zm0 7.6a2 2 0 1 1 0-4 2 2 0 0 1 0 4z" fill="#35D07F"/></svg><div><b>412 Avenue Akei, Tokoin Tamé</b>En face de la caisse, Lomé</div></div><div class="r"><b>SODAF Auto-École</b>autosodaf.com</div></div>
+</div></div></body></html>
