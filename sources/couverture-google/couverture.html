@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>SODAF · couverture Google</title>
+<style>
+@font-face{font-family:"Outfit";src:url(../affiche-tirage-14nov/Outfit.ttf)}
+@font-face{font-family:"Figtree";src:url(../affiche-tirage-14nov/Figtree.ttf)}
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--noir:#0B0C0E;--trait:#26282E;--vert:#35D07F;--vert2:#7CF0B0;--gris:#A3A8B2;--blanc:#F6F7F8}
+body{background:var(--noir)}
+.c{position:relative;width:1600px;height:900px;overflow:hidden;color:var(--blanc);font-family:Figtree;
+ background:radial-gradient(50% 70% at 30% 45%,rgba(53,208,127,.20),transparent 70%),radial-gradient(60% 60% at 90% 10%,rgba(255,255,255,.05),transparent 60%),linear-gradient(180deg,#0F1113,var(--noir))}
+.c::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:40px 40px;mask-image:radial-gradient(70% 80% at 50% 40%,#000,transparent)}
+/* route en perspective */
+.route{position:absolute;left:50%;bottom:-60px;width:2600px;height:560px;-webkit-mask-image:linear-gradient(0deg,#000 30%,transparent 95%);mask-image:linear-gradient(0deg,#000 30%,transparent 95%);transform:translateX(-50%) perspective(420px) rotateX(58deg);transform-origin:50% 100%;
+ background:linear-gradient(90deg,transparent 0 34%,#17191D 34% 66%,transparent 66%);opacity:.9}
+.route::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:16px;transform:translateX(-50%);background:repeating-linear-gradient(180deg,var(--vert) 0 46px,transparent 46px 92px);opacity:.85;box-shadow:0 0 18px rgba(53,208,127,.5)}
+.route::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 34%,rgba(255,255,255,.45) 34.2%,transparent 34.4%,transparent 65.6%,rgba(255,255,255,.45) 65.8%,transparent 66%)}
+.fade{position:absolute;left:0;right:0;bottom:0;height:420px;background:linear-gradient(180deg,var(--noir) 0%,transparent 45%)}
+/* feu */
+.feu{position:absolute;left:250px;top:150px}
+.boite{width:168px;padding:16px 15px;border-radius:34px;background:linear-gradient(180deg,#25272D,#16171B 60%,#111215);box-shadow:inset 0 0 0 2px #2F3138,inset 0 2px 0 rgba(255,255,255,.07),0 40px 80px rgba(0,0,0,.7);display:flex;flex-direction:column;gap:15px}
+.lum{position:relative;width:138px;height:138px;border-radius:50%;background:#1A1B1F;box-shadow:inset 0 5px 12px rgba(0,0,0,.85)}
+.lum::before{content:"";position:absolute;inset:-5px;border-radius:50%;border:3px solid #2C2E35;border-bottom-color:transparent;border-left-color:transparent;transform:rotate(-45deg)}
+.lum::after{content:"";position:absolute;inset:11px;border-radius:50%}
+.lum.r::after{background:radial-gradient(circle at 40% 35%,#4A1C1E,#2A1012 70%)}
+.lum.o::after{background:radial-gradient(circle at 40% 35%,#4A3A14,#2A210B 70%)}
+.lum.v::after{background:radial-gradient(circle at 42% 36%,#E2FFEF 0%,var(--vert2) 18%,var(--vert) 48%,#1F9A5A 100%);box-shadow:0 0 30px rgba(53,208,127,.95),0 0 90px rgba(53,208,127,.6),0 0 180px rgba(53,208,127,.35)}
+.mat{width:26px;height:120px;margin:0 auto;background:linear-gradient(90deg,#15161A,#2C2E34 50%,#15161A);mask-image:linear-gradient(180deg,#000,transparent)}
+/* texte */
+.txt{position:absolute;left:530px;top:150px;right:120px}
+.logo{height:46px;display:block}
+.k{margin-top:34px;font:700 20px/1 Outfit;letter-spacing:.26em;text-transform:uppercase;color:var(--vert)}
+h1{margin-top:16px;font:900 104px/.92 Outfit;letter-spacing:-.03em}
+h1 b{color:var(--vert);text-shadow:0 0 40px rgba(53,208,127,.35)}
+.sub{margin-top:22px;font:600 26px/1.35 Figtree;color:var(--gris)}
+.sub b{color:var(--blanc)}
+.pts{margin-top:30px;display:flex;gap:12px;flex-wrap:wrap}
+.pts span{display:flex;align-items:center;gap:10px;font:700 19px/1 Figtree;padding:13px 18px;border-radius:999px;border:1.5px solid #2E3138;background:rgba(255,255,255,.035)}
+.pts i{width:9px;height:9px;border-radius:50%;background:var(--vert);box-shadow:0 0 10px var(--vert)}
+.tel{position:absolute;right:120px;bottom:70px;text-align:right;font:600 18px/1.3 Figtree;color:var(--gris)}
+.tel b{display:block;font:800 34px/1.1 Outfit;color:var(--blanc)}
+</style></head><body>
+<div class="c">
+ <div class="route"></div>
+ <div class="feu"><div class="boite"><div class="lum r"></div><div class="lum o"></div><div class="lum v"></div></div><div class="mat"></div></div>
+ <div class="txt">
+  <img class="logo" src="../affiche-tirage-14nov/logo.svg" alt="SODAF">
+  <p class="k">Auto-école · Lomé</p>
+  <h1>Feu vert pour<br>ton <b>permis.</b></h1>
+  <p class="sub">Code en salle et en ligne, conduite à ton rythme.<br><b>412 Avenue Akei, Tokoin Tamé</b>, en face de la caisse.</p>
+  <div class="pts"><span><i></i>6 élèves maximum en salle</span><span><i></i>4 maximum par voiture</span><span><i></i>Code l'après-midi ou le soir</span></div>
+ </div>
+ <div class="tel"><b>72 54 41 66</b>Appel et WhatsApp · autosodaf.com</div>
+</div>
+</body></html>
