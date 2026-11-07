@@ -6526,7 +6526,7 @@ function init(root) {
         const kc = (j) => { const q = qui(j); return q.length === 1 ? " k-" + q[0].toLowerCase() : ""; }, moiK = mj ? String(me.nom || "").replace(/\s*SODAF\s*/i, "").trim().split(/\s+/)[0].toLowerCase() : "";
         const sem = [1, 2, 3, 4, 5, 6].map((j) => { const on = mj ? mj.includes(j) : qui(j).length > 0, q = qui(j); return '<div class="ams-d' + (on ? " on" + kc(j) : "") + (j === 6 ? " sam" : "") + (j === auj.getDay() ? " auj" : "") + '"><b>' + cap(JNOMS[j]).slice(0, 3) + "</b><small>" + (j === 6 ? "tirage" : mj ? (on ? "agence" : "") : q.join(" ")) + "</small></div>"; }).join("");
         const titre = mj ? '<span class="ams-k">Tes jours à l\'agence</span><p class="ams-h">' + cap(JNOMS[mj[0]]) + " et " + JNOMS[mj[1]] + "</p>"
-          : '<span class="ams-k">Les ambassadeurs à l\'agence</span><p class="ams-h"><span class="k-christian">Christian</span> et <span class="k-patrick">Patrick</span></p>';
+          : '<span class="ams-k">Les ambassadeurs à l\'agence</span><p class="ams-h ams-hq"><span class="k-christian">Christian</span><i>/</i><em>lundi, mercredi</em></p><p class="ams-h ams-hq"><span class="k-patrick">Patrick</span><i>/</i><em>mardi, jeudi</em></p>';
         const nxt = n === 0 ? "<small>Aujourd'hui</small><b>À l'agence</b><span>" + (mj ? "Pub auprès des passants" : qui(d.getDay()).join(" et ")) + "</span>"
           : "<small>Prochain jour</small><b>" + cap(d.toLocaleDateString("fr-FR", { weekday: "long" })) + "</b><span>" + d.toLocaleDateString("fr-FR", { day: "numeric", month: "long" }) + (n === 1 ? " · demain" : "") + (mj ? "" : " · " + qui(d.getDay()).join(" et ")) + "</span>";
         $("#sd-amSortie").innerHTML = '<div class="ams' + (moiK ? " k-" + moiK : "") + '"><div class="ams-l">' + titre + '<div class="ams-w">' + sem + '</div><p class="ams-p">Ces jours-là : la pub auprès des gens qui passent (flyers, QR code, renseignements). Le samedi, seulement le jour du tirage.</p></div><div class="ams-r' + (mj ? "" : kc(d.getDay())) + '">' + nxt + "</div></div>";
@@ -9364,6 +9364,7 @@ a.tf-pc{text-decoration:none;color:inherit}.tf-pjf .cf-pick{margin-bottom:6px}.t
 .ams-k{display:block;color:#8A93A3;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
 .ams-h{margin:6px 0 0!important;font-size:clamp(24px,4.2vw,34px)!important;font-weight:900!important;line-height:1.05;color:#fff!important}
 .ams.k-christian .ams-h,.ams.k-patrick .ams-h,.ams-h span{color:var(--c)}
+.ams-hq{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;font-size:clamp(22px,3.4vw,28px)!important}.ams-hq+.ams-hq{margin-top:2px!important}.ams-hq i{font-style:normal;font-weight:400;color:#4A5160}.ams-hq em{font-style:normal;font-weight:600;font-size:.72em;color:#E8EAEE}
 .ams-w{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;margin-top:16px;max-width:520px}
 .ams-d{position:relative;border-radius:11px;padding:9px 4px 8px;text-align:center;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#7D8594}
 .ams-d b{display:block;font-size:13px;font-weight:800}
