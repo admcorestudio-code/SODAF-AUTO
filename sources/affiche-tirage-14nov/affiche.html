@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>Tirage SODAF · samedi 14 novembre</title>
+<style>
+@font-face{font-family:"Outfit";src:url(Outfit.ttf)}
+@font-face{font-family:"Figtree";src:url(Figtree.ttf)}
+:root{--nuit:#0B1530;--nuit2:#13224A;--or:#F5B700;--or2:#FFD45C;--rouge:#D7263D;--blanc:#FFFFFF;--gris:#B9C2D8}
+@page{size:210mm 297mm;margin:0}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--nuit)}
+.page{position:relative;overflow:hidden;color:var(--blanc);font-family:"Figtree",sans-serif;
+  background:radial-gradient(120% 70% at 50% 18%,#22366E 0%,var(--nuit2) 38%,var(--nuit) 75%)}
+/* rayons de lumière et pointillés de route */
+.page::before{content:"";position:absolute;inset:0;background:repeating-conic-gradient(from 0deg at 50% 26%,rgba(255,255,255,.035) 0 6deg,transparent 6deg 18deg);pointer-events:none}
+.route{position:absolute;left:0;right:0;height:10px;background:repeating-linear-gradient(90deg,var(--or) 0 46px,transparent 46px 78px);opacity:.9}
+.top{display:flex;justify-content:space-between;align-items:center;position:relative}
+.logo{display:block}
+.pill{font:700 13px/1 "Outfit";letter-spacing:.14em;text-transform:uppercase;color:var(--nuit);background:var(--or);padding:9px 14px;border-radius:999px}
+.kick{position:relative;font:600 15px/1.2 "Outfit";letter-spacing:.2em;text-transform:uppercase;color:var(--or2);text-align:center}
+.cal{position:relative;margin:0 auto;background:var(--blanc);color:var(--nuit);border-radius:22px;box-shadow:0 24px 60px rgba(0,0,0,.45),0 0 0 6px rgba(245,183,0,.35);overflow:visible;text-align:center}
+.cal .mois{background:var(--rouge);color:var(--blanc);font:800 30px/1 "Outfit";letter-spacing:.16em;text-transform:uppercase;padding:20px 0 18px;border-radius:22px 22px 0 0}
+.cal .anneau{position:absolute;top:-16px;width:18px;height:40px;border-radius:9px;background:linear-gradient(#E8ECF5,#9AA6C2);box-shadow:inset 0 -3px 0 rgba(0,0,0,.2)}
+.cal .jour{font:900 210px/0.86 "Outfit";letter-spacing:-.04em;padding-top:18px}
+.cal .sam{font:800 34px/1 "Outfit";letter-spacing:.12em;text-transform:uppercase;padding:6px 0 0}
+.cal .h{display:inline-block;margin:16px 0 22px;font:800 30px/1 "Outfit";background:var(--nuit);color:var(--or);padding:10px 22px;border-radius:12px}
+.gain{position:relative;text-align:center}
+.gain h1{font:900 46px/1.02 "Outfit";letter-spacing:-.01em}
+.gain h1 b{color:var(--or)}
+.gain p{margin-top:10px;font:600 22px/1.2 "Figtree";color:var(--gris)}
+.gain p s{color:var(--blanc);text-decoration-color:var(--rouge);text-decoration-thickness:3px}
+.lots{position:relative;display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+.lots span{font:700 16px/1 "Figtree";border:1.5px solid rgba(245,183,0,.6);color:var(--blanc);padding:10px 14px;border-radius:999px;background:rgba(255,255,255,.04)}
+.ins{position:relative;display:flex;align-items:center;gap:22px;background:var(--or);color:var(--nuit);border-radius:20px;padding:18px 22px}
+.ins .qr{flex:none;background:var(--blanc);padding:10px;border-radius:12px}
+.ins .qr img{display:block}
+.ins h2{font:900 30px/1.02 "Outfit"}
+.ins .url{margin-top:6px;font:800 21px/1.1 "Outfit"}
+.ins .av{margin-top:8px;font:600 17px/1.3 "Figtree"}
+.cond{position:relative;text-align:center;font:500 14.5px/1.45 "Figtree";color:var(--gris)}
+.cond b{color:var(--blanc);font-weight:700}
+.foot{position:relative;display:flex;justify-content:space-between;align-items:center;font:600 15px/1.3 "Figtree";color:var(--blanc);border-top:1px solid rgba(255,255,255,.18)}
+.foot .tel{font:800 22px/1 "Outfit";color:var(--or)}
+.foot .tel small{display:block;font:600 12px/1.3 "Figtree";color:var(--gris);letter-spacing:.04em}
+.foot .adr{text-align:right}
+/* A4 */
+.a4{width:794px;height:1123px;padding:40px 52px 30px;display:flex;flex-direction:column;gap:18px}
+.a4 .route{top:0}
+.a4 .cal{width:300px;margin-top:16px}.a4 .cal .jour{font-size:170px}.a4 .cal .mois{font-size:26px;padding:16px 0 14px}.a4 .cal .sam{font-size:30px}.a4 .cal .h{font-size:26px;margin:12px 0 18px}
+.a4 .gain h1{font-size:42px}.a4 .gain p{font-size:20px;margin-top:6px}.a4 .lots span{font-size:15px;padding:9px 13px}.a4 .ins{padding:16px 20px}
+.a4 .cal .anneau.g{left:46px}.a4 .cal .anneau.d{right:46px}
+.a4 .foot{margin-top:auto;padding-top:16px}
+/* Statut WhatsApp 1080 × 1920 */
+.story{width:1080px;height:1920px;padding:90px 80px 70px;display:flex;flex-direction:column;gap:42px}
+.story .logo{height:58px;width:auto}
+.story .pill{font-size:20px;padding:13px 20px}
+.story .route{top:0;height:14px}
+.story .kick{font-size:24px;margin-top:20px}
+.story .cal{width:520px}
+.story .cal .mois{font-size:44px;padding:28px 0 26px}
+.story .cal .anneau{width:24px;height:54px;top:-22px}.story .cal .anneau.g{left:80px}.story .cal .anneau.d{right:80px}
+.story .cal .jour{font-size:320px;padding-top:26px}
+.story .cal .sam{font-size:50px}
+.story .cal .h{font-size:44px;padding:14px 32px;margin:22px 0 32px}
+.story .gain h1{font-size:72px}
+.story .gain p{font-size:32px}
+.story .lots span{font-size:24px;padding:14px 20px}
+.story .lots{gap:14px}
+.story .ins{padding:28px 32px;gap:32px;border-radius:28px}
+.story .ins h2{font-size:44px}.story .ins .url{font-size:31px}.story .ins .av{font-size:25px}
+.story .cond{font-size:22px}
+.story .foot{margin-top:auto;padding-top:24px;font-size:22px}.story .foot .tel{font-size:34px}.story .foot .tel small{font-size:18px}
+</style></head>
+<body>
+<!--PAGE-->
+</body></html>
