@@ -32,7 +32,7 @@ def page1():
 <h1>Ton assistant pour les affiches, les vidéos et les textes</h1>
 <p class="intro">{e("Claude t'aide à écrire vite et bien : le texte d'une affiche, le script d'une vidéo, une réponse à un commentaire. **Toi**, tu crées dans Canva, tu filmes, tu montes dans CapCut, et tu fais valider par la direction.")}</p>
 <div class="sec"><h3>1 · Ton compte</h3><ol class="st">
-<li><i>1</i><p>{e("Va sur **claude.ai** (ou l'appli **Claude** sur le téléphone ou la tablette).")}</p></li>
+<li><i>1</i><p>{e("Va sur **claude.ai** (ou l'appli **Claude** sur ton téléphone).")}</p></li>
 <li><i>2</i><p>{e("Crée ton compte avec **ton propre Gmail**. C'est **gratuit**.")}</p></li>
 <li><i>3</i><p>{e("Sur le PC de l'agence : connecte-le dans **ton** profil Chrome (Christian ou Patrick).")}</p></li>
 <li><i>4</i><p>{e("Message « limite atteinte » : attends quelques heures. Si ça arrive souvent, dis-le à la direction.")}</p></li></ol></div>
