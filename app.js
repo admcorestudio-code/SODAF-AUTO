@@ -6524,12 +6524,11 @@ function init(root) {
         const qui = (j) => Object.keys(AMB_JOURS).filter((k) => AMB_JOURS[k].includes(j)).map((k) => k[0].toUpperCase() + k.slice(1));
         const cap = (t) => t[0].toUpperCase() + t.slice(1);
         const kc = (j) => { const q = qui(j); return q.length === 1 ? " k-" + q[0].toLowerCase() : ""; }, moiK = mj ? String(me.nom || "").replace(/\s*SODAF\s*/i, "").trim().split(/\s+/)[0].toLowerCase() : "";
-        const sem = [1, 2, 3, 4, 5, 6].map((j) => { const on = mj ? mj.includes(j) : qui(j).length > 0, q = qui(j); return '<div class="ams-d' + (on ? " on" + kc(j) : "") + (j === 6 ? " sam" : "") + (j === auj.getDay() ? " auj" : "") + '"><b>' + cap(JNOMS[j]).slice(0, 3) + "</b><small>" + (j === 6 ? "tirage" : mj ? (on ? "agence" : "") : q.join(" ")) + "</small></div>"; }).join("");
         const titre = mj ? '<span class="ams-k">Tes jours à l\'agence</span><p class="ams-h">' + cap(JNOMS[mj[0]]) + " et " + JNOMS[mj[1]] + "</p>"
           : '<span class="ams-k">Les ambassadeurs à l\'agence</span><p class="ams-h ams-hq"><span class="k-christian">Christian</span><i>/</i><em>lundi, mercredi</em></p><p class="ams-h ams-hq"><span class="k-patrick">Patrick</span><i>/</i><em>mardi, jeudi</em></p>';
         const nxt = n === 0 ? "<small>Aujourd'hui</small><b>À l'agence</b><span>" + (mj ? "Pub auprès des passants" : qui(d.getDay()).join(" et ")) + "</span>"
           : "<small>Prochain jour</small><b>" + cap(d.toLocaleDateString("fr-FR", { weekday: "long" })) + "</b><span>" + d.toLocaleDateString("fr-FR", { day: "numeric", month: "long" }) + (n === 1 ? " · demain" : "") + (mj ? "" : " · " + qui(d.getDay()).join(" et ")) + "</span>";
-        $("#sd-amSortie").innerHTML = '<div class="ams' + (moiK ? " k-" + moiK : "") + '"><div class="ams-l">' + titre + '<div class="ams-w">' + sem + '</div><p class="ams-p">Ces jours-là : la pub auprès des gens qui passent (flyers, QR code, renseignements). Le samedi, seulement le jour du tirage.</p></div><div class="ams-r' + (mj ? "" : kc(d.getDay())) + '">' + nxt + "</div></div>";
+        $("#sd-amSortie").innerHTML = '<div class="ams' + (moiK ? " k-" + moiK : "") + '"><div class="ams-l">' + titre + '<p class="ams-p">Ces jours-là : la pub auprès des gens qui passent (flyers, QR code, renseignements). Le samedi, seulement le jour du tirage.</p></div><div class="ams-r' + (mj ? "" : kc(d.getDay())) + '">' + nxt + "</div></div>";
         $("#sd-amSortie").classList.toggle("today", n === 0); }
       if (!AM.ong) amOnglet(moi === "d" ? "digital" : "terrain"); else amOnglet(AM.ong);
     }
@@ -9365,13 +9364,6 @@ a.tf-pc{text-decoration:none;color:inherit}.tf-pjf .cf-pick{margin-bottom:6px}.t
 .ams-h{margin:6px 0 0!important;font-size:clamp(24px,4.2vw,34px)!important;font-weight:900!important;line-height:1.05;color:#fff!important}
 .ams.k-christian .ams-h,.ams.k-patrick .ams-h,.ams-h span{color:var(--c)}
 .ams-hq{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;font-size:clamp(22px,3.4vw,28px)!important}.ams-hq+.ams-hq{margin-top:2px!important}.ams-hq i{font-style:normal;font-weight:400;color:#4A5160}.ams-hq em{font-style:normal;font-weight:600;font-size:.72em;color:#E8EAEE}
-.ams-w{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;margin-top:16px;max-width:520px}
-.ams-d{position:relative;border-radius:11px;padding:9px 4px 8px;text-align:center;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#7D8594}
-.ams-d b{display:block;font-size:13px;font-weight:800}
-.ams-d small{display:block;font-size:10.5px;font-weight:600;min-height:13px;margin-top:2px}
-.ams .ams-d.on{background:var(--c);border-color:var(--c);color:#0B0D12;box-shadow:0 6px 16px -8px var(--c)}
-.ams-d.sam{border-style:dashed;border-color:rgba(255,255,255,.22);color:#B4BAC5}
-.ams-d.auj::after{content:"";position:absolute;left:50%;bottom:-8px;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:#fff}
 .ams-p{margin:16px 0 0!important;font-size:13.5px!important;color:#A9B0BC!important}
 .ams-r{--c:#15181E;min-width:176px;text-align:center;background:#fff;color:#15181E;border-radius:14px;padding:16px 18px;box-shadow:0 10px 24px -14px rgba(0,0,0,.8)}
 .ams-r.k-christian{--c:#0284C7}.ams-r.k-patrick{--c:#7C3AED}.ams.k-christian .ams-r{--c:#0284C7}.ams.k-patrick .ams-r{--c:#7C3AED}
@@ -9379,7 +9371,6 @@ a.tf-pc{text-decoration:none;color:inherit}.tf-pjf .cf-pick{margin-bottom:6px}.t
 .ams-r b{display:block;font-size:28px;font-weight:900;margin-top:4px;color:var(--c)}
 .ams-r span{display:block;font-size:13px;color:#4B5563;margin-top:2px}
 @media (max-width:620px){.ams{grid-template-columns:1fr}.ams-r{text-align:left}}
-@media (max-width:420px){.ams-w{gap:5px}.ams-d{padding:8px 1px 7px}.ams-d small{font-size:8.5px;letter-spacing:-.02em}}
 .pa-tot{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;background:#F3EBDA;border:1px solid #DFD0B0;border-radius:12px;padding:14px 16px;margin:0 0 10px}.pa-tot span{flex:1 1 100%;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#6B5A2E}.pa-tot b{font-size:28px;line-height:1.1}.pa-tot small{color:#6B5A2E}.pa-send{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 16px}.pa-send select{min-height:44px;border-radius:10px;padding:0 10px}
 .tr-ov{position:fixed;inset:0;z-index:200;background:#121519;display:grid;place-items:center;padding:24px;text-align:center}
 .tr-ov::after{content:"";position:absolute;left:0;right:0;bottom:40px;height:8px;background:repeating-linear-gradient(90deg,#F2B705 0 60px,transparent 60px 100px)}
