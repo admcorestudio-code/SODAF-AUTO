@@ -2515,7 +2515,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="tn-daytxt">
 <p class="cz-k2">Le jour J</p><h2>Comment ça se passe</h2>
 <ol class="tn-tl">
-<li><b>20 h</b><div><strong>Le tirage, à l'agence</strong><span>L'ordinateur fait défiler tous les inscrits du mois et s'arrête sur 2 noms, au hasard. Tout est filmé, en une seule prise.</span></div></li>
+<li><b>20 h</b><div><strong>Le tirage, filmé</strong><span>L'ordinateur fait défiler tous les inscrits du mois et s'arrête sur 2 noms, au hasard. Tout est filmé, en une seule prise.</span></div></li>
 <li><b>Juste après</b><div><strong>La vidéo sur TikTok</strong><span>Publiée sur le TikTok de SODAF (@autoecole.sodaf.tg). Abonne-toi pour voir les gagnants en premier.</span></div></li>
 <li><b>Après</b><div><strong>On t'appelle</strong><span>Si c'est toi, tu reçois l'appel et le message WhatsApp le soir même. Tu passes à l'agence sous 48 h avec ta carte d'étudiant.</span></div></li>
 </ol>
@@ -2580,13 +2580,13 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <details><summary>Comment je saurai si j'ai gagné ?</summary><p>Abonne-toi au TikTok de SODAF (@autoecole.sodaf.tg) : la vidéo du tirage y est publiée le premier samedi du mois, juste après le tirage de 20 h. Si tu gagnes, on t'appelle et on t'écrit aussi sur WhatsApp le soir même.</p></details>
 <details><summary>Je n'ai pas gagné. Je peux rejouer ?</summary><p>Oui, chaque mois. Les inscriptions pour le tirage suivant rouvrent le lendemain du tirage.</p></details>
 <details><summary>Pourquoi la photo de ma carte ?</summary><p>Le tirage est réservé aux étudiants. On vérifie la carte des gagnants avant d'annoncer leur nom. Si elle ne correspond pas, on tire un autre gagnant.</p></details>
-<details><summary>Le tirage est-il honnête ?</summary><p>Oui. L'ordinateur tire au hasard parmi tous les inscrits du mois. Le tirage est filmé à l'agence en une seule prise, sans coupure, et la vidéo est publiée sur le TikTok de SODAF.</p></details>
+<details><summary>Le tirage est-il honnête ?</summary><p>Oui. L'ordinateur tire au hasard parmi tous les inscrits du mois. Le tirage est filmé en une seule prise, sans coupure, et la vidéo est publiée sur le TikTok de SODAF.</p></details>
 </div>
 <details class="tir-rules"><summary>Règlement du tirage</summary><ol>
 <li>Le tirage est organisé chaque mois par SODAF Auto-École, 412 Avenue Akei, Tokoin Tamé, Lomé. La participation est gratuite et sans obligation d'achat.</li>
 <li>Il est réservé aux étudiants de 18 ans ou plus, inscrits dans une université ou une école pour l'année en cours.</li>
 <li>Inscriptions tous les jours, jusqu'à la veille du tirage à minuit. Une seule participation par numéro de téléphone et par mois.</li>
-<li>Le premier samedi de chaque mois à 20 h, 2 gagnants sont tirés au hasard par l'ordinateur, à l'agence. Le tirage est filmé et la vidéo est publiée sur le compte TikTok de SODAF.</li>
+<li>Le premier samedi de chaque mois à 20 h, 2 gagnants sont tirés au hasard par l'ordinateur. Le tirage est filmé et la vidéo est publiée sur le compte TikTok de SODAF.</li>
 <li>Chaque gagnant présente à l'agence, sous 48 h, sa carte d'étudiant de l'année et sa carte d'identité. Si les informations ne correspondent pas, ou sans nouvelles sous 48 h, un autre gagnant est tiré.</li>
 <li>Le lot : la formation complète permis B à 15 000 F au lieu de 55 000 F, l'inscription offerte (5 000 F), une séance de conduite en plus, un t-shirt SODAF et la priorité sur les horaires de conduite.</li>
 <li>Le lot est valable 3 mois. Il peut être cédé une fois à un proche de 18 ans ou plus sans permis, qui paie alors 30 000 F. Il ne peut pas être échangé contre de l'argent.</li>

@@ -13,14 +13,14 @@ def page(cls, qr):
 <div class="hero">
  <div class="feu"><div class="boite"><div class="lum r"></div><div class="lum o"></div><div class="lum v"></div></div><div class="mat"></div></div>
  <div class="txt"><div class="hfeu"><i></i><i></i><i class="v"></i></div><p class="k">Feu vert pour ton permis</p><h1><span>Samedi</span><span>14 novembre</span></h1>
-  <div class="quand"><div class="h"><small>Tirage</small><b>20 h</b></div><div><small>Lieu</small><b>À l'agence SODAF</b></div><div><small>Gagnants</small><b>2</b></div></div></div>
+  <div class="quand"><div class="h"><small>Tirage</small><b>20 h</b></div><div><small>Résultat</small><b>Sur notre TikTok</b></div><div><small>Gagnants</small><b>2</b></div></div></div>
 </div>
 <div class="offre"><p class="a">2 étudiants gagnent leur permis à</p><div class="prix"><b>15&nbsp;000&nbsp;F</b><span>au lieu de <s>60&nbsp;000&nbsp;F</s><br>inscription comprise</span></div>
 <div class="lots">{lots}</div></div>
 <div class="ins"><div class="qr"><img src="qr.svg" alt="QR code autosodaf.com/#tirage" style="width:{qr}px;height:{qr}px"><small>Scanne</small></div>
 <div><h2>Inscris-toi gratuitement</h2><span class="url">autosodaf.com/#tirage</span>
 <ol><li><b>1</b>Tes nom, université et numéro WhatsApp</li><li><b>2</b>La photo de ta carte d'étudiant</li><li><b>3</b>Avant le vendredi 13 novembre à minuit</li></ol></div></div>
-<p class="cond"><b>Étudiants de 18 ans et plus</b>, une participation par numéro. Tirage filmé à l'agence, vidéo publiée le soir même sur TikTok <b>@autoecole.sodaf.tg</b>.</p>
+<p class="cond"><b>Étudiants de 18 ans et plus</b>, une participation par numéro. Le tirage est filmé : la vidéo et les 2 gagnants sont publiés le soir même sur notre TikTok <b>@autoecole.sodaf.tg</b>. Abonne-toi pour ne rien rater.</p>
 <div class="foot"><div class="c">{TEL}<div><b>72 54 41 66</b>Appel et WhatsApp</div></div><div class="c">{LIEU}<div><b>412 Avenue Akei, Tokoin Tamé</b>En face de la caisse, Lomé</div></div><div class="r"><b>SODAF Auto-École</b>autosodaf.com</div></div>
 </div></div>'''
 
