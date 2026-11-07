@@ -98,7 +98,7 @@ SEC = page("Secrétariat", "Le secrétariat, étape par étape",
     "**Étudiant** : carte d'étudiant de l'année + carte d'identité. Sinon, tarif normal.",
     "**Corps habillés** : même prix que tout le monde. Conseille gentiment de venir en civil si possible (pas obligé).",
     "**Formation privée** : 85 000 F, 1 h seul avec le moniteur, code en particulier.",
-    "**Dimanche** (seulement s'il ne peut venir que ce jour-là) : **formation complète ou privée** uniquement. Groupe H au code (14 h 30 et 18 h) et conduite. On ne l'annonce pas.",
+    "**Dimanche** (seulement s'il ne peut venir que ce jour-là) : **formation complète ou privée** uniquement. Groupe F au code (14 h 30 et 18 h) et conduite. On ne l'annonce pas.",
   ]),
   prix() + regle(REGLES))
 
@@ -151,7 +151,7 @@ MON = page("Moniteur", "Le moniteur, sur son téléphone",
   ]) +
   lignes("Les horaires du code", [
     ("Groupe A", "lundi et jeudi, 14 h 30"), ("Groupe B", "mardi et vendredi, 14 h 30"), ("Groupe C", "mercredi, 14 h 30 (1er cours) et 18 h (2e cours)"),
-    ("Groupe F", "lundi et jeudi, 18 h (soir)"), ("Groupe G", "mardi et vendredi, 18 h (soir)"),
+    ("Groupe D", "lundi et jeudi, 18 h (soir)"), ("Groupe E", "mardi et vendredi, 18 h (soir)"),
   ]) +
   puces("Essence et voiture", [
     "**Ajouter un plein** : montant, compteur, photo du compteur. Toi seul ajoutes les pleins.",
@@ -180,7 +180,7 @@ MON = page("Moniteur", "Le moniteur, sur son téléphone",
     ("10 h – 12 h", ["Conduite"] * 6),
     ("14 h 30", ["Code · groupe A", "Code · groupe B", "Code · groupe C (1er cours)", "Code · groupe A", "Code · groupe B", "Voiture : contrôle et atelier"]),
     ("15 h 45 – 17 h 45", ["Conduite", "Conduite", "Conduite", "Conduite", "Conduite", "—"]),
-    ("18 h – 19 h", ["Code · groupe F", "Code · groupe G", "Code · groupe C (2e cours)", "Code · groupe F", "Code · groupe G", "—"]),
+    ("18 h – 19 h", ["Code · groupe D", "Code · groupe E", "Code · groupe C (2e cours)", "Code · groupe D", "Code · groupe E", "—"]),
   ], "Un groupe sans élève n'a pas cours : ta page Aujourd'hui montre seulement ce qui a lieu. Midi – 14 h 30 : repos.") +
   regle("**À retenir.** Note chaque cours et chaque séance **le jour même** : c'est ce qui permet de suivre les élèves. "
         "Messages : écris @ puis la personne, ou SO12 pour ouvrir la fiche d'un élève. Ton mot de passe ne se donne à personne."))
