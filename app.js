@@ -6518,13 +6518,18 @@ function init(root) {
           (me && me.role === "admin" && AM.ambs.length >= 2 ? '<button type="button" class="am-swb" data-amswap>Échanger cette semaine</button>' : "");
         sw.hidden = false; }
       box.innerHTML = h; box.hidden = !h; $$("[data-amme]").forEach((x) => { const id = R0[x.dataset.amme]; x.textContent = id ? amNom(id) : ""; x.hidden = !id; x.classList.toggle("am-me", !!(id && me && id === me.id)); }); // « Ton rôle » pour l'ambassadeur, le prénom pour la direction
-      { // 7 nov. : chaque ambassadeur a ses 2 jours à l'agence (AMB_JOURS)
+      { // 7 nov. : chaque ambassadeur a ses 2 jours à l'agence (AMB_JOURS) ; bannière : jours, semaine en pastilles, prochain jour
         const mj = me && me.role === "ambassadeur" ? ambJours(me.nom) : null, jours = mj || [1, 2, 3, 4];
-        const sk = $("#sd-amSk"); if (sk) sk.innerHTML = mj ? "<span>Tes jours à l'agence · à ne jamais manquer</span><b>" + JNOMS[mj[0]].toUpperCase() + "</b><i>et</i><b>" + JNOMS[mj[1]].toUpperCase() + "</b>"
-          : "<span>Jours à l'agence des ambassadeurs</span><b>LUN · MER</b><i>Christian</i><b>MAR · JEU</b><i>Patrick</i>";
-        const pp = $("#sd-amSkP"); if (pp) pp.textContent = mj ? "À l'agence, tu fais la pub auprès des gens qui passent : flyers, QR code, renseignements. Le samedi, seulement le jour du tirage." : "À l'agence, ils font la pub auprès des gens qui passent : flyers, QR code, renseignements. Le samedi, seulement le jour du tirage.";
-        const d = new Date(); d.setHours(12, 0, 0, 0); let n = 0; while (!jours.includes(d.getDay())) { d.setDate(d.getDate() + 1); n++; }
-        $("#sd-amNext").innerHTML = n === 0 ? "<b>Aujourd'hui : à l'agence !</b>" : "Prochain jour à l'agence : <b>" + d.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" }) + "</b>" + (n === 1 ? " (demain)" : ""); $("#sd-amSortie").classList.toggle("today", n === 0); }
+        const auj = new Date(); auj.setHours(12, 0, 0, 0); const d = new Date(auj); let n = 0; while (!jours.includes(d.getDay())) { d.setDate(d.getDate() + 1); n++; }
+        const qui = (j) => Object.keys(AMB_JOURS).filter((k) => AMB_JOURS[k].includes(j)).map((k) => k[0].toUpperCase() + k.slice(1));
+        const cap = (t) => t[0].toUpperCase() + t.slice(1);
+        const sem = [1, 2, 3, 4, 5, 6].map((j) => { const on = mj ? mj.includes(j) : qui(j).length > 0, q = qui(j); return '<div class="ams-d' + (on ? " on" : "") + (j === auj.getDay() ? " auj" : "") + '"><b>' + cap(JNOMS[j]).slice(0, 3) + "</b><small>" + (j === 6 ? "tirage" : mj ? (on ? "agence" : "") : q.join(" ")) + "</small></div>"; }).join("");
+        const titre = mj ? '<span class="ams-k">Tes jours à l\'agence</span><p class="ams-h">' + cap(JNOMS[mj[0]]) + " et " + JNOMS[mj[1]] + "</p>"
+          : '<span class="ams-k">Les ambassadeurs à l\'agence</span><p class="ams-h">Christian et Patrick</p>';
+        const nxt = n === 0 ? "<small>Aujourd'hui</small><b>À l'agence</b><span>" + (mj ? "Pub auprès des passants" : qui(d.getDay()).join(" et ")) + "</span>"
+          : "<small>Prochain jour</small><b>" + cap(d.toLocaleDateString("fr-FR", { weekday: "long" })) + "</b><span>" + d.toLocaleDateString("fr-FR", { day: "numeric", month: "long" }) + (n === 1 ? " · demain" : "") + (mj ? "" : " · " + qui(d.getDay()).join(" et ")) + "</span>";
+        $("#sd-amSortie").innerHTML = '<div class="ams"><div class="ams-l">' + titre + '<div class="ams-w">' + sem + '</div><p class="ams-p">Ces jours-là : la pub auprès des gens qui passent (flyers, QR code, renseignements). Le samedi, seulement le jour du tirage.</p></div><div class="ams-r">' + nxt + "</div></div>";
+        $("#sd-amSortie").classList.toggle("today", n === 0); }
       if (!AM.ong) amOnglet(moi === "d" ? "digital" : "terrain"); else amOnglet(AM.ong);
     }
     $("#sd-amSwap") && $("#sd-amSwap").addEventListener("click", (e) => {
@@ -9347,7 +9352,24 @@ a.tf-pc{text-decoration:none;color:inherit}.tf-pjf .cf-pick{margin-bottom:6px}.t
 .am-miss li::before{content:counter(am);position:absolute;left:0;top:11px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:12.5px;font-weight:800;background:var(--am-tl);color:var(--am-tc)}
 .am-hero.am-d .am-miss li::before{background:var(--am-dl);color:var(--am-dc)}
 .am-miss b{font-size:14.5px}.am-miss span{color:var(--am-m)}
-@media (max-width:600px){.tm-pane[data-pane="com"] .am-rme{font-size:9px;padding:1px 6px;max-width:92%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;right:50%;transform:translateX(50%)}.tm-pane[data-pane="com"] .am-roles{gap:6px}.am-wk{grid-template-columns:1fr 1fr;padding:14px}.am-wkr b{font-size:17px}.am-sortie{padding:16px 16px 22px}}
+@media (max-width:600px){.tm-pane[data-pane="com"] .am-rme{font-size:9px;padding:1px 6px;max-width:92%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;right:50%;transform:translateX(50%)}.tm-pane[data-pane="com"] .am-roles{gap:6px}.am-wk{grid-template-columns:1fr 1fr;padding:14px}.am-wkr b{font-size:17px}.am-sortie{padding:16px 16px 22px}
+}
+.ams{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center}
+.ams-k{display:block;color:#F2B705;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+.ams-h{margin:6px 0 0!important;font-size:clamp(24px,4.2vw,34px)!important;font-weight:900!important;line-height:1.05;color:#fff!important}
+.ams-h small{font-size:.5em;font-weight:600;opacity:.85}
+.ams-w{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;margin-top:14px;max-width:520px}
+.ams-d{border-radius:10px;padding:8px 4px;text-align:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}
+.ams-d b{display:block;font-size:13px;font-weight:800}
+.ams-d small{display:block;font-size:10.5px;opacity:.85;min-height:13px;margin-top:2px}
+.ams-d.on{background:#F2B705;color:#14171C;border-color:#F2B705}
+.ams-d.auj{box-shadow:0 0 0 2px #fff}
+.ams-p{margin:12px 0 0!important;font-size:13.5px!important;color:rgba(255,255,255,.85)!important}
+.ams-r{min-width:170px;text-align:center;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.15);border-radius:14px;padding:14px 16px}
+.ams-r small{display:block;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#F2B705}
+.ams-r b{display:block;font-size:26px;font-weight:900;margin-top:4px}
+.ams-r span{display:block;font-size:13px;opacity:.9;margin-top:2px}
+@media (max-width:620px){.ams{grid-template-columns:1fr}.ams-r{text-align:left}}
 .pa-tot{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;background:#F3EBDA;border:1px solid #DFD0B0;border-radius:12px;padding:14px 16px;margin:0 0 10px}.pa-tot span{flex:1 1 100%;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#6B5A2E}.pa-tot b{font-size:28px;line-height:1.1}.pa-tot small{color:#6B5A2E}.pa-send{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 16px}.pa-send select{min-height:44px;border-radius:10px;padding:0 10px}
 .tr-ov{position:fixed;inset:0;z-index:200;background:#121519;display:grid;place-items:center;padding:24px;text-align:center}
 .tr-ov::after{content:"";position:absolute;left:0;right:0;bottom:40px;height:8px;background:repeating-linear-gradient(90deg,#F2B705 0 60px,transparent 60px 100px)}
