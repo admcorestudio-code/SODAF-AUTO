@@ -24,7 +24,7 @@ def fiche():
   <div class="ln"><span>Ma question</span><i></i></div><div class="ln"><i></i></div>
  </div>
 </div>
-<div class="sec"><span class="t">Secrétariat</span><div class="ln"><span>Appelé le</span><i class="s"></i></div>{cases(["Pré-inscrit", "Pas joignable", "Pas intéressé"])}<div class="ln"><span>SO</span><i class="xs"></i></div></div>
+<div class="secw"><p class="sect">Réservé au secrétariat · <b>visiteur : ne rien écrire ici</b></p><div class="sec"><div class="ln"><span>Appelé le</span><i class="s"></i></div>{cases(["Pré-inscrit", "Pas joignable", "Pas intéressé"])}<div class="ln"><span>SO</span><i class="xs"></i></div></div></div>
 <footer><b>SODAF Auto-École</b> · 412 Avenue Akei, Tokoin Tamé, en face de la caisse · 72 54 41 66 (appel et WhatsApp) · autosodaf.com</footer>
 </section>'''
 CSS = '''@font-face{font-family:"Outfit";src:url(../affiche-tirage-14nov/Outfit.ttf)}@font-face{font-family:"Figtree";src:url(../affiche-tirage-14nov/Figtree.ttf)}
@@ -49,8 +49,9 @@ header img{height:26px}
 .q>div{display:flex;flex-wrap:wrap;gap:7px 16px}.q>div.col{display:grid;grid-template-columns:1fr 1fr;gap:7px 12px}
 .cb{display:inline-flex;align-items:center;gap:7px;font:600 12.5px Figtree;white-space:nowrap}
 .cb i{flex:none;width:15px;height:15px;border:1.6px solid #14171C;border-radius:4px}
-.sec{margin-top:auto;display:flex;align-items:center;flex-wrap:wrap;gap:8px 16px;border:1.5px dashed #B9BEC6;border-radius:12px;padding:10px 14px;background:#F6F7F8}
-.sec>span.t{color:#1F9A5A;padding:0}.sec{flex-wrap:nowrap;gap:14px}.sec .cb{font-size:12px}
+.secw{margin-top:auto;display:flex;flex-direction:column;gap:5px}.sect{font:700 10.5px Outfit;letter-spacing:.07em;text-transform:uppercase;color:#6B7280}.sect b{color:#B42318}
+.sec{display:flex;align-items:center;flex-wrap:wrap;gap:8px 16px;border:1.5px dashed #B9BEC6;border-radius:12px;padding:10px 14px;background:#F6F7F8}
+.sec{flex-wrap:nowrap;gap:14px}.sec .cb{font-size:12px}
 .sec .ln i.s{flex:0 0 80px}
 footer{font:500 10px Figtree;color:#5B6470}footer b{color:#14171C}'''
 html = f'<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>SODAF · fiche de pré-inscription</title><style>{CSS}</style></head><body><div class="page">{fiche()}<div class="cut"><span>Couper ici</span></div>{fiche()}</div></body></html>'
