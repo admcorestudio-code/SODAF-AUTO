@@ -74,7 +74,7 @@ SEC = page("Secrétariat", "Le secrétariat, étape par étape",
     ("Les appels", "Pré-inscrit du site : **Envoyer l'accueil**. Appelle avec le script : les prix, puis « commencer avec 5 000 F ». Il hésite ? Pré-inscris-le quand même pendant l'appel."),
     ("Le lien d'inscription", "**Envoyer le lien d'inscription** : il choisit sa formule et combien il paie. Relance tous les 5 jours (4 au plus)."),
     ("Le reçu", "Il paie en espèces : **Formation payée ? Faire le reçu**, puis envoie-le. 5 000 F = inscrit, le code en ligne s'ouvre. La moitié = code en salle. Tout = conduite."),
-    ("Le code", "Il reçoit tout seul une place dans un groupe de 6 : **Envoyer ses horaires**. Cours raté : il vient au **cours ouvert du mercredi** (14 h 30 ou 18 h, sans réserver) ou le revoit au tour suivant."),
+    ("Le code", "Il reçoit tout seul une place dans un groupe de 6 : **Envoyer ses horaires**. Cours raté : il le revoit au tour suivant du programme. Il préfère le mercredi ? Choisis le **Groupe C** dans sa fiche."),
     ("Le solde", "À 3 semaines dans son groupe : rappel en rouge, en haut. À 1 mois sans paiement : place au code suspendue. Pas de conduite avant le solde."),
     ("La conduite", "Feu vert après les cours 1 à 9. Fiche → **Conduite** → **Réserver une séance** (3 par semaine au plus), puis **Envoyer ses séances**."),
     ("L'examen", "**Passer à l'examen** (message des papiers). Dossier complet + 35 000 F : reçu. Bordereau signé, **Lot déposé**, puis **Permis obtenu** ou **À repasser**."),
@@ -150,9 +150,8 @@ MON = page("Moniteur", "Le moniteur, sur son téléphone",
     ("À la fin", "Mode classe → **Examen** : le quiz d'examen du cours (questions SOTOPLA)."),
   ]) +
   lignes("Les horaires du code", [
-    ("Groupe A", "lundi et jeudi, 14 h 30"), ("Groupe B", "mardi et vendredi, 14 h 30"),
+    ("Groupe A", "lundi et jeudi, 14 h 30"), ("Groupe B", "mardi et vendredi, 14 h 30"), ("Groupe C", "mercredi, 14 h 30 (1er cours) et 18 h (2e cours)"),
     ("Groupe F", "lundi et jeudi, 18 h (soir)"), ("Groupe G", "mardi et vendredi, 18 h (soir)"),
-    ("Mercredi", "14 h 30 et 18 h : **cours ouvert à tous**, le cours de la semaine. Fais l'appel."),
   ]) +
   puces("Essence et voiture", [
     "**Ajouter un plein** : montant, compteur, photo du compteur. Toi seul ajoutes les pleins.",
@@ -172,16 +171,16 @@ MON = page("Moniteur", "Le moniteur, sur son téléphone",
     ("12 h – 14 h 30", "repos (heures chaudes)"),
   ]) +
   puces("Les cas spéciaux", [
-    "**Formation privée** : 1 h, seul avec toi. La séance ne prend pas d'élèves en groupe. Ses 12 cours de code sont en particulier : tu les organises avec lui.",
+    "**Formation privée** : 1 h, seul avec toi. La séance ne prend pas d'élèves en groupe. Ses 12 cours de code sont en particulier : après chacun, **Noter ce cours** (Code en salle).",
     "**Séance à l'unité** : client non inscrit, 1 h. Il a payé avant de monter (reçu).",
     "**Feu vert** : un élève conduit après les cours 1 à 9 en salle (sauf remise à niveau et privée).",
   ]),
   semaine("Ta semaine", [
     ("7 h 30 – 9 h 30", ["Conduite"] * 6),
     ("10 h – 12 h", ["Conduite"] * 6),
-    ("14 h 30", ["Code · groupe A", "Code · groupe B", "Code · ouvert à tous", "Code · groupe A", "Code · groupe B", "Voiture : contrôle et atelier"]),
+    ("14 h 30", ["Code · groupe A", "Code · groupe B", "Code · groupe C (1er cours)", "Code · groupe A", "Code · groupe B", "Voiture : contrôle et atelier"]),
     ("15 h 45 – 17 h 45", ["Conduite", "Conduite", "Conduite", "Conduite", "Conduite", "—"]),
-    ("18 h – 19 h", ["Code · groupe F", "Code · groupe G", "Code · ouvert à tous", "Code · groupe F", "Code · groupe G", "—"]),
+    ("18 h – 19 h", ["Code · groupe F", "Code · groupe G", "Code · groupe C (2e cours)", "Code · groupe F", "Code · groupe G", "—"]),
   ], "Un groupe sans élève n'a pas cours : ta page Aujourd'hui montre seulement ce qui a lieu. Midi – 14 h 30 : repos.") +
   regle("**À retenir.** Note chaque cours et chaque séance **le jour même** : c'est ce qui permet de suivre les élèves. "
         "Messages : écris @ puis la personne, ou SO12 pour ouvrir la fiche d'un élève. Ton mot de passe ne se donne à personne."))
