@@ -1,5 +1,5 @@
 # Mémos de l'équipe SODAF (source). Construit memos.html (une page A4 par rôle), puis render.py en fait les PDF et les images.
-# Mis à jour le 5 nov. 2026 (3 mémos : secrétariat, moniteur, ambassadeurs). Pour changer un texte : modifie ce fichier, puis lance  python3 build.py && python3 render.py
+# Mis à jour le 7 nov. 2026 (3 mémos : secrétariat, moniteur, ambassadeurs). Pour changer un texte : modifie ce fichier, puis lance  python3 build.py && python3 render.py
 import html, pathlib
 ICI = pathlib.Path(__file__).parent
 LOGO = (ICI / "logo.svg.html").read_text(encoding="utf-8")
@@ -64,7 +64,7 @@ REGLES = ("**Les règles de tous.** Tout bouton qui enregistre ou envoie se conf
 SEC = page("Secrétariat", "Le secrétariat, étape par étape",
   "Ton espace Secrétariat s'ouvre sur Accueil client. L'outil te dit quoi faire et les messages WhatsApp sont déjà écrits : tu vérifies, puis tu envoies.",
   lignes("Ta journée", [
-    ("7 h 30", "Ouvre l'agence. **Planning** : qui tient l'agence. **À faire** : ce qui t'attend."),
+    ("7 h 30", "L'ambassadeur de jour t'amène. Ouvre l'agence, puis **À faire**."),
     ("Un client au bureau", "**Accueil client** → **Ouvrir l'écran client** (la présentation), puis **Nouvelle pré-inscription**."),
     ("Un client sur WhatsApp", "Appelle-le tout de suite : **Client venu de WhatsApp · Script d'appel**."),
     ("L'après-midi", "**Planning conduite** : **Rappel de la veille** pour les séances de demain."),
@@ -130,7 +130,7 @@ GER = page("Gérante", "La gérante, au quotidien",
     "Les prix : fixes, **aucune remise**. Réductions seulement : étudiant, parrainage, tirage.",
   ]) +
   puces("Les ambassadeurs", [
-    "Deux rôles qui s'échangent chaque lundi : **Relations** et **Contenu**. Leurs affiches et vidéos sont validées par la direction (Messages).",
+    "Un ambassadeur à l'agence **chaque jour** (il amène le secrétariat le matin) : Christian lun-mer-ven, Patrick mar-jeu-sam. Deux rôles qui s'échangent chaque mois : **Relations** et **Contenu**. Leurs affiches et vidéos sont validées par la direction (Messages).",
     "**Ambassadeurs** : qui est où cette semaine, leurs missions et les **Résultats**.",
     "À vérifier : pas de gain du parrain, « examen du permis ».",
   ]) +
@@ -187,16 +187,16 @@ MON = page("Moniteur", "Le moniteur, sur son téléphone",
 
 # ---------------------------------------------------------------- Ambassadeur
 AMB = page("Ambassadeur", "Les ambassadeurs, l'image de SODAF",
-  "Deux ambassadeurs, deux rôles qui s'échangent chaque lundi : **Relations** (les gens, les affiches, le tirage) et **Contenu** (les vidéos). Ton espace : Ambassadeurs, À faire, Messages, Documents. Tu ne vois ni les élèves ni l'argent.",
+  "Deux ambassadeurs, deux rôles qui s'échangent **chaque mois, le 1er lundi** : **Relations** (les gens, les affiches, le tirage, avec le **téléphone SODAF**) et **Contenu** (les vidéos, avec le **PC portable**). Ton espace : Ambassadeurs, À faire, Messages, Documents. Tu ne vois ni les élèves ni l'argent.",
   lignes("Ta semaine", [
-    ("À l'agence", "**Christian** lundi et mercredi, **Patrick** mardi et jeudi : la pub auprès des gens qui passent (flyers, QR code)."),
-    ("Lundi matin", "Vous **changez de rôle** : 15 minutes pour se passer le relais."),
-    ("Samedi", "Pas besoin de venir, **sauf le jour du tirage**."),
-    ("1er samedi du mois", "**Tirage au sort** à 20 h à l'agence, filmé pour TikTok."),
+    ("À l'agence", "**Christian** lundi, mercredi, vendredi ; **Patrick** mardi, jeudi, samedi. Tu **amènes le secrétariat**, puis la pub auprès des passants."),
+    ("Journée terrain", "**À deux, une fois par semaine** (le jour : en haut de l'onglet) : le matin les commerces, l'après-midi les universités."),
+    ("1er lundi du mois", "Vous **changez de rôle** et vous échangez le **téléphone** et le **PC** : 15 minutes de relais."),
+    ("1er samedi du mois", "**Tirage au sort** à 20 h, filmé pour TikTok : **les deux sont là**."),
     ("Chaque semaine", "Au moins **une publication chacun** sur **@autoecole.sodaf.tg**."),
   ]) +
   etapes("Chaque publication", [
-    ("Préparer", "Relations : l'affiche (Canva). Contenu : la vidéo (Osmo Pocket, CapCut)."),
+    ("Préparer", "Relations : l'affiche (Canva, sur le téléphone). Contenu : la vidéo (Osmo Pocket, CapCut sur le PC)."),
     ("Faire valider", "Envoie-la à la **direction dans Messages**. Elle répond « c'est bon » ou « change ça »."),
     ("Publier", "Toi-même, sur **TikTok** (et Instagram). Garde l'original."),
     ("Noter", "**Ambassadeurs → Affiches à publier** ou **Vidéos à publier** : le fichier et le lien."),
@@ -211,6 +211,9 @@ AMB = page("Ambassadeur", "Les ambassadeurs, l'image de SODAF",
     "Code **l'après-midi ou le soir** (18 h pour ceux qui travaillent). Conduite à ton rythme.",
     "Étudiants **30 000 F**. Corps habillés : « votre permis, à votre rythme » (gardes, missions).",
     "Le tirage au sort étudiant, le **premier samedi du mois** : la vidéo des gagnants sur TikTok.",
+  ]) +
+  puces("Les messages TikTok", [
+    "Contenu répond aux **commentaires et messages chaque jour**, sur le PC (tiktok.com) : **9 h, 13 h et 19 h**.",
   ]) +
   puces("Tes résultats", [
     "**Ambassadeurs → Résultats** : la semaine, le mois et l'historique de vos publications.",
