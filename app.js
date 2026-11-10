@@ -5996,6 +5996,8 @@ function init(root) {
     //      la gérante transfère à la direction ou refuse ; ses propres demandes vont directement à la direction.
     const DEP_RZ = ["Séances en plus", "Chercher le gagnant du tirage", "Prix de l'essence en hausse", "Route bloquée ou détour", "Trajet au garage"];
     const ROLE_NOM = { admin: "Direction", gerant: "Gérante", secretariat: "Secrétariat", moniteur: "Moniteur", ambassadeur: "Ambassadeur" };
+// 10 nov. : deux ambassadeurs, on précise lequel : « Ambassadeur (Patrick) »
+const QUI_NOM = (p) => { if (!p) return ""; if (p.role !== "ambassadeur") return ROLE_NOM[p.role] || p.nom || ""; const pr = String(p.nom || "").replace(/\s*SODAF\s*/i, "").replace(/^ambassadeur\s*/i, "").trim().split(/\s+/)[0]; return pr ? "Ambassadeur (" + pr.charAt(0).toUpperCase() + pr.slice(1) + ")" : "Ambassadeur"; };
     // Champ pièce jointe : « Prendre une photo » ou « Choisir un fichier »
     // Pièce jointe (24 oct.) : « Galerie » ouvre les photos du téléphone (photos prises, images reçues sur WhatsApp) ; le PDF à part, en petit
     const pjHtml = (pdf) => '<div class="pj"><label class="btn btn-line btn-sm">Prendre une photo<input type="file" accept="image/*" capture="environment" hidden></label><label class="btn btn-line btn-sm">Galerie<input type="file" accept="image/*" hidden></label>' + (pdf ? '<label class="pj-pdf">Fichier PDF<input type="file" accept="application/pdf" hidden></label>' : "") + '<span class="pj-nom">Aucun fichier</span></div>';
@@ -6719,7 +6721,7 @@ function init(root) {
     //      La direction écrit aussi des tâches (prix inconnu → la gérante le trouve → la direction accorde). La gérante donne des tâches sans argent.
     const TF = { t: [], prof: [], dm: [], open: new Set(), vu: false, finiOuvert: false, num: {}, numOk: false };
     const TF_FIN = ["fait", "refusee", "annulee"];
-    const tfNom = (id) => { if (me && id === me.id) return "toi"; const p = TF.prof.find((x) => x.id === id); return p ? ROLE_NOM[p.role] || p.nom : "Équipe"; };
+    const tfNom = (id) => { if (me && id === me.id) return "toi"; const p = TF.prof.find((x) => x.id === id); return p ? QUI_NOM(p) : "Équipe"; };
     const tfJour = (d) => dOf(d).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "short" });
     const tfMois = (d) => { const n = new Date(); return d && new Date(d) >= new Date(n.getFullYear(), n.getMonth(), 1); };
     // Ce qui attend MON geste
@@ -6845,7 +6847,7 @@ function init(root) {
       if (box.dataset.pret === me.id) return; box.dataset.pret = me.id;
       box.innerHTML = '<div class="card tf-newc"><h3 class="tm-h3 tf-newh">Nouvelle tâche</h3><p class="tf-aide tf-newa">' + (adm ? "Pour toi ou pour quelqu'un de l'équipe. S'il faut de l'argent, choisis « Oui » plus bas." : "Pour toi, le secrétariat, le moniteur ou l'Ambassadeur.") + '</p><form class="tf-form" novalidate>' +
         '<div class="field"><label>Quoi ?</label><textarea class="tf-tx2" rows="2" maxlength="600" placeholder="ex. Refaire l\'enseigne de l\'agence"></textarea></div>' +
-        '<div class="field"><label>Pour qui ?</label><div class="tf-chips" role="radiogroup">' + ok.map((p) => '<button type="button" role="radio" data-tfqui="' + p.id + '" aria-checked="false">' + (p.id === me.id ? "Moi" : esc(ROLE_NOM[p.role] || p.nom)) + "</button>").join("") + "</div></div>" +
+        '<div class="field"><label>Pour qui ?</label><div class="tf-chips" role="radiogroup">' + ok.map((p) => '<button type="button" role="radio" data-tfqui="' + p.id + '" aria-checked="false">' + (p.id === me.id ? "Moi" : esc(QUI_NOM(p))) + "</button>").join("") + "</div></div>" +
         '<div class="field"><label>Pour quand ? (facultatif)</label><input type="date" class="tf-date2"></div>' +
         '<div class="field tf-pjf"><label>Pièce jointe (facultatif)</label><div class="cf-pick"><label class="btn btn-line btn-sm">Document ou image<input type="file" class="tf-pjin" accept="image/*,application/pdf,.pdf,.doc,.docx,.xls,.xlsx" hidden></label><span class="cf-nom tf-pjn">Aucun fichier</span></div>' +
           '<small class="tf-aide">Le bouton ouvre aussi Google Drive : sur Android, choisis « Drive » dans la liste ; sur iPhone, « Parcourir » puis Drive. Image, PDF, Word ou Excel, 10 Mo au plus.</small>' +
@@ -6882,7 +6884,7 @@ function init(root) {
       if (!TF.numOk) return '<p class="tf-aide">Numéros Mixx : pas encore activés dans la base.</p>';
       const l = TF.prof.filter((p) => p.actif !== false && p.role !== "admin");
       return '<details class="card tf-nums"><summary>Numéros Mixx de l\'équipe' + (l.some((p) => !TF.num[p.id]) ? ' <small class="tf-numx">(' + l.filter((p) => !TF.num[p.id]).length + " à compléter)</small>" : "") + "</summary>" + '<p class="tf-aide">Le numéro où tu envoies l\'argent. Toi seul le vois et le changes.</p>' +
-        l.map((p) => '<div class="tf-numl" data-tfnp="' + p.id + '"><span>' + esc(ROLE_NOM[p.role] || p.nom) + '</span><input inputmode="numeric" maxlength="14" autocomplete="off" placeholder="ex. 72 54 41 66" value="' + tfTel(TF.num[p.id] || "") + '" aria-label="Numéro Mixx"><button type="button" class="btn btn-sm btn-line" data-tfnok>Enregistrer</button></div>').join("") + "</details>";
+        l.map((p) => '<div class="tf-numl" data-tfnp="' + p.id + '"><span>' + esc(QUI_NOM(p)) + '</span><input inputmode="numeric" maxlength="14" autocomplete="off" placeholder="ex. 72 54 41 66" value="' + tfTel(TF.num[p.id] || "") + '" aria-label="Numéro Mixx"><button type="button" class="btn btn-sm btn-line" data-tfnok>Enregistrer</button></div>').join("") + "</details>";
     }
     // ---- Une seule liste, dans l'ordre (24 oct. : « faire un truc qui liste avec un sens précis ») ----
     //   1. + Nouvelle tâche  2. À toi de jouer (ce qui attend MON geste)  3. En attente des autres (qui doit agir)  4. Terminé (replié)
