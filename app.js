@@ -66,17 +66,23 @@ const ELEVE = !window.SODAF_APP && (/[?&]app=eleve\b/.test(location.search) || (
 if (ELEVE) document.documentElement.classList.add("mode-eleve");
 // Photo d'élève : recadrée au centre en carré, 1080 px, réduite par paliers (image nette), JPEG de bonne qualité (≈ 150 à 300 Ko)
 async function photoCompresse(file, cote = 1080, carre = true) {
-  const url = URL.createObjectURL(file);
+  // 18 nov. 2026 : les téléphones de 50 à 108 Mpx (Tecno, Infinix…) faisaient échouer l'ancienne version (toile à la taille réelle de la photo,
+  // trop grande pour le navigateur). On ne dessine plus jamais plus grand que 2 fois la taille finale.
+  const toile = (w, h) => { const c = document.createElement("canvas"); c.width = Math.max(1, Math.round(w)); c.height = Math.max(1, Math.round(h)); const g = c.getContext("2d"); if (!g) throw new Error("toile"); g.imageSmoothingEnabled = true; g.imageSmoothingQuality = "high"; return [c, g]; };
+  let src = null, W = 0, H = 0, url = null;
   try {
-    const img = await new Promise((ok, ko) => { const i = new Image(); i.onload = () => ok(i); i.onerror = ko; i.src = url; });
-    const W = img.naturalWidth, H = img.naturalHeight, c = Math.min(W, H), sw = carre ? c : W, sh = carre ? c : H, k = Math.min(1, cote / Math.max(sw, sh)), tw = Math.round(sw * k), th = Math.round(sh * k);
-    let cv = document.createElement("canvas"); cv.width = sw; cv.height = sh;
-    let g = cv.getContext("2d"); g.drawImage(img, (W - sw) / 2, (H - sh) / 2, sw, sh, 0, 0, sw, sh);
-    while (cv.width / 2 >= tw) { const n = document.createElement("canvas"); n.width = Math.round(cv.width / 2); n.height = Math.round(cv.height / 2); const ng = n.getContext("2d"); ng.imageSmoothingEnabled = true; ng.imageSmoothingQuality = "high"; ng.drawImage(cv, 0, 0, n.width, n.height); cv = n; }
-    if (cv.width !== tw) { const n = document.createElement("canvas"); n.width = tw; n.height = th; const ng = n.getContext("2d"); ng.imageSmoothingEnabled = true; ng.imageSmoothingQuality = "high"; ng.drawImage(cv, 0, 0, tw, th); cv = n; }
-    for (const q of [0.92, 0.86, 0.78]) { const b = await new Promise((ok) => cv.toBlob((x) => ok(x), "image/jpeg", q)); if (b && b.size < 900000) return b; }
-    return await new Promise((ok) => cv.toBlob((x) => ok(x), "image/jpeg", 0.7));
-  } finally { URL.revokeObjectURL(url); }
+    if (window.createImageBitmap) { try { src = await createImageBitmap(file, { imageOrientation: "from-image" }); W = src.width; H = src.height; } catch (e) { src = null; } }
+    if (!src) { url = URL.createObjectURL(file); src = await new Promise((ok, ko) => { const i = new Image(); i.onload = () => ok(i); i.onerror = ko; i.src = url; }); W = src.naturalWidth; H = src.naturalHeight; }
+    if (!W || !H) throw new Error("image vide");
+    const c = Math.min(W, H), sw = carre ? c : W, sh = carre ? c : H, k = Math.min(1, cote / Math.max(sw, sh)), tw = Math.round(sw * k), th = Math.round(sh * k);
+    // 1re étape : directement à 2 fois la taille finale au plus (et jamais plus de 4096 px de côté)
+    const k1 = Math.min(1, (2 * Math.max(tw, th)) / Math.max(sw, sh), 4096 / Math.max(sw, sh));
+    let [cv, g] = toile(sw * k1, sh * k1); g.drawImage(src, (W - sw) / 2, (H - sh) / 2, sw, sh, 0, 0, cv.width, cv.height);
+    while (cv.width / 2 >= tw && cv.width > tw) { const [n, ng] = toile(cv.width / 2, cv.height / 2); ng.drawImage(cv, 0, 0, n.width, n.height); cv = n; }
+    if (cv.width !== tw) { const [n, ng] = toile(tw, th); ng.drawImage(cv, 0, 0, tw, th); cv = n; }
+    for (const q of [0.92, 0.86, 0.78, 0.7]) { const bl = await new Promise((ok) => cv.toBlob((x) => ok(x), "image/jpeg", q)); if (bl && bl.size < 900000) return bl; }
+    throw new Error("photo trop lourde");
+  } finally { if (url) URL.revokeObjectURL(url); if (src && src.close) try { src.close(); } catch (e) {} }
 }
 // Envoi dans l'espace privé « photos » (jeton de l'équipe, ou clé publique pour le lien d'inscription)
 async function photoEnvoyer(path, blob, jeton, espace = "photos") {
@@ -2562,7 +2568,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="cz-st"><span class="cz-km" aria-hidden="true">3</span><div class="cz-stb"><p class="cz-stt">Ta carte d'étudiant</p>
 <div class="field"><span class="tir-lab">Photo de ta carte d'étudiant</span>
 <label class="tir-card" for="sd-tirCarte" id="sd-tirCardBox"><span class="tir-cardph" id="sd-tirCardPh"><svg viewBox="0 0 48 32" width="64" height="44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="44" height="28" rx="4"/><circle cx="15" cy="14" r="5"/><path d="M8 25c1.6-3.4 4.2-5 7-5s5.4 1.6 7 5M28 11h12M28 17h12M28 23h7"/></svg></span><span class="tir-cardtx"><b id="sd-tirCardBtn">Prendre la photo</b><small>Carte de l'année en cours, nom bien lisible. Seule l'équipe SODAF la voit.</small></span></label>
-<input type="file" id="sd-tirCarte" accept="image/*" capture="environment" class="insc-file"></div>
+<input type="file" id="sd-tirCarte" accept="image/*" capture="environment" class="insc-file"><label class="tir-gal" for="sd-tirCarteG">Ou choisir une photo déjà prise</label><input type="file" id="sd-tirCarteG" accept="image/*" class="insc-file"></div>
 </div></div>
 <div class="cz-st cz-stl"><span class="cz-km cz-kmf" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div class="cz-stb"><p class="cz-stt">Tu valides</p>
 <label class="tir-check"><input type="checkbox" id="sd-tirOk1"><span>Je suis étudiant(e) et j'ai <b>18 ans ou plus</b>.</span></label>
@@ -7804,11 +7810,15 @@ const QUI_NOM = (p) => { if (!p) return ""; if (p.role !== "ambassadeur") return
       '<div class="tir-dl"><button class="btn cz-btn" type="button" data-tirdl><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>Télécharger mon ticket</button><small>Garde-le dans ta galerie : il sert de preuve le jour du tirage.</small></div>' +
       '<div class="tir-share"><a class="btn btn-wa" target="_blank" rel="noopener" href="https://wa.me/?text=' + encodeURIComponent(msg) + '">Partager sur WhatsApp</a><button class="btn btn-line" type="button" data-copy="' + escHtml(url) + '">Copier le lien</button></div>';
   }
-  $("#sd-tirCarte").addEventListener("change", async (e) => {
+  // 18 nov. : appareil photo OU galerie ; dans l'appli TikTok / Facebook / Instagram, on conseille d'ouvrir le lien dans Chrome si ça bloque
+  const tirAppli = /TikTok|musical_ly|Bytedance|FBAN|FBAV|Instagram/i.test(navigator.userAgent || "");
+  const tirCarteLire = async (e) => {
     const f = e.target.files && e.target.files[0]; if (!f) return; const er = $("#sd-tirErr");
     try { TIR.blob = await photoCompresse(f, 1400, false); $("#sd-tirCardPh").innerHTML = '<img src="' + URL.createObjectURL(TIR.blob) + '" alt="Ta carte d\'étudiant">'; $("#sd-tirCardBox").classList.add("on"); $("#sd-tirCardBtn").textContent = "Reprendre la photo"; er.hidden = true; }
-    catch (x) { TIR.blob = null; er.textContent = "Cette photo n'a pas pu être lue. Reprends-la avec l'appareil photo."; er.hidden = false; }
-  });
+    catch (x) { TIR.blob = null; er.textContent = "Cette photo n'a pas pu être lue. Reprends-la, ou choisis une photo déjà prise." + (tirAppli ? " Si ça bloque encore : touche les trois points en haut, puis « Ouvrir dans le navigateur »." : ""); er.hidden = false; }
+    e.target.value = "";
+  };
+  ["#sd-tirCarte", "#sd-tirCarteG"].forEach((s) => $(s) && $(s).addEventListener("change", tirCarteLire));
   $("#sd-tirForm").addEventListener("submit", async (e) => {
     e.preventDefault(); const er = $("#sd-tirErr"), btn = $("#sd-tirGo");
     const nom = $("#sd-tirNom").value.trim(), pre = $("#sd-tirPre").value.trim(), tel = $("#sd-tirTel").value.replace(/\D/g, "").replace(/^228(?=\d{8}$)/, ""), uni = $("#sd-tirUniv").value.trim();
@@ -7821,7 +7831,7 @@ const QUI_NOM = (p) => { if (!p) return ""; if (p.role !== "ambassadeur") return
       const r = await DB.q("rpc/tirage_participer", { method: "POST", body: { p_nom: nom, p_prenoms: pre, p_telephone: tel, p_universite: uni, p_photo: path }, anon: true });
       const qui = { nom: nom.toUpperCase(), pre, uni }; S.set("tirTicket", { c: r.campagne, n: r.numero, qui }); tirTicket(r.numero, r.deja, qui);
       const n = $("#sd-tirN"); if (!r.deja && /^\d+$/.test(n.textContent)) n.textContent = +n.textContent + 1;
-    } catch (x) { er.textContent = navigator.onLine === false ? "Pas de connexion internet. Réessaie quand tu as du réseau." : (x && x.message && !/^Erreur \d/.test(x.message) ? x.message : "L'envoi n'a pas marché. Vérifie ta connexion et réessaie."); er.hidden = false; }
+    } catch (x) { er.textContent = navigator.onLine === false ? "Pas de connexion internet. Réessaie quand tu as du réseau." : (x && x.message && !/^Erreur \d/.test(x.message) ? x.message : "L'envoi n'a pas marché. Vérifie ta connexion et réessaie." + (tirAppli ? " Ou ouvre le lien dans ton navigateur (les trois points en haut)." : "")); er.hidden = false; }
     btn.disabled = false; btn.textContent = "Valider ma participation";
   });
   async function tirImage(n, qui) {
@@ -8459,6 +8469,8 @@ html{scrollbar-gutter:stable}
 #sodaf-root .cz-form .tel span{background:#222A32;color:#F2B705;border-right:1px solid #343E48}
 #sodaf-root .cz-form .tel input{border:0;box-shadow:none}
 #sodaf-root .cz-form .tir-card{background:#0F1316;border:1.5px dashed #4A5560;border-radius:14px;color:#E9ECEF}
+#sodaf-root .tir-gal{display:inline-block;margin-top:10px;font-size:.88rem;font-weight:600;text-decoration:underline;text-underline-offset:3px;cursor:pointer;color:inherit;opacity:.85}
+#sodaf-root .cz-form .tir-gal{color:#E8ECEF}
 #sodaf-root .cz-form .tir-card:hover{border-color:#F2B705}
 #sodaf-root .cz-form .tir-card.on{border-style:solid;border-color:#2BB673;background:rgba(11,110,79,.16)}
 #sodaf-root .cz-form .tir-cardph{background:#1F262D;border-color:#343E48;color:#F2B705}
