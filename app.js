@@ -2565,11 +2565,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="cz-st"><span class="cz-km" aria-hidden="true">2</span><div class="cz-stb"><p class="cz-stt">Où te joindre ?</p>
 <div class="row2"><div class="field"><label for="sd-tirTel">Numéro WhatsApp</label><div class="tel"><span>+228</span><input id="sd-tirTel" inputmode="numeric" maxlength="11" autocomplete="tel-national" placeholder="90 00 00 00"></div></div><div class="field"><label for="sd-tirUniv">Université ou école</label><input id="sd-tirUniv" list="sd-tirUnivL" maxlength="80" placeholder="Ex. Université de Lomé"><datalist id="sd-tirUnivL"><option value="Université de Lomé"><option value="Université de Kara"><option value="UCAO-UUT"><option value="ESGIS"><option value="IAI-Togo"><option value="ESA"><option value="IPNET Institute of Technology"><option value="Autre école"></datalist></div></div>
 </div></div>
-<div class="cz-st"><span class="cz-km" aria-hidden="true">3</span><div class="cz-stb"><p class="cz-stt">Ta carte d'étudiant</p>
-<div class="field"><span class="tir-lab">Photo de ta carte d'étudiant</span>
-<label class="tir-card" for="sd-tirCarte" id="sd-tirCardBox"><span class="tir-cardph" id="sd-tirCardPh"><svg viewBox="0 0 48 32" width="64" height="44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="44" height="28" rx="4"/><circle cx="15" cy="14" r="5"/><path d="M8 25c1.6-3.4 4.2-5 7-5s5.4 1.6 7 5M28 11h12M28 17h12M28 23h7"/></svg></span><span class="tir-cardtx"><b id="sd-tirCardBtn">Prendre la photo</b><small>Carte de l'année en cours, nom bien lisible. Seule l'équipe SODAF la voit.</small></span></label>
-<input type="file" id="sd-tirCarte" accept="image/*" capture="environment" class="insc-file"><label class="tir-gal" for="sd-tirCarteG">Ou choisir une photo déjà prise</label><input type="file" id="sd-tirCarteG" accept="image/*" class="insc-file"></div>
-</div></div>
+<!-- 19 nov. 2026 : plus de photo de la carte d'étudiant ici ; le gagnant la montre à l'agence sous 48 h. -->
 <div class="cz-st cz-stl"><span class="cz-km cz-kmf" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div class="cz-stb"><p class="cz-stt">Tu valides</p>
 <label class="tir-check"><input type="checkbox" id="sd-tirOk1"><span>Je suis étudiant(e) et j'ai <b>18 ans ou plus</b>.</span></label>
 <label class="tir-check"><input type="checkbox" id="sd-tirOk2"><span>J'accepte le règlement du tirage et que SODAF me contacte sur WhatsApp.</span></label>
@@ -2582,7 +2578,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="tir-closed" id="sd-tirClosed" hidden></div>
 </div>
 <aside class="cz-side">
-<ol class="cz-steps"><li><b>Tu t'inscris ici</b><span>Une minute, avec la photo de ta carte d'étudiant.</span></li><li><b>Tirage le <span class="sd-tirDay">1er</span> à 20 h</b><span>L'ordinateur tire 2 gagnants au hasard. La vidéo est publiée sur le TikTok de SODAF : abonne-toi.</span></li><li><b>Tu passes à l'agence</b><span>Sous 48 h, avec ta carte d'étudiant et ta carte d'identité.</span></li></ol>
+<ol class="cz-steps"><li><b>Tu t'inscris ici</b><span>Une minute, c'est gratuit.</span></li><li><b>Tirage le <span class="sd-tirDay">1er</span> à 20 h</b><span>L'ordinateur tire 2 gagnants au hasard. La vidéo est publiée sur le TikTok de SODAF : abonne-toi.</span></li><li><b>Tu passes à l'agence</b><span>Sous 48 h, avec ta carte d'étudiant et ta carte d'identité.</span></li></ol>
 <div class="cz-alt"><b>Pas le temps d'attendre ?</b><p>Le tarif étudiant : formation complète à <b>30 000 F</b>, inscription à 5 000 F, sans tirage.</p><a class="btn btn-line btn-sm" href="#inscription">Je me pré-inscris</a></div>
 <div class="cz-alt cz-altg"><b>Parrainage : 2 000 F pour toi</b><p>Pour chaque personne que tu amènes et qui s'inscrit chez SODAF, étudiant ou pas.</p></div>
 </aside>
@@ -5928,7 +5924,7 @@ function init(root) {
       $("#sd-trStats").innerHTML = "<div><b>" + L.length + "</b><span>participants</span></div><div><b>" + ok + " / 2</b><span>gagnants validés</span></div>" + (top ? '<div class="tr-top"><span>Universités en tête</span>' + top + "</div>" : "");
       $("#sd-trGo").disabled = ok >= 2 || att.length > 0 || !L.some((x) => x.statut === "inscrit"); $("#sd-trGo").textContent = ok >= 2 ? "Les 2 gagnants sont validés" : att.length ? "Vérifie d'abord le gagnant tiré" : "Tirer un gagnant";
       const tires = L.filter((x) => x.statut !== "inscrit").sort((a, b) => (a.tire_le < b.tire_le ? 1 : -1));
-      $("#sd-trWin").innerHTML = tires.length ? tires.map((x) => '<div class="tr-win st-' + x.statut + '"><img data-ph="tirage:' + esc(x.carte_photo) + '" alt="Carte d\'étudiant de ' + esc(x.prenoms + " " + x.nom) + '" class="tr-card"><div class="tr-who"><em class="gr-st ' + { gagnant: "att", valide: "oui", refuse: "non" }[x.statut] + '">' + { gagnant: "À vérifier", valide: "Gagnant validé", refuse: "Refusé" }[x.statut] + "</em><b>" + esc(x.prenoms + " " + x.nom) + "</b><span>" + esc(x.universite) + " · " + esc(x.telephone.replace("+228", "+228 ")) + "</span><small>Tiré " + esc(grQuand(x.tire_le)) + (x.note ? " · " + esc(x.note) : "") + "</small>" +
+      $("#sd-trWin").innerHTML = tires.length ? tires.map((x) => '<div class="tr-win st-' + x.statut + '">' + (x.carte_photo ? '<img data-ph="tirage:' + esc(x.carte_photo) + '" alt="Carte d\'étudiant de ' + esc(x.prenoms + " " + x.nom) + '" class="tr-card">' : '<span class="tr-card tr-nocard">Carte à montrer à l\'agence</span>') + '<div class="tr-who"><em class="gr-st ' + { gagnant: "att", valide: "oui", refuse: "non" }[x.statut] + '">' + { gagnant: "À vérifier", valide: "Gagnant validé", refuse: "Refusé" }[x.statut] + "</em><b>" + esc(x.prenoms + " " + x.nom) + "</b><span>" + esc(x.universite) + " · " + esc(x.telephone.replace("+228", "+228 ")) + "</span><small>Tiré " + esc(grQuand(x.tire_le)) + (x.note ? " · " + esc(x.note) : "") + "</small>" +
         (x.statut === "gagnant" ? '<p class="tr-q">Même nom que sur la carte ? Carte de l\'année en cours ?</p><div class="gr-act" data-tr="' + x.id + '"><input type="text" maxlength="300" placeholder="Motif si refusé (non obligatoire)" aria-label="Motif"><button type="button" class="btn btn-sm btn-green" data-trok="1">Valide</button><button type="button" class="btn btn-sm btn-line" data-trok="0">Pas valide, choisir un autre</button></div>' : x.statut === "valide" ? '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" href="https://wa.me/' + x.telephone.replace(/\D/g, "") + "?text=" + encodeURIComponent("Bonjour " + x.prenoms + ",\n\nFélicitations, tu as gagné le *tirage au sort SODAF* : ta formation complète du permis B à 15 000 F, inscription offerte.\n\nPasse à l'agence sous 48 h avec ta carte d'étudiant et ta carte d'identité : 412 Avenue Akei, Tokoin Tamé, en face de la caisse.\n\n*L'équipe SODAF · L'art de conduire, la force de réussir.*") + '">Prévenir le gagnant sur WhatsApp</a>' : "") + "</div></div>").join("")
         : '<p class="tm-empty">Aucun gagnant tiré pour ce mois.</p>';
       $("#sd-trAllSum").textContent = "Tous les participants (" + L.length + ")";
@@ -7822,12 +7818,12 @@ const QUI_NOM = (p) => { if (!p) return ""; if (p.role !== "ambassadeur") return
   $("#sd-tirForm").addEventListener("submit", async (e) => {
     e.preventDefault(); const er = $("#sd-tirErr"), btn = $("#sd-tirGo");
     const nom = $("#sd-tirNom").value.trim(), pre = $("#sd-tirPre").value.trim(), tel = $("#sd-tirTel").value.replace(/\D/g, "").replace(/^228(?=\d{8}$)/, ""), uni = $("#sd-tirUniv").value.trim();
-    const bad = nom.length < 2 ? "Écris ton nom." : pre.length < 2 ? "Écris tes prénoms." : tel.length !== 8 ? "Ton numéro doit avoir 8 chiffres (après le +228)." : uni.length < 2 ? "Indique ton université ou ton école." : !TIR.blob ? "Ajoute la photo de ta carte d'étudiant." : !$("#sd-tirOk1").checked ? "Le tirage est réservé aux étudiants de 18 ans ou plus." : !$("#sd-tirOk2").checked ? "Coche la case pour accepter le règlement." : "";
+    const bad = nom.length < 2 ? "Écris ton nom." : pre.length < 2 ? "Écris tes prénoms." : tel.length !== 8 ? "Ton numéro doit avoir 8 chiffres (après le +228)." : uni.length < 2 ? "Indique ton université ou ton école." : !$("#sd-tirOk1").checked ? "Le tirage est réservé aux étudiants de 18 ans ou plus." : !$("#sd-tirOk2").checked ? "Coche la case pour accepter le règlement." : "";
     if (bad) { er.textContent = bad; er.hidden = false; return; }
     er.hidden = true; btn.disabled = true; btn.textContent = "Envoi…";
     const c = tirCampagne(), camp = c.y + "-" + String(c.m + 1).padStart(2, "0");
     try {
-      const path = await photoEnvoyer(camp + "/" + Date.now() + "-" + Math.random().toString(36).slice(2, 10) + ".jpg", TIR.blob, null, "tirage");
+      const path = null; // 19 nov. : plus de photo de la carte (vérifiée à l'agence pour le gagnant)
       const r = await DB.q("rpc/tirage_participer", { method: "POST", body: { p_nom: nom, p_prenoms: pre, p_telephone: tel, p_universite: uni, p_photo: path }, anon: true });
       const qui = { nom: nom.toUpperCase(), pre, uni }; S.set("tirTicket", { c: r.campagne, n: r.numero, qui }); tirTicket(r.numero, r.deja, qui);
       const n = $("#sd-tirN"); if (!r.deja && /^\d+$/.test(n.textContent)) n.textContent = +n.textContent + 1;
@@ -9288,7 +9284,7 @@ a.tf-pc{text-decoration:none;color:inherit}.tf-pjf .cf-pick{margin-bottom:6px}.t
 .tr-wins{display:grid;gap:10px}
 .tr-win{display:grid;grid-template-columns:minmax(0,260px) 1fr;gap:16px;border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff}
 .tr-win.st-gagnant{border-color:#E8A317;box-shadow:inset 3px 0 0 #E8A317}.tr-win.st-valide{box-shadow:inset 3px 0 0 var(--green)}.tr-win.st-refuse{opacity:.6}
-.tr-card{width:100%;aspect-ratio:3/2;object-fit:contain;background:#F1F3F5;border-radius:10px;cursor:zoom-in}
+.tr-card{width:100%;aspect-ratio:3/2;object-fit:contain;background:#F1F3F5;border-radius:10px;cursor:zoom-in}.tr-nocard{display:grid;place-items:center;padding:10px;text-align:center;font-size:.85rem;font-weight:600;color:#5B6670;cursor:default;border:1px dashed #C9CFD6}
 .tr-who{display:grid;gap:4px;align-content:start}.tr-who b{font:700 1.3rem var(--f-display)}.tr-who span,.tr-who small{color:var(--muted);font-size:.86rem}.tr-who em{justify-self:start}
 .tr-q{margin:6px 0 0;font-weight:600;font-size:.9rem}
 .tr-all{margin-top:14px}.tr-all summary{cursor:pointer;font-weight:700}
