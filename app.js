@@ -2519,14 +2519,9 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 <div class="tn-ticker" aria-hidden="true"><div class="tn-tk"><span>2 gagnants chaque mois</span><span>Ton permis à 15 000 F</span><span>Participation gratuite</span><span>Abonne-toi à SODAF sur TikTok</span><span>Inscription offerte</span><span>T-shirt SODAF</span><span>2 gagnants chaque mois</span><span>Ton permis à 15 000 F</span><span>Participation gratuite</span><span>Abonne-toi à SODAF sur TikTok</span><span>Inscription offerte</span><span>T-shirt SODAF</span></div></div>
 
 <div class="wrap sec cz-body">
-<div class="cz-sh"><p class="cz-k2">Le lot</p><h2>Plus de 60&nbsp;000&nbsp;F de valeur. Tu paies 15&nbsp;000&nbsp;F.</h2></div>
-<div class="cz-chips">
-<div class="cz-chip cz-c1"><span class="cz-cv">55 000 F</span><b>Formation complète</b><small>12 cours de code et 12 séances de conduite</small></div>
-<div class="cz-chip"><span class="cz-cv">5 000 F</span><b>Inscription offerte</b><small>Aucun frais d'inscription</small></div>
-<div class="cz-chip"><span class="cz-cv">3 000 F</span><b>Séance en plus</b><small>Pour t'entraîner avant l'examen</small></div>
-<div class="cz-chip"><span class="cz-cv">Offert</span><b>T-shirt SODAF</b><small>Réservé aux gagnants</small></div>
-<div class="cz-chip"><span class="cz-cv">Priorité</span><b>Tes horaires</b><small>Tu réserves tes séances en premier</small></div>
-</div>
+<!-- 23 nov. 2026 : lot simplifié, sans les montants (5 000 F, 3 000 F…) ni la priorité sur les horaires -->
+<div class="cz-sh"><p class="cz-k2">Le lot</p><h2>Ton permis à 15&nbsp;000&nbsp;F seulement</h2></div>
+<ul class="cz-lot"><li><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>Formation complète</span></li><li><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>Inscription offerte</span></li><li><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>Une séance en plus</span></li><li><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>T-shirt SODAF offert</span></li></ul>
 </div>
 
 <div class="tn-day"><div class="wrap tn-dayin">
@@ -8423,6 +8418,11 @@ html{scrollbar-gutter:stable}
 #sodaf-root .cz-sh{margin:0 0 16px}#sodaf-root .cz-sh h2{margin:6px 0 0;text-wrap:balance}
 #sodaf-root .cz-play+.cz-sh{margin-top:44px}
 #sodaf-root .cz-k2{margin:0;font:800 .74rem/1.3 var(--f-ui);letter-spacing:.14em;text-transform:uppercase;color:#A87A00}
+#sodaf-root .cz-lot{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+#sodaf-root .cz-lot li{display:flex;align-items:center;justify-content:center;gap:10px;padding:16px 14px;border-radius:14px;background:#fff;border:1px solid #E6E1D2;font:700 1.05rem/1.25 var(--f-display);text-align:center}
+#sodaf-root .cz-lot svg{flex:none;color:#fff;background:#1F7A4D;border-radius:50%;padding:4px;width:26px;height:26px}
+@media (max-width:820px){#sodaf-root .cz-lot{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:420px){#sodaf-root .cz-lot li{justify-content:flex-start;text-align:left;font-size:.98rem;padding:14px 12px}}
 #sodaf-root .cz-chips{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
 #sodaf-root .cz-chip{position:relative;display:grid;justify-items:center;text-align:center;gap:6px;padding:18px 12px 16px;border-radius:18px;background:#fff;border:1px solid #E6E1D2;min-width:0}
 #sodaf-root .cz-cv{display:grid;place-items:center;width:92px;height:92px;padding:0 18px;text-align:center;border-radius:50%;font:700 .92rem/1 var(--f-display);white-space:nowrap;color:#1A1408;background:radial-gradient(circle,#FFF6D6 0 60%,transparent 61%),repeating-conic-gradient(#F6C232 0 15deg,#C9940F 15deg 30deg);box-shadow:0 0 0 3px #fff,0 0 0 4px #E6D6A0,0 10px 20px -10px rgba(0,0,0,.4)}
