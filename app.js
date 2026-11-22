@@ -2579,8 +2579,7 @@ ${HEAD("Équipe SODAF", "Espace équipe", "Réservé au personnel de l'auto-éco
 </div>
 <aside class="cz-side">
 <ol class="cz-steps"><li><b>Tu t'inscris ici</b><span>Une minute, c'est gratuit.</span></li><li><b>Tirage le <span class="sd-tirDay">1er</span> à 20 h</b><span>L'ordinateur tire 2 gagnants au hasard. La vidéo est publiée sur le TikTok de SODAF : abonne-toi.</span></li><li><b>Tu passes à l'agence</b><span>Sous 48 h, avec ta carte d'étudiant et ta carte d'identité.</span></li></ol>
-<div class="cz-alt"><b>Pas le temps d'attendre ?</b><p>Le tarif étudiant : formation complète à <b>30 000 F</b>, inscription à 5 000 F, sans tirage.</p><a class="btn btn-line btn-sm" href="#inscription">Je me pré-inscris</a></div>
-<div class="cz-alt cz-altg"><b>Parrainage : 2 000 F pour toi</b><p>Pour chaque personne que tu amènes et qui s'inscrit chez SODAF, étudiant ou pas.</p></div>
+<!-- 23 nov. 2026 : « Pas le temps d'attendre ? » (tarif étudiant) et « Parrainage » retirés du tirage : moins d'informations. -->
 </aside>
 </div>
 <div class="cz-lane" aria-hidden="true"></div>
